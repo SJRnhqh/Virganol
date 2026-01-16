@@ -1,0 +1,19 @@
+{
+  "name": "virganol",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Virganol Monorepo Root",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    
+    "dev:ui": "pnpm -F @virganol/ui dev",
+    
+    "dev": "pnpm -F @virganol/desktop tauri dev",
+
+    "build": "pnpm -F @virganol/desktop tauri build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.0"
+}
