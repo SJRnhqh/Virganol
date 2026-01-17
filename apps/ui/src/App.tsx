@@ -13,14 +13,16 @@ const InputField = ({ label, icon, ...props }: InputFieldProps) => (
       {label}
     </label>
     <div className="relative group">
-      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-indigo-400 transition-colors">
-        {icon}
-      </div>
+      {icon && (
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-indigo-400 transition-colors">
+          {icon}
+        </div>
+      )}
       <input
         {...props}
-        className="w-full pl-10 pr-4 py-2.5 bg-slate-900/50 border border-slate-800 rounded-xl
+        className={`w-full ${icon ? "pl-10" : "pl-4"} pr-4 py-2.5 bg-slate-900/50 border border-slate-800 rounded-xl
                    focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 outline-none
-                   transition-all placeholder:text-slate-700 text-sm"
+                   transition-all placeholder:text-slate-700 text-sm`}
       />
     </div>
   </div>
@@ -29,6 +31,7 @@ const InputField = ({ label, icon, ...props }: InputFieldProps) => (
 function App() {
   const [formData, setFormData] = useState({
     host: "",
+    port: "22",
     username: "",
     password: "",
   });
@@ -44,6 +47,7 @@ function App() {
     setLoading(true);
     setStatus("Initiating encrypted tunnel...");
     try {
+      // 传递完整的 formData (包含 host, port, username, password)
       const response = await invoke<string>("test_ssh_params", formData);
       setStatus(response);
     } catch (err) {
@@ -58,7 +62,6 @@ function App() {
       {/* 背景装饰 */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-125 h-75 bg-indigo-600/10 blur-[120px] pointer-events-none" />
 
-      {/* 使用规范化的 max-w-100 (即 400px) */}
       <main className="relative w-full max-w-100 p-8">
         <header className="mb-10 space-y-2">
           <h1 className="text-3xl font-light tracking-[0.2em] text-white uppercase text-center">
@@ -68,31 +71,48 @@ function App() {
         </header>
 
         <section className="space-y-6">
-          <InputField
-            label="Remote Host"
-            placeholder="127.0.0.1"
-            onChange={handleChange("host")}
-            icon={
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
-                />
-              </svg>
-            }
-          />
+          {/* 第一行：Host (3份宽度) + Port (1份宽度) */}
+          <div className="flex gap-4">
+            <div className="flex-3">
+              <InputField
+                label="Remote Host"
+                placeholder="127.0.0.1"
+                value={formData.host}
+                onChange={handleChange("host")}
+                icon={
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+                    />
+                  </svg>
+                }
+              />
+            </div>
+            <div className="flex-1">
+              <InputField
+                label="Port"
+                placeholder="22"
+                value={formData.port}
+                onChange={handleChange("port")}
+                icon={null}
+              />
+            </div>
+          </div>
 
+          {/* 第二行：User + Secret (对等宽度) */}
           <div className="flex gap-4">
             <InputField
               label="User"
               placeholder="root"
+              value={formData.username}
               onChange={handleChange("username")}
               icon={
                 <svg
@@ -114,6 +134,7 @@ function App() {
               label="Secret"
               type="password"
               placeholder="••••"
+              value={formData.password}
               onChange={handleChange("password")}
               icon={
                 <svg
