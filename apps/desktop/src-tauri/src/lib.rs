@@ -8,23 +8,34 @@ async fn test_ssh_params(
     username: String,
     password: String,
 ) -> Result<String, String> {
-    // 2. 动态拼接：使用 host:port
     let addr = format!("{}:{}", host, port);
 
-    let tcp = TcpStream::connect(&addr).map_err(|e| format!("无法连接到 {}: {}", addr, e))?;
+    // 1. Establish TCP Connection
+    let tcp = TcpStream::connect(&addr)
+        .map_err(|e| format!("TCP Connection failed to {}: {}", addr, e))?;
 
-    let mut sess = Session::new().map_err(|e| format!("会话初始化失败: {}", e))?;
+    // Fix for Windows: Ensure the stream is in blocking mode before handshake
+    tcp.set_nonblocking(false)
+        .map_err(|e| format!("Failed to set blocking mode: {}", e))?;
+
+    // 2. Initialize SSH Session
+    let mut sess = Session::new()
+        .map_err(|e| format!("SSH Session initialization failed: {}", e))?;
+    
     sess.set_tcp_stream(tcp);
-    sess.handshake()
-        .map_err(|e| format!("协议握手失败: {}", e))?;
 
+    // 3. Protocol Handshake
+    sess.handshake()
+        .map_err(|e| format!("SSH handshake failed: {}", e))?;
+
+    // 4. Authentication
     sess.userauth_password(&username, &password)
-        .map_err(|e| format!("认证异常: {}", e))?;
+        .map_err(|e| format!("Authentication error: {}", e))?;
 
     if sess.authenticated() {
-        Ok(format!("✅ 成功连接到 {} (端口: {})", host, port))
+        Ok(format!("Successfully established link to {} on port {}", host, port))
     } else {
-        Err("❌ 认证失败".into())
+        Err("Authentication failed: Invalid credentials".into())
     }
 }
 
@@ -32,8 +43,7 @@ async fn test_ssh_params(
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        // 记得在这里注册你的新函数
         .invoke_handler(tauri::generate_handler![test_ssh_params])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("Error while running tauri application");
 }

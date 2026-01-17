@@ -1,7 +1,34 @@
 @import "tailwindcss";
 
+/* 定义茯葭主题的全局变量 */
+:root {
+    --color-parchment: #faf7f0;
+    --color-sage: #84a59d;
+    --color-charcoal: #2f3e46;
+    --color-moss: #a3b18a;
+    --color-paper-edge: #e6e1d3;
+}
+
 body {
-    background-color: #020617;
-    color: #f8fafc;
+    background-color: var(--color-parchment);
+    color: var(--color-charcoal);
     margin: 0;
+    /* 选用更具人文气息的字体栈 */
+    font-family:
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+    /* 让文字渲染更细腻 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 甚至可以定义全局的选中文本颜色，增加呼吸感 */
+::selection {
+    background-color: rgba(132, 165, 157, 0.3);
+    color: var(--color-charcoal);
 }

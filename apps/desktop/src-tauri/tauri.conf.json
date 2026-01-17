@@ -13,9 +13,12 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "desktop",
-        "width": 800,
-        "height": 600
+        "title": "Virganol",
+        "maximized": true,
+        "resizable": true,
+        "fullscreen": false,
+        "center": true,
+        "decorations": true
       }
     ],
     "security": {
