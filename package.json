@@ -5,15 +5,16 @@
   "description": "Virganol Monorepo Root",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    
     "dev:ui": "pnpm -F @virganol/ui dev",
-    
     "dev": "pnpm -F @virganol/desktop tauri dev",
-
     "build": "pnpm -F @virganol/desktop tauri build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.28.0"
+  "packageManager": "pnpm@10.28.0",
+  "dependencies": {
+    "lucide-react": "^0.562.0",
+    "zustand": "^5.0.10"
+  }
 }

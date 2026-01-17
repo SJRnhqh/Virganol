@@ -32,3 +32,30 @@ body {
     background-color: rgba(132, 165, 157, 0.3);
     color: var(--color-charcoal);
 }
+/* --- React Flow Customization for Virganol --- */
+
+/* 隐藏默认的选中框 (因为我们在 ServerNode 内部自己画了漂亮的边框) */
+.react-flow__node {
+    border: none !important;
+    background: transparent !important;
+    width: auto !important;
+    box-shadow: none !important;
+}
+
+/* 去除聚焦时的蓝色轮廓 */
+.react-flow__node:focus,
+.react-flow__node:focus-visible {
+    outline: none !important;
+}
+
+/* 优化控制条 */
+.react-flow__controls-button {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+.react-flow__controls-button:hover {
+    background: #ffffff !important;
+}
+.react-flow__controls svg {
+    fill: #84a59d !important;
+}
