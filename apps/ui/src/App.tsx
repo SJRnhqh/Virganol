@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [msg, setMsg] = useState("等待后端...");
+
+  async function testBridge() {
+    // 呼叫 Rust 里的 greet 函数，传参 name
+    const response = await invoke<string>("greet", { name: "Virganol" });
+    setMsg(response);
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+    <div
+      style={{ padding: "50px", textAlign: "center", fontFamily: "sans-serif" }}
+    >
+      <h1>桥接测试</h1>
+      <p>
+        Rust后端回复: <b>{msg}</b>
       </p>
-    </>
-  )
+      <button
+        onClick={testBridge}
+        style={{ padding: "10px 20px", cursor: "pointer" }}
+      >
+        向 Rust 发送信号
+      </button>
+    </div>
+  );
 }
 
-export default App
+export default App;
