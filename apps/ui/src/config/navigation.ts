@@ -1,10 +1,12 @@
 import {
   Bot,
   Workflow,
+  Library,
   CodeXml,
   Network,
   BrainCircuit,
   Database,
+  Store,
   type LucideIcon,
 } from "lucide-react";
 
@@ -18,19 +20,25 @@ export interface NavItemConfig {
 }
 
 export const NAV_ITEMS: NavItemConfig[] = [
+  // 核心交互与记忆
   { id: "bot", icon: Bot, label: "Bot Deck", group: "logic" },
   { id: "workflow", icon: Workflow, label: "Workflow Deck", group: "logic" },
-  { id: "code", icon: CodeXml, label: "Code Deck", group: "logic" },
+  { id: "vault", icon: Library, label: "Vault Deck", group: "logic" },
+
+  // 节点实验室
   { id: "nodes", icon: Network, label: "Node Deck", group: "infra" },
+  { id: "code", icon: CodeXml, label: "Code Deck", group: "infra" }, // Code 也可以看作一种基础设施
+
+  // 静态资产
   { id: "models", icon: BrainCircuit, label: "Model Deck", group: "assets" },
   { id: "datasets", icon: Database, label: "Dataset Deck", group: "assets" },
+  { id: "hub", icon: Store, label: "Hub Deck", group: "assets" }, // 新增：插件生态
 ];
 
 export const NAV_DIMENSIONS = {
-  ITEM_HEIGHT: 40,
-  ITEM_MARGIN: 12,
-  SEPARATOR_HEIGHT: 16,
-  INDICATOR_OFFSET: 10,
+  ITEM_HEIGHT: 40, // 对应 w-10
+  ITEM_MARGIN: 12, // 对应 mb-3
+  INDICATOR_OFFSET: 10, // 用于对齐图标中心 (40/2 - 5/2 等逻辑)
 };
 
 export const NAV_THEME = {
