@@ -1,0 +1,26 @@
+/* src/styles/themes/_palette.css */
+
+:root {
+    /* =========================================
+     🎨 基础色盘 (Primitives)
+     这里只定义颜色值 (Hex)，不定义用途。
+     ========================================= */
+
+    /* 🌿 Virganol 核心色系 */
+    --color-parchment: #faf7f0; /* 米色 - 你的标志性背景 */
+    --color-sage: #84a59d; /* 苍艾绿 - 经典浅绿 */
+    --color-forest: #315f4d; /* 森林绿 - 新选的深绿 */
+    --color-charcoal: #2f3e46; /* 深炭灰 - 主要文字色 */
+
+    /* 🍂 辅助点缀色 */
+    --color-moss: #a3b18a; /* 苔藓绿 */
+    --color-paper-edge: #e6e1d3; /* 纸张边缘色 (用于分割线) */
+    --color-rose: #f43f5e; /* 红色 (用于关闭/错误) */
+    --color-emerald: #6ee7b7; /* 亮绿 (用于在线状态点) */
+
+    /* ⚪️ 通用基础色 */
+    --color-white: #ffffff;
+    --color-black-fade: rgba(0, 0, 0, 0.05); /* 通用浅黑遮罩 */
+    --color-white-fade: rgba(255, 255, 255, 0.15); /* 通用浅白遮罩 */
+    --color-transparent: transparent;
+}
