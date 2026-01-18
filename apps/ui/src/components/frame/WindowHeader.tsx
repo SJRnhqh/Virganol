@@ -1,77 +1,53 @@
-import { memo, useState, useEffect } from "react";
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import { type as getOsType } from "@tauri-apps/plugin-os";
-import { Minus, Square, X, Maximize2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useMemo } from "react";
+import { ChevronRight } from "lucide-react";
+import { NAV_ITEMS } from "@/config/navigation";
 
-export const WindowHeader = memo(() => {
-  const [isMaximized, setIsMaximized] = useState(false);
-  const appWindow = getCurrentWindow();
-  const [isMac] = useState(() => getOsType() === "macos");
-
-  useEffect(() => {
-    const updateState = async () =>
-      setIsMaximized(await appWindow.isMaximized());
-    updateState();
-    const unlisten = appWindow.onResized(updateState);
-    return () => {
-      unlisten.then((f) => f());
-    };
-  }, [appWindow]);
-
-  return (
-    <header className="flex w-full h-10 shrink-0 z-50 border-b border-sidebar-border/30 bg-header-bg">
-      {/* 🔴 确保宽度严格对齐 64px */}
-      <div
-        data-tauri-drag-region
-        className="w-16 shrink-0 h-full bg-sidebar-bg border-r border-sidebar-border/10"
-      />
-
-      <div
-        data-tauri-drag-region
-        className="flex-1 flex items-center justify-end px-4 h-full"
-      >
-        {!isMac && (
-          <div className="flex items-center gap-1.5 pointer-events-none">
-            <WinBtn onClick={() => appWindow.minimize()}>
-              <Minus size={14} />
-            </WinBtn>
-            <WinBtn
-              onClick={async () => {
-                await appWindow.toggleMaximize();
-                setIsMaximized(await appWindow.isMaximized());
-              }}
-            >
-              {isMaximized ? <Maximize2 size={12} /> : <Square size={12} />}
-            </WinBtn>
-            <WinBtn onClick={() => appWindow.close()} isClose>
-              <X size={14} />
-            </WinBtn>
-          </div>
-        )}
-      </div>
-    </header>
-  );
-});
-
-// 1. 定义 Props 的类型接口
-interface WinBtnProps {
-  children: React.ReactNode; // React 节点类型
-  onClick: () => void; // 无参数无返回值的函数
-  isClose?: boolean; // 可选的布尔值
+interface WindowHeaderProps {
+  activeId: string;
 }
 
-// 2. 将 any 替换为 WinBtnProps
-const WinBtn = ({ children, onClick, isClose = false }: WinBtnProps) => (
-  <button
-    onClick={onClick}
-    className={cn(
-      "h-7 w-7 rounded-md flex items-center justify-center transition-all duration-200 pointer-events-auto",
-      isClose
-        ? "hover:bg-rose-500 hover:text-white"
-        : "text-header-fg/60 hover:text-header-fg hover:bg-header-fg/10",
-    )}
-  >
-    {children}
-  </button>
-);
+export function WindowHeader({ activeId }: WindowHeaderProps) {
+  // 根据当前 activeId 获取配置
+  const currentItem = useMemo(() => {
+    return NAV_ITEMS.find((item) => item.id === activeId);
+  }, [activeId]);
+
+  // 映射 V.I.N.E. 逻辑分组名称
+  const groupLabel = useMemo(() => {
+    const groupMap: Record<string, string> = {
+      logic: "Cognition",
+      infra: "Infrastructure",
+      assets: "Assets",
+    };
+    return currentItem ? groupMap[currentItem.group] : "Core";
+  }, [currentItem]);
+
+  return (
+    <header
+      className="h-10 flex items-center px-20 border-b border-sidebar-border bg-sidebar-bg shrink-0 select-none cursor-default"
+      // 保持全域拖拽能力
+      data-tauri-drag-region
+    >
+      {/* 极致简约的面包屑，调整了字号、间距与透明度层级 */}
+      <nav className="flex items-center text-[10px] font-medium tracking-widest pointer-events-none">
+        {/* 第一层：项目名 (低饱和度) */}
+        <span className="text-primary/20 uppercase">Virganol</span>
+
+        {/* 间距调整：mx-3 (12px) 让层级更清晰 */}
+        <ChevronRight size={10} className="mx-3 text-primary/10" />
+
+        {/* 第二层：逻辑组 (中等饱和度) */}
+        <span className="text-primary/40 uppercase font-light">
+          {groupLabel}
+        </span>
+
+        <ChevronRight size={10} className="mx-3 text-primary/10" />
+
+        {/* 第三层：当前 Deck (高饱和度/加粗) */}
+        <span className="text-primary/90 font-bold tracking-normal">
+          {currentItem?.label}
+        </span>
+      </nav>
+    </header>
+  );
+}
