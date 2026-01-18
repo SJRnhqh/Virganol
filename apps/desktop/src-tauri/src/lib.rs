@@ -19,9 +19,9 @@ async fn test_ssh_params(
         .map_err(|e| format!("Failed to set blocking mode: {}", e))?;
 
     // 2. Initialize SSH Session
-    let mut sess = Session::new()
-        .map_err(|e| format!("SSH Session initialization failed: {}", e))?;
-    
+    let mut sess =
+        Session::new().map_err(|e| format!("SSH Session initialization failed: {}", e))?;
+
     sess.set_tcp_stream(tcp);
 
     // 3. Protocol Handshake
@@ -33,7 +33,10 @@ async fn test_ssh_params(
         .map_err(|e| format!("Authentication error: {}", e))?;
 
     if sess.authenticated() {
-        Ok(format!("Successfully established link to {} on port {}", host, port))
+        Ok(format!(
+            "Successfully established link to {} on port {}",
+            host, port
+        ))
     } else {
         Err("Authentication failed: Invalid credentials".into())
     }
@@ -43,6 +46,7 @@ async fn test_ssh_params(
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_os::init())
         .invoke_handler(tauri::generate_handler![test_ssh_params])
         .run(tauri::generate_context!())
         .expect("Error while running tauri application");
