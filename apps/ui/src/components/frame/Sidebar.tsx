@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+// 定义导航项的数据结构类型
 interface NavItemConfig {
   id: string;
   icon: LucideIcon;
@@ -30,12 +31,12 @@ export const Sidebar = memo(() => {
       className={cn(
         "flex flex-col items-center shrink-0 z-40",
         "w-17 h-full",
-        // ✅ 侧边栏的竖线。因为它在 Header 之下，所以它不会穿透顶栏
+        // 侧边栏的竖线，位于 Header 之下
         "bg-sidebar-bg border-r border-sidebar-border text-sidebar-fg",
         "transition-colors duration-300 pt-4",
       )}
     >
-      {/* 导航区域 */}
+      {/* 1. 顶部导航区域 */}
       <nav className="flex flex-col gap-4 w-full px-3">
         {NAV_ITEMS.map((item) => (
           <NavItem
@@ -48,24 +49,17 @@ export const Sidebar = memo(() => {
         ))}
       </nav>
 
-      {/* 底部区域 */}
-      <div className="mt-auto mb-6 flex flex-col items-center gap-6">
+      {/* 2. 底部功能区域 (已移除用户头像和状态点) */}
+      <div className="mt-auto mb-6 flex flex-col items-center">
         <NavItem
           icon={Settings}
           isActive={false}
-          onClick={() => {}}
+          onClick={() => {
+            // 这里以后可以放置打开设置面板的逻辑
+            console.log("Open Settings");
+          }}
           label="Settings"
         />
-
-        {/* Logo */}
-        <div className="relative group cursor-default">
-          <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/10 shadow-sm transition-transform group-hover:scale-105">
-            <span className="font-serif italic font-bold text-sidebar-fg/90 text-sm pt-0.5">
-              V
-            </span>
-          </div>
-          <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-300 rounded-full border-2 border-sidebar-bg animate-pulse"></div>
-        </div>
       </div>
     </aside>
   );
@@ -96,6 +90,7 @@ const NavItem = ({
     <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
 
     {isActive && (
+      // 激活状态的侧边指示条
       <div className="absolute -left-3.5 w-1 h-5 bg-sidebar-active-bg rounded-r-full" />
     )}
   </button>
