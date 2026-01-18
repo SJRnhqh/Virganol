@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "desktop",
-  "version": "0.1.0",
-  "identifier": "com.pc.desktop",
+  "productName": "Virganol",
+  "version": "0.0.1",
+  "identifier": "com.virganol.app",
   "build": {
     "beforeDevCommand": "pnpm --filter @virganol/ui dev",
     "devUrl": "http://localhost:5173",
@@ -13,9 +13,16 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "desktop",
-        "width": 800,
-        "height": 600
+        "title": "Virganol",
+        "maximized": true,
+        "resizable": true,
+        "fullscreen": false,
+        "center": true,
+        "decorations": true,
+        "transparent": true,
+        "titleBarStyle": "Overlay",
+        "theme": "Light",
+        "hiddenTitle": true
       }
     ],
     "security": {
