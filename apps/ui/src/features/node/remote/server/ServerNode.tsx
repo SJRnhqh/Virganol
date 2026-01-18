@@ -1,7 +1,7 @@
 import { memo } from "react";
 // 🔴 关键：导入 Node 类型用于构建 Custom Node 类型
 import { Handle, Position, type NodeProps, type Node } from "@xyflow/react";
-import { type ServerConfig } from "../../store/useServerStore";
+import { type ServerConfig } from "@/store/useServerStore";
 
 // 1. 定义该节点接收的纯数据类型 (Nectar)
 export type ServerNodeData = Pick<
