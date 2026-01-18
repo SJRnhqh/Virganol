@@ -1,0 +1,34 @@
+/* src/styles/themes/light.css */
+
+/* ☀️ 默认浅色主题 (Light / Latte)
+   这里负责 "连线"：把组件的语义变量 (Sidebar) 连接到基础色盘 (Sage/Parchment)
+*/
+
+:root {
+    /* === 1. 侧边栏 (Sidebar) === */
+    /* 背景用 "苍艾绿" */
+    --sidebar-bg: var(--color-sage);
+    /* 边框用 "纸张边缘色" 的 20% 透明度 */
+    --sidebar-border: color-mix(
+        in srgb,
+        var(--color-paper-edge),
+        transparent 80%
+    );
+    /* 文字用 "纯白" */
+    --sidebar-fg: var(--color-white);
+
+    /* 选中项背景用 "米色" */
+    --sidebar-active-bg: var(--color-parchment);
+    /* 选中项文字用 "深炭灰" */
+    --sidebar-active-fg: var(--color-charcoal);
+
+    /* === 2. 顶部栏 (Header) === */
+    /* 背景透明 */
+    --header-bg: var(--color-transparent);
+    /* 文字深灰 */
+    --header-fg: var(--color-charcoal);
+
+    /* === 3. 主内容区 (Main Canvas) === */
+    /* 背景米色 */
+    --main-bg: var(--color-parchment);
+}

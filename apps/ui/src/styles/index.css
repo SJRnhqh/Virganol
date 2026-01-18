@@ -1,12 +1,30 @@
 @import "tailwindcss";
 
-/* 定义茯葭主题的全局变量 */
-:root {
-    --color-parchment: #faf7f0;
-    --color-sage: #84a59d;
-    --color-charcoal: #2f3e46;
-    --color-moss: #a3b18a;
-    --color-paper-edge: #e6e1d3;
+/* 👇 路径修改了：现在 index.css 和 themes 同级，所以直接引用 */
+@import "./themes/_palette.css";
+@import "./themes/light.css";
+
+@theme {
+    /* ... 里面的内容保持不变 ... */
+    /* 侧边栏映射 */
+    --color-sidebar-bg: var(--sidebar-bg);
+    --color-sidebar-fg: var(--sidebar-fg);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-active-bg: var(--sidebar-active-bg);
+    --color-sidebar-active-fg: var(--sidebar-active-fg);
+
+    /* 顶部栏映射 */
+    --color-header-bg: var(--header-bg);
+    --color-header-fg: var(--header-fg);
+
+    /* 主体映射 */
+    --color-main-bg: var(--main-bg);
+
+    /* 基础色映射 */
+    --color-sage: var(--color-sage);
+    --color-forest: var(--color-forest);
+    --color-parchment: var(--color-parchment);
+    --color-paper-edge: var(--color-paper-edge);
 }
 
 body {

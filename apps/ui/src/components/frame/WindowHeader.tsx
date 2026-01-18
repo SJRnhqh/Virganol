@@ -26,30 +26,27 @@ export const WindowHeader = memo(() => {
     };
   }, [appWindow]);
 
-  // 如果是 Mac，且不需要显示任何标题，可以直接返回 null (或者保留一个空的 div 占位)
-  // 但为了布局的统一性，保留一个空的容器也是可以的
   if (isMac) {
-    // 方案 A: Mac 完全隐藏右侧顶栏 (让 Canvas 冲顶)
-    // return null;
-
-    // 方案 B: Mac 保留一个空的透明占位 (防止内容贴顶太紧)
-    return <div className="h-4 w-full bg-transparent pointer-events-none" />;
+    // Mac 占位符也使用透明语义
+    // Old: bg-transparent -> New: bg-header-bg (如果我们在 CSS 里定义 header 是透明的，这里也一样)
+    return <div className="h-4 w-full bg-header-bg pointer-events-none" />;
   }
 
   return (
     <header
       data-tauri-drag-region
       className={cn(
-        // 这里用了 justify-end，把所有东西推到最右边
         "flex items-center justify-end shrink-0",
         "h-10 w-full px-4",
-        "bg-[#FAF7F0] text-[#2F3E46]",
-        "z-40", // 确保层级
+
+        // 👇 1. 容器样式替换
+        // Old: bg-[#FAF7F0] -> New: bg-header-bg (读取 CSS 里的 --header-bg)
+        // Old: text-[#2F3E46] -> New: text-header-fg (读取 CSS 里的 --header-fg)
+        "bg-header-bg text-header-fg",
+
+        "z-40 transition-colors duration-300", // 加上过渡动画
       )}
     >
-      {/* ❌ 删除了之前的 左侧面包屑 (Cpu图标 + Project/Default Space) */}
-
-      {/* === 只保留：Windows 窗口控制 === */}
       <div className="flex items-center gap-2 pointer-events-auto">
         <WinBtn onClick={() => appWindow.minimize()}>
           <Minus size={14} />
@@ -70,6 +67,7 @@ export const WindowHeader = memo(() => {
   );
 });
 
+// 👇 2. 按钮样式替换
 const WinBtn = ({ children, onClick, isClose }: WindowControlBtnProps) => (
   <button
     onClick={onClick}
@@ -77,7 +75,10 @@ const WinBtn = ({ children, onClick, isClose }: WindowControlBtnProps) => (
       "h-7 w-7 rounded-md flex items-center justify-center transition-all duration-200",
       isClose
         ? "hover:bg-rose-500 hover:text-white"
-        : "hover:bg-black/5 text-[#2F3E46]/80 hover:text-black",
+        : // 👇 这里做了更高级的适配：
+          // Old: text-[#2F3E46]/80 -> New: text-header-fg/80 (使用语义变量)
+          // Old: hover:bg-black/5  -> New: hover:bg-header-fg/10 (使用前景色作为 Hover 背景，这样深色/浅色模式都通用)
+          "text-header-fg/80 hover:text-header-fg hover:bg-header-fg/10",
     )}
   >
     {children}
