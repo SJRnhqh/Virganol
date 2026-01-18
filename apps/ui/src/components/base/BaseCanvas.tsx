@@ -1,61 +1,38 @@
-import { 
-  ReactFlow, 
-  Background, 
-  Controls, 
+import {
+  ReactFlow,
+  Background,
+  Controls,
   BackgroundVariant,
-  type Node,
-  type NodeChange,
-  type NodeTypes,
-  type ReactFlowProps
-} from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
+  type ReactFlowProps,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 
-interface BaseCanvasProps extends ReactFlowProps {
-  nodes: Node[];
-  nodeTypes: NodeTypes;
-  onNodesChange: (changes: NodeChange[]) => void;
-  onNodeDoubleClick?: (event: React.MouseEvent, node: Node) => void;
-}
-
-/**
- * V.I.N.E. 基础设施层：通用画布底座
- * 负责定义全局的视觉风格（网格、缩放控制、背景色）
- */
-export function BaseCanvas({
-  nodes,
-  nodeTypes,
-  onNodesChange,
-  onNodeDoubleClick,
-  children,
-  ...rest
-}: BaseCanvasProps) {
+export function BaseCanvas({ children, ...props }: ReactFlowProps) {
   return (
-    <div className="w-full h-full bg-[#FAF7F0]"> {/* 使用你选定的呼吸感背景色 */}
+    <div className="w-full h-full bg-main-bg transition-colors duration-500">
       <ReactFlow
-        nodes={nodes}
-        nodeTypes={nodeTypes}
-        onNodesChange={onNodesChange}
-        onNodeDoubleClick={onNodeDoubleClick}
         fitView
-        minZoom={0.5}
+        minZoom={0.4}
         maxZoom={2.0}
-        defaultEdgeOptions={{ type: 'smoothstep', animated: true }}
+        defaultEdgeOptions={{
+          type: "smoothstep",
+          animated: true,
+          style: { stroke: "var(--canvas-edge)", strokeWidth: 2 },
+        }}
         proOptions={{ hideAttribution: true }}
         className="touch-none"
-        {...rest}
+        {...props}
       >
-        {/* 精密网格：Dots 变体，低不透明度 */}
-        <Background 
-          color="#2F3E46" 
-          gap={24} 
-          size={1.5} 
+        <Background
+          color="var(--canvas-grid)"
+          gap={24}
+          size={1.2}
           variant={BackgroundVariant.Dots}
-          className="opacity-20!" 
+          className="opacity-10!"
         />
-        {/* 自定义控制器样式 */}
-        <Controls 
-          className="bg-white/60! border-none! shadow-sm! m-4! fill-[#84A59D]!" 
-          showInteractive={false} 
+        <Controls
+          showInteractive={false}
+          className="m-4! border-none! shadow-none!"
         />
         {children}
       </ReactFlow>

@@ -1,79 +1,72 @@
 @import "tailwindcss";
 
-/* 👇 路径修改了：现在 index.css 和 themes 同级，所以直接引用 */
 @import "./themes/_palette.css";
 @import "./themes/light.css";
 
 @theme {
-    /* ... 里面的内容保持不变 ... */
-    /* 侧边栏映射 */
+    /* 语义化颜色映射 */
     --color-sidebar-bg: var(--sidebar-bg);
     --color-sidebar-fg: var(--sidebar-fg);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-active-bg: var(--sidebar-active-bg);
     --color-sidebar-active-fg: var(--sidebar-active-fg);
 
-    /* 顶部栏映射 */
     --color-header-bg: var(--header-bg);
     --color-header-fg: var(--header-fg);
 
-    /* 主体映射 */
     --color-main-bg: var(--main-bg);
+    
+    --color-canvas-grid: var(--canvas-grid);
+    --color-canvas-edge: var(--canvas-edge);
 
-    /* 基础色映射 */
+    --color-action-bg: var(--action-bg);
+    --color-action-fg: var(--action-fg);
+    --color-action-badge: var(--action-badge);
+
+    /* 基础色直接映射 */
     --color-sage: var(--color-sage);
     --color-forest: var(--color-forest);
     --color-parchment: var(--color-parchment);
     --color-paper-edge: var(--color-paper-edge);
+    --color-charcoal: var(--color-charcoal);
 }
 
 body {
-    background-color: var(--color-parchment);
+    background-color: var(--main-bg);
     color: var(--color-charcoal);
     margin: 0;
-    /* 选用更具人文气息的字体栈 */
-    font-family:
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        sans-serif;
-    /* 让文字渲染更细腻 */
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* 甚至可以定义全局的选中文本颜色，增加呼吸感 */
 ::selection {
-    background-color: rgba(132, 165, 157, 0.3);
+    background-color: color-mix(in srgb, var(--sidebar-bg), transparent 70%);
     color: var(--color-charcoal);
 }
-/* --- React Flow Customization for Virganol --- */
 
-/* 隐藏默认的选中框 (因为我们在 ServerNode 内部自己画了漂亮的边框) */
+/* --- React Flow 工业化定制 --- */
+
 .react-flow__node {
     border: none !important;
     background: transparent !important;
-    width: auto !important;
     box-shadow: none !important;
 }
 
-/* 去除聚焦时的蓝色轮廓 */
-.react-flow__node:focus,
-.react-flow__node:focus-visible {
+.react-flow__node:focus, .react-flow__node:focus-visible {
     outline: none !important;
 }
 
-/* 优化控制条 */
 .react-flow__controls-button {
-    background: rgba(255, 255, 255, 0.5) !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    background: color-mix(in srgb, var(--main-bg), transparent 50%) !important;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-charcoal), transparent 95%) !important;
+    backdrop-filter: blur(4px);
 }
+
 .react-flow__controls-button:hover {
-    background: #ffffff !important;
+    background: var(--main-bg) !important;
 }
+
 .react-flow__controls svg {
-    fill: #84a59d !important;
+    fill: var(--canvas-edge) !important;
 }
