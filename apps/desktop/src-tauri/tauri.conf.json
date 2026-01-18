@@ -19,7 +19,10 @@
         "fullscreen": false,
         "center": true,
         "decorations": true,
-        "theme": "Light"
+        "transparent": true,
+        "titleBarStyle": "Overlay",
+        "theme": "Light",
+        "hiddenTitle": true
       }
     ],
     "security": {

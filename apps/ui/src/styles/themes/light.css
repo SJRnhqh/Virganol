@@ -24,7 +24,7 @@
 
     /* === 2. 顶部栏 (Header) === */
     /* 背景透明 */
-    --header-bg: var(--color-transparent);
+    --header-bg: var(--color-sage);
     /* 文字深灰 */
     --header-fg: var(--color-charcoal);
 
