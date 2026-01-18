@@ -1,8 +1,10 @@
+import { CanvasWorkspace } from "../canvas/CanvasWorkspace";
+
 export const SshDashboard = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-primary/40">
-      <div className="text-lg font-medium mb-2">Network Dashboard</div>
-      <p className="text-sm opacity-50">SSH 节点管理逻辑开发中...</p>
+    <div className="relative w-full h-full overflow-hidden bg-main-bg">
+      {/* 1. 核心层：Canvas 逻辑 */}
+      <CanvasWorkspace />
     </div>
   );
 };
