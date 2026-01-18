@@ -4,7 +4,7 @@ import { Sidebar } from "@/components/frame/Sidebar";
 import { WindowHeader } from "@/components/frame/WindowHeader";
 import { NAV_ITEMS } from "@/config/navigation";
 import { DevelopingView } from "@/components/frame/DevelopingView";
-import { SshDashboard } from "@/features/ssh/SshDashboard";
+import { NodeDashboard } from "@/features/node/NodeDashboard";
 
 // 注意：这里去掉了 export 关键字，防止触发 Fast Refresh 警告
 interface MainLayoutProps {
@@ -19,7 +19,7 @@ export function MainLayout({ children }: MainLayoutProps) {
     switch (activeDeck) {
       case "nodes":
         // Node 模块的所有逻辑（Canvas, AddServerCard）都封装在这里
-        return <SshDashboard />;
+        return <NodeDashboard />;
       default: {
         const config = NAV_ITEMS.find((i) => i.id === activeDeck);
         return (
