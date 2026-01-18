@@ -18,7 +18,7 @@ export const ActiveIndicator = ({ activeId }: ActiveIndicatorProps) => {
 
   return (
     <div
-      className="absolute -right-px w-0.75 h-5 bg-sidebar-active-bg rounded-l-full z-10 shadow-[-2px_0_10px_rgba(var(--sidebar-active-bg),0.3)] transition-all"
+      className="absolute -right-px w-0.75 h-5 bg-sidebar-active-bg rounded-l-full z-10 shadow-[-2px_0_10px_color-mix(in_srgb,var(--sidebar-active-bg),transparent_70%)]] transition-all"
       style={{
         transform: `translateY(${translateY}px)`,
         transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",

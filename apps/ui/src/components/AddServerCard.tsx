@@ -21,7 +21,7 @@ export const AddServerCard = memo(() => {
           hover:scale-110 hover:-translate-y-2 hover:shadow-emerald-900/50 active:scale-95"
       >
         {/* 1. 背景光效 (Hover 时一闪而过) */}
-        <div className="absolute inset-0 `bg-linear-to-tr from-transparent via-[#84A59D]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-linear-to-tr from-transparent via-[#84A59D]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         {/* 2. 核心图标 */}
         <div className="relative z-10">
