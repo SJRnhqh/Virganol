@@ -33,8 +33,8 @@ export function BaseCanvas({
         fitView // 初始自动调整视角，让所有节点可见
         snapToGrid={true} // 🌟 开启吸附，让拖拽具有工业级的精准感
         snapGrid={[24, 24]} // 吸附步长，与背景点阵间距保持一致
-        minZoom={0.2} // 允许缩得更小，方便查看宏观拓扑
-        maxZoom={1.5} // 限制最大放大倍数，防止像素崩坏
+        minZoom={1} // 允许缩得更小，方便查看宏观拓扑
+        maxZoom={2} // 限制最大放大倍数，防止像素崩坏
         // --- 连线基础行为 ---
         defaultEdgeOptions={{
           type: "smoothstep", // 经典的折线风格，整洁直观
@@ -51,8 +51,8 @@ export function BaseCanvas({
         {/* 控制按钮：放在右上角，避开底部 Dock 栏 */}
         <Controls
           position="top-right"
-          showInteractive={false} // 隐藏锁定按钮，初次体验建议保持全自由操作
-          className="m-4 shadow-sm border border-gray-100" // 仅保留基础边框
+          showInteractive={false}
+          className="m-6 border-none! bg-transparent! shadow-none!"
         />
 
         {/* 预留插槽：用于渲染自定义 UI 覆盖层 */}

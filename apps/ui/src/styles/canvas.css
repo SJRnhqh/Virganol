@@ -2,11 +2,8 @@
 
 /* --- 1. 画布点阵网格定制 --- */
 .react-flow__background-pattern circle {
-    /* 使用 light.css 中定义的语义变量 */
     fill: var(--canvas-grid);
-    /* 这里的透明度从 0.1 提升到 0.5，解决你提到的颜色太淡的问题 */
     opacity: 0.9;
-    /* 点的半径，可以在这里微调精密感 */
     r: 0.8;
 }
 
@@ -25,22 +22,65 @@
 }
 
 /* --- 3. 画布控制器 (Controls) 定制 --- */
-/* 这里的样式会覆盖 react-flow 的默认样式 */
+
+.react-flow__controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* 外部整体阴影，让整组按钮浮起来 */
+    filter: drop-shadow(0 2px 4px var(--color-black-fade));
+}
+
 .react-flow__controls-button {
-    background: color-mix(in srgb, var(--main-bg), transparent 50%) !important;
-    border-bottom: 1px solid
-        color-mix(in srgb, var(--color-charcoal), transparent 95%) !important;
-    backdrop-filter: blur(4px);
-    border-radius: 8px !important;
-    margin-bottom: 4px;
+    background: color-mix(in srgb, var(--main-bg), transparent 15%) !important;
+    backdrop-filter: blur(8px);
+
+    /* 🌟 核心修复：确保四边边框颜色完全一致，形成闭环包裹 */
+    border: 1px solid
+        color-mix(in srgb, var(--color-forest), var(--color-charcoal) 40%) !important;
+
+    /* 🌟 进阶优化：使用阴影而非边框来模拟“底边厚度”
+       这样不会破坏 1px 边框的连续性，看起来更像一个实心零件 */
+    box-shadow:
+        inset 0 -1px 0 0 var(--color-black-fade),
+        0 1px 1px var(--color-black-fade) !important;
+
+    border-radius: 6px !important;
+    width: 28px !important;
+    height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .react-flow__controls-button:hover {
-    background: var(--main-bg) !important;
+    background: var(--color-white) !important;
+    /* 悬停时四边同步变亮 */
+    border-color: var(--color-forest) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px var(--color-black-fade) !important;
+}
+
+.react-flow__controls-button:active {
+    transform: translateY(0.5px);
+    background: color-mix(
+        in srgb,
+        var(--main-bg),
+        var(--color-black-fade) 100%
+    ) !important;
+    /* 点击时消除阴影，模拟按下的物理反馈 */
+    box-shadow: none !important;
 }
 
 .react-flow__controls svg {
-    fill: var(--canvas-edge) !important;
+    fill: var(--color-charcoal) !important;
+    width: 10px !important;
+    height: 10px !important;
+}
+
+.react-flow__controls-button:hover svg {
+    fill: var(--color-forest) !important;
 }
 
 /* --- 4. 节点全局样式重置 (Nodes) --- */
