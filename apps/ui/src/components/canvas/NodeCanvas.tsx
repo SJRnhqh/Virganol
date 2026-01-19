@@ -1,45 +1,59 @@
-import { useCallback, useMemo } from 'react';
-import { type NodeChange } from '@xyflow/react';
-import { useServerStore } from '@/store/useServerStore';
-import { BaseCanvas } from '../base/BaseCanvas';
-import ServerNode from '../../features/node/remote/server/ServerNode';
+import { useCallback, useMemo } from "react";
+import { type NodeChange } from "@xyflow/react";
+import { NodeStore } from "@/store/NodeStore"; // 注意引用路径更新
+import { BaseCanvas } from "../base/BaseCanvas";
+import { HomeNode } from "../../features/node/home/HomeNode";
+import { useTerminalStore } from "@/store/TerminalStore";
 
-const nodeTypes = { server: ServerNode };
+// 🌟 注册节点类型字典：告诉 React Flow "home" 类型对应哪个组件
+const nodeTypes = {
+  home: HomeNode,
+  // remote: ServerNode, // 未来可以在这里解开注释
+};
 
 export function NodeCanvas() {
-  const { servers, updateServerPosition, enterNode } = useServerStore();
+  const { nodes, updateNodePosition } = NodeStore();
+  const { openTerminal } = useTerminalStore();
 
-  // 将业务数据转换为 React Flow 格式
-  const nodes = useMemo(() => servers.map(server => ({
-    id: server.id,
-    type: 'server',
-    position: server.position,
-    data: { 
-      name: server.name, 
-      host: server.host, 
-      username: server.username,
-      status: server.status 
-    },
-  })), [servers]);
+  // 🌟 翻译官：将 Store 里的业务数据 -> 转换为 React Flow 的视觉数据
+  const rfNodes = useMemo(
+    () =>
+      nodes.map((node) => ({
+        id: node.id,
+        type: node.category, // 关键点：这里是 "home"，所以会渲染 HomeNode
+        position: node.position,
+        data: {
+          // 只传递 UI 需要的数据
+          name: node.name,
+          status: node.status,
+          description: node.description,
+        },
+      })),
+    [nodes],
+  );
 
-  // 处理位置实时更新
+  // 处理拖拽反馈
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
-      changes.forEach(change => {
-        if (change.type === 'position' && change.position) {
-          updateServerPosition(change.id, change.position);
+      changes.forEach((change) => {
+        if (change.type === "position" && change.position) {
+          updateNodePosition(change.id, change.position);
         }
       });
     },
-    [updateServerPosition]
+    [updateNodePosition],
   );
 
   return (
     <BaseCanvas
-      nodes={nodes}
+      nodes={rfNodes}
       nodeTypes={nodeTypes}
       onNodesChange={onNodesChange}
-      onNodeDoubleClick={(_, node) => enterNode(node.id)}
+      // 🌟 核心：双击节点打开终端
+      onNodeDoubleClick={(_, node) => {
+        // 将 node.data 里的 name 传进去
+        openTerminal(node.id, node.data.name as string);
+      }}
     />
   );
 }
