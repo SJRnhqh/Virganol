@@ -1,176 +1,129 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useTerminalStore } from "@/store/TerminalStore";
 import { XTerm } from "@/components/terminal/XTerm";
-import {
-  Maximize2,
-  Minimize2,
-  X,
-  Terminal as TerminalIcon,
-  ChevronRight,
-  Minus,
-  GripHorizontal,
-} from "lucide-react";
+import { Maximize2, Minimize2, X, Terminal as TerminalIcon, ChevronRight, Minus, GripHorizontal } from "lucide-react";
 import { clsx } from "clsx";
 
 export const TerminalWorkspace = () => {
-  const {
-    isOpen,
-    isMaximized,
-    sessions,
-    activeSessionId,
-    switchSession,
-    closeTerminal,
-    toggleMaximize,
-    minimize,
-  } = useTerminalStore();
+  const { isOpen, isMaximized, sessions, activeSessionId, switchSession, closeTerminal, toggleMaximize, minimize } = useTerminalStore();
 
-  // --- 拖拽状态 ---
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false); // 🌟 新增：用于控制 transition
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
   
+  // 使用 Ref 保存拖拽起始时的快照，避免闭包陷阱，也不需要作为依赖项
   const dragStartPosRef = useRef({ x: 0, y: 0 });
-  const windowStartPosRef = useRef({ x: 0, y: 0 });
+  const windowStartOffsetRef = useRef({ x: 0, y: 0 });
 
-  // --- 拖拽逻辑 ---
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (isMaximized || e.button !== 0) return;
-    e.preventDefault();
-    e.stopPropagation(); // 防止事件穿透
-
-    setIsDragging(true); // 开始拖拽，禁用动画
-    dragStartPosRef.current = { x: e.clientX, y: e.clientY };
-    windowStartPosRef.current = { ...position };
-
-    document.addEventListener("mousemove", handleGlobalMouseMove);
-    document.addEventListener("mouseup", handleGlobalMouseUp);
-  };
-
-  const handleGlobalMouseMove = (e: MouseEvent) => {
+  // 1. 移动逻辑 (稳定函数，依赖为空)
+  // 因为使用了 Ref 获取起始位置，所以不需要依赖任何变动的 State
+  const handleMouseMove = useCallback((e: MouseEvent) => {
     const deltaX = e.clientX - dragStartPosRef.current.x;
     const deltaY = e.clientY - dragStartPosRef.current.y;
 
-    // requestAnimationFrame 这里可以省去，React 18 批处理足够快
-    setPosition({
-      x: windowStartPosRef.current.x + deltaX,
-      y: windowStartPosRef.current.y + deltaY,
+    setOffset({
+      x: windowStartOffsetRef.current.x + deltaX,
+      y: windowStartOffsetRef.current.y + deltaY,
     });
-  };
+  }, []);
 
-  const handleGlobalMouseUp = () => {
-    setIsDragging(false); // 结束拖拽，恢复动画
-    document.removeEventListener("mousemove", handleGlobalMouseMove);
-    document.removeEventListener("mouseup", handleGlobalMouseUp);
-  };
+  // 2. 停止逻辑 (稳定函数，依赖为空)
+  // 只需改变状态，不再需要手动 removeEventListener (交给 useEffect)
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
 
+  // 3. 核心修复：使用 Effect 管理事件监听
+  // 当 isDragging 变化时，自动挂载/卸载监听器
   useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+    } else {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    }
+
+    // 清理函数：确保组件卸载或状态改变时移除监听
     return () => {
-      document.removeEventListener("mousemove", handleGlobalMouseMove);
-      document.removeEventListener("mouseup", handleGlobalMouseUp);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
     };
-  });
+  }, [isDragging, handleMouseMove, handleMouseUp]);
+
+  // 4. 开始拖拽
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (isMaximized || e.button !== 0) return;
+    e.preventDefault();
+    
+    // 记录初始快照
+    dragStartPosRef.current = { x: e.clientX, y: e.clientY };
+    windowStartOffsetRef.current = { ...offset };
+
+    // 触发 Effect 挂载监听器
+    setIsDragging(true);
+  };
 
   if (!isOpen) return null;
 
   return (
     <div
-      // 🌟 动态样式：接管 transform
       style={{
-        transform: isMaximized
-          ? "none"
-          : `translate(calc(-50% + ${position.x}px), ${position.y}px)`,
+        position: isMaximized ? "absolute" : "fixed",
+        top: isMaximized ? 0 : "50%",
+        left: isMaximized ? 0 : "50%",
+        right: isMaximized ? 0 : "auto",
+        bottom: isMaximized ? 0 : "auto",
+        
+        transform: isMaximized 
+          ? "none" 
+          : `translate3d(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px), 0)`,
+
+        width: isMaximized ? "auto" : "800px",
+        height: isMaximized ? "auto" : "500px",
+        
+        zIndex: isMaximized ? 10 : 9999,
       }}
       className={clsx(
-        "absolute z-40 flex flex-col overflow-hidden",
-        "bg-charcoal/95 backdrop-blur-xl border border-white/10 shadow-2xl",
-        
-        // 🌟 核心修复：拖拽时禁用 transition，否则会卡顿！
-        // 只有在 (非拖拽 且 非最大化切换) 时才开启动画
-        !isDragging && "transition-all duration-300 ease-out",
-
-        isMaximized
-          ? "inset-0 rounded-none border-0"
-          // 悬浮样式：移除 Tailwind 的 transform 类，完全由 style 控制
-          : "bottom-6 left-1/2 w-200 h-125 rounded-xl border-t border-white/20"
+        "flex flex-col overflow-hidden bg-charcoal/95 backdrop-blur-xl shadow-2xl pointer-events-auto",
+        // 拖拽时禁用 Transition，保证跟手
+        !isDragging && !isMaximized && "transition-all duration-300 ease-out",
+        isMaximized ? "rounded-none border-0" : "rounded-xl border border-white/20"
       )}
     >
-      {/* --- Header (拖拽触发区) --- */}
+      {/* Header */}
       <div
         onMouseDown={handleMouseDown}
         className={clsx(
-          "flex items-center justify-between h-10 px-4 bg-black/40 border-b border-white/5 select-none shrink-0",
-          // 鼠标手势反馈
+          "flex items-center justify-between h-10 px-4 bg-black/50 border-b border-white/10 select-none shrink-0",
           isMaximized ? "cursor-default" : "cursor-grab active:cursor-grabbing"
         )}
       >
-        {/* 左侧：面包屑 (阻止冒泡，防止拖拽) */}
-        <div 
-          className="flex items-center gap-1 overflow-x-auto no-scrollbar"
-          onMouseDown={(e) => e.stopPropagation()} 
-        >
-          {sessions.map((session, index) => {
-            const isActive = session.nodeId === activeSessionId;
-            return (
-              <div key={session.nodeId} className="flex items-center group">
-                {index > 0 && (
-                  <ChevronRight size={14} className="text-white/20 mx-1" />
-                )}
-                <button
-                  onClick={() => switchSession(session.nodeId)}
-                  className={clsx(
-                    "flex items-center gap-2 px-2.5 py-1 rounded-md text-xs font-mono transition-all border",
-                    isActive
-                      ? "bg-forest/20 text-emerald-400 border-emerald-500/30"
-                      : "text-sage/60 border-transparent hover:text-white hover:bg-white/5",
-                  )}
+        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar max-w-[70%]" onMouseDown={e => e.stopPropagation()}>
+          {sessions.map((s, idx) => (
+            <div key={s.nodeId} className="flex items-center group">
+                {idx > 0 && <ChevronRight size={14} className="text-white/20 mx-1" />}
+                <button 
+                  onClick={() => switchSession(s.nodeId)} 
+                  className={clsx("flex items-center gap-2 px-2.5 py-1 rounded-md text-xs font-mono border transition-all", s.nodeId === activeSessionId ? "bg-forest/20 text-emerald-400 border-emerald-500/30" : "text-sage/60 border-transparent hover:text-white hover:bg-white/5")}
                 >
-                  <TerminalIcon size={12} />
-                  {session.name}
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      closeTerminal(session.nodeId);
-                    }}
-                    className="ml-1.5 p-0.5 rounded-full hover:bg-red-500/20 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <X size={10} />
-                  </div>
+                  <TerminalIcon size={12} /> {s.name}
+                  <X size={10} className="ml-1.5 opacity-0 group-hover:opacity-100 hover:text-red-400" onClick={(e) => { e.stopPropagation(); closeTerminal(s.nodeId); }}/>
                 </button>
-              </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
-
-        {/* 中间：把手图标 */}
-        {!isMaximized && (
-          <div className="flex-1 flex justify-center opacity-10 pointer-events-none">
-            <GripHorizontal size={16} />
-          </div>
-        )}
+        
+        {!isMaximized && <div className="flex-1 flex justify-center opacity-10 pointer-events-none"><GripHorizontal size={16} /></div>}
         {isMaximized && <div className="flex-1" />}
 
-        {/* 右侧：控制按钮 (阻止冒泡) */}
-        <div 
-            className="flex items-center gap-3 ml-4"
-            onMouseDown={(e) => e.stopPropagation()}
-        >
-          <button onClick={minimize} className="text-sage/50 hover:text-white transition-colors">
-            <Minus size={14} />
-          </button>
-          <button onClick={toggleMaximize} className="text-sage/50 hover:text-white transition-colors">
-            {isMaximized ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
-          </button>
+        <div className="flex items-center gap-3 ml-4" onMouseDown={e => e.stopPropagation()}>
+          <Minus size={14} onClick={minimize} className="text-sage/50 hover:text-white cursor-pointer"/>
+          {isMaximized ? <Minimize2 size={14} onClick={toggleMaximize} className="text-sage/50 hover:text-white cursor-pointer"/> : <Maximize2 size={14} onClick={toggleMaximize} className="text-sage/50 hover:text-white cursor-pointer"/>}
         </div>
       </div>
 
-      {/* --- Terminal --- */}
-      <div className="flex-1 bg-black/80 relative overflow-hidden p-1">
-        {activeSessionId && (
-          <XTerm
-            key={activeSessionId}
-            nodeId={activeSessionId}
-            className="w-full h-full"
-          />
-        )}
+      <div className="flex-1 bg-black/90 relative p-1 overflow-hidden">
+        {activeSessionId && <XTerm key={activeSessionId} nodeId={activeSessionId} className="w-full h-full" />}
       </div>
     </div>
   );
