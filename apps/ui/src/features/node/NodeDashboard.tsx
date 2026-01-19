@@ -1,5 +1,4 @@
 import { NodeCanvas } from "@/components/canvas/NodeCanvas";
-import { TerminalWorkspace } from "@/features/terminal/TerminalWorkspace";
 // import { AddServerCard } from "@/components/cards/AddServerCard";
 // import { BaseActionDock } from "@/components/base/BaseActionDock"; // 引入底座
 
@@ -11,8 +10,6 @@ export const NodeDashboard = () => {
       <div className="absolute inset-0 z-0">
         <NodeCanvas />
       </div>
-      {/* 2. 终端工作区 (悬浮层) */}
-      <TerminalWorkspace />
     </div>
   );
 };
