@@ -1,4 +1,4 @@
-/* src/styles/canvas.css */
+/* apps/ui/src/styles/canvas.css */
 
 /* --- 1. 画布点阵网格定制 --- */
 .react-flow__background-pattern circle {
@@ -22,7 +22,6 @@
 }
 
 /* --- 3. 画布控制器 (Controls) 定制 --- */
-
 .react-flow__controls {
     display: flex;
     flex-direction: column;
@@ -84,7 +83,7 @@
 }
 
 /* --- 4. 节点全局样式重置 (Nodes) --- */
-/* 隐藏 React Flow 默认的节点容器样式，因为我们在 ServerNode 内部自定义了 UI */
+/* 隐藏 React Flow 默认的节点容器样式，因为我们在 ServerNode/HomeNode 内部自定义了 UI */
 .react-flow__node {
     border: none !important;
     background: transparent !important;
@@ -95,4 +94,17 @@
 .react-flow__node:focus,
 .react-flow__node:focus-visible {
     outline: none !important;
+}
+
+/* --- 5. 交互穿透修正 (The Pass-Through Magic) --- */
+/* 🌟 新增：当按住空格键进入平移模式时，强制禁用所有节点和连线的鼠标事件 */
+/* 这让鼠标点击可以直接穿透节点，作用于底层的画布上，实现丝滑移动 */
+.space-panning-mode .react-flow__node,
+.space-panning-mode .react-flow__edge {
+    pointer-events: none !important;
+}
+
+/* 强制鼠标变为抓手，提示用户现在是移动模式 */
+.space-panning-mode .react-flow__pane {
+    cursor: grabbing !important;
 }
