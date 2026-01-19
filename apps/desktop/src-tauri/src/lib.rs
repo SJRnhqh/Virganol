@@ -42,12 +42,20 @@ async fn test_ssh_params(
     }
 }
 
+// 1. 引入模块
+mod terminal;
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_os::init())
-        .invoke_handler(tauri::generate_handler![test_ssh_params])
+        .manage(terminal::TerminalState::default())
+        .invoke_handler(tauri::generate_handler![
+            test_ssh_params,
+            terminal::init_pty,
+            terminal::write_pty
+        ])
         .run(tauri::generate_context!())
         .expect("Error while running tauri application");
 }
