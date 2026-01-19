@@ -1,5 +1,5 @@
 // src/config/nodes.ts
-import { Home, Server, Box } from "lucide-react";
+import { Home, Server, Box, type LucideIcon } from "lucide-react";
 
 export const NODE_CATEGORIES = {
   HOME: "home",
@@ -12,7 +12,7 @@ export type NodeCategory =
 
 export interface NodeRule {
   label: string;
-  icon: any;
+  icon: LucideIcon;
   maxCount: number; // 数量限制
   defaultName: string;
   allowDelete: boolean;
@@ -21,10 +21,10 @@ export interface NodeRule {
 
 export const NODE_CONFIG: Record<NodeCategory, NodeRule> = {
   [NODE_CATEGORIES.HOME]: {
-    label: "Local Apiary",
+    label: "Local Machine",
     icon: Home,
     maxCount: 1, // 本地宿主机节点全球唯一
-    defaultName: "Home Station",
+    defaultName: "Local Machine",
     allowDelete: false, // 宿主机不可删除
     actions: ["terminal", "monitor"],
   },
@@ -32,12 +32,12 @@ export const NODE_CONFIG: Record<NodeCategory, NodeRule> = {
     label: "Remote Server",
     icon: Server,
     maxCount: Infinity,
-    defaultName: "Cloud Server",
+    defaultName: "Remote Server",
     allowDelete: true,
     actions: ["ssh", "sftp", "settings"],
   },
   [NODE_CATEGORIES.SANDBOX]: {
-    label: "Docker Crate",
+    label: "Sandbox",
     icon: Box,
     maxCount: Infinity,
     defaultName: "Sandbox",
