@@ -3,6 +3,7 @@ import { type NodeChange } from "@xyflow/react";
 import { NodeStore } from "@/store/NodeStore"; // 注意引用路径更新
 import { BaseCanvas } from "../base/BaseCanvas";
 import { HomeNode } from "../../features/node/home/HomeNode";
+import { useTerminalStore } from "@/store/TerminalStore";
 
 // 🌟 注册节点类型字典：告诉 React Flow "home" 类型对应哪个组件
 const nodeTypes = {
@@ -11,7 +12,8 @@ const nodeTypes = {
 };
 
 export function NodeCanvas() {
-  const { nodes, updateNodePosition, enterNode } = NodeStore();
+  const { nodes, updateNodePosition } = NodeStore();
+  const { openTerminal } = useTerminalStore();
 
   // 🌟 翻译官：将 Store 里的业务数据 -> 转换为 React Flow 的视觉数据
   const rfNodes = useMemo(
@@ -47,8 +49,11 @@ export function NodeCanvas() {
       nodes={rfNodes}
       nodeTypes={nodeTypes}
       onNodesChange={onNodesChange}
-      // 双击进入节点 (聚焦)
-      onNodeDoubleClick={(_, node) => enterNode(node.id)}
+      // 🌟 核心：双击节点打开终端
+      onNodeDoubleClick={(_, node) => {
+        // 将 node.data 里的 name 传进去
+        openTerminal(node.id, node.data.name as string);
+      }}
     />
   );
 }
