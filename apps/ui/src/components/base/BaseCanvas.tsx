@@ -1,5 +1,3 @@
-/* apps/ui/src/components/base/BaseCanvas.tsx */
-import { useEffect, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -8,88 +6,66 @@ import {
   SelectionMode,
   type ReactFlowProps,
 } from "@xyflow/react";
-/* 核心样式是必须的，保证基础功能（如缩放、拖拽）不失效 */
 import "@xyflow/react/dist/style.css";
+
+// --- 1. 配置常量 (基础设施配置) ---
+
+/** 交互配置：定义如何拖拽、选择和缩放 */
+const INTERACTION_CONFIG = {
+  // 平时仅允许中键 [1] 拖拽
+  panOnDrag: [1],
+  // 🌟 核心：按下 Space 键时激活“抓手模式”（自动允许左键拖拽）
+  panActivationKeyCode: "Space",
+  // 允许拖拽框选
+  selectionOnDrag: true,
+  selectionMode: SelectionMode.Partial,
+  // 允许滚动缩放
+  zoomOnScroll: true,
+  // 连线平滑
+  defaultEdgeOptions: {
+    type: "smoothstep",
+    animated: true,
+  },
+};
+
+/** 视图配置：定义缩放限制和网格 */
+const VIEWPORT_CONFIG = {
+  fitView: true,
+  minZoom: 0.6,
+  maxZoom: 1,
+  snapToGrid: true,
+  snapGrid: [24, 24] as [number, number],
+};
+
+/** UI 配置：隐藏水印等 */
+const UI_CONFIG = {
+  proOptions: { hideAttribution: true },
+  className: "touch-none", // 禁用浏览器默认触摸逻辑
+};
 
 /**
  * V.I.N.E. BaseCanvas - 基础设施级画布底座
- * 目标：功能完整、操作丝滑、代码纯净。
+ * * 重构说明：
+ * 1. 移除了手动的 window keydown 监听，改用 React Flow 原生 panActivationKeyCode。
+ * 2. 将配置项抽取为常量，保持 JSX 干净。
+ * 3. 简化 Props 传递，支持所有 ReactFlowProps 透传。
  */
-export function BaseCanvas({
-  nodes,
-  nodeTypes,
-  onNodesChange,
-  onNodeDoubleClick,
-  children,
-  ...rest
-}: ReactFlowProps) {
-  // --- 1. 状态监听：追踪空格键是否被按下 ---
-  const [isSpacePressed, setIsSpacePressed] = useState(false);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // 避免长按重复触发
-      if (e.code === "Space" && !e.repeat) {
-        setIsSpacePressed(true);
-      }
-    };
-
-    const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.code === "Space") {
-        setIsSpacePressed(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, []);
+export function BaseCanvas(props: ReactFlowProps) {
+  // 分离 children，其余的全部作为 props 透传给 ReactFlow
+  const { children, className, ...rest } = props;
 
   return (
-    // --- 2. 动态类名：当按下空格时，添加 space-panning-mode 以配合 CSS 实现点击穿透 ---
-    <div
-      className={`w-full h-full bg-main-bg ${isSpacePressed ? "space-panning-mode" : ""}`}
-    >
+    <div className={`w-full h-full bg-main-bg ${className || ""}`}>
       <ReactFlow
-        nodes={nodes}
-        nodeTypes={nodeTypes}
-        onNodesChange={onNodesChange}
-        onNodeDoubleClick={onNodeDoubleClick}
-        // --- 核心“丝滑”配置 ---
-        fitView
-        snapToGrid={true}
-        snapGrid={[24, 24]} // 24px 网格吸附
-        minZoom={0.6}
-        maxZoom={1}
-        // --- 🌟 专业级交互约束 (核心修正) ---
-        // 1. 动态拖拽键位：
-        //    - 平时：仅允许中键 [1] 拖拽 (左键用于框选，右键用于菜单)
-        //    - 空格按下时：允许左键 [0] 和中键 [1] 拖拽 (实现类似 Figma 的抓手模式)
-        panOnDrag={isSpacePressed ? [0, 1] : [1]}
-        // 2. 启用左键框选功能
-        selectionOnDrag={true}
-        selectionMode={SelectionMode.Partial}
-        // 3. 启用空格键激活逻辑 (React Flow 内部逻辑)
-        panActivationKeyCode="Space"
-        // 4. 允许通过缩放滚轮在移动时更顺滑
-        zoomOnScroll={true}
-        // --- 连线基础行为 ---
-        defaultEdgeOptions={{
-          type: "smoothstep",
-          animated: true,
-        }}
-        // --- 移除多余装饰 ---
-        proOptions={{ hideAttribution: true }}
-        className="touch-none" // 禁用浏览器默认触摸逻辑
+        // 展开配置常量
+        {...INTERACTION_CONFIG}
+        {...VIEWPORT_CONFIG}
+        {...UI_CONFIG}
+        // 展开传入的业务 Props (nodes, edges, onNodesChange 等)
         {...rest}
       >
         <Background variant={BackgroundVariant.Dots} gap={24} />
 
-        {/* 控制器 */}
         <Controls
           position="top-right"
           showInteractive={false}

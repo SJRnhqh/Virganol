@@ -21,18 +21,19 @@ impl Default for TerminalState {
 
 #[tauri::command]
 pub fn init_pty(window: tauri::Window, node_id: String, state: State<'_, TerminalState>) {
-    // 1. 强制清理旧会话 (防止重影导致无法连接)
-    if state.sessions.lock().unwrap().contains_key(&node_id) {
-        state.sessions.lock().unwrap().remove(&node_id);
+    // 🌟 修复 1: 优化锁逻辑。直接 remove 即可，无需先 check 再 remove。
+    // 这避免了两次获取锁，且 remove 本身就是幂等的（如果不存在会返回 None，不会报错）。
+    {
+        let mut sessions = state.sessions.lock().unwrap();
+        sessions.remove(&node_id);
     }
 
     println!("[PTY] Starting clean session for: {}", node_id);
     let pty_system = NativePtySystem::default();
 
-    // 2. 最简启动命令 (不做任何骚操作，只求启动)
+    // 启动命令配置
     let cmd = if cfg!(target_os = "windows") {
         let mut c = CommandBuilder::new("powershell.exe");
-        // 只保留最基础的 NoExit，去掉其他花里胡哨的
         c.args(["-NoExit"]); 
         c
     } else {
@@ -40,9 +41,6 @@ pub fn init_pty(window: tauri::Window, node_id: String, state: State<'_, Termina
         c.args(["-l"]);
         c
     };
-
-    // 3. ❌ 删除 cmd.cwd() 设置
-    // 很多时候是目录权限导致闪退，我们先不设目录，让系统决定
 
     let pair = match pty_system.openpty(PtySize {
         rows: 24, cols: 80, pixel_width: 0, pixel_height: 0,
@@ -62,22 +60,19 @@ pub fn init_pty(window: tauri::Window, node_id: String, state: State<'_, Termina
         }
     };
 
-    // 4. ❌ 在 Windows 上先不要 drop slave，以防管道过早关闭
-    // drop(pair.slave); 
-    // 保持引用 (虽然这会导致 slave 句柄泄露，但为了调试 232 错误，先活着再说)
-    // 为了不让 rust 报错 unused，我们把 pair 移入线程或者不 drop
-    // 这里简单处理：让 pair 在作用域结束时自动 drop，而不是显式 drop
-
     let mut reader = pair.master.try_clone_reader().expect("Failed to clone reader");
     let writer = pair.master.take_writer().expect("Failed to take writer");
 
+    // 保存 writer
     state.sessions.lock().unwrap().insert(node_id.clone(), writer);
 
+    // 🌟 关键：我们需要把 state 的克隆传进线程，以便线程结束时能清理 session
+    let state_clone = state.inner().sessions.clone(); 
     let node_id_clone = node_id.clone();
+    
     thread::spawn(move || {
-        // 保持 child 活着，直到线程结束 (这是一个 dirty hack，但能解决 EOF 问题)
+        // 保持 child 活着
         let _keep_alive = child; 
-        // 同样保持 slave 活着
         let _keep_slave = pair.slave;
 
         let mut buffer = [0u8; 1024];
@@ -97,12 +92,23 @@ pub fn init_pty(window: tauri::Window, node_id: String, state: State<'_, Termina
                 }
             }
         }
+        
+        // 🌟 修复 2: 自动清理机制
+        // 当循环结束（进程退出或出错）时，从全局 Map 中移除该会话，防止内存泄漏
+        println!("[PTY] Cleaning up session: {}", node_id_clone);
+        let mut sessions = state_clone.lock().unwrap();
+        sessions.remove(&node_id_clone);
     });
 }
 
 #[tauri::command]
 pub fn write_pty(node_id: String, data: String, state: State<'_, TerminalState>) {
     if let Some(writer) = state.sessions.lock().unwrap().get_mut(&node_id) {
-        let _ = write!(writer, "{}", data);
+        // 🌟 修复 3: 显式 Flush
+        // 写入后必须 flush，否则类似 vim/nano 这种交互式程序可能会卡住等缓冲区满
+        if let Err(e) = write!(writer, "{}", data).and_then(|_| writer.flush()) {
+            eprintln!("[PTY Error] Write/Flush failed for {}: {}", node_id, e);
+            // 这里也可以选择如果写入失败就直接移除 session，但通常读线程的 EOF 清理已经足够
+        }
     }
 }

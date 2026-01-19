@@ -10,30 +10,44 @@ export const TerminalWorkspace = () => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   
-  // 使用 Ref 保存拖拽起始时的快照，避免闭包陷阱，也不需要作为依赖项
   const dragStartPosRef = useRef({ x: 0, y: 0 });
   const windowStartOffsetRef = useRef({ x: 0, y: 0 });
 
-  // 1. 移动逻辑 (稳定函数，依赖为空)
-  // 因为使用了 Ref 获取起始位置，所以不需要依赖任何变动的 State
+  // 1. 移动逻辑 (加入边界限制)
   const handleMouseMove = useCallback((e: MouseEvent) => {
+    // 计算理论上的新位置
     const deltaX = e.clientX - dragStartPosRef.current.x;
     const deltaY = e.clientY - dragStartPosRef.current.y;
+    
+    const nextX = windowStartOffsetRef.current.x + deltaX;
+    const nextY = windowStartOffsetRef.current.y + deltaY;
+
+    // 🌟 核心修复：边界限制 (Clamp)
+    // 获取当前视口大小
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // 限制偏移量：中心点偏移不能超过屏幕宽高的一半
+    // 这样保证窗口至少有一半是在屏幕内的，绝对不会"丢"
+    // 减去 40px 是为了给标题栏留点余地，防止标题栏刚好卡在边缘点不到
+    const limitX = vw / 2 - 40; 
+    const limitY = vh / 2 - 40;
+
+    const clampedX = Math.max(-limitX, Math.min(limitX, nextX));
+    const clampedY = Math.max(-limitY, Math.min(limitY, nextY));
 
     setOffset({
-      x: windowStartOffsetRef.current.x + deltaX,
-      y: windowStartOffsetRef.current.y + deltaY,
+      x: clampedX,
+      y: clampedY,
     });
   }, []);
 
-  // 2. 停止逻辑 (稳定函数，依赖为空)
-  // 只需改变状态，不再需要手动 removeEventListener (交给 useEffect)
+  // 2. 停止逻辑
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
   }, []);
 
-  // 3. 核心修复：使用 Effect 管理事件监听
-  // 当 isDragging 变化时，自动挂载/卸载监听器
+  // 3. Effect 管理事件监听
   useEffect(() => {
     if (isDragging) {
       window.addEventListener("mousemove", handleMouseMove);
@@ -42,8 +56,6 @@ export const TerminalWorkspace = () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     }
-
-    // 清理函数：确保组件卸载或状态改变时移除监听
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
@@ -55,11 +67,9 @@ export const TerminalWorkspace = () => {
     if (isMaximized || e.button !== 0) return;
     e.preventDefault();
     
-    // 记录初始快照
     dragStartPosRef.current = { x: e.clientX, y: e.clientY };
     windowStartOffsetRef.current = { ...offset };
 
-    // 触发 Effect 挂载监听器
     setIsDragging(true);
   };
 
@@ -85,7 +95,6 @@ export const TerminalWorkspace = () => {
       }}
       className={clsx(
         "flex flex-col overflow-hidden bg-charcoal/95 backdrop-blur-xl shadow-2xl pointer-events-auto",
-        // 拖拽时禁用 Transition，保证跟手
         !isDragging && !isMaximized && "transition-all duration-300 ease-out",
         isMaximized ? "rounded-none border-0" : "rounded-xl border border-white/20"
       )}

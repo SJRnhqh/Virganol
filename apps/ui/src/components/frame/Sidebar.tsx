@@ -35,7 +35,7 @@ export const Sidebar = memo(({ activeId, onActiveIdChange }: SidebarProps) => {
           label="Settings"
           isActive={false}
           // 🔴 核心修复：点击时调用全局状态打开弹窗
-          onClick={() => false}
+          onClick={() => false} // TODO: Implement settings modal
           showMargin={false}
         />
       </div>
