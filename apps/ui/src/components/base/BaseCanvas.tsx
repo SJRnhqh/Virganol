@@ -6,12 +6,12 @@ import {
   BackgroundVariant,
   type ReactFlowProps,
 } from "@xyflow/react";
-/* 引入 React Flow 基础样式，后续会被我们的 canvas.css 覆盖 */
+/* 核心样式是必须的，保证基础功能（如缩放、拖拽）不失效 */
 import "@xyflow/react/dist/style.css";
 
 /**
  * V.I.N.E. BaseCanvas - 基础设施级画布底座
- * 此时已完成“逻辑与样式”的分离。
+ * 目标：功能完整、操作丝滑、代码纯净。
  */
 export function BaseCanvas({
   nodes,
@@ -22,33 +22,40 @@ export function BaseCanvas({
   ...rest
 }: ReactFlowProps) {
   return (
-    <div className="w-full h-full bg-main-bg transition-colors duration-500">
+    /* 使用 MainLayout 定义的背景色，保持视觉统一 */
+    <div className="w-full h-full bg-main-bg">
       <ReactFlow
         nodes={nodes}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onNodeDoubleClick={onNodeDoubleClick}
-        fitView
-        minZoom={0.4}
-        maxZoom={2.0}
-        /* 基础动画配置，具体视觉参数(颜色、粗细)已迁移至 canvas.css */
+        // --- 核心“丝滑”配置 ---
+        fitView // 初始自动调整视角，让所有节点可见
+        snapToGrid={true} // 🌟 开启吸附，让拖拽具有工业级的精准感
+        snapGrid={[24, 24]} // 吸附步长，与背景点阵间距保持一致
+        minZoom={0.2} // 允许缩得更小，方便查看宏观拓扑
+        maxZoom={1.5} // 限制最大放大倍数，防止像素崩坏
+        // --- 连线基础行为 ---
         defaultEdgeOptions={{
-          type: "smoothstep",
-          animated: true,
+          type: "smoothstep", // 经典的折线风格，整洁直观
+          animated: true, // 默认开启连线动画，表现数据流向
         }}
-        proOptions={{ hideAttribution: true }}
-        className="touch-none"
+        // --- 移除多余装饰 ---
+        proOptions={{ hideAttribution: true }} // 隐藏右下角 Logo
+        className="touch-none" // 禁用浏览器默认触摸逻辑，防止交互干扰
         {...rest}
       >
-        {/* 🌟 极致精简：不再传递 color, size 或 className，样式完全由 CSS 掌控 */}
+        {/* 背景网格：作为位置参考，保持最基本的点阵模式 */}
         <Background variant={BackgroundVariant.Dots} gap={24} />
 
-        {/* 控制器组件：边距和影子通过 Tailwind 处理，内部色彩由 CSS 处理 */}
+        {/* 控制按钮：放在右上角，避开底部 Dock 栏 */}
         <Controls
-          showInteractive={false}
-          className="m-4! border-none! shadow-none!"
+          position="top-right"
+          showInteractive={false} // 隐藏锁定按钮，初次体验建议保持全自由操作
+          className="m-4 shadow-sm border border-gray-100" // 仅保留基础边框
         />
 
+        {/* 预留插槽：用于渲染自定义 UI 覆盖层 */}
         {children}
       </ReactFlow>
     </div>

@@ -1,21 +1,16 @@
 import { NodeCanvas } from "@/components/canvas/NodeCanvas";
-import { AddHomeCard } from "@/components/cards/AddHomeCard";
-import { AddServerCard } from "@/components/cards/AddServerCard";
-import { BaseActionDock } from "@/components/base/BaseActionDock"; // 引入底座
+// import { AddHomeCard } from "@/components/cards/AddHomeCard";
+// import { AddServerCard } from "@/components/cards/AddServerCard";
+// import { BaseActionDock } from "@/components/base/BaseActionDock"; // 引入底座
 
 export const NodeDashboard = () => {
   return (
-    <div className="relative w-full h-full overflow-hidden bg-main-bg">
-      {/* 1. 核心层：React Flow 画布 */}
-      <NodeCanvas />
-
-      {/* 2. 交互层：使用透明 Bar 承载所有快捷卡片 */}
-      <BaseActionDock>
-        <AddHomeCard />
-        {/* 这里可以放一个细细的分割线增加精密感 */}
-        <div className="w-px h-8 bg-white/10 mx-1" />
-        <AddServerCard />
-      </BaseActionDock>
+    /* 🌟 使用 isolate 开启独立的堆叠上下文，bg-main-bg 由 MainLayout 提供 */
+    <div className="relative w-full h-full overflow-hidden isolate">
+      {/* 第 1 层：业务视图层 (Work Surface) - 永远在底层 */}
+      <div className="absolute inset-0 z-0">
+        <NodeCanvas />
+      </div>
     </div>
   );
 };
