@@ -1,27 +1,41 @@
 @import "tailwindcss";
 
+/* 1. 基础色盘与语义化主题导入 */
 @import "./themes/_palette.css";
 @import "./themes/light.css";
 
+/* 🌟 核心修改：引入画布专用样式，实现模块化管理 */
+@import "./canvas.css";
+
 @theme {
-    /* 语义化颜色映射 */
+    /* 侧边栏语义映射 */
     --color-sidebar-bg: var(--sidebar-bg);
     --color-sidebar-fg: var(--sidebar-fg);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-active-bg: var(--sidebar-active-bg);
     --color-sidebar-active-fg: var(--sidebar-active-fg);
 
+    /* 顶部栏语义映射 */
     --color-header-bg: var(--header-bg);
     --color-header-fg: var(--header-fg);
 
+    /* 主体区域映射 */
     --color-main-bg: var(--main-bg);
-    
+
+    /* 画布语义映射 */
     --color-canvas-grid: var(--canvas-grid);
     --color-canvas-edge: var(--canvas-edge);
 
+    /* 操作卡片语义映射 */
     --color-action-bg: var(--action-bg);
     --color-action-fg: var(--action-fg);
     --color-action-badge: var(--action-badge);
+
+    /* 节点语义映射 - 增强对比度关键点 */
+    --color-node-bg: var(--node-bg);
+    --color-node-border: var(--node-border);
+    --color-node-fg-title: var(--node-fg-title);
+    --color-node-fg-desc: var(--node-fg-desc);
 
     /* 基础色直接映射 */
     --color-sage: var(--color-sage);
@@ -29,44 +43,24 @@
     --color-parchment: var(--color-parchment);
     --color-paper-edge: var(--color-paper-edge);
     --color-charcoal: var(--color-charcoal);
+    --color-white: #ffffff;
 }
 
 body {
     background-color: var(--main-bg);
     color: var(--color-charcoal);
     margin: 0;
-    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-family:
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* 全局选中文本呼吸感设置 */
 ::selection {
     background-color: color-mix(in srgb, var(--sidebar-bg), transparent 70%);
     color: var(--color-charcoal);
-}
-
-/* --- React Flow 工业化定制 --- */
-
-.react-flow__node {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-}
-
-.react-flow__node:focus, .react-flow__node:focus-visible {
-    outline: none !important;
-}
-
-.react-flow__controls-button {
-    background: color-mix(in srgb, var(--main-bg), transparent 50%) !important;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-charcoal), transparent 95%) !important;
-    backdrop-filter: blur(4px);
-}
-
-.react-flow__controls-button:hover {
-    background: var(--main-bg) !important;
-}
-
-.react-flow__controls svg {
-    fill: var(--canvas-edge) !important;
 }
