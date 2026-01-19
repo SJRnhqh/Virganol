@@ -4,6 +4,7 @@ import {
   Background,
   Controls,
   BackgroundVariant,
+  SelectionMode,
   type ReactFlowProps,
 } from "@xyflow/react";
 /* 核心样式是必须的，保证基础功能（如缩放、拖拽）不失效 */
@@ -35,6 +36,16 @@ export function BaseCanvas({
         snapGrid={[24, 24]} // 吸附步长，与背景点阵间距保持一致
         minZoom={1} // 允许缩得更小，方便查看宏观拓扑
         maxZoom={2} // 限制最大放大倍数，防止像素崩坏
+        // --- 🌟 专业级交互约束 ---
+        // 1. 禁用左键直接拖拽画布，改为只有中键(1)和右键(2)可以拖拽
+        panOnDrag={[1, 2]}
+        // 2. 启用左键框选功能
+        selectionOnDrag={true}
+        selectionMode={SelectionMode.Partial}
+        // 3. 启用空格键激活“抓手”模式进行移动
+        panActivationKeyCode="Space"
+        // 4. 允许通过缩放滚轮在移动时更顺滑
+        zoomOnScroll={true}
         // --- 连线基础行为 ---
         defaultEdgeOptions={{
           type: "smoothstep", // 经典的折线风格，整洁直观
