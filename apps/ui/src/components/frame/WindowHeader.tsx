@@ -1,5 +1,6 @@
-import { useMemo, useCallback, useState } from "react";
-import { ChevronRight, Minus, Maximize2, X } from "lucide-react"; // ✨ 换了更灵动的图标
+import { useMemo, useCallback, useState, useEffect } from "react";
+// ✨ 引入 Minimize2 用于 "还原" 状态
+import { Minus, Maximize2, Minimize2, X, Milestone } from "lucide-react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { type } from "@tauri-apps/plugin-os";
 import { NAV_ITEMS } from "@/config/navigation";
@@ -9,23 +10,32 @@ interface WindowHeaderProps {
 }
 
 export function WindowHeader({ activeId }: WindowHeaderProps) {
-  // ⚡️ Lazy State 初始化 OS 检测
   const [isWindows] = useState(() => type() === "windows");
+  
+  // 🔄 新增状态：记录当前窗口是否已最大化
+  const [isMaximized, setIsMaximized] = useState(false);
+
+  useEffect(() => {
+    const appWindow = getCurrentWindow();
+
+    // 1. 初始化时检查状态
+    appWindow.isMaximized().then(setIsMaximized);
+
+    // 2. 监听 resize 事件
+    // 当用户拖拽边缘、使用 Snap Layout (分屏) 或快捷键时，这个事件会被触发
+    // 我们利用它来实时同步 isMaximized 状态
+    const updateState = () => {
+      appWindow.isMaximized().then(setIsMaximized);
+    };
+
+    window.addEventListener("resize", updateState);
+    return () => window.removeEventListener("resize", updateState);
+  }, []);
 
   const currentItem = useMemo(() => {
     return NAV_ITEMS.find((item) => item.id === activeId);
   }, [activeId]);
 
-  const groupLabel = useMemo(() => {
-    const groupMap: Record<string, string> = {
-      logic: "Cognition",
-      infra: "Infrastructure",
-      assets: "Assets",
-    };
-    return currentItem ? groupMap[currentItem.group] : "Core";
-  }, [currentItem]);
-
-  // 🖱️ 拖拽逻辑
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     if (e.button === 0 && e.detail === 1) {
@@ -33,7 +43,7 @@ export function WindowHeader({ activeId }: WindowHeaderProps) {
     }
   }, []);
 
-  // 🔄 双击最大化
+  // 双击逻辑：Toggle 之后，resize 监听器会自动更新 isMaximized 状态
   const handleDoubleClick = useCallback(() => {
     getCurrentWindow().toggleMaximize();
   }, []);
@@ -44,76 +54,65 @@ export function WindowHeader({ activeId }: WindowHeaderProps) {
 
   return (
     <header
-      className="relative h-10 flex items-center px-20 border-b border-sidebar-border bg-sidebar-bg shrink-0 select-none cursor-default"
+      className="relative h-10 flex items-center px-4 sm:px-6 lg:px-20 border-b border-sidebar-border bg-sidebar-bg shrink-0 select-none cursor-default"
       onMouseDown={handleMouseDown}
       onDoubleClick={handleDoubleClick}
     >
-      {/* 面包屑导航 (保持原样) */}
-      <nav className="flex items-center text-[10px] font-medium tracking-widest pointer-events-none">
-        <span className="text-primary/20 uppercase">Virganol</span>
-        <ChevronRight size={10} className="mx-3 text-primary/10" />
-        <span className="text-primary/40 uppercase font-light">
-          {groupLabel}
-        </span>
-        <ChevronRight size={10} className="mx-3 text-primary/10" />
-        <span className="text-primary/90 font-bold tracking-normal">
+      {/* 🚩 里程碑式导航 (保持你喜欢的可爱路标) */}
+      <nav className="flex items-center font-medium tracking-wide pointer-events-none group">
+        <Milestone 
+          size={16} 
+          strokeWidth={2.5}
+          className="mr-2 transition-all duration-300 ease-out 
+                     text-primary/40 
+                     group-hover:text-primary/80 
+                     group-hover:rotate-12"
+        />
+        <span className="text-sm text-primary/80 font-bold tracking-tight">
           {currentItem?.label}
         </span>
       </nav>
 
-      {/* 🪟 Windows 专属可爱风控制按钮组 */}
+      {/* 🪟 Windows 控制按钮 */}
       {isWindows && (
         <div
-          className="absolute right-0 top-0 h-full flex items-center"
-          // 阻止冒泡，避免误触拖拽
+          className="absolute right-0 top-0 h-full flex items-center pr-2"
           onMouseDown={(e) => e.stopPropagation()}
           onDoubleClick={(e) => e.stopPropagation()}
         >
-          {/* 🟡 最小化 - Amber (琥珀色) */}
-          <button
-            onClick={handleMinimize}
-            className="group h-full w-12 flex items-center justify-center text-primary/40 
-                       hover:bg-amber-400/10 hover:text-amber-500 
-                       transition-all duration-300 ease-in-out"
+          {/* 最小化 */}
+          <button 
+            onClick={handleMinimize} 
+            className="group h-8 w-10 flex items-center justify-center rounded-md text-primary/30 hover:bg-amber-400/15 hover:text-amber-600 transition-all duration-300 ease-in-out mx-px" 
             title="Minimize"
           >
-            {/* 图标独立动画：Hover时放大回弹 */}
-            <Minus 
-              strokeWidth={2.5} 
-              size={18} 
-              className="transition-transform duration-300 group-hover:scale-110 group-active:scale-90" 
-            />
+            <Minus strokeWidth={3} size={14} className="transition-transform duration-300 group-hover:scale-110 group-active:scale-90" />
           </button>
 
-          {/* 🟢 最大化 - Emerald (祖母绿) */}
-          <button
-            onClick={handleMaximize}
-            className="group h-full w-12 flex items-center justify-center text-primary/40 
-                       hover:bg-emerald-400/10 hover:text-emerald-500 
-                       transition-all duration-300 ease-in-out"
-            title="Maximize"
+          {/* 🟢 智能最大化/还原按钮 */}
+          <button 
+            onClick={handleMaximize} 
+            className="group h-8 w-10 flex items-center justify-center rounded-md text-primary/30 hover:bg-emerald-400/15 hover:text-emerald-600 transition-all duration-300 ease-in-out mx-px" 
+            // 根据状态显示不同的 Tooltip
+            title={isMaximized ? "Restore Down" : "Maximize"}
           >
-            {/* 使用 Maximize2 (扩张箭头) 替代呆板的方块 */}
-            <Maximize2 
-              strokeWidth={2.5} 
-              size={16} 
-              className="transition-transform duration-300 group-hover:scale-110 group-active:scale-90" 
-            />
+            {/* 根据状态切换图标 */}
+            {isMaximized ? (
+              // 状态：已最大化 -> 显示 "收缩" 图标 (Minimize2)
+              <Minimize2 strokeWidth={3} size={13} className="transition-transform duration-300 group-hover:scale-110 group-active:scale-90" />
+            ) : (
+              // 状态：窗口模式 -> 显示 "扩张" 图标 (Maximize2)
+              <Maximize2 strokeWidth={3} size={13} className="transition-transform duration-300 group-hover:scale-110 group-active:scale-90" />
+            )}
           </button>
 
-          {/* 🔴 关闭 - Rose (玫瑰红) */}
-          <button
-            onClick={handleClose}
-            className="group h-full w-12 flex items-center justify-center text-primary/40 
-                       hover:bg-rose-500 hover:text-white 
-                       transition-all duration-300 ease-in-out"
+          {/* 关闭 */}
+          <button 
+            onClick={handleClose} 
+            className="group h-8 w-10 flex items-center justify-center rounded-md text-primary/30 hover:bg-rose-500 hover:text-white transition-all duration-300 ease-in-out mx-px" 
             title="Close"
           >
-            <X 
-              strokeWidth={2.5} 
-              size={18} 
-              className="transition-transform duration-300 group-hover:scale-110 group-active:scale-90" 
-            />
+            <X strokeWidth={3} size={14} className="transition-transform duration-300 group-hover:scale-110 group-active:scale-90" />
           </button>
         </div>
       )}
