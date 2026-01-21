@@ -1,6 +1,6 @@
-// src/components/canvas/NodeCanvas.tsx
-import { BaseCanvas } from "../base/BaseCanvas";
-import { HomeNode } from "../../features/node/home/HomeNode";
+// src/features/node/components/NodeCanvas.tsx
+import { BaseCanvas } from "@/components/base/BaseCanvas";
+import { HomeNode } from "../home/HomeNode";
 import { useTerminalStore } from "@/store/TerminalStore";
 import { useNodeSync } from "@/features/node/hooks/useNodeSync";
 import { type Node } from "@xyflow/react";

@@ -1,4 +1,4 @@
-import { NodeCanvas } from "@/components/canvas/NodeCanvas";
+import { NodeCanvas } from "@/features/node/components/NodeCanvas";
 // import { AddServerCard } from "@/components/cards/AddServerCard";
 // import { BaseActionDock } from "@/components/base/BaseActionDock"; // 引入底座
 
