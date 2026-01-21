@@ -1,27 +1,42 @@
 // src/features/node/NodeDashboard.tsx
 import { NodeCanvas, NodeTerminalDock } from "./components";
 import { useTerminalStore } from "@/store/TerminalStore";
+import { clsx } from "clsx";
 
 export const NodeDashboard = () => {
-  // 1. 只需要监听 isOpen，决定是否把终端层渲染出来
-  // 细节：不用在这里监听 isMaximized，因为那是由 Dock 内部样式处理的
-  const { isOpen } = useTerminalStore();
+  // 我们需要 isOpen 来决定渲染，isMaximized 来决定位置
+  const { isOpen, isMaximized } = useTerminalStore();
   return (
     /* 🌟 容器层：使用 isolate 开启独立的堆叠上下文 */
     <div className="relative w-full h-full overflow-hidden isolate bg-[#121212]">
-      {/* 🟦 第 1 层：业务视图层 (Canvas) - 永远在底层 */}
+      {/* 🟦 Layer 0: 画布层 */}
       <div className="absolute inset-0 z-0">
         <NodeCanvas />
       </div>
-      {/* 🟧 第 2 层：终端界面层 (Overlay) - 永远在顶层 */}
+
+      {/* 🟧 Layer 1: 终端窗口层 */}
       {/* pointer-events-none: 关键！让这一层的透明区域允许鼠标穿透点击底下的 Canvas */}
-      <div className="absolute inset-0 z-10 pointer-events-none flex flex-col justify-end">
+      <div className="absolute inset-0 z-10 pointer-events-none">
         {isOpen && (
-          // 终端坞容器
-          // pointer-events-auto: 恢复鼠标交互，否则无法点击终端
-          // h-[35%]: 默认高度占屏幕 35%
-          // animate-slide-up: 进场动画 (需在 tailwind 配置)
-          <div className="w-full h-[35%] min-h-75 pointer-events-auto shadow-2xl transition-all duration-300">
+          <div
+            className={clsx(
+              // 公共样式：恢复鼠标交互、过渡动画、阴影
+              "pointer-events-auto shadow-2xl transition-all duration-300 ease-out border border-white/10",
+
+              // 🔀 状态切换逻辑
+              isMaximized
+                ? "absolute inset-0 z-50 rounded-none" // 最大化：铺满全屏，无圆角
+                : clsx(
+                    "absolute z-50 rounded-xl",
+                    // 📐 黄金比例尺寸 (约 1.618)
+                    // w-[900px] / h-[560px] ≈ 1.60
+                    "w-225 h-140",
+
+                    // 📍 位置：绝对垂直居中 + 靠右 10% (视觉上的中右侧)
+                    "top-1/2 -translate-y-1/2 right-[10%]",
+                  ),
+            )}
+          >
             <NodeTerminalDock />
           </div>
         )}
