@@ -1,58 +1,34 @@
-import { useCallback, useMemo } from "react";
-import { type NodeChange } from "@xyflow/react";
-import { NodeStore } from "@/store/NodeStore"; // 注意引用路径更新
+// src/components/canvas/NodeCanvas.tsx
 import { BaseCanvas } from "../base/BaseCanvas";
 import { HomeNode } from "../../features/node/home/HomeNode";
 import { useTerminalStore } from "@/store/TerminalStore";
+import { useNodeSync } from "@/features/node/hooks/useNodeSync";
+import { type Node } from "@xyflow/react";
+// 1. 引入新定义的类型
+import { type AppNode, NODE_CATEGORIES } from "@/types/node";
 
-// 🌟 注册节点类型字典：告诉 React Flow "home" 类型对应哪个组件
+// 2. 类型字典使用常量 Key，防止拼写错误
 const nodeTypes = {
-  home: HomeNode,
-  // remote: ServerNode, // 未来可以在这里解开注释
+  [NODE_CATEGORIES.HOME]: HomeNode,
+  // [NODE_CATEGORIES.REMOTE]: ServerNode,
 };
 
 export function NodeCanvas() {
-  const { nodes, updateNodePosition } = NodeStore();
+  // 3. 🌟 泛型显威：告诉 useMemo 返回的是标准的 AppNode 数组
+  const { rfNodes, onNodesChange } = useNodeSync();
   const { openTerminal } = useTerminalStore();
-
-  // 🌟 翻译官：将 Store 里的业务数据 -> 转换为 React Flow 的视觉数据
-  const rfNodes = useMemo(
-    () =>
-      nodes.map((node) => ({
-        id: node.id,
-        type: node.category, // 关键点：这里是 "home"，所以会渲染 HomeNode
-        position: node.position,
-        data: {
-          // 只传递 UI 需要的数据
-          name: node.name,
-          status: node.status,
-          description: node.description,
-        },
-      })),
-    [nodes],
-  );
-
-  // 处理拖拽反馈
-  const onNodesChange = useCallback(
-    (changes: NodeChange[]) => {
-      changes.forEach((change) => {
-        if (change.type === "position" && change.position) {
-          updateNodePosition(change.id, change.position);
-        }
-      });
-    },
-    [updateNodePosition],
-  );
 
   return (
     <BaseCanvas
       nodes={rfNodes}
       nodeTypes={nodeTypes}
       onNodesChange={onNodesChange}
-      // 🌟 核心：双击节点打开终端
-      onNodeDoubleClick={(_, node) => {
-        // 将 node.data 里的 name 传进去
-        openTerminal(node.id, node.data.name as string);
+      // 4. 🌟 参数直接标注为 AppNode，无需 any 或断言
+      onNodeDoubleClick={(_, genericNode: Node) => {
+        // 🌟 关键修复：先接收通用 Node，再断言为 AppNode
+        const node = genericNode as AppNode;
+        // 现在 TS 知道它是 AppNode 了，可以安全访问 .data.name
+        openTerminal(node.id, node.data.name);
       }}
     />
   );

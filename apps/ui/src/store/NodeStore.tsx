@@ -1,20 +1,35 @@
+// src/store/NodeStore.ts
 import { create } from "zustand";
-import { NODE_CONFIG, NODE_CATEGORIES, type NodeCategory } from "@/config/node";
+import {
+  NODE_CONFIG,
+  NODE_CATEGORIES,
+  type NodeCategory,
+  type BaseNodeData, // 🌟 1. 引入这个类型，它是唯一的真理来源
+} from "@/types/node"; // 注意检查文件名是否是 nodes.ts
 
-// 🌟 核心定义：本地母舰节点的静态 ID，方便全局索引
+// 🌟 核心定义：本地母舰节点的静态 ID
 export const HOME_NODE_ID = "local-home-station";
 
-export interface NodeConfig {
+/**
+ * StoreNode (原 NodeConfig)
+ * 这里的策略是：Store 专用的结构 = 基础数据 (BaseNodeData) + 位置/ID信息
+ */
+export interface StoreNode {
   id: string;
   category: NodeCategory;
-  name: string;
-  status: "disconnected" | "connected" | "error";
   position: { x: number; y: number };
-  description?: string; // 用于展示本地硬件摘要
+
+  // 👇 下面这些字段直接复用 BaseNodeData 的定义，确保和 React Flow 渲染层完全一致
+  name: string;
+  // 🌟 关键修复：直接使用 BaseNodeData['status']
+  // 等同于: "online" | "offline" | "error" | "connecting"
+  status: BaseNodeData["status"];
+  description?: string;
+  ip?: string; // 远程服务器需要 IP，类型定义里有，Store 里也得有
 }
 
 interface NodeState {
-  nodes: NodeConfig[];
+  nodes: StoreNode[];
   activeNodeId: string | null;
 
   // Actions
@@ -25,14 +40,15 @@ interface NodeState {
   exitNode: () => void;
 }
 
-// 🌟 初始化状态：默认包含一个本地节点
-const INITIAL_NODES: NodeConfig[] = [
+// 🌟 初始化状态
+const INITIAL_NODES: StoreNode[] = [
   {
     id: HOME_NODE_ID,
-    category: NODE_CATEGORIES.HOME, // 这里决定了它在 Canvas 里会被映射为 HomeNode
+    category: NODE_CATEGORIES.HOME,
     name: NODE_CONFIG[NODE_CATEGORIES.HOME].defaultName,
-    status: "connected", // 本地节点永远在线
-    position: { x: 0, y: 0 }, // 默认居中
+    // 🌟 修复：必须使用 types/nodes.ts 里定义的合法值 ("connected" -> "online")
+    status: "online",
+    position: { x: 0, y: 0 },
     description: "Primary Control Station",
   },
 ];
@@ -44,21 +60,24 @@ export const NodeStore = create<NodeState>((set, get) => ({
   addNode: (category) => {
     const config = NODE_CONFIG[category];
 
-    // 单例拦截：如果是 HOME 类型，直接跳转，绝不重复创建
+    // 单例拦截
     if (category === NODE_CATEGORIES.HOME) {
       return get().enterNode(HOME_NODE_ID);
     }
 
-    // 其他节点的创建逻辑
-    const newNode: NodeConfig = {
+    // 创建新节点
+    const newNode: StoreNode = {
       id: crypto.randomUUID(),
       category,
       name: config.defaultName,
-      status: "disconnected",
+      // 🌟 修复：默认状态设为 "offline" (对应之前的 disconnected)
+      status: "offline",
       position: {
         x: Math.random() * 200 - 100,
         y: Math.random() * 200 + 100,
       },
+      // 如果是远程节点，可以预留 ip 字段
+      ip: category === NODE_CATEGORIES.REMOTE ? "127.0.0.1" : undefined,
     };
 
     set((state) => ({ nodes: [...state.nodes, newNode] }));
@@ -67,7 +86,6 @@ export const NodeStore = create<NodeState>((set, get) => ({
   removeNode: (id) =>
     set((state) => ({
       nodes: state.nodes.filter((n) => {
-        // 保护 HOME 节点不被删除
         if (n.id === id) return NODE_CONFIG[n.category].allowDelete;
         return true;
       }),
