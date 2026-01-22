@@ -2,12 +2,10 @@ import { useMemo, useState } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { type } from "@tauri-apps/plugin-os";
 import { NAV_ITEMS } from "@/config/navigation";
-
-// ✅ 引入你已经拆分好的组件和 Hook
 import { Breadcrumb } from "./Breadcrumb";
 import { SettingsButton } from "./SettingsButton";
-// 🟢 新增：引入侧边栏切换组件
 import { SidebarToggle } from "./SidebarToggle"; 
+import { SideSwitch } from "./SideSwitch";
 import { MacTrafficLightSpacer } from "./MacTrafficLightSpacer";
 import { WindowsWindowControls } from "./WindowsWindowControls";
 import { useWindowState } from "@/hooks/useWindowState";
@@ -61,7 +59,13 @@ export function WindowHeader({ activeId }: WindowHeaderProps) {
       >
         {/* 🟢 布局控制组：将切换按钮放在设置按钮左侧，保持 1 单位间隔 */}
         <div className="flex items-center gap-1">
+          {/* 🟢 镜像切换按钮 */}
+          <SideSwitch />
+          
+          {/* 侧边栏开关 */}
           <SidebarToggle />
+          
+          {/* 设置按钮 */}
           <SettingsButton onClick={() => console.log("Open Settings")} />
         </div>
       </div>

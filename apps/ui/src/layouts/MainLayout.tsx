@@ -63,7 +63,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           // 🟢 智能方向控制：
           // - Left 模式: Sidebar 在左，内容在右 (flex-row)
           // - Right 模式: Sidebar 在右，内容在左 (flex-row-reverse)
-          side === "left" ? "flex-row" : "flex-row-reverse"
+          side === "left" ? "flex-row" : "flex-row-reverse",
         )}
       >
         {/* Sidebar: 现在作为 Flex Item 参与布局，不再绝对定位 */}
