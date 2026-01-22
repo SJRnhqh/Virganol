@@ -3,25 +3,36 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { type } from "@tauri-apps/plugin-os";
 import { NAV_ITEMS } from "@/config/navigation";
 
-// 引入拆分后的组件和 Hook
+// ✅ 引入你已经拆分好的组件和 Hook
 import { Breadcrumb } from "./Breadcrumb";
 import { SettingsButton } from "./SettingsButton";
-import { useWindowState } from "@/hooks/useWindowState";
 import { MacTrafficLightSpacer } from "./MacTrafficLightSpacer";
 import { WindowsWindowControls } from "./WindowsWindowControls";
+import { useWindowState } from "@/hooks/useWindowState";
 
 interface WindowHeaderProps {
   activeId: string;
 }
 
 export function WindowHeader({ activeId }: WindowHeaderProps) {
-  const [osType] = useState(() => type());
+  // 🟢 修复：根据 TS 报错，type() 是同步的，直接在 useState 初始化即可
+  // 这样 osType 初始值就是 "windows" 或 "macos"，不会是 null
+  const [osType] = useState(() => {
+    try {
+      return type(); // 同步调用
+    } catch (error) {
+      console.warn("OS detection failed", error);
+      return null;
+    }
+  });
+
   const isWindows = osType === "windows";
   const isMac = osType === "macos";
 
-  // 1. 逻辑下沉到 Hook
+  // 窗口状态 Hook
   const { isMaximized, isFullscreen } = useWindowState();
 
+  // 导航项查找
   const currentItem = useMemo(
     () => NAV_ITEMS.find((i) => i.id === activeId),
     [activeId],

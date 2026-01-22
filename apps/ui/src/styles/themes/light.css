@@ -29,6 +29,7 @@
     );
 
     --header-accent: var(--color-honey);
+    --breadcrumb-accent: var(--color-honey);
 
     /* === 3. 主内容区 & 画布 === */
     --main-bg: var(--color-parchment);
