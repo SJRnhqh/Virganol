@@ -1,60 +1,78 @@
+// apps/ui/src/config/navigation.ts
 import {
-  Bot,
-  Workflow,
-  Library,
-  CodeXml,
-  Network,
-  BrainCircuit,
-  Database,
-  Store,
+  Bot, // 🤖 Spirit: AI 灵魂
+  Network, // 🌐 Apiary: 蜂场拓扑
+  Hexagon, // ⬡ Comb: 蜂巢数据
+  FlaskConical, // ⚗️ Mead: 酿造模型
+  ScrollText, // 👨‍💻 Formula: 代码配方 (IDE)
+  Warehouse, // 🛖 Cellar: 资产地窖
+  Beer, // 🍺 Bar: 插件酒馆 (社区集市)
   type LucideIcon,
 } from "lucide-react";
 
-export type NavGroup = "logic" | "infra" | "assets";
-
 export interface NavItemConfig {
   id: string;
+  label: string; // UI显示名 (简短有力)
+  fullName?: string; // Tooltip全名 (V.I.N.E. 家族名)
   icon: LucideIcon;
-  label: string;
-  group: NavGroup;
+  description?: string;
 }
 
 export const NAV_ITEMS: NavItemConfig[] = [
-  // 核心交互与记忆
-  { id: "bot", icon: Bot, label: "Bot Deck", group: "logic" },
-  { id: "workflow", icon: Workflow, label: "Workflow Deck", group: "logic" },
-  { id: "vault", icon: Library, label: "Vault Deck", group: "logic" },
+  // --- High Frequency: Interaction & Creation (高频区：交互与创造) ---
+  {
+    id: "scispirit", // 建议统一 ID 前缀，方便代码全局搜索
+    label: "Spirit",
+    fullName: "SciSpirit",
+    icon: Bot,
+    description: "AI Assistant & Robots",
+  },
+  {
+    id: "sciscript",
+    label: "Script",
+    fullName: "SciScript",
+    icon: ScrollText,
+    description: "Code Editor & Notebook",
+  },
 
-  // 节点实验室
-  { id: "nodes", icon: Network, label: "Node Deck", group: "infra" },
-  { id: "code", icon: CodeXml, label: "Code Deck", group: "infra" }, // Code 也可以看作一种基础设施
+  // --- Core Workflow: Production (核心区：生产流水线) ---
+  {
+    id: "scicomb",
+    label: "Comb",
+    fullName: "SciComb",
+    icon: Hexagon,
+    description: "Data Refinery & Processing Workflow",
+  },
+  {
+    id: "scimead",
+    label: "Mead",
+    fullName: "SciMead",
+    icon: FlaskConical,
+    description: "Model Training & Evaluation Workflow",
+  },
 
-  // 静态资产
-  { id: "models", icon: BrainCircuit, label: "Model Deck", group: "assets" },
-  { id: "datasets", icon: Database, label: "Dataset Deck", group: "assets" },
-  { id: "hub", icon: Store, label: "Hub Deck", group: "assets" }, // 新增：插件生态
+  // --- Support: Storage & Infra (支撑区：存储与基建) ---
+  {
+    id: "scicellar",
+    label: "Cellar",
+    fullName: "SciCellar",
+    icon: Warehouse,
+    description: "Asset Vault & Storage",
+  },
+  {
+    id: "sciapiary",
+    label: "Apiary",
+    fullName: "SciApiary",
+    icon: Network,
+    description: "Computing Cluster & Nodes",
+  },
+
+  // --- External: Community (外部区：社区) ---
+  {
+    id: "scibar",
+    label: "Bar",
+    fullName: "SciBar",
+    icon: Beer,
+    description: "Plugin, Dataset, Model, Agent Marketplace",
+  },
 ];
-
-export const NAV_DIMENSIONS = {
-  ITEM_HEIGHT: 40, // 对应 w-10
-  ITEM_MARGIN: 12, // 对应 mb-3
-  INDICATOR_OFFSET: 10, // 用于对齐图标中心 (40/2 - 5/2 等逻辑)
-};
-
-export const NAV_THEME = {
-  // 1.0 为正常大小
-  IDLE_SCALE: "scale-120",
-
-  // 🔴 关键：直接定义 group-hover 类名，解决 Hover 无效问题
-  HOVER_SCALE: "group-hover:scale-[1.25]", // 1.5倍太大会模糊，推荐 1.25
-  HOVER_OPACITY: "group-hover:opacity-100",
-
-  ACTIVE_SCALE: "scale-130",
-
-  // 🔴 关键：确保 ease 语法被正确包裹在 ease-[...] 中
-  TRANSITION:
-    "transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
-
-  OPACITY_IDLE: "opacity-60",
-  OPACITY_ACTIVE: "opacity-100",
-};
