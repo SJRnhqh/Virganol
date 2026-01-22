@@ -21,6 +21,9 @@
 
     /* 🛠️ 关键映射：确保這一行存在，Tailwind 才能生成 text-breadcrumb-accent 类 */
     --color-breadcrumb-accent: var(--breadcrumb-accent);
+    --color-window-control-minimize: var(--window-control-minimize);
+    --color-window-control-toggle-maximize: var(--window-control-toggle-maximize);
+    --color-window-control-close: var(--window-control-close);
 
     /* 主体区域 */
     --color-main-bg: var(--main-bg);
