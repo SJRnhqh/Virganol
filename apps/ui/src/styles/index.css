@@ -1,37 +1,39 @@
+/* apps/ui/src/styles/index.css */
 @import "tailwindcss";
-
-/* 1. 基础色盘与语义化主题导入 */
 @import "./themes/_palette.css";
 @import "./themes/light.css";
-
-/* 🌟 核心修改：引入画布专用样式，实现模块化管理 */
 @import "./canvas.css";
 
 @theme {
-    /* 侧边栏语义映射 */
+    /* 侧边栏 */
     --color-sidebar-bg: var(--sidebar-bg);
     --color-sidebar-fg: var(--sidebar-fg);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-active-bg: var(--sidebar-active-bg);
     --color-sidebar-active-fg: var(--sidebar-active-fg);
 
-    /* 顶部栏语义映射 */
+    /* 顶部栏 */
     --color-header-bg: var(--header-bg);
     --color-header-fg: var(--header-fg);
+    --color-header-icon: var(--header-icon);
+    --color-header-icon-muted: var(--header-icon-muted);
+    --color-header-accent: var(--header-accent);
 
-    /* 主体区域映射 */
+    /* 🛠️ 关键映射：确保這一行存在，Tailwind 才能生成 text-breadcrumb-accent 类 */
+    --color-breadcrumb-accent: var(--breadcrumb-accent);
+
+    /* 主体区域 */
     --color-main-bg: var(--main-bg);
 
-    /* 画布语义映射 */
+    /* 画布 */
     --color-canvas-grid: var(--canvas-grid);
     --color-canvas-edge: var(--canvas-edge);
 
-    /* 操作卡片语义映射 */
+    /* 操作卡片 */
     --color-action-bg: var(--action-bg);
     --color-action-fg: var(--action-fg);
-    --color-action-badge: var(--action-badge);
 
-    /* 节点语义映射 - 增强对比度关键点 */
+    /* 节点 */
     --color-node-bg: var(--node-bg);
     --color-node-border: var(--node-border);
     --color-node-fg-title: var(--node-fg-title);
@@ -41,9 +43,11 @@
     --color-sage: var(--color-sage);
     --color-forest: var(--color-forest);
     --color-parchment: var(--color-parchment);
-    --color-paper-edge: var(--color-paper-edge);
     --color-charcoal: var(--color-charcoal);
+    --color-honey: var(--color-honey);
+    --color-rose: var(--color-rose);
     --color-white: #ffffff;
+    --color-parchment-fade: var(--color-parchment-fade);
 }
 
 body {
@@ -56,11 +60,24 @@ body {
         -apple-system,
         sans-serif;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
-/* 全局选中文本呼吸感设置 */
 ::selection {
-    background-color: color-mix(in srgb, var(--sidebar-bg), transparent 70%);
+    background-color: var(--color-parchment-fade);
     color: var(--color-charcoal);
+}
+
+/* 🚨 修改开始：解决 PR 机器人的无障碍警告 */
+
+/* 1. 移除所有元素的默认丑陋 Focus 框（针对鼠标点击） */
+:focus {
+    outline: none;
+}
+
+/* 2. 智能焦点：仅在键盘操作（Tab键）时显示高亮 */
+/* 使用 Honey 色 (--breadcrumb-accent)，既醒目又符合主题 */
+:focus-visible {
+    outline: 2px solid var(--breadcrumb-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
 }
