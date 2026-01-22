@@ -14,17 +14,21 @@
 
     /* === 2. 顶部栏 (Header) === */
     --header-bg: var(--color-sage);
+
+    /* 🍞 面包屑文字：保持深炭灰，因为它是显示在米色地基上的 */
     --header-fg: var(--color-charcoal);
-    --header-icon: var(--color-charcoal);
+
+    /* ⚙️ 按钮图标：修改为米色 (Parchment)，让它在绿色背景上呈现“乳白色”质感 */
+    --header-icon: var(--color-parchment);
+
+    /* 自动计算静音色：现在它是 60% 透明度的米色 */
     --header-icon-muted: color-mix(
         in srgb,
         var(--header-icon),
-        transparent 60%
+        transparent 40% /* 调整透明度比例，让静态时稍微亮一点，避免太透 */
     );
-    --header-accent: var(--color-honey);
 
-    /* 🛠️ 关键：必须显式定义面包屑使用的变量 */
-    --breadcrumb-accent: var(--color-honey);
+    --header-accent: var(--color-honey);
 
     /* === 3. 主内容区 & 画布 === */
     --main-bg: var(--color-parchment);
