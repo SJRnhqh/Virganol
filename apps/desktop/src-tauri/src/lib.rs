@@ -1,5 +1,6 @@
 use ssh2::Session;
 use std::net::TcpStream;
+#[cfg(target_os = "windows")]
 use tauri::Manager; // 👈 必须引入这个，才能使用 get_webview_window
 
 // 1. 引入模块
@@ -53,11 +54,11 @@ pub fn run() {
         .plugin(tauri_plugin_os::init())
         .manage(terminal::TerminalState::default())
         // 👇👇👇 核心修改：在此处插入 setup 钩子 👇👇👇
-        .setup(|app| {
+        .setup(|_app| {
             #[cfg(target_os = "windows")]
             {
                 // 获取主窗口（Tauri 默认 label 为 "main"）
-                if let Some(window) = app.get_webview_window("main") {
+                if let Some(window) = _app.get_webview_window("main") {
                     // 1. Windows 上强制去除装饰（去掉白色边框）
                     let _ = window.set_decorations(false);
                     // 2. 开启阴影（避免窗口看起来像贴纸）
