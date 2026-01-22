@@ -2,51 +2,37 @@
 
 :root {
     /* === 1. 侧边栏 (Sidebar) === */
-    /* 背景用 "苍艾绿" */
     --sidebar-bg: var(--color-sage);
-    /* 边框用 "纸张边缘色" 的 20% 透明度 */
     --sidebar-border: color-mix(
         in srgb,
         var(--color-paper-edge),
         transparent 80%
     );
-    /* 文字用 "纯白" */
     --sidebar-fg: var(--color-white);
-
-    /* 选中项背景用 "米色" */
     --sidebar-active-bg: var(--color-parchment);
-    /* 选中项文字用 "深炭灰" */
     --sidebar-active-fg: var(--color-charcoal);
 
     /* === 2. 顶部栏 (Header) === */
-    /* 背景用 "苍艾绿" */
     --header-bg: var(--color-sage);
-    /* 文字用 "深炭灰" */
     --header-fg: var(--color-charcoal);
+    /* ⚙️ 核心：图标使用米色，解决绿色背景下不醒目的问题 */
+    --header-icon: var(--color-parchment);
+    /* 交互光晕使用亮绿 */
+    --header-accent: var(--color-emerald);
 
     /* === 3. 主内容区 & 画布 (BaseCanvas) === */
-    /* 背景米色 */
     --main-bg: var(--color-parchment);
-    /* 画布网格：使用深炭灰 */
     --canvas-grid: var(--color-charcoal);
-    /* 画布连线：使用苍艾绿 */
     --canvas-edge: var(--color-sage);
 
     /* === 4. 操作卡片 (BaseActionCard) === */
-    /* 按钮背景：森林绿 */
     --action-bg: var(--color-forest);
-    /* 按钮内容：暖白 */
     --action-fg: var(--color-parchment);
-    /* 角标背景：苍艾绿 */
     --action-badge: var(--color-sage);
 
     /* === 5. 节点 (Nodes) === */
-    /* 节点背景：使用纯白以增强与米色画布的对比度 */
     --node-bg: var(--color-white);
-    /* 默认边框颜色：使用纸张边缘色 */
     --node-border: var(--color-paper-edge);
-    /* 节点标题文字：深炭灰 */
     --node-fg-title: var(--color-charcoal);
-    /* 节点描述文字：苍艾绿 */
     --node-fg-desc: var(--color-sage);
 }

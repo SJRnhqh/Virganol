@@ -4,7 +4,7 @@
 @import "./themes/_palette.css";
 @import "./themes/light.css";
 
-/* 🌟 核心修改：引入画布专用样式，实现模块化管理 */
+/* 🌟 引入画布专用样式 */
 @import "./canvas.css";
 
 @theme {
@@ -15,9 +15,11 @@
     --color-sidebar-active-bg: var(--sidebar-active-bg);
     --color-sidebar-active-fg: var(--sidebar-active-fg);
 
-    /* 顶部栏语义映射 */
+    /* 顶部栏语义映射 (增强醒目度) */
     --color-header-bg: var(--header-bg);
     --color-header-fg: var(--header-fg);
+    --color-header-icon: var(--header-icon);
+    --color-header-accent: var(--header-accent);
 
     /* 主体区域映射 */
     --color-main-bg: var(--main-bg);
@@ -31,19 +33,23 @@
     --color-action-fg: var(--action-fg);
     --color-action-badge: var(--action-badge);
 
-    /* 节点语义映射 - 增强对比度关键点 */
+    /* 节点语义映射 */
     --color-node-bg: var(--node-bg);
     --color-node-border: var(--node-border);
     --color-node-fg-title: var(--node-fg-title);
     --color-node-fg-desc: var(--node-fg-desc);
 
-    /* 基础色直接映射 */
+    /* 基础色直接映射 (确保 TSX 可以使用 text-parchment 等类名) */
     --color-sage: var(--color-sage);
     --color-forest: var(--color-forest);
     --color-parchment: var(--color-parchment);
-    --color-paper-edge: var(--color-paper-edge);
     --color-charcoal: var(--color-charcoal);
+    --color-emerald: var(--color-emerald);
+    --color-rose: var(--color-rose);
     --color-white: #ffffff;
+
+    /* 遮罩高光映射 */
+    --color-parchment-fade: var(--color-parchment-fade);
 }
 
 body {
@@ -59,8 +65,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* 全局选中文本呼吸感设置 */
+/* 全局选中文本样式：使用苍艾绿透明度增加温润感 */
 ::selection {
-    background-color: color-mix(in srgb, var(--sidebar-bg), transparent 70%);
+    background-color: var(--color-parchment-fade);
     color: var(--color-charcoal);
 }
