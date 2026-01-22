@@ -56,7 +56,7 @@ export function WindowHeader({ activeId }: WindowHeaderProps) {
 
       {/* 4. 右侧功能区 */}
       <div
-        className={`flex items-center h-full ml-auto mb-0.5 ${isWindows ? "mr-24" : "mr-1"}`}
+        className={`flex items-center h-full ml-auto mb-0.5 ${isWindows ? "mr-26" : "mr-1"}`}
       >
         <SettingsButton onClick={() => console.log("Open Settings")} />
       </div>
