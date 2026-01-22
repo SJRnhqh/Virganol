@@ -79,6 +79,7 @@ export const Sidebar = memo(({ activeId, onActiveIdChange }: SidebarProps) => {
               onClick={() => onActiveIdChange(item.id)}
               icon={item.icon}
               label={item.label}
+              side={side}
             />
           ))}
         </nav>
