@@ -1,11 +1,13 @@
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Rocket, Construction } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion"; // 🟢 引入动画增强隔离感
 import { Sidebar } from "@/components/frame/Sidebar";
 import { WindowHeader } from "@/components/frame/WindowHeader/WindowHeader";
 import { NAV_ITEMS } from "@/config/navigation";
 import { DevelopingView } from "@/components/frame/DevelopingView";
 import { BotDashboard } from "@/features/bot/BotDashboard";
-import { useSidebarStore } from "@/store/SidebarStore"; // 🟢 引入 Store
+import { useSidebarStore } from "@/store/SidebarStore";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
@@ -13,38 +15,34 @@ interface MainLayoutProps {
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
-  // 🟢 修改 1: 默认让用户进入 "scispirit" (Bot/MVP 界面)
-  const [activeDeck, setActiveDeck] = useState("scispirit");
+  useKeyboardShortcuts();
 
-  // 🟢 获取侧边栏位置状态 (left | right)
-  const { side } = useSidebarStore();
+  // 🟢 统一使用 Store 状态，删除之前的本地 activeDeck
+  const { side, activeId, setActiveId } = useSidebarStore();
 
   const renderContent = () => {
-    switch (activeDeck) {
-      // 🟢 新增: SciSpirit (Bot) 是现在的主角
+    // 💡 这里的 key={activeId} 非常关键，它告诉 React 这是一个全新的“隔离”页面
+    switch (activeId) {
       case "scispirit":
-        return <BotDashboard />;
+        return <BotDashboard key="scispirit" />;
 
-      // 🟡 修改 2: SciApiary 暂时退居幕后，显示“开发中”
       case "sciapiary":
         return (
-          <div className="w-full h-full pl-24 pt-6">
-            <DevelopingView
-              title="SciApiary (Orchestration Hub)"
-              icon={Construction} // 用个施工图标提示自己
-            />
-          </div>
+          <DevelopingView
+            key="sciapiary"
+            title="SciApiary (Orchestration Hub)"
+            icon={Construction}
+          />
         );
 
       default: {
-        const config = NAV_ITEMS.find((i) => i.id === activeDeck);
+        const config = NAV_ITEMS.find((i) => i.id === activeId);
         return (
-          <div className="w-full h-full pl-24 pt-6">
-            <DevelopingView
-              title={config?.label || "Unknown Deck"}
-              icon={config?.icon || Rocket}
-            />
-          </div>
+          <DevelopingView
+            key={activeId}
+            title={config?.label || "Unknown Deck"}
+            icon={config?.icon || Rocket}
+          />
         );
       }
     }
@@ -52,35 +50,46 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-main-bg text-primary">
-      {/* 1. 顶栏 (Header) - 固定高度 */}
-      {/* 这里的 WindowHeader 内部包含了 SidebarToggle */}
-      <WindowHeader activeId={activeDeck} />
+      <WindowHeader activeId={activeId} />
 
-      {/* 2. 内容视口 (Viewport) - 弹性布局区域 */}
       <div
         className={cn(
           "relative flex-1 w-full h-full overflow-hidden flex",
-          // 🟢 智能方向控制：
-          // - Left 模式: Sidebar 在左，内容在右 (flex-row)
-          // - Right 模式: Sidebar 在右，内容在左 (flex-row-reverse)
           side === "left" ? "flex-row" : "flex-row-reverse",
         )}
       >
-        {/* Sidebar: 现在作为 Flex Item 参与布局，不再绝对定位 */}
-        <Sidebar activeId={activeDeck} onActiveIdChange={setActiveDeck} />
+        <Sidebar activeId={activeId} onActiveIdChange={setActiveId} />
 
-        {/* Main Stage: 自动占满剩余空间 (flex-1) */}
-        {/* min-w-0 是 Flexbox 嵌套滚动的关键 hack，防止内容撑破容器 */}
-        <main className="flex-1 h-full bg-main-bg isolate relative min-w-0 duration-300">
-          <div className="w-full h-full z-0">{renderContent()}</div>
+        {/* 🟢 Main Stage: 容器隔离优化 */}
+        <main className="flex-1 h-full bg-main-bg isolate relative min-w-0">
+          {/* AnimatePresence 实现页面切换时的“静默消隐”
+            mode="wait" 确保旧页面先消失，新页面再进入，实现物理隔离感
+          */}
+          
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeId}
+              // 🟢 Initial: 新页面从微小的放大和透明开始（感觉是从屏幕外浮现）
+              initial={{ opacity: 0, scale: 1.01, filter: "blur(4px)" }}
+              
+              // 🟢 Animate: 瞬间恢复原状
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              
+              // 🟢 Exit: 旧页面微调缩小并消失（感觉是退入深处）
+              exit={{ opacity: 0, scale: 0.98, filter: "blur(2px)" }}
+              
+              // 🚀 极速响应：使用 0.15s 的持续时间，让切换像快门一样利落
+              transition={{ 
+                duration: 0.15, 
+                ease: [0.4, 0, 0.2, 1] // 标准的工业级缓动曲线
+              }}
+              className="w-full h-full p-6"
+            >
+              {renderContent()}
+            </motion.div>
+          </AnimatePresence>
 
-          {children && (
-            <div className="absolute inset-0 z-50 pointer-events-none">
-              <div className="pointer-events-auto w-full h-full">
-                {children}
-              </div>
-            </div>
-          )}
+          {children}
         </main>
       </div>
     </div>
