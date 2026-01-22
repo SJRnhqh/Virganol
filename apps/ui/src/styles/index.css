@@ -1,41 +1,72 @@
+/* apps/ui/src/styles/index.css */
 @import "tailwindcss";
 @import "./themes/_palette.css";
 @import "./themes/light.css";
 @import "./canvas.css";
 
 @theme {
-    /* ... 保持侧边栏映射 ... */
+    /* 侧边栏 */
     --color-sidebar-bg: var(--sidebar-bg);
     --color-sidebar-fg: var(--sidebar-fg);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-active-bg: var(--sidebar-active-bg);
     --color-sidebar-active-fg: var(--sidebar-active-fg);
 
-    /* 顶部栏语义映射：完全同步 light.css */
+    /* 顶部栏 */
     --color-header-bg: var(--header-bg);
     --color-header-fg: var(--header-fg);
     --color-header-icon: var(--header-icon);
     --color-header-icon-muted: var(--header-icon-muted);
     --color-header-accent: var(--header-accent);
 
-    /* ... 其他映射保持不变 ... */
+    /* 🛠️ 关键映射：如果不写这一行，TSX 里的 text-breadcrumb-accent 就没颜色 */
+    --color-breadcrumb-accent: var(--breadcrumb-accent);
+
+    /* 主体区域 */
     --color-main-bg: var(--main-bg);
+
+    /* 画布 */
     --color-canvas-grid: var(--canvas-grid);
     --color-canvas-edge: var(--canvas-edge);
+
+    /* 操作卡片 */
     --color-action-bg: var(--action-bg);
     --color-action-fg: var(--action-fg);
-    --color-action-badge: var(--action-badge);
+
+    /* 节点 */
     --color-node-bg: var(--node-bg);
     --color-node-border: var(--node-border);
     --color-node-fg-title: var(--node-fg-title);
     --color-node-fg-desc: var(--node-fg-desc);
 
-    /* 基础色映射 */
+    /* 基础色直接映射 */
     --color-sage: var(--color-sage);
     --color-forest: var(--color-forest);
     --color-parchment: var(--color-parchment);
     --color-charcoal: var(--color-charcoal);
-    --color-emerald: var(--color-emerald);
+    --color-honey: var(--color-honey);
+    --color-rose: var(--color-rose);
+    --color-white: #ffffff;
+    --color-parchment-fade: var(--color-parchment-fade);
 }
 
-/* ... body 样式 ... */
+body {
+    background-color: var(--main-bg);
+    color: var(--color-charcoal);
+    margin: 0;
+    font-family:
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+    background-color: var(--color-parchment-fade);
+    color: var(--color-charcoal);
+}
+
+button:focus {
+    outline: none;
+}

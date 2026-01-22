@@ -1,28 +1,26 @@
-/* src/styles/themes/_palette.css */
+/* apps/ui/src/styles/themes/_palette.css */
 
 :root {
     /* =========================================
      🎨 基础色盘 (Primitives)
-     这里只定义颜色值 (Hex)，不定义用途。
      ========================================= */
 
     /* 🌿 Virganol 核心色系 */
     --color-parchment: #faf7f0; /* 米色 - 标志性背景与温润高光 */
-    --color-sage: #84a59d; /* 苍艾绿 - 经典背景色 */
-    --color-forest: #315f4d; /* 森林绿 - 深度强调色 */
-    --color-charcoal: #2f3e46; /* 深炭灰 - 主文字色 */
+    --color-sage: #84a59d; /* 苍艾绿 - 核心界面背景色 */
+    --color-forest: #315f4d; /* 森林绿 - 深度交互色 */
+    --color-charcoal: #2f3e46; /* 深炭灰 - 稳重的文字色 */
 
     /* 🍂 辅助点缀色 */
+    --color-honey: #b48a32; /* ✨ 新增：复古蜂蜜金 - 比金黄更深沉、更具复古感 */
     --color-moss: #a3b18a; /* 苔藓绿 */
     --color-paper-edge: #e6e1d3; /* 纸张边缘色 */
-    --color-rose: #f43f5e; /* 红色 (关闭/错误) */
-    --color-emerald: #6ee7b7; /* 亮绿 (在线/高亮) */
+    --color-rose: #f43f5e; /* 红色 - 警告与关闭 */
+    --color-emerald: #6ee7b7; /* 亮绿 - 仅用于状态指示 */
 
     /* ⚪️ 通用基础色与动态遮罩 */
     --color-white: #ffffff;
-    /* ✨ 优化：使用 Charcoal 调制的浅黑遮罩 */
-    --color-black-fade: rgba(47, 62, 70, 0.08);
-    /* ✨ 新增：米色遮罩，在绿色背景上产生“奶油感”高光 */
-    --color-parchment-fade: rgba(250, 247, 240, 0.15);
+    --color-charcoal-fade: rgba(47, 62, 70, 0.1);
+    --color-parchment-fade: rgba(250, 247, 240, 0.2);
     --color-transparent: transparent;
 }

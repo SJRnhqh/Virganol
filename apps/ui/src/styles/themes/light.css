@@ -15,26 +15,25 @@
     /* === 2. 顶部栏 (Header) === */
     --header-bg: var(--color-sage);
     --header-fg: var(--color-charcoal);
-    /* 🛠️ 语义化：定义顶部图标的基础色、常态透明度和高亮色 */
-    --header-icon: var(--color-parchment);
+    --header-icon: var(--color-charcoal);
     --header-icon-muted: color-mix(
         in srgb,
         var(--header-icon),
         transparent 60%
     );
-    --header-accent: var(--color-emerald);
+    --header-accent: var(--color-honey);
+
+    /* 🛠️ 关键：必须显式定义面包屑使用的变量 */
+    --breadcrumb-accent: var(--color-honey);
 
     /* === 3. 主内容区 & 画布 === */
     --main-bg: var(--color-parchment);
     --canvas-grid: var(--color-charcoal);
     --canvas-edge: var(--color-sage);
 
-    /* === 4. 操作卡片 === */
+    /* === 4. 操作卡片、节点等 === */
     --action-bg: var(--color-forest);
     --action-fg: var(--color-parchment);
-    --action-badge: var(--color-sage);
-
-    /* === 5. 节点 (Nodes) === */
     --node-bg: var(--color-white);
     --node-border: var(--color-paper-edge);
     --node-fg-title: var(--color-charcoal);
