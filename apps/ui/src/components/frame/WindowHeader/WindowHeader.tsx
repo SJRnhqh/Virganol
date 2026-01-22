@@ -6,6 +6,8 @@ import { NAV_ITEMS } from "@/config/navigation";
 // ✅ 引入你已经拆分好的组件和 Hook
 import { Breadcrumb } from "./Breadcrumb";
 import { SettingsButton } from "./SettingsButton";
+// 🟢 新增：引入侧边栏切换组件
+import { SidebarToggle } from "./SidebarToggle"; 
 import { MacTrafficLightSpacer } from "./MacTrafficLightSpacer";
 import { WindowsWindowControls } from "./WindowsWindowControls";
 import { useWindowState } from "@/hooks/useWindowState";
@@ -16,7 +18,6 @@ interface WindowHeaderProps {
 
 export function WindowHeader({ activeId }: WindowHeaderProps) {
   // 🟢 修复：根据 TS 报错，type() 是同步的，直接在 useState 初始化即可
-  // 这样 osType 初始值就是 "windows" 或 "macos"，不会是 null
   const [osType] = useState(() => {
     try {
       return type(); // 同步调用
@@ -58,7 +59,11 @@ export function WindowHeader({ activeId }: WindowHeaderProps) {
       <div
         className={`flex items-center h-full ml-auto mb-0.5 ${isWindows ? "mr-26" : "mr-1"}`}
       >
-        <SettingsButton onClick={() => console.log("Open Settings")} />
+        {/* 🟢 布局控制组：将切换按钮放在设置按钮左侧，保持 1 单位间隔 */}
+        <div className="flex items-center gap-1">
+          <SidebarToggle />
+          <SettingsButton onClick={() => console.log("Open Settings")} />
+        </div>
       </div>
 
       {/* 5. Windows 控制按钮 */}
