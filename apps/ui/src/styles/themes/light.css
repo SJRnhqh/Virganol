@@ -1,4 +1,4 @@
-/* src/styles/themes/light.css */
+/* apps/ui/src/styles/themes/light.css */
 
 :root {
     /* === 1. 侧边栏 (Sidebar) === */
@@ -15,17 +15,21 @@
     /* === 2. 顶部栏 (Header) === */
     --header-bg: var(--color-sage);
     --header-fg: var(--color-charcoal);
-    /* ⚙️ 核心：图标使用米色，解决绿色背景下不醒目的问题 */
+    /* 🛠️ 语义化：定义顶部图标的基础色、常态透明度和高亮色 */
     --header-icon: var(--color-parchment);
-    /* 交互光晕使用亮绿 */
+    --header-icon-muted: color-mix(
+        in srgb,
+        var(--header-icon),
+        transparent 60%
+    );
     --header-accent: var(--color-emerald);
 
-    /* === 3. 主内容区 & 画布 (BaseCanvas) === */
+    /* === 3. 主内容区 & 画布 === */
     --main-bg: var(--color-parchment);
     --canvas-grid: var(--color-charcoal);
     --canvas-edge: var(--color-sage);
 
-    /* === 4. 操作卡片 (BaseActionCard) === */
+    /* === 4. 操作卡片 === */
     --action-bg: var(--color-forest);
     --action-fg: var(--color-parchment);
     --action-badge: var(--color-sage);

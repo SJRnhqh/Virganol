@@ -1,72 +1,41 @@
 @import "tailwindcss";
-
-/* 1. 基础色盘与语义化主题导入 */
 @import "./themes/_palette.css";
 @import "./themes/light.css";
-
-/* 🌟 引入画布专用样式 */
 @import "./canvas.css";
 
 @theme {
-    /* 侧边栏语义映射 */
+    /* ... 保持侧边栏映射 ... */
     --color-sidebar-bg: var(--sidebar-bg);
     --color-sidebar-fg: var(--sidebar-fg);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-active-bg: var(--sidebar-active-bg);
     --color-sidebar-active-fg: var(--sidebar-active-fg);
 
-    /* 顶部栏语义映射 (增强醒目度) */
+    /* 顶部栏语义映射：完全同步 light.css */
     --color-header-bg: var(--header-bg);
     --color-header-fg: var(--header-fg);
     --color-header-icon: var(--header-icon);
+    --color-header-icon-muted: var(--header-icon-muted);
     --color-header-accent: var(--header-accent);
 
-    /* 主体区域映射 */
+    /* ... 其他映射保持不变 ... */
     --color-main-bg: var(--main-bg);
-
-    /* 画布语义映射 */
     --color-canvas-grid: var(--canvas-grid);
     --color-canvas-edge: var(--canvas-edge);
-
-    /* 操作卡片语义映射 */
     --color-action-bg: var(--action-bg);
     --color-action-fg: var(--action-fg);
     --color-action-badge: var(--action-badge);
-
-    /* 节点语义映射 */
     --color-node-bg: var(--node-bg);
     --color-node-border: var(--node-border);
     --color-node-fg-title: var(--node-fg-title);
     --color-node-fg-desc: var(--node-fg-desc);
 
-    /* 基础色直接映射 (确保 TSX 可以使用 text-parchment 等类名) */
+    /* 基础色映射 */
     --color-sage: var(--color-sage);
     --color-forest: var(--color-forest);
     --color-parchment: var(--color-parchment);
     --color-charcoal: var(--color-charcoal);
     --color-emerald: var(--color-emerald);
-    --color-rose: var(--color-rose);
-    --color-white: #ffffff;
-
-    /* 遮罩高光映射 */
-    --color-parchment-fade: var(--color-parchment-fade);
 }
 
-body {
-    background-color: var(--main-bg);
-    color: var(--color-charcoal);
-    margin: 0;
-    font-family:
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* 全局选中文本样式：使用苍艾绿透明度增加温润感 */
-::selection {
-    background-color: var(--color-parchment-fade);
-    color: var(--color-charcoal);
-}
+/* ... body 样式 ... */

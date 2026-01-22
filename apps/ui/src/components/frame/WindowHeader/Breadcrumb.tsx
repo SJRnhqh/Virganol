@@ -11,23 +11,23 @@ export function Breadcrumb({ label }: BreadcrumbProps) {
         <Milestone
           size={16}
           strokeWidth={2.5}
-          // 移除硬编码，改用语义化的米色 (parchment)
+          // ✨ 这里的类名现在完全是语义化的
           className="transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]
-                      text-parchment/40
-                      group-hover:text-emerald
+                      text-header-icon-muted
+                      group-hover:text-header-accent
                       group-hover:-translate-y-1
                       group-hover:rotate-12
-                      group-hover:drop-shadow-[0_0_8px_var(--color-emerald)]"
+                      group-hover:drop-shadow-[0_0_8px_var(--color-header-accent)]"
         />
-        {/* 使用调色板中的 emerald 产生 Nectar Glow */}
+        {/* Nectar Glow 呼吸感 */}
         <div
-          className="absolute bottom-1 w-3 h-1 bg-emerald/0 rounded-full blur-[2px]
+          className="absolute bottom-1 w-3 h-1 bg-header-accent/0 rounded-full blur-[2px]
                         transition-all duration-300
-                        group-hover:bg-emerald/40 group-hover:scale-150"
+                        group-hover:bg-header-accent/40 group-hover:scale-150"
         />
       </div>
 
-      {/* 使用主题定义的 header-fg (深炭灰) */}
+      {/* 文字颜色也通过语义变量控制 */}
       <span className="text-sm text-header-fg font-bold tracking-tight transition-colors duration-300 group-hover:text-header-fg/80">
         {label}
       </span>
