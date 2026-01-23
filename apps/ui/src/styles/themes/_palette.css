@@ -5,19 +5,22 @@
      🎨 基础色盘 (Primitives)
      ========================================= */
 
-    /* 🌿 Virganol 核心色系 */
-    --color-parchment: #faf7f0; /* 米色 - 标志性背景与温润高光 */
-    --color-sage: #84a59d; /* 苍艾绿 - 核心界面背景色 */
-    --color-forest: #315f4d; /* 森林绿 - 深度交互色 */
-    --color-charcoal: #2f3e46; /* 深炭灰 - 稳重的文字色 */
+    /* 🌿 Virganol 色系 */
+    --color-danmifen: #fbeee2; /* 淡米粉 - 标志性背景与温润高光 */
+    --color-songshuanglv: #83a78d; /* 松霜绿 - 核心界面背景色 */
+    --color-qinghui: #2b333e; /* 青灰 - 稳重的文字色 */
+    --color-zheshi: #862617; /* 赭石 - 面包屑交互色 */
+    --color-mihuang: #fbb957; /* 蜜黄 - 面包屑交互色 */
 
     /* 🍂 辅助点缀色 */
-    --color-honey: #b48a32; /* ✨ 新增：复古蜂蜜金 - 比金黄更深沉、更具复古感 */
-    --color-moss: #a3b18a; /* 苔藓绿 */
-    --color-paper-edge: #e6e1d3; /* 纸张边缘色 */
-    --color-rose: #f43f5e; /* 红色 - 警告与关闭 */
-    --color-emerald: #6ee7b7; /* 亮绿 - 仅用于状态指示 */
+    --color-danhuilv: #ad9e5f; /* 淡灰绿 - 窗口最小化 */
+    --color-shuilv: #8cc269; /* 水绿 - 窗口缩放 */
+    --color-xiangyehong: #f07c82; /* 香叶红 - 窗口关闭 */
+    --color-meirenjiaocheng: #fa7e23; /* 美人焦橙 - 悬浮胶囊光标 */
+    
+    --color-honey:#862617; /* TODO: 选择合适的高亮配色 */
 
+    --color-forest: #315f4d; /* 森林绿 - 深度交互色 */
     /* ⚪️ 通用基础色与动态遮罩 */
     --color-white: #ffffff;
     --color-charcoal-fade: rgba(47, 62, 70, 0.1);

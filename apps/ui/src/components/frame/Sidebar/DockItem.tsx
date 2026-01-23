@@ -1,8 +1,8 @@
+// apps/ui/src/components/frame/Sidebar/DockItem.tsx
 import { useRef } from "react";
 import { motion, useSpring, useTransform, MotionValue } from "framer-motion";
 import { type LucideIcon } from "lucide-react";
 import { NavIndicator } from "./NavIndicator";
-import { GlassTooltip } from "../GlassTooltip"; 
 
 function cn(...classes: (string | boolean | undefined)[]) {
   return classes.filter(Boolean).join(" ");
@@ -11,7 +11,6 @@ function cn(...classes: (string | boolean | undefined)[]) {
 interface DockItemProps {
   mouseY: MotionValue;
   icon: LucideIcon;
-  label: string;
   isActive: boolean;
   onClick: () => void;
   side: "left" | "right";
@@ -20,7 +19,6 @@ interface DockItemProps {
 export function DockItem({
   mouseY,
   icon: Icon,
-  label,
   isActive,
   onClick,
   side,
@@ -56,18 +54,16 @@ export function DockItem({
         style={{ x, scale }}
         className="relative w-11 h-11 flex items-center justify-center"
       >
-        <GlassTooltip label={label} side={side}>
-          <div
-            className={cn(
-              "flex items-center justify-center w-11 h-11 rounded-2xl transition-colors duration-200",
-              isActive
-                ? "bg-sidebar-active-bg text-sidebar-active-fg shadow-lg"
-                : "bg-transparent text-sidebar-fg/50 group-hover:bg-parchment-fade group-hover:text-sidebar-fg"
-            )}
-          >
-            <Icon strokeWidth={isActive ? 2.5 : 2} size={22} />
-          </div>
-        </GlassTooltip>
+        <div
+          className={cn(
+            "flex items-center justify-center w-11 h-11 rounded-2xl transition-colors duration-200",
+            isActive
+              ? "bg-sidebar-active-bg text-sidebar-active-fg shadow-lg"
+              : "bg-transparent text-sidebar-fg/50 group-hover:bg-parchment-fade group-hover:text-sidebar-fg"
+          )}
+        >
+          <Icon strokeWidth={isActive ? 2.5 : 2} size={22} />
+        </div>
       </motion.div>
     </button>
   );

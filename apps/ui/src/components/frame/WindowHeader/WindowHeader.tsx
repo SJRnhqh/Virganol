@@ -1,3 +1,4 @@
+// apps/ui/src/components/frame/WindowHeader/WindowHeader.tsx
 import { useState } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { type } from "@tauri-apps/plugin-os";

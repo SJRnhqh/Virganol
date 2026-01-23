@@ -11,14 +11,14 @@ export function Breadcrumb() {
   const containerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
-  const { activeId, side } = useSidebarStore();
+  const { activeId } = useSidebarStore();
   const currentItem = NAV_ITEMS.find(i => i.id === activeId);
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    timeoutRef.current = setTimeout(() => setIsOpen(true), 150);
+    setIsOpen(true);
   };
 
   const handleMouseLeave = () => {
@@ -26,7 +26,7 @@ export function Breadcrumb() {
       clearTimeout(timeoutRef.current);
     }
     // 500ms 黄金缓冲区
-    timeoutRef.current = setTimeout(() => setIsOpen(false), 500);
+    timeoutRef.current = setTimeout(() => setIsOpen(false), 80);
   };
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export function Breadcrumb() {
         )}
       >
         <div className="relative flex items-center justify-center mr-2.5">
-          <Milestone size={14} strokeWidth={2.5} className="text-header-fg/60 transition-all group-hover/nav:text-breadcrumb-accent group-hover/nav:scale-110" />
+          <Milestone size={14} strokeWidth={2.5} className="text-header-icon transition-all group-hover/nav:text-header-breadcrumb-icon-accent group-hover/nav:scale-110" />
         </div>
 
         <div className="overflow-hidden h-4 flex flex-col justify-center">
@@ -83,7 +83,6 @@ export function Breadcrumb() {
           <div 
             className={cn(
               "absolute top-full z-10000 pt-4 px-32 -mx-32", // 🛡️ 全域感应盾牌
-              side === "left" ? "left-0" : "right-0"
             )}
             onMouseDown={(e) => e.stopPropagation()}
             onMouseEnter={() => {

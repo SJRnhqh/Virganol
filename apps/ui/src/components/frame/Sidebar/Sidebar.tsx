@@ -1,3 +1,4 @@
+// apps/ui/src/components/frame/Sidebar/Sidebar.tsx
 import { memo } from "react";
 import { useMotionValue } from "framer-motion";
 import { NAV_ITEMS } from "@/config/navigation";
@@ -54,7 +55,6 @@ export const Sidebar = memo(({ activeId, onActiveIdChange }: SidebarProps) => {
               isActive={activeId === item.id}
               onClick={() => onActiveIdChange(item.id)}
               icon={item.icon}
-              label={item.label}
               side={side}
             />
           ))}
