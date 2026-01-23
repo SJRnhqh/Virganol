@@ -2,28 +2,32 @@
 
 :root {
     /* =========================================
-     🎨 基础色盘 (Primitives)
-     ========================================= */
+      🎨 基础色盘 (Primitives / The Palette)
+      只定义颜色本身，绝不定义“它是用来做什么的”
+      ========================================= */
 
-    /* 🌿 Virganol 色系 */
-    --color-danmifen: #fbeee2; /* 淡米粉 - 标志性背景与温润高光 */
-    --color-songshuanglv: #83a78d; /* 松霜绿 - 核心界面背景色 */
-    --color-qinghui: #2b333e; /* 青灰 - 稳重的文字色 */
-    --color-zheshi: #862617; /* 赭石 - 面包屑交互色 */
-    --color-mihuang: #fbb957; /* 蜜黄 - 面包屑交互色 */
+    /* 🌿 V.I.N.E. 核心品牌色 (Brand Colors) */
+    --color-songshuanglv: #83a78d; /* 松霜绿 (Pine Frost) - 主色调 */
+    --color-danmifen: #fbeee2;     /* 淡米粉 (Pale Rice) - 背景色调 */
+    --color-qinghui: #2b333e;      /* 青灰 (Cyan Grey) - 墨色/深色调 */
 
-    /* 🍂 辅助点缀色 */
-    --color-danhuilv: #ad9e5f; /* 淡灰绿 - 窗口最小化 */
-    --color-shuilv: #8cc269; /* 水绿 - 窗口缩放 */
-    --color-xiangyehong: #f07c82; /* 香叶红 - 窗口关闭 */
-    --color-meirenjiaocheng: #fa7e23; /* 美人焦橙 - 悬浮胶囊光标 */
-    
-    --color-honey:#862617; /* TODO: 选择合适的高亮配色 */
+    /* 🏮 国风强调色 (Accent Colors - Nectar & Minerals) */
+    --color-meirenjiaocheng: #fa7e23; /* 美人焦橙 (Canna Orange) - 活力/鲜活 */
+    --color-zheshi: #862617;          /* 赭石 (Ochre) - 沉稳/印记 */
+    --color-mihuang: #fbb957;         /* 蜜黄 (Honey Yellow) - 光晕/温润 */
+    --color-forest: #315f4d;          /* 森林绿 (Deep Forest) - 深度 */
+    --color-jizong:#de7622;           /* 麂棕 (Jute Brown) - 低调/稳重 */
 
-    --color-forest: #315f4d; /* 森林绿 - 深度交互色 */
-    /* ⚪️ 通用基础色与动态遮罩 */
+    /* 🚦 功能状态色 (Functional Status) */
+    --color-xiangyehong: #f07c82; /* 香叶红 (Geranium Red) - 危险/关闭/错误 */
+    --color-shuilv: #8cc269;      /* 水绿 (Water Green) - 成功/最大化 */
+    --color-danhuilv: #ad9e5f;    /* 淡灰绿 (Pale Olive) - 警告/最小化/中立 */
+
+    /* ⚪️ 中性色与遮罩 (Neutrals & Utility) */
     --color-white: #ffffff;
-    --color-charcoal-fade: rgba(47, 62, 70, 0.1);
-    --color-parchment-fade: rgba(250, 247, 240, 0.2);
     --color-transparent: transparent;
+    
+    /* 遮罩层建议使用语义化命名，但在这里作为基础变量保留 */
+    --color-mask-dark: rgba(47, 62, 70, 0.1);    /* 深色遮罩 */
+    --color-mask-warm: rgba(250, 247, 240, 0.2); /* 暖色遮罩 */
 }

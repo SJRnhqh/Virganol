@@ -3,7 +3,7 @@ import { Milestone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSidebarStore } from "@/store/SidebarStore";
 import { NAV_ITEMS } from "@/config/navigation";
-import { ModuleMenu } from "./ModuleMenu";
+// import { ModuleMenu } from "./ModuleMenu";
 import { cn } from "@/lib/utils";
 
 export function Breadcrumb() {
@@ -59,7 +59,7 @@ export function Breadcrumb() {
         )}
       >
         <div className="relative flex items-center justify-center mr-2.5">
-          <Milestone size={14} strokeWidth={2.5} className="text-header-icon transition-all group-hover/nav:text-header-breadcrumb-icon-accent group-hover/nav:scale-110" />
+          <Milestone size={14} strokeWidth={2.5} className="text-header-icon transition-all group-hover/nav:text-header-milestone group-hover/nav:scale-110" />
         </div>
 
         <div className="overflow-hidden h-4 flex flex-col justify-center">
@@ -91,7 +91,7 @@ export function Breadcrumb() {
               }
             }}
           >
-            <ModuleMenu onClose={() => setIsOpen(false)} />
+            {/*<ModuleMenu onClose={() => setIsOpen(false)} />*/}
           </div>
         )}
       </AnimatePresence>

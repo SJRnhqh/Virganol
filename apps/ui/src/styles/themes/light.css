@@ -20,11 +20,11 @@
     
     /* 面包屑文字颜色 */
     --header-fg: var(--color-qinghui);
-    /* 面包屑图标高亮颜色 */
+    /* 面包屑交互体系 */
+    --header-milestone: var(--color-zheshi);
+    --header-breadcrumb-bg: var(--color-jizong);
     --header-breadcrumb-icon-accent: var(--color-zheshi);
-    /* 面包屑光标、阴影高亮颜色 */
-    --header-breadcrumb-accent: var(--color-meirenjiaocheng);
-    --header-breadcrumb-shadow: var(--color-mihuang);
+    
     
     /* 图标默认颜色（静默60%透明度的青灰色）和背景色 */
     --header-icon-muted: color-mix(
@@ -35,10 +35,10 @@
     --header-icon: var(--color-qinghui);
     --header-icon-bg: var(--color-parchment-fade); /* 默认羊皮纸浅色 */
 
-    /*Windows 窗口控制背景*/
-    --window-control-minimize: var(--color-danhuilv);
-    --window-control-toggle-maximize: var(--color-shuilv);
-    --window-control-close: var(--color-xiangyehong);
+    /* 🚦 窗口控制体系 (复用基础色) */
+    --window-control-close: var(--color-xiangyehong);           /* 关闭 -> 香叶红 */
+    --window-control-toggle-maximize: var(--color-shuilv);      /* 最大化 -> 水绿 */
+    --window-control-minimize: var(--color-danhuilv);           /* 最小化 -> 淡灰绿 */
 
     /* === 3. 主体背景  === */
     --main-bg: var(--color-danmifen);
