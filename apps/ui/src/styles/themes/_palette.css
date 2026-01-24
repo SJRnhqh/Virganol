@@ -12,11 +12,14 @@
     --color-qinghui: #2b333e;      /* 青灰 (Cyan Grey) - 墨色/深色调 */
 
     /* 🏮 国风强调色 (Accent Colors - Nectar & Minerals) */
-    --color-meirenjiaocheng: #fa7e23; /* 美人焦橙 (Canna Orange) - 活力/鲜活 */
     --color-zheshi: #862617;          /* 赭石 (Ochre) - 沉稳/印记 */
-    --color-mihuang: #fbb957;         /* 蜜黄 (Honey Yellow) - 光晕/温润 */
-    --color-forest: #315f4d;          /* 森林绿 (Deep Forest) - 深度 */
-    --color-jizong:#de7622;           /* 麂棕 (Jute Brown) - 低调/稳重 */
+    --color-mihuang: #fbb957;         /* 蜜黄 (Honey Yellow) - bot光晕、sparkles背景 */
+    --color-meirenjiaocheng: #fa7e23; /* 美人焦橙 (Canna Orange) - sparkles轮廓 */
+    --color-ningmenghuang:#fcd337;    /* 柠檬黄 (Lemon Yellow) - sparkles填充 */
+    --color-haimolv:#e2e7bf;         /* 海沫绿 (Sea Foam Green) - flaskconical背景 */
+    --color-qinglv:#2e8b57;          /* 青绿 (Cyan Green) - flaskconical轮廓 */
+    --color-yuqing:#4a9d9c;          /* 玉青 (Jade Blue) - flaskconical填充 */
+    --color-jizong:#de7622;           /* 麂棕 (Jute Brown) - 低调/稳重 */    
 
     /* 🚦 功能状态色 (Functional Status) */
     --color-xiangyehong: #f07c82; /* 香叶红 (Geranium Red) - 危险/关闭/错误 */

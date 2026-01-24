@@ -43,6 +43,24 @@
     --color-main-bg: var(--main-bg);
     --color-main-fg: var(--main-fg);
     
+    /* === 4. SciSpirit === */
+    --color-spirit-welcome-atomsphere: var(--spirit-welcome-atomsphere);
+    
+    /* === 4.1 WelcomeBoard === */
+    /* Bot */
+    --color-spirit-welcome-bot-bg: var(--spirit-welcome-bot-bg);
+    --color-spirit-welcome-bot-border: var(--spirit-welcome-bot-border);
+    
+    /* Sparkles */
+    --color-spirit-welcome-sparkles-bg: var(--spirit-welcome-sparkles-bg);
+    --color-spirit-welcome-sparkles-border: var(--spirit-welcome-sparkles-border);
+    --color-spirit-welcome-sparkles-fill: var(--spirit-welcome-sparkles-fill);
+    
+    /* FlaskConical */
+    --color-spirit-welcome-flaskconical-bg: var(--spirit-welcome-flaskconical-bg);
+    --color-spirit-welcome-flaskconical-border: var(--spirit-welcome-flaskconical-border);
+    --color-spirit-welcome-flaskconical-fill: var(--spirit-welcome-flaskconical-fill);
+    
     /* TODO: 有待重构规整 */
     /* 画布 */
     --color-canvas-grid: var(--canvas-grid);

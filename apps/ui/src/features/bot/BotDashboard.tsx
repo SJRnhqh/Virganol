@@ -1,128 +1,57 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  SendHorizontal, 
-  Paperclip, 
-  ArrowUp
-} from "lucide-react";
-import { cn } from "@/lib/utils"; 
+// apps/ui/src/features/bot/BotDashboard.tsx
+import { cn } from "@/lib/utils";
+import { useBotStore } from "./store/useBotStore";
+import { WelcomeBoard } from "./views/WelcomeBoard";
+import { ChatStream } from "./views/ChatStream";
+import { BotInput } from "./components/BotInput";
 
 export function BotDashboard() {
-  const [inputValue, setInputValue] = useState("");
-  // 核心状态：是否开始对话。默认为 false，输入框在中间。
-  const [hasStarted, setHasStarted] = useState(false);
+  // 1. 获取剧本 (Store)
+  const { messages, viewMode } = useBotStore();
+  
+  // 2. 计算当前场景状态
+  const hasStarted = messages.length > 0;
 
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
-    setHasStarted(true); // 🚀 触发布局切换：中心 -> 底部
-    // 这里未来接真实的发送逻辑
-    console.log("Sending:", inputValue);
-    setInputValue("");
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-
+  // 3. 编排舞台
   return (
-    // 外层容器
-    <div className="w-full h-full flex flex-col relative overflow-hidden bg-main-bg/50">
-      {/* 2. 主体区域：利用 Flex 布局控制垂直位置 */}
-      {/* hasStarted = false: justify-center (居中) */}
-      {/* hasStarted = true:  justify-end (到底部) */}
+    <div className="w-full h-full flex flex-row overflow-hidden relative">
+      
+      {/* === 左侧区域 (Solo模式的主舞台 / Split模式的侧边栏) === */}
       <div className={cn(
-        "flex-1 flex flex-col relative transition-all duration-500 ease-in-out",
-        hasStarted ? "justify-end" : "justify-center items-center"
+        "flex flex-col h-full transition-all duration-500 ease-in-out",
+        // 核心布局逻辑：如果是 Split 模式，宽度变窄；否则全宽
+        viewMode === 'split' ? "w-122.5 border-r border-sidebar-border/50" : "w-full"
       )}>
-        {/* B. 聊天记录区域 (只在开始后显示并占据剩余空间) */}
-        {hasStarted && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="flex-1 w-full overflow-y-auto p-4 custom-scrollbar"
-          >
-             {/* 这里未来放置 ChatMessageList */}
-             <div className="h-full flex flex-col justify-end items-center pb-10 opacity-30 text-sm text-muted-foreground">
-                <p>Chat history starts here...</p>
-             </div>
-          </motion.div>
-        )}
-
-        {/* 3. 输入框区域 (神奇的布局切换) */}
-        {/* - layout prop: 让 framer-motion 自动处理位置变化的平滑过渡
-            - key: 保持不变，确保 React 认为是同一个组件在移动
-        */}
-        <motion.div 
-          layout
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          className={cn(
-            "w-full z-20", 
-            // 如果未开始，限制宽度并居中；如果已开始，全宽并带 Padding
-            hasStarted ? "p-4 max-w-4xl mx-auto" : "max-w-2xl px-6"
-          )}
-        >
-          <div className={cn(
-            "relative flex items-end gap-2 p-2 pl-4 border shadow-sm backdrop-blur-md transition-all duration-300",
-            // 样式微调：未开始时圆角大一点(像搜索框)，开始后圆角标准一点
-            hasStarted 
-              ? "rounded-xl bg-sidebar-bg/80 border-sidebar-border" 
-              : "rounded-2xl bg-white/60 border-white/40 shadow-xl"
-          )}>
-            
-            {/* 附件按钮 */}
-            <button className="p-2 text-muted-foreground hover:text-primary transition-colors mb-0.5 rounded-lg hover:bg-black/5">
-              <Paperclip size={18} />
-            </button>
-
-            {/* 输入域 */}
-            <textarea 
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={hasStarted ? "Message SciSpirit..." : "Ask SciSpirit anything..."}
-              className="flex-1 bg-transparent border-none focus:ring-0 text-sm py-3 resize-none placeholder:text-muted-foreground/40 leading-relaxed custom-scrollbar text-sidebar-fg"
-              rows={1}
-              style={{ minHeight: "48px", maxHeight: "150px" }}
-            />
-            
-            {/* 发送按钮 */}
-            <button 
-              onClick={handleSend}
-              disabled={!inputValue.trim()}
-              className={cn(
-                "p-2.5 rounded-xl transition-all mb-0.5",
-                inputValue.trim() 
-                  ? "bg-primary text-primary-foreground shadow-md hover:scale-105 active:scale-95" 
-                  : "bg-transparent text-muted-foreground/30 cursor-not-allowed"
-              )}
-            >
-              {hasStarted ? <ArrowUp size={18} /> : <SendHorizontal size={18} />}
-            </button>
-          </div>
-
-          {/* 底部免责声明 (仅在初始状态显示，避免聊天时干扰) */}
-          <AnimatePresence>
-            {!hasStarted && (
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
-                exit={{ opacity: 0 }}
-                className="text-center mt-4"
-              >
-                 <p className="text-[10px] text-muted-foreground/40 font-light tracking-widest uppercase">
-                   AI-Generated Content • Check for errors
-                 </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+        
+        {/* 内部布局：欢迎页/聊天页切换 */}
+        <div className={cn(
+          "flex-1 flex flex-col p-4 transition-all duration-500",
+          hasStarted ? "justify-end" : "justify-center items-center"
+        )}>
           
-        </motion.div>
+          {/* 导演指令：如果没开始，显示欢迎页 */}
+          {!hasStarted && <WelcomeBoard />}
 
+          {/* 导演指令：如果开始了，显示聊天流 */}
+          {hasStarted && <ChatStream />}
+
+          {/* 导演指令：输入框始终在场 */}
+          <BotInput hasStarted={hasStarted} />
+          
+        </div>
       </div>
+
+      {/* === 右侧区域 (工坊区域 - 预留位置) === */}
+      {/* 这里展现了极致的可扩展性：现在它是空的，未来只要 viewMode 变成 split，它就会滑出来 */}
+      {viewMode === 'split' && (
+        <div className="flex-1 bg-white/50 backdrop-blur-sm animate-in slide-in-from-right duration-500">
+           {/* 未来这里放 <Workbench /> */}
+           <div className="h-full flex items-center justify-center text-sidebar-fg/30">
+             Workbench Area
+           </div>
+        </div>
+      )}
+
     </div>
   );
 }

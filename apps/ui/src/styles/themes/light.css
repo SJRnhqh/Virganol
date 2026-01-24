@@ -43,6 +43,24 @@
     /* === 3. 主体背景  === */
     --main-bg: var(--color-danmifen);
     --main-fg: var(--color-qinghui);
+    
+    /* === 4. SciSpirit === */
+    --spirit-welcome-atomsphere: var(--color-mihuang);
+    
+    /* === 4.1 WelcomeBoard === */
+    /* Bot */
+    --spirit-welcome-bot-bg: var(--color-white);
+    --spirit-welcome-bot-border: var(--color-white);
+    
+    /* Sparkles */
+    --spirit-welcome-sparkles-bg: var(--color-mihuang);
+    --spirit-welcome-sparkles-border: var(--color-meirenjiaocheng);
+    --spirit-welcome-sparkles-fill: var(--color-ningmenghuang);
+
+    /* FlaskConical */
+    --spirit-welcome-flaskconical-bg: var(--color-haimolv);
+    --spirit-welcome-flaskconical-border: var(--color-qinglv);
+    --spirit-welcome-flaskconical-fill: var(--color-yuqing);
 
     /* TODO: 有待重构规整 */
     --canvas-grid: var(--color-qinghui);
