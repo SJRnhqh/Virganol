@@ -1,7 +1,11 @@
+// apps/ui/src/components/frame/Sidebar/Sidebar.tsx
 import { memo } from "react";
 import { useMotionValue } from "framer-motion";
 import { NAV_ITEMS } from "@/config/navigation";
 import { DockItem } from "./DockItem";
+import { cn } from "@/lib/utils";
+// 引入刚才创建的 Hook
+import { useSidebarStyles } from "@/hooks/useSidebarStyles"; 
 
 interface SidebarProps {
   activeId: string;
@@ -10,33 +14,57 @@ interface SidebarProps {
 
 export const Sidebar = memo(({ activeId, onActiveIdChange }: SidebarProps) => {
   const mouseY = useMotionValue(Infinity);
+  
+  // ✨ 使用 Hook 获取样式逻辑，不再直接调用 useSidebarStore
+  // 这里解构出的变量全是语义化的，没有复杂的 ternary operator (? :)
+  const { 
+    isOpen, 
+    side, 
+    dockAnimationClass, 
+    dockBorderClass 
+  } = useSidebarStyles();
 
   return (
     <aside
-      className="absolute left-0 top-1/2 -translate-y-1/2 z-40"
+      data-state={isOpen ? "open" : "closed"}
+      className={cn(
+        "relative h-full z-40 shrink-0 flex transition-[width] duration-500 ease-in-out",
+        "w-18 data-[state=closed]:w-0",
+        // 🚀 核心：展开时允许溢出显示 Tooltip，收起时隐藏
+        isOpen ? "overflow-visible" : "overflow-hidden",
+        side === "left" ? "justify-end" : "justify-start"
+      )}
       onMouseMove={(e) => mouseY.set(e.pageY)}
       onMouseLeave={() => mouseY.set(Infinity)}
     >
-      {/* bg-sidebar-bg: 对应 Sage
-        border-sidebar-border: 对应 Paper Edge (20% 透明度)
-        shadow-charcoal-fade: 使用基于深炭灰的阴影，比纯黑更高级
-      */}
-      <nav
-        className="relative flex flex-col items-center gap-5 py-8 px-3 w-18
-                      bg-sidebar-bg border-y border-r border-sidebar-border
-                      rounded-r-3xl shadow-2xl shadow-charcoal-fade"
+      <div 
+        className={cn(
+          "w-18 h-full flex flex-col items-center justify-center shrink-0",
+          "transition-all ease-in-out transform-gpu will-change-transform",
+          // ✨ 这里直接使用 Hook 计算好的动画类，非常干净
+          dockAnimationClass
+        )}
       >
-        {NAV_ITEMS.map((item) => (
-          <DockItem
-            key={item.id}
-            mouseY={mouseY}
-            isActive={activeId === item.id}
-            onClick={() => onActiveIdChange(item.id)}
-            icon={item.icon}
-            label={item.label}
-          />
-        ))}
-      </nav>
+        <nav
+          className={cn(
+            "relative flex flex-col items-center gap-5 py-8 px-3 w-full",
+            "bg-sidebar-bg shadow-2xl shadow-charcoal-fade",
+            // ✨ 这里直接使用 Hook 计算好的边框类
+            dockBorderClass
+          )}
+        >
+          {NAV_ITEMS.map((item) => (
+            <DockItem
+              key={item.id}
+              mouseY={mouseY}
+              isActive={activeId === item.id}
+              onClick={() => onActiveIdChange(item.id)}
+              icon={item.icon}
+              side={side}
+            />
+          ))}
+        </nav>
+      </div>
     </aside>
   );
 });

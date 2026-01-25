@@ -1,56 +1,100 @@
+import { useState, useRef, useEffect } from "react";
 import { Milestone } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useSidebarStore } from "@/store/SidebarStore";
+import { NAV_ITEMS } from "@/config/navigation";
+// import { ModuleMenu } from "./ModuleMenu";
+import { cn } from "@/lib/utils";
 
-interface BreadcrumbProps {
-  label?: string;
-}
+export function Breadcrumb() {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
+  const { activeId } = useSidebarStore();
+  const currentItem = NAV_ITEMS.find(i => i.id === activeId);
 
-export function Breadcrumb({ label }: BreadcrumbProps) {
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    // 500ms 黄金缓冲区
+    timeoutRef.current = setTimeout(() => setIsOpen(false), 80);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="flex items-end h-full px-1 group/nav">
-      <div
-        className="flex items-center h-7.5 px-3
-                   bg-main-bg border-t border-x border-sidebar-border rounded-t-md
-                   shadow-[0_-2px_10px_var(--color-charcoal-fade)]
-                   relative translate-y-px z-10"
+    <div 
+      className="flex items-end h-full px-1 group/nav relative" 
+      ref={containerRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <button
+        onMouseDown={(e) => e.stopPropagation()}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
+        onDoubleClick={(e) => e.stopPropagation()}
+        className={cn(
+          "flex items-center h-7.5 px-3 z-51",
+          "bg-main-bg border-t border-x border-sidebar-border rounded-t-md",
+          "shadow-[0_-2px_10px_var(--color-charcoal-fade)] relative translate-y-px outline-none transition-colors",
+          isOpen ? "brightness-95" : "hover:brightness-105"
+        )}
       >
-        {/* 1. 图标容器 */}
         <div className="relative flex items-center justify-center mr-2.5">
-          <Milestone
-            size={14}
-            strokeWidth={2.5}
-            /**
-             * 🎨 动画重构：触感弹跳 (Tactile Pop)
-             * - ❌ 移除了 rotate-12
-             * - ✅ duration-300: 时间缩短，更干脆
-             * - ✅ ease-[cubic...]: 自定义回弹曲线，带来物理弹射感
-             * - ✅ scale-110: 悬停时稍微放大，强调焦点
-             * - ✅ -translate-y-0.5: 稍微上浮
-             */
-            className="text-header-fg/60
-                       transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]
-                       group-hover/nav:text-breadcrumb-accent
-                       group-hover/nav:scale-110
-                       group-hover/nav:-translate-y-0.5"
-          />
-
-          {/* 2. 底部光晕：配合图标的弹跳节奏 */}
-          {/* 加快了扩散速度，并稍微增加了扩散范围 */}
-          <div
-            className="absolute inset-0 bg-breadcrumb-accent/0 blur-xs rounded-full
-                          transition-all duration-300 ease-out
-                          group-hover/nav:bg-breadcrumb-accent/30 group-hover/nav:scale-125"
-          />
+          <Milestone size={14} strokeWidth={2.5} className="text-header-icon transition-all group-hover/nav:text-header-milestone group-hover/nav:scale-110" />
         </div>
 
-        <span className="text-xs text-header-fg font-black tracking-tight whitespace-nowrap uppercase">
-          {label || "Workspace"}
-        </span>
+        <div className="overflow-hidden h-4 flex flex-col justify-center">
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={activeId}
+              initial={{ y: 8, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -8, opacity: 0 }}
+              transition={{ duration: 0.15, ease: [0.2, 0.8, 0.2, 1] }}
+              className="text-xs text-header-fg font-black tracking-tight uppercase"
+            >
+              {currentItem?.label || "CELLAR"}
+            </motion.span>
+          </AnimatePresence>
+        </div>
+      </button>
 
-        <div
-          className="ml-3 w-1.5 h-1.5 rounded-full bg-breadcrumb-accent
-                     shadow-[0_0_4px_var(--color-honey)] opacity-80"
-        />
-      </div>
+      <AnimatePresence>
+        {isOpen && (
+          <div 
+            className={cn(
+              "absolute top-full z-50 pt-4 px-32 -mx-32", // 🛡️ 全域感应盾牌
+            )}
+            onMouseDown={(e) => e.stopPropagation()}
+            onMouseEnter={() => {
+              if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+              }
+            }}
+          >
+            {/*<ModuleMenu onClose={() => setIsOpen(false)} />*/}
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
