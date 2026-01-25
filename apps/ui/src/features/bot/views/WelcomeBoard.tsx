@@ -8,7 +8,7 @@ export function WelcomeBoard() {
       {/* === 1. 核心视觉区：炼金透镜 === */}
       <div className="relative group cursor-default">
         {/* A. 氛围光晕 */}
-        <div className="absolute -inset-6 bg-spirit-welcome-atomsphere blur-[50px] rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="absolute -inset-20 bg-[radial-gradient(circle,var(--color-spirit-welcome-atomsphere)_0%,transparent_70%)] opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
 
         {/* B. 主容器：磨砂玻璃 */}
         <div className="relative w-28 h-28 bg-linear-to-br from-spirit-welcome-bot-bg/80 to-spirit-welcome-bot-bg/30 backdrop-blur-md border border-spirit-welcome-bot-border/10 rounded-4xl shadow-[0_8px_30px_-6px_rgba(0,0,0,0.1)] flex items-center justify-center transition-transform duration-500 group-hover:-translate-y-2 group-hover:rotate-1">

@@ -17,15 +17,14 @@
     /* === 2. 顶部栏 (Header) === */
     /* 顶部栏背景色 */
     --header-bg: var(--color-songshuanglv);
-    
+
     /* 面包屑文字颜色 */
     --header-fg: var(--color-qinghui);
     /* 面包屑交互体系 */
     --header-milestone: var(--color-zheshi);
     --header-breadcrumb-bg: var(--color-jizong);
     --header-breadcrumb-icon-accent: var(--color-zheshi);
-    
-    
+
     /* 图标默认颜色（静默60%透明度的青灰色）和背景色 */
     --header-icon-muted: color-mix(
         in srgb,
@@ -36,22 +35,22 @@
     --header-icon-bg: var(--color-parchment-fade); /* 默认羊皮纸浅色 */
 
     /* 🚦 窗口控制体系 (复用基础色) */
-    --window-control-close: var(--color-xiangyehong);           /* 关闭 -> 香叶红 */
-    --window-control-toggle-maximize: var(--color-shuilv);      /* 最大化 -> 水绿 */
-    --window-control-minimize: var(--color-danhuilv);           /* 最小化 -> 淡灰绿 */
+    --window-control-close: var(--color-xiangyehong); /* 关闭 -> 香叶红 */
+    --window-control-toggle-maximize: var(--color-shuilv); /* 最大化 -> 水绿 */
+    --window-control-minimize: var(--color-danhuilv); /* 最小化 -> 淡灰绿 */
 
     /* === 3. 主体背景  === */
     --main-bg: var(--color-danmifen);
     --main-fg: var(--color-qinghui);
-    
+
     /* === 4. SciSpirit === */
     --spirit-welcome-atomsphere: var(--color-mihuang);
-    
+
     /* === 4.1 WelcomeBoard === */
     /* Bot */
     --spirit-welcome-bot-bg: var(--color-white);
     --spirit-welcome-bot-border: var(--color-white);
-    
+
     /* Sparkles */
     --spirit-welcome-sparkles-bg: var(--color-mihuang);
     --spirit-welcome-sparkles-border: var(--color-meirenjiaocheng);
