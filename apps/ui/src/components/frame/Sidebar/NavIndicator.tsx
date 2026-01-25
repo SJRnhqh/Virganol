@@ -1,17 +1,28 @@
-import React from "react";
+// apps/ui/src/components/frame/Sidebar/NavIndicator.tsx
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
-export function NavIndicator() {
+interface NavIndicatorProps {
+  side: "left" | "right";
+}
+
+export function NavIndicator({ side }: NavIndicatorProps) {
   return (
     <motion.div
       layoutId="active-pill"
       /**
-       * 🎨 颜色语义化重构
-       * 1. bg-sidebar-active-bg: 对应主题中的米色 (Parchment)
-       * 2. shadow: 使用 Tailwind 主题映射的变量
+       * 🎨 样式完全保留，仅对位置和圆角进行镜像
        */
-      className="absolute -right-3 w-1 h-7 bg-sidebar-active-bg rounded-l-full z-50 shadow-[0_0_10px_var(--color-sidebar-active-bg)]"
-      // 🚀 物理反馈参数严格保持原样，没有任何迟滞
+      className={cn(
+        "absolute w-1 h-7 z-50 bg-sidebar-active-bg shadow-[0_0_10px_var(--color-sidebar-active-bg)]",
+        // 🟢 镜像逻辑
+        // 左边时：贴右 (-right-3)，圆角向左 (rounded-l-full)
+        // 右边时：贴左 (-left-3)，圆角向右 (rounded-r-full)
+        side === "left" 
+          ? "-right-3 rounded-l-full" 
+          : "-left-3 rounded-r-full"
+      )}
+      // 🚀 物理反馈参数严格保持原样，没有任何变动
       transition={{
         type: "spring",
         stiffness: 500,

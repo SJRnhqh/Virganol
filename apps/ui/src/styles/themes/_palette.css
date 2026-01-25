@@ -2,25 +2,34 @@
 
 :root {
     /* =========================================
-     🎨 基础色盘 (Primitives)
-     ========================================= */
+      🎨 基础色盘 (Primitives / The Palette)
+      只定义颜色本身，绝不定义“它是用来做什么的”
+      ========================================= */
 
-    /* 🌿 Virganol 核心色系 */
-    --color-parchment: #faf7f0; /* 米色 - 标志性背景与温润高光 */
-    --color-sage: #84a59d; /* 苍艾绿 - 核心界面背景色 */
-    --color-forest: #315f4d; /* 森林绿 - 深度交互色 */
-    --color-charcoal: #2f3e46; /* 深炭灰 - 稳重的文字色 */
+    /* 🌿 V.I.N.E. 核心品牌色 (Brand Colors) */
+    --color-songshuanglv: #83a78d; /* 松霜绿 (Pine Frost) - 主色调 */
+    --color-danmifen: #fbeee2; /* 淡米粉 (Pale Rice) - 背景色调 */
+    --color-qinghui: #2b333e; /* 青灰 (Cyan Grey) - 墨色/深色调 */
 
-    /* 🍂 辅助点缀色 */
-    --color-honey: #b48a32; /* ✨ 新增：复古蜂蜜金 - 比金黄更深沉、更具复古感 */
-    --color-moss: #a3b18a; /* 苔藓绿 */
-    --color-paper-edge: #e6e1d3; /* 纸张边缘色 */
-    --color-rose: #f43f5e; /* 红色 - 警告与关闭 */
-    --color-emerald: #6ee7b7; /* 亮绿 - 仅用于状态指示 */
+    /* 🏮 国风强调色 (Accent Colors - Nectar & Minerals) */
+    --color-zheshi: #862617; /* 赭石 (Ochre) - 沉稳/印记 */
+    --color-danlvhui: #70887d; /* 淡绿灰 (Pale Green Grey) - 顶部栏icon背景 */
+    --color-mihuang: #fbb957; /* 蜜黄 (Honey Yellow) - bot光晕、sparkles背景 */
+    --color-meirenjiaocheng: #fa7e23; /* 美人焦橙 (Canna Orange) - sparkles轮廓 */
+    --color-ningmenghuang: #fcd337; /* 柠檬黄 (Lemon Yellow) - sparkles填充 */
+    --color-haimolv: #e2e7bf; /* 海沫绿 (Sea Foam Green) - flaskconical背景、agent胶囊填充 */
+    --color-qinglv: #2e8b57; /* 青绿 (Cyan Green) - flaskconical轮廓 */
+    --color-yuqing: #4a9d9c; /* 玉青 (Jade Blue) - flaskconical填充 */
+    --color-jizong: #de7622; /* 麂棕 (Jute Brown) - ester主色调 */
+    --color-kongquelv:#229453; /* 孔雀绿（Malachite Green） - kiral主色调 */
 
-    /* ⚪️ 通用基础色与动态遮罩 */
+    /* 🚦 功能状态色 (Functional Status) */
+    --color-xiangyehong: #f07c82; /* 香叶红 (Geranium Red) - 危险/关闭/错误 */
+    --color-shuilv: #8cc269; /* 水绿 (Water Green) - 成功/最大化 */
+    --color-danhuilv: #ad9e5f; /* 淡灰绿 (Pale Olive) - 警告/最小化/中立 */
+
+    /* ⚪️ 中性色与遮罩 (Neutrals & Utility) */
     --color-white: #ffffff;
-    --color-charcoal-fade: rgba(47, 62, 70, 0.1);
-    --color-parchment-fade: rgba(250, 247, 240, 0.2);
+    --color-black: #000000;
     --color-transparent: transparent;
 }
