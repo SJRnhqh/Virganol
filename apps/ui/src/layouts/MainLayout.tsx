@@ -50,7 +50,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-main-bg text-primary">
-      <WindowHeader activeId={activeId} />
+      <WindowHeader />
 
       <div
         className={cn(

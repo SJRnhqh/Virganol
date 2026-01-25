@@ -3,8 +3,9 @@ import { memo } from "react";
 import { useMotionValue } from "framer-motion";
 import { NAV_ITEMS } from "@/config/navigation";
 import { DockItem } from "./DockItem";
-import { useSidebarStore } from "@/store/SidebarStore";
 import { cn } from "@/lib/utils";
+// 引入刚才创建的 Hook
+import { useSidebarStyles } from "@/hooks/useSidebarStyles"; 
 
 interface SidebarProps {
   activeId: string;
@@ -13,7 +14,15 @@ interface SidebarProps {
 
 export const Sidebar = memo(({ activeId, onActiveIdChange }: SidebarProps) => {
   const mouseY = useMotionValue(Infinity);
-  const { isOpen, side, isSwitching } = useSidebarStore();
+  
+  // ✨ 使用 Hook 获取样式逻辑，不再直接调用 useSidebarStore
+  // 这里解构出的变量全是语义化的，没有复杂的 ternary operator (? :)
+  const { 
+    isOpen, 
+    side, 
+    dockAnimationClass, 
+    dockBorderClass 
+  } = useSidebarStyles();
 
   return (
     <aside
@@ -32,20 +41,16 @@ export const Sidebar = memo(({ activeId, onActiveIdChange }: SidebarProps) => {
         className={cn(
           "w-18 h-full flex flex-col items-center justify-center shrink-0",
           "transition-all ease-in-out transform-gpu will-change-transform",
-          (isSwitching || !isOpen) ? "opacity-0" : "opacity-100",
-          isSwitching 
-            ? "duration-200 delay-0" 
-            : (isOpen ? "duration-500 delay-0" : "duration-500 delay-1000"),
-          !isOpen && (side === "left" ? "-translate-x-1/2" : "translate-x-1/2")
+          // ✨ 这里直接使用 Hook 计算好的动画类，非常干净
+          dockAnimationClass
         )}
       >
         <nav
           className={cn(
             "relative flex flex-col items-center gap-5 py-8 px-3 w-full",
             "bg-sidebar-bg shadow-2xl shadow-charcoal-fade",
-            side === "left" 
-              ? "border-y border-r border-sidebar-border rounded-r-3xl" 
-              : "border-y border-l border-sidebar-border rounded-l-3xl"
+            // ✨ 这里直接使用 Hook 计算好的边框类
+            dockBorderClass
           )}
         >
           {NAV_ITEMS.map((item) => (
