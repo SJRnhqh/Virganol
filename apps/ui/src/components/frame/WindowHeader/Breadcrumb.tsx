@@ -52,7 +52,7 @@ export function Breadcrumb() {
         }}
         onDoubleClick={(e) => e.stopPropagation()}
         className={cn(
-          "flex items-center h-7.5 px-3 z-10001",
+          "flex items-center h-7.5 px-3 z-51",
           "bg-main-bg border-t border-x border-sidebar-border rounded-t-md",
           "shadow-[0_-2px_10px_var(--color-charcoal-fade)] relative translate-y-px outline-none transition-colors",
           isOpen ? "brightness-95" : "hover:brightness-105"
@@ -82,7 +82,7 @@ export function Breadcrumb() {
         {isOpen && (
           <div 
             className={cn(
-              "absolute top-full z-10000 pt-4 px-32 -mx-32", // 🛡️ 全域感应盾牌
+              "absolute top-full z-50 pt-4 px-32 -mx-32", // 🛡️ 全域感应盾牌
             )}
             onMouseDown={(e) => e.stopPropagation()}
             onMouseEnter={() => {

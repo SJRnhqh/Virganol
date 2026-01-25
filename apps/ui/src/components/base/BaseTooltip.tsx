@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -22,16 +22,39 @@ export function BaseTooltip({
   delay = 300 
 }: BaseTooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
-  // 使用 ref 或 timer 来管理延迟，这里用简单的 timeout 逻辑演示核心思路
-  const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout> | null>(null);
+  
+  // ✅ 使用 useRef 代替 useState 管理定时器 ID
+  // 这样可以保证在任何闭包中都能访问到最新的 ID，避免竞态问题
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ✅ 组件卸载时的清理逻辑，防止内存泄漏或卸载后更新状态
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleMouseEnter = () => {
-    const id = setTimeout(() => setIsVisible(true), delay);
-    setTimeoutId(id);
+    // 1. 设置新定时器前，务必清除可能存在的旧定时器（例如快速移出又移入的情况）
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    // 2. 设置新的延迟显示
+    timeoutRef.current = setTimeout(() => {
+      setIsVisible(true);
+    }, delay);
   };
 
   const handleMouseLeave = () => {
-    if (timeoutId) clearTimeout(timeoutId);
+    // 1. 移出时立即清除定时器，防止 Tooltip 在延迟后错误显示
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    // 2. 立即隐藏
     setIsVisible(false);
   };
 
