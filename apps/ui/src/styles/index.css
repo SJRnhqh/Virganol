@@ -4,6 +4,19 @@
 @import "./themes/light.css";
 @import "./canvas.css";
 
+/* ================== 🟢 新增开始：全局流式缩放 ================== */
+@layer base {
+    html {
+        /* clamp(最小值, 动态值, 最大值)
+       1. 最小值 12px：防止在极小窗口下文字小到无法阅读。
+       2. 动态值 0.85vw：核心魔法。视口宽度 1920px 时字号约 16px；1366px(笔记本)时自动缩放到约 11.6px。
+       3. 最大值 16px：限制上限，防止在 4K 屏上 UI 变得大而无当。
+    */
+        font-size: clamp(12px, 0.85vw, 16px);
+    }
+}
+/* ================== 🟢 新增结束 ================== */
+
 @theme {
     /* === 1. 侧边栏 === */
     --color-sidebar-bg: var(--sidebar-bg);
@@ -11,56 +24,66 @@
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-active-bg: var(--sidebar-active-bg);
     --color-sidebar-active-fg: var(--sidebar-active-fg);
-    
+
     /* === 2. 顶部栏 === */
     /* 顶部栏背景色 */
     --color-header-bg: var(--header-bg);
-    
+
     /* 面包屑字体颜色 */
     --color-header-fg: var(--header-fg);
-    
+
     /* 面包屑图标高亮颜色 */
     --color-header-milestone: var(--header-milestone);
-    
+
     /* 面包屑背景颜色 */
     --color-header-breadcrumb-bg: var(--header-breadcrumb-bg);
-    
+
     /* 面包屑光标颜色 */
     --color-header-breadcrumb-accent: var(--header-breadcrumb-accent);
-    
+
     /* 顶部栏图标和背景颜色 */
     --color-header-icon: var(--header-icon);
     --color-header-icon-muted: var(--header-icon-muted);
     --color-header-icon-bg: var(--header-icon-bg);
-    
+
     /* 窗口控制 */
     --color-window-control-minimize: var(--window-control-minimize);
-    --color-window-control-toggle-maximize: var(--window-control-toggle-maximize);
+    --color-window-control-toggle-maximize: var(
+        --window-control-toggle-maximize
+    );
     --color-window-control-close: var(--window-control-close);
-    
+
     /* === 3. 主体背景 === */
     /* 主体区域背景色 */
     --color-main-bg: var(--main-bg);
     --color-main-fg: var(--main-fg);
-    
+
     /* === 4. SciSpirit === */
     --color-spirit-welcome-atomsphere: var(--spirit-welcome-atomsphere);
-    
+
     /* === 4.1 WelcomeBoard === */
     /* Bot */
     --color-spirit-welcome-bot-bg: var(--spirit-welcome-bot-bg);
     --color-spirit-welcome-bot-border: var(--spirit-welcome-bot-border);
-    
+
     /* Sparkles */
     --color-spirit-welcome-sparkles-bg: var(--spirit-welcome-sparkles-bg);
-    --color-spirit-welcome-sparkles-border: var(--spirit-welcome-sparkles-border);
+    --color-spirit-welcome-sparkles-border: var(
+        --spirit-welcome-sparkles-border
+    );
     --color-spirit-welcome-sparkles-fill: var(--spirit-welcome-sparkles-fill);
-    
+
     /* FlaskConical */
-    --color-spirit-welcome-flaskconical-bg: var(--spirit-welcome-flaskconical-bg);
-    --color-spirit-welcome-flaskconical-border: var(--spirit-welcome-flaskconical-border);
-    --color-spirit-welcome-flaskconical-fill: var(--spirit-welcome-flaskconical-fill);
-    
+    --color-spirit-welcome-flaskconical-bg: var(
+        --spirit-welcome-flaskconical-bg
+    );
+    --color-spirit-welcome-flaskconical-border: var(
+        --spirit-welcome-flaskconical-border
+    );
+    --color-spirit-welcome-flaskconical-fill: var(
+        --spirit-welcome-flaskconical-fill
+    );
+
     /* TODO: 有待重构规整 */
     /* 画布 */
     --color-canvas-grid: var(--canvas-grid);
