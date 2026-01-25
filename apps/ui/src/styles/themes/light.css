@@ -60,6 +60,19 @@
     --spirit-welcome-flaskconical-bg: var(--color-haimolv);
     --spirit-welcome-flaskconical-border: var(--color-qinglv);
     --spirit-welcome-flaskconical-fill: var(--color-yuqing);
+    
+    /* === 4.2 BotInput === */
+    /* 默认边框和背景 */
+    --spirit-botinput-box-border: var(--color-qinghui);
+    --spirit-botinput-box-bg: var(--color-white);
+    --spirit-botinput-capsule: var(--color-haimolv);
+    --spirit-botinput-icon-bg: var(--color-black);
+    
+    /* Ester */
+    --spirit-botinput-ester: var(--color-jizong);
+    
+    /* Kiral */
+    --spirit-botinput-kiral: var(--color-kongquelv);
 
     /* TODO: 有待重构规整 */
     --canvas-grid: var(--color-qinghui);

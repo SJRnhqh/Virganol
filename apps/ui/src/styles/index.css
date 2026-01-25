@@ -84,6 +84,19 @@
         --spirit-welcome-flaskconical-fill
     );
 
+    /* === 4.2 BotInput === */
+    /* 默认边框和背景 */
+    --color-spirit-botinput-box-border: var(--spirit-botinput-box-border);
+    --color-spirit-botinput-box-bg: var(--spirit-botinput-box-bg);
+    --color-spirit-botinput-capsule: var(--spirit-botinput-capsule);
+    --color-spirit-botinput-icon-bg: var(--spirit-botinput-icon-bg);
+    
+    /* Ester */
+    --color-spirit-botinput-ester: var(--spirit-botinput-ester);
+
+    /* Kiral */
+    --color-spirit-botinput-kiral: var(--spirit-botinput-kiral);
+
     /* TODO: 有待重构规整 */
     /* 画布 */
     --color-canvas-grid: var(--canvas-grid);
@@ -98,10 +111,6 @@
     --color-node-border: var(--node-border);
     --color-node-fg-title: var(--node-fg-title);
     --color-node-fg-desc: var(--node-fg-desc);
-
-    /* 基础色直接映射 */
-    --color-forest: var(--color-forest);
-    --color-honey: var(--color-honey);
 }
 
 body {
