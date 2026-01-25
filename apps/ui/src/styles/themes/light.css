@@ -2,50 +2,87 @@
 
 :root {
     /* === 1. 侧边栏 (Sidebar) === */
-    --sidebar-bg: var(--color-sage);
+    /* 侧边栏背景色 */
+    --sidebar-bg: var(--color-songshuanglv);
+    /* 图标默认颜色、激活背景颜色、激活颜色*/
+    --sidebar-fg: var(--color-danmifen);
+    --sidebar-active-bg: var(--color-danmifen);
+    --sidebar-active-fg: var(--color-qinghui);
+    /* 边框颜色 */
     --sidebar-border: color-mix(
         in srgb,
-        var(--color-paper-edge),
+        var(--color-songshuanglv),
         transparent 80%
     );
-    --sidebar-fg: var(--color-white);
-    --sidebar-active-bg: var(--color-parchment);
-    --sidebar-active-fg: var(--color-charcoal);
-
     /* === 2. 顶部栏 (Header) === */
-    --header-bg: var(--color-sage);
+    /* 顶部栏背景色 */
+    --header-bg: var(--color-songshuanglv);
 
-    /* 🍞 面包屑文字：保持深炭灰，因为它是显示在米色地基上的 */
-    --header-fg: var(--color-charcoal);
+    /* 面包屑文字颜色 */
+    --header-fg: var(--color-qinghui);
+    /* 面包屑交互体系 */
+    --header-milestone: var(--color-zheshi);
+    --header-breadcrumb-bg: var(--color-jizong);
+    --header-breadcrumb-icon-accent: var(--color-zheshi);
 
-    /* ⚙️ 按钮图标：修改为米色 (Parchment)，让它在绿色背景上呈现“乳白色”质感 */
-    --header-icon: var(--color-parchment);
-
-    /* 自动计算静音色：现在它是 60% 透明度的米色 */
+    /* 图标默认颜色（静默60%透明度的青灰色）和背景色 */
     --header-icon-muted: color-mix(
         in srgb,
         var(--header-icon),
-        transparent 40% /* 调整透明度比例，让静态时稍微亮一点，避免太透 */
+        transparent 40%
     );
+    --header-icon: var(--color-qinghui);
+    --header-icon-bg: var(--color-danlvhui);
 
-    --header-accent: var(--color-honey);
-    --breadcrumb-accent: var(--color-honey);
+    /* 🚦 窗口控制体系 (复用基础色) */
+    --window-control-close: var(--color-xiangyehong); /* 关闭 -> 香叶红 */
+    --window-control-toggle-maximize: var(--color-shuilv); /* 最大化 -> 水绿 */
+    --window-control-minimize: var(--color-danhuilv); /* 最小化 -> 淡灰绿 */
+
+    /* === 3. 主体背景  === */
+    --main-bg: var(--color-danmifen);
+    --main-fg: var(--color-qinghui);
+
+    /* === 4. SciSpirit === */
+    --spirit-welcome-atomsphere: var(--color-mihuang);
+
+    /* === 4.1 WelcomeBoard === */
+    /* Bot */
+    --spirit-welcome-bot-bg: var(--color-white);
+    --spirit-welcome-bot-border: var(--color-white);
+
+    /* Sparkles */
+    --spirit-welcome-sparkles-bg: var(--color-mihuang);
+    --spirit-welcome-sparkles-border: var(--color-meirenjiaocheng);
+    --spirit-welcome-sparkles-fill: var(--color-ningmenghuang);
+
+    /* FlaskConical */
+    --spirit-welcome-flaskconical-bg: var(--color-haimolv);
+    --spirit-welcome-flaskconical-border: var(--color-qinglv);
+    --spirit-welcome-flaskconical-fill: var(--color-yuqing);
     
-    /*Windows 窗口控制背景*/
-    --window-control-minimize: var(--color-moss);
-    --window-control-toggle-maximize: var(--color-emerald);
-    --window-control-close: var(--color-rose);
+    /* === 4.2 BotInput === */
+    /* 默认边框和背景 */
+    --spirit-botinput-box-border: var(--color-qinghui);
+    --spirit-botinput-box-bg: var(--color-white);
+    --spirit-botinput-capsule: var(--color-haimolv);
+    --spirit-botinput-icon-bg: var(--color-black);
+    
+    /* Ester */
+    --spirit-botinput-ester: var(--color-jizong);
+    
+    /* Kiral */
+    --spirit-botinput-kiral: var(--color-kongquelv);
 
-    /* === 3. 主内容区 & 画布 === */
-    --main-bg: var(--color-parchment);
-    --canvas-grid: var(--color-charcoal);
-    --canvas-edge: var(--color-sage);
+    /* TODO: 有待重构规整 */
+    --canvas-grid: var(--color-qinghui);
+    --canvas-edge: var(--color-songshuanglv);
 
     /* === 4. 操作卡片、节点等 === */
-    --action-bg: var(--color-forest);
-    --action-fg: var(--color-parchment);
-    --node-bg: var(--color-white);
-    --node-border: var(--color-paper-edge);
-    --node-fg-title: var(--color-charcoal);
-    --node-fg-desc: var(--color-sage);
+    --action-bg: var(--color-songshuanglv);
+    --action-fg: var(--color-danmifen);
+    --node-bg: var(--color-danmifen);
+    --node-border: var(--color-danmifen);
+    --node-fg-title: var(--color-qinghui);
+    --node-fg-desc: var(--color-songshuanglv);
 }
