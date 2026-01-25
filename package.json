@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:ui": "pnpm -F @virganol/ui dev",
-    "dev": "pnpm -F @virganol/desktop tauri dev",
-    "build": "pnpm -F @virganol/desktop tauri build"
+    "dev": "pnpm -F @virganol/desktop dev",
+    "build": "pnpm -F @virganol/desktop build"
   },
   "keywords": [],
   "author": "",

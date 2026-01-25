@@ -1,3 +1,4 @@
+// apps/desktop/src-tauri/src/tmp/terminal.rs
 use portable_pty::{CommandBuilder, NativePtySystem, PtySize, PtySystem};
 use std::{
     collections::HashMap,

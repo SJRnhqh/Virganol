@@ -4,6 +4,9 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "dev": "pnpm build:sidecar && tauri dev",
+    "build": "pnpm build:sidecar && tauri build",
+    "build:sidecar": "node scripts/build-sidecar.js",
     "tauri": "tauri"
   },
   "dependencies": {
