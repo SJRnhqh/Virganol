@@ -1,6 +1,8 @@
+// apps/server/internal/agent/run.go
 package agent
 
 import (
+	// 外部依赖
 	"context"
 	"fmt"
 	"log"
@@ -8,7 +10,8 @@ import (
 	"os"
 	"time"
 
-	"virganol/server/internal/lifecycle"
+	// 内部引用
+	lifecycle "virganol/server/internal/lifecycle"
 )
 
 // Config holds runtime options for the agent server.
@@ -53,6 +56,8 @@ func Run(ctx context.Context, cfg Config) error {
 	}
 
 	// 5) Wait for shutdown signal
+	// 阻塞等待关闭事件：ctx.Done() 是一个只读的取消通知 channel。
+	// 当上下文被取消或截止时间到达时，该 channel 会被关闭；读取已关闭的 channel 立即返回，解除阻塞。
 	<-ctx.Done()
 	log.Println("🛑 Shutting down server...")
 
@@ -61,8 +66,9 @@ func Run(ctx context.Context, cfg Config) error {
 	if timeout <= 0 {
 		timeout = 20 * time.Second
 	}
-	sdCtx, cancel := lifecycle.WithShutdownTimeout(context.Background(), timeout)
-	defer cancel()
+	sdCtx, tcCancel := lifecycle.WithShutdownTimeout(context.Background(), timeout)
+	// 释放计时的资源 & 取消计时关闭上下文
+	defer tcCancel()
 
 	timedOut := lifecycle.RunWithTimeout(sdCtx, func() {
 		// GracefulStop stops accepting new connections and waits for inflight RPCs.

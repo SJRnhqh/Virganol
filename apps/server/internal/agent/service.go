@@ -1,10 +1,13 @@
+// apps/server/internal/agent/service.go
 package agent
 
 import (
+	// 外部依赖
 	"context"
 	"log"
 	"time"
 
+	// 内部引用
 	pb "virganol/server/proto/virganol/v1"
 )
 

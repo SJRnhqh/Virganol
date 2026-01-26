@@ -1,19 +1,23 @@
+// apps/server/internal/agent/server.go
 package agent
 
 import (
-	pb "virganol/server/proto/virganol/v1"
+	// 外部依赖
+	grpc "google.golang.org/grpc"
 
-	"google.golang.org/grpc"
+	// 内部引用
+	pb "virganol/server/proto/virganol/v1"
 )
 
 // NewGRPCServer creates a gRPC server with the provided options.
 // Add interceptors, keepalive parameters, message size limits, etc., via opts.
 //
 // Example:
-//   s := NewGRPCServer(
-//       grpc.MaxRecvMsgSize(8 << 20), // 8MB
-//       grpc.MaxSendMsgSize(8 << 20),
-//   )
+//
+//	s := NewGRPCServer(
+//	    grpc.MaxRecvMsgSize(8 << 20), // 8MB
+//	    grpc.MaxSendMsgSize(8 << 20),
+//	)
 func NewGRPCServer(opts ...grpc.ServerOption) *grpc.Server {
 	return grpc.NewServer(opts...)
 }
