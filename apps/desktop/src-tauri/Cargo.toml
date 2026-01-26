@@ -11,6 +11,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
+tonic-build = "0.12"
 
 [dependencies]
 tauri = { version = "2", features = ["macos-private-api"] }
@@ -18,12 +19,14 @@ tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
-# --- 新增依赖 ---
-# ssh2: 商业友好的 SSH 协议实现
-# 使用 vendored-openssl 特性可以减少你在不同机器上编译时对系统库的依赖
-ssh2 = { version = "0.9", features = ["vendored-openssl"] }
-# tokio: 异步支持，防止连接服务器时卡死前端界面
+# --- 核心新增：gRPC 套件 ---
+tonic = "0.12"       # gRPC 客户端核心库
+prost = "0.13"       # Protobuf 运行时
+# 既然已经有 tokio 了，确保它开启 full 特性
 tokio = { version = "1", features = ["full"] }
+
+# --- 现有依赖 ---
+ssh2 = { version = "0.9", features = ["vendored-openssl"] }
 tauri-plugin-os = "2.3.2"
 portable-pty = "0.8"
 directories = "5.0"

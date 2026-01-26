@@ -1,0 +1,24 @@
+// apps/server/proto/virganol.proto
+syntax = "proto3";
+
+package virganol;
+
+// 【核心修复1】解决 "Files with package..." 报错
+// 必须明确告诉编译器生成的 go 包名是 agentpb，放在当前目录
+option go_package = "./;agentpb";
+
+service AgentService {
+  // 【核心修复2】解决命名警告
+  // RPC方法名是 Ping，返回值必须是 PingResponse (不能叫 PongResponse)
+  rpc Ping(PingRequest) returns (PingResponse);
+}
+
+message PingRequest {
+  string message = 1;
+}
+
+// 把 PongResponse 改名为 PingResponse 以满足规范
+message PingResponse {
+  string reply = 1;
+  int64 timestamp = 2;
+}
