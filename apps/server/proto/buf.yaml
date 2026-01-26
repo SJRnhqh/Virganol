@@ -1,4 +1,3 @@
 version: v1
-lint:
-  use:
-    - DEFAULT
+directories:
+  - apps/server/proto
