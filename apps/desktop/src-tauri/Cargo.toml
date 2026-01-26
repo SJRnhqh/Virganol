@@ -12,6 +12,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 tonic-build = "0.12"
+protoc-bin-vendored = "3.0"
 
 [dependencies]
 tauri = { version = "2", features = ["macos-private-api"] }
