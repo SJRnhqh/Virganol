@@ -4,7 +4,7 @@ use tauri_plugin_shell::ShellExt;
 
 // 引入生成的 gRPC 模块
 pub mod virganol_rpc {
-    tonic::include_proto!("virganol");
+    tonic::include_proto!("virganol.v1");
 }
 
 use virganol_rpc::agent_service_client::AgentServiceClient;

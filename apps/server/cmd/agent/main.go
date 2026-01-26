@@ -13,7 +13,7 @@ import (
 	grpc "google.golang.org/grpc"
 
 	// 内部引用
-	pb "virganol/server/proto"
+	pb "virganol/server/proto/virganol/v1"
 )
 
 // server 结构体需要实现 AgentServiceServer 接口

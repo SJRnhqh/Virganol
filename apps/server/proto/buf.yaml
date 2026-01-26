@@ -1,5 +1,4 @@
 version: v1
 lint:
-  except:
-    - PACKAGE_VERSION_SUFFIX
-    - PACKAGE_DIRECTORY_MATCH
+  use:
+    - DEFAULT

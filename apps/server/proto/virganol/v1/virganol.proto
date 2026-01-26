@@ -1,11 +1,11 @@
-// apps/server/proto/virganol.proto
+// apps/server/proto/virganol/v1/virganol.proto
 syntax = "proto3";
 
-package virganol;
+package virganol.v1;
 
 // 【核心修复1】解决 "Files with package..." 报错
 // 必须明确告诉编译器生成的 go 包名是 agentpb，放在当前目录
-option go_package = "./;agentpb";
+option go_package = "virganol/server/proto/virganol/v1";
 
 service AgentService {
   // 【核心修复2】解决命名警告
