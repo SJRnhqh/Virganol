@@ -36,10 +36,15 @@ func Run(ctx context.Context, cfg Config) error {
 		return fmt.Errorf("listen %s: %w", cfg.Addr, err)
 	}
 
-	// 2) Build server and register services
 	grpcServer := NewGRPCServer()
+	// Health manager for liveness/readiness
+	hm := NewHealthManager()
+	hm.Register(grpcServer)
 	svc := NewService()
 	RegisterGRPC(grpcServer, svc)
+	// Mark overall and Agent service as SERVING before accepting calls
+	hm.SetOverallServing()
+	hm.SetAgentServing()
 
 	// 3) Start serving
 	go func() {
@@ -78,9 +83,15 @@ func Run(ctx context.Context, cfg Config) error {
 	defer tcCancel()
 
 	timedOut := lifecycle.RunWithTimeout(sdCtx, func() {
+
+		// Mark NOT_SERVING before draining connections, then graceful stop.
 		// GracefulStop stops accepting new connections and waits for inflight RPCs.
+
+		hm.Shutdown()
 		grpcServer.GracefulStop()
+
 	})
+
 	if timedOut {
 		log.Println("⏱️ Graceful shutdown timed out; forcing stop")
 		grpcServer.Stop()

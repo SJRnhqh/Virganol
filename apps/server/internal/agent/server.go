@@ -4,6 +4,7 @@ package agent
 import (
 	// 外部依赖
 	grpc "google.golang.org/grpc"
+	reflection "google.golang.org/grpc/reflection"
 
 	// 内部引用
 	pb "virganol/server/proto/virganol/v1"
@@ -19,7 +20,11 @@ import (
 //	    grpc.MaxSendMsgSize(8 << 20),
 //	)
 func NewGRPCServer(opts ...grpc.ServerOption) *grpc.Server {
-	return grpc.NewServer(opts...)
+	s := grpc.NewServer(opts...)
+	// Enable gRPC Server Reflection in development for tools like grpcurl/grpcui.
+	// In production, consider gating this with a build tag or env flag.
+	reflection.Register(s)
+	return s
 }
 
 // RegisterGRPC registers all Agent-related gRPC services to the given server.
