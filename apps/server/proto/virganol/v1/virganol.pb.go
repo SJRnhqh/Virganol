@@ -120,6 +120,98 @@ func (x *PingResponse) GetTimestamp() int64 {
 	return 0
 }
 
+// 关闭请求
+type ShutdownRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 可选：优雅关闭的超时时间（毫秒）
+	TimeoutMs     int64 `protobuf:"varint,1,opt,name=timeout_ms,json=timeoutMs,proto3" json:"timeout_ms,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ShutdownRequest) Reset() {
+	*x = ShutdownRequest{}
+	mi := &file_proto_virganol_v1_virganol_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ShutdownRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ShutdownRequest) ProtoMessage() {}
+
+func (x *ShutdownRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_virganol_v1_virganol_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ShutdownRequest.ProtoReflect.Descriptor instead.
+func (*ShutdownRequest) Descriptor() ([]byte, []int) {
+	return file_proto_virganol_v1_virganol_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ShutdownRequest) GetTimeoutMs() int64 {
+	if x != nil {
+		return x.TimeoutMs
+	}
+	return 0
+}
+
+// 关闭响应
+type ShutdownResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 确认已收到关闭请求
+	Acknowledged  bool `protobuf:"varint,1,opt,name=acknowledged,proto3" json:"acknowledged,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ShutdownResponse) Reset() {
+	*x = ShutdownResponse{}
+	mi := &file_proto_virganol_v1_virganol_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ShutdownResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ShutdownResponse) ProtoMessage() {}
+
+func (x *ShutdownResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_virganol_v1_virganol_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ShutdownResponse.ProtoReflect.Descriptor instead.
+func (*ShutdownResponse) Descriptor() ([]byte, []int) {
+	return file_proto_virganol_v1_virganol_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ShutdownResponse) GetAcknowledged() bool {
+	if x != nil {
+		return x.Acknowledged
+	}
+	return false
+}
+
 var File_proto_virganol_v1_virganol_proto protoreflect.FileDescriptor
 
 const file_proto_virganol_v1_virganol_proto_rawDesc = "" +
@@ -129,9 +221,15 @@ const file_proto_virganol_v1_virganol_proto_rawDesc = "" +
 	"\amessage\x18\x01 \x01(\tR\amessage\"B\n" +
 	"\fPingResponse\x12\x14\n" +
 	"\x05reply\x18\x01 \x01(\tR\x05reply\x12\x1c\n" +
-	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp2K\n" +
+	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\"0\n" +
+	"\x0fShutdownRequest\x12\x1d\n" +
+	"\n" +
+	"timeout_ms\x18\x01 \x01(\x03R\ttimeoutMs\"6\n" +
+	"\x10ShutdownResponse\x12\"\n" +
+	"\facknowledged\x18\x01 \x01(\bR\facknowledged2\x94\x01\n" +
 	"\fAgentService\x12;\n" +
-	"\x04Ping\x12\x18.virganol.v1.PingRequest\x1a\x19.virganol.v1.PingResponseB#Z!virganol/server/proto/virganol/v1b\x06proto3"
+	"\x04Ping\x12\x18.virganol.v1.PingRequest\x1a\x19.virganol.v1.PingResponse\x12G\n" +
+	"\bShutdown\x12\x1c.virganol.v1.ShutdownRequest\x1a\x1d.virganol.v1.ShutdownResponseB#Z!virganol/server/proto/virganol/v1b\x06proto3"
 
 var (
 	file_proto_virganol_v1_virganol_proto_rawDescOnce sync.Once
@@ -145,16 +243,20 @@ func file_proto_virganol_v1_virganol_proto_rawDescGZIP() []byte {
 	return file_proto_virganol_v1_virganol_proto_rawDescData
 }
 
-var file_proto_virganol_v1_virganol_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_proto_virganol_v1_virganol_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_proto_virganol_v1_virganol_proto_goTypes = []any{
-	(*PingRequest)(nil),  // 0: virganol.v1.PingRequest
-	(*PingResponse)(nil), // 1: virganol.v1.PingResponse
+	(*PingRequest)(nil),      // 0: virganol.v1.PingRequest
+	(*PingResponse)(nil),     // 1: virganol.v1.PingResponse
+	(*ShutdownRequest)(nil),  // 2: virganol.v1.ShutdownRequest
+	(*ShutdownResponse)(nil), // 3: virganol.v1.ShutdownResponse
 }
 var file_proto_virganol_v1_virganol_proto_depIdxs = []int32{
 	0, // 0: virganol.v1.AgentService.Ping:input_type -> virganol.v1.PingRequest
-	1, // 1: virganol.v1.AgentService.Ping:output_type -> virganol.v1.PingResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	2, // 1: virganol.v1.AgentService.Shutdown:input_type -> virganol.v1.ShutdownRequest
+	1, // 2: virganol.v1.AgentService.Ping:output_type -> virganol.v1.PingResponse
+	3, // 3: virganol.v1.AgentService.Shutdown:output_type -> virganol.v1.ShutdownResponse
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -171,7 +273,7 @@ func file_proto_virganol_v1_virganol_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_virganol_v1_virganol_proto_rawDesc), len(file_proto_virganol_v1_virganol_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

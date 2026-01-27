@@ -11,6 +11,8 @@ service AgentService {
   // 【核心修复2】解决命名警告
   // RPC方法名是 Ping，返回值必须是 PingResponse (不能叫 PongResponse)
   rpc Ping(PingRequest) returns (PingResponse);
+  // 优雅关闭请求 - 由 Rust 端调用，通知 Go 端开始关闭流程
+  rpc Shutdown(ShutdownRequest) returns (ShutdownResponse);
 }
 
 message PingRequest {
@@ -21,4 +23,16 @@ message PingRequest {
 message PingResponse {
   string reply = 1;
   int64 timestamp = 2;
+}
+
+// 关闭请求
+message ShutdownRequest {
+  // 可选：优雅关闭的超时时间（毫秒）
+  int64 timeout_ms = 1;
+}
+
+// 关闭响应
+message ShutdownResponse {
+  // 确认已收到关闭请求
+  bool acknowledged = 1;
 }

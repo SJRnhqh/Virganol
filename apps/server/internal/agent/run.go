@@ -38,7 +38,8 @@ func Run(ctx context.Context, cfg Config) error {
 
 	// 2) Build server and register services
 	grpcServer := NewGRPCServer()
-	RegisterGRPC(grpcServer, NewService())
+	svc := NewService()
+	RegisterGRPC(grpcServer, svc)
 
 	// 3) Start serving
 	go func() {
@@ -55,10 +56,16 @@ func Run(ctx context.Context, cfg Config) error {
 		_ = os.Stdout.Sync()
 	}
 
-	// 5) Wait for shutdown signal
-	// 阻塞等待关闭事件：ctx.Done() 是一个只读的取消通知 channel。
-	// 当上下文被取消或截止时间到达时，该 channel 会被关闭；读取已关闭的 channel 立即返回，解除阻塞。
-	<-ctx.Done()
+	// 5) Wait for shutdown signal (OS signal OR gRPC Shutdown request)
+	// 同时监听两种关闭信号：
+	// - ctx.Done(): 来自操作系统的信号 (SIGINT/SIGTERM)
+	// - svc.ShutdownChan(): 来自 Rust 端的 gRPC Shutdown 请求
+	select {
+	case <-ctx.Done():
+		log.Println("🛑 Shutdown triggered by OS signal")
+	case <-svc.ShutdownChan():
+		log.Println("🛑 Shutdown triggered by gRPC request from Rust")
+	}
 	log.Println("🛑 Shutting down server...")
 
 	// 6) Graceful shutdown with timeout fallback
