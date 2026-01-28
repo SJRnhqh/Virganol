@@ -26,6 +26,7 @@ func Run(ctx context.Context) error {
 	// 2) 创建gRPC服务器并且注册服务
 	grpcServer := NewgRPCServer()
 	handles := RegisterServices(grpcServer)
+	// TODO：保留健康检查的部分，后续再重构完善，目前先不加入
 	// Health manager for liveness/readiness
 	// hm := NewHealthManager()
 	// hm.Register(grpcServer)
@@ -65,10 +66,6 @@ func Run(ctx context.Context) error {
 	defer tcCancel()
 
 	timedOut := lifecycle.RunWithTimeout(sdCtx, func() {
-
-		// Mark NOT_SERVING before draining connections, then graceful stop.
-		// GracefulStop stops accepting new connections and waits for inflight RPCs.
-
 		// hm.Shutdown()
 		grpcServer.GracefulStop()
 

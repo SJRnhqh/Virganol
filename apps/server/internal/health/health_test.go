@@ -1,16 +1,20 @@
-package agent
+// apps/server/internal/health/health_test.go
+// TODO: 保留健康检查的测试文件，后续再重构
+package health
 
 import (
+	// 外部依赖
 	"context"
 	"net"
 	"testing"
 	"time"
 
-	grpcserver "virganol/server/internal/grpcserver"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	grpc "google.golang.org/grpc"
+	insecure "google.golang.org/grpc/credentials/insecure"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+
+	// 内部引用
+	grpcserver "virganol/server/internal/grpcserver"
 )
 
 // TestHealthLivenessAndServiceStatus spins up a minimal gRPC server with the

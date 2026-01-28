@@ -1,5 +1,6 @@
-// apps/server/internal/agent/health.go
-package agent
+// apps/server/internal/health/health.go
+// 保留健康检查的代码但后续需要重构和重新兼容到现有架构设计中
+package health
 
 import (
 	// 外部依赖
