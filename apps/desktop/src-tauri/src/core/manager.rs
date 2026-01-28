@@ -4,7 +4,7 @@ use std::sync::Arc;
 use tauri_plugin_shell::process::CommandChild;
 use tokio::sync::Mutex;
 
-use super::rpc::agent_service_client::AgentServiceClient;
+use super::rpc::base_service_client::BaseServiceClient;
 use super::rpc::ShutdownRequest;
 
 /// 管理 sidecar 进程的生命周期和 gRPC 连接
@@ -41,13 +41,16 @@ impl SidecarManager {
     }
 
     /// 优雅关闭 sidecar 进程
-    /// 
+    ///
     /// 流程：
     /// 1. 尝试通过 gRPC 发送 Shutdown 请求（跨平台友好）
     /// 2. 等待进程自行退出
     /// 3. 超时后强制终止进程
     pub async fn shutdown(&self, timeout_ms: u64) -> bool {
-        println!("[SidecarManager] Starting shutdown (timeout={}ms)", timeout_ms);
+        println!(
+            "[SidecarManager] Starting shutdown (timeout={}ms)",
+            timeout_ms
+        );
 
         // 1. 尝试 gRPC 优雅关闭
         if let Some(addr) = self.get_grpc_addr().await {
@@ -84,7 +87,7 @@ impl SidecarManager {
         addr: &str,
         timeout_ms: u64,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        let mut client = AgentServiceClient::connect(addr.to_string()).await?;
+        let mut client = BaseServiceClient::connect(addr.to_string()).await?;
         let request = tonic::Request::new(ShutdownRequest {
             timeout_ms: timeout_ms as i64,
         });

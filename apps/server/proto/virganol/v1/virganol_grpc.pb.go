@@ -21,14 +21,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AgentService_Ping_FullMethodName     = "/virganol.v1.AgentService/Ping"
-	AgentService_Shutdown_FullMethodName = "/virganol.v1.AgentService/Shutdown"
+	BaseService_Ping_FullMethodName     = "/virganol.v1.BaseService/Ping"
+	BaseService_Shutdown_FullMethodName = "/virganol.v1.BaseService/Shutdown"
 )
 
-// AgentServiceClient is the client API for AgentService service.
+// BaseServiceClient is the client API for BaseService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type AgentServiceClient interface {
+type BaseServiceClient interface {
 	// 【核心修复2】解决命名警告
 	// RPC方法名是 Ping，返回值必须是 PingResponse (不能叫 PongResponse)
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
@@ -36,130 +36,130 @@ type AgentServiceClient interface {
 	Shutdown(ctx context.Context, in *ShutdownRequest, opts ...grpc.CallOption) (*ShutdownResponse, error)
 }
 
-type agentServiceClient struct {
+type baseServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewAgentServiceClient(cc grpc.ClientConnInterface) AgentServiceClient {
-	return &agentServiceClient{cc}
+func NewBaseServiceClient(cc grpc.ClientConnInterface) BaseServiceClient {
+	return &baseServiceClient{cc}
 }
 
-func (c *agentServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
+func (c *baseServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PingResponse)
-	err := c.cc.Invoke(ctx, AgentService_Ping_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, BaseService_Ping_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *agentServiceClient) Shutdown(ctx context.Context, in *ShutdownRequest, opts ...grpc.CallOption) (*ShutdownResponse, error) {
+func (c *baseServiceClient) Shutdown(ctx context.Context, in *ShutdownRequest, opts ...grpc.CallOption) (*ShutdownResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ShutdownResponse)
-	err := c.cc.Invoke(ctx, AgentService_Shutdown_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, BaseService_Shutdown_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// AgentServiceServer is the server API for AgentService service.
-// All implementations must embed UnimplementedAgentServiceServer
+// BaseServiceServer is the server API for BaseService service.
+// All implementations must embed UnimplementedBaseServiceServer
 // for forward compatibility.
-type AgentServiceServer interface {
+type BaseServiceServer interface {
 	// 【核心修复2】解决命名警告
 	// RPC方法名是 Ping，返回值必须是 PingResponse (不能叫 PongResponse)
 	Ping(context.Context, *PingRequest) (*PingResponse, error)
 	// 优雅关闭请求 - 由 Rust 端调用，通知 Go 端开始关闭流程
 	Shutdown(context.Context, *ShutdownRequest) (*ShutdownResponse, error)
-	mustEmbedUnimplementedAgentServiceServer()
+	mustEmbedUnimplementedBaseServiceServer()
 }
 
-// UnimplementedAgentServiceServer must be embedded to have
+// UnimplementedBaseServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedAgentServiceServer struct{}
+type UnimplementedBaseServiceServer struct{}
 
-func (UnimplementedAgentServiceServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
+func (UnimplementedBaseServiceServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Ping not implemented")
 }
-func (UnimplementedAgentServiceServer) Shutdown(context.Context, *ShutdownRequest) (*ShutdownResponse, error) {
+func (UnimplementedBaseServiceServer) Shutdown(context.Context, *ShutdownRequest) (*ShutdownResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Shutdown not implemented")
 }
-func (UnimplementedAgentServiceServer) mustEmbedUnimplementedAgentServiceServer() {}
-func (UnimplementedAgentServiceServer) testEmbeddedByValue()                      {}
+func (UnimplementedBaseServiceServer) mustEmbedUnimplementedBaseServiceServer() {}
+func (UnimplementedBaseServiceServer) testEmbeddedByValue()                     {}
 
-// UnsafeAgentServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to AgentServiceServer will
+// UnsafeBaseServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BaseServiceServer will
 // result in compilation errors.
-type UnsafeAgentServiceServer interface {
-	mustEmbedUnimplementedAgentServiceServer()
+type UnsafeBaseServiceServer interface {
+	mustEmbedUnimplementedBaseServiceServer()
 }
 
-func RegisterAgentServiceServer(s grpc.ServiceRegistrar, srv AgentServiceServer) {
-	// If the following call panics, it indicates UnimplementedAgentServiceServer was
+func RegisterBaseServiceServer(s grpc.ServiceRegistrar, srv BaseServiceServer) {
+	// If the following call panics, it indicates UnimplementedBaseServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&AgentService_ServiceDesc, srv)
+	s.RegisterService(&BaseService_ServiceDesc, srv)
 }
 
-func _AgentService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BaseService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServiceServer).Ping(ctx, in)
+		return srv.(BaseServiceServer).Ping(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AgentService_Ping_FullMethodName,
+		FullMethod: BaseService_Ping_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServiceServer).Ping(ctx, req.(*PingRequest))
+		return srv.(BaseServiceServer).Ping(ctx, req.(*PingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AgentService_Shutdown_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BaseService_Shutdown_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ShutdownRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServiceServer).Shutdown(ctx, in)
+		return srv.(BaseServiceServer).Shutdown(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AgentService_Shutdown_FullMethodName,
+		FullMethod: BaseService_Shutdown_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServiceServer).Shutdown(ctx, req.(*ShutdownRequest))
+		return srv.(BaseServiceServer).Shutdown(ctx, req.(*ShutdownRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// AgentService_ServiceDesc is the grpc.ServiceDesc for AgentService service.
+// BaseService_ServiceDesc is the grpc.ServiceDesc for BaseService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var AgentService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "virganol.v1.AgentService",
-	HandlerType: (*AgentServiceServer)(nil),
+var BaseService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "virganol.v1.BaseService",
+	HandlerType: (*BaseServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Ping",
-			Handler:    _AgentService_Ping_Handler,
+			Handler:    _BaseService_Ping_Handler,
 		},
 		{
 			MethodName: "Shutdown",
-			Handler:    _AgentService_Shutdown_Handler,
+			Handler:    _BaseService_Shutdown_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -6,6 +6,8 @@ import (
 	"testing"
 	"time"
 
+	grpcserver "virganol/server/internal/grpcserver"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
@@ -23,7 +25,7 @@ func TestHealthLivenessAndServiceStatus(t *testing.T) {
 	defer lis.Close()
 
 	// 2) Build gRPC server and register health
-	s := NewGRPCServer()
+	s := grpcserver.NewgRPCServer()
 	hm := NewHealthManager()
 	hm.Register(s)
 

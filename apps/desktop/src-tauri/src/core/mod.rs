@@ -9,7 +9,7 @@ use tauri_plugin_shell::process::CommandEvent;
 use tauri_plugin_shell::ShellExt;
 
 use manager::SidecarState;
-use rpc::agent_service_client::AgentServiceClient;
+use rpc::base_service_client::BaseServiceClient;
 use rpc::PingRequest;
 
 /// 初始化并启动 sidecar 进程
@@ -53,7 +53,7 @@ pub fn init(app: &AppHandle) {
                             manager.set_grpc_addr(addr.clone()).await;
 
                             // 4. 发起 gRPC 连接测试
-                            match AgentServiceClient::connect(addr.clone()).await {
+                            match BaseServiceClient::connect(addr.clone()).await {
                                 Ok(mut client) => {
                                     println!("[Rust] gRPC connected successfully");
 

@@ -226,8 +226,8 @@ const file_proto_virganol_v1_virganol_proto_rawDesc = "" +
 	"\n" +
 	"timeout_ms\x18\x01 \x01(\x03R\ttimeoutMs\"6\n" +
 	"\x10ShutdownResponse\x12\"\n" +
-	"\facknowledged\x18\x01 \x01(\bR\facknowledged2\x94\x01\n" +
-	"\fAgentService\x12;\n" +
+	"\facknowledged\x18\x01 \x01(\bR\facknowledged2\x93\x01\n" +
+	"\vBaseService\x12;\n" +
 	"\x04Ping\x12\x18.virganol.v1.PingRequest\x1a\x19.virganol.v1.PingResponse\x12G\n" +
 	"\bShutdown\x12\x1c.virganol.v1.ShutdownRequest\x1a\x1d.virganol.v1.ShutdownResponseB#Z!virganol/server/proto/virganol/v1b\x06proto3"
 
@@ -251,10 +251,10 @@ var file_proto_virganol_v1_virganol_proto_goTypes = []any{
 	(*ShutdownResponse)(nil), // 3: virganol.v1.ShutdownResponse
 }
 var file_proto_virganol_v1_virganol_proto_depIdxs = []int32{
-	0, // 0: virganol.v1.AgentService.Ping:input_type -> virganol.v1.PingRequest
-	2, // 1: virganol.v1.AgentService.Shutdown:input_type -> virganol.v1.ShutdownRequest
-	1, // 2: virganol.v1.AgentService.Ping:output_type -> virganol.v1.PingResponse
-	3, // 3: virganol.v1.AgentService.Shutdown:output_type -> virganol.v1.ShutdownResponse
+	0, // 0: virganol.v1.BaseService.Ping:input_type -> virganol.v1.PingRequest
+	2, // 1: virganol.v1.BaseService.Shutdown:input_type -> virganol.v1.ShutdownRequest
+	1, // 2: virganol.v1.BaseService.Ping:output_type -> virganol.v1.PingResponse
+	3, // 3: virganol.v1.BaseService.Shutdown:output_type -> virganol.v1.ShutdownResponse
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

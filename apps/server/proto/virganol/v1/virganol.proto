@@ -7,7 +7,7 @@ package virganol.v1;
 // 必须明确告诉编译器生成的 go 包名是 agentpb，放在当前目录
 option go_package = "virganol/server/proto/virganol/v1";
 
-service AgentService {
+service BaseService {
   // 【核心修复2】解决命名警告
   // RPC方法名是 Ping，返回值必须是 PingResponse (不能叫 PongResponse)
   rpc Ping(PingRequest) returns (PingResponse);

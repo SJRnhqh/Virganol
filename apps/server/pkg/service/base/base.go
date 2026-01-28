@@ -1,5 +1,5 @@
-// apps/server/internal/agent/service.go
-package agent
+// apps/server/pkg/service/base/base.go
+package base
 
 import (
 	// 外部依赖
@@ -11,26 +11,26 @@ import (
 	pb "virganol/server/proto/virganol/v1"
 )
 
-// Service implements the Agent gRPC API.
-type Service struct {
-	pb.UnimplementedAgentServiceServer
+// BaseService结构体
+type BaseService struct {
+	pb.UnimplementedBaseServiceServer
 	shutdownCh chan struct{}
 }
 
-// NewService constructs the Agent service.
-func NewService() *Service {
-	return &Service{
+// NewBaseService 创建一个新的BaseService实例
+func NewBaseService() *BaseService {
+	return &BaseService{
 		shutdownCh: make(chan struct{}, 1),
 	}
 }
 
-// ShutdownChan 返回关闭信号通道，供 run.go 监听
-func (s *Service) ShutdownChan() <-chan struct{} {
+// ShutdownChan 返回BaseService的关闭信号通道
+func (s *BaseService) ShutdownChan() <-chan struct{} {
 	return s.shutdownCh
 }
 
-// Ping is a simple connectivity test method.
-func (s *Service) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingResponse, error) {
+// Ping
+func (s *BaseService) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingResponse, error) {
 	log.Printf("📥 Received: %s", in.GetMessage())
 	return &pb.PingResponse{
 		Reply:     "Pong from Go: " + in.GetMessage(),
@@ -39,7 +39,7 @@ func (s *Service) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingRespons
 }
 
 // Shutdown 处理来自 Rust 端的优雅关闭请求
-func (s *Service) Shutdown(ctx context.Context, in *pb.ShutdownRequest) (*pb.ShutdownResponse, error) {
+func (s *BaseService) Shutdown(ctx context.Context, in *pb.ShutdownRequest) (*pb.ShutdownResponse, error) {
 	log.Printf("🛑 Received Shutdown request (timeout_ms=%d)", in.GetTimeoutMs())
 
 	// 发送关闭信号（非阻塞）
@@ -56,5 +56,5 @@ func (s *Service) Shutdown(ctx context.Context, in *pb.ShutdownRequest) (*pb.Shu
 	}, nil
 }
 
-// Compile-time assertion that Service implements the interface.
-var _ pb.AgentServiceServer = (*Service)(nil)
+// 编译断言实现了pb.BaseServiceServer接口
+var _ pb.BaseServiceServer = (*BaseService)(nil)

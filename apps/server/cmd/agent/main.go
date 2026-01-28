@@ -4,10 +4,9 @@ package main
 import (
 	// 外部依赖
 	"log"
-	"time"
 
 	// 内部引用
-	agent "virganol/server/internal/agent"
+	grpcserver "virganol/server/internal/grpcserver"
 	lifecycle "virganol/server/internal/lifecycle"
 )
 
@@ -16,18 +15,12 @@ func main() {
 	rCtx, rCancel := lifecycle.NewRootContext()
 	// 取消根上下文，给其上所有子上下文取消的广播
 	defer rCancel()
-	sigCtx, sigCancel := lifecycle.WithShutdownSignals(rCtx)
-	// 注销信号监听器 & 取消信号监听上下文
-	defer sigCancel()
-
-	// Configuration for the agent server
-	cfg := agent.Config{
-		Addr:            "127.0.0.1:0",
-		ShutdownTimeout: 20 * time.Second,
-	}
+	appCtx, appCancel := lifecycle.WithShutdownSignals(rCtx)
+	// 注销信号监听器 & 取消监听信号的应用上下文
+	defer appCancel()
 
 	// Delegate execution to the internal/agent package
-	if err := agent.Run(sigCtx, cfg); err != nil {
-		log.Fatalf("agent run error: %v", err)
+	if err := grpcserver.Run(appCtx); err != nil {
+		log.Fatalf("gRPC server run error: %v", err)
 	}
 }
