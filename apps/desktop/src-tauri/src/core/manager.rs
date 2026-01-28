@@ -53,12 +53,14 @@ impl SidecarManager {
     ///
     /// 流程：
     /// 1. 尝试通过 gRPC 发送 Shutdown 请求（跨平台友好）
-    /// 2. 等待进程自行退出
+    /// 2. 等待进程自行退出（最多等待timeout_ms）
     /// 3. 超时后强制终止进程
     pub async fn shutdown(&self, timeout_ms: u64) -> bool {
+        let timeout = std::time::Duration::from_millis(timeout_ms);
+
         println!(
             "[SidecarManager] Starting shutdown (timeout={}ms)",
-            timeout_ms
+            timeout.as_millis()
         );
 
         // 1. 尝试 gRPC 优雅关闭
@@ -67,8 +69,8 @@ impl SidecarManager {
             match self.send_shutdown_rpc(&addr, timeout_ms).await {
                 Ok(_) => {
                     println!("[SidecarManager] Shutdown RPC acknowledged");
-                    // 给进程一点时间自行退出
-                    tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
+                    // 给进程一点时间自行退出，但不超过配置的超时时间
+                    tokio::time::sleep(timeout).await;
                 }
                 Err(e) => {
                     eprintln!("[SidecarManager] Shutdown RPC failed: {}", e);
