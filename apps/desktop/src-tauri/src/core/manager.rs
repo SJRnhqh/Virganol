@@ -7,37 +7,46 @@ use tokio::sync::Mutex;
 use super::rpc::base_service_client::BaseServiceClient;
 use super::rpc::ShutdownRequest;
 
+/// 内部状态结构体，包含子进程和gRPC地址
+struct SidecarStateInner {
+    /// 子进程句柄（启动后设置，终止后清空）
+    child: Option<CommandChild>,
+    /// gRPC 服务地址（握手成功后设置）
+    grpc_addr: Option<String>,
+}
+
 /// 管理 sidecar 进程的生命周期和 gRPC 连接
 pub struct SidecarManager {
-    /// 子进程句柄（启动后设置，终止后清空）
-    child: Mutex<Option<CommandChild>>,
-    /// gRPC 服务地址（握手成功后设置）
-    grpc_addr: Mutex<Option<String>>,
+    /// 统一的内部状态，用单一互斥锁保护
+    state: Mutex<SidecarStateInner>,
 }
 
 impl SidecarManager {
     pub fn new() -> Self {
         Self {
-            child: Mutex::new(None),
-            grpc_addr: Mutex::new(None),
+            state: Mutex::new(SidecarStateInner {
+                child: None,
+                grpc_addr: None,
+            }),
         }
     }
 
     /// 保存子进程句柄
     pub async fn set_child(&self, child: CommandChild) {
-        let mut guard = self.child.lock().await;
-        *guard = Some(child);
+        let mut state = self.state.lock().await;
+        state.child = Some(child);
     }
 
     /// 保存 gRPC 地址
     pub async fn set_grpc_addr(&self, addr: String) {
-        let mut guard = self.grpc_addr.lock().await;
-        *guard = Some(addr);
+        let mut state = self.state.lock().await;
+        state.grpc_addr = Some(addr);
     }
 
     /// 获取 gRPC 地址
     pub async fn get_grpc_addr(&self) -> Option<String> {
-        self.grpc_addr.lock().await.clone()
+        let state = self.state.lock().await;
+        state.grpc_addr.clone()
     }
 
     /// 优雅关闭 sidecar 进程
@@ -68,8 +77,8 @@ impl SidecarManager {
         }
 
         // 2. 检查并强制终止进程（如果还在运行）
-        let mut guard = self.child.lock().await;
-        if let Some(child) = guard.take() {
+        let mut state = self.state.lock().await;
+        if let Some(child) = state.child.take() {
             println!("[SidecarManager] Force killing child process");
             if let Err(e) = child.kill() {
                 eprintln!("[SidecarManager] Failed to kill process: {}", e);
