@@ -7,7 +7,7 @@ import (
 
 	// 内部引用
 	base "virganol/server/pkg/service/base"
-	pb "virganol/server/proto/virganol/v1"
+	pb "virganol/server/gen/go/virganol/v1"
 )
 
 type ServiceHandles struct {

@@ -3,9 +3,9 @@ version: v2
 modules:
   - path: apps/server/proto
     name: buf.build/sjrnhqh/virganol-sidecar
-    lint:
-      use:
-        - STANDARD
-    breaking:
-      use:
-        - FILE
+lint:
+  use:
+    - STANDARD
+breaking:
+  use:
+    - FILE

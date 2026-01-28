@@ -4,6 +4,9 @@ use std::sync::Arc;
 use tauri_plugin_shell::process::CommandChild;
 use tokio::sync::Mutex;
 
+#[cfg(target_os = "windows")]
+use std::process::Command;
+
 use super::rpc::base_service_client::BaseServiceClient;
 use super::rpc::ShutdownRequest;
 
@@ -11,6 +14,8 @@ use super::rpc::ShutdownRequest;
 struct SidecarStateInner {
     /// 子进程句柄（启动后设置，终止后清空）
     child: Option<CommandChild>,
+    /// 子进程 PID（用于 Windows 上的强制清理）
+    pid: Option<u32>,
     /// gRPC 服务地址（握手成功后设置）
     grpc_addr: Option<String>,
 }
@@ -26,6 +31,7 @@ impl SidecarManager {
         Self {
             state: Mutex::new(SidecarStateInner {
                 child: None,
+                pid: None,
                 grpc_addr: None,
             }),
         }
@@ -34,6 +40,7 @@ impl SidecarManager {
     /// 保存子进程句柄
     pub async fn set_child(&self, child: CommandChild) {
         let mut state = self.state.lock().await;
+        state.pid = Some(child.pid());
         state.child = Some(child);
     }
 
@@ -53,14 +60,12 @@ impl SidecarManager {
     ///
     /// 流程：
     /// 1. 尝试通过 gRPC 发送 Shutdown 请求（跨平台友好）
-    /// 2. 等待进程自行退出（最多等待timeout_ms）
-    /// 3. 超时后强制终止进程
+    /// 2. 短暂等待进程自行退出
+    /// 3. 强制终止进程（Windows 上使用 taskkill /T 终止进程树）
     pub async fn shutdown(&self, timeout_ms: u64) -> bool {
-        let timeout = std::time::Duration::from_millis(timeout_ms);
-
         println!(
             "[SidecarManager] Starting shutdown (timeout={}ms)",
-            timeout.as_millis()
+            timeout_ms
         );
 
         // 1. 尝试 gRPC 优雅关闭
@@ -69,8 +74,8 @@ impl SidecarManager {
             match self.send_shutdown_rpc(&addr, timeout_ms).await {
                 Ok(_) => {
                     println!("[SidecarManager] Shutdown RPC acknowledged");
-                    // 给进程一点时间自行退出，但不超过配置的超时时间
-                    tokio::time::sleep(timeout).await;
+                    // 给进程一点时间自行退出
+                    tokio::time::sleep(std::time::Duration::from_millis(500)).await;
                 }
                 Err(e) => {
                     eprintln!("[SidecarManager] Shutdown RPC failed: {}", e);
@@ -78,16 +83,51 @@ impl SidecarManager {
             }
         }
 
-        // 2. 检查并强制终止进程（如果还在运行）
+        // 2. 强制终止进程
         let mut state = self.state.lock().await;
-        if let Some(child) = state.child.take() {
-            println!("[SidecarManager] Force killing child process");
-            if let Err(e) = child.kill() {
-                eprintln!("[SidecarManager] Failed to kill process: {}", e);
-                return false;
+        let pid = state.pid.take();
+
+        // Windows: 使用 taskkill /T 终止整个进程树
+        #[cfg(target_os = "windows")]
+        if let Some(pid) = pid {
+            println!("[SidecarManager] Killing process tree (PID: {})", pid);
+            let result = Command::new("taskkill")
+                .args(["/F", "/T", "/PID", &pid.to_string()])
+                .output();
+
+            match result {
+                Ok(output) => {
+                    if output.status.success() {
+                        println!("[SidecarManager] Process tree killed successfully");
+                    } else {
+                        // 进程可能已经通过 gRPC 优雅退出，这是正常的
+                        println!(
+                            "[SidecarManager] Process already exited (graceful shutdown worked)"
+                        );
+                    }
+                }
+                Err(e) => {
+                    eprintln!("[SidecarManager] Failed to run taskkill: {}", e);
+                }
+            }
+            // 清理 child handle（即使 taskkill 已处理）
+            state.child.take();
+        }
+
+        // 非 Windows: 使用标准 kill
+        #[cfg(not(target_os = "windows"))]
+        {
+            let _ = pid; // 消除未使用警告
+            if let Some(child) = state.child.take() {
+                println!("[SidecarManager] Force killing child process");
+                if let Err(e) = child.kill() {
+                    eprintln!("[SidecarManager] Failed to kill process: {}", e);
+                    return false;
+                }
             }
         }
 
+        state.grpc_addr = None;
         println!("[SidecarManager] Shutdown complete");
         true
     }
