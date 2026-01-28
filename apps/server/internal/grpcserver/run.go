@@ -60,15 +60,14 @@ func Run(ctx context.Context) error {
 	}
 	log.Println("🛑 Shutting down server...")
 
-	// 6) 等待超时后强制关闭
-	sdCtx, tcCancel := lifecycle.WithShutdownTimeout(context.Background(), constant.GRPC_SHUTDOWN_TIMEOUT)
-	// 释放计时的资源 & 取消计时关闭上下文
-	defer tcCancel()
+	// 6) Graceful shutdown with timeout
+	// Create a context with timeout for the shutdown operation
+	sdCtx, sdCancel := context.WithTimeout(context.Background(), constant.GRPC_SHUTDOWN_TIMEOUT)
+	defer sdCancel()
 
 	timedOut := lifecycle.RunWithTimeout(sdCtx, func() {
 		// hm.Shutdown()
 		grpcServer.GracefulStop()
-
 	})
 
 	if timedOut {
@@ -76,7 +75,7 @@ func Run(ctx context.Context) error {
 		grpcServer.Stop()
 	}
 
-	// 7) 关闭监听，优雅退出
+	// 7) Close listener and exit gracefully
 	_ = lis.Close()
 	log.Println("👋 Server exited gracefully")
 	return nil

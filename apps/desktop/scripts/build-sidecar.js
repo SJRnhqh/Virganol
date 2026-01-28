@@ -1,5 +1,5 @@
 // apps/desktop/scripts/build-sidecar.js
-import { execSync } from "child_process";
+import { execSync, spawnSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -103,6 +103,9 @@ if (!buildAll) {
 }
 
 // 3) Build for each selected target
+// Collect failures so we can fail the script after attempting all targets
+const buildFailures = [];
+
 selectedTargets.forEach((t) => {
   const { target, goos, goarch, ext } = t;
   const outputFile = path.join(binPath, `${BINARY_NAME}-${target}${ext}`);
@@ -110,13 +113,21 @@ selectedTargets.forEach((t) => {
   console.log(`   📦 Target: ${target} (${goos}/${goarch})`);
 
   try {
-    // Core build command
+    // Build command using spawnSync with array args to avoid shell injection
     // -trimpath: remove file system paths for smaller, cleaner binaries
     // -ldflags "-s -w": strip debug symbols to reduce size
-    const cmd = `go build -trimpath -ldflags "-s -w" -o "${outputFile}" .`;
     const cwd = path.resolve(DESKTOP_ROOT, GO_ENTRY_DIR);
+    const args = [
+      "build",
+      "-trimpath",
+      "-ldflags",
+      "-s -w",
+      "-o",
+      outputFile,
+      ".",
+    ];
 
-    execSync(cmd, {
+    const result = spawnSync("go", args, {
       cwd,
       env: {
         ...process.env,
@@ -127,14 +138,49 @@ selectedTargets.forEach((t) => {
       stdio: "inherit", // Stream child process output
     });
 
+    if (result.error) {
+      throw result.error;
+    }
+    if (result.status !== 0) {
+      throw new Error(`go build exited with status ${result.status}`);
+    }
+
     console.log(`   ✅ Success: ${path.basename(outputFile)}`);
   } catch (error) {
     const reason = error?.message || String(error);
     console.error(`   ❌ Failed: ${target} (${goos}/${goarch})`);
     console.error(`      ↳ Reason: ${reason}`);
-    // Optionally fail fast:
-    // process.exit(1);
+
+    // Collect failure for later reporting
+    buildFailures.push({
+      target,
+      goos,
+      goarch,
+      error,
+    });
   }
 });
 
-console.log("🎉 All Go Agent builds completed!\n");
+// 4) Report results and fail if necessary
+if (buildFailures.length > 0) {
+  console.error("\n❌ Sidecar build completed with failures:");
+  for (const failure of buildFailures) {
+    console.error(
+      `   - ${failure.target} (${failure.goos}/${failure.goarch}): ${failure.error.message || failure.error}`,
+    );
+  }
+
+  // Fail CI / production builds so missing binaries are detected
+  if (process.env.NODE_ENV === "production" || process.env.CI === "true") {
+    console.error(
+      "\n🚨 Production/CI build detected: failing due to incomplete sidecar builds.",
+    );
+    process.exit(1);
+  } else {
+    console.warn(
+      "\n⚠️ Non-production build: continuing despite sidecar build failures.",
+    );
+  }
+} else {
+  console.log("🎉 All Go Agent builds completed successfully!\n");
+}
