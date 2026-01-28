@@ -44,7 +44,9 @@ pub fn run() {
             // 处理应用退出事件
             if let RunEvent::ExitRequested { .. } = event {
                 let manager = manager_for_exit.clone();
-                tauri::async_runtime::block_on(async {
+                // 在异步运行时中执行shutdown，不阻塞Tauri事件循环
+                // 这样UI在退出时保持响应，不会冻结
+                tauri::async_runtime::spawn(async move {
                     println!("[Tauri] Exit requested, shutting down sidecar...");
                     let success = manager.shutdown(10000).await;
                     if success {
