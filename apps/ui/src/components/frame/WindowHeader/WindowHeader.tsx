@@ -55,7 +55,7 @@ export function WindowHeader() {
         <div className="flex items-center gap-1">
           <SideSwitch />
           <SidebarToggle />
-          <SettingsButton onClick={() => console.log("Open Settings")} />
+          <SettingsButton />
         </div>
       </div>
 

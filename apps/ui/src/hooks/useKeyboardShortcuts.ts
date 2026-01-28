@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSidebarStore } from "@/store/SidebarStore";
-import { NAV_ITEMS } from "@/config/navigation";
+import { NAV_ITEMS } from "@/constants/navigation";
 
 /**
  * ⌨️ Virganol 全局快捷键调度中心

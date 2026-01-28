@@ -1,0 +1,4 @@
+{
+  "provider": "openai",
+  "model": "gemma3:1b"
+}
