@@ -36,7 +36,10 @@ pub fn run() {
             tmp::ssh::test_ssh_params,
             // PTY 命令
             tmp::terminal::init_pty,
-            tmp::terminal::write_pty
+            tmp::terminal::write_pty,
+            core::commands::verify_llm_config,
+            core::commands::set_llm_config,
+            core::commands::get_llm_config
         ])
         .build(tauri::generate_context!())
         .expect("Error while building tauri application")
