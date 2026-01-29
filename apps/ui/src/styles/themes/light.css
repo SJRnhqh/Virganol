@@ -40,8 +40,12 @@
     --window-control-minimize: var(--color-danhuilv); /* 最小化 -> 淡灰绿 */
 
     /* === 3. 主体背景  === */
+    /* 主体区域背景色 */
     --main-bg: var(--color-danmifen);
     --main-fg: var(--color-qinghui);
+
+    /* 设置窗口 */
+    --settings-outlay-bg: var(--color-transparent);
 
     /* === 4. SciSpirit === */
     --spirit-welcome-atomsphere: var(--color-mihuang);
@@ -60,17 +64,17 @@
     --spirit-welcome-flaskconical-bg: var(--color-haimolv);
     --spirit-welcome-flaskconical-border: var(--color-qinglv);
     --spirit-welcome-flaskconical-fill: var(--color-yuqing);
-    
+
     /* === 4.2 BotInput === */
     /* 默认边框和背景 */
     --spirit-botinput-box-border: var(--color-qinghui);
     --spirit-botinput-box-bg: var(--color-white);
     --spirit-botinput-capsule: var(--color-haimolv);
     --spirit-botinput-icon-bg: var(--color-black);
-    
+
     /* Ester */
     --spirit-botinput-ester: var(--color-jizong);
-    
+
     /* Kiral */
     --spirit-botinput-kiral: var(--color-kongquelv);
 

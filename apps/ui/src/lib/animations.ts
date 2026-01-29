@@ -1,94 +1,94 @@
+// apps/ui/src/lib/animations.ts
 import type { Variants } from "framer-motion";
 
-/**
- * V.I.N.E. Settings Modal Animations (Eternal Flow Mode 🌊)
- * 特征：1.2s 极长时长、原路返回、呼吸般的自然感
- */
-
-// 1. 遮罩层：配合超长时长，营造氛围
+{
+  /* === 1. Settings窗口动画 === */
+}
+// 1. 纯逻辑遮罩：不负责好看，只负责占位
 export const modalBackdrop: Variants = {
-  hidden: { opacity: 0, backdropFilter: "blur(0px)" },
+  hidden: {
+    // 即使是透明的，也保持 opacity: 0 以防万一后续有人加了背景色
+    opacity: 0,
+  },
   visible: {
     opacity: 1,
-    backdropFilter: "blur(2px)",
-    transition: { 
-      duration: 1.2, // 🐢 跟随主节奏
-      ease: [0.22, 1, 0.36, 1] // 非常平缓
+    transition: {
+      duration: 0, // 进场不需要等，直接出现开始挡住点击
     },
   },
   exit: {
     opacity: 0,
-    backdropFilter: "blur(0px)",
-    transition: { 
-      duration: 1.0, // 退出稍微快一点点，避免用户等太久
-      ease: "easeInOut" 
+    transition: {
+      // 🟢 关键：保持与主窗口退出动画(1.2s)接近的时长
+      // 作用：在主窗口完全消失前，继续阻挡用户误触底部内容
+      duration: 1.2,
+    },
+  },
+};
+// TODO：重构美化
+// 2. 纸张容器 (父级)：完美的"起"与"落"
+export const paperUnfoldVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.9,
+    rotateX: 45, // 📐 45度：完美的呈递角度
+    y: 80,
+    filter: "blur(10px)", // 深度模糊，增加梦幻感
+    transformPerspective: 1500,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    rotateX: 0,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      // 🐢 1.2秒 入场
+      duration: 1.2,
+      // 🌊 极度平滑的曲线：大部分时间都在做最后的微调归位
+      ease: [0.19, 1, 0.22, 1] as const,
+
+      // 彻底同步
+      when: "start",
+      staggerChildren: 0,
+      delayChildren: 0,
+    },
+  },
+  // 🟢 关键：退出动画 (原路返回 / 归位)
+  exit: {
+    opacity: 0,
+    scale: 0.92, // 慢慢缩回去
+    rotateX: 45, // 📐 向后倒 (正数 rotateX)，回到桌面上
+    y: 60, // 向下沉
+    filter: "blur(10px)",
+    transition: {
+      // 🐢 1.2秒 离场 (保持一致的慢节奏)
+      duration: 1.2,
+      // 🍂 离场曲线：先慢后快再慢，像一片叶子落下
+      ease: [0.3, 0, 0.2, 1] as const,
+
+      // 同步
+      staggerChildren: 0,
     },
   },
 };
 
-// 2. 纸张容器 (父级)：完美的"起"与"落"
-export const paperUnfoldVariants: Variants = {
-  hidden: { 
-    opacity: 0,
-    scale: 0.9,         
-    rotateX: 45,        // 📐 45度：完美的呈递角度
-    y: 80,              
-    filter: "blur(10px)", // 深度模糊，增加梦幻感
-    transformPerspective: 1500
-  },
-  visible: { 
-    opacity: 1,
-    scale: 1,
-    rotateX: 0,         
-    y: 0,
-    filter: "blur(0px)",
-    transition: { 
-      // 🐢 1.2秒 入场
-      duration: 1.2,    
-      // 🌊 极度平滑的曲线：大部分时间都在做最后的微调归位
-      ease: [0.19, 1, 0.22, 1] as const, 
-      
-      // 彻底同步
-      when: "start",
-      staggerChildren: 0, 
-      delayChildren: 0
-    }
-  },
-  // 🟢 关键：退出动画 (原路返回 / 归位)
-  exit: { 
-    opacity: 0,
-    scale: 0.92,        // 慢慢缩回去
-    rotateX:45,        // 📐 向后倒 (正数 rotateX)，回到桌面上
-    y: 60,              // 向下沉
-    filter: "blur(10px)",
-    transition: { 
-      // 🐢 1.2秒 离场 (保持一致的慢节奏)
-      duration: 1.2, 
-      // 🍂 离场曲线：先慢后快再慢，像一片叶子落下
-      ease: [0.3, 0, 0.2, 1] as const,
-      
-      // 同步
-      staggerChildren: 0
-    } 
-  }
-};
-
 // 3. 内容块 (子级)：完全静止
 export const contentFadeUp: Variants = {
-  hidden: { 
-    opacity: 1, 
-    y: 0        
-  },
-  visible: { 
-    opacity: 1, 
+  hidden: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0 } 
   },
-  exit: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0 } 
-  }
+    transition: { duration: 0 },
+  },
+  exit: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0 },
+  },
 };
 
 // 4. 容器控制
@@ -97,13 +97,13 @@ export const containerStagger: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0, 
+      staggerChildren: 0,
       delayChildren: 0,
     },
   },
   exit: {
     transition: {
       staggerChildren: 0,
-    }
-  }
+    },
+  },
 };
