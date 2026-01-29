@@ -13,7 +13,7 @@ export const SettingsModal = () => {
   // 1. 从全局 Store 获取状态
   // isOpen: 控制模态框显示/隐藏
   // activeTab: 当前选中的是哪个设置项（如 'general', 'scispirit'）
-  const { isOpen, closeSettings, activeTab, setTab } = useSettingsStore();
+  const { isOpen, closeSettings, activeTab } = useSettingsStore();
 
   // 2. 计算当前 Tab 信息
   // 用于在右侧 Header 显示当前的标题和描述
@@ -59,7 +59,7 @@ export const SettingsModal = () => {
             )}
           >
             {/* === 左侧 Sidebar === */}
-            <SettingsSidebar activeTab={activeTab} setTab={setTab} />
+            <SettingsSidebar/>
 
             {/* TODO: 美化重构 */}
             {/* === 右侧 Main Content === */}
