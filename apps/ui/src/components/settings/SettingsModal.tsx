@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // 内部引用
 import { SpiritPanel, GeneralPanel, ComingSoonPanel } from "./panels";
+import { SettingsSidebar } from "./sidebar/SettingsSidebar";
 import { useSettingsStore } from "@/store/SettingsStore";
 import { SETTINGS_TABS } from "@/constants/settings";
 import {
@@ -28,7 +29,7 @@ export const SettingsModal = () => {
     // AnimatePresence: 允许 React 组件在从 DOM 移除时播放退出动画 (exit prop)
     <AnimatePresence>
       {isOpen && (
-        // 全屏定位容器，z-index 设为 100 保证在最上层
+        // 全屏定位容
         <div className="fixed inset-0 z-100 flex items-center justify-center isolate">
           {/* 遮罩 */}
           <motion.div
@@ -36,61 +37,37 @@ export const SettingsModal = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute inset-0 bg-settings-outlay-bg"
+            className="absolute inset-0 bg-settings-outlay"
             onClick={closeSettings}
           />
 
-          {/* TODO: 重构美化*/}
           {/* 纸张容器：3D 展开 */}
           <motion.div
             variants={paperUnfoldVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="relative w-200 h-137.5 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-2xl flex overflow-hidden border border-slate-200 dark:border-[#333] origin-center"
+            className={cn(
+              // 1. 布局核心 (Layout Core)
+              // relative: 为内部绝对定位元素提供锚点
+              // flex: 左右布局容器
+              // overflow-hidden: 确保圆角切边生效，防止子元素溢出
+              // origin-center: 动画展开的中心点
+              "relative flex overflow-hidden origin-center",
+
+              // 2. 尺寸设定 (Dimensions)
+              // 如果要改成全屏或不同大小，改这里
+              "w-200 h-137.5",
+
+              // 3. 物理质感 (Physical Material)
+              // 形状(圆角)和立体感(阴影)
+              "rounded-3xl shadow-3xl",
+            )}
           >
             {/* === 左侧 Sidebar === */}
-            <motion.div
-              variants={containerStagger}
-              className="w-60 bg-slate-50/50 dark:bg-[#252526]/50 border-r border-slate-200 dark:border-[#333] flex flex-col py-6 backdrop-blur-xl z-10"
-            >
-              <motion.div variants={contentFadeUp} className="px-6 mb-6">
-                <h2 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                  Settings
-                </h2>
-              </motion.div>
+            <SettingsSidebar activeTab={activeTab} setTab={setTab} />
 
-              <motion.div
-                variants={contentFadeUp}
-                className="flex-1 px-3 space-y-1"
-              >
-                {SETTINGS_TABS.map((tab) => {
-                  const Icon = tab.icon;
-                  const isActive = activeTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setTab(tab.id)}
-                      className={cn(
-                        "w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200",
-                        isActive
-                          ? "bg-white dark:bg-[#37373d] text-blue-600 dark:text-blue-400 shadow-sm ring-1 ring-slate-200 dark:ring-[#444]"
-                          : "text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-[#2d2d2d]",
-                      )}
-                    >
-                      <Icon
-                        className={cn(
-                          "w-4.5 h-4.5",
-                          isActive ? "text-blue-500" : "text-slate-400",
-                        )}
-                      />
-                      {tab.label}
-                    </button>
-                  );
-                })}
-              </motion.div>
-            </motion.div>
-
+            {/* TODO: 美化重构 */}
             {/* === 右侧 Main Content === */}
             <motion.div
               variants={containerStagger}

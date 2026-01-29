@@ -45,7 +45,8 @@
     --main-fg: var(--color-qinghui);
 
     /* 设置窗口 */
-    --settings-outlay-bg: var(--color-transparent);
+    --settings-outlay: var(--color-transparent);
+    --settings-sidebar: var(--color-songshuanglv);
 
     /* === 4. SciSpirit === */
     --spirit-welcome-atomsphere: var(--color-mihuang);

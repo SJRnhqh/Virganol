@@ -4,34 +4,30 @@ import type { Variants } from "framer-motion";
 {
   /* === 1. Settings窗口动画 === */
 }
-// 1. 纯逻辑遮罩：不负责好看，只负责占位
+// 1. 纯逻辑遮罩
 export const modalBackdrop: Variants = {
   hidden: {
-    // 即使是透明的，也保持 opacity: 0 以防万一后续有人加了背景色
     opacity: 0,
   },
   visible: {
     opacity: 1,
     transition: {
-      duration: 0, // 进场不需要等，直接出现开始挡住点击
+      duration: 0,
     },
   },
   exit: {
     opacity: 0,
     transition: {
-      // 🟢 关键：保持与主窗口退出动画(1.2s)接近的时长
-      // 作用：在主窗口完全消失前，继续阻挡用户误触底部内容
       duration: 1.2,
     },
   },
 };
-// TODO：重构美化
 // 2. 纸张容器 (父级)：完美的"起"与"落"
 export const paperUnfoldVariants: Variants = {
   hidden: {
     opacity: 0,
     scale: 0.9,
-    rotateX: 45, // 📐 45度：完美的呈递角度
+    rotateX: 45,
     y: 80,
     filter: "blur(10px)", // 深度模糊，增加梦幻感
     transformPerspective: 1500,
@@ -58,7 +54,7 @@ export const paperUnfoldVariants: Variants = {
   exit: {
     opacity: 0,
     scale: 0.92, // 慢慢缩回去
-    rotateX: 45, // 📐 向后倒 (正数 rotateX)，回到桌面上
+    rotateX: 45,
     y: 60, // 向下沉
     filter: "blur(10px)",
     transition: {

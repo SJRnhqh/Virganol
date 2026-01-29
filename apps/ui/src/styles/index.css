@@ -59,7 +59,8 @@
     --color-main-fg: var(--main-fg);
 
     /* 设置窗口 */
-    --color-settings-outlay-bg: var(--settings-outlay-bg);
+    --color-settings-outlay: var(--settings-outlay);
+    --color-settings-sidebar: var(--settings-sidebar);
 
     /* === 4. SciSpirit === */
     --color-spirit-welcome-atomsphere: var(--spirit-welcome-atomsphere);
