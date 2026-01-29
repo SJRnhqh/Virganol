@@ -68,38 +68,3 @@ export const paperUnfoldVariants: Variants = {
     },
   },
 };
-
-// 3. 内容块 (子级)：完全静止
-export const contentFadeUp: Variants = {
-  hidden: {
-    opacity: 1,
-    y: 0,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0 },
-  },
-  exit: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0 },
-  },
-};
-
-// 4. 容器控制
-export const containerStagger: Variants = {
-  hidden: { opacity: 1 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0,
-      delayChildren: 0,
-    },
-  },
-  exit: {
-    transition: {
-      staggerChildren: 0,
-    },
-  },
-};

@@ -7,13 +7,7 @@ import { SpiritPanel, GeneralPanel, ComingSoonPanel } from "./panels";
 import { SettingsSidebar } from "./sidebar/SettingsSidebar";
 import { useSettingsStore } from "@/store/SettingsStore";
 import { SETTINGS_TABS } from "@/constants/settings";
-import {
-  cn,
-  modalBackdrop,
-  paperUnfoldVariants,
-  contentFadeUp,
-  containerStagger,
-} from "@/lib";
+import { cn, modalBackdrop, paperUnfoldVariants } from "@/lib";
 
 export const SettingsModal = () => {
   // 1. 从全局 Store 获取状态
@@ -69,14 +63,8 @@ export const SettingsModal = () => {
 
             {/* TODO: 美化重构 */}
             {/* === 右侧 Main Content === */}
-            <motion.div
-              variants={containerStagger}
-              className="flex-1 flex flex-col min-w-0 bg-white dark:bg-[#1e1e1e] relative z-0"
-            >
-              <motion.div
-                variants={contentFadeUp}
-                className="h-16 border-b border-slate-100 dark:border-[#2d2d2d] flex items-center justify-between px-8 shrink-0 bg-white/50 dark:bg-[#1e1e1e]/50 backdrop-blur-sm"
-              >
+            <motion.div className="flex-1 flex flex-col min-w-0 bg-white dark:bg-[#1e1e1e] relative z-0">
+              <motion.div className="h-16 border-b border-slate-100 dark:border-[#2d2d2d] flex items-center justify-between px-8 shrink-0 bg-white/50 dark:bg-[#1e1e1e]/50 backdrop-blur-sm">
                 <motion.div key={currentTabInfo?.label}>
                   <h1 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
                     {currentTabInfo?.label || "Unknown"}
@@ -87,10 +75,7 @@ export const SettingsModal = () => {
                 </motion.div>
               </motion.div>
 
-              <motion.div
-                variants={contentFadeUp}
-                className="flex-1 overflow-y-auto p-8"
-              >
+              <motion.div className="flex-1 overflow-y-auto p-8">
                 <div className="max-w-2xl">
                   {/* Tab 切换动画 */}
                   <motion.div

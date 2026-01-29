@@ -61,6 +61,12 @@
     /* 设置窗口 */
     --color-settings-outlay: var(--settings-outlay);
     --color-settings-sidebar: var(--settings-sidebar);
+    --color-settings-sidebar-fg: var(--settings-sidebar-fg);
+    --color-settings-sidebar-fg-active: var(--settings-sidebar-fg-active);
+    --color-settings-sidebar-icon-bg: var(--settings-sidebar-icon-bg);
+    --color-settings-sidebar-icon-indicator: var(
+        --settings-sidebar-icon-indicator
+    );
 
     /* === 4. SciSpirit === */
     --color-spirit-welcome-atomsphere: var(--spirit-welcome-atomsphere);

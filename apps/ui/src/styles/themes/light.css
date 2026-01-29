@@ -47,6 +47,10 @@
     /* 设置窗口 */
     --settings-outlay: var(--color-transparent);
     --settings-sidebar: var(--color-songshuanglv);
+    --settings-sidebar-fg: var(--color-danmifen);
+    --settings-sidebar-fg-active: var(--color-qinghui);
+    --settings-sidebar-icon-bg: var(--color-haimolv);
+    --settings-sidebar-icon-indicator: var(--color-zheshi);
 
     /* === 4. SciSpirit === */
     --spirit-welcome-atomsphere: var(--color-mihuang);

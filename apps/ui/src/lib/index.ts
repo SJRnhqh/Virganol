@@ -1,8 +1,3 @@
 // apps/ui/src/lib/index.ts
 export { cn } from "./utils";
-export {
-  modalBackdrop,
-  paperUnfoldVariants,
-  contentFadeUp,
-  containerStagger,
-} from "./animations";
+export { modalBackdrop, paperUnfoldVariants } from "./animations";
