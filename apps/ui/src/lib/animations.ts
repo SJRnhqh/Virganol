@@ -68,3 +68,38 @@ export const paperUnfoldVariants: Variants = {
     },
   },
 };
+
+/* === 2. Settings Tab 面板切换动画 === */
+// 更自然的面板切换：轻微位移 + 模糊 + 弹性曲线
+export const panelSwitchVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    x: 16,
+    scale: 0.995,
+    filter: "blur(6px)",
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      stiffness: 240,
+      damping: 24,
+      mass: 0.9,
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: -16,
+    scale: 0.995,
+    filter: "blur(6px)",
+    transition: {
+      type: "spring",
+      stiffness: 200,
+      damping: 26,
+      mass: 0.9,
+    },
+  },
+};

@@ -2,3 +2,4 @@
 export { SpiritPanel } from "./SpiritPanel";
 export { GeneralPanel } from "./GeneralPanel";
 export { ComingSoonPanel } from "./ComingSoonPanel";
+export { PanelBoard } from "./PanelBoard";
