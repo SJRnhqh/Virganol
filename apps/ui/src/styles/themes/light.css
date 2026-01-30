@@ -51,6 +51,7 @@
     --settings-sidebar-fg-active: var(--color-qinghui);
     --settings-sidebar-icon-bg: var(--color-haimolv);
     --settings-sidebar-icon-indicator: var(--color-zheshi);
+    --settings-panel-bg: var(--color-liroubai);
 
     /* === 4. SciSpirit === */
     --spirit-welcome-atomsphere: var(--color-mihuang);

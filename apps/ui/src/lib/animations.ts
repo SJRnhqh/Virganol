@@ -52,8 +52,8 @@ export const paperUnfoldVariants: Variants = {
     rotateX: 30,
     y: 30,
     transition: {
-      duration: 0.35, // 关闭更快，不浪费时间
-      ease: [0.32, 0, 0.67, 0] as const, // easeInCubic - 平滑加速消失
+      duration: 0.35,
+      ease: [0.32, 0, 0.67, 0] as const,
       when: "afterChildren",
     },
   },
