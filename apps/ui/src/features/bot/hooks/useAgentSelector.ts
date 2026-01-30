@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/hooks/useAgentSelector.ts
 import { useState, useRef, useEffect, useCallback } from "react";
-import { type AgentType } from "../config/agents";
+import { type AgentType } from "../types/agents";
 
 interface UseAgentSelectorProps {
   onSelect: (agentId: AgentType) => void;

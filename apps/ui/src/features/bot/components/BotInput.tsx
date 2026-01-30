@@ -1,7 +1,7 @@
 // apps/ui/src/features/bot/components/BotInput.tsx
 import { ArrowUp, Paperclip, Sparkles, Mic } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { AGENTS } from "../config/agents";
+import { AGENTS } from "../types/agents";
 import { AgentSelector } from "./AgentSelector";
 import { useBotInput } from "../hooks/useBotInput";
 
