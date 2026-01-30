@@ -26,11 +26,6 @@ export const DevelopingView = ({ title, icon: Icon }: DevelopingViewProps) => {
       <p className="mt-2 text-sm text-primary/30 font-light italic">
         "Refining Nectar into specialized Mead... the brewing takes time."
       </p>
-
-      {/* 底部状态标识 */}
-      <div className="mt-8 px-4 py-1.5 rounded-full border border-sidebar-border/30 bg-white/5 text-[10px] text-primary/20 uppercase tracking-widest">
-        Syncing with V.I.N.E. Infrastructure
-      </div>
     </div>
   );
 };

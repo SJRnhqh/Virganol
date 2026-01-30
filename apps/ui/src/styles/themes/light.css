@@ -47,9 +47,9 @@
     /* 设置窗口 */
     --settings-outlay: var(--color-transparent);
     --settings-sidebar: var(--color-songshuanglv);
-    --settings-sidebar-fg: var(--color-danmifen);
+    --settings-sidebar-fg: var(--color-liroubai);
     --settings-sidebar-fg-active: var(--color-qinghui);
-    --settings-sidebar-icon-bg: var(--color-haimolv);
+    --settings-sidebar-icon-bg: var(--color-liroubai);
     --settings-sidebar-icon-indicator: var(--color-zheshi);
     --settings-panel-bg: var(--color-liroubai);
 

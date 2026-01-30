@@ -1,4 +1,4 @@
-import { Monitor } from "lucide-react";
+import { Settings2, type LucideIcon } from "lucide-react";
 import { NAV_ITEMS } from "./navigation";
 import { type SettingsTab } from "../store/SettingsStore";
 
@@ -9,7 +9,7 @@ export type PanelType = "general" | "spirit" | "comingSoon";
 export interface SettingsTabItem {
   id: SettingsTab;
   label: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   // 面板类型：决定渲染哪个面板组件
   panelType: PanelType;
   // 面板显示名称（用于 ComingSoonPanel）
@@ -21,8 +21,9 @@ const STATIC_TABS: SettingsTabItem[] = [
   {
     id: "general",
     label: "General",
-    icon: Monitor,
+    icon: Settings2,
     panelType: "general",
+    panelDisplayName: "General Settings",
   },
 ];
 
