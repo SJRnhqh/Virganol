@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useSidebarStore } from "@/store/SidebarStore";
-import { NAV_ITEMS } from "@/config/navigation";
+import { useSidebarStore, useSettingsStore } from "@/store";
+import { NAV_ITEMS } from "@/constants/navigation";
 
 /**
  * ⌨️ Virganol 全局快捷键调度中心
@@ -8,6 +8,11 @@ import { NAV_ITEMS } from "@/config/navigation";
  */
 export function useKeyboardShortcuts() {
   const { toggle, toggleSide, setActiveId } = useSidebarStore();
+  const {
+    isOpen: isSettingsOpen,
+    closeSettings,
+    openSettings,
+  } = useSettingsStore();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -25,7 +30,30 @@ export function useKeyboardShortcuts() {
       const shiftKey = event.shiftKey;
       const key = event.key.toLowerCase();
 
-      // --- 指令分发 ---
+      // === 第一层级：绝对全局快捷键 (不受输入框焦点限制) ===
+
+      // 🔴 ESC 关闭设置 (从 SettingsModal 移过来的逻辑)
+      // 逻辑：如果设置面板打开了，按 ESC 应该优先关闭它，无论焦点在哪里
+      if (key === "escape" && isSettingsOpen) {
+        event.preventDefault();
+        event.stopPropagation(); // 防止冒泡
+        closeSettings();
+        return; // 阻止后续处理
+      }
+
+      // ⚙️ 打开/关闭设置: [Cmd/Ctrl] + [,]
+      // 这是业界标准快捷键 (VS Code, Mac Apps 等)
+      if (mainKey && key === ",") {
+        event.preventDefault();
+        if (isSettingsOpen) {
+          closeSettings();
+        } else {
+          openSettings();
+        }
+        return;
+      }
+
+      // === 第二层级：输入敏感快捷键 (如果在打字，则不触发) ===
 
       // 🟢 侧边栏收放: [Cmd/Ctrl] + B
       if (mainKey && !shiftKey && key === "b") {
@@ -45,7 +73,7 @@ export function useKeyboardShortcuts() {
       if (mainKey && !shiftKey && /^[1-7]$/.test(key)) {
         const index = parseInt(key) - 1;
         const targetModule = NAV_ITEMS[index];
-        
+
         if (targetModule) {
           event.preventDefault();
           setActiveId(targetModule.id);
@@ -55,5 +83,12 @@ export function useKeyboardShortcuts() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [toggle, toggleSide, setActiveId]);
+  }, [
+    toggle,
+    toggleSide,
+    setActiveId,
+    isSettingsOpen,
+    closeSettings,
+    openSettings,
+  ]);
 }

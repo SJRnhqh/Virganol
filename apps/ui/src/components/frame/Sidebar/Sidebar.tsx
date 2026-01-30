@@ -1,7 +1,7 @@
 // apps/ui/src/components/frame/Sidebar/Sidebar.tsx
 import { memo } from "react";
 import { useMotionValue } from "framer-motion";
-import { NAV_ITEMS } from "@/config/navigation";
+import { NAV_ITEMS } from "@/constants/navigation";
 import { DockItem } from "./DockItem";
 import { cn } from "@/lib/utils";
 // 引入刚才创建的 Hook
