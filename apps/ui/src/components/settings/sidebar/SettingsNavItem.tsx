@@ -41,8 +41,8 @@ export const SettingsNavItem = ({
         className={cn(
           "w-4.5 h-4.5 transition-colors duration-300",
           isActive
-            ? "text-settings-sidebar-font-active"
-            : "text-settings-sidebar-fg/50 group-hover:text-settings-sidebar-font",
+            ? "text-settings-sidebar-fg-active"
+            : "text-settings-sidebar-fg/50 group-hover:text-settings-sidebar-fg"
         )}
       />
       <span className="relative z-10">{label}</span>

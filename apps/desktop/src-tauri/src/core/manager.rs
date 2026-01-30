@@ -112,6 +112,10 @@ impl SidecarManager {
             }
             // 清理 child handle（即使 taskkill 已处理）
             state.child.take();
+        } else if let Some(child) = state.child.take() {
+            // Fallback: 如果没有 PID，直接通过 Child handle 终止
+            println!("[SidecarManager] No PID available, killing via Child handle");
+            let _ = child.kill();
         }
 
         // 非 Windows: 使用标准 kill
