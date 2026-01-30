@@ -58,6 +58,17 @@
     --color-main-bg: var(--main-bg);
     --color-main-fg: var(--main-fg);
 
+    /* 设置窗口 */
+    --color-settings-outlay: var(--settings-outlay);
+    --color-settings-sidebar: var(--settings-sidebar);
+    --color-settings-sidebar-fg: var(--settings-sidebar-fg);
+    --color-settings-sidebar-fg-active: var(--settings-sidebar-fg-active);
+    --color-settings-sidebar-icon-bg: var(--settings-sidebar-icon-bg);
+    --color-settings-sidebar-icon-indicator: var(
+        --settings-sidebar-icon-indicator
+    );
+    --color-settings-panel-bg: var(--settings-panel-bg);
+
     /* === 4. SciSpirit === */
     --color-spirit-welcome-atomsphere: var(--spirit-welcome-atomsphere);
 
@@ -90,7 +101,7 @@
     --color-spirit-botinput-box-bg: var(--spirit-botinput-box-bg);
     --color-spirit-botinput-capsule: var(--spirit-botinput-capsule);
     --color-spirit-botinput-icon-bg: var(--spirit-botinput-icon-bg);
-    
+
     /* Ester */
     --color-spirit-botinput-ester: var(--spirit-botinput-ester);
 
