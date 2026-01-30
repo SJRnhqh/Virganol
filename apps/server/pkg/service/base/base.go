@@ -8,7 +8,7 @@ import (
 	"time"
 
 	// 内部引用
-	pb "virganol/server/proto/virganol/v1"
+	pb "virganol/server/gen/go/virganol/v1"
 )
 
 // BaseService结构体

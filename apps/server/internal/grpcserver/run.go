@@ -15,7 +15,7 @@ import (
 )
 
 // 启动和管理gRPC完整生命周期
-func Run(ctx context.Context) error {
+func Run(ctx context.Context, dataDir string) error {
 
 	// 1) 监听
 	lis, err := net.Listen("tcp", constant.GRPC_ADDR)
@@ -25,7 +25,7 @@ func Run(ctx context.Context) error {
 
 	// 2) 创建gRPC服务器并且注册服务
 	grpcServer := NewgRPCServer()
-	handles := RegisterServices(grpcServer)
+	handles := RegisterServices(grpcServer, dataDir)
 	// TODO：保留健康检查的部分，后续再重构完善，目前先不加入
 	// Health manager for liveness/readiness
 	// hm := NewHealthManager()
