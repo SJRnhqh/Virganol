@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package virganol.v1;
+
+option go_package = "virganol/v1;virganolv1";
+
+service ConfigService {
+  // 保存配置
+  rpc SetLLMConfig(SetLLMConfigRequest) returns (SetLLMConfigResponse);
+  // 获取配置
+  rpc GetLLMConfig(GetLLMConfigRequest) returns (GetLLMConfigResponse);
+
+  // 验证配置
+  rpc VerifyLLMConfig(VerifyLLMConfigRequest) returns (VerifyLLMConfigResponse);
+}
+
+message LLMConfig {
+  string provider = 1;
+  string api_key = 2;
+  string model = 3;
+}
+
+message SetLLMConfigRequest {
+  LLMConfig config = 1;
+}
+
+message SetLLMConfigResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetLLMConfigRequest {}
+
+message GetLLMConfigResponse {
+  LLMConfig config = 1;
+  bool exists = 2;
+}
+
+message VerifyLLMConfigRequest {
+  LLMConfig config = 1;
+}
+
+message VerifyLLMConfigResponse {
+  bool is_valid = 1;
+  string message = 2;
+}

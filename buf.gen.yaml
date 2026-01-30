@@ -1,0 +1,17 @@
+version: v2
+clean: true
+
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: virganol/server/gen/go
+
+plugins:
+  - local: protoc-gen-go
+    out: apps/server/gen/go
+    opt: paths=source_relative
+
+  - local: protoc-gen-go-grpc
+    out: apps/server/gen/go
+    opt: paths=source_relative

@@ -2,6 +2,7 @@
 
 pub mod manager;
 pub mod rpc;
+pub mod commands;
 
 use tauri::AppHandle;
 use tauri::Manager;

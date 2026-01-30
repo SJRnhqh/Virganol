@@ -3,11 +3,12 @@ import { Rocket, Construction } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion"; // 🟢 引入动画增强隔离感
 import { Sidebar } from "@/components/frame/Sidebar";
 import { WindowHeader } from "@/components/frame/WindowHeader/WindowHeader";
-import { NAV_ITEMS } from "@/config/navigation";
+import { NAV_ITEMS } from "@/constants/navigation";
 import { DevelopingView } from "@/components/frame/DevelopingView";
 import { BotDashboard } from "@/features/bot/BotDashboard";
 import { useSidebarStore } from "@/store/SidebarStore";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { SettingsModal } from "../components/settings/SettingsModal";
 import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
@@ -52,6 +53,8 @@ export function MainLayout({ children }: MainLayoutProps) {
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-main-bg text-primary">
       <WindowHeader />
 
+      <SettingsModal />
+
       <div
         className={cn(
           "relative flex-1 w-full h-full overflow-hidden flex",
@@ -65,23 +68,20 @@ export function MainLayout({ children }: MainLayoutProps) {
           {/* AnimatePresence 实现页面切换时的“静默消隐”
             mode="wait" 确保旧页面先消失，新页面再进入，实现物理隔离感
           */}
-          
+
           <AnimatePresence mode="wait">
             <motion.div
               key={activeId}
               // 🟢 Initial: 新页面从微小的放大和透明开始（感觉是从屏幕外浮现）
               initial={{ opacity: 0, scale: 1.01, filter: "blur(4px)" }}
-              
               // 🟢 Animate: 瞬间恢复原状
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              
               // 🟢 Exit: 旧页面微调缩小并消失（感觉是退入深处）
               exit={{ opacity: 0, scale: 0.98, filter: "blur(2px)" }}
-              
               // 🚀 极速响应：使用 0.15s 的持续时间，让切换像快门一样利落
-              transition={{ 
-                duration: 0.15, 
-                ease: [0.4, 0, 0.2, 1] // 标准的工业级缓动曲线
+              transition={{
+                duration: 0.15,
+                ease: [0.4, 0, 0.2, 1], // 标准的工业级缓动曲线
               }}
               className="w-full h-full p-6"
             >
