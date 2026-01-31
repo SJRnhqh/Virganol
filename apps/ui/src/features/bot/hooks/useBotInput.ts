@@ -1,7 +1,7 @@
 // apps/ui/src/features/bot/hooks/useBotInput.ts
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useBotStore } from "../store/useBotStore";
-import { type AgentType } from "../config/agents";
+import { type AgentType } from "../types/agents";
 
 export function useBotInput() {
   const [value, setValue] = useState("");
