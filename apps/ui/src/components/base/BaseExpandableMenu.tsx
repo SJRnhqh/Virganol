@@ -87,6 +87,7 @@ export const BaseExpandableMenu = ({
           role="region"
           className={contentOuterClassName}
           aria-hidden={!isOpen}
+          inert={!isOpen ? true : undefined}
         >
           <div className={contentInnerClassName}>{children}</div>
         </div>
