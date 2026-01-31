@@ -1,29 +1,21 @@
 // TODO：优化样式语义化
+import { useState } from "react";
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import { Ollama as OllamaIcon } from "@lobehub/icons";
+import {
+  DEFAULT_PROVIDER_CONFIG,
+  type OllamaConfig,
+} from "@/features/bot/types/llmProviders";
 
-export interface OllamaConfig {
-  apiURL: string;
-  apiKey: string;
-}
-
-interface OllamaProviderProps {
-  value: OllamaConfig;
-  onChange: (next: OllamaConfig) => void;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
-
-export const OllamaProvider = ({
-  value,
-  onChange,
-  open,
-  onOpenChange,
-}: OllamaProviderProps) => {
+export const OllamaProvider = () => {
+  const [value, setValue] = useState<OllamaConfig>(
+    DEFAULT_PROVIDER_CONFIG.ollama,
+  );
+  const [open, setOpen] = useState(false);
   return (
     <BaseExpandableMenu
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={setOpen}
       collapseStrategy="grid"
       className={[
         "w-full transition-all duration-300",
@@ -78,7 +70,7 @@ export const OllamaProvider = ({
             <input
               type="text"
               value={value.apiURL}
-              onChange={(e) => onChange({ ...value, apiURL: e.target.value })}
+              onChange={(e) => setValue({ ...value, apiURL: e.target.value })}
               placeholder="http://localhost:11434"
               className="w-full bg-[#5b4913]/10 text-[#5b4913] border-none rounded-lg px-3.5 py-2.5 text-xs font-mono placeholder:text-[#5b4913]/40 shadow-inner focus:outline-none focus:bg-[#5b4913]/15 focus:ring-1 focus:ring-[#5b4913]/20 transition-all duration-200"
               spellCheck={false}
@@ -96,7 +88,7 @@ export const OllamaProvider = ({
           <input
             type="password"
             value={value.apiKey}
-            onChange={(e) => onChange({ ...value, apiKey: e.target.value })}
+            onChange={(e) => setValue({ ...value, apiKey: e.target.value })}
             placeholder="No auth required"
             className="w-full bg-[#5b4913]/10 text-[#5b4913] border-none rounded-lg px-3.5 py-2.5 text-xs font-mono placeholder:text-[#5b4913]/40 shadow-inner focus:outline-none focus:bg-[#5b4913]/15 focus:ring-1 focus:ring-[#5b4913]/20 transition-all duration-200"
             autoComplete="off"

@@ -1,2 +1,3 @@
-export { OllamaProvider, type OllamaConfig } from "./ollama";
-export { DeepseekProvider, type DeepseekConfig } from "./deepseek";
+// apps/ui/src/features/bot/components/settings/providers/index.ts
+export { OllamaProvider } from "./ollama";
+export { DeepseekProvider } from "./deepseek";

@@ -1,28 +1,21 @@
 // TODO：优化样式语义化
+import { useState } from "react";
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import { DeepSeek as DeepSeekIcon } from "@lobehub/icons";
+import {
+  DEFAULT_PROVIDER_CONFIG,
+  type DeepseekConfig,
+} from "@/features/bot/types/llmProviders";
 
-export interface DeepseekConfig {
-  apiKey: string;
-}
-
-interface DeepseekProviderProps {
-  value: DeepseekConfig;
-  onChange: (next: DeepseekConfig) => void;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
-
-export const DeepseekProvider = ({
-  value,
-  onChange,
-  open,
-  onOpenChange,
-}: DeepseekProviderProps) => {
+export const DeepseekProvider = () => {
+  const [value, setValue] = useState<DeepseekConfig>(
+    DEFAULT_PROVIDER_CONFIG.deepseek,
+  );
+  const [open, setOpen] = useState(false);
   return (
     <BaseExpandableMenu
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={setOpen}
       collapseStrategy="grid"
       className={[
         "w-full transition-all duration-300",
@@ -74,7 +67,7 @@ export const DeepseekProvider = ({
           <input
             type="password"
             value={value.apiKey}
-            onChange={(e) => onChange({ ...value, apiKey: e.target.value })}
+            onChange={(e) => setValue({ ...value, apiKey: e.target.value })}
             placeholder="sk-..."
             className="w-full bg-[#5b4913]/10 text-[#5b4913] border-none rounded-lg px-3.5 py-2.5 text-xs font-mono placeholder:text-[#5b4913]/40 shadow-inner focus:outline-none focus:bg-[#5b4913]/15 focus:ring-1 focus:ring-[#5b4913]/20 transition-all duration-200"
             autoComplete="off"
