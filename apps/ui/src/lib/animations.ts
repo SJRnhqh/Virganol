@@ -83,3 +83,49 @@ export const panelSwitchVariants: Variants = {
     },
   },
 };
+
+/* === 3. Provider Connect 按钮动画 === */
+// 可爱的连接按钮：icon 跳跃 + 整体缩放反馈 + 丝滑的颜色过渡
+export const connectButtonVariants: Variants = {
+  // 默认状态
+  idle: {
+    scale: 1,
+    color: "rgba(var(--settings-panel-fg), 0.6)",
+    backgroundColor: "rgba(var(--settings-panel-fg), 0)",
+  },
+  // hover 状态：轻��放大 + 颜色变亮 + 背景出现
+  hover: {
+    scale: 1.05,
+    color: "rgba(var(--settings-panel-fg), 1)",
+    backgroundColor: "rgba(var(--settings-panel-fg), 0.1)",
+    transition: {
+      duration: 0.15,
+      ease: "easeOut",
+    },
+  },
+  // 点击状态：快速缩小再恢复
+  tap: {
+    scale: 0.95,
+    transition: {
+      duration: 0.08,
+      ease: "easeInOut",
+    },
+  },
+};
+
+// Icon 跳跃动画：配合按钮使用
+export const connectIconVariants: Variants = {
+  // 默认状态
+  idle: {
+    x: 0,
+  },
+  // hover 状态：icon 向右跳跃
+  hover: {
+    x: [0, 2, 0],
+    transition: {
+      duration: 0.6,
+      ease: "easeInOut",
+      repeat: Infinity,
+    },
+  },
+};
