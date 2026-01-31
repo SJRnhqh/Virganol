@@ -129,3 +129,20 @@ export const connectIconVariants: Variants = {
     },
   },
 };
+
+// 旋转动画：用于重新连接和加载状态
+export const rotatingIconVariants: Variants = {
+  // 默认状态：不旋转
+  idle: {
+    rotate: 0,
+  },
+  // 旋转状态：持续旋转
+  rotating: {
+    rotate: 360,
+    transition: {
+      duration: 1.5,
+      ease: "linear",
+      repeat: Infinity,
+    },
+  },
+};

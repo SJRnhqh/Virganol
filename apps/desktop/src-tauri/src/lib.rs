@@ -1,8 +1,8 @@
 // apps/desktop/src-tauri/src/lib.rs
+mod commands;
 mod core;
 mod platform;
 mod tmp;
-mod commands;
 
 use std::sync::Arc;
 use tauri::RunEvent;
@@ -11,6 +11,11 @@ use core::manager::{SidecarManager, SidecarState};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // 初始化日志系统
+    env_logger::Builder::from_default_env()
+        .filter_level(log::LevelFilter::Debug)
+        .init();
+
     // 创建 SidecarManager 实例
     let sidecar_manager: SidecarState = Arc::new(SidecarManager::new());
     let manager_for_exit = sidecar_manager.clone();

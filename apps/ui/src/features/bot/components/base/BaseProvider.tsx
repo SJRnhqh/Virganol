@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Check } from "lucide-react";
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import type { ProviderDefinition } from "@/features/bot/types/llmProviders";
 import { ProviderFormFields } from "../forms/ProviderFormFields";
@@ -8,12 +9,16 @@ interface BaseProviderProps {
   definition: ProviderDefinition;
   icon: React.ReactNode;
   onConnect?: (config: Record<string, string>) => Promise<void>;
+  isConnected?: boolean;
+  isLoading?: boolean;
 }
 
 export const BaseProvider = ({
   definition,
   icon,
   onConnect,
+  isConnected = false,
+  isLoading = false,
 }: BaseProviderProps) => {
   const [value, setValue] = useState<Record<string, string>>(
     definition.defaultConfig,
@@ -57,16 +62,21 @@ export const BaseProvider = ({
           >
             {icon}
           </span>
-          <span
-            className={[
-              "text-sm font-medium transition-colors",
-              open
-                ? "text-settings-panel-fg"
-                : "text-settings-panel-fg/60 group-hover:text-settings-panel-fg",
-            ].join(" ")}
-          >
-            {definition.name}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              className={[
+                "text-sm font-medium transition-colors",
+                open
+                  ? "text-settings-panel-fg"
+                  : "text-settings-panel-fg/60 group-hover:text-settings-panel-fg",
+              ].join(" ")}
+            >
+              {definition.name}
+            </span>
+            {isConnected && !open && (
+              <Check className="w-4 h-4 text-settings-panel-check" />
+            )}
+          </div>
         </div>
       }
     >
@@ -78,7 +88,11 @@ export const BaseProvider = ({
         onChange={updateField}
       />
 
-      <ConnectButton onClick={() => onConnect?.(value)} />
+      <ConnectButton
+        onClick={() => onConnect?.(value)}
+        isConnected={isConnected}
+        isLoading={isLoading}
+      />
     </BaseExpandableMenu>
   );
 };

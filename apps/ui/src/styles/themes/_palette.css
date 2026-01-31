@@ -14,16 +14,16 @@
 
     /* 🏮 国风强调色 (Accent Colors - Nectar & Minerals) */
     --color-zheshi: #862617; /* 赭石 (Ochre) - mileston、settings指示 */
-    --color-lujiaozong: #e3bd8d; /* 鹿角棕（Antlers Brown）- Panel虚线框 */
-    --color-bengroubai: #f9f1db; /* 蚌肉白（Clam meat white） - Panel子区域背景 */
-    --color-qiaomaizong: #8b6d47; /* 荞麦棕（Buckwheat Brown） - Panel子区域文字 */
-    --color-juleibai: #e9ddb6; /* 菊蕾白（Chrysanthemum Buds White）- Panel子区域内容背景 */
+    --color-lujiaozong: #e3bd8d; /* 鹿角棕（Antlers Brown）- panel虚线框 */
+    --color-bengroubai: #f9f1db; /* 蚌肉白（Clam meat white） - panel子区域背景 */
+    --color-qiaomaizong: #8b6d47; /* 荞麦棕（Buckwheat Brown） - panel子区域文字 */
+    --color-juleibai: #e9ddb6; /* 菊蕾白（Chrysanthemum Buds White）- panel子区域内容背景 */
     --color-danlvhui: #70887d; /* 淡绿灰 (Pale Green Grey) - 顶部栏icon背景 */
     --color-mihuang: #fbb957; /* 蜜黄 (Honey Yellow) - bot光晕、sparkles背景 */
     --color-meirenjiaocheng: #fa7e23; /* 美人焦橙 (Canna Orange) - sparkles轮廓 */
     --color-ningmenghuang: #fcd337; /* 柠檬黄 (Lemon Yellow) - sparkles填充 */
     --color-haimolv: #e2e7bf; /* 海沫绿 (Sea Foam Green) - flaskconical背景、agent胶囊填充 */
-    --color-qinglv: #2e8b57; /* 青绿 (Cyan Green) - flaskconical轮廓 */
+    --color-qinglv: #2e8b57; /* 青绿 (Cyan Green) - flaskconical轮廓、check */
     --color-yuqing: #4a9d9c; /* 玉青 (Jade Blue) - flaskconical填充 */
     --color-jizong: #de7622; /* 麂棕 (Jute Brown) - ester主色调 */
     --color-kongquelv: #229453; /* 孔雀绿（Malachite Green） - kiral主色调 */
