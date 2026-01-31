@@ -67,7 +67,13 @@
     --color-settings-sidebar-icon-indicator: var(
         --settings-sidebar-icon-indicator
     );
+
+    /* SciSpirit设置 */
     --color-settings-panel-bg: var(--settings-panel-bg);
+    --color-settings-panel-border: var(--settings-panel-border);
+    --color-settings-panel-outer-bg: var(--settings-panel-outer-bg);
+    --color-settings-panel-inner-bg: var(--settings-panel-inner-bg);
+    --color-settings-panel-fg: var(--settings-panel-fg);
 
     /* === 4. SciSpirit === */
     --color-spirit-welcome-atomsphere: var(--spirit-welcome-atomsphere);
