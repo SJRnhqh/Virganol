@@ -53,6 +53,10 @@
     --settings-sidebar-icon-indicator: var(--color-zheshi);
     --settings-panel-bg: var(--color-liroubai);
 
+    /* SciSpirit设置 */
+    --settings-spirit-dash: var(--color-lujiaozong);
+    --settings-spirit-bg: var(--color-bengroubai);
+
     /* === 4. SciSpirit === */
     --spirit-welcome-atomsphere: var(--color-mihuang);
 

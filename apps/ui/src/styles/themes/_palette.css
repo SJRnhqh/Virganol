@@ -14,6 +14,8 @@
 
     /* 🏮 国风强调色 (Accent Colors - Nectar & Minerals) */
     --color-zheshi: #862617; /* 赭石 (Ochre) - mileston、settings指示 */
+    --color-lujiaozong: #e3bd8d; /* 鹿角棕（Antlers Brown）- Panel虚线框 */
+    --color-bengroubai: #f9f1db; /* 蚌肉白（Clam meat white） - Panel子区域背景 */
     --color-danlvhui: #70887d; /* 淡绿灰 (Pale Green Grey) - 顶部栏icon背景 */
     --color-mihuang: #fbb957; /* 蜜黄 (Honey Yellow) - bot光晕、sparkles背景 */
     --color-meirenjiaocheng: #fa7e23; /* 美人焦橙 (Canna Orange) - sparkles轮廓 */

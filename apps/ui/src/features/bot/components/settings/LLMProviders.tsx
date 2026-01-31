@@ -24,14 +24,14 @@ export const LLMProviders = () => {
   const [openDeepseek, setOpenDeepseek] = useState(false);
 
   return (
-    <div className="w-full h-full p-8 max-w-3xl mx-auto text-[#5b4913]">
-      <div className="mb-6 px-1">
-        <h2 className="text-xl font-bold tracking-tight text-[#5b4913]">
+    <div className="w-full h-full p-2 max-w-3xl mx-auto text-[#5b4913]">
+      <div className="mb-3 px-1">
+        <h2 className="text-lg font-bold tracking-tight text-[#5b4913]">
           LLM Providers
         </h2>
       </div>
 
-      <div className="border border-[#5b4913]/20 rounded-xl bg-[#5b4913]/5 shadow-sm overflow-hidden divide-y divide-[#5b4913]/5">
+      <div className="border border-[#5b4913]/20 rounded-lg bg-[#5b4913]/5 shadow-sm overflow-hidden divide-y divide-[#5b4913]/5">
         <OllamaProvider
           value={ollamaConfig}
           onChange={setOllamaConfig}

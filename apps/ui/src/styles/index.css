@@ -69,6 +69,10 @@
     );
     --color-settings-panel-bg: var(--settings-panel-bg);
 
+    /* SciSpirit设置 */
+    --color-settings-spirit-dash: var(--settings-spirit-dash);
+    --color-settings-spirit-bg: var(--settings-spirit-bg);
+
     /* === 4. SciSpirit === */
     --color-spirit-welcome-atomsphere: var(--spirit-welcome-atomsphere);
 
