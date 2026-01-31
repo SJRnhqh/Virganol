@@ -78,3 +78,21 @@ export const DEFAULT_PROVIDER_CONFIG: ProviderConfigMap = {
   ollama: PROVIDER_DEFINITIONS.ollama.defaultConfig,
   deepseek: PROVIDER_DEFINITIONS.deepseek.defaultConfig,
 };
+
+// ============ API 通讯规范 ============
+
+// 连接请求
+export interface ConnectProviderRequest extends Record<string, unknown> {
+  provider_id: ProviderId;
+  config: Record<string, string>;
+}
+
+// 连接响应
+export interface ConnectProviderResponse {
+  success: boolean;
+  data?: {
+    connected: boolean;
+    available_models?: string[];
+  };
+  error?: string;
+}
