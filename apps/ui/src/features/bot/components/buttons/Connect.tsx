@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Play, Check, RotateCw, Loader2 } from "lucide-react";
+import { Play, Check, RotateCcw, Loader2 } from "lucide-react";
 import {
   connectButtonVariants,
   connectIconVariants,
@@ -49,21 +49,9 @@ export const ConnectButton = ({
           </>
         ) : isConnected ? (
           <>
-            <motion.div
-              variants={connectIconVariants}
-              initial="idle"
-              animate={isHovering && !isConnected ? "hover" : "idle"}
-            >
-              <Check className="w-3.5 h-3.5 text-settings-panel-check" />
-            </motion.div>
+            <Check className="w-3.5 h-3.5 text-settings-panel-check" />
             Connected
-            <motion.div
-              variants={rotatingIconVariants}
-              initial="idle"
-              animate={isHovering ? "rotating" : "idle"}
-            >
-              <RotateCw className="w-3.5 h-3.5" />
-            </motion.div>
+            <RotateCcw className="w-3.5 h-3.5" />
           </>
         ) : (
           <>
