@@ -1,7 +1,7 @@
 // apps/ui/src/features/bot/components/AgentSelector.tsx
 import { ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { AGENTS, type AgentType } from "../config/agents";
+import { AGENTS, type AgentType } from "../types/agents";
 import { useAgentSelector } from "../hooks/useAgentSelector";
 
 interface AgentSelectorProps {
