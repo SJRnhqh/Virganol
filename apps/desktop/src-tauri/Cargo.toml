@@ -26,6 +26,9 @@ prost = "0.13"       # Protobuf 运行时
 # 既然已经有 tokio 了，确保它开启 full 特性
 tokio = { version = "1", features = ["full"] }
 
+# --- HTTP 客户端 ---
+reqwest = { version = "0.11", features = ["json"] }
+
 # --- 现有依赖 ---
 ssh2 = { version = "0.9", features = ["vendored-openssl"] }
 tauri-plugin-os = "2.3.2"

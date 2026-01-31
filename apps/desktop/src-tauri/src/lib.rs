@@ -2,6 +2,7 @@
 mod core;
 mod platform;
 mod tmp;
+mod commands;
 
 use std::sync::Arc;
 use tauri::RunEvent;
@@ -37,9 +38,12 @@ pub fn run() {
             // PTY 命令
             tmp::terminal::init_pty,
             tmp::terminal::write_pty,
+            // LLM 配置命令
             core::commands::verify_llm_config,
             core::commands::set_llm_config,
-            core::commands::get_llm_config
+            core::commands::get_llm_config,
+            // Provider 连接命令
+            commands::connection::connect_provider,
         ])
         .build(tauri::generate_context!())
         .expect("Error while building tauri application")
