@@ -5,7 +5,7 @@ import {
   NODE_CATEGORIES,
   type NodeCategory,
   type BaseNodeData, // 🌟 1. 引入这个类型，它是唯一的真理来源
-} from "@/types/node"; // 注意检查文件名是否是 nodes.ts
+} from "@/features/node/types/node"; // 注意检查文件名是否是 nodes.ts
 
 // 🌟 核心定义：本地母舰节点的静态 ID
 export const HOME_NODE_ID = "local-home-station";
