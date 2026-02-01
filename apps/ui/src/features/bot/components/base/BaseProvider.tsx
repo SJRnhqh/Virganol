@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import type { ProviderDefinition } from "@/features/bot/types/llmProviders";
 import { ProviderFormFields } from "../forms/ProviderFormFields";
+import { ConnectionError } from "../forms/ConnectionError";
 import { ConnectButton } from "../buttons/Connect";
 
 interface BaseProviderProps {
@@ -12,6 +13,9 @@ interface BaseProviderProps {
   onDisconnect?: () => void;
   isConnected?: boolean;
   isLoading?: boolean;
+  isError?: boolean;
+  errorMessage?: string;
+  onErrorReset?: () => void;
 }
 
 export const BaseProvider = ({
@@ -21,6 +25,9 @@ export const BaseProvider = ({
   onDisconnect,
   isConnected = false,
   isLoading = false,
+  isError = false,
+  errorMessage,
+  onErrorReset,
 }: BaseProviderProps) => {
   const [value, setValue] = useState<Record<string, string>>(
     definition.defaultConfig,
@@ -97,11 +104,23 @@ export const BaseProvider = ({
         onReset={handleReset}
       />
 
-      <ConnectButton
-        onClick={() => onConnect?.(value)}
-        isConnected={isConnected}
-        isLoading={isLoading}
-      />
+      {isError && (
+        <ConnectionError
+          message={errorMessage}
+          onRetry={() => {
+            onErrorReset?.();
+            onConnect?.(value);
+          }}
+        />
+      )}
+
+      {!isError && (
+        <ConnectButton
+          onClick={() => onConnect?.(value)}
+          isConnected={isConnected}
+          isLoading={isLoading}
+        />
+      )}
     </BaseExpandableMenu>
   );
 };

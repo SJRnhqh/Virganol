@@ -11,9 +11,6 @@ interface ConnectButtonProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isConnected?: boolean;
   isLoading?: boolean;
-  // TODO: Add isError state to display error state with X icon and "Failed" text
-  // TODO: Implement auto-recovery from error state after 2-3 seconds
-  // TODO: Integrate Toast notification for detailed error messages
 }
 
 export const ConnectButton = ({
