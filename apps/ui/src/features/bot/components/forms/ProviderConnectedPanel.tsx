@@ -22,6 +22,7 @@ export const ProviderConnectedPanel = ({
 }: ProviderConnectedPanelProps) => {
   const urlField = fields.find((field) => field.isUrl);
   const urlValue = urlField ? value[urlField.key] : undefined;
+  const hasUrl = Boolean(urlValue);
   const hasModels = models.length > 0;
   const enabledCount = models.reduce(
     (count, model) => count + ((enabledModels[model] ?? true) ? 1 : 0),
@@ -40,8 +41,16 @@ export const ProviderConnectedPanel = ({
     <div className="pb-2 pl-1 pt-0 space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div className="text-xs text-settings-panel-fg/70">
-          <span className="text-settings-panel-fg/60">Connected to: </span>
-          <span className="font-mono text-settings-panel-fg">{urlValue}</span>
+          {hasUrl ? (
+            <>
+              <span className="text-settings-panel-fg/60">Connected to: </span>
+              <span className="font-mono text-settings-panel-fg">
+                {urlValue}
+              </span>
+            </>
+          ) : (
+            <span className="text-settings-panel-fg/60">Connection active</span>
+          )}
         </div>
         {onReset && (
           <button
