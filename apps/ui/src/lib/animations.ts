@@ -90,14 +90,14 @@ export const connectButtonVariants: Variants = {
   // 默认状态
   idle: {
     scale: 1,
-    color: "rgba(var(--settings-panel-fg), 0.6)",
-    backgroundColor: "rgba(var(--settings-panel-fg), 0)",
+    color: "rgba(139, 109, 71, 0.5)",
+    backgroundColor: "transparent",
   },
-  // hover 状态：轻��放大 + 颜色变亮 + 背景出现
+  // hover 状态：轻放大 + 颜色变亮 + 背景出现
   hover: {
     scale: 1.05,
-    color: "rgba(var(--settings-panel-fg), 1)",
-    backgroundColor: "rgba(var(--settings-panel-fg), 0.1)",
+    color: "rgba(139, 109, 71, 0.8)",
+    backgroundColor: "rgba(139, 109, 71, 0.05)",
     transition: {
       duration: 0.15,
       ease: "easeOut",

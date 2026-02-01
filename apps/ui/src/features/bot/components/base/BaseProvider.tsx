@@ -9,6 +9,7 @@ interface BaseProviderProps {
   definition: ProviderDefinition;
   icon: React.ReactNode;
   onConnect?: (config: Record<string, string>) => Promise<void>;
+  onDisconnect?: () => void;
   isConnected?: boolean;
   isLoading?: boolean;
 }
@@ -17,6 +18,7 @@ export const BaseProvider = ({
   definition,
   icon,
   onConnect,
+  onDisconnect,
   isConnected = false,
   isLoading = false,
 }: BaseProviderProps) => {
@@ -27,6 +29,11 @@ export const BaseProvider = ({
 
   const updateField = (key: string, val: string) => {
     setValue((prev) => ({ ...prev, [key]: val }));
+  };
+
+  const handleReset = () => {
+    setValue(definition.defaultConfig);
+    onDisconnect?.();
   };
 
   return (
@@ -86,6 +93,8 @@ export const BaseProvider = ({
         fields={definition.fields}
         value={value}
         onChange={updateField}
+        isConnected={isConnected}
+        onReset={handleReset}
       />
 
       <ConnectButton

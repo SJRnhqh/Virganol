@@ -26,6 +26,7 @@ export interface ProviderField {
   type: "text" | "password";
   placeholder?: string;
   optional?: boolean;
+  isUrl?: boolean;
 }
 
 export interface ProviderDefinition<T = Record<string, string>> {
@@ -47,6 +48,7 @@ export const PROVIDER_DEFINITIONS = {
         label: "API URL",
         type: "text",
         placeholder: "http://localhost:11434",
+        isUrl: true,
       },
       {
         key: "apiKey",

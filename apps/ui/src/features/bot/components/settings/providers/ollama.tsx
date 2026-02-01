@@ -20,11 +20,16 @@ export const OllamaProvider = () => {
     setIsLoading(false);
   };
 
+  const handleDisconnect = () => {
+    setIsConnected(false);
+  };
+
   return (
     <BaseProvider
       definition={PROVIDER_DEFINITIONS.ollama}
       icon={<OllamaIcon className="w-5 h-5" />}
       onConnect={handleConnect}
+      onDisconnect={handleDisconnect}
       isConnected={isConnected}
       isLoading={isLoading}
     />

@@ -34,7 +34,7 @@ export const ConnectButton = ({
         onHoverEnd={() => setIsHovering(false)}
         onClick={onClick}
         disabled={isLoading}
-        className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium text-settings-panel-fg/50 hover:text-settings-panel-fg/80 hover:bg-settings-panel-fg/5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isLoading ? (
           <>
