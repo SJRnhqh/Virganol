@@ -23,8 +23,8 @@ pub async fn connect_provider(request: ConnectProviderRequest) -> ConnectProvide
             providers::ollama::connect(request.config).await
         }
         ProviderId::Deepseek => {
-            // 暂时返回未实现的错误
-            ConnectProviderResponse::error("DeepSeek provider not implemented yet")
+            // 调用 Deepseek provider 的 connect 函数
+            providers::deepseek::connect(request.config).await
         }
     }
 }
