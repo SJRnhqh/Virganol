@@ -20,36 +20,85 @@ type ProviderConfigState = Record<ProviderId, Record<string, string>>;
 type ProviderStatusState = Record<ProviderId, ProviderStatus>;
 type ProviderModelsState = Record<ProviderId, ProviderModels>;
 
-const DEFAULT_PROVIDER_CONFIG: ProviderConfigState = {
-  ollama: { ...PROVIDER_DEFINITIONS.ollama.defaultConfig },
-  deepseek: { ...PROVIDER_DEFINITIONS.deepseek.defaultConfig },
-};
+const PROVIDER_IDS = Object.keys(PROVIDER_DEFINITIONS) as ProviderId[];
 
-const DEFAULT_PROVIDER_STATUS: ProviderStatusState = {
-  ollama: {
-    isConnected: false,
-    isLoading: false,
-    isError: false,
-    errorMessage: undefined,
-  },
-  deepseek: {
-    isConnected: false,
-    isLoading: false,
-    isError: false,
-    errorMessage: undefined,
-  },
-};
+type ProviderSlice = "providerConfig" | "providerStatus" | "providerModels";
 
-const DEFAULT_PROVIDER_MODELS: ProviderModelsState = {
-  ollama: {
-    available: [],
-    enabled: {},
-  },
-  deepseek: {
-    available: [],
-    enabled: {},
-  },
-};
+const createDefaultProviderConfig = (
+  providerId: ProviderId,
+): Record<string, string> => ({
+  ...PROVIDER_DEFINITIONS[providerId].defaultConfig,
+});
+
+const createDefaultProviderStatus = (): ProviderStatus => ({
+  isConnected: false,
+  isLoading: false,
+  isError: false,
+  errorMessage: undefined,
+});
+
+const createDefaultProviderModels = (): ProviderModels => ({
+  available: [],
+  enabled: {},
+});
+
+const createDefaultProviderConfigState = (): ProviderConfigState =>
+  Object.fromEntries(
+    PROVIDER_IDS.map((providerId) => [
+      providerId,
+      createDefaultProviderConfig(providerId),
+    ]),
+  ) as ProviderConfigState;
+
+const createDefaultProviderStatusState = (): ProviderStatusState =>
+  Object.fromEntries(
+    PROVIDER_IDS.map((providerId) => [
+      providerId,
+      createDefaultProviderStatus(),
+    ]),
+  ) as ProviderStatusState;
+
+const createDefaultProviderModelsState = (): ProviderModelsState =>
+  Object.fromEntries(
+    PROVIDER_IDS.map((providerId) => [
+      providerId,
+      createDefaultProviderModels(),
+    ]),
+  ) as ProviderModelsState;
+
+const createProviderState = () => ({
+  providerConfig: createDefaultProviderConfigState(),
+  providerStatus: createDefaultProviderStatusState(),
+  providerModels: createDefaultProviderModelsState(),
+});
+
+const withProviderSlice = <T extends ProviderSlice>(
+  state: ProviderState,
+  slice: T,
+  providerId: ProviderId,
+  value: ProviderState[T][ProviderId],
+): Pick<ProviderState, T> =>
+  ({
+    [slice]: { ...state[slice], [providerId]: value },
+  }) as Pick<ProviderState, T>;
+
+const withProviderConfig = (
+  state: ProviderState,
+  providerId: ProviderId,
+  value: Record<string, string>,
+) => withProviderSlice(state, "providerConfig", providerId, value);
+
+const withProviderStatus = (
+  state: ProviderState,
+  providerId: ProviderId,
+  value: ProviderStatus,
+) => withProviderSlice(state, "providerStatus", providerId, value);
+
+const withProviderModels = (
+  state: ProviderState,
+  providerId: ProviderId,
+  value: ProviderModels,
+) => withProviderSlice(state, "providerModels", providerId, value);
 
 interface ProviderState {
   providerConfig: ProviderConfigState;
@@ -83,73 +132,49 @@ interface ProviderState {
 }
 
 export const useProviderStore = create<ProviderState>((set) => ({
-  providerConfig: {
-    ollama: { ...DEFAULT_PROVIDER_CONFIG.ollama },
-    deepseek: { ...DEFAULT_PROVIDER_CONFIG.deepseek },
-  },
-  providerStatus: {
-    ollama: { ...DEFAULT_PROVIDER_STATUS.ollama },
-    deepseek: { ...DEFAULT_PROVIDER_STATUS.deepseek },
-  },
-  providerModels: {
-    ollama: { ...DEFAULT_PROVIDER_MODELS.ollama },
-    deepseek: { ...DEFAULT_PROVIDER_MODELS.deepseek },
-  },
+  ...createProviderState(),
 
   setProviderConfig: (providerId, config) =>
-    set((state) => ({
-      providerConfig: {
-        ...state.providerConfig,
-        [providerId]: { ...config },
-      },
-    })),
+    set((state) => withProviderConfig(state, providerId, { ...config })),
 
   updateProviderConfigField: (providerId, key, value) =>
-    set((state) => ({
-      providerConfig: {
-        ...state.providerConfig,
-        [providerId]: {
-          ...state.providerConfig[providerId],
-          [key]: value,
-        },
-      },
-    })),
+    set((state) =>
+      withProviderConfig(state, providerId, {
+        ...state.providerConfig[providerId],
+        [key]: value,
+      }),
+    ),
 
   resetProviderConfig: (providerId) =>
-    set((state) => ({
-      providerConfig: {
-        ...state.providerConfig,
-        [providerId]: { ...DEFAULT_PROVIDER_CONFIG[providerId] },
-      },
-    })),
+    set((state) =>
+      withProviderConfig(
+        state,
+        providerId,
+        createDefaultProviderConfig(providerId),
+      ),
+    ),
 
   setProviderStatus: (providerId, patch) =>
-    set((state) => ({
-      providerStatus: {
-        ...state.providerStatus,
-        [providerId]: { ...state.providerStatus[providerId], ...patch },
-      },
-    })),
+    set((state) =>
+      withProviderStatus(state, providerId, {
+        ...state.providerStatus[providerId],
+        ...patch,
+      }),
+    ),
 
   resetProviderStatus: (providerId) =>
-    set((state) => ({
-      providerStatus: {
-        ...state.providerStatus,
-        [providerId]: { ...DEFAULT_PROVIDER_STATUS[providerId] },
-      },
-    })),
+    set((state) =>
+      withProviderStatus(state, providerId, createDefaultProviderStatus()),
+    ),
 
   resetProviderError: (providerId) =>
-    set((state) => ({
-      providerStatus: {
-        ...state.providerStatus,
-        [providerId]: {
-          ...state.providerStatus[providerId],
-          isError: false,
-          errorMessage: undefined,
-        },
-      },
-    })),
+    set((state) =>
+      withProviderStatus(state, providerId, {
+        ...state.providerStatus[providerId],
+        isError: false,
+        errorMessage: undefined,
+      }),
+    ),
 
   setAvailableModels: (providerId, models) =>
     set((state) => {
@@ -161,29 +186,23 @@ export const useProviderStore = create<ProviderState>((set) => ({
       });
 
       return {
-        providerModels: {
-          ...state.providerModels,
-          [providerId]: {
-            available: models,
-            enabled: nextEnabled,
-          },
-        },
+        ...withProviderModels(state, providerId, {
+          available: models,
+          enabled: nextEnabled,
+        }),
       };
     }),
 
   setModelEnabled: (providerId, model, enabled) =>
-    set((state) => ({
-      providerModels: {
-        ...state.providerModels,
-        [providerId]: {
-          ...state.providerModels[providerId],
-          enabled: {
-            ...state.providerModels[providerId].enabled,
-            [model]: enabled,
-          },
+    set((state) =>
+      withProviderModels(state, providerId, {
+        ...state.providerModels[providerId],
+        enabled: {
+          ...state.providerModels[providerId].enabled,
+          [model]: enabled,
         },
-      },
-    })),
+      }),
+    ),
 
   setAllModelsEnabled: (providerId, enabled) =>
     set((state) => {
@@ -195,29 +214,21 @@ export const useProviderStore = create<ProviderState>((set) => ({
       });
 
       return {
-        providerModels: {
-          ...state.providerModels,
-          [providerId]: {
-            ...state.providerModels[providerId],
-            enabled: nextEnabled,
-          },
-        },
+        ...withProviderModels(state, providerId, {
+          ...state.providerModels[providerId],
+          enabled: nextEnabled,
+        }),
       };
     }),
 
   resetProvider: (providerId) =>
     set((state) => ({
-      providerConfig: {
-        ...state.providerConfig,
-        [providerId]: { ...DEFAULT_PROVIDER_CONFIG[providerId] },
-      },
-      providerStatus: {
-        ...state.providerStatus,
-        [providerId]: { ...DEFAULT_PROVIDER_STATUS[providerId] },
-      },
-      providerModels: {
-        ...state.providerModels,
-        [providerId]: { ...DEFAULT_PROVIDER_MODELS[providerId] },
-      },
+      ...withProviderConfig(
+        state,
+        providerId,
+        createDefaultProviderConfig(providerId),
+      ),
+      ...withProviderStatus(state, providerId, createDefaultProviderStatus()),
+      ...withProviderModels(state, providerId, createDefaultProviderModels()),
     })),
 }));
