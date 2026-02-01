@@ -16,6 +16,8 @@ interface BaseProviderProps {
   isError?: boolean;
   errorMessage?: string;
   onErrorReset?: () => void;
+  value?: Record<string, string>;
+  onValueChange?: (value: Record<string, string>) => void;
 }
 
 export const BaseProvider = ({
@@ -28,14 +30,26 @@ export const BaseProvider = ({
   isError = false,
   errorMessage,
   onErrorReset,
+  value: controlledValue,
+  onValueChange,
 }: BaseProviderProps) => {
-  const [value, setValue] = useState<Record<string, string>>(
+  const [internalValue, setInternalValue] = useState<Record<string, string>>(
     definition.defaultConfig,
   );
   const [open, setOpen] = useState(false);
+  const isValueControlled = controlledValue !== undefined;
+  const value = isValueControlled ? controlledValue : internalValue;
+
+  const setValue = (nextValue: Record<string, string>) => {
+    if (isValueControlled) {
+      onValueChange?.(nextValue);
+      return;
+    }
+    setInternalValue(nextValue);
+  };
 
   const updateField = (key: string, val: string) => {
-    setValue((prev) => ({ ...prev, [key]: val }));
+    setValue({ ...value, [key]: val });
   };
 
   const handleReset = () => {

@@ -1,51 +1,62 @@
-import { useState } from "react";
 import { Ollama as OllamaIcon } from "@lobehub/icons";
 import { BaseProvider } from "../../base/BaseProvider";
 import { PROVIDER_DEFINITIONS } from "@/features/bot/types/llmProviders";
 import { connectProvider } from "@/features/bot/api/providers";
+import { useBotStore } from "@/store";
 
 export const OllamaProvider = () => {
-  const [isConnected, setIsConnected] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const config = useBotStore((state) => state.providerConfig.ollama);
+  const status = useBotStore((state) => state.providerStatus.ollama);
+  const setProviderConfig = useBotStore((state) => state.setProviderConfig);
+  const setProviderStatus = useBotStore((state) => state.setProviderStatus);
+  const resetProviderError = useBotStore((state) => state.resetProviderError);
 
   const handleConnect = async (config: Record<string, string>) => {
-    setIsLoading(true);
-    setIsError(false);
-    setErrorMessage(undefined);
+    setProviderStatus("ollama", {
+      isLoading: true,
+      isError: false,
+      errorMessage: undefined,
+    });
 
     const response = await connectProvider("ollama", config);
 
     if (response.success) {
-      setIsConnected(true);
+      setProviderStatus("ollama", {
+        isConnected: true,
+        isLoading: false,
+        isError: false,
+        errorMessage: undefined,
+      });
     } else {
-      setIsConnected(false);
-      setIsError(true);
-      setErrorMessage(response.error || "Connection failed");
+      setProviderStatus("ollama", {
+        isConnected: false,
+        isLoading: false,
+        isError: true,
+        errorMessage: response.error || "Connection failed",
+      });
     }
-    setIsLoading(false);
   };
 
   const handleDisconnect = () => {
-    setIsConnected(false);
+    setProviderStatus("ollama", { isConnected: false });
   };
 
   const handleErrorReset = () => {
-    setIsError(false);
-    setErrorMessage(undefined);
+    resetProviderError("ollama");
   };
 
   return (
     <BaseProvider
       definition={PROVIDER_DEFINITIONS.ollama}
       icon={<OllamaIcon className="w-5 h-5" />}
+      value={config}
+      onValueChange={(nextValue) => setProviderConfig("ollama", nextValue)}
       onConnect={handleConnect}
       onDisconnect={handleDisconnect}
-      isConnected={isConnected}
-      isLoading={isLoading}
-      isError={isError}
-      errorMessage={errorMessage}
+      isConnected={status.isConnected}
+      isLoading={status.isLoading}
+      isError={status.isError}
+      errorMessage={status.errorMessage}
       onErrorReset={handleErrorReset}
     />
   );
