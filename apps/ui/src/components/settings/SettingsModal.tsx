@@ -33,7 +33,7 @@ export const SettingsModal = () => {
             exit="exit"
             className={cn(
               "relative flex overflow-hidden origin-center",
-              "w-200 h-137.5",
+              "w-220 h-160",
               "rounded-3xl shadow-3xl",
             )}
           >
