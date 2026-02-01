@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import type { ProviderDefinition } from "@/features/bot/types/llmProviders";
 import { ProviderFormFields } from "../forms/ProviderFormFields";
+import { ProviderConnectedPanel } from "../forms/ProviderConnectedPanel";
 import { ConnectionError } from "../forms/ConnectionError";
 import { ConnectButton } from "../buttons/Connect";
 
@@ -18,6 +19,10 @@ interface BaseProviderProps {
   onErrorReset?: () => void;
   value?: Record<string, string>;
   onValueChange?: (value: Record<string, string>) => void;
+  availableModels?: string[];
+  enabledModels?: Record<string, boolean>;
+  onModelToggle?: (model: string, enabled: boolean) => void;
+  onToggleAllModels?: (enabled: boolean) => void;
 }
 
 export const BaseProvider = ({
@@ -32,6 +37,10 @@ export const BaseProvider = ({
   onErrorReset,
   value: controlledValue,
   onValueChange,
+  availableModels,
+  enabledModels,
+  onModelToggle,
+  onToggleAllModels,
 }: BaseProviderProps) => {
   const [internalValue, setInternalValue] = useState<Record<string, string>>(
     definition.defaultConfig,
@@ -110,13 +119,23 @@ export const BaseProvider = ({
     >
       <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
 
-      <ProviderFormFields
-        fields={definition.fields}
-        value={value}
-        onChange={updateField}
-        isConnected={isConnected}
-        onReset={handleReset}
-      />
+      {isConnected ? (
+        <ProviderConnectedPanel
+          fields={definition.fields}
+          value={value}
+          onReset={handleReset}
+          models={availableModels}
+          enabledModels={enabledModels}
+          onToggleModel={onModelToggle}
+          onToggleAll={onToggleAllModels}
+        />
+      ) : (
+        <ProviderFormFields
+          fields={definition.fields}
+          value={value}
+          onChange={updateField}
+        />
+      )}
 
       {isError && (
         <ConnectionError

@@ -2,14 +2,28 @@ import { Ollama as OllamaIcon } from "@lobehub/icons";
 import { BaseProvider } from "../../base/BaseProvider";
 import { PROVIDER_DEFINITIONS } from "@/features/bot/types/llmProviders";
 import { connectProvider } from "@/features/bot/api/providers";
-import { useBotStore } from "@/store";
+import { useProviderStore } from "@/features/bot/store/providerStore";
 
 export const OllamaProvider = () => {
-  const config = useBotStore((state) => state.providerConfig.ollama);
-  const status = useBotStore((state) => state.providerStatus.ollama);
-  const setProviderConfig = useBotStore((state) => state.setProviderConfig);
-  const setProviderStatus = useBotStore((state) => state.setProviderStatus);
-  const resetProviderError = useBotStore((state) => state.resetProviderError);
+  const config = useProviderStore((state) => state.providerConfig.ollama);
+  const status = useProviderStore((state) => state.providerStatus.ollama);
+  const models = useProviderStore((state) => state.providerModels.ollama);
+  const setProviderConfig = useProviderStore(
+    (state) => state.setProviderConfig,
+  );
+  const setProviderStatus = useProviderStore(
+    (state) => state.setProviderStatus,
+  );
+  const resetProviderError = useProviderStore(
+    (state) => state.resetProviderError,
+  );
+  const setAvailableModels = useProviderStore(
+    (state) => state.setAvailableModels,
+  );
+  const setModelEnabled = useProviderStore((state) => state.setModelEnabled);
+  const setAllModelsEnabled = useProviderStore(
+    (state) => state.setAllModelsEnabled,
+  );
 
   const handleConnect = async (config: Record<string, string>) => {
     setProviderStatus("ollama", {
@@ -21,6 +35,7 @@ export const OllamaProvider = () => {
     const response = await connectProvider("ollama", config);
 
     if (response.success) {
+      setAvailableModels("ollama", response.data?.available_models ?? []);
       setProviderStatus("ollama", {
         isConnected: true,
         isLoading: false,
@@ -38,7 +53,12 @@ export const OllamaProvider = () => {
   };
 
   const handleDisconnect = () => {
-    setProviderStatus("ollama", { isConnected: false });
+    setProviderStatus("ollama", {
+      isConnected: false,
+      isLoading: false,
+      isError: false,
+      errorMessage: undefined,
+    });
   };
 
   const handleErrorReset = () => {
@@ -58,6 +78,12 @@ export const OllamaProvider = () => {
       isError={status.isError}
       errorMessage={status.errorMessage}
       onErrorReset={handleErrorReset}
+      availableModels={models.available}
+      enabledModels={models.enabled}
+      onModelToggle={(model, enabled) =>
+        setModelEnabled("ollama", model, enabled)
+      }
+      onToggleAllModels={(enabled) => setAllModelsEnabled("ollama", enabled)}
     />
   );
 };
