@@ -96,3 +96,6 @@ pnpm install
 # Run development server
 pnpm dev
 ```
+
+This project is source-available for viewing only; no license is granted
+and all rights are reserved.
