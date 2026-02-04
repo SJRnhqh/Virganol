@@ -4,10 +4,10 @@ import { type LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
 
 // 内部引用
-import { useSettingsStore } from "@/store/SettingsStore";
-import { type SettingsTab } from "@/types/settings";
 import { SettingsNavItem } from "@/components/settings/sidebar";
-import { SETTINGS_TABS } from "@/constants/settings";
+import { useSettingsStore } from "@/store";
+import { type SettingsTab } from "@/types";
+import { SETTINGS_TABS } from "@/constants";
 
 export const SettingsNavigation = () => {
   const { activeTab, setTab } = useSettingsStore();
