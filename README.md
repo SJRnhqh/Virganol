@@ -97,5 +97,6 @@ pnpm install
 pnpm dev
 ```
 
-This project is source-available for viewing only; no license is granted
-and all rights are reserved.
+## License
+
+Licensed under the GNU General Public License v3.0. See `LICENSE`.
