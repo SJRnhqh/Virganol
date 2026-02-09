@@ -1,5 +1,9 @@
+// apps/ui/src/features/bot/components/settings/providers/ollama.tsx
+// 外部依赖
 import { Ollama as OllamaIcon } from "@lobehub/icons";
-import type { ProviderRegistryEntry } from "./types";
+
+// 内部引用
+import type { ProviderRegistryEntry } from "../registry";
 
 export const ollamaProvider = {
   id: "ollama",

@@ -1,5 +1,9 @@
+// apps/ui/src/features/bot/components/settings/providers/deepseek.tsx
+// 外部依赖
 import { DeepSeek as DeepSeekIcon } from "@lobehub/icons";
-import type { ProviderRegistryEntry } from "./types";
+
+// 内部引用
+import type { ProviderRegistryEntry } from "../registry";
 
 export const deepseekProvider = {
   id: "deepseek",
