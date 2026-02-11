@@ -2,8 +2,8 @@
 
 import { useMemo, useCallback } from "react";
 import { type NodeChange } from "@xyflow/react";
-import { NodeStore } from "@/store/NodeStore";
-import { type AppNode } from "@/types/node";
+import { NodeStore } from "../store/NodeStore";
+import { type AppNode } from "../types/node";
 
 /**
  * useNodeSync

@@ -97,6 +97,18 @@ pnpm install
 pnpm dev
 ```
 
+## CI
+
+CI workflow is defined in `.github/workflows/ci.yml`.
+
+Run CI checks locally from repository root:
+
+```bash
+bash .github/ci/ui-lint.sh
+bash .github/ci/go-test.sh
+bash .github/ci/rust-check.sh
+```
+
 ## License
 
 Licensed under the GNU General Public License v3.0. See `LICENSE`.
