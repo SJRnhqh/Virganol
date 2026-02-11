@@ -1,29 +1,21 @@
+// apps/ui/src/features/bot/hooks/providers/useProviderConnection.ts
+// 外部依赖
 import { useCallback } from "react";
+
+// 内部引用
 import { connectProvider } from "@/features/bot/api/providers";
-import { PROVIDER_DEFINITIONS } from "@/features/bot/constants/providers";
 import { useProviderStore } from "@/features/bot/store/providers";
 import type { ProviderId } from "@/features/bot/types/providers";
 
-export const useProvider = (providerId: ProviderId) => {
-  const definition = PROVIDER_DEFINITIONS[providerId];
-  const config = useProviderStore((state) => state.providerConfig[providerId]);
-  const status = useProviderStore((state) => state.providerStatus[providerId]);
-  const models = useProviderStore((state) => state.providerModels[providerId]);
-  const setProviderConfig = useProviderStore(
-    (state) => state.setProviderConfig,
-  );
+export const useProviderConnection = (providerId: ProviderId) => {
   const setProviderStatus = useProviderStore(
     (state) => state.setProviderStatus,
-  );
-  const resetProviderError = useProviderStore(
-    (state) => state.resetProviderError,
   );
   const setAvailableModels = useProviderStore(
     (state) => state.setAvailableModels,
   );
-  const setModelEnabled = useProviderStore((state) => state.setModelEnabled);
-  const setAllModelsEnabled = useProviderStore(
-    (state) => state.setAllModelsEnabled,
+  const resetProviderError = useProviderStore(
+    (state) => state.resetProviderError,
   );
 
   const handleConnect = useCallback(
@@ -66,22 +58,9 @@ export const useProvider = (providerId: ProviderId) => {
   }, [providerId, setProviderStatus]);
 
   return {
-    definition,
-    value: config,
-    onValueChange: (nextValue: Record<string, string>) =>
-      setProviderConfig(providerId, nextValue),
     onConnect: handleConnect,
     onDisconnect: handleDisconnect,
-    isConnected: status.isConnected,
-    isLoading: status.isLoading,
-    isError: status.isError,
-    errorMessage: status.errorMessage,
     onErrorReset: () => resetProviderError(providerId),
-    availableModels: models.available,
-    enabledModels: models.enabled,
-    onModelToggle: (model: string, enabled: boolean) =>
-      setModelEnabled(providerId, model, enabled),
-    onToggleAllModels: (enabled: boolean) =>
-      setAllModelsEnabled(providerId, enabled),
   };
 };
+
