@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/components/settings/registry/ProviderItem.tsx
 // 内部引用
-import { BaseProvider } from "../../base/BaseProvider";
+import { BaseProvider } from "../../base/providers";
 import { useProvider } from "../../../hooks/providers";
 import type { ProviderRegistryEntry } from "../../../types/providers";
 
