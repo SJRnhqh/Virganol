@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { connectProvider } from "@/features/bot/api/providers";
 import { PROVIDER_DEFINITIONS } from "@/features/bot/constants/providers";
+import { useProviderStore } from "@/features/bot/store/providers";
 import type { ProviderId } from "@/features/bot/types/providers";
-import { useProviderStore } from "@/features/bot/store/providerStore";
 
 export const useProvider = (providerId: ProviderId) => {
   const definition = PROVIDER_DEFINITIONS[providerId];

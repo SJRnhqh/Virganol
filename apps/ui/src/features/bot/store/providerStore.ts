@@ -1,41 +1,41 @@
-import { create } from "zustand";
+// apps/ui/src/features/bot/store/providerStore.ts
 import { PROVIDER_DEFINITIONS } from "@/features/bot/constants/providers";
 import type { ProviderId } from "@/features/bot/types/providers";
 
-interface ProviderStatus {
+export interface ProviderStatus {
   isConnected: boolean;
   isLoading: boolean;
   isError: boolean;
   errorMessage?: string;
 }
 
-interface ProviderModels {
+export interface ProviderModels {
   available: string[];
   enabled: Record<string, boolean>;
 }
 
-type ProviderConfigState = Record<ProviderId, Record<string, string>>;
-type ProviderStatusState = Record<ProviderId, ProviderStatus>;
-type ProviderModelsState = Record<ProviderId, ProviderModels>;
+export type ProviderConfigState = Record<ProviderId, Record<string, string>>;
+export type ProviderStatusState = Record<ProviderId, ProviderStatus>;
+export type ProviderModelsState = Record<ProviderId, ProviderModels>;
 
 const PROVIDER_IDS = Object.keys(PROVIDER_DEFINITIONS) as ProviderId[];
 
 type ProviderSlice = "providerConfig" | "providerStatus" | "providerModels";
 
-const createDefaultProviderConfig = (
+export const createDefaultProviderConfig = (
   providerId: ProviderId,
 ): Record<string, string> => ({
   ...PROVIDER_DEFINITIONS[providerId].defaultConfig,
 });
 
-const createDefaultProviderStatus = (): ProviderStatus => ({
+export const createDefaultProviderStatus = (): ProviderStatus => ({
   isConnected: false,
   isLoading: false,
   isError: false,
   errorMessage: undefined,
 });
 
-const createDefaultProviderModels = (): ProviderModels => ({
+export const createDefaultProviderModels = (): ProviderModels => ({
   available: [],
   enabled: {},
 });
@@ -64,7 +64,7 @@ const createDefaultProviderModelsState = (): ProviderModelsState =>
     ]),
   ) as ProviderModelsState;
 
-const createProviderState = () => ({
+export const createProviderState = () => ({
   providerConfig: createDefaultProviderConfigState(),
   providerStatus: createDefaultProviderStatusState(),
   providerModels: createDefaultProviderModelsState(),
@@ -80,25 +80,25 @@ const withProviderSlice = <T extends ProviderSlice>(
     [slice]: { ...state[slice], [providerId]: value },
   }) as Pick<ProviderState, T>;
 
-const withProviderConfig = (
+export const withProviderConfig = (
   state: ProviderState,
   providerId: ProviderId,
   value: Record<string, string>,
 ) => withProviderSlice(state, "providerConfig", providerId, value);
 
-const withProviderStatus = (
+export const withProviderStatus = (
   state: ProviderState,
   providerId: ProviderId,
   value: ProviderStatus,
 ) => withProviderSlice(state, "providerStatus", providerId, value);
 
-const withProviderModels = (
+export const withProviderModels = (
   state: ProviderState,
   providerId: ProviderId,
   value: ProviderModels,
 ) => withProviderSlice(state, "providerModels", providerId, value);
 
-interface ProviderState {
+export interface ProviderState {
   providerConfig: ProviderConfigState;
   providerStatus: ProviderStatusState;
   providerModels: ProviderModelsState;
@@ -107,17 +107,10 @@ interface ProviderState {
     providerId: ProviderId,
     config: Record<string, string>,
   ) => void;
-  updateProviderConfigField: (
-    providerId: ProviderId,
-    key: string,
-    value: string,
-  ) => void;
-  resetProviderConfig: (providerId: ProviderId) => void;
   setProviderStatus: (
     providerId: ProviderId,
     patch: Partial<ProviderStatus>,
   ) => void;
-  resetProviderStatus: (providerId: ProviderId) => void;
   resetProviderError: (providerId: ProviderId) => void;
   setAvailableModels: (providerId: ProviderId, models: string[]) => void;
   setModelEnabled: (
@@ -126,107 +119,4 @@ interface ProviderState {
     enabled: boolean,
   ) => void;
   setAllModelsEnabled: (providerId: ProviderId, enabled: boolean) => void;
-  resetProvider: (providerId: ProviderId) => void;
 }
-
-export const useProviderStore = create<ProviderState>((set) => ({
-  ...createProviderState(),
-
-  setProviderConfig: (providerId, config) =>
-    set((state) => withProviderConfig(state, providerId, { ...config })),
-
-  updateProviderConfigField: (providerId, key, value) =>
-    set((state) =>
-      withProviderConfig(state, providerId, {
-        ...state.providerConfig[providerId],
-        [key]: value,
-      }),
-    ),
-
-  resetProviderConfig: (providerId) =>
-    set((state) =>
-      withProviderConfig(
-        state,
-        providerId,
-        createDefaultProviderConfig(providerId),
-      ),
-    ),
-
-  setProviderStatus: (providerId, patch) =>
-    set((state) =>
-      withProviderStatus(state, providerId, {
-        ...state.providerStatus[providerId],
-        ...patch,
-      }),
-    ),
-
-  resetProviderStatus: (providerId) =>
-    set((state) =>
-      withProviderStatus(state, providerId, createDefaultProviderStatus()),
-    ),
-
-  resetProviderError: (providerId) =>
-    set((state) =>
-      withProviderStatus(state, providerId, {
-        ...state.providerStatus[providerId],
-        isError: false,
-        errorMessage: undefined,
-      }),
-    ),
-
-  setAvailableModels: (providerId, models) =>
-    set((state) => {
-      const previousEnabled = state.providerModels[providerId].enabled;
-      const nextEnabled: Record<string, boolean> = {};
-
-      models.forEach((model) => {
-        nextEnabled[model] = previousEnabled[model] ?? true;
-      });
-
-      return {
-        ...withProviderModels(state, providerId, {
-          available: models,
-          enabled: nextEnabled,
-        }),
-      };
-    }),
-
-  setModelEnabled: (providerId, model, enabled) =>
-    set((state) =>
-      withProviderModels(state, providerId, {
-        ...state.providerModels[providerId],
-        enabled: {
-          ...state.providerModels[providerId].enabled,
-          [model]: enabled,
-        },
-      }),
-    ),
-
-  setAllModelsEnabled: (providerId, enabled) =>
-    set((state) => {
-      const availableModels = state.providerModels[providerId].available;
-      const nextEnabled: Record<string, boolean> = {};
-
-      availableModels.forEach((model) => {
-        nextEnabled[model] = enabled;
-      });
-
-      return {
-        ...withProviderModels(state, providerId, {
-          ...state.providerModels[providerId],
-          enabled: nextEnabled,
-        }),
-      };
-    }),
-
-  resetProvider: (providerId) =>
-    set((state) => ({
-      ...withProviderConfig(
-        state,
-        providerId,
-        createDefaultProviderConfig(providerId),
-      ),
-      ...withProviderStatus(state, providerId, createDefaultProviderStatus()),
-      ...withProviderModels(state, providerId, createDefaultProviderModels()),
-    })),
-}));
