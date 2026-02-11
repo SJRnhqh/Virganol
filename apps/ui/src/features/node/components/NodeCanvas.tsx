@@ -1,11 +1,11 @@
 // src/features/node/components/NodeCanvas.tsx
 import { BaseCanvas } from "@/components/base/BaseCanvas";
 import { HomeNode } from "../home/HomeNode";
-import { useTerminalStore } from "@/store/TerminalStore";
+import { useTerminalStore } from "../store/TerminalStore";
 import { useNodeSync } from "@/features/node/hooks/useNodeSync";
 import { type Node } from "@xyflow/react";
 // 1. 引入新定义的类型
-import { type AppNode, NODE_CATEGORIES } from "@/types/node";
+import { type AppNode, NODE_CATEGORIES } from "../types/node";
 
 // 2. 类型字典使用常量 Key，防止拼写错误
 const nodeTypes = {
