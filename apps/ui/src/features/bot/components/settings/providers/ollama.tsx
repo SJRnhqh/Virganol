@@ -3,7 +3,7 @@
 import { Ollama as OllamaIcon } from "@lobehub/icons";
 
 // 内部引用
-import type { ProviderRegistryEntry } from "../registry";
+import type { ProviderRegistryEntry } from "@/features/bot/types/providers";
 
 export const ollamaProvider = {
   id: "ollama",

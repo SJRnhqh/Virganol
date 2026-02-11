@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/settings/registry/entry.ts
+// apps/ui/src/features/bot/types/providers/registry.ts
 // 外部依赖
 import type { ReactNode } from "react";
 

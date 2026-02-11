@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/components/settings/LLMProviders.tsx
 // 内部引用
-import { ProviderList } from "@/features/bot/components/settings/providers";
+import { ProviderList } from "./registry";
 
 export const LLMProviders = () => {
   return (
