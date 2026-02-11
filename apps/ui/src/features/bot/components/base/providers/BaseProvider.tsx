@@ -8,7 +8,8 @@ import type {
   ProviderDefinition,
   ProviderConnectionProps,
   ProviderModelProps,
-} from "@/features/bot/types/providers";
+} from "@/features/bot/types";
+
 import { ProviderHeader } from "./ProviderHeader";
 import { ProviderBody } from "./ProviderBody";
 

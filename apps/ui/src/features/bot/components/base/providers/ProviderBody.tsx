@@ -4,11 +4,11 @@ import type {
   ProviderField,
   ProviderConnectionProps,
   ProviderModelProps,
-} from "@/features/bot/types/providers";
-import { ProviderFormFields } from "../../forms/ProviderFormFields";
-import { ProviderConnectedPanel } from "../../forms/ProviderConnectedPanel";
-import { ConnectionError } from "../../forms/ConnectionError";
-import { ConnectButton } from "../../buttons/Connect";
+} from "@/features/bot/types";
+import { ProviderFormFields } from "@/features/bot/components/forms/ProviderFormFields";
+import { ProviderConnectedPanel } from "@/features/bot/components/forms/ProviderConnectedPanel";
+import { ConnectionError } from "@/features/bot/components/forms/ConnectionError";
+import { ConnectButton } from "@/features/bot/components/buttons/Connect";
 
 interface ProviderBodyProps {
   fields: ProviderField[];

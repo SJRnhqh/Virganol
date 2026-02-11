@@ -1,8 +1,8 @@
 // apps/ui/src/features/bot/components/settings/registry/ProviderItem.tsx
 // 内部引用
-import type { ProviderRegistryEntry } from "@/features/bot/types/providers";
-import { BaseProvider } from "@/features/bot/components/base/providers";
-import { useProvider } from "@/features/bot/hooks/providers";
+import type { ProviderRegistryEntry } from "@/features/bot/types";
+import { BaseProvider } from "@/features/bot/components/base";
+import { useProvider } from "@/features/bot/hooks";
 
 interface ProviderItemProps {
   item: ProviderRegistryEntry;

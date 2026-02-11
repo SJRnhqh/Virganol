@@ -1,8 +1,9 @@
 // apps/ui/src/features/bot/hooks/providers/useProvider.ts
 // 内部引用
-import { PROVIDER_DEFINITIONS } from "@/features/bot/constants/providers";
-import { useProviderStore } from "@/features/bot/store/providers";
-import type { ProviderId } from "@/features/bot/types/providers";
+import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
+import { useProviderStore } from "@/features/bot/store";
+import type { ProviderId } from "@/features/bot/types";
+
 import { useProviderConnection } from "./useProviderConnection";
 
 export const useProvider = (providerId: ProviderId) => {

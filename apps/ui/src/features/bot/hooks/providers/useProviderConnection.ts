@@ -4,8 +4,8 @@ import { useCallback } from "react";
 
 // 内部引用
 import { connectProvider } from "@/features/bot/api/providers";
-import { useProviderStore } from "@/features/bot/store/providers";
-import type { ProviderId } from "@/features/bot/types/providers";
+import { useProviderStore } from "@/features/bot/store";
+import type { ProviderId } from "@/features/bot/types";
 
 export const useProviderConnection = (providerId: ProviderId) => {
   const setProviderStatus = useProviderStore(
