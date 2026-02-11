@@ -15,13 +15,14 @@ use std::collections::HashMap;
 /// - `ConnectProviderResponse`: 连接结果，包含可用模型列表
 pub async fn connect(config: HashMap<String, String>) -> ConnectProviderResponse {
     // 1. 从 config 中提取 api_url
-    let api_url = match config.get("apiURL") {
-        Some(url) => url.clone(),
+    let raw_api_url = match config.get("apiURL") {
+        Some(url) => url,
         None => {
             error!("[Ollama] Missing apiURL in config");
             return ConnectProviderResponse::error("Missing apiURL in config");
         }
     };
+    let api_url = raw_api_url.trim().trim_end_matches('/').to_string();
 
     info!("[Ollama] Attempting to connect to: {}", api_url);
 
@@ -66,7 +67,8 @@ pub async fn connect(config: HashMap<String, String>) -> ConnectProviderResponse
 /// - `Result<Vec<String>, String>`: 模型名称列表或错误信息
 async fn fetch_ollama_models(api_url: &str) -> Result<Vec<String>, String> {
     // 构建请求 URL
-    let url = format!("{}/api/tags", api_url);
+    let normalized_api_url = api_url.trim().trim_end_matches('/');
+    let url = format!("{}/api/tags", normalized_api_url);
     debug!("[Ollama] Fetching models from: {}", url);
 
     // 发送 HTTP GET 请求
