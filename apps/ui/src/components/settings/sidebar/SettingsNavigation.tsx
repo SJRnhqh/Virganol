@@ -1,13 +1,14 @@
 // apps/ui/src/components/settings/sidebar/SettingsNavigation.tsx
 // 外部依赖
-import { type LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
 
 // 内部引用
-import { SettingsNavItem } from "@/components/settings/sidebar";
 import { useSettingsStore } from "@/store";
-import { type SettingsTab } from "@/types";
+import type { SettingsTab } from "@/types";
 import { SETTINGS_TABS } from "@/constants";
+
+import { SettingsNavItem } from "./SettingsNavItem";
 
 export const SettingsNavigation = () => {
   const { activeTab, setTab } = useSettingsStore();

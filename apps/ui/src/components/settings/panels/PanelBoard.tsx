@@ -1,10 +1,14 @@
 // apps/ui/src/components/settings/panels/PanelBoard.tsx
-import { SpiritPanel } from "./SpiritPanel";
-import { ComingSoonPanel } from "./ComingSoonPanel";
-import { useSettingsStore } from "@/store/SettingsStore";
-import type { ReactElement } from "react";
-import { SETTINGS_TABS, type PanelType } from "@/constants/settings";
+// 外部依赖
 import { Monitor, type LucideIcon } from "lucide-react";
+import type { ReactElement } from "react";
+
+// 内部引用
+import { SETTINGS_TABS, type PanelType } from "@/constants";
+import { useSettingsStore } from "@/store";
+
+import { ComingSoonPanel } from "./ComingSoonPanel";
+import { SpiritPanel } from "./SpiritPanel";
 
 export const PanelBoard = () => {
   const activeTab = useSettingsStore((state) => state.activeTab);

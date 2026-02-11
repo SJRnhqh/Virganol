@@ -1,7 +1,7 @@
 // apps/ui/src/components/settings/sidebar/SettingsNavItem.tsx
 // 外部依赖
+import type { LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
-import { type LucideIcon } from "lucide-react";
 
 // 内部引用
 import { cn } from "@/lib";

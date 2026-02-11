@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 
 // 内部引用
-import { SettingsNavigation } from "@/components/settings/sidebar";
 import { cn } from "@/lib";
+
+import { SettingsNavigation } from "./SettingsNavigation";
 
 export const SettingsSidebar = () => {
   return (
