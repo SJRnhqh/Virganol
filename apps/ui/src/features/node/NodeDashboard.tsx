@@ -1,6 +1,6 @@
 // src/features/node/NodeDashboard.tsx
 import { NodeCanvas, NodeTerminalDock } from "./components";
-import { useTerminalStore } from "@/store/TerminalStore";
+import { useTerminalStore } from "./store/TerminalStore";
 import { clsx } from "clsx";
 
 export const NodeDashboard = () => {
