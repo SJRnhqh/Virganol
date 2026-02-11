@@ -58,6 +58,7 @@
     --settings-panel-outer-bg: var(--color-bengroubai);
     --settings-panel-inner-bg: var(--color-juleibai);
     --settings-panel-fg: var(--color-qiaomaizong);
+    --settings-panel-check: var(--color-qinglv);
 
     /* === 4. SciSpirit === */
     --spirit-welcome-atomsphere: var(--color-mihuang);

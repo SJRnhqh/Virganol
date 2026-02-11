@@ -1,4 +1,6 @@
+// apps/ui/src/store/SidebarStore.ts
 import { create } from "zustand";
+
 import { persist } from "zustand/middleware";
 
 interface SidebarState {
@@ -27,7 +29,7 @@ export const useSidebarStore = create<SidebarState>()(
 
       // --- 基础动作 ---
       toggle: () => set((state) => ({ isOpen: !state.isOpen })),
-      
+
       setOpen: (isOpen) => set({ isOpen }),
 
       setActiveId: (id: string) => set({ activeId: id }),
@@ -62,6 +64,6 @@ export const useSidebarStore = create<SidebarState>()(
         side: state.side,
         activeId: state.activeId,
       }),
-    }
-  )
+    },
+  ),
 );

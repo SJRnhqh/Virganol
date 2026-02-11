@@ -1,17 +1,14 @@
-import { create } from 'zustand';
+// apps/ui/src/store/SettingsStore.ts
+import { create } from "zustand";
+import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "../types/settings";
 
-// 根据你的 navigation.ts 定义，我们将设置选项卡分为这 5 类
-export type SettingsTab = 
-  | 'general'    // 🛡️ 通用 (主题, 语言, 版本信息)
-  | 'scispirit'  // 🤖 Spirit: AI/LLM 设置 (原先的 'llm')
-  | 'sciscript'  // 👨‍💻 Script: 编辑器偏好 (字体, 补全)
-  | 'scicomb'    // ⬡ Comb: 数据处理流设置
-  | 'scicellar'; // 🛖 Cellar: 连接与存储 (原先的 'ssh')
-
+// Settings 运行时状态：只管理打开/关闭与当前激活的 Tab
 interface SettingsState {
+  // ---- State ----
   isOpen: boolean;
   activeTab: SettingsTab;
 
+  // ---- Actions ----
   // 打开设置 (可传入目标 Tab 实现自动跳转)
   openSettings: (tab?: SettingsTab) => void;
   closeSettings: () => void;
@@ -20,13 +17,13 @@ interface SettingsState {
 
 export const useSettingsStore = create<SettingsState>((set) => ({
   isOpen: false,
-  activeTab: 'general', // 默认进通用
+  activeTab: DEFAULT_SETTINGS_TAB, // 默认进通用
 
   openSettings: (tab) =>
     set(() => ({
       isOpen: true,
       // 如果没传 tab，默认去 general；传了就去对应的模块设置
-      activeTab: tab || 'general',
+      activeTab: tab || DEFAULT_SETTINGS_TAB,
     })),
 
   closeSettings: () => set({ isOpen: false }),

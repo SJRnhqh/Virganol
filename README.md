@@ -96,3 +96,7 @@ pnpm install
 # Run development server
 pnpm dev
 ```
+
+## License
+
+Licensed under the GNU General Public License v3.0. See `LICENSE`.

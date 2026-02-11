@@ -1,4 +1,5 @@
 // src/type/nodes.ts
+// TODO: 开发中
 import { Home, Server, Box, type LucideIcon } from "lucide-react";
 import { type Node } from "@xyflow/react";
 
