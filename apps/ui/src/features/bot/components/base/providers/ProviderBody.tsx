@@ -5,10 +5,12 @@ import type {
   ProviderConnectionProps,
   ProviderModelProps,
 } from "@/features/bot/types";
-import { ProviderFormFields } from "@/features/bot/components/forms/ProviderFormFields";
-import { ProviderConnectedPanel } from "@/features/bot/components/forms/ProviderConnectedPanel";
-import { ConnectionError } from "@/features/bot/components/forms/ConnectionError";
-import { ConnectButton } from "@/features/bot/components/buttons/Connect";
+import {
+  ProviderFormFields,
+  ProviderConnectedPanel,
+  ConnectionError,
+} from "@/features/bot/components/forms";
+import { ConnectButton } from "@/features/bot/components/buttons";
 
 interface ProviderBodyProps {
   fields: ProviderField[];

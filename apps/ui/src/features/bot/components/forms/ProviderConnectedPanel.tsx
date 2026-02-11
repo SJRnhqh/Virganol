@@ -1,5 +1,10 @@
-import type { ProviderField } from "@/features/bot/types/providers";
+// apps/ui/src/features/bot/components/forms/ProviderConnectedPanel.tsx
+// TODO: 后续有空对该组件进行重构优化
+// 外部依赖
 import { Undo2 } from "lucide-react";
+
+// 内部引用
+import type { ProviderField } from "@/features/bot/types";
 
 interface ProviderConnectedPanelProps {
   fields: ProviderField[];

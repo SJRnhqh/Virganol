@@ -1,6 +1,11 @@
+// apps/ui/src/features/bot/components/buttons/Connect.tsx
+// TODO: 后续有空对该组件进行重构优化
+// 外部依赖
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Play, Check, RotateCcw, Loader2 } from "lucide-react";
+
+// 内部引用
 import {
   connectButtonVariants,
   connectIconVariants,

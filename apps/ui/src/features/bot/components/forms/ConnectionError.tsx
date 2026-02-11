@@ -1,3 +1,6 @@
+// apps/ui/src/features/bot/components/forms/ConnectionError.tsx
+// TODO: 后续有空对该组件进行重构优化
+// 外部依赖
 import { X, RotateCcw } from "lucide-react";
 
 interface ConnectionErrorProps {
