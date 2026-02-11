@@ -3,6 +3,7 @@
 @import "./themes/_palette.css";
 @import "./themes/light.css";
 @import "./canvas.css";
+@import "./scrollbars.css";
 
 /* ================== 🟢 新增开始：全局流式缩放 ================== */
 @layer base {
@@ -74,6 +75,7 @@
     --color-settings-panel-outer-bg: var(--settings-panel-outer-bg);
     --color-settings-panel-inner-bg: var(--settings-panel-inner-bg);
     --color-settings-panel-fg: var(--settings-panel-fg);
+    --color-settings-panel-check: var(--settings-panel-check);
 
     /* === 4. SciSpirit === */
     --color-spirit-welcome-atomsphere: var(--spirit-welcome-atomsphere);

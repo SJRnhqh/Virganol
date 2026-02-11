@@ -1,4 +1,3 @@
 // apps/ui/src/components/settings/panels/index.ts
-export { SpiritPanel } from "./SpiritPanel";
-export { ComingSoonPanel } from "./ComingSoonPanel";
+// 导出内容
 export { PanelBoard } from "./PanelBoard";

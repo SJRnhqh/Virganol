@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/lib.rs
+mod commands;
 mod core;
 mod platform;
 mod tmp;
@@ -10,6 +11,11 @@ use core::manager::{SidecarManager, SidecarState};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // 初始化日志系统
+    env_logger::Builder::from_default_env()
+        .filter_level(log::LevelFilter::Debug)
+        .init();
+
     // 创建 SidecarManager 实例
     let sidecar_manager: SidecarState = Arc::new(SidecarManager::new());
     let manager_for_exit = sidecar_manager.clone();
@@ -37,9 +43,12 @@ pub fn run() {
             // PTY 命令
             tmp::terminal::init_pty,
             tmp::terminal::write_pty,
+            // LLM 配置命令
             core::commands::verify_llm_config,
             core::commands::set_llm_config,
-            core::commands::get_llm_config
+            core::commands::get_llm_config,
+            // Provider 连接命令
+            commands::connection::connect_provider,
         ])
         .build(tauri::generate_context!())
         .expect("Error while building tauri application")

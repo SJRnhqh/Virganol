@@ -1,4 +1,7 @@
+// apps/ui/src/components/settings/panels/SpiritPanel.tsx
+// 内部引用
 import { LLMProviders } from "@/features/bot/components/settings/LLMProviders";
+
 export const SpiritPanel = () => {
   return (
     <div className="w-full h-full max-w-4xl mx-auto">
