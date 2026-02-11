@@ -1,22 +1,23 @@
 // apps/ui/src/features/bot/store/providers/useProviderStore.ts
+// 外部依赖
 import { create } from "zustand";
-import {
-  createProviderState,
-  type ProviderState,
-  withProviderConfig,
-  withProviderModels,
-  withProviderStatus,
-} from "../providerStore";
+
+// 内部引用
+import type { ProviderState } from "@/features/bot/types/providers";
+import { createProviderState } from "./init";
+import { withSlice } from "./update";
 
 export const useProviderStore = create<ProviderState>((set) => ({
   ...createProviderState(),
 
+  // ── Config ──────────────────────────────────
   setProviderConfig: (providerId, config) =>
-    set((state) => withProviderConfig(state, providerId, { ...config })),
+    set((state) => withSlice(state, "providerConfig", providerId, { ...config })),
 
+  // ── Status ──────────────────────────────────
   setProviderStatus: (providerId, patch) =>
     set((state) =>
-      withProviderStatus(state, providerId, {
+      withSlice(state, "providerStatus", providerId, {
         ...state.providerStatus[providerId],
         ...patch,
       }),
@@ -24,13 +25,14 @@ export const useProviderStore = create<ProviderState>((set) => ({
 
   resetProviderError: (providerId) =>
     set((state) =>
-      withProviderStatus(state, providerId, {
+      withSlice(state, "providerStatus", providerId, {
         ...state.providerStatus[providerId],
         isError: false,
         errorMessage: undefined,
       }),
     ),
 
+  // ── Models ──────────────────────────────────
   setAvailableModels: (providerId, models) =>
     set((state) => {
       const previousEnabled = state.providerModels[providerId].enabled;
@@ -40,17 +42,15 @@ export const useProviderStore = create<ProviderState>((set) => ({
         nextEnabled[model] = previousEnabled[model] ?? true;
       });
 
-      return {
-        ...withProviderModels(state, providerId, {
-          available: models,
-          enabled: nextEnabled,
-        }),
-      };
+      return withSlice(state, "providerModels", providerId, {
+        available: models,
+        enabled: nextEnabled,
+      });
     }),
 
   setModelEnabled: (providerId, model, enabled) =>
     set((state) =>
-      withProviderModels(state, providerId, {
+      withSlice(state, "providerModels", providerId, {
         ...state.providerModels[providerId],
         enabled: {
           ...state.providerModels[providerId].enabled,
@@ -68,11 +68,9 @@ export const useProviderStore = create<ProviderState>((set) => ({
         nextEnabled[model] = enabled;
       });
 
-      return {
-        ...withProviderModels(state, providerId, {
-          ...state.providerModels[providerId],
-          enabled: nextEnabled,
-        }),
-      };
+      return withSlice(state, "providerModels", providerId, {
+        ...state.providerModels[providerId],
+        enabled: nextEnabled,
+      });
     }),
 }));
