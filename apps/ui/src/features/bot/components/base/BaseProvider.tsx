@@ -1,5 +1,9 @@
-import { useState } from "react";
+// apps/ui/src/features/bot/components/base/BaseProvider.tsx
+// 外部依赖
 import { Check } from "lucide-react";
+import { useState } from "react";
+
+// 内部引用
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import type { ProviderDefinition } from "@/features/bot/types/llmProviders";
 import { ProviderFormFields } from "../forms/ProviderFormFields";

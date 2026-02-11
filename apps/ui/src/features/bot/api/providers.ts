@@ -1,10 +1,10 @@
 // apps/ui/src/features/bot/api/providers.ts
 import { invoke } from "@tauri-apps/api/core";
+import type { ProviderId } from "@/features/bot/types/llmProviders";
 import type {
-  ProviderId,
   ConnectProviderRequest,
   ConnectProviderResponse,
-} from "@/features/bot/types/llmProviders";
+} from "@/features/bot/types/providers";
 
 /**
  * 连接到指定的 LLM Provider
