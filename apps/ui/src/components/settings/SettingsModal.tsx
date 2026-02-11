@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // 内部引用
 import { cn, modalBackdrop, paperUnfoldVariants } from "@/lib";
-import { SettingsSidebar } from "./sidebar/SettingsSidebar";
-import { PanelBoard } from "@/components/settings/panels";
-import { useSettingsStore } from "@/store/SettingsStore";
+import { useSettingsStore } from "@/store";
+
+import { SettingsSidebar } from "./sidebar";
+import { PanelBoard } from "./panels";
 
 export const SettingsModal = () => {
   const { isOpen, closeSettings } = useSettingsStore();
@@ -33,7 +34,7 @@ export const SettingsModal = () => {
             exit="exit"
             className={cn(
               "relative flex overflow-hidden origin-center",
-              "w-200 h-137.5",
+              "w-220 h-160",
               "rounded-3xl shadow-3xl",
             )}
           >

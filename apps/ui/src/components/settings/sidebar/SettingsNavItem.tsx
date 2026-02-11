@@ -1,7 +1,10 @@
 // apps/ui/src/components/settings/sidebar/SettingsNavItem.tsx
+// 外部依赖
+import type { LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
+
+// 内部引用
 import { cn } from "@/lib";
-import { type LucideIcon } from "lucide-react";
 
 interface SettingsNavItemProps {
   label: string;
@@ -42,7 +45,7 @@ export const SettingsNavItem = ({
           "w-4.5 h-4.5 transition-colors duration-300",
           isActive
             ? "text-settings-sidebar-fg-active"
-            : "text-settings-sidebar-fg/50 group-hover:text-settings-sidebar-fg"
+            : "text-settings-sidebar-fg/50 group-hover:text-settings-sidebar-fg",
         )}
       />
       <span className="relative z-10">{label}</span>

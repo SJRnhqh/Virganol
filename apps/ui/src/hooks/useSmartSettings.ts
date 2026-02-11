@@ -1,4 +1,5 @@
-import { useSettingsStore, type SettingsTab } from "../store/SettingsStore";
+import { useSettingsStore } from "../store/SettingsStore";
+import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "../types/settings";
 import { useSidebarStore } from "../store/SidebarStore";
 import { NAV_ITEMS } from "../constants/navigation"; // 👈 直接引入导航配置
 
@@ -15,7 +16,7 @@ export function useSmartSettings() {
 
     // 2. 如果存在，且我们约定了 Sidebar ID === Settings Tab ID，直接透传
     //    如果当前不在任何模块中（比如在 Welcome 页），则回退到 'general'
-    let targetTab: SettingsTab = 'general';
+    let targetTab: SettingsTab = DEFAULT_SETTINGS_TAB;
 
     if (isNavModule) {
       // 这里做一个简单的类型断言，因为我们的架构约定了 ID 一致性
