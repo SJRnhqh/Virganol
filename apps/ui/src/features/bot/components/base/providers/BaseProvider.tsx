@@ -4,44 +4,30 @@ import { useState } from "react";
 
 // 内部引用
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
-import type { ProviderDefinition } from "@/features/bot/types/providers";
+import type {
+  ProviderDefinition,
+  ProviderConnectionProps,
+  ProviderModelProps,
+} from "@/features/bot/types/providers";
 import { ProviderHeader } from "./ProviderHeader";
 import { ProviderBody } from "./ProviderBody";
 
 interface BaseProviderProps {
   definition: ProviderDefinition;
   icon: React.ReactNode;
-  onConnect?: (config: Record<string, string>) => Promise<void>;
-  onDisconnect?: () => void;
-  isConnected?: boolean;
-  isLoading?: boolean;
-  isError?: boolean;
-  errorMessage?: string;
-  onErrorReset?: () => void;
   value: Record<string, string>;
   onValueChange: (value: Record<string, string>) => void;
-  availableModels?: string[];
-  enabledModels?: Record<string, boolean>;
-  onModelToggle?: (model: string, enabled: boolean) => void;
-  onToggleAllModels?: (enabled: boolean) => void;
+  connection: ProviderConnectionProps;
+  models: ProviderModelProps;
 }
 
 export const BaseProvider = ({
   definition,
   icon,
-  onConnect,
-  onDisconnect,
-  isConnected = false,
-  isLoading = false,
-  isError = false,
-  errorMessage,
-  onErrorReset,
   value,
   onValueChange,
-  availableModels,
-  enabledModels,
-  onModelToggle,
-  onToggleAllModels,
+  connection,
+  models,
 }: BaseProviderProps) => {
   const [open, setOpen] = useState(false);
 
@@ -51,7 +37,7 @@ export const BaseProvider = ({
 
   const handleReset = () => {
     onValueChange(definition.defaultConfig);
-    onDisconnect?.();
+    connection.onDisconnect?.();
   };
 
   return (
@@ -79,7 +65,7 @@ export const BaseProvider = ({
         <ProviderHeader
           icon={icon}
           name={definition.name}
-          isConnected={isConnected}
+          isConnected={connection.isConnected}
           open={open}
         />
       }
@@ -87,18 +73,10 @@ export const BaseProvider = ({
       <ProviderBody
         fields={definition.fields}
         value={value}
-        isConnected={isConnected}
-        isLoading={isLoading}
-        isError={isError}
-        errorMessage={errorMessage}
         onFieldChange={updateField}
         onReset={handleReset}
-        onConnect={onConnect}
-        onErrorReset={onErrorReset}
-        availableModels={availableModels}
-        enabledModels={enabledModels}
-        onModelToggle={onModelToggle}
-        onToggleAllModels={onToggleAllModels}
+        connection={connection}
+        models={models}
       />
     </BaseExpandableMenu>
   );

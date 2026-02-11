@@ -1,6 +1,10 @@
 // apps/ui/src/features/bot/components/base/providers/ProviderBody.tsx
 // 内部引用
-import type { ProviderField } from "@/features/bot/types/providers";
+import type {
+  ProviderField,
+  ProviderConnectionProps,
+  ProviderModelProps,
+} from "@/features/bot/types/providers";
 import { ProviderFormFields } from "../../forms/ProviderFormFields";
 import { ProviderConnectedPanel } from "../../forms/ProviderConnectedPanel";
 import { ConnectionError } from "../../forms/ConnectionError";
@@ -9,48 +13,32 @@ import { ConnectButton } from "../../buttons/Connect";
 interface ProviderBodyProps {
   fields: ProviderField[];
   value: Record<string, string>;
-  isConnected: boolean;
-  isLoading: boolean;
-  isError: boolean;
-  errorMessage?: string;
   onFieldChange: (key: string, val: string) => void;
   onReset: () => void;
-  onConnect?: (config: Record<string, string>) => Promise<void>;
-  onErrorReset?: () => void;
-  availableModels?: string[];
-  enabledModels?: Record<string, boolean>;
-  onModelToggle?: (model: string, enabled: boolean) => void;
-  onToggleAllModels?: (enabled: boolean) => void;
+  connection: ProviderConnectionProps;
+  models: ProviderModelProps;
 }
 
 export const ProviderBody = ({
   fields,
   value,
-  isConnected,
-  isLoading,
-  isError,
-  errorMessage,
   onFieldChange,
   onReset,
-  onConnect,
-  onErrorReset,
-  availableModels,
-  enabledModels,
-  onModelToggle,
-  onToggleAllModels,
+  connection,
+  models,
 }: ProviderBodyProps) => (
   <>
     <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
 
-    {isConnected ? (
+    {connection.isConnected ? (
       <ProviderConnectedPanel
         fields={fields}
         value={value}
         onReset={onReset}
-        models={availableModels}
-        enabledModels={enabledModels}
-        onToggleModel={onModelToggle}
-        onToggleAll={onToggleAllModels}
+        models={models.available}
+        enabledModels={models.enabled}
+        onToggleModel={models.onToggle}
+        onToggleAll={models.onToggleAll}
       />
     ) : (
       <ProviderFormFields
@@ -60,23 +48,22 @@ export const ProviderBody = ({
       />
     )}
 
-    {isError && (
+    {connection.isError && (
       <ConnectionError
-        message={errorMessage}
+        message={connection.errorMessage}
         onRetry={() => {
-          onErrorReset?.();
-          onConnect?.(value);
+          connection.onErrorReset?.();
+          connection.onConnect?.(value);
         }}
       />
     )}
 
-    {!isError && (
+    {!connection.isError && (
       <ConnectButton
-        onClick={() => onConnect?.(value)}
-        isConnected={isConnected}
-        isLoading={isLoading}
+        onClick={() => connection.onConnect?.(value)}
+        isConnected={connection.isConnected}
+        isLoading={connection.isLoading}
       />
     )}
   </>
 );
-

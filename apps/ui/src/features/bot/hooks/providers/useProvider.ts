@@ -31,18 +31,24 @@ export const useProvider = (providerId: ProviderId) => {
     value: config,
     onValueChange: (nextValue: Record<string, string>) =>
       setProviderConfig(providerId, nextValue),
-    onConnect,
-    onDisconnect,
-    isConnected: status.isConnected,
-    isLoading: status.isLoading,
-    isError: status.isError,
-    errorMessage: status.errorMessage,
-    onErrorReset,
-    availableModels: models.available,
-    enabledModels: models.enabled,
-    onModelToggle: (model: string, enabled: boolean) =>
-      setModelEnabled(providerId, model, enabled),
-    onToggleAllModels: (enabled: boolean) =>
-      setAllModelsEnabled(providerId, enabled),
+
+    connection: {
+      isConnected: status.isConnected,
+      isLoading: status.isLoading,
+      isError: status.isError,
+      errorMessage: status.errorMessage,
+      onConnect,
+      onDisconnect,
+      onErrorReset,
+    },
+
+    models: {
+      available: models.available,
+      enabled: models.enabled,
+      onToggle: (model: string, enabled: boolean) =>
+        setModelEnabled(providerId, model, enabled),
+      onToggleAll: (enabled: boolean) =>
+        setAllModelsEnabled(providerId, enabled),
+    },
   };
 };
