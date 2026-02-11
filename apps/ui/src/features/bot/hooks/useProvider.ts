@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { connectProvider } from "@/features/bot/api/providers";
-import { PROVIDER_DEFINITIONS, type ProviderId } from "@/features/bot/types/llmProviders";
+import { PROVIDER_DEFINITIONS } from "@/features/bot/constants/providers";
+import type { ProviderId } from "@/features/bot/types/providers";
 import { useProviderStore } from "@/features/bot/store/providerStore";
 
 export const useProvider = (providerId: ProviderId) => {
@@ -8,12 +9,22 @@ export const useProvider = (providerId: ProviderId) => {
   const config = useProviderStore((state) => state.providerConfig[providerId]);
   const status = useProviderStore((state) => state.providerStatus[providerId]);
   const models = useProviderStore((state) => state.providerModels[providerId]);
-  const setProviderConfig = useProviderStore((state) => state.setProviderConfig);
-  const setProviderStatus = useProviderStore((state) => state.setProviderStatus);
-  const resetProviderError = useProviderStore((state) => state.resetProviderError);
-  const setAvailableModels = useProviderStore((state) => state.setAvailableModels);
+  const setProviderConfig = useProviderStore(
+    (state) => state.setProviderConfig,
+  );
+  const setProviderStatus = useProviderStore(
+    (state) => state.setProviderStatus,
+  );
+  const resetProviderError = useProviderStore(
+    (state) => state.resetProviderError,
+  );
+  const setAvailableModels = useProviderStore(
+    (state) => state.setAvailableModels,
+  );
   const setModelEnabled = useProviderStore((state) => state.setModelEnabled);
-  const setAllModelsEnabled = useProviderStore((state) => state.setAllModelsEnabled);
+  const setAllModelsEnabled = useProviderStore(
+    (state) => state.setAllModelsEnabled,
+  );
 
   const handleConnect = useCallback(
     async (nextConfig: Record<string, string>) => {

@@ -1,4 +1,4 @@
-import type { ProviderField } from "@/features/bot/types/llmProviders";
+import type { ProviderField } from "@/features/bot/types/providers";
 import { Undo2 } from "lucide-react";
 
 interface ProviderConnectedPanelProps {

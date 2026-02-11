@@ -1,8 +1,6 @@
 import { create } from "zustand";
-import {
-  PROVIDER_DEFINITIONS,
-  type ProviderId,
-} from "@/features/bot/types/llmProviders";
+import { PROVIDER_DEFINITIONS } from "@/features/bot/constants/providers";
+import type { ProviderId } from "@/features/bot/types/providers";
 
 interface ProviderStatus {
   isConnected: boolean;

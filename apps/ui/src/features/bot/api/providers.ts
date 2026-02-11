@@ -1,9 +1,9 @@
 // apps/ui/src/features/bot/api/providers.ts
 import { invoke } from "@tauri-apps/api/core";
-import type { ProviderId } from "@/features/bot/types/llmProviders";
 import type {
   ConnectProviderRequest,
   ConnectProviderResponse,
+  ProviderId,
 } from "@/features/bot/types/providers";
 
 /**

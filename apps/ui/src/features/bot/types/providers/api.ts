@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/types/providers/api.ts
 // 内部引用
-import type { ProviderId } from "@/features/bot/types/llmProviders";
+import type { ProviderId } from "./config";
 
 // 连接请求
 export interface ConnectProviderRequest extends Record<string, unknown> {

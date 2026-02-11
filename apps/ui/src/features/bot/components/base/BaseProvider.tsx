@@ -5,7 +5,7 @@ import { useState } from "react";
 
 // 内部引用
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
-import type { ProviderDefinition } from "@/features/bot/types/llmProviders";
+import type { ProviderDefinition } from "@/features/bot/types/providers";
 import { ProviderFormFields } from "../forms/ProviderFormFields";
 import { ProviderConnectedPanel } from "../forms/ProviderConnectedPanel";
 import { ConnectionError } from "../forms/ConnectionError";

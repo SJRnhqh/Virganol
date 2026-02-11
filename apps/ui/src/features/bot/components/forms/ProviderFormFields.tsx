@@ -1,4 +1,4 @@
-import type { ProviderField } from "@/features/bot/types/llmProviders";
+import type { ProviderField } from "@/features/bot/types/providers";
 
 interface ProviderFormFieldsProps {
   fields: ProviderField[];
