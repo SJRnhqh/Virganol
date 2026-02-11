@@ -3,7 +3,7 @@
 import { DeepSeek as DeepSeekIcon } from "@lobehub/icons";
 
 // 内部引用
-import type { ProviderRegistryEntry } from "@/features/bot/types/providers";
+import type { ProviderRegistryEntry } from "@/features/bot/types";
 
 export const deepseekProvider = {
   id: "deepseek",

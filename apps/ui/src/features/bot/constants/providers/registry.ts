@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/constants/providers/registry.ts
 // 内部引用
-import type { ProviderRegistryEntry } from "@/features/bot/types/providers";
+import type { ProviderRegistryEntry } from "@/features/bot/types";
 import {
   ollamaProvider,
   deepseekProvider,

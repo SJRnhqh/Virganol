@@ -3,7 +3,7 @@
 import type {
   ProviderDefinition,
   ProviderId,
-} from "@/features/bot/types/providers";
+} from "@/features/bot/types";
 
 export const PROVIDER_DEFINITIONS = {
   ollama: {

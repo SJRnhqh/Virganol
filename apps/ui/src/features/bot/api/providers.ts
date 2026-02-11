@@ -4,7 +4,7 @@ import type {
   ConnectProviderRequest,
   ConnectProviderResponse,
   ProviderId,
-} from "@/features/bot/types/providers";
+} from "@/features/bot/types";
 
 /**
  * 连接到指定的 LLM Provider
