@@ -1,4 +1,5 @@
 // apps/ui/src/features/bot/types/providers/store.ts
+// 内部引用
 import type { ProviderId } from "./config";
 
 // ── 单个 Provider 的数据结构 ─────────────────

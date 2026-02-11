@@ -3,7 +3,8 @@
 import { create } from "zustand";
 
 // 内部引用
-import type { ProviderState } from "@/features/bot/types/providers";
+import type { ProviderState } from "@/features/bot/types";
+
 import { createProviderState } from "./init";
 import { withSlice } from "./update";
 

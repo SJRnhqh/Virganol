@@ -1,2 +1,3 @@
 // apps/ui/src/features/bot/constants/index.ts
-export { PROVIDER_REGISTRY } from "./providers";
+// 导出内容
+export { PROVIDER_REGISTRY, PROVIDER_DEFINITIONS } from "./providers";

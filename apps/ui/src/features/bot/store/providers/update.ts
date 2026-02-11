@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/store/providers/update.ts
 // 内部引用
-import type { ProviderId, ProviderState } from "@/features/bot/types/providers";
+import type { ProviderId, ProviderState } from "@/features/bot/types";
 
 type ProviderSlice = "providerConfig" | "providerStatus" | "providerModels";
 

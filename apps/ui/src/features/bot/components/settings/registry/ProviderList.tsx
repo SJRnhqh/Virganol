@@ -1,6 +1,7 @@
 // apps/ui/src/features/bot/components/settings/registry/ProviderList.tsx
 // 内部引用
-import { PROVIDER_REGISTRY } from "../../../constants";
+import { PROVIDER_REGISTRY } from "@/features/bot/constants";
+
 import { ProviderItem } from "./ProviderItem";
 
 export const ProviderList = () => {

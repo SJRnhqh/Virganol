@@ -1,7 +1,7 @@
 // apps/ui/src/features/bot/store/providers/init.ts
 // 内部引用
-import { PROVIDER_DEFINITIONS } from "@/features/bot/constants/providers";
-import type { ProviderId, ProviderState } from "@/features/bot/types/providers";
+import type { ProviderId, ProviderState } from "@/features/bot/types";
+import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
 
 const PROVIDER_IDS = Object.keys(PROVIDER_DEFINITIONS) as ProviderId[];
 
