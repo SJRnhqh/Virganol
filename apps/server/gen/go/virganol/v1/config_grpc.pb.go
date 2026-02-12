@@ -19,21 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ConfigService_SetLLMConfig_FullMethodName    = "/virganol.v1.ConfigService/SetLLMConfig"
-	ConfigService_GetLLMConfig_FullMethodName    = "/virganol.v1.ConfigService/GetLLMConfig"
-	ConfigService_VerifyLLMConfig_FullMethodName = "/virganol.v1.ConfigService/VerifyLLMConfig"
+	ConfigService_SetLLMConfig_FullMethodName = "/virganol.v1.ConfigService/SetLLMConfig"
+	ConfigService_GetLLMConfig_FullMethodName = "/virganol.v1.ConfigService/GetLLMConfig"
 )
 
 // ConfigServiceClient is the client API for ConfigService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConfigServiceClient interface {
-	// 保存配置
+	// 保存配置（scoped write）
 	SetLLMConfig(ctx context.Context, in *SetLLMConfigRequest, opts ...grpc.CallOption) (*SetLLMConfigResponse, error)
-	// 获取配置
+	// 获取配置（scoped read）
 	GetLLMConfig(ctx context.Context, in *GetLLMConfigRequest, opts ...grpc.CallOption) (*GetLLMConfigResponse, error)
-	// 验证配置
-	VerifyLLMConfig(ctx context.Context, in *VerifyLLMConfigRequest, opts ...grpc.CallOption) (*VerifyLLMConfigResponse, error)
 }
 
 type configServiceClient struct {
@@ -64,26 +61,14 @@ func (c *configServiceClient) GetLLMConfig(ctx context.Context, in *GetLLMConfig
 	return out, nil
 }
 
-func (c *configServiceClient) VerifyLLMConfig(ctx context.Context, in *VerifyLLMConfigRequest, opts ...grpc.CallOption) (*VerifyLLMConfigResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(VerifyLLMConfigResponse)
-	err := c.cc.Invoke(ctx, ConfigService_VerifyLLMConfig_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ConfigServiceServer is the server API for ConfigService service.
 // All implementations must embed UnimplementedConfigServiceServer
 // for forward compatibility.
 type ConfigServiceServer interface {
-	// 保存配置
+	// 保存配置（scoped write）
 	SetLLMConfig(context.Context, *SetLLMConfigRequest) (*SetLLMConfigResponse, error)
-	// 获取配置
+	// 获取配置（scoped read）
 	GetLLMConfig(context.Context, *GetLLMConfigRequest) (*GetLLMConfigResponse, error)
-	// 验证配置
-	VerifyLLMConfig(context.Context, *VerifyLLMConfigRequest) (*VerifyLLMConfigResponse, error)
 	mustEmbedUnimplementedConfigServiceServer()
 }
 
@@ -99,9 +84,6 @@ func (UnimplementedConfigServiceServer) SetLLMConfig(context.Context, *SetLLMCon
 }
 func (UnimplementedConfigServiceServer) GetLLMConfig(context.Context, *GetLLMConfigRequest) (*GetLLMConfigResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetLLMConfig not implemented")
-}
-func (UnimplementedConfigServiceServer) VerifyLLMConfig(context.Context, *VerifyLLMConfigRequest) (*VerifyLLMConfigResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method VerifyLLMConfig not implemented")
 }
 func (UnimplementedConfigServiceServer) mustEmbedUnimplementedConfigServiceServer() {}
 func (UnimplementedConfigServiceServer) testEmbeddedByValue()                       {}
@@ -160,24 +142,6 @@ func _ConfigService_GetLLMConfig_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ConfigService_VerifyLLMConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(VerifyLLMConfigRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConfigServiceServer).VerifyLLMConfig(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ConfigService_VerifyLLMConfig_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigServiceServer).VerifyLLMConfig(ctx, req.(*VerifyLLMConfigRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // ConfigService_ServiceDesc is the grpc.ServiceDesc for ConfigService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -192,10 +156,6 @@ var ConfigService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLLMConfig",
 			Handler:    _ConfigService_GetLLMConfig_Handler,
-		},
-		{
-			MethodName: "VerifyLLMConfig",
-			Handler:    _ConfigService_VerifyLLMConfig_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
