@@ -39,3 +39,6 @@ tauri-plugin-os = "2.3.2"
 portable-pty = "0.8"
 directories = "5.0"
 tauri-plugin-shell = "2"
+
+# --- 持久化存储 ---
+tauri-plugin-store = "2"

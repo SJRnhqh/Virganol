@@ -24,6 +24,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_store::Builder::new().build()) // 持久化存储
         // 注册 terminal 状态
         .manage(tmp::terminal::TerminalState::default())
         // 注册 sidecar manager 状态
@@ -45,6 +46,12 @@ pub fn run() {
             tmp::terminal::write_pty,
             // Provider 连接命令
             commands::connection::connect_provider,
+            // Provider 设置命令
+            commands::settings::load_providers,
+            commands::settings::remove_provider,
+            commands::settings::check_provider,
+            commands::settings::connect_and_save_provider,
+            commands::settings::update_enabled_models,
         ])
         .build(tauri::generate_context!())
         .expect("Error while building tauri application")
