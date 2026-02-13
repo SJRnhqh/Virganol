@@ -11,12 +11,6 @@ pub async fn trigger_providers_startup_check(app: AppHandle) {
     provider::startup_check_providers(app).await;
 }
 
-/// 前端点击删除时调用：移除一个 Provider 配置
-#[tauri::command]
-pub async fn remove_provider(app: AppHandle, provider_id: String) -> bool {
-    provider::remove(&app, &provider_id)
-}
-
 /// 前端点击"连接"时调用：健康检查 + 成功则持久化
 #[tauri::command]
 pub async fn connect_and_save_provider(
@@ -36,4 +30,10 @@ pub async fn update_enabled_models(
     enabled_models: Vec<String>,
 ) -> bool {
     provider::update_models(&app, &provider_id, enabled_models)
+}
+
+/// 前端点击删除时调用：移除一个 Provider 配置
+#[tauri::command]
+pub async fn remove_provider(app: AppHandle, provider_id: String) -> bool {
+    provider::remove(&app, &provider_id)
 }

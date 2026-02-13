@@ -219,30 +219,6 @@ async fn check_deepseek(url: &str, key: &str) -> HealthCheckResponse {
     HealthCheckResponse::ok(models)
 }
 
-/// 接入并持久化：health_check 成功后自动保存配置
-/// 返回 HealthCheckResponse（前端根据 success 判断是否接入成功）
-pub async fn connect_and_save(
-    app: &AppHandle,
-    provider_id: &str,
-    url: &str,
-    key: &str,
-) -> HealthCheckResponse {
-    let result = health_check(provider_id, url, key).await;
-
-    if result.success {
-        // 健康检查通过，持久化写入（enabled_models 初始为空，用户稍后勾选）
-        let record = ProviderRecord {
-            url: url.trim().trim_end_matches('/').to_string(),
-            key: key.to_string(),
-            enabled_models: vec![],
-        };
-        save(app, provider_id, &record);
-        info!("[Provider] {} saved to store", provider_id);
-    }
-
-    result
-}
-
 /// 更新某个 provider 的 enabled_models
 /// 返回 true 表示更新成功，false 表示该 provider 不存在
 pub fn update_models(
@@ -307,4 +283,28 @@ pub async fn startup_check_providers(app: AppHandle) {
     }
 
     info!("[Tauri] Provider check complete");
+}
+
+/// 接入并持久化：health_check 成功后自动保存配置
+/// 返回 HealthCheckResponse（前端根据 success 判断是否接入成功）
+pub async fn connect_and_save(
+    app: &AppHandle,
+    provider_id: &str,
+    url: &str,
+    key: &str,
+) -> HealthCheckResponse {
+    let result = health_check(provider_id, url, key).await;
+
+    if result.success {
+        // 健康检查通过，持久化写入（enabled_models 初始为空，用户稍后勾选）
+        let record = ProviderRecord {
+            url: url.trim().trim_end_matches('/').to_string(),
+            key: key.to_string(),
+            enabled_models: result.available_models.clone(),
+        };
+        save(app, provider_id, &record);
+        info!("[Tauri] {} saved to store", provider_id);
+    }
+
+    result
 }

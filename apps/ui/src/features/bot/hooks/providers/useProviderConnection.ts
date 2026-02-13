@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 
 // 内部引用
-import { connectProvider } from "@/features/bot/api/providers";
+import { connectAndSaveProvider } from "@/features/bot/api/providers";
 import { useProviderStore } from "@/features/bot/store";
 import type { ProviderId } from "@/features/bot/types";
 
@@ -26,10 +26,14 @@ export const useProviderConnection = (providerId: ProviderId) => {
         errorMessage: undefined,
       });
 
-      const response = await connectProvider(providerId, nextConfig);
+      // 从前端 config 字段中提取 url 和 key
+      const url = nextConfig.apiURL ?? "";
+      const key = nextConfig.apiKey ?? "";
+
+      const response = await connectAndSaveProvider(providerId, url, key);
 
       if (response.success) {
-        setAvailableModels(providerId, response.data?.available_models ?? []);
+        setAvailableModels(providerId, response.available_models);
         setProviderStatus(providerId, {
           isConnected: true,
           isLoading: false,
@@ -63,4 +67,3 @@ export const useProviderConnection = (providerId: ProviderId) => {
     onErrorReset: () => resetProviderError(providerId),
   };
 };
-
