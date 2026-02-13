@@ -47,22 +47,46 @@ export const useProvider = (providerId: ProviderId) => {
     models: {
       available: models.available,
       enabled: models.enabled,
-      onToggle: (model: string, enabled: boolean) => {
-        // 1. 立即更新 Store（UI 即时响应）
+      onToggle: async (model: string, enabled: boolean) => {
+        // 回滚快照：后端持久化失败时恢复单个模型开关
+        const previous = models.enabled[model] ?? true;
+
+        // 乐观更新：先更新 UI，保证交互即时反馈
         setModelEnabled(providerId, model, enabled);
-        // 2. 计算新的 enabled 列表，同步到后端持久化
+
+        // 计算最新启用模型列表并同步到后端
         const nextEnabled = { ...models.enabled, [model]: enabled };
         const enabledList = Object.entries(nextEnabled)
           .filter(([, v]) => v)
           .map(([k]) => k);
-        updateEnabledModels(providerId, enabledList);
+
+        const ok = await updateEnabledModels(providerId, enabledList);
+        if (!ok) {
+          // 持久化失败：回滚 UI 到操作前状态
+          setModelEnabled(providerId, model, previous);
+          console.error(
+            `[React] rollback single model: ${providerId}/${model}`,
+          );
+        }
       },
-      onToggleAll: (enabled: boolean) => {
-        // 1. 立即更新 Store
+
+      onToggleAll: async (enabled: boolean) => {
+        // 回滚快照：记录当前每个模型状态，失败时整组恢复
+        const previousMap = { ...models.enabled };
+
+        // 乐观更新：批量切换前端状态
         setAllModelsEnabled(providerId, enabled);
-        // 2. 同步到后端
+
+        // 同步批量结果到后端持久化
         const enabledList = enabled ? [...models.available] : [];
-        updateEnabledModels(providerId, enabledList);
+        const ok = await updateEnabledModels(providerId, enabledList);
+        if (!ok) {
+          // 持久化失败：逐个模型回滚到旧状态
+          models.available.forEach((model) => {
+            setModelEnabled(providerId, model, previousMap[model] ?? true);
+          });
+          console.error(`[React] rollback all models: ${providerId}`);
+        }
       },
     },
   };

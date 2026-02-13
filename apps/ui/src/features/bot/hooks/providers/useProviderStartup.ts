@@ -29,7 +29,7 @@ export const useProviderStartup = () => {
         const { provider_id, config, health } = event.payload;
 
         if (!(provider_id in PROVIDER_DEFINITIONS)) {
-          console.warn(`[Startup] Unknown provider: ${provider_id}, skipping`);
+          console.warn(`[React] Unknown provider: ${provider_id}, skipping`);
           return;
         }
 
@@ -59,7 +59,7 @@ export const useProviderStartup = () => {
         }
 
         console.log(
-          `[Startup] ${id}: online=${health.success}, models=${health.available_models.length}`,
+          `[React] ${id}: online=${health.success}, models=${health.available_models.length}`,
         );
       });
 
@@ -75,7 +75,7 @@ export const useProviderStartup = () => {
 
     // 捕捉监听异常
     bootstrap().catch((error) => {
-      console.error("[Startup] bootstrap failed:", error);
+      console.error("[React] bootstrap failed:", error);
     });
 
     // 3) 卸载清理
