@@ -2,8 +2,6 @@
 // 导出内容
 export type { ProviderStatus, ProviderModels, ProviderState } from "./store";
 export type { 
-    ConnectProviderRequest, 
-    ConnectProviderResponse, 
     HealthCheckResponse,
     ProviderStatusPayload,
 } from "./api";

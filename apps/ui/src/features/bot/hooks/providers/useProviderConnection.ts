@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 
 // 内部引用
-import { connectAndSaveProvider } from "@/features/bot/api/providers";
+import { connectAndSaveProvider } from "@/features/bot/api";
 import { useProviderStore } from "@/features/bot/store";
 import type { ProviderId } from "@/features/bot/types";
 

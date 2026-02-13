@@ -1,6 +1,5 @@
 // apps/desktop/src-tauri/src/core/mod.rs
 
-pub mod connections;
 pub mod settings;
 pub mod manager;
 pub mod models;

@@ -96,6 +96,14 @@ pub fn remove(app: &AppHandle, provider_id: &str) -> bool {
     existed
 }
 
+/// Provider 默认 URL（当前端未提供 url 时使用）
+fn default_url(provider_id: &str) -> Option<&'static str> {
+    match provider_id {
+        "deepseek" => Some("https://api.deepseek.com"),
+        _ => None,
+    }
+}
+
 /// 健康检查：用 url + key 探测 provider 是否可用，返回可用模型列表
 pub async fn health_check(provider_id: &str, url: &str, key: &str) -> HealthCheckResponse {
     match provider_id {
@@ -293,12 +301,22 @@ pub async fn connect_and_save(
     url: &str,
     key: &str,
 ) -> HealthCheckResponse {
-    let result = health_check(provider_id, url, key).await;
+    // URL 兜底：前端未传时使用默认值
+    let actual_url = if url.trim().is_empty() {
+        match default_url(provider_id) {
+            Some(default) => default.to_string(),
+            None => return HealthCheckResponse::fail("Missing URL"),
+        }
+    } else {
+        url.trim().trim_end_matches('/').to_string()
+    };
+
+    let result = health_check(provider_id, &actual_url, key).await;
 
     if result.success {
         // 健康检查通过，持久化写入（enabled_models 初始为空，用户稍后勾选）
         let record = ProviderRecord {
-            url: url.trim().trim_end_matches('/').to_string(),
+            url: actual_url,
             key: key.to_string(),
             enabled_models: result.available_models.clone(),
         };

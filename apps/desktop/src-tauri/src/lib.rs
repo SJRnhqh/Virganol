@@ -46,8 +46,6 @@ pub fn run() {
             // PTY 命令
             tmp::terminal::init_pty,
             tmp::terminal::write_pty,
-            // Provider 连接命令
-            commands::connection::connect_provider,
             // Provider 设置命令
             commands::settings::remove_provider,
             commands::settings::connect_and_save_provider,
