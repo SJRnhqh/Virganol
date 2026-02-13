@@ -17,3 +17,17 @@ export interface ConnectProviderResponse {
   };
   error?: string;
 }
+
+/** 对应 Rust ProviderRecord */
+export interface ProviderRecord {
+  url: string;
+  key: string;
+  enabled_models: string[];
+}
+
+/** 对应 Rust HealthCheckResponse */
+export interface HealthCheckResponse {
+  success: boolean;
+  available_models: string[];
+  error?: string;
+}

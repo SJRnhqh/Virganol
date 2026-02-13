@@ -12,4 +12,6 @@ export type {
   ProviderState,
   ProviderConnectionProps,
   ProviderModelProps,
+  ProviderRecord,
+  HealthCheckResponse,
 } from "./providers";
