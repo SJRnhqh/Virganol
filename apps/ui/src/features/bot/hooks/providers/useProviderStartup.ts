@@ -20,13 +20,14 @@ export const useProviderStartup = () => {
   const setModelEnabled = useProviderStore((s) => s.setModelEnabled);
 
   useEffect(() => {
-    // ① 注册监听：后端每检查完一个 Provider 就推送一次
-    const unlisten = listen<ProviderStatusPayload>(
-      "provider-status",
-      (event) => {
+    let disposed = false;
+    let off: null | (() => void) = null;
+
+    const bootstrap = async () => {
+      // 1) 等监听真正注册完成
+      off = await listen<ProviderStatusPayload>("provider-status", (event) => {
         const { provider_id, config, health } = event.payload;
 
-        // 校验 provider_id 是否为前端已知的 Provider
         if (!(provider_id in PROVIDER_DEFINITIONS)) {
           console.warn(`[Startup] Unknown provider: ${provider_id}, skipping`);
           return;
@@ -34,13 +35,11 @@ export const useProviderStartup = () => {
 
         const id = provider_id as ProviderId;
 
-        // 填入配置（后端字段 → 前端字段映射）
         const frontendConfig: Record<string, string> = {};
         if (config.url) frontendConfig.apiURL = config.url;
         if (config.key !== undefined) frontendConfig.apiKey = config.key;
         setProviderConfig(id, frontendConfig);
 
-        // 填入连接状态
         setProviderStatus(id, {
           isConnected: health.success,
           isLoading: false,
@@ -48,12 +47,9 @@ export const useProviderStartup = () => {
           errorMessage: health.error,
         });
 
-        // 填入模型信息（仅健康检查成功时）
         if (health.success && health.available_models.length > 0) {
-          // setAvailableModels 内部会默认所有模型 enabled = true
           setAvailableModels(id, health.available_models);
 
-          // 根据持久化的 enabled_models 修正：不在列表里的设为 false
           const enabledSet = new Set(config.enabled_models);
           health.available_models.forEach((model) => {
             if (!enabledSet.has(model)) {
@@ -65,15 +61,27 @@ export const useProviderStartup = () => {
         console.log(
           `[Startup] ${id}: online=${health.success}, models=${health.available_models.length}`,
         );
-      },
-    );
+      });
 
-    // ② 监听注册完毕后，通知后端开始检查
-    triggerProvidersStartupCheck();
+      // 组件已卸载则直接清理
+      if (disposed) {
+        off();
+        return;
+      }
 
-    // ③ 组件卸载时清理监听
+      // 2) 再触发后端检查（时序保证）
+      await triggerProvidersStartupCheck();
+    };
+
+    // 捕捉监听异常
+    bootstrap().catch((error) => {
+      console.error("[Startup] bootstrap failed:", error);
+    });
+
+    // 3) 卸载清理
     return () => {
-      unlisten.then((fn) => fn());
+      disposed = true;
+      off?.();
     };
   }, [
     setProviderConfig,

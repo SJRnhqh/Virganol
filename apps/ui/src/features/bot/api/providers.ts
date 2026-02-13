@@ -8,6 +8,7 @@ export const triggerProvidersStartupCheck = async (): Promise<void> => {
     await invoke("trigger_providers_startup_check");
   } catch (error) {
     console.error("[API] trigger_providers_startup_check error:", error);
+    throw error;
   }
 };
 
