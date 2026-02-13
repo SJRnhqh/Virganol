@@ -7,7 +7,7 @@ export function useBotInput() {
   const [value, setValue] = useState("");
   const [currentAgent, setCurrentAgent] = useState<AgentType>("ester");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  
+
   // 从 Store 获取 actions
   const addMessage = useBotStore((state) => state.addMessage);
 
@@ -24,16 +24,16 @@ export function useBotInput() {
   // 🚀 发送逻辑
   const handleSend = useCallback(() => {
     if (!value.trim()) return;
-    
+
     addMessage({
       id: Date.now().toString(),
       role: "user",
       content: value,
       timestamp: Date.now(),
     });
-    
+
     setValue(""); // 清空输入
-    
+
     // 发送后重置高度
     if (textareaRef.current) textareaRef.current.style.height = "auto";
   }, [value, addMessage]);
@@ -46,13 +46,16 @@ export function useBotInput() {
         handleSend();
       }
     },
-    [handleSend]
+    [handleSend],
   );
 
   // 📝 输入变化
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.target.value);
-  }, []);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setValue(e.target.value);
+    },
+    [],
+  );
 
   return {
     value,

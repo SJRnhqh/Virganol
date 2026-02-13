@@ -43,13 +43,12 @@ pub fn run() {
             commands::settings::trigger_providers_startup_check,
             commands::settings::connect_and_save_provider,
             commands::settings::reset_provider,
+            commands::settings::update_enabled_models,
             // SSH 命令
             tmp::ssh::test_ssh_params,
             // PTY 命令
             tmp::terminal::init_pty,
             tmp::terminal::write_pty,
-            // Provider 设置命令
-            commands::settings::update_enabled_models,
         ])
         .build(tauri::generate_context!())
         .expect("Error while building tauri application")

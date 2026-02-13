@@ -1,6 +1,7 @@
 // apps/ui/src/features/bot/hooks/providers/useProvider.ts
 // 内部引用
 import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
+import { updateEnabledModels } from "@/features/bot/api";
 import { useProviderStore } from "@/features/bot/store";
 import type { ProviderId } from "@/features/bot/types";
 
@@ -46,10 +47,23 @@ export const useProvider = (providerId: ProviderId) => {
     models: {
       available: models.available,
       enabled: models.enabled,
-      onToggle: (model: string, enabled: boolean) =>
-        setModelEnabled(providerId, model, enabled),
-      onToggleAll: (enabled: boolean) =>
-        setAllModelsEnabled(providerId, enabled),
+      onToggle: (model: string, enabled: boolean) => {
+        // 1. 立即更新 Store（UI 即时响应）
+        setModelEnabled(providerId, model, enabled);
+        // 2. 计算新的 enabled 列表，同步到后端持久化
+        const nextEnabled = { ...models.enabled, [model]: enabled };
+        const enabledList = Object.entries(nextEnabled)
+          .filter(([, v]) => v)
+          .map(([k]) => k);
+        updateEnabledModels(providerId, enabledList);
+      },
+      onToggleAll: (enabled: boolean) => {
+        // 1. 立即更新 Store
+        setAllModelsEnabled(providerId, enabled);
+        // 2. 同步到后端
+        const enabledList = enabled ? [...models.available] : [];
+        updateEnabledModels(providerId, enabledList);
+      },
     },
   };
 };

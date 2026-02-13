@@ -79,23 +79,6 @@ pub fn save_provider(app: &AppHandle, provider_id: &str, record: &ProviderRecord
     }
 }
 
-/// 删除单个 provider 的配置
-pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
-    let mut providers = load_all_providers(app);
-    let existed = providers.remove(provider_id).is_some();
-
-    if existed {
-        if let Ok(store) = app.store(STORE_FILE) {
-            store.set(
-                STORE_KEY_SPIRIT_PROVIDERS,
-                serde_json::to_value(&providers).unwrap_or_default(),
-            );
-        }
-    }
-
-    existed
-}
-
 /// Provider 默认 URL（当前端未提供 url 时使用）
 fn default_url(provider_id: &str) -> Option<&'static str> {
     match provider_id {
@@ -227,35 +210,6 @@ async fn check_deepseek(url: &str, key: &str) -> HealthCheckResponse {
     HealthCheckResponse::ok(models)
 }
 
-/// 更新某个 provider 的 enabled_models
-/// 返回 true 表示更新成功，false 表示该 provider 不存在
-pub fn update_models(
-    app: &AppHandle,
-    provider_id: &str,
-    enabled_models: Vec<String>,
-) -> bool {
-    let mut providers = load_all_providers(app);
-
-    match providers.get_mut(provider_id) {
-        Some(record) => {
-            record.enabled_models = enabled_models;
-            // 重新保存整个 map
-            if let Ok(store) = app.store(STORE_FILE) {
-                store.set(
-                    STORE_KEY_SPIRIT_PROVIDERS,
-                    serde_json::to_value(&providers).unwrap_or_default(),
-                );
-            }
-            info!("[Provider] {} enabled_models updated", provider_id);
-            true
-        }
-        None => {
-            error!("[Provider] {} not found, cannot update models", provider_id);
-            false
-        }
-    }
-}
-
 /// App 启动时自动执行：加载所有已持久化的 Provider，逐个健康检查，逐个推送给前端
 pub async fn startup_check_providers(app: AppHandle) {
     let providers = load_all_providers(&app);
@@ -325,4 +279,50 @@ pub async fn connect_and_save(
     }
 
     result
+}
+
+/// 重置 provider 的持久化配置
+pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
+    let mut providers = load_all_providers(app);
+    let existed = providers.remove(provider_id).is_some();
+
+    if existed {
+        if let Ok(store) = app.store(STORE_FILE) {
+            store.set(
+                STORE_KEY_SPIRIT_PROVIDERS,
+                serde_json::to_value(&providers).unwrap_or_default(),
+            );
+        }
+    }
+
+    existed
+}
+
+/// 更新某个 provider 的 enabled_models
+/// 返回 true 表示更新成功，false 表示该 provider 不存在
+pub fn update_models(
+    app: &AppHandle,
+    provider_id: &str,
+    enabled_models: Vec<String>,
+) -> bool {
+    let mut providers = load_all_providers(app);
+
+    match providers.get_mut(provider_id) {
+        Some(record) => {
+            record.enabled_models = enabled_models;
+            // 重新保存整个 map
+            if let Ok(store) = app.store(STORE_FILE) {
+                store.set(
+                    STORE_KEY_SPIRIT_PROVIDERS,
+                    serde_json::to_value(&providers).unwrap_or_default(),
+                );
+            }
+            info!("[Provider] {} enabled_models updated", provider_id);
+            true
+        }
+        None => {
+            error!("[Provider] {} not found, cannot update models", provider_id);
+            false
+        }
+    }
 }

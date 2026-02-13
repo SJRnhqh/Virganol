@@ -1,9 +1,6 @@
 // apps/ui/src/features/bot/api/providers.ts
 import { invoke } from "@tauri-apps/api/core";
-import type {
-  HealthCheckResponse,
-  ProviderId,
-} from "@/features/bot/types";
+import type { HealthCheckResponse, ProviderId } from "@/features/bot/types";
 
 /** 触发后端检查所有已持久化的 Provider（配合 listen 使用） */
 export const triggerProvidersStartupCheck = async (): Promise<void> => {
@@ -22,16 +19,25 @@ export const connectAndSaveProvider = async (
 ): Promise<HealthCheckResponse> => {
   const startTime = performance.now();
   try {
-    const response = await invoke<HealthCheckResponse>("connect_and_save_provider", {
-      providerId,
-      url,
-      key,
-    });
+    const response = await invoke<HealthCheckResponse>(
+      "connect_and_save_provider",
+      {
+        providerId,
+        url,
+        key,
+      },
+    );
     const ms = (performance.now() - startTime).toFixed(2);
     if (response.success) {
-      console.log(`[API] connect_and_save ${providerId} ✅ (${ms}ms)`, response.available_models);
+      console.log(
+        `[API] connect_and_save ${providerId} ✅ (${ms}ms)`,
+        response.available_models,
+      );
     } else {
-      console.error(`[API] connect_and_save ${providerId} ❌ (${ms}ms):`, response.error);
+      console.error(
+        `[API] connect_and_save ${providerId} ❌ (${ms}ms):`,
+        response.error,
+      );
     }
     return response;
   } catch (error) {
@@ -43,13 +49,33 @@ export const connectAndSaveProvider = async (
 };
 
 /** 重置一个 Provider 的持久化配置 */
-export const resetProvider = async (providerId: string): Promise<boolean> => {
+export const resetProvider = async (
+  providerId: ProviderId,
+): Promise<boolean> => {
   try {
     const result = await invoke<boolean>("reset_provider", { providerId });
     console.log(`[API] reset_provider ${providerId}:`, result);
     return result;
   } catch (error) {
     console.error("[API] reset_provider error:", error);
+    return false;
+  }
+};
+
+/** 更新某个 Provider 的 enabled_models */
+export const updateEnabledModels = async (
+  providerId: ProviderId,
+  enabledModels: string[],
+): Promise<boolean> => {
+  try {
+    const result = await invoke<boolean>("update_enabled_models", {
+      providerId,
+      enabledModels,
+    });
+    console.log(`[API] update_enabled_models ${providerId}:`, result);
+    return result;
+  } catch (error) {
+    console.error("[API] update_enabled_models error:", error);
     return false;
   }
 };
