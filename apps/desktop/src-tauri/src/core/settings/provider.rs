@@ -1,17 +1,17 @@
 // apps/desktop/src-tauri/src/core/settings/provider.rs
 
-use tauri::AppHandle;
+use tauri::{AppHandle, Emitter};
 use tauri_plugin_store::StoreExt;
 use log::{debug, error, info};
 
-use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
+use crate::core::models::settings::{HealthCheckResponse, ProviderRecord, ProviderStatusPayload};
 
 const STORE_FILE: &str = "settings.json";
 const STORE_KEY_SPIRIT_PROVIDERS: &str = "spirit.providers";
 
 /// 读取所有已保存的 providers
 /// 返回 HashMap<provider_id_string, ProviderRecord>
-pub fn load_all(app: &AppHandle) -> std::collections::HashMap<String, ProviderRecord> {
+pub fn load_all_providers(app: &AppHandle) -> std::collections::HashMap<String, ProviderRecord> {
     let store = match app.store(STORE_FILE) {
         Ok(s) => s,
         Err(_) => return std::collections::HashMap::new(),
@@ -27,7 +27,7 @@ pub fn load_all(app: &AppHandle) -> std::collections::HashMap<String, ProviderRe
 
 /// 保存单个 provider 的配置（upsert：有则覆盖，无则新增）
 pub fn save(app: &AppHandle, provider_id: &str, record: &ProviderRecord) {
-    let mut providers = load_all(app);
+    let mut providers = load_all_providers(app);
     providers.insert(provider_id.to_string(), record.clone());
 
     if let Ok(store) = app.store(STORE_FILE) {
@@ -40,7 +40,7 @@ pub fn save(app: &AppHandle, provider_id: &str, record: &ProviderRecord) {
 
 /// 删除单个 provider 的配置
 pub fn remove(app: &AppHandle, provider_id: &str) -> bool {
-    let mut providers = load_all(app);
+    let mut providers = load_all_providers(app);
     let existed = providers.remove(provider_id).is_some();
 
     if existed {
@@ -209,7 +209,7 @@ pub fn update_models(
     provider_id: &str,
     enabled_models: Vec<String>,
 ) -> bool {
-    let mut providers = load_all(app);
+    let mut providers = load_all_providers(app);
 
     match providers.get_mut(provider_id) {
         Some(record) => {
@@ -229,4 +229,34 @@ pub fn update_models(
             false
         }
     }
+}
+
+/// App 启动时自动执行：加载所有已持久化的 Provider，逐个健康检查，逐个推送给前端
+pub async fn startup_check_providers(app: AppHandle) {
+    let providers = load_all_providers(&app);
+
+    if providers.is_empty() {
+        info!("[Tauri] No persisted providers found");
+        return;
+    }
+
+    info!("[Tauri] Checking {} provider(s)...", providers.len());
+
+    for (id, record) in &providers {
+        let result = health_check(id, &record.url, &record.key).await;
+
+        let payload = ProviderStatusPayload {
+            provider_id: id.clone(),
+            config: record.clone(),
+            health: result,
+        };
+
+        if let Err(e) = app.emit("provider-status", &payload) {
+            error!("[Tauri] Failed to emit status for {}: {}", id, e);
+        } else {
+            info!("[Tauri] {} → online: {}", id, payload.health.success);
+        }
+    }
+
+    info!("[Tauri] Provider check complete");
 }

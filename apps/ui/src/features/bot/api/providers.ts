@@ -4,7 +4,6 @@ import type {
   ConnectProviderRequest,
   ConnectProviderResponse,
   ProviderId,
-  ProviderRecord,
   HealthCheckResponse,
 } from "@/features/bot/types";
 
@@ -62,15 +61,12 @@ export const connectProvider = async (
   }
 };
 
-/** 加载所有已持久化的 Provider 配置 */
-export const loadProviders = async (): Promise<Record<string, ProviderRecord>> => {
+/** 触发后端检查所有已持久化的 Provider（配合 listen 使用） */
+export const triggerProvidersStartupCheck = async (): Promise<void> => {
   try {
-    const result = await invoke<Record<string, ProviderRecord>>("load_providers");
-    console.log("[API] load_providers:", result);
-    return result;
+    await invoke("trigger_providers_startup_check");
   } catch (error) {
-    console.error("[API] load_providers error:", error);
-    return {};
+    console.error("[API] trigger_providers_startup_check error:", error);
   }
 };
 

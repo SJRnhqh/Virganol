@@ -39,6 +39,8 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            // 持久化
+            commands::settings::trigger_providers_startup_check,
             // SSH 命令
             tmp::ssh::test_ssh_params,
             // PTY 命令
@@ -47,9 +49,7 @@ pub fn run() {
             // Provider 连接命令
             commands::connection::connect_provider,
             // Provider 设置命令
-            commands::settings::load_providers,
             commands::settings::remove_provider,
-            commands::settings::check_provider,
             commands::settings::connect_and_save_provider,
             commands::settings::update_enabled_models,
         ])

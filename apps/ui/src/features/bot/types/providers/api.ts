@@ -31,3 +31,10 @@ export interface HealthCheckResponse {
   available_models: string[];
   error?: string;
 }
+
+/** 对应 Rust ProviderStatusPayload（startup 推送） */
+export interface ProviderStatusPayload {
+  provider_id: string;
+  config: ProviderRecord;
+  health: HealthCheckResponse;
+}

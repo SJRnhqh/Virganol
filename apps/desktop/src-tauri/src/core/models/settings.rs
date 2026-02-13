@@ -36,3 +36,11 @@ impl HealthCheckResponse {
         }
     }
 }
+
+/// 推送给前端的 Provider 状态
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProviderStatusPayload {
+    pub provider_id: String,
+    pub config: ProviderRecord,
+    pub health: HealthCheckResponse,
+}

@@ -1,27 +1,20 @@
 // apps/desktop/src-tauri/src/commands/settings.rs
 
-use std::collections::HashMap;
 use tauri::AppHandle;
 
-use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
+use crate::core::models::settings::HealthCheckResponse;
 use crate::core::settings::provider;
 
-/// 前端启动时调用：加载所有已保存的 Provider 配置
+/// 前端 ready 后调用：触发后端检查所有已持久化的 Provider 并推送状态到前端
 #[tauri::command]
-pub async fn load_providers(app: AppHandle) -> HashMap<String, ProviderRecord> {
-    provider::load_all(&app)
+pub async fn trigger_providers_startup_check(app: AppHandle) {
+    provider::startup_check_providers(app).await;
 }
 
 /// 前端点击删除时调用：移除一个 Provider 配置
 #[tauri::command]
 pub async fn remove_provider(app: AppHandle, provider_id: String) -> bool {
     provider::remove(&app, &provider_id)
-}
-
-/// 健康检查：探测指定 provider 是否可用，返回可用模型列表
-#[tauri::command]
-pub async fn check_provider(provider_id: String, url: String, key: String) -> HealthCheckResponse {
-    provider::health_check(&provider_id, &url, &key).await
 }
 
 /// 前端点击"连接"时调用：健康检查 + 成功则持久化

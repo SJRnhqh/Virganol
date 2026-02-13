@@ -4,8 +4,8 @@ export type { ProviderStatus, ProviderModels, ProviderState } from "./store";
 export type { 
     ConnectProviderRequest, 
     ConnectProviderResponse, 
-    ProviderRecord, 
-    HealthCheckResponse 
+    HealthCheckResponse,
+    ProviderStatusPayload,
 } from "./api";
 export type { ProviderConnectionProps, ProviderModelProps } from "./base";
 export type { ProviderField, ProviderDefinition } from "./definition";
