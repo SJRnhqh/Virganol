@@ -42,14 +42,14 @@ export const connectAndSaveProvider = async (
   }
 };
 
-/** 删除一个 Provider 的持久化配置 */
-export const removeProvider = async (providerId: string): Promise<boolean> => {
+/** 重置一个 Provider 的持久化配置 */
+export const resetProvider = async (providerId: string): Promise<boolean> => {
   try {
-    const result = await invoke<boolean>("remove_provider", { providerId });
-    console.log(`[API] remove_provider ${providerId}:`, result);
+    const result = await invoke<boolean>("reset_provider", { providerId });
+    console.log(`[API] reset_provider ${providerId}:`, result);
     return result;
   } catch (error) {
-    console.error("[API] remove_provider error:", error);
+    console.error("[API] reset_provider error:", error);
     return false;
   }
 };

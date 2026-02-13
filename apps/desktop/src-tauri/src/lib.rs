@@ -41,14 +41,14 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             // 持久化
             commands::settings::trigger_providers_startup_check,
+            commands::settings::connect_and_save_provider,
+            commands::settings::reset_provider,
             // SSH 命令
             tmp::ssh::test_ssh_params,
             // PTY 命令
             tmp::terminal::init_pty,
             tmp::terminal::write_pty,
             // Provider 设置命令
-            commands::settings::remove_provider,
-            commands::settings::connect_and_save_provider,
             commands::settings::update_enabled_models,
         ])
         .build(tauri::generate_context!())

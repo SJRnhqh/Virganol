@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 
 // 内部引用
-import { connectAndSaveProvider } from "@/features/bot/api";
+import { connectAndSaveProvider, resetProvider } from "@/features/bot/api";
 import { useProviderStore } from "@/features/bot/store";
 import type { ProviderId } from "@/features/bot/types";
 
@@ -52,7 +52,10 @@ export const useProviderConnection = (providerId: ProviderId) => {
     [providerId, setAvailableModels, setProviderStatus],
   );
 
-  const handleDisconnect = useCallback(() => {
+  const handleDisconnect = useCallback(async () => {
+    // 删除后端持久化配置
+    await resetProvider(providerId);
+    // 清空前端 Store 状态
     setProviderStatus(providerId, {
       isConnected: false,
       isLoading: false,

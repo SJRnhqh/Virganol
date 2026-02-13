@@ -52,7 +52,7 @@ fn reconcile_enabled_models(
             key: record.key.clone(),
             enabled_models: new_enabled,
         };
-        save(app, provider_id, &updated);
+        save_provider(app, provider_id, &updated);
         info!(
             "[Provider] {} enabled_models reconciled: {} → {}",
             provider_id,
@@ -67,7 +67,7 @@ fn reconcile_enabled_models(
 }
 
 /// 保存单个 provider 的配置（upsert：有则覆盖，无则新增）
-pub fn save(app: &AppHandle, provider_id: &str, record: &ProviderRecord) {
+pub fn save_provider(app: &AppHandle, provider_id: &str, record: &ProviderRecord) {
     let mut providers = load_all_providers(app);
     providers.insert(provider_id.to_string(), record.clone());
 
@@ -80,7 +80,7 @@ pub fn save(app: &AppHandle, provider_id: &str, record: &ProviderRecord) {
 }
 
 /// 删除单个 provider 的配置
-pub fn remove(app: &AppHandle, provider_id: &str) -> bool {
+pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
     let mut providers = load_all_providers(app);
     let existed = providers.remove(provider_id).is_some();
 
@@ -314,13 +314,13 @@ pub async fn connect_and_save(
     let result = health_check(provider_id, &actual_url, key).await;
 
     if result.success {
-        // 健康检查通过，持久化写入（enabled_models 初始为空，用户稍后勾选）
+        // 健康检查通过，持久化写入配置
         let record = ProviderRecord {
             url: actual_url,
             key: key.to_string(),
             enabled_models: result.available_models.clone(),
         };
-        save(app, provider_id, &record);
+        save_provider(app, provider_id, &record);
         info!("[Tauri] {} saved to store", provider_id);
     }
 
