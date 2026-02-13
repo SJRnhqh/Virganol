@@ -25,6 +25,47 @@ pub fn load_all_providers(app: &AppHandle) -> std::collections::HashMap<String, 
     }
 }
 
+/// 协调 enabled_models：只保留 available_models 中仍然存在的模型
+/// 如果有模型被淘汰，自动写回配置文件并返回更新后的 ProviderRecord
+/// 如果无变化，直接返回原 record 的克隆
+fn reconcile_enabled_models(
+    app: &AppHandle,
+    provider_id: &str,
+    record: &ProviderRecord,
+    available_models: &[String],
+) -> ProviderRecord {
+    let available_set: std::collections::HashSet<&str> =
+        available_models.iter().map(|s| s.as_str()).collect();
+
+    // 交集：只保留仍然可用的 enabled 模型
+    let new_enabled: Vec<String> = record
+        .enabled_models
+        .iter()
+        .filter(|m| available_set.contains(m.as_str()))
+        .cloned()
+        .collect();
+
+    if new_enabled.len() != record.enabled_models.len() {
+        // 有模型被淘汰了，构造新 record 并写回配置
+        let updated = ProviderRecord {
+            url: record.url.clone(),
+            key: record.key.clone(),
+            enabled_models: new_enabled,
+        };
+        save(app, provider_id, &updated);
+        info!(
+            "[Provider] {} enabled_models reconciled: {} → {}",
+            provider_id,
+            record.enabled_models.len(),
+            updated.enabled_models.len()
+        );
+        updated
+    } else {
+        // 无变化，原样返回
+        record.clone()
+    }
+}
+
 /// 保存单个 provider 的配置（upsert：有则覆盖，无则新增）
 pub fn save(app: &AppHandle, provider_id: &str, record: &ProviderRecord) {
     let mut providers = load_all_providers(app);
@@ -245,9 +286,16 @@ pub async fn startup_check_providers(app: AppHandle) {
     for (id, record) in &providers {
         let result = health_check(id, &record.url, &record.key).await;
 
+        // 健康检查成功时，协调 enabled_models
+        let final_record = if result.success {
+            reconcile_enabled_models(&app, id, record, &result.available_models)
+        } else {
+            record.clone()
+        };
+
         let payload = ProviderStatusPayload {
             provider_id: id.clone(),
-            config: record.clone(),
+            config: final_record,
             health: result,
         };
 
