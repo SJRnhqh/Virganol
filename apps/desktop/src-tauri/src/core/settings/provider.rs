@@ -1,10 +1,11 @@
 // apps/desktop/src-tauri/src/core/settings/provider.rs
 
+use log::{error, info};
 use tauri::{AppHandle, Emitter};
 use tauri_plugin_store::StoreExt;
-use log::{debug, error, info};
 
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord, ProviderStatusPayload};
+use crate::core::providers::connections::health;
 
 const STORE_FILE: &str = "settings.json";
 const STORE_KEY_SPIRIT_PROVIDERS: &str = "spirit.providers";
@@ -18,9 +19,7 @@ pub fn load_all_providers(app: &AppHandle) -> std::collections::HashMap<String, 
     };
 
     match store.get(STORE_KEY_SPIRIT_PROVIDERS) {
-        Some(value) => {
-            serde_json::from_value(value.clone()).unwrap_or_default()
-        }
+        Some(value) => serde_json::from_value(value.clone()).unwrap_or_default(),
         None => std::collections::HashMap::new(),
     }
 }
@@ -87,129 +86,6 @@ fn default_url(provider_id: &str) -> Option<&'static str> {
     }
 }
 
-/// 健康检查：用 url + key 探测 provider 是否可用，返回可用模型列表
-pub async fn health_check(provider_id: &str, url: &str, key: &str) -> HealthCheckResponse {
-    match provider_id {
-        "ollama" => check_ollama(url).await,
-        "deepseek" => check_deepseek(url, key).await,
-        other => HealthCheckResponse::fail(format!("Unknown provider: {}", other)),
-    }
-}
-
-/// Ollama 健康检查：GET {url}/api/tags → 解析模型列表
-async fn check_ollama(url: &str) -> HealthCheckResponse {
-    let base = url.trim().trim_end_matches('/');
-    let endpoint = format!("{}/api/tags", base);
-    info!("[HealthCheck][Ollama] → {}", endpoint);
-
-    let resp = match reqwest::Client::new()
-        .get(&endpoint)
-        .timeout(std::time::Duration::from_secs(5))
-        .send()
-        .await
-    {
-        Ok(r) => r,
-        Err(e) => {
-            error!("[HealthCheck][Ollama] request failed: {}", e);
-            return HealthCheckResponse::fail(format!("Connection failed: {}", e));
-        }
-    };
-
-    if !resp.status().is_success() {
-        let msg = format!("HTTP {}", resp.status());
-        error!("[HealthCheck][Ollama] {}", msg);
-        return HealthCheckResponse::fail(msg);
-    }
-
-    let json: serde_json::Value = match resp.json().await {
-        Ok(v) => v,
-        Err(e) => {
-            error!("[HealthCheck][Ollama] JSON parse error: {}", e);
-            return HealthCheckResponse::fail(format!("Invalid response: {}", e));
-        }
-    };
-
-    debug!("[HealthCheck][Ollama] response: {}", json);
-
-    let models: Vec<String> = json
-        .get("models")
-        .and_then(|m| m.as_array())
-        .map(|arr| {
-            arr.iter()
-                .filter_map(|item| item.get("name").and_then(|n| n.as_str()))
-                .map(|s| s.to_string())
-                .collect()
-        })
-        .unwrap_or_default();
-
-    if models.is_empty() {
-        return HealthCheckResponse::fail("No models available");
-    }
-
-    info!("[HealthCheck][Ollama] ✅ {} models found", models.len());
-    HealthCheckResponse::ok(models)
-}
-
-/// DeepSeek 健康检查：GET {url}/v1/models + Bearer token → 解析模型列表
-async fn check_deepseek(url: &str, key: &str) -> HealthCheckResponse {
-    if key.trim().is_empty() {
-        return HealthCheckResponse::fail("Missing API key");
-    }
-
-    let base = url.trim().trim_end_matches('/');
-    let endpoint = format!("{}/v1/models", base);
-    info!("[HealthCheck][DeepSeek] → {}", endpoint);
-
-    let resp = match reqwest::Client::new()
-        .get(&endpoint)
-        .bearer_auth(key.trim())
-        .timeout(std::time::Duration::from_secs(5))
-        .send()
-        .await
-    {
-        Ok(r) => r,
-        Err(e) => {
-            error!("[HealthCheck][DeepSeek] request failed: {}", e);
-            return HealthCheckResponse::fail(format!("Connection failed: {}", e));
-        }
-    };
-
-    if !resp.status().is_success() {
-        let msg = format!("HTTP {}", resp.status());
-        error!("[HealthCheck][DeepSeek] {}", msg);
-        return HealthCheckResponse::fail(msg);
-    }
-
-    let json: serde_json::Value = match resp.json().await {
-        Ok(v) => v,
-        Err(e) => {
-            error!("[HealthCheck][DeepSeek] JSON parse error: {}", e);
-            return HealthCheckResponse::fail(format!("Invalid response: {}", e));
-        }
-    };
-
-    debug!("[HealthCheck][DeepSeek] response: {}", json);
-
-    // OpenAI-compatible: { "data": [{ "id": "model-name" }] }
-    let models: Vec<String> = json
-        .get("data")
-        .and_then(|d| d.as_array())
-        .map(|arr| {
-            arr.iter()
-                .filter_map(|item| item.get("id").and_then(|id| id.as_str()))
-                .map(|s| s.to_string())
-                .collect()
-        })
-        .unwrap_or_default();
-
-    if models.is_empty() {
-        return HealthCheckResponse::fail("No models available");
-    }
-
-    info!("[HealthCheck][DeepSeek] ✅ {} models found", models.len());
-    HealthCheckResponse::ok(models)
-}
-
 /// App 启动时自动执行：加载所有已持久化的 Provider，逐个健康检查，逐个推送给前端
 pub async fn startup_check_providers(app: AppHandle) {
     let providers = load_all_providers(&app);
@@ -222,7 +98,7 @@ pub async fn startup_check_providers(app: AppHandle) {
     info!("[Tauri] Checking {} provider(s)...", providers.len());
 
     for (id, record) in &providers {
-        let result = health_check(id, &record.url, &record.key).await;
+        let result = health::health_check(id, &record.url, &record.key).await;
 
         // 健康检查成功时，协调 enabled_models
         let final_record = if result.success {
@@ -265,7 +141,7 @@ pub async fn connect_and_save(
         url.trim().trim_end_matches('/').to_string()
     };
 
-    let result = health_check(provider_id, &actual_url, key).await;
+    let result = health::health_check(provider_id, &actual_url, key).await;
 
     if result.success {
         // 健康检查通过，持久化写入配置
@@ -300,11 +176,7 @@ pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
 
 /// 更新某个 provider 的 enabled_models
 /// 返回 true 表示更新成功，false 表示该 provider 不存在
-pub fn update_models(
-    app: &AppHandle,
-    provider_id: &str,
-    enabled_models: Vec<String>,
-) -> bool {
+pub fn update_models(app: &AppHandle, provider_id: &str, enabled_models: Vec<String>) -> bool {
     let mut providers = load_all_providers(app);
 
     match providers.get_mut(provider_id) {
