@@ -5,8 +5,7 @@ use serde::{Deserialize, Serialize};
 /// 注意：available_models 不存储，每次健康检查实时拉取
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProviderRecord {
-    pub url: String,
-    pub key: String,
+    pub url: Option<String>,
     pub enabled_models: Vec<String>,
 }
 

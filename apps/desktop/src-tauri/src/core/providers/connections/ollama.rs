@@ -1,19 +1,29 @@
+// apps/desktop/scr-tauri/src/core/providers/connections/ollama.rs
+// 外部依赖
 use log::{debug, error, info};
 
+// 内部引用
 use crate::core::models::settings::HealthCheckResponse;
 
 /// Ollama 健康检查：GET {url}/api/tags → 解析模型列表
-pub async fn check(url: &str) -> HealthCheckResponse {
+/// `key` 为可选，非空时附带 Bearer 认证头，空字符串时直接忽略
+pub async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
+    if url.trim().is_empty() {
+        return HealthCheckResponse::fail("Missing URL");
+    }
+
     let base = url.trim().trim_end_matches('/');
     let endpoint = format!("{}/api/tags", base);
     info!("[HealthCheck][Ollama] → {}", endpoint);
 
-    let resp = match reqwest::Client::new()
+    let mut request = reqwest::Client::new()
         .get(&endpoint)
-        .timeout(std::time::Duration::from_secs(5))
-        .send()
-        .await
-    {
+        .timeout(std::time::Duration::from_secs(5));
+    if !key.trim().is_empty() {
+        request = request.bearer_auth(key.trim());
+    }
+
+    let resp = match request.send().await {
         Ok(r) => r,
         Err(e) => {
             error!("[HealthCheck][Ollama] request failed: {}", e);

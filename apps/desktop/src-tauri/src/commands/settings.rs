@@ -37,4 +37,3 @@ pub async fn update_enabled_models(
 ) -> bool {
     provider::update_models(&app, &provider_id, enabled_models)
 }
-

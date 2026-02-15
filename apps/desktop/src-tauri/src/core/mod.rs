@@ -4,6 +4,7 @@ pub mod manager;
 pub mod models;
 pub mod providers;
 pub mod rpc;
+pub mod security;
 pub mod settings;
 
 use tauri::AppHandle;

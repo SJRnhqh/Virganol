@@ -1,16 +1,21 @@
+// apps/desktop/src-tauri/src/core/providers/connections/deepseek.rs
+// 外部依赖
 use log::{debug, error, info};
 
+// 内部引用
 use crate::core::models::settings::HealthCheckResponse;
 
-/// DeepSeek 健康检查：GET {url}/v1/models + Bearer token → 解析模型列表
-pub async fn check(url: &str, key: &str) -> HealthCheckResponse {
+const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
+
+/// DeepSeek 健康检查：GET {base_url}/v1/models + Bearer token → 解析模型列表
+pub async fn deepseek_check(key: &str) -> HealthCheckResponse {
     if key.trim().is_empty() {
         return HealthCheckResponse::fail("Missing API key");
     }
 
-    let base = url.trim().trim_end_matches('/');
+    let base = DEEPSEEK_BASE_URL.trim_end_matches('/');
     let endpoint = format!("{}/v1/models", base);
-    info!("[HealthCheck][DeepSeek] → {}", endpoint);
+    info!("[Tauri][DeepSeek] → {}", endpoint);
 
     let resp = match reqwest::Client::new()
         .get(&endpoint)
@@ -21,26 +26,26 @@ pub async fn check(url: &str, key: &str) -> HealthCheckResponse {
     {
         Ok(r) => r,
         Err(e) => {
-            error!("[HealthCheck][DeepSeek] request failed: {}", e);
+            error!("[Tauri][DeepSeek] request failed: {}", e);
             return HealthCheckResponse::fail(format!("Connection failed: {}", e));
         }
     };
 
     if !resp.status().is_success() {
         let msg = format!("HTTP {}", resp.status());
-        error!("[HealthCheck][DeepSeek] {}", msg);
+        error!("[Tauri][DeepSeek] {}", msg);
         return HealthCheckResponse::fail(msg);
     }
 
     let json: serde_json::Value = match resp.json().await {
         Ok(v) => v,
         Err(e) => {
-            error!("[HealthCheck][DeepSeek] JSON parse error: {}", e);
+            error!("[Tauri][DeepSeek] JSON parse error: {}", e);
             return HealthCheckResponse::fail(format!("Invalid response: {}", e));
         }
     };
 
-    debug!("[HealthCheck][DeepSeek] response: {}", json);
+    debug!("[Tauri][DeepSeek] response: {}", json);
 
     // OpenAI-compatible: { "data": [{ "id": "model-name" }] }
     let models: Vec<String> = json
@@ -58,6 +63,6 @@ pub async fn check(url: &str, key: &str) -> HealthCheckResponse {
         return HealthCheckResponse::fail("No models available");
     }
 
-    info!("[HealthCheck][DeepSeek] ✅ {} models found", models.len());
+    info!("[Tauri][DeepSeek] ✅ {} models found", models.len());
     HealthCheckResponse::ok(models)
 }

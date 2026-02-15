@@ -39,7 +39,7 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            // 持久化
+            // Settings持久化设置的命令
             commands::settings::trigger_providers_startup_check,
             commands::settings::connect_and_save_provider,
             commands::settings::reset_provider,

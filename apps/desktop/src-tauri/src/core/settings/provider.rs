@@ -4,6 +4,7 @@ use log::{error, info};
 use tauri::{AppHandle, Emitter};
 use tauri_plugin_store::StoreExt;
 
+use super::secrets;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord, ProviderStatusPayload};
 use crate::core::providers::connections::health;
 
@@ -46,11 +47,9 @@ fn reconcile_enabled_models(
 
     if new_enabled.len() != record.enabled_models.len() {
         // 有模型被淘汰了，构造新 record 并写回配置
-        let updated = ProviderRecord {
-            url: record.url.clone(),
-            key: record.key.clone(),
-            enabled_models: new_enabled,
-        };
+        let mut updated = record.clone();
+        updated.enabled_models = new_enabled;
+
         save_provider(app, provider_id, &updated);
         info!(
             "[Provider] {} enabled_models reconciled: {} → {}",
@@ -86,6 +85,13 @@ fn default_url(provider_id: &str) -> Option<&'static str> {
     }
 }
 
+/// 启动检查场景：从 keyring 读取密钥并执行健康检查
+async fn health_check_with_stored_key(provider_id: &str, url: &str) -> HealthCheckResponse {
+    let api_key = secrets::load_provider_key(provider_id);
+    let key = api_key.as_ref().map(|key| key.as_str()).unwrap_or("");
+    health::health_check(provider_id, url, key).await
+}
+
 /// App 启动时自动执行：加载所有已持久化的 Provider，逐个健康检查，逐个推送给前端
 pub async fn startup_check_providers(app: AppHandle) {
     let providers = load_all_providers(&app);
@@ -98,7 +104,8 @@ pub async fn startup_check_providers(app: AppHandle) {
     info!("[Tauri] Checking {} provider(s)...", providers.len());
 
     for (id, record) in &providers {
-        let result = health::health_check(id, &record.url, &record.key).await;
+        let url = record.url.as_deref().unwrap_or("");
+        let result = health_check_with_stored_key(id, url).await;
 
         // 健康检查成功时，协调 enabled_models
         let final_record = if result.success {
@@ -147,7 +154,6 @@ pub async fn connect_and_save(
         // 健康检查通过，持久化写入配置
         let record = ProviderRecord {
             url: actual_url,
-            key: key.to_string(),
             enabled_models: result.available_models.clone(),
         };
         save_provider(app, provider_id, &record);
