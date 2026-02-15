@@ -37,7 +37,6 @@ export const useProviderStartup = () => {
 
         const frontendConfig: Record<string, string> = {};
         if (config.url) frontendConfig.apiURL = config.url;
-        if (config.key !== undefined) frontendConfig.apiKey = config.key;
         setProviderConfig(id, frontendConfig);
 
         setProviderStatus(id, {

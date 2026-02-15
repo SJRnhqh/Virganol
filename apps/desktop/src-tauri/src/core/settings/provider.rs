@@ -52,7 +52,7 @@ fn reconcile_enabled_models(
 
         save_provider(app, provider_id, &updated);
         info!(
-            "[Provider] {} enabled_models reconciled: {} → {}",
+            "[Tauri] {} enabled_models reconciled: {} → {}",
             provider_id,
             record.enabled_models.len(),
             updated.enabled_models.len()
@@ -77,17 +77,10 @@ pub fn save_provider(app: &AppHandle, provider_id: &str, record: &ProviderRecord
     }
 }
 
-/// Provider 默认 URL（当前端未提供 url 时使用）
-fn default_url(provider_id: &str) -> Option<&'static str> {
-    match provider_id {
-        "deepseek" => Some("https://api.deepseek.com"),
-        _ => None,
-    }
-}
-
-/// 启动检查场景：从 keyring 读取密钥并执行健康检查
+/// 启动检查场景：优先从环境变量读取密钥，缺失时回退到 keyring
 async fn health_check_with_stored_key(provider_id: &str, url: &str) -> HealthCheckResponse {
-    let api_key = secrets::load_provider_key(provider_id);
+    let api_key = secrets::load_provider_key_from_env(provider_id)
+        .or_else(|| secrets::load_provider_key(provider_id));
     let key = api_key.as_ref().map(|key| key.as_str()).unwrap_or("");
     health::health_check(provider_id, url, key).await
 }
@@ -138,23 +131,56 @@ pub async fn connect_and_save(
     url: &str,
     key: &str,
 ) -> HealthCheckResponse {
-    // URL 兜底：前端未传时使用默认值
-    let actual_url = if url.trim().is_empty() {
-        match default_url(provider_id) {
-            Some(default) => default.to_string(),
-            None => return HealthCheckResponse::fail("Missing URL"),
-        }
+    let normalized_key = key.trim();
+    let fallback_key = if normalized_key.is_empty() {
+        secrets::load_provider_key_from_env(provider_id)
+            .or_else(|| secrets::load_provider_key(provider_id))
     } else {
-        url.trim().trim_end_matches('/').to_string()
+        None
     };
-
-    let result = health::health_check(provider_id, &actual_url, key).await;
+    let key_for_check = fallback_key
+        .as_ref()
+        .map(|resolved| resolved.as_str())
+        .unwrap_or(normalized_key);
+    let result = health::health_check(provider_id, url, key_for_check).await;
 
     if result.success {
+        if !normalized_key.is_empty() {
+            if let Err(error_msg) = secrets::save_provider_key(provider_id, key_for_check) {
+                error!("[Tauri] {} key persist failed: {}", provider_id, error_msg);
+                return HealthCheckResponse::fail("Failed to persist provider key");
+            }
+        } else {
+            info!(
+                "[Tauri] {} skip key persist: using env or existing key",
+                provider_id
+            );
+        }
+
+        let mut providers = load_all_providers(app);
+        let previous_record = providers.remove(provider_id);
+        let next_enabled_models = match previous_record {
+            Some(record) => {
+                let available_set: std::collections::HashSet<&str> =
+                    result.available_models.iter().map(|s| s.as_str()).collect();
+                record
+                    .enabled_models
+                    .into_iter()
+                    .filter(|model| available_set.contains(model.as_str()))
+                    .collect()
+            }
+            None => result.available_models.clone(),
+        };
+
         // 健康检查通过，持久化写入配置
+        let trimmed_url = url.trim();
         let record = ProviderRecord {
-            url: actual_url,
-            enabled_models: result.available_models.clone(),
+            url: if trimmed_url.is_empty() {
+                None
+            } else {
+                Some(trimmed_url.to_string())
+            },
+            enabled_models: next_enabled_models,
         };
         save_provider(app, provider_id, &record);
         info!("[Tauri] {} saved to store", provider_id);
@@ -167,6 +193,13 @@ pub async fn connect_and_save(
 pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
     let mut providers = load_all_providers(app);
     let existed = providers.remove(provider_id).is_some();
+    let key_removed = match secrets::remove_provider_key(provider_id) {
+        Ok(()) => true,
+        Err(error_msg) => {
+            error!("[Tauri] {} key remove failed: {}", provider_id, error_msg);
+            false
+        }
+    };
 
     if existed {
         if let Ok(store) = app.store(STORE_FILE) {
@@ -177,7 +210,7 @@ pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
         }
     }
 
-    existed
+    existed && key_removed
 }
 
 /// 更新某个 provider 的 enabled_models
@@ -195,11 +228,11 @@ pub fn update_models(app: &AppHandle, provider_id: &str, enabled_models: Vec<Str
                     serde_json::to_value(&providers).unwrap_or_default(),
                 );
             }
-            info!("[Provider] {} enabled_models updated", provider_id);
+            info!("[Tauri] {} enabled_models updated", provider_id);
             true
         }
         None => {
-            error!("[Provider] {} not found, cannot update models", provider_id);
+            error!("[Tauri] {} not found, cannot update models", provider_id);
             false
         }
     }

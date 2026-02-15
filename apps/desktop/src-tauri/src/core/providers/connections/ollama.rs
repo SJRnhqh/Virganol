@@ -14,7 +14,7 @@ pub async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
 
     let base = url.trim().trim_end_matches('/');
     let endpoint = format!("{}/api/tags", base);
-    info!("[HealthCheck][Ollama] → {}", endpoint);
+    info!("[Tauri][Ollama] → {}", endpoint);
 
     let mut request = reqwest::Client::new()
         .get(&endpoint)
@@ -26,26 +26,26 @@ pub async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
     let resp = match request.send().await {
         Ok(r) => r,
         Err(e) => {
-            error!("[HealthCheck][Ollama] request failed: {}", e);
+            error!("[Tauri][Ollama] request failed: {}", e);
             return HealthCheckResponse::fail(format!("Connection failed: {}", e));
         }
     };
 
     if !resp.status().is_success() {
         let msg = format!("HTTP {}", resp.status());
-        error!("[HealthCheck][Ollama] {}", msg);
+        error!("[Tauri][Ollama] {}", msg);
         return HealthCheckResponse::fail(msg);
     }
 
     let json: serde_json::Value = match resp.json().await {
         Ok(v) => v,
         Err(e) => {
-            error!("[HealthCheck][Ollama] JSON parse error: {}", e);
+            error!("[Tauri][Ollama] JSON parse error: {}", e);
             return HealthCheckResponse::fail(format!("Invalid response: {}", e));
         }
     };
 
-    debug!("[HealthCheck][Ollama] response: {}", json);
+    debug!("[Tauri][Ollama] response: {}", json);
 
     let models: Vec<String> = json
         .get("models")
@@ -62,6 +62,6 @@ pub async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
         return HealthCheckResponse::fail("No models available");
     }
 
-    info!("[HealthCheck][Ollama] ✅ {} models found", models.len());
+    info!("[Tauri][Ollama] ✅ {} models found", models.len());
     HealthCheckResponse::ok(models)
 }

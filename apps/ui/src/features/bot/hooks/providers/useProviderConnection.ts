@@ -30,7 +30,11 @@ export const useProviderConnection = (providerId: ProviderId) => {
       const url = nextConfig.apiURL ?? "";
       const key = nextConfig.apiKey ?? "";
 
-      const response = await connectAndSaveProvider(providerId, url, key);
+      const response = await connectAndSaveProvider({
+        providerId,
+        key,
+        ...(url.trim().length > 0 ? { url } : {}),
+      });
 
       if (response.success) {
         setAvailableModels(providerId, response.available_models);
@@ -55,6 +59,7 @@ export const useProviderConnection = (providerId: ProviderId) => {
   const handleDisconnect = useCallback(async () => {
     // 删除后端持久化配置
     await resetProvider(providerId);
+    setAvailableModels(providerId, []);
     // 清空前端 Store 状态
     setProviderStatus(providerId, {
       isConnected: false,
@@ -62,7 +67,7 @@ export const useProviderConnection = (providerId: ProviderId) => {
       isError: false,
       errorMessage: undefined,
     });
-  }, [providerId, setProviderStatus]);
+  }, [providerId, setAvailableModels, setProviderStatus]);
 
   return {
     onConnect: handleConnect,

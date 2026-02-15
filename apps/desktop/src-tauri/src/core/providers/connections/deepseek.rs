@@ -10,7 +10,7 @@ const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
 /// DeepSeek 健康检查：GET {base_url}/v1/models + Bearer token → 解析模型列表
 pub async fn deepseek_check(key: &str) -> HealthCheckResponse {
     if key.trim().is_empty() {
-        return HealthCheckResponse::fail("Missing API key");
+        return HealthCheckResponse::fail("Missing API key (input or DEEPSEEK_API_KEY)");
     }
 
     let base = DEEPSEEK_BASE_URL.trim_end_matches('/');

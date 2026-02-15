@@ -1,6 +1,10 @@
 // apps/ui/src/features/bot/api/providers.ts
 import { invoke } from "@tauri-apps/api/core";
-import type { HealthCheckResponse, ProviderId } from "@/features/bot/types";
+import type {
+  ConnectAndSaveProviderPayload,
+  HealthCheckResponse,
+  ProviderId,
+} from "@/features/bot/types";
 
 /** 触发后端检查所有已持久化的 Provider（配合 listen 使用） */
 export const triggerProvidersStartupCheck = async (): Promise<void> => {
@@ -13,19 +17,21 @@ export const triggerProvidersStartupCheck = async (): Promise<void> => {
 };
 
 /** 接入新 Provider：健康检查 + 成功则持久化 */
-export const connectAndSaveProvider = async (
-  providerId: ProviderId,
-  url: string = "",
-  key: string = "",
-): Promise<HealthCheckResponse> => {
+export const connectAndSaveProvider = async ({
+  providerId,
+  key,
+  url,
+}: ConnectAndSaveProviderPayload): Promise<HealthCheckResponse> => {
   const startTime = performance.now();
   try {
     const response = await invoke<HealthCheckResponse>(
       "connect_and_save_provider",
       {
-        providerId,
-        url,
-        key,
+        payload: {
+          providerId,
+          key,
+          ...(url !== undefined ? { url } : {}),
+        },
       },
     );
     const ms = (performance.now() - startTime).toFixed(2);

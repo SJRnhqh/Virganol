@@ -1,9 +1,17 @@
 // apps/ui/src/features/bot/types/providers/api.ts
 
+import type { ProviderId } from "./config";
+
+/** 对应 Rust ConnectAndSaveProviderRequest */
+export interface ConnectAndSaveProviderPayload {
+  providerId: ProviderId;
+  key: string;
+  url?: string;
+}
+
 /** 对应 Rust ProviderRecord */
 export interface ProviderRecord {
-  url: string;
-  key: string;
+  url?: string;
   enabled_models: string[];
 }
 

@@ -58,3 +58,75 @@ pub fn load_provider_key(provider_id: &str) -> Option<ProviderKey> {
         }
     }
 }
+
+/// 从环境变量读取 provider 的 API Key（开发/CI 兜底）。
+///
+/// 当前支持：
+/// - deepseek: `DEEPSEEK_API_KEY`
+pub fn load_provider_key_from_env(provider_id: &str) -> Option<ProviderKey> {
+    let env_names: &[&str] = match provider_id {
+        "deepseek" => &["DEEPSEEK_API_KEY"],
+        _ => return None,
+    };
+
+    for env_name in env_names {
+        if let Ok(mut value) = std::env::var(env_name) {
+            let normalized = value.trim();
+            if normalized.is_empty() {
+                value.zeroize();
+                continue;
+            }
+
+            log::info!("[Tauri] load key from env: {}", env_name);
+            let requires_trim_copy = normalized.len() != value.len();
+            if requires_trim_copy {
+                let normalized_owned = normalized.to_string();
+                value.zeroize();
+                return Some(ProviderKey::new(normalized_owned));
+            }
+            return Some(ProviderKey::new(value));
+        }
+    }
+
+    None
+}
+
+/// 将 provider 的 API Key 写入系统密钥库。
+///
+/// - `provider_id` 不能为空
+/// - `key` 允许空字符串：空时等价于删除条目
+pub fn save_provider_key(provider_id: &str, key: &str) -> Result<(), String> {
+    let normalized_key = key.trim();
+    if normalized_key.is_empty() {
+        return remove_provider_key(provider_id);
+    }
+
+    let account = provider_id.trim();
+    if account.is_empty() {
+        return Err("provider_id is empty".to_string());
+    }
+
+    let entry = Entry::new(KEYRING_SERVICE, account)
+        .map_err(|error| format!("init keyring entry failed: {}", error))?;
+    entry
+        .set_password(normalized_key)
+        .map_err(|error| format!("save key failed for {}: {}", account, error))
+}
+
+/// 从系统密钥库删除 provider 的 API Key。
+///
+/// - 条目不存在（`NoEntry`）视为成功（幂等）
+pub fn remove_provider_key(provider_id: &str) -> Result<(), String> {
+    let account = provider_id.trim();
+    if account.is_empty() {
+        return Err("provider_id is empty".to_string());
+    }
+
+    let entry = Entry::new(KEYRING_SERVICE, account)
+        .map_err(|error| format!("init keyring entry failed: {}", error))?;
+
+    match entry.delete_credential() {
+        Ok(()) | Err(KeyringError::NoEntry) => Ok(()),
+        Err(error) => Err(format!("remove key failed for {}: {}", account, error)),
+    }
+}

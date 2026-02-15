@@ -2,7 +2,7 @@
 
 use tauri::AppHandle;
 
-use crate::core::models::settings::HealthCheckResponse;
+use crate::core::models::settings::{ConnectAndSaveProviderRequest, HealthCheckResponse};
 use crate::core::settings::provider;
 
 /// 前端 ready 后调用：触发后端检查所有已持久化的 Provider 并推送状态到前端
@@ -15,11 +15,10 @@ pub async fn trigger_providers_startup_check(app: AppHandle) {
 #[tauri::command]
 pub async fn connect_and_save_provider(
     app: AppHandle,
-    provider_id: String,
-    url: String,
-    key: String,
+    payload: ConnectAndSaveProviderRequest,
 ) -> HealthCheckResponse {
-    provider::connect_and_save(&app, &provider_id, &url, &key).await
+    let url = payload.url.as_deref().unwrap_or("");
+    provider::connect_and_save(&app, &payload.provider_id, url, &payload.key).await
 }
 
 /// 前端点击删除时调用：移除一个 Provider 配置
