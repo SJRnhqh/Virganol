@@ -1,10 +1,11 @@
 // apps/desktop/src-tauri/src/core/mod.rs
 
-pub mod commands;
-pub mod connections;
 pub mod manager;
 pub mod models;
+pub mod providers;
 pub mod rpc;
+pub mod security;
+pub mod settings;
 
 use tauri::AppHandle;
 use tauri::Manager;

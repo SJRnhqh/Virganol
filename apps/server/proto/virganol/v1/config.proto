@@ -5,13 +5,10 @@ package virganol.v1;
 option go_package = "virganol/v1;virganolv1";
 
 service ConfigService {
-  // 保存配置
+  // 保存配置（scoped write）
   rpc SetLLMConfig(SetLLMConfigRequest) returns (SetLLMConfigResponse);
-  // 获取配置
+  // 获取配置（scoped read）
   rpc GetLLMConfig(GetLLMConfigRequest) returns (GetLLMConfigResponse);
-
-  // 验证配置
-  rpc VerifyLLMConfig(VerifyLLMConfigRequest) returns (VerifyLLMConfigResponse);
 }
 
 message LLMConfig {
@@ -34,13 +31,4 @@ message GetLLMConfigRequest {}
 message GetLLMConfigResponse {
   LLMConfig config = 1;
   bool exists = 2;
-}
-
-message VerifyLLMConfigRequest {
-  LLMConfig config = 1;
-}
-
-message VerifyLLMConfigResponse {
-  bool is_valid = 1;
-  string message = 2;
 }

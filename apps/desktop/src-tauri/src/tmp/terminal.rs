@@ -35,7 +35,7 @@ pub fn init_pty(window: tauri::Window, node_id: String, state: State<'_, Termina
     // 启动命令配置
     let cmd = if cfg!(target_os = "windows") {
         let mut c = CommandBuilder::new("powershell.exe");
-        c.args(["-NoExit"]); 
+        c.args(["-NoExit"]);
         c
     } else {
         let mut c = CommandBuilder::new("bash");
@@ -44,7 +44,10 @@ pub fn init_pty(window: tauri::Window, node_id: String, state: State<'_, Termina
     };
 
     let pair = match pty_system.openpty(PtySize {
-        rows: 24, cols: 80, pixel_width: 0, pixel_height: 0,
+        rows: 24,
+        cols: 80,
+        pixel_width: 0,
+        pixel_height: 0,
     }) {
         Ok(p) => p,
         Err(e) => {
@@ -61,19 +64,26 @@ pub fn init_pty(window: tauri::Window, node_id: String, state: State<'_, Termina
         }
     };
 
-    let mut reader = pair.master.try_clone_reader().expect("Failed to clone reader");
+    let mut reader = pair
+        .master
+        .try_clone_reader()
+        .expect("Failed to clone reader");
     let writer = pair.master.take_writer().expect("Failed to take writer");
 
     // 保存 writer
-    state.sessions.lock().unwrap().insert(node_id.clone(), writer);
+    state
+        .sessions
+        .lock()
+        .unwrap()
+        .insert(node_id.clone(), writer);
 
     // 🌟 关键：我们需要把 state 的克隆传进线程，以便线程结束时能清理 session
-    let state_clone = state.inner().sessions.clone(); 
+    let state_clone = state.inner().sessions.clone();
     let node_id_clone = node_id.clone();
-    
+
     thread::spawn(move || {
         // 保持 child 活着
-        let _keep_alive = child; 
+        let _keep_alive = child;
         let _keep_slave = pair.slave;
 
         let mut buffer = [0u8; 1024];
@@ -81,7 +91,9 @@ pub fn init_pty(window: tauri::Window, node_id: String, state: State<'_, Termina
             match reader.read(&mut buffer) {
                 Ok(n) if n > 0 => {
                     let output = String::from_utf8_lossy(&buffer[0..n]).to_string();
-                    window.emit(&format!("pty-output:{}", node_id_clone), output).unwrap_or(());
+                    window
+                        .emit(&format!("pty-output:{}", node_id_clone), output)
+                        .unwrap_or(());
                 }
                 Ok(_) => {
                     println!("[PTY] EOF for {}", node_id_clone);
@@ -93,7 +105,7 @@ pub fn init_pty(window: tauri::Window, node_id: String, state: State<'_, Termina
                 }
             }
         }
-        
+
         // 🌟 修复 2: 自动清理机制
         // 当循环结束（进程退出或出错）时，从全局 Map 中移除该会话，防止内存泄漏
         println!("[PTY] Cleaning up session: {}", node_id_clone);

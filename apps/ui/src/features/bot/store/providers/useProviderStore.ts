@@ -13,7 +13,9 @@ export const useProviderStore = create<ProviderState>((set) => ({
 
   // ── Config ──────────────────────────────────
   setProviderConfig: (providerId, config) =>
-    set((state) => withSlice(state, "providerConfig", providerId, { ...config })),
+    set((state) =>
+      withSlice(state, "providerConfig", providerId, { ...config }),
+    ),
 
   // ── Status ──────────────────────────────────
   setProviderStatus: (providerId, patch) =>
