@@ -2,6 +2,7 @@
 // 外部依赖
 use log::{error, info};
 use tauri::{AppHandle, Emitter};
+use tokio::task::JoinSet;
 
 // 内部引用
 use super::store::{load_all_providers, save_provider};
@@ -10,9 +11,10 @@ use crate::core::providers::connections::health;
 use crate::core::settings::secrets;
 
 // === 默认流程：持久化配置校验与结果推送 === //
+const STARTUP_CHECK_CONCURRENCY_LIMIT: usize = 4;
 
 /// 启动检查场景：优先从环境变量读取密钥，缺失时回退到 keyring
-async fn health_check_with_stored_key(provider_id: &str, url: &str) -> HealthCheckResponse {
+async fn health_check_with_resolved_key(provider_id: &str, url: &str) -> HealthCheckResponse {
     let api_key = secrets::load_provider_key_from_env(provider_id)
         .or_else(|| secrets::load_provider_key(provider_id));
     let key = api_key.as_ref().map(|key| key.as_str()).unwrap_or("");
@@ -58,42 +60,76 @@ fn reconcile_enabled_models(
     }
 }
 
+/// 处理单个 Provider 的启动检查结果：协调配置并推送到前端
+fn handle_startup_check_result(
+    app: &AppHandle,
+    id: String,
+    record: ProviderRecord,
+    result: HealthCheckResponse,
+) {
+    // 健康检查成功时，协调 enabled_models
+    let final_record = if result.success {
+        reconcile_enabled_models(app, &id, &record, &result.available_models)
+    } else {
+        record
+    };
+
+    let online = result.success;
+
+    let payload = ProviderStatusPayload {
+        provider_id: id.clone(),
+        config: final_record,
+        health: result,
+    };
+
+    if let Err(e) = app.emit("provider-status", &payload) {
+        error!("[Tauri] ❌ Failed to emit status for {}: {}", id, e);
+    } else {
+        let icon = if online { "✅" } else { "⚠️" };
+        info!("[Tauri] {} {} → online: {}", icon, id, online);
+    }
+}
+
 /// App 启动时自动执行：加载所有已持久化的 Provider，逐个健康检查，逐个推送给前端
 pub async fn startup_check_providers(app: AppHandle) {
     let providers = load_all_providers(&app);
 
     if providers.is_empty() {
-        info!("[Tauri] No persisted providers found");
+        info!("[Tauri] 📭 No persisted providers found");
         return;
     }
 
-    info!("[Tauri] Checking {} provider(s)...", providers.len());
+    info!("[Tauri] 🔍 Checking {} provider(s)...", providers.len());
 
-    for (id, record) in &providers {
-        let url = record.url.as_deref().unwrap_or("");
-        let result = health_check_with_stored_key(id, url).await;
+    let mut pending: std::collections::VecDeque<(String, ProviderRecord)> =
+        providers.into_iter().collect();
+    let mut in_flight = JoinSet::new();
 
-        // 健康检查成功时，协调 enabled_models
-        let final_record = if result.success {
-            reconcile_enabled_models(&app, id, record, &result.available_models)
-        } else {
-            record.clone()
-        };
+    while !pending.is_empty() || !in_flight.is_empty() {
+        while in_flight.len() < STARTUP_CHECK_CONCURRENCY_LIMIT {
+            let Some((provider_id, record)) = pending.pop_front() else {
+                break;
+            };
 
-        let payload = ProviderStatusPayload {
-            provider_id: id.clone(),
-            config: final_record,
-            health: result,
-        };
+            in_flight.spawn(async move {
+                let url = record.url.as_deref().unwrap_or("").to_string();
+                let result = health_check_with_resolved_key(&provider_id, &url).await;
+                (provider_id, record, result)
+            });
+        }
 
-        if let Err(e) = app.emit("provider-status", &payload) {
-            error!("[Tauri] Failed to emit status for {}: {}", id, e);
-        } else {
-            info!("[Tauri] {} → online: {}", id, payload.health.success);
+        match in_flight.join_next().await {
+            Some(Ok((id, record, result))) => {
+                handle_startup_check_result(&app, id, record, result);
+            }
+            Some(Err(join_error)) => {
+                error!("[Tauri] ❌ Startup check task join failed: {}", join_error);
+            }
+            None => break,
         }
     }
 
-    info!("[Tauri] Provider check complete");
+    info!("[Tauri] 🏁 Provider check complete");
 }
 
 // === 交互流程：响应前端LLM供应商与模型CRUD === //
