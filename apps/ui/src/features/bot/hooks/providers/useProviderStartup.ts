@@ -51,9 +51,7 @@ export const useProviderStartup = () => {
 
           const enabledSet = new Set(config.enabled_models);
           health.available_models.forEach((model) => {
-            if (!enabledSet.has(model)) {
-              setModelEnabled(id, model, false);
-            }
+            setModelEnabled(id, model, enabledSet.has(model));
           });
         }
 
