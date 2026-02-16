@@ -28,3 +28,23 @@ pub fn save_provider(app: &AppHandle, provider_id: &str, record: &ProviderRecord
         serde_json::to_value(&providers).unwrap_or_default(),
     );
 }
+
+/// 更新某个 provider 的 enabled_models
+/// 返回 true 表示更新成功，false 表示该 provider 不存在
+pub fn update_models(app: &AppHandle, provider_id: &str, enabled_models: Vec<String>) -> bool {
+    let mut providers = load_all_providers(app);
+
+    let Some(record) = providers.get_mut(provider_id) else {
+        return false;
+    };
+
+    record.enabled_models = enabled_models;
+
+    save_settings(
+        app,
+        STORE_KEY_SPIRIT_PROVIDERS,
+        serde_json::to_value(&providers).unwrap_or_default(),
+    );
+
+    true
+}

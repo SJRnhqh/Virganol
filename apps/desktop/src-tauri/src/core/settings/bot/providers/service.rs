@@ -5,7 +5,7 @@ use tauri::{AppHandle, Emitter};
 use tokio::task::JoinSet;
 
 // 内部引用
-use super::store::{load_all_providers, save_provider};
+use super::store::{load_all_providers, save_provider, update_models};
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord, ProviderStatusPayload};
 use crate::core::providers::connections::health;
 use crate::core::settings::secrets;
@@ -209,4 +209,20 @@ pub async fn connect_and_save(
     }
 
     result
+}
+
+/// 更新某个 provider 的 enabled_models（service 层：负责业务日志）
+pub fn update_provider_enabled_models(
+    app: &AppHandle,
+    provider_id: &str,
+    enabled_models: Vec<String>,
+) -> bool {
+    // 调用 store 层执行实际写入，并在这里统一记录业务结果
+    let ok = update_models(app, provider_id, enabled_models);
+    if ok {
+        info!("[Tauri] ✅ {} enabled_models updated", provider_id);
+    } else {
+        error!("[Tauri] ❌ {} not found, cannot update models", provider_id);
+    }
+    ok
 }

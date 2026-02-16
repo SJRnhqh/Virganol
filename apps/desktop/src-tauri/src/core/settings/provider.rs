@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/settings/provider.rs
 
-use log::{error, info};
+use log::error;
 use tauri::AppHandle;
 use tauri_plugin_store::StoreExt;
 
@@ -46,29 +46,4 @@ pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
     }
 
     existed && key_removed
-}
-
-/// 更新某个 provider 的 enabled_models
-/// 返回 true 表示更新成功，false 表示该 provider 不存在
-pub fn update_models(app: &AppHandle, provider_id: &str, enabled_models: Vec<String>) -> bool {
-    let mut providers = load_all_providers(app);
-
-    match providers.get_mut(provider_id) {
-        Some(record) => {
-            record.enabled_models = enabled_models;
-            // 重新保存整个 map
-            if let Ok(store) = app.store(STORE_FILE) {
-                store.set(
-                    STORE_KEY_SPIRIT_PROVIDERS,
-                    serde_json::to_value(&providers).unwrap_or_default(),
-                );
-            }
-            info!("[Tauri] {} enabled_models updated", provider_id);
-            true
-        }
-        None => {
-            error!("[Tauri] {} not found, cannot update models", provider_id);
-            false
-        }
-    }
 }

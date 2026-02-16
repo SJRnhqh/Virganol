@@ -3,7 +3,9 @@
 use tauri::AppHandle;
 
 use crate::core::models::settings::{ConnectAndSaveProviderRequest, HealthCheckResponse};
-use crate::core::settings::bot::providers::service::{connect_and_save, startup_check_providers};
+use crate::core::settings::bot::providers::service::{
+    connect_and_save, startup_check_providers, update_provider_enabled_models,
+};
 use crate::core::settings::provider;
 
 /// 前端 ready 后调用：触发后端检查所有已持久化的 Provider 并推送状态到前端
@@ -35,5 +37,5 @@ pub async fn update_enabled_models(
     provider_id: String,
     enabled_models: Vec<String>,
 ) -> bool {
-    provider::update_models(&app, &provider_id, enabled_models)
+    update_provider_enabled_models(&app, &provider_id, enabled_models)
 }
