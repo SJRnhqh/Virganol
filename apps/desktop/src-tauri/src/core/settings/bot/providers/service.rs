@@ -9,6 +9,8 @@ use crate::core::models::settings::{HealthCheckResponse, ProviderRecord, Provide
 use crate::core::providers::connections::health;
 use crate::core::settings::secrets;
 
+// === 默认流程：持久化配置校验与结果推送 === //
+
 /// 启动检查场景：优先从环境变量读取密钥，缺失时回退到 keyring
 async fn health_check_with_stored_key(provider_id: &str, url: &str) -> HealthCheckResponse {
     let api_key = secrets::load_provider_key_from_env(provider_id)
@@ -93,3 +95,5 @@ pub async fn startup_check_providers(app: AppHandle) {
 
     info!("[Tauri] Provider check complete");
 }
+
+// === 交互流程：响应前端LLM供应商与模型CRUD === //

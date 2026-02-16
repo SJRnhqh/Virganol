@@ -3,3 +3,4 @@
 pub mod bot;
 pub mod provider;
 mod secrets;
+pub mod store;
