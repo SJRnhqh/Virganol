@@ -18,5 +18,9 @@ pub fn save_settings(app: &AppHandle, key: &str, value: serde_json::Value) -> Re
         .map_err(|error| format!("open settings store failed: {}", error))?;
 
     store.set(key, value);
+    store
+        .save()
+        .map_err(|error| format!("flush settings store failed: {}", error))?;
+
     Ok(())
 }
