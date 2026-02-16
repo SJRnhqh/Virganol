@@ -17,53 +17,57 @@ pub fn load_all_providers(app: &AppHandle) -> HashMap<String, ProviderRecord> {
 }
 
 /// 保存单个 provider 的配置（upsert：有则覆盖，无则新增）
-/// TODO(provider-persistence): 返回 `Result` 并上抛写盘错误，为 connect/save 的原子化回滚提供基础。
-pub fn save_provider(app: &AppHandle, provider_id: &str, record: &ProviderRecord) {
+/// 返回 Err 表示序列化或写盘失败。
+pub fn save_provider(
+    app: &AppHandle,
+    provider_id: &str,
+    record: &ProviderRecord,
+) -> Result<(), String> {
     let mut providers = load_all_providers(app);
     providers.insert(provider_id.to_string(), record.clone());
 
-    save_settings(
-        app,
-        STORE_KEY_SPIRIT_PROVIDERS,
-        serde_json::to_value(&providers).unwrap_or_default(),
-    );
+    let value = serde_json::to_value(&providers)
+        .map_err(|error| format!("serialize providers failed: {}", error))?;
+    save_settings(app, STORE_KEY_SPIRIT_PROVIDERS, value)
 }
 
 /// 删除某个 provider 的配置
-/// 返回 true 表示删除成功，false 表示该 provider 不存在
-pub fn remove_provider(app: &AppHandle, provider_id: &str) -> bool {
+/// - Ok(true)：删除成功
+/// - Ok(false)：该 provider 不存在
+/// - Err(...)：序列化或写盘失败
+pub fn remove_provider(app: &AppHandle, provider_id: &str) -> Result<bool, String> {
     let mut providers = load_all_providers(app);
     let existed = providers.remove(provider_id).is_some();
 
     if !existed {
-        return false;
+        return Ok(false);
     }
 
-    save_settings(
-        app,
-        STORE_KEY_SPIRIT_PROVIDERS,
-        serde_json::to_value(&providers).unwrap_or_default(),
-    );
-
-    true
+    let value = serde_json::to_value(&providers)
+        .map_err(|error| format!("serialize providers failed: {}", error))?;
+    save_settings(app, STORE_KEY_SPIRIT_PROVIDERS, value)?;
+    Ok(true)
 }
 
 /// 更新某个 provider 的 enabled_models
-/// 返回 true 表示更新成功，false 表示该 provider 不存在
-pub fn update_models(app: &AppHandle, provider_id: &str, enabled_models: Vec<String>) -> bool {
+/// - Ok(true)：更新成功
+/// - Ok(false)：该 provider 不存在
+/// - Err(...)：序列化或写盘失败
+pub fn update_models(
+    app: &AppHandle,
+    provider_id: &str,
+    enabled_models: Vec<String>,
+) -> Result<bool, String> {
     let mut providers = load_all_providers(app);
 
     let Some(record) = providers.get_mut(provider_id) else {
-        return false;
+        return Ok(false);
     };
 
     record.enabled_models = enabled_models;
 
-    save_settings(
-        app,
-        STORE_KEY_SPIRIT_PROVIDERS,
-        serde_json::to_value(&providers).unwrap_or_default(),
-    );
-
-    true
+    let value = serde_json::to_value(&providers)
+        .map_err(|error| format!("serialize providers failed: {}", error))?;
+    save_settings(app, STORE_KEY_SPIRIT_PROVIDERS, value)?;
+    Ok(true)
 }

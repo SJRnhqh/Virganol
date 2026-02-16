@@ -52,14 +52,24 @@ fn reconcile_enabled_models(
         let mut updated = record.clone();
         updated.enabled_models = new_enabled;
 
-        save_provider(app, provider_id, &updated);
-        info!(
-            "[Tauri] {} enabled_models reconciled: {} → {}",
-            provider_id,
-            record.enabled_models.len(),
-            updated.enabled_models.len()
-        );
-        updated
+        match save_provider(app, provider_id, &updated) {
+            Ok(()) => {
+                info!(
+                    "[Tauri] 🔄 {} enabled_models reconciled: {} → {}",
+                    provider_id,
+                    record.enabled_models.len(),
+                    updated.enabled_models.len()
+                );
+                updated
+            }
+            Err(error_msg) => {
+                error!(
+                    "[Tauri] ❌ {} enabled_models reconcile persist failed: {}",
+                    provider_id, error_msg
+                );
+                record.clone()
+            }
+        }
     } else {
         // 无变化，原样返回
         record.clone()
@@ -152,6 +162,13 @@ pub async fn connect_and_save(
 ) -> HealthCheckResponse {
     // 1) 先归一化前端传入的 key（去掉首尾空白）
     let normalized_key = key.trim();
+    // 若本次输入了新 key，先记录旧 key 快照，用于后续异常回滚
+    let previous_persisted_key = if normalized_key.is_empty() {
+        None
+    } else {
+        secrets::load_provider_key(provider_id)
+    };
+
     // 2) 若本次未输入 key，则尝试回退：env -> keyring
     // 前端输入 > env > keyring
     let fallback_key = if normalized_key.is_empty() {
@@ -204,7 +221,35 @@ pub async fn connect_and_save(
             },
             enabled_models: next_enabled_models,
         };
-        save_provider(app, provider_id, &record);
+        if let Err(error_msg) = save_provider(app, provider_id, &record) {
+            error!(
+                "[Tauri] ❌ {} provider config persist failed: {}",
+                provider_id, error_msg
+            );
+
+            // 仅当本次显式输入了 key 时，才需要回滚 keyring 变更
+            if !normalized_key.is_empty() {
+                let rollback_result = if let Some(previous_key) = previous_persisted_key.as_ref() {
+                    // 回滚 keyring 旧密钥
+                    secrets::save_provider_key(provider_id, previous_key.as_str())
+                } else {
+                    // 删除新添加密钥
+                    secrets::remove_provider_key(provider_id)
+                };
+
+                if let Err(rollback_error) = rollback_result {
+                    error!(
+                        "[Tauri] ❌ {} key rollback failed after config persist error: {}",
+                        provider_id, rollback_error
+                    );
+                } else {
+                    info!("[Tauri] ↩️ {} key rollback completed", provider_id);
+                }
+            }
+
+            return HealthCheckResponse::fail("Failed to persist provider config");
+        }
+
         info!("[Tauri] 💾 {} saved to store", provider_id);
     }
 
@@ -214,7 +259,17 @@ pub async fn connect_and_save(
 /// 重置 provider 的持久化配置
 pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
     // 1) 先删除普通配置（settings.json 中的 spirit.providers.{id}）
-    let config_removed = remove_provider(app, provider_id);
+    let config_removed = match remove_provider(app, provider_id) {
+        Ok(removed) => removed,
+        Err(error_msg) => {
+            error!(
+                "[Tauri] ❌ {} config remove persist failed: {}",
+                provider_id, error_msg
+            );
+            return false;
+        }
+    };
+
     if !config_removed {
         error!("[Tauri] ❌ {} not found, cannot reset config", provider_id);
     }
@@ -241,12 +296,23 @@ pub fn update_provider_enabled_models(
     provider_id: &str,
     enabled_models: Vec<String>,
 ) -> bool {
-    // 调用 store 层执行实际写入，并在这里统一记录业务结果
-    let ok = update_models(app, provider_id, enabled_models);
+    // 调用 store 层执行实际写入，并在这里统一记录业务结果与持久化错误
+    let ok = match update_models(app, provider_id, enabled_models) {
+        Ok(updated) => updated,
+        Err(error_msg) => {
+            error!(
+                "[Tauri] ❌ {} enabled_models persist failed: {}",
+                provider_id, error_msg
+            );
+            return false;
+        }
+    };
+
     if ok {
         info!("[Tauri] ✅ {} enabled_models updated", provider_id);
     } else {
         error!("[Tauri] ❌ {} not found, cannot update models", provider_id);
     }
+
     ok
 }
