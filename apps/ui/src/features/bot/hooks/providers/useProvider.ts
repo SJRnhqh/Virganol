@@ -5,26 +5,24 @@ import { useProviderStore } from "@/features/bot/store";
 import type { ProviderId } from "@/features/bot/types";
 
 import { useProviderConnection } from "./useProviderConnection";
+import { useProviderModelActions } from "./useProviderModelActions";
 
 export const useProvider = (providerId: ProviderId) => {
   // ── 读取 Store 数据 ────────────────────────
   const definition = PROVIDER_DEFINITIONS[providerId];
   const config = useProviderStore((state) => state.providerConfig[providerId]);
   const status = useProviderStore((state) => state.providerStatus[providerId]);
-  const models = useProviderStore((state) => state.providerModels[providerId]);
 
   // ── Actions ────────────────────────────────
   const setProviderConfig = useProviderStore(
     (state) => state.setProviderConfig,
   );
-  const setModelEnabled = useProviderStore((state) => state.setModelEnabled);
-  const setAllModelsEnabled = useProviderStore(
-    (state) => state.setAllModelsEnabled,
-  );
 
   // ── 连接逻辑 ──────────────────────────────
   const { onConnect, onDisconnect, onErrorReset } =
     useProviderConnection(providerId);
+
+  const models = useProviderModelActions(providerId);
 
   // ── 组装返回 ──────────────────────────────
   return {
@@ -43,13 +41,6 @@ export const useProvider = (providerId: ProviderId) => {
       onErrorReset,
     },
 
-    models: {
-      available: models.available,
-      enabled: models.enabled,
-      onToggle: (model: string, enabled: boolean) =>
-        setModelEnabled(providerId, model, enabled),
-      onToggleAll: (enabled: boolean) =>
-        setAllModelsEnabled(providerId, enabled),
-    },
+    models,
   };
 };

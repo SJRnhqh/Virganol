@@ -8,14 +8,13 @@ fn main() {
 
     // 2. 编译 Proto (加了详细日志打印)
     println!("cargo:warning=Compiling Protos...");
-    let proto_result = tonic_build::configure()
-        .compile_protos(
-            &[
-                "../../server/proto/virganol/v1/base.proto",   
-                "../../server/proto/virganol/v1/config.proto"
-            ],
-            &["../../server/proto"] 
-        );
+    let proto_result = tonic_build::configure().compile_protos(
+        &[
+            "../../server/proto/virganol/v1/base.proto",
+            "../../server/proto/virganol/v1/config.proto",
+        ],
+        &["../../server/proto"],
+    );
 
     // 如果 Proto 编译失败，打印警告但不要 panic，以免阻塞 Tauri 的构建
     if let Err(e) = proto_result {
