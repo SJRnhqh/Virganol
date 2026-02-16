@@ -21,6 +21,20 @@ async fn health_check_with_resolved_key(provider_id: &str, url: &str) -> HealthC
     health::health_check(provider_id, url, key).await
 }
 
+/// 计算 enabled_models 与 available_models 的交集
+fn compute_enabled_models(enabled_models: &[String], available_models: &[String]) -> Vec<String> {
+    let available_set: std::collections::HashSet<&str> = available_models
+        .iter()
+        .map(|model| model.as_str())
+        .collect();
+
+    enabled_models
+        .iter()
+        .filter(|model| available_set.contains(model.as_str()))
+        .cloned()
+        .collect()
+}
+
 /// 协调 enabled_models：只保留 available_models 中仍然存在的模型
 /// 如果有模型被淘汰，自动写回配置文件并返回更新后的 ProviderRecord
 /// 如果无变化，直接返回原 record 的克隆
@@ -30,16 +44,8 @@ fn reconcile_enabled_models(
     record: &ProviderRecord,
     available_models: &[String],
 ) -> ProviderRecord {
-    let available_set: std::collections::HashSet<&str> =
-        available_models.iter().map(|s| s.as_str()).collect();
-
     // 交集：只保留仍然可用的 enabled 模型
-    let new_enabled: Vec<String> = record
-        .enabled_models
-        .iter()
-        .filter(|m| available_set.contains(m.as_str()))
-        .cloned()
-        .collect();
+    let new_enabled = compute_enabled_models(&record.enabled_models, available_models);
 
     if new_enabled.len() != record.enabled_models.len() {
         // 有模型被淘汰了，构造新 record 并写回配置
@@ -105,7 +111,9 @@ pub async fn startup_check_providers(app: AppHandle) {
         providers.into_iter().collect();
     let mut in_flight = JoinSet::new();
 
+    // 并发调度循环：队列未清空或仍有在途任务时持续推进
     while !pending.is_empty() || !in_flight.is_empty() {
+        // 1) 尽可能把任务补满到并发上限
         while in_flight.len() < STARTUP_CHECK_CONCURRENCY_LIMIT {
             let Some((provider_id, record)) = pending.pop_front() else {
                 break;
@@ -118,6 +126,7 @@ pub async fn startup_check_providers(app: AppHandle) {
             });
         }
 
+        // 2) 消费一个已完成任务（完成即处理，增量推送）
         match in_flight.join_next().await {
             Some(Ok((id, record, result))) => {
                 handle_startup_check_result(&app, id, record, result);
@@ -133,3 +142,71 @@ pub async fn startup_check_providers(app: AppHandle) {
 }
 
 // === 交互流程：响应前端LLM供应商与模型CRUD === //
+/// 接入并持久化：health_check 成功后自动保存配置
+/// 返回 HealthCheckResponse（前端根据 success 判断是否接入成功）
+pub async fn connect_and_save(
+    app: &AppHandle,
+    provider_id: &str,
+    url: &str,
+    key: &str,
+) -> HealthCheckResponse {
+    // 1) 先归一化前端传入的 key（去掉首尾空白）
+    let normalized_key = key.trim();
+    // 2) 若本次未输入 key，则尝试回退：env -> keyring
+    // 前端输入 > env > keyring
+    let fallback_key = if normalized_key.is_empty() {
+        secrets::load_provider_key_from_env(provider_id)
+            .or_else(|| secrets::load_provider_key(provider_id))
+    } else {
+        None
+    };
+    // 3) 最终用于健康检查的 key：优先 fallback，其次当前输入（可能为空）
+    let key_for_check = fallback_key
+        .as_ref()
+        .map(|resolved| resolved.as_str())
+        .unwrap_or(normalized_key);
+    // 4) 用解析后的 key 执行健康检查
+    let result = health::health_check(provider_id, url, key_for_check).await;
+
+    if result.success {
+        if !normalized_key.is_empty() {
+            if let Err(error_msg) = secrets::save_provider_key(provider_id, key_for_check) {
+                error!(
+                    "[Tauri] ❌ {} key persist failed: {}",
+                    provider_id, error_msg
+                );
+                return HealthCheckResponse::fail("Failed to persist provider key");
+            }
+        } else {
+            info!(
+                "[Tauri] ⏭️ {} skip key persist: using env or existing key",
+                provider_id
+            );
+        }
+
+        // 复用历史启用状态，并与本次可用模型做交集对齐
+        let mut providers = load_all_providers(app);
+        let previous_record = providers.remove(provider_id);
+        let next_enabled_models = match previous_record {
+            Some(record) => {
+                compute_enabled_models(&record.enabled_models, &result.available_models)
+            }
+            None => result.available_models.clone(),
+        };
+
+        // 健康检查通过，持久化写入配置
+        let trimmed_url = url.trim();
+        let record = ProviderRecord {
+            url: if trimmed_url.is_empty() {
+                None
+            } else {
+                Some(trimmed_url.to_string())
+            },
+            enabled_models: next_enabled_models,
+        };
+        save_provider(app, provider_id, &record);
+        info!("[Tauri] 💾 {} saved to store", provider_id);
+    }
+
+    result
+}
