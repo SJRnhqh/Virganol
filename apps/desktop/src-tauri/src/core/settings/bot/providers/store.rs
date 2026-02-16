@@ -29,6 +29,25 @@ pub fn save_provider(app: &AppHandle, provider_id: &str, record: &ProviderRecord
     );
 }
 
+/// 删除某个 provider 的配置
+/// 返回 true 表示删除成功，false 表示该 provider 不存在
+pub fn remove_provider(app: &AppHandle, provider_id: &str) -> bool {
+    let mut providers = load_all_providers(app);
+    let existed = providers.remove(provider_id).is_some();
+
+    if !existed {
+        return false;
+    }
+
+    save_settings(
+        app,
+        STORE_KEY_SPIRIT_PROVIDERS,
+        serde_json::to_value(&providers).unwrap_or_default(),
+    );
+
+    true
+}
+
 /// 更新某个 provider 的 enabled_models
 /// 返回 true 表示更新成功，false 表示该 provider 不存在
 pub fn update_models(app: &AppHandle, provider_id: &str, enabled_models: Vec<String>) -> bool {

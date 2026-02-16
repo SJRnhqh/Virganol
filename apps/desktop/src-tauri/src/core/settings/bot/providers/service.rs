@@ -5,7 +5,7 @@ use tauri::{AppHandle, Emitter};
 use tokio::task::JoinSet;
 
 // 内部引用
-use super::store::{load_all_providers, save_provider, update_models};
+use super::store::{load_all_providers, remove_provider, save_provider, update_models};
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord, ProviderStatusPayload};
 use crate::core::providers::connections::health;
 use crate::core::settings::secrets;
@@ -209,6 +209,30 @@ pub async fn connect_and_save(
     }
 
     result
+}
+
+/// 重置 provider 的持久化配置
+pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
+    // 1) 先删除普通配置（settings.json 中的 spirit.providers.{id}）
+    let config_removed = remove_provider(app, provider_id);
+    if !config_removed {
+        error!("[Tauri] ❌ {} not found, cannot reset config", provider_id);
+    }
+
+    // 2) 再删除系统密钥库中的 key（幂等：不存在也应算成功）
+    let key_removed = match secrets::remove_provider_key(provider_id) {
+        Ok(()) => true,
+        Err(error_msg) => {
+            error!(
+                "[Tauri] ❌ {} key remove failed: {}",
+                provider_id, error_msg
+            );
+            false
+        }
+    };
+
+    // 3) 两者都成功才返回 true
+    config_removed && key_removed
 }
 
 /// 更新某个 provider 的 enabled_models（service 层：负责业务日志）

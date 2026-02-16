@@ -4,9 +4,9 @@ use tauri::AppHandle;
 
 use crate::core::models::settings::{ConnectAndSaveProviderRequest, HealthCheckResponse};
 use crate::core::settings::bot::providers::service::{
-    connect_and_save, startup_check_providers, update_provider_enabled_models,
+    connect_and_save, reset_provider_config, startup_check_providers,
+    update_provider_enabled_models,
 };
-use crate::core::settings::provider;
 
 /// 前端 ready 后调用：触发后端检查所有已持久化的 Provider 并推送状态到前端
 #[tauri::command]
@@ -27,7 +27,7 @@ pub async fn connect_and_save_provider(
 /// 前端点击删除时调用：移除一个 Provider 配置
 #[tauri::command]
 pub async fn reset_provider(app: AppHandle, provider_id: String) -> bool {
-    provider::reset_provider_config(&app, &provider_id)
+    reset_provider_config(&app, &provider_id)
 }
 
 /// 前端勾选模型后调用：更新 enabled_models
