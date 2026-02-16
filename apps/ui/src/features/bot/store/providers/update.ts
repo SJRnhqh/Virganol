@@ -13,4 +13,3 @@ export const withSlice = <T extends ProviderSlice>(
   ({
     [slice]: { ...state[slice], [providerId]: value },
   }) as Pick<ProviderState, T>;
-

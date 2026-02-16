@@ -18,4 +18,3 @@ export interface ProviderModelProps {
   onToggle?: (model: string, enabled: boolean) => void;
   onToggleAll?: (enabled: boolean) => void;
 }
-

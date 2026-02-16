@@ -24,6 +24,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_store::Builder::new().build()) // 持久化存储
         // 注册 terminal 状态
         .manage(tmp::terminal::TerminalState::default())
         // 注册 sidecar manager 状态
@@ -38,17 +39,16 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            // Settings持久化设置的命令
+            commands::settings::trigger_providers_startup_check,
+            commands::settings::connect_and_save_provider,
+            commands::settings::reset_provider,
+            commands::settings::update_enabled_models,
             // SSH 命令
             tmp::ssh::test_ssh_params,
             // PTY 命令
             tmp::terminal::init_pty,
             tmp::terminal::write_pty,
-            // LLM 配置命令
-            core::commands::verify_llm_config,
-            core::commands::set_llm_config,
-            core::commands::get_llm_config,
-            // Provider 连接命令
-            commands::connection::connect_provider,
         ])
         .build(tauri::generate_context!())
         .expect("Error while building tauri application")

@@ -1,8 +1,6 @@
 // apps/ui/src/features/bot/types/index.ts
 // 导出内容
 export type {
-  ConnectProviderRequest,
-  ConnectProviderResponse,
   ProviderId,
   ProviderField,
   ProviderDefinition,
@@ -12,4 +10,7 @@ export type {
   ProviderState,
   ProviderConnectionProps,
   ProviderModelProps,
+  HealthCheckResponse,
+  ProviderStatusPayload,
+  ConnectAndSaveProviderPayload,
 } from "./providers";

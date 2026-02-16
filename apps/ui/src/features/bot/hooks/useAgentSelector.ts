@@ -13,7 +13,10 @@ export function useAgentSelector({ onSelect }: UseAgentSelectorProps) {
   // 🖱️ 点击外部自动关闭逻辑
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
@@ -35,7 +38,7 @@ export function useAgentSelector({ onSelect }: UseAgentSelectorProps) {
       onSelect(id);
       setIsOpen(false);
     },
-    [onSelect]
+    [onSelect],
   );
 
   return {

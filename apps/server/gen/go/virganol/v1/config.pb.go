@@ -265,102 +265,6 @@ func (x *GetLLMConfigResponse) GetExists() bool {
 	return false
 }
 
-type VerifyLLMConfigRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Config        *LLMConfig             `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *VerifyLLMConfigRequest) Reset() {
-	*x = VerifyLLMConfigRequest{}
-	mi := &file_virganol_v1_config_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *VerifyLLMConfigRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*VerifyLLMConfigRequest) ProtoMessage() {}
-
-func (x *VerifyLLMConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_virganol_v1_config_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use VerifyLLMConfigRequest.ProtoReflect.Descriptor instead.
-func (*VerifyLLMConfigRequest) Descriptor() ([]byte, []int) {
-	return file_virganol_v1_config_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *VerifyLLMConfigRequest) GetConfig() *LLMConfig {
-	if x != nil {
-		return x.Config
-	}
-	return nil
-}
-
-type VerifyLLMConfigResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	IsValid       bool                   `protobuf:"varint,1,opt,name=is_valid,json=isValid,proto3" json:"is_valid,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *VerifyLLMConfigResponse) Reset() {
-	*x = VerifyLLMConfigResponse{}
-	mi := &file_virganol_v1_config_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *VerifyLLMConfigResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*VerifyLLMConfigResponse) ProtoMessage() {}
-
-func (x *VerifyLLMConfigResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_virganol_v1_config_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use VerifyLLMConfigResponse.ProtoReflect.Descriptor instead.
-func (*VerifyLLMConfigResponse) Descriptor() ([]byte, []int) {
-	return file_virganol_v1_config_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *VerifyLLMConfigResponse) GetIsValid() bool {
-	if x != nil {
-		return x.IsValid
-	}
-	return false
-}
-
-func (x *VerifyLLMConfigResponse) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
-}
-
 var File_virganol_v1_config_proto protoreflect.FileDescriptor
 
 const file_virganol_v1_config_proto_rawDesc = "" +
@@ -378,16 +282,10 @@ const file_virganol_v1_config_proto_rawDesc = "" +
 	"\x13GetLLMConfigRequest\"^\n" +
 	"\x14GetLLMConfigResponse\x12.\n" +
 	"\x06config\x18\x01 \x01(\v2\x16.virganol.v1.LLMConfigR\x06config\x12\x16\n" +
-	"\x06exists\x18\x02 \x01(\bR\x06exists\"H\n" +
-	"\x16VerifyLLMConfigRequest\x12.\n" +
-	"\x06config\x18\x01 \x01(\v2\x16.virganol.v1.LLMConfigR\x06config\"N\n" +
-	"\x17VerifyLLMConfigResponse\x12\x19\n" +
-	"\bis_valid\x18\x01 \x01(\bR\aisValid\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage2\x97\x02\n" +
+	"\x06exists\x18\x02 \x01(\bR\x06exists2\xb9\x01\n" +
 	"\rConfigService\x12S\n" +
 	"\fSetLLMConfig\x12 .virganol.v1.SetLLMConfigRequest\x1a!.virganol.v1.SetLLMConfigResponse\x12S\n" +
-	"\fGetLLMConfig\x12 .virganol.v1.GetLLMConfigRequest\x1a!.virganol.v1.GetLLMConfigResponse\x12\\\n" +
-	"\x0fVerifyLLMConfig\x12#.virganol.v1.VerifyLLMConfigRequest\x1a$.virganol.v1.VerifyLLMConfigResponseB\x9a\x01\n" +
+	"\fGetLLMConfig\x12 .virganol.v1.GetLLMConfigRequest\x1a!.virganol.v1.GetLLMConfigResponseB\x9a\x01\n" +
 	"\x0fcom.virganol.v1B\vConfigProtoP\x01Z-virganol/server/gen/go/virganol/v1;virganolv1\xa2\x02\x03VXX\xaa\x02\vVirganol.V1\xca\x02\vVirganol\\V1\xe2\x02\x17Virganol\\V1\\GPBMetadata\xea\x02\fVirganol::V1b\x06proto3"
 
 var (
@@ -402,31 +300,26 @@ func file_virganol_v1_config_proto_rawDescGZIP() []byte {
 	return file_virganol_v1_config_proto_rawDescData
 }
 
-var file_virganol_v1_config_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_virganol_v1_config_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_virganol_v1_config_proto_goTypes = []any{
-	(*LLMConfig)(nil),               // 0: virganol.v1.LLMConfig
-	(*SetLLMConfigRequest)(nil),     // 1: virganol.v1.SetLLMConfigRequest
-	(*SetLLMConfigResponse)(nil),    // 2: virganol.v1.SetLLMConfigResponse
-	(*GetLLMConfigRequest)(nil),     // 3: virganol.v1.GetLLMConfigRequest
-	(*GetLLMConfigResponse)(nil),    // 4: virganol.v1.GetLLMConfigResponse
-	(*VerifyLLMConfigRequest)(nil),  // 5: virganol.v1.VerifyLLMConfigRequest
-	(*VerifyLLMConfigResponse)(nil), // 6: virganol.v1.VerifyLLMConfigResponse
+	(*LLMConfig)(nil),            // 0: virganol.v1.LLMConfig
+	(*SetLLMConfigRequest)(nil),  // 1: virganol.v1.SetLLMConfigRequest
+	(*SetLLMConfigResponse)(nil), // 2: virganol.v1.SetLLMConfigResponse
+	(*GetLLMConfigRequest)(nil),  // 3: virganol.v1.GetLLMConfigRequest
+	(*GetLLMConfigResponse)(nil), // 4: virganol.v1.GetLLMConfigResponse
 }
 var file_virganol_v1_config_proto_depIdxs = []int32{
 	0, // 0: virganol.v1.SetLLMConfigRequest.config:type_name -> virganol.v1.LLMConfig
 	0, // 1: virganol.v1.GetLLMConfigResponse.config:type_name -> virganol.v1.LLMConfig
-	0, // 2: virganol.v1.VerifyLLMConfigRequest.config:type_name -> virganol.v1.LLMConfig
-	1, // 3: virganol.v1.ConfigService.SetLLMConfig:input_type -> virganol.v1.SetLLMConfigRequest
-	3, // 4: virganol.v1.ConfigService.GetLLMConfig:input_type -> virganol.v1.GetLLMConfigRequest
-	5, // 5: virganol.v1.ConfigService.VerifyLLMConfig:input_type -> virganol.v1.VerifyLLMConfigRequest
-	2, // 6: virganol.v1.ConfigService.SetLLMConfig:output_type -> virganol.v1.SetLLMConfigResponse
-	4, // 7: virganol.v1.ConfigService.GetLLMConfig:output_type -> virganol.v1.GetLLMConfigResponse
-	6, // 8: virganol.v1.ConfigService.VerifyLLMConfig:output_type -> virganol.v1.VerifyLLMConfigResponse
-	6, // [6:9] is the sub-list for method output_type
-	3, // [3:6] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	1, // 2: virganol.v1.ConfigService.SetLLMConfig:input_type -> virganol.v1.SetLLMConfigRequest
+	3, // 3: virganol.v1.ConfigService.GetLLMConfig:input_type -> virganol.v1.GetLLMConfigRequest
+	2, // 4: virganol.v1.ConfigService.SetLLMConfig:output_type -> virganol.v1.SetLLMConfigResponse
+	4, // 5: virganol.v1.ConfigService.GetLLMConfig:output_type -> virganol.v1.GetLLMConfigResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_virganol_v1_config_proto_init() }
@@ -440,7 +333,7 @@ func file_virganol_v1_config_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_virganol_v1_config_proto_rawDesc), len(file_virganol_v1_config_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
