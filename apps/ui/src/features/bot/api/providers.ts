@@ -6,14 +6,27 @@ import type {
   ProviderId,
 } from "@/features/bot/types";
 
+// 记录“启动检查”是否正在进行中，避免同一时刻重复触发 invoke。
+let startupCheckInFlight: Promise<void> | null = null;
+
 /** 触发后端检查所有已持久化的 Provider（配合 listen 使用） */
 export const triggerProvidersStartupCheck = async (): Promise<void> => {
-  try {
-    await invoke("trigger_providers_startup_check");
-  } catch (error) {
-    console.error("[API] trigger_providers_startup_check error:", error);
-    throw error;
+  if (startupCheckInFlight) {
+    return startupCheckInFlight;
   }
+
+  startupCheckInFlight = (async () => {
+    try {
+      await invoke("trigger_providers_startup_check");
+    } catch (error) {
+      console.error("[API] trigger_providers_startup_check error:", error);
+      throw error;
+    } finally {
+      startupCheckInFlight = null;
+    }
+  })();
+
+  return startupCheckInFlight;
 };
 
 /** 接入新 Provider：健康检查 + 成功则持久化 */

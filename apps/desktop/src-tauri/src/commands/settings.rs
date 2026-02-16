@@ -3,12 +3,13 @@
 use tauri::AppHandle;
 
 use crate::core::models::settings::{ConnectAndSaveProviderRequest, HealthCheckResponse};
+use crate::core::settings::bot::providers::service::startup_check_providers;
 use crate::core::settings::provider;
 
 /// 前端 ready 后调用：触发后端检查所有已持久化的 Provider 并推送状态到前端
 #[tauri::command]
 pub async fn trigger_providers_startup_check(app: AppHandle) {
-    provider::startup_check_providers(app).await;
+    startup_check_providers(app).await;
 }
 
 /// 前端点击"连接"时调用：健康检查 + 成功则持久化
