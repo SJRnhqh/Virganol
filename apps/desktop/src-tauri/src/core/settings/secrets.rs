@@ -22,14 +22,14 @@ pub fn load_provider_key(provider_id: &str) -> Option<ProviderKey> {
     // 这里将 provider_id 作为第二个索引键（account）使用。
     let account = provider_id.trim();
     if account.is_empty() {
-        log::warn!("[Tauri] load key skipped: provider_id is empty");
+        log::warn!("[Tauri] ⚠️ load key skipped: provider_id is empty");
         return None;
     }
 
     let entry = match Entry::new(KEYRING_SERVICE, account) {
         Ok(entry) => entry,
         Err(error) => {
-            log::warn!("[Tauri] init keyring entry failed: {}", error);
+            log::warn!("[Tauri] ⚠️ init keyring entry failed: {}", error);
             return None;
         }
     };
@@ -53,7 +53,7 @@ pub fn load_provider_key(provider_id: &str) -> Option<ProviderKey> {
         }
         Err(KeyringError::NoEntry) => None,
         Err(error) => {
-            log::warn!("[Tauri] load key failed for {}: {}", account, error);
+            log::warn!("[Tauri] ⚠️ load key failed for {}: {}", account, error);
             None
         }
     }
@@ -77,7 +77,7 @@ pub fn load_provider_key_from_env(provider_id: &str) -> Option<ProviderKey> {
                 continue;
             }
 
-            log::info!("[Tauri] load key from env: {}", env_name);
+            log::info!("[Tauri] 🔐 load key from env: {}", env_name);
             let requires_trim_copy = normalized.len() != value.len();
             if requires_trim_copy {
                 let normalized_owned = normalized.to_string();

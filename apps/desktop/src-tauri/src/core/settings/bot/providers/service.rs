@@ -90,7 +90,7 @@ fn handle_startup_check_result(
     }
 }
 
-/// App 启动时自动执行：加载所有已持久化的 Provider，逐个健康检查，逐个推送给前端
+/// App 启动时自动执行：加载所有已持久化的 Provider，进行有界并发健康检查，并按完成顺序逐个推送给前端
 pub async fn startup_check_providers(app: AppHandle) {
     let providers = load_all_providers(&app);
 
