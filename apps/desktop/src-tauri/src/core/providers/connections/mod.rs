@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/providers/connections/mod.rs
 // 导出内容
-mod deepseek;
+pub(crate) mod deepseek;
 pub mod health;
-mod ollama;
+pub(crate) mod ollama;
