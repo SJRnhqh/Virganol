@@ -61,5 +61,5 @@ pub struct ProviderStatusPayload {
     pub provider_id: String,
     pub config: ProviderRecord,
     pub health: HealthCheckResponse,
-    pub secret_meta: Option<ProviderSecretMeta>,
+    pub secret_meta: ProviderSecretMeta,
 }

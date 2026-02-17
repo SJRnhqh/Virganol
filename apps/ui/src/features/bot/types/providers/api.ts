@@ -22,9 +22,18 @@ export interface HealthCheckResponse {
   error?: string;
 }
 
+export type ProviderKeySource = "none" | "env" | "keyring";
+
+/** 对应 Rust ProviderSecretMeta */
+export interface ProviderSecretMeta {
+  has_key: boolean;
+  key_source: ProviderKeySource;
+}
+
 /** 对应 Rust ProviderStatusPayload（startup 推送） */
 export interface ProviderStatusPayload {
   provider_id: string;
   config: ProviderRecord;
   health: HealthCheckResponse;
+  secret_meta: ProviderSecretMeta;
 }

@@ -77,6 +77,7 @@ fn reconcile_enabled_models(
     }
 }
 
+/// 解析 Provider 的密钥来源元数据
 fn resolve_provider_secret_meta(provider_id: &str) -> ProviderSecretMeta {
     if secrets::load_provider_key_from_env(provider_id).is_some() {
         return ProviderSecretMeta::with_source(ProviderKeySource::Env);
@@ -109,7 +110,7 @@ fn handle_startup_check_result(
         provider_id: id.clone(),
         config: final_record,
         health: result,
-        secret_meta: Some(resolve_provider_secret_meta(&id)),
+        secret_meta: resolve_provider_secret_meta(&id),
     };
 
     if let Err(e) = app.emit("provider-status", &payload) {
