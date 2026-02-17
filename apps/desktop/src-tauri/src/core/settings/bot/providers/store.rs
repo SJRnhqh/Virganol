@@ -12,12 +12,48 @@ use crate::core::settings::store::{load_settings, save_settings};
 const STORE_KEY_SPIRIT_PROVIDERS: &str = "spirit.providers";
 static PROVIDERS_STORE_LOCK: Mutex<()> = Mutex::new(());
 
+/// 启动检查用的 Provider 加载结果（已完成 provider_id 类型收敛）
+pub struct SupportedProvidersSnapshot {
+    pub total: usize,
+    pub supported: Vec<(ProviderId, ProviderRecord)>,
+    pub skipped_raw_ids: Vec<String>,
+}
+
 /// 读取所有已保存的 providers
 /// 返回 HashMap<provider_id_string, ProviderRecord>
-pub fn load_all_providers(app: &AppHandle) -> HashMap<String, ProviderRecord> {
+fn load_all_providers(app: &AppHandle) -> HashMap<String, ProviderRecord> {
     load_settings(app, STORE_KEY_SPIRIT_PROVIDERS)
         .and_then(|value| serde_json::from_value(value).ok())
         .unwrap_or_default()
+}
+
+/// 读取并过滤为“后端当前支持”的 provider 列表（startup_check 专用）
+pub fn load_supported_providers(app: &AppHandle) -> SupportedProvidersSnapshot {
+    let providers = load_all_providers(app);
+    let total = providers.len();
+    let mut supported = Vec::new();
+    let mut skipped_raw_ids = Vec::new();
+
+    for (raw_id, record) in providers {
+        match ProviderId::try_from(raw_id.as_str()) {
+            Ok(provider_id) => supported.push((provider_id, record)),
+            Err(_) => skipped_raw_ids.push(raw_id),
+        }
+    }
+
+    SupportedProvidersSnapshot {
+        total,
+        supported,
+        skipped_raw_ids,
+    }
+}
+
+/// 读取单个 provider 的配置快照（只读）
+/// - Some(record)：存在该 provider 配置
+/// - None：不存在该 provider 配置
+pub fn load_provider_record(app: &AppHandle, provider_id: ProviderId) -> Option<ProviderRecord> {
+    let provider_name = provider_id.as_str();
+    load_all_providers(app).get(provider_name).cloned()
 }
 
 /// 保存单个 provider 的配置（upsert：有则覆盖，无则新增）

@@ -5,7 +5,9 @@ use tauri::{AppHandle, Emitter};
 use tokio::task::JoinSet;
 
 // 内部引用
-use super::store::{load_all_providers, remove_provider, save_provider, update_models};
+use super::store::{
+    load_provider_record, load_supported_providers, remove_provider, save_provider, update_models,
+};
 use crate::core::models::provider::ProviderId;
 use crate::core::models::security::{ProviderKeySource, ProviderSecretMeta};
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord, ProviderStatusPayload};
@@ -127,26 +129,20 @@ fn handle_startup_check_result(
 
 /// App 启动时自动执行：加载所有已持久化的 Provider，进行有界并发健康检查，并按完成顺序逐个推送给前端
 pub async fn startup_check_providers(app: AppHandle) {
-    let providers = load_all_providers(&app);
-
-    if providers.is_empty() {
+    let snapshot = load_supported_providers(&app);
+    if snapshot.total == 0 {
         info!("[Tauri] 📭 No persisted providers found");
         return;
     }
 
-    let total = providers.len();
-    let mut pending: std::collections::VecDeque<(ProviderId, ProviderRecord)> = providers
-        .into_iter()
-        .filter_map(
-            |(raw_id, record)| match ProviderId::try_from(raw_id.as_str()) {
-                Ok(provider_id) => Some((provider_id, record)),
-                Err(_) => {
-                    warn!("[Tauri] ⚠️ Skip unsupported provider in store: {}", raw_id);
-                    None
-                }
-            },
-        )
-        .collect();
+    let total = snapshot.total;
+    let skipped = snapshot.skipped_raw_ids.len();
+    for raw_id in snapshot.skipped_raw_ids {
+        warn!("[Tauri] ⚠️ Skip unsupported provider in store: {}", raw_id);
+    }
+
+    let mut pending: std::collections::VecDeque<(ProviderId, ProviderRecord)> =
+        snapshot.supported.into();
 
     if pending.is_empty() {
         info!("[Tauri] 📭 No supported providers found in persisted configs");
@@ -157,7 +153,7 @@ pub async fn startup_check_providers(app: AppHandle) {
         "[Tauri] 🔍 Checking {} provider(s) (loaded {}, skipped {})...",
         pending.len(),
         total,
-        total - pending.len()
+        skipped
     );
 
     let mut in_flight = JoinSet::new();
@@ -243,8 +239,7 @@ pub async fn connect_and_save(
         }
 
         // 复用历史启用状态，并与本次可用模型做交集对齐
-        let mut providers = load_all_providers(app);
-        let previous_record = providers.remove(provider_id.as_str());
+        let previous_record = load_provider_record(app, provider_id);
         let next_enabled_models = match previous_record {
             Some(record) => {
                 compute_enabled_models(&record.enabled_models, &result.available_models)
@@ -299,10 +294,8 @@ pub async fn connect_and_save(
 
 /// 重置 provider 的持久化配置
 pub fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) -> bool {
-    let provider_name = provider_id.as_str();
-
     // 1) 先快照旧配置，供异常时回滚
-    let previous_record = load_all_providers(app).get(provider_name).cloned();
+    let previous_record = load_provider_record(app, provider_id);
 
     // 2) 先删除普通配置（settings.json 中的 spirit.providers.{id}）
     let config_removed = match remove_provider(app, provider_id) {
