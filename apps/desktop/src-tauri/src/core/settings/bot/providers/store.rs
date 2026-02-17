@@ -1,12 +1,15 @@
 // apps/desktop/src-tauri/src/core/settings/bot/providers/store.rs
 // 外部依赖
 use std::collections::HashMap;
+use std::sync::Mutex;
 use tauri::AppHandle;
+
 // 内部引用
 use crate::core::models::settings::ProviderRecord;
 use crate::core::settings::store::{load_settings, save_settings};
 
 const STORE_KEY_SPIRIT_PROVIDERS: &str = "spirit.providers";
+static PROVIDERS_STORE_LOCK: Mutex<()> = Mutex::new(());
 
 /// 读取所有已保存的 providers
 /// 返回 HashMap<provider_id_string, ProviderRecord>
@@ -58,12 +61,18 @@ pub fn update_models(
     provider_id: &str,
     enabled_models: Vec<String>,
 ) -> Result<bool, String> {
+    // 锁住整个“读取 -> 修改 -> 写回”事务，避免并发请求互相覆盖结果
+    let _guard = PROVIDERS_STORE_LOCK
+        .lock()
+        .map_err(|_| "providers store lock poisoned".to_string())?;
+
     let mut providers = load_all_providers(app);
 
     let Some(record) = providers.get_mut(provider_id) else {
         return Ok(false);
     };
 
+    // 仅更新目标 provider 的 enabled_models，随后整体落盘
     record.enabled_models = enabled_models;
 
     let value = serde_json::to_value(&providers)
