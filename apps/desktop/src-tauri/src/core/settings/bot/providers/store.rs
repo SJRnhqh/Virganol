@@ -5,6 +5,7 @@ use std::sync::Mutex;
 use tauri::AppHandle;
 
 // 内部引用
+use crate::core::models::provider::ProviderId;
 use crate::core::models::settings::ProviderRecord;
 use crate::core::settings::store::{load_settings, save_settings};
 
@@ -23,7 +24,7 @@ pub fn load_all_providers(app: &AppHandle) -> HashMap<String, ProviderRecord> {
 /// 返回 Err 表示序列化或写盘失败。
 pub fn save_provider(
     app: &AppHandle,
-    provider_id: &str,
+    provider_id: ProviderId,
     record: &ProviderRecord,
 ) -> Result<(), String> {
     // 锁住整个“读取 -> 修改 -> 写回”事务，避免并发写入互相覆盖
@@ -31,8 +32,9 @@ pub fn save_provider(
         .lock()
         .map_err(|_| "providers store lock poisoned".to_string())?;
 
+    let provider_name = provider_id.as_str();
     let mut providers = load_all_providers(app);
-    providers.insert(provider_id.to_string(), record.clone());
+    providers.insert(provider_name.to_string(), record.clone());
 
     let value = serde_json::to_value(&providers)
         .map_err(|error| format!("serialize providers failed: {}", error))?;
@@ -43,14 +45,15 @@ pub fn save_provider(
 /// - Ok(true)：删除成功
 /// - Ok(false)：该 provider 不存在
 /// - Err(...)：序列化或写盘失败
-pub fn remove_provider(app: &AppHandle, provider_id: &str) -> Result<bool, String> {
+pub fn remove_provider(app: &AppHandle, provider_id: ProviderId) -> Result<bool, String> {
     // 锁住整个“读取 -> 修改 -> 写回”事务，确保删除与其他写操作顺序一致
     let _guard = PROVIDERS_STORE_LOCK
         .lock()
         .map_err(|_| "providers store lock poisoned".to_string())?;
 
+    let provider_name = provider_id.as_str();
     let mut providers = load_all_providers(app);
-    let existed = providers.remove(provider_id).is_some();
+    let existed = providers.remove(provider_name).is_some();
 
     if !existed {
         return Ok(false);
@@ -68,7 +71,7 @@ pub fn remove_provider(app: &AppHandle, provider_id: &str) -> Result<bool, Strin
 /// - Err(...)：序列化或写盘失败
 pub fn update_models(
     app: &AppHandle,
-    provider_id: &str,
+    provider_id: ProviderId,
     enabled_models: Vec<String>,
 ) -> Result<bool, String> {
     // 锁住整个“读取 -> 修改 -> 写回”事务，避免并发请求互相覆盖结果
@@ -76,9 +79,10 @@ pub fn update_models(
         .lock()
         .map_err(|_| "providers store lock poisoned".to_string())?;
 
+    let provider_name = provider_id.as_str();
     let mut providers = load_all_providers(app);
 
-    let Some(record) = providers.get_mut(provider_id) else {
+    let Some(record) = providers.get_mut(provider_name) else {
         return Ok(false);
     };
 

@@ -42,7 +42,7 @@ fn compute_enabled_models(enabled_models: &[String], available_models: &[String]
 /// 如果无变化，直接返回原 record 的克隆
 fn reconcile_enabled_models(
     app: &AppHandle,
-    provider_id: &str,
+    provider_id: ProviderId,
     record: &ProviderRecord,
     available_models: &[String],
 ) -> ProviderRecord {
@@ -79,17 +79,12 @@ fn reconcile_enabled_models(
 }
 
 /// 解析 Provider 的密钥来源元数据
-fn resolve_provider_secret_meta(provider_id: &str) -> ProviderSecretMeta {
-    let provider = match ProviderId::try_from(provider_id) {
-        Ok(provider) => provider,
-        Err(_) => return ProviderSecretMeta::none(),
-    };
-
-    if secrets::load_provider_key_from_env(provider).is_some() {
+fn resolve_provider_secret_meta(provider_id: ProviderId) -> ProviderSecretMeta {
+    if secrets::load_provider_key_from_env(provider_id).is_some() {
         return ProviderSecretMeta::with_source(ProviderKeySource::Env);
     }
 
-    if secrets::load_provider_key(provider).is_some() {
+    if secrets::load_provider_key(provider_id).is_some() {
         return ProviderSecretMeta::with_source(ProviderKeySource::Keyring);
     }
 
@@ -99,13 +94,14 @@ fn resolve_provider_secret_meta(provider_id: &str) -> ProviderSecretMeta {
 /// 处理单个 Provider 的启动检查结果：协调配置并推送到前端
 fn handle_startup_check_result(
     app: &AppHandle,
+    provider_id: ProviderId,
     id: String,
     record: ProviderRecord,
     result: HealthCheckResponse,
 ) {
     // 健康检查成功时，协调 enabled_models
     let final_record = if result.success {
-        reconcile_enabled_models(app, &id, &record, &result.available_models)
+        reconcile_enabled_models(app, provider_id, &record, &result.available_models)
     } else {
         record
     };
@@ -116,7 +112,7 @@ fn handle_startup_check_result(
         provider_id: id.clone(),
         config: final_record,
         health: result,
-        secret_meta: resolve_provider_secret_meta(&id),
+        secret_meta: resolve_provider_secret_meta(provider_id),
     };
 
     if let Err(e) = app.emit("provider-status", &payload) {
@@ -176,14 +172,14 @@ pub async fn startup_check_providers(app: AppHandle) {
             in_flight.spawn(async move {
                 let url = record.url.as_deref().unwrap_or("").to_string();
                 let result = health_check_with_resolved_key(provider_id, &url).await;
-                (raw_id, record, result)
+                (provider_id, raw_id, record, result)
             });
         }
 
         // 2) 消费一个已完成任务（完成即处理，增量推送）
         match in_flight.join_next().await {
-            Some(Ok((id, record, result))) => {
-                handle_startup_check_result(&app, id, record, result);
+            Some(Ok((provider_id, id, record, result))) => {
+                handle_startup_check_result(&app, provider_id, id, record, result);
             }
             Some(Err(join_error)) => {
                 error!("[Tauri] ❌ Startup check task join failed: {}", join_error);
@@ -267,7 +263,7 @@ pub async fn connect_and_save(
             },
             enabled_models: next_enabled_models,
         };
-        if let Err(error_msg) = save_provider(app, provider_name, &record) {
+        if let Err(error_msg) = save_provider(app, provider_id, &record) {
             error!(
                 "[Tauri] ❌ {} provider config persist failed: {}",
                 provider_id, error_msg
@@ -304,41 +300,47 @@ pub async fn connect_and_save(
 
 /// 重置 provider 的持久化配置
 pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
+    let provider = match ProviderId::try_from(provider_id) {
+        Ok(provider) => provider,
+        Err(_) => {
+            error!(
+                "[Tauri] ❌ {} invalid provider_id, cannot reset config",
+                provider_id
+            );
+            return false;
+        }
+    };
+    let provider_name = provider.as_str();
+
     // 1) 先快照旧配置，供异常时回滚
-    let previous_record = load_all_providers(app).get(provider_id).cloned();
+    let previous_record = load_all_providers(app).get(provider_name).cloned();
 
     // 2) 先删除普通配置（settings.json 中的 spirit.providers.{id}）
-    let config_removed = match remove_provider(app, provider_id) {
+    let config_removed = match remove_provider(app, provider) {
         Ok(removed) => removed,
         Err(error_msg) => {
             error!(
                 "[Tauri] ❌ {} config remove persist failed: {}",
-                provider_id, error_msg
+                provider_name, error_msg
             );
             return false;
         }
     };
 
     if !config_removed {
-        error!("[Tauri] ❌ {} not found, cannot reset config", provider_id);
+        error!(
+            "[Tauri] ❌ {} not found, cannot reset config",
+            provider_name
+        );
     }
 
     // 3) 再删除系统密钥库中的 key（幂等：不存在也应算成功）
-    let key_removed = match ProviderId::try_from(provider_id) {
-        Ok(id) => match secrets::remove_provider_key(id) {
-            Ok(()) => true,
-            Err(error_msg) => {
-                error!(
-                    "[Tauri] ❌ {} key remove failed: {}",
-                    provider_id, error_msg
-                );
-                false
-            }
-        },
-        Err(_) => {
+    let key_removed = match secrets::remove_provider_key(provider) {
+        Ok(()) => true,
+        Err(error_msg) => {
             error!(
-                "[Tauri] ❌ {} invalid provider_id, cannot remove key",
-                provider_id
+                "[Tauri] ❌ {} key remove failed: {}",
+                provider_name, error_msg
             );
             false
         }
@@ -347,13 +349,13 @@ pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
     // 4) key 删除失败时，回滚已删除的配置
     if config_removed && !key_removed {
         if let Some(record) = previous_record.as_ref() {
-            if let Err(error_msg) = save_provider(app, provider_id, record) {
+            if let Err(error_msg) = save_provider(app, provider, record) {
                 error!(
                     "[Tauri] ❌ {} config rollback failed after key remove error: {}",
-                    provider_id, error_msg
+                    provider_name, error_msg
                 );
             } else {
-                info!("[Tauri] ↩️ {} config rollback completed", provider_id);
+                info!("[Tauri] ↩️ {} config rollback completed", provider_name);
             }
         }
     }
@@ -368,8 +370,19 @@ pub fn update_provider_enabled_models(
     provider_id: &str,
     enabled_models: Vec<String>,
 ) -> bool {
+    let provider = match ProviderId::try_from(provider_id) {
+        Ok(provider) => provider,
+        Err(_) => {
+            error!(
+                "[Tauri] ❌ {} invalid provider_id, cannot update models",
+                provider_id
+            );
+            return false;
+        }
+    };
+
     // 调用 store 层执行实际写入，并在这里统一记录业务结果与持久化错误
-    let ok = match update_models(app, provider_id, enabled_models) {
+    let ok = match update_models(app, provider, enabled_models) {
         Ok(updated) => updated,
         Err(error_msg) => {
             error!(
