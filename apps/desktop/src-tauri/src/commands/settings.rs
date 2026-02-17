@@ -1,7 +1,9 @@
 // apps/desktop/src-tauri/src/commands/settings.rs
-
+// 外部依赖
 use tauri::AppHandle;
 
+// 内部引用
+use crate::core::models::provider::ProviderId;
 use crate::core::models::settings::{ConnectAndSaveProviderRequest, HealthCheckResponse};
 use crate::core::settings::bot::providers::service::{
     connect_and_save, reset_provider_config, startup_check_providers,
@@ -21,7 +23,14 @@ pub async fn connect_and_save_provider(
     payload: ConnectAndSaveProviderRequest,
 ) -> HealthCheckResponse {
     let url = payload.url.as_deref().unwrap_or("");
-    connect_and_save(&app, &payload.provider_id, url, &payload.key).await
+    let raw_id = payload.provider_id.trim();
+
+    let provider_id = match ProviderId::try_from(raw_id) {
+        Ok(id) => id,
+        Err(_) => return HealthCheckResponse::fail(format!("Unknown provider: {}", raw_id)),
+    };
+
+    connect_and_save(&app, provider_id, url, &payload.key).await
 }
 
 /// 前端点击删除时调用：移除一个 Provider 配置

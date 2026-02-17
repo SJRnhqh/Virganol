@@ -1,11 +1,12 @@
 // apps/desktop/src-tauri/src/core/settings/bot/providers/service.rs
 // 外部依赖
-use log::{error, info};
+use log::{error, info, warn};
 use tauri::{AppHandle, Emitter};
 use tokio::task::JoinSet;
 
 // 内部引用
 use super::store::{load_all_providers, remove_provider, save_provider, update_models};
+use crate::core::models::provider::ProviderId;
 use crate::core::models::security::{ProviderKeySource, ProviderSecretMeta};
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord, ProviderStatusPayload};
 use crate::core::providers::connections::health;
@@ -15,9 +16,10 @@ use crate::core::settings::secrets;
 const STARTUP_CHECK_CONCURRENCY_LIMIT: usize = 4;
 
 /// 启动检查场景：优先从环境变量读取密钥，缺失时回退到 keyring
-async fn health_check_with_resolved_key(provider_id: &str, url: &str) -> HealthCheckResponse {
-    let api_key = secrets::load_provider_key_from_env(provider_id)
-        .or_else(|| secrets::load_provider_key(provider_id));
+async fn health_check_with_resolved_key(provider_id: ProviderId, url: &str) -> HealthCheckResponse {
+    let provider_name = provider_id.as_str();
+    let api_key = secrets::load_provider_key_from_env(provider_name)
+        .or_else(|| secrets::load_provider_key(provider_name));
     let key = api_key.as_ref().map(|key| key.as_str()).unwrap_or("");
     health::health_check(provider_id, url, key).await
 }
@@ -130,24 +132,47 @@ pub async fn startup_check_providers(app: AppHandle) {
         return;
     }
 
-    info!("[Tauri] 🔍 Checking {} provider(s)...", providers.len());
+    let total = providers.len();
+    let mut pending: std::collections::VecDeque<(ProviderId, String, ProviderRecord)> = providers
+        .into_iter()
+        // raw_id是原始字符串，provider_id是解析后的ID
+        .filter_map(
+            |(raw_id, record)| match ProviderId::try_from(raw_id.as_str()) {
+                Ok(provider_id) => Some((provider_id, raw_id, record)),
+                Err(_) => {
+                    warn!("[Tauri] ⚠️ Skip unsupported provider in store: {}", raw_id);
+                    None
+                }
+            },
+        )
+        .collect();
 
-    let mut pending: std::collections::VecDeque<(String, ProviderRecord)> =
-        providers.into_iter().collect();
+    if pending.is_empty() {
+        info!("[Tauri] 📭 No supported providers found in persisted configs");
+        return;
+    }
+
+    info!(
+        "[Tauri] 🔍 Checking {} provider(s) (loaded {}, skipped {})...",
+        pending.len(),
+        total,
+        total - pending.len()
+    );
+
     let mut in_flight = JoinSet::new();
 
     // 并发调度循环：队列未清空或仍有在途任务时持续推进
     while !pending.is_empty() || !in_flight.is_empty() {
         // 1) 尽可能把任务补满到并发上限
         while in_flight.len() < STARTUP_CHECK_CONCURRENCY_LIMIT {
-            let Some((provider_id, record)) = pending.pop_front() else {
+            let Some((provider_id, raw_id, record)) = pending.pop_front() else {
                 break;
             };
 
             in_flight.spawn(async move {
                 let url = record.url.as_deref().unwrap_or("").to_string();
-                let result = health_check_with_resolved_key(&provider_id, &url).await;
-                (provider_id, record, result)
+                let result = health_check_with_resolved_key(provider_id, &url).await;
+                (raw_id, record, result)
             });
         }
 
@@ -171,24 +196,26 @@ pub async fn startup_check_providers(app: AppHandle) {
 /// 返回 HealthCheckResponse（前端根据 success 判断是否接入成功）
 pub async fn connect_and_save(
     app: &AppHandle,
-    provider_id: &str,
+    provider_id: ProviderId,
     url: &str,
     key: &str,
 ) -> HealthCheckResponse {
+    let provider_name = provider_id.as_str();
+
     // 1) 先归一化前端传入的 key（去掉首尾空白）
     let normalized_key = key.trim();
     // 若本次输入了新 key，先记录旧 key 快照，用于后续异常回滚
     let previous_persisted_key = if normalized_key.is_empty() {
         None
     } else {
-        secrets::load_provider_key(provider_id)
+        secrets::load_provider_key(provider_name)
     };
 
     // 2) 若本次未输入 key，则尝试回退：env -> keyring
     // 前端输入 > env > keyring
     let fallback_key = if normalized_key.is_empty() {
-        secrets::load_provider_key_from_env(provider_id)
-            .or_else(|| secrets::load_provider_key(provider_id))
+        secrets::load_provider_key_from_env(provider_name)
+            .or_else(|| secrets::load_provider_key(provider_name))
     } else {
         None
     };
@@ -202,7 +229,7 @@ pub async fn connect_and_save(
 
     if result.success {
         if !normalized_key.is_empty() {
-            if let Err(error_msg) = secrets::save_provider_key(provider_id, key_for_check) {
+            if let Err(error_msg) = secrets::save_provider_key(provider_name, key_for_check) {
                 error!(
                     "[Tauri] ❌ {} key persist failed: {}",
                     provider_id, error_msg
@@ -218,7 +245,7 @@ pub async fn connect_and_save(
 
         // 复用历史启用状态，并与本次可用模型做交集对齐
         let mut providers = load_all_providers(app);
-        let previous_record = providers.remove(provider_id);
+        let previous_record = providers.remove(provider_name);
         let next_enabled_models = match previous_record {
             Some(record) => {
                 compute_enabled_models(&record.enabled_models, &result.available_models)
@@ -236,7 +263,7 @@ pub async fn connect_and_save(
             },
             enabled_models: next_enabled_models,
         };
-        if let Err(error_msg) = save_provider(app, provider_id, &record) {
+        if let Err(error_msg) = save_provider(app, provider_name, &record) {
             error!(
                 "[Tauri] ❌ {} provider config persist failed: {}",
                 provider_id, error_msg
@@ -246,10 +273,10 @@ pub async fn connect_and_save(
             if !normalized_key.is_empty() {
                 let rollback_result = if let Some(previous_key) = previous_persisted_key.as_ref() {
                     // 回滚 keyring 旧密钥
-                    secrets::save_provider_key(provider_id, previous_key.as_str())
+                    secrets::save_provider_key(provider_name, previous_key.as_str())
                 } else {
                     // 删除新添加密钥
-                    secrets::remove_provider_key(provider_id)
+                    secrets::remove_provider_key(provider_name)
                 };
 
                 if let Err(rollback_error) = rollback_result {
