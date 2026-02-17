@@ -23,25 +23,12 @@ pub async fn connect_and_save_provider(
     payload: ConnectAndSaveProviderRequest,
 ) -> HealthCheckResponse {
     let url = payload.url.as_deref().unwrap_or("");
-    let raw_id = payload.provider_id.trim();
-
-    let provider_id = match ProviderId::try_from(raw_id) {
-        Ok(id) => id,
-        Err(_) => return HealthCheckResponse::fail(format!("Unknown provider: {}", raw_id)),
-    };
-
-    connect_and_save(&app, provider_id, url, &payload.key).await
+    connect_and_save(&app, payload.provider_id, url, &payload.key).await
 }
 
 /// 前端点击删除时调用：移除一个 Provider 配置
 #[tauri::command]
-pub async fn reset_provider(app: AppHandle, provider_id: String) -> bool {
-    let raw_id = provider_id.trim();
-    let provider_id = match ProviderId::try_from(raw_id) {
-        Ok(id) => id,
-        Err(_) => return false,
-    };
-
+pub async fn reset_provider(app: AppHandle, provider_id: ProviderId) -> bool {
     reset_provider_config(&app, provider_id)
 }
 
@@ -49,14 +36,8 @@ pub async fn reset_provider(app: AppHandle, provider_id: String) -> bool {
 #[tauri::command]
 pub async fn update_enabled_models(
     app: AppHandle,
-    provider_id: String,
+    provider_id: ProviderId,
     enabled_models: Vec<String>,
 ) -> bool {
-    let raw_id = provider_id.trim();
-    let provider_id = match ProviderId::try_from(raw_id) {
-        Ok(id) => id,
-        Err(_) => return false,
-    };
-
     update_provider_enabled_models(&app, provider_id, enabled_models)
 }

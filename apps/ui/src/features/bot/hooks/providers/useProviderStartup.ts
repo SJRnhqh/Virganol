@@ -4,7 +4,7 @@ import { listen } from "@tauri-apps/api/event";
 import { useEffect } from "react";
 
 // 内部引用
-import type { ProviderId, ProviderStatusPayload } from "@/features/bot/types";
+import type { ProviderStatusPayload } from "@/features/bot/types";
 import { triggerProvidersStartupCheck } from "@/features/bot/api";
 import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
 import { useProviderStore } from "@/features/bot/store";
@@ -26,20 +26,18 @@ export const useProviderStartup = () => {
     const bootstrap = async () => {
       // 1) 等监听真正注册完成
       off = await listen<ProviderStatusPayload>("provider-status", (event) => {
-        const { provider_id, config, health } = event.payload;
+        const { provider, config, health } = event.payload;
 
-        if (!(provider_id in PROVIDER_DEFINITIONS)) {
-          console.warn(`[React] Unknown provider: ${provider_id}, skipping`);
+        if (!(provider in PROVIDER_DEFINITIONS)) {
+          console.warn(`[React] Unknown provider: ${provider}, skipping`);
           return;
         }
 
-        const id = provider_id as ProviderId;
-
         const frontendConfig: Record<string, string> = {};
         if (config.url) frontendConfig.apiURL = config.url;
-        setProviderConfig(id, frontendConfig);
+        setProviderConfig(provider, frontendConfig);
 
-        setProviderStatus(id, {
+        setProviderStatus(provider, {
           isConnected: health.success,
           isLoading: false,
           isError: !health.success,
@@ -47,16 +45,16 @@ export const useProviderStartup = () => {
         });
 
         if (health.success && health.available_models.length > 0) {
-          setAvailableModels(id, health.available_models);
+          setAvailableModels(provider, health.available_models);
 
           const enabledSet = new Set(config.enabled_models);
           health.available_models.forEach((model) => {
-            setModelEnabled(id, model, enabledSet.has(model));
+            setModelEnabled(provider, model, enabledSet.has(model));
           });
         }
 
         console.log(
-          `[React] ${id}: online=${health.success}, models=${health.available_models.length}`,
+          `[React] ${provider}: online=${health.success}, models=${health.available_models.length}`,
         );
       });
 

@@ -32,7 +32,7 @@ export interface ProviderSecretMeta {
 
 /** 对应 Rust ProviderStatusPayload（startup 推送） */
 export interface ProviderStatusPayload {
-  provider_id: string;
+  provider: ProviderId;
   config: ProviderRecord;
   health: HealthCheckResponse;
   secret_meta: ProviderSecretMeta;

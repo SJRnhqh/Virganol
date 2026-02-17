@@ -108,7 +108,7 @@ fn handle_startup_check_result(
     let online = result.success;
 
     let payload = ProviderStatusPayload {
-        provider_id: provider_id.to_string(),
+        provider: provider_id,
         config: final_record,
         health: result,
         secret_meta: resolve_provider_secret_meta(provider_id),

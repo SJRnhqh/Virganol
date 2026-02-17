@@ -3,6 +3,7 @@
 use serde::{Deserialize, Serialize};
 
 // 内部引用
+use crate::core::models::provider::ProviderId;
 use crate::core::models::security::ProviderSecretMeta;
 
 /// 前端发起 connect_and_save_provider 的请求契约
@@ -13,7 +14,7 @@ use crate::core::models::security::ProviderSecretMeta;
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ConnectAndSaveProviderRequest {
-    pub provider_id: String,
+    pub provider_id: ProviderId,
     pub url: Option<String>,
     pub key: String,
 }
@@ -58,7 +59,7 @@ impl HealthCheckResponse {
 /// 推送给前端的 Provider 状态
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProviderStatusPayload {
-    pub provider_id: String,
+    pub provider: ProviderId,
     pub config: ProviderRecord,
     pub health: HealthCheckResponse,
     pub secret_meta: ProviderSecretMeta,
