@@ -17,9 +17,8 @@ const STARTUP_CHECK_CONCURRENCY_LIMIT: usize = 4;
 
 /// 启动检查场景：优先从环境变量读取密钥，缺失时回退到 keyring
 async fn health_check_with_resolved_key(provider_id: ProviderId, url: &str) -> HealthCheckResponse {
-    let provider_name = provider_id.as_str();
-    let api_key = secrets::load_provider_key_from_env(provider_name)
-        .or_else(|| secrets::load_provider_key(provider_name));
+    let api_key = secrets::load_provider_key_from_env(provider_id)
+        .or_else(|| secrets::load_provider_key(provider_id));
     let key = api_key.as_ref().map(|key| key.as_str()).unwrap_or("");
     health::health_check(provider_id, url, key).await
 }
@@ -81,11 +80,16 @@ fn reconcile_enabled_models(
 
 /// 解析 Provider 的密钥来源元数据
 fn resolve_provider_secret_meta(provider_id: &str) -> ProviderSecretMeta {
-    if secrets::load_provider_key_from_env(provider_id).is_some() {
+    let provider = match ProviderId::try_from(provider_id) {
+        Ok(provider) => provider,
+        Err(_) => return ProviderSecretMeta::none(),
+    };
+
+    if secrets::load_provider_key_from_env(provider).is_some() {
         return ProviderSecretMeta::with_source(ProviderKeySource::Env);
     }
 
-    if secrets::load_provider_key(provider_id).is_some() {
+    if secrets::load_provider_key(provider).is_some() {
         return ProviderSecretMeta::with_source(ProviderKeySource::Keyring);
     }
 
@@ -208,14 +212,14 @@ pub async fn connect_and_save(
     let previous_persisted_key = if normalized_key.is_empty() {
         None
     } else {
-        secrets::load_provider_key(provider_name)
+        secrets::load_provider_key(provider_id)
     };
 
     // 2) 若本次未输入 key，则尝试回退：env -> keyring
     // 前端输入 > env > keyring
     let fallback_key = if normalized_key.is_empty() {
-        secrets::load_provider_key_from_env(provider_name)
-            .or_else(|| secrets::load_provider_key(provider_name))
+        secrets::load_provider_key_from_env(provider_id)
+            .or_else(|| secrets::load_provider_key(provider_id))
     } else {
         None
     };
@@ -229,7 +233,7 @@ pub async fn connect_and_save(
 
     if result.success {
         if !normalized_key.is_empty() {
-            if let Err(error_msg) = secrets::save_provider_key(provider_name, key_for_check) {
+            if let Err(error_msg) = secrets::save_provider_key(provider_id, key_for_check) {
                 error!(
                     "[Tauri] ❌ {} key persist failed: {}",
                     provider_id, error_msg
@@ -273,10 +277,10 @@ pub async fn connect_and_save(
             if !normalized_key.is_empty() {
                 let rollback_result = if let Some(previous_key) = previous_persisted_key.as_ref() {
                     // 回滚 keyring 旧密钥
-                    secrets::save_provider_key(provider_name, previous_key.as_str())
+                    secrets::save_provider_key(provider_id, previous_key.as_str())
                 } else {
                     // 删除新添加密钥
-                    secrets::remove_provider_key(provider_name)
+                    secrets::remove_provider_key(provider_id)
                 };
 
                 if let Err(rollback_error) = rollback_result {
@@ -320,12 +324,21 @@ pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
     }
 
     // 3) 再删除系统密钥库中的 key（幂等：不存在也应算成功）
-    let key_removed = match secrets::remove_provider_key(provider_id) {
-        Ok(()) => true,
-        Err(error_msg) => {
+    let key_removed = match ProviderId::try_from(provider_id) {
+        Ok(id) => match secrets::remove_provider_key(id) {
+            Ok(()) => true,
+            Err(error_msg) => {
+                error!(
+                    "[Tauri] ❌ {} key remove failed: {}",
+                    provider_id, error_msg
+                );
+                false
+            }
+        },
+        Err(_) => {
             error!(
-                "[Tauri] ❌ {} key remove failed: {}",
-                provider_id, error_msg
+                "[Tauri] ❌ {} invalid provider_id, cannot remove key",
+                provider_id
             );
             false
         }
