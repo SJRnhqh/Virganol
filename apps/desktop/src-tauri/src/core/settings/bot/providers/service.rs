@@ -6,6 +6,7 @@ use tokio::task::JoinSet;
 
 // 内部引用
 use super::store::{load_all_providers, remove_provider, save_provider, update_models};
+use crate::core::models::security::{ProviderKeySource, ProviderSecretMeta};
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord, ProviderStatusPayload};
 use crate::core::providers::connections::health;
 use crate::core::settings::secrets;
@@ -76,6 +77,18 @@ fn reconcile_enabled_models(
     }
 }
 
+fn resolve_provider_secret_meta(provider_id: &str) -> ProviderSecretMeta {
+    if secrets::load_provider_key_from_env(provider_id).is_some() {
+        return ProviderSecretMeta::with_source(ProviderKeySource::Env);
+    }
+
+    if secrets::load_provider_key(provider_id).is_some() {
+        return ProviderSecretMeta::with_source(ProviderKeySource::Keyring);
+    }
+
+    ProviderSecretMeta::none()
+}
+
 /// 处理单个 Provider 的启动检查结果：协调配置并推送到前端
 fn handle_startup_check_result(
     app: &AppHandle,
@@ -96,6 +109,7 @@ fn handle_startup_check_result(
         provider_id: id.clone(),
         config: final_record,
         health: result,
+        secret_meta: Some(resolve_provider_secret_meta(&id)),
     };
 
     if let Err(e) = app.emit("provider-status", &payload) {

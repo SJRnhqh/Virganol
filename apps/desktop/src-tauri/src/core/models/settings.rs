@@ -1,4 +1,9 @@
+// apps/core/models/security.rs
+// 外部方法
 use serde::{Deserialize, Serialize};
+
+// 内部引用
+use crate::core::models::security::ProviderSecretMeta;
 
 /// 前端发起 connect_and_save_provider 的请求契约
 ///
@@ -56,4 +61,5 @@ pub struct ProviderStatusPayload {
     pub provider_id: String,
     pub config: ProviderRecord,
     pub health: HealthCheckResponse,
+    pub secret_meta: Option<ProviderSecretMeta>,
 }
