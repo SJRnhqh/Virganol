@@ -26,6 +26,11 @@ pub fn save_provider(
     provider_id: &str,
     record: &ProviderRecord,
 ) -> Result<(), String> {
+    // 锁住整个“读取 -> 修改 -> 写回”事务，避免并发写入互相覆盖
+    let _guard = PROVIDERS_STORE_LOCK
+        .lock()
+        .map_err(|_| "providers store lock poisoned".to_string())?;
+
     let mut providers = load_all_providers(app);
     providers.insert(provider_id.to_string(), record.clone());
 
@@ -39,6 +44,11 @@ pub fn save_provider(
 /// - Ok(false)：该 provider 不存在
 /// - Err(...)：序列化或写盘失败
 pub fn remove_provider(app: &AppHandle, provider_id: &str) -> Result<bool, String> {
+    // 锁住整个“读取 -> 修改 -> 写回”事务，确保删除与其他写操作顺序一致
+    let _guard = PROVIDERS_STORE_LOCK
+        .lock()
+        .map_err(|_| "providers store lock poisoned".to_string())?;
+
     let mut providers = load_all_providers(app);
     let existed = providers.remove(provider_id).is_some();
 
