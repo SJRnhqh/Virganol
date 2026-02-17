@@ -36,7 +36,13 @@ pub async fn connect_and_save_provider(
 /// 前端点击删除时调用：移除一个 Provider 配置
 #[tauri::command]
 pub async fn reset_provider(app: AppHandle, provider_id: String) -> bool {
-    reset_provider_config(&app, &provider_id)
+    let raw_id = provider_id.trim();
+    let provider_id = match ProviderId::try_from(raw_id) {
+        Ok(id) => id,
+        Err(_) => return false,
+    };
+
+    reset_provider_config(&app, provider_id)
 }
 
 /// 前端勾选模型后调用：更新 enabled_models
@@ -46,5 +52,11 @@ pub async fn update_enabled_models(
     provider_id: String,
     enabled_models: Vec<String>,
 ) -> bool {
-    update_provider_enabled_models(&app, &provider_id, enabled_models)
+    let raw_id = provider_id.trim();
+    let provider_id = match ProviderId::try_from(raw_id) {
+        Ok(id) => id,
+        Err(_) => return false,
+    };
+
+    update_provider_enabled_models(&app, provider_id, enabled_models)
 }

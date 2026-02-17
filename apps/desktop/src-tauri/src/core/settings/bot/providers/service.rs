@@ -95,7 +95,6 @@ fn resolve_provider_secret_meta(provider_id: ProviderId) -> ProviderSecretMeta {
 fn handle_startup_check_result(
     app: &AppHandle,
     provider_id: ProviderId,
-    id: String,
     record: ProviderRecord,
     result: HealthCheckResponse,
 ) {
@@ -109,17 +108,20 @@ fn handle_startup_check_result(
     let online = result.success;
 
     let payload = ProviderStatusPayload {
-        provider_id: id.clone(),
+        provider_id: provider_id.to_string(),
         config: final_record,
         health: result,
         secret_meta: resolve_provider_secret_meta(provider_id),
     };
 
     if let Err(e) = app.emit("provider-status", &payload) {
-        error!("[Tauri] ❌ Failed to emit status for {}: {}", id, e);
+        error!(
+            "[Tauri] ❌ Failed to emit status for {}: {}",
+            provider_id, e
+        );
     } else {
         let icon = if online { "✅" } else { "⚠️" };
-        info!("[Tauri] {} {} → online: {}", icon, id, online);
+        info!("[Tauri] {} {} → online: {}", icon, provider_id, online);
     }
 }
 
@@ -133,12 +135,11 @@ pub async fn startup_check_providers(app: AppHandle) {
     }
 
     let total = providers.len();
-    let mut pending: std::collections::VecDeque<(ProviderId, String, ProviderRecord)> = providers
+    let mut pending: std::collections::VecDeque<(ProviderId, ProviderRecord)> = providers
         .into_iter()
-        // raw_id是原始字符串，provider_id是解析后的ID
         .filter_map(
             |(raw_id, record)| match ProviderId::try_from(raw_id.as_str()) {
-                Ok(provider_id) => Some((provider_id, raw_id, record)),
+                Ok(provider_id) => Some((provider_id, record)),
                 Err(_) => {
                     warn!("[Tauri] ⚠️ Skip unsupported provider in store: {}", raw_id);
                     None
@@ -165,21 +166,21 @@ pub async fn startup_check_providers(app: AppHandle) {
     while !pending.is_empty() || !in_flight.is_empty() {
         // 1) 尽可能把任务补满到并发上限
         while in_flight.len() < STARTUP_CHECK_CONCURRENCY_LIMIT {
-            let Some((provider_id, raw_id, record)) = pending.pop_front() else {
+            let Some((provider_id, record)) = pending.pop_front() else {
                 break;
             };
 
             in_flight.spawn(async move {
                 let url = record.url.as_deref().unwrap_or("").to_string();
                 let result = health_check_with_resolved_key(provider_id, &url).await;
-                (provider_id, raw_id, record, result)
+                (provider_id, record, result)
             });
         }
 
         // 2) 消费一个已完成任务（完成即处理，增量推送）
         match in_flight.join_next().await {
-            Some(Ok((provider_id, id, record, result))) => {
-                handle_startup_check_result(&app, provider_id, id, record, result);
+            Some(Ok((provider_id, record, result))) => {
+                handle_startup_check_result(&app, provider_id, record, result);
             }
             Some(Err(join_error)) => {
                 error!("[Tauri] ❌ Startup check task join failed: {}", join_error);
@@ -200,8 +201,6 @@ pub async fn connect_and_save(
     url: &str,
     key: &str,
 ) -> HealthCheckResponse {
-    let provider_name = provider_id.as_str();
-
     // 1) 先归一化前端传入的 key（去掉首尾空白）
     let normalized_key = key.trim();
     // 若本次输入了新 key，先记录旧 key 快照，用于后续异常回滚
@@ -245,7 +244,7 @@ pub async fn connect_and_save(
 
         // 复用历史启用状态，并与本次可用模型做交集对齐
         let mut providers = load_all_providers(app);
-        let previous_record = providers.remove(provider_name);
+        let previous_record = providers.remove(provider_id.as_str());
         let next_enabled_models = match previous_record {
             Some(record) => {
                 compute_enabled_models(&record.enabled_models, &result.available_models)
@@ -299,48 +298,35 @@ pub async fn connect_and_save(
 }
 
 /// 重置 provider 的持久化配置
-pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
-    let provider = match ProviderId::try_from(provider_id) {
-        Ok(provider) => provider,
-        Err(_) => {
-            error!(
-                "[Tauri] ❌ {} invalid provider_id, cannot reset config",
-                provider_id
-            );
-            return false;
-        }
-    };
-    let provider_name = provider.as_str();
+pub fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) -> bool {
+    let provider_name = provider_id.as_str();
 
     // 1) 先快照旧配置，供异常时回滚
     let previous_record = load_all_providers(app).get(provider_name).cloned();
 
     // 2) 先删除普通配置（settings.json 中的 spirit.providers.{id}）
-    let config_removed = match remove_provider(app, provider) {
+    let config_removed = match remove_provider(app, provider_id) {
         Ok(removed) => removed,
         Err(error_msg) => {
             error!(
                 "[Tauri] ❌ {} config remove persist failed: {}",
-                provider_name, error_msg
+                provider_id, error_msg
             );
             return false;
         }
     };
 
     if !config_removed {
-        error!(
-            "[Tauri] ❌ {} not found, cannot reset config",
-            provider_name
-        );
+        error!("[Tauri] ❌ {} not found, cannot reset config", provider_id);
     }
 
     // 3) 再删除系统密钥库中的 key（幂等：不存在也应算成功）
-    let key_removed = match secrets::remove_provider_key(provider) {
+    let key_removed = match secrets::remove_provider_key(provider_id) {
         Ok(()) => true,
         Err(error_msg) => {
             error!(
                 "[Tauri] ❌ {} key remove failed: {}",
-                provider_name, error_msg
+                provider_id, error_msg
             );
             false
         }
@@ -349,13 +335,13 @@ pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
     // 4) key 删除失败时，回滚已删除的配置
     if config_removed && !key_removed {
         if let Some(record) = previous_record.as_ref() {
-            if let Err(error_msg) = save_provider(app, provider, record) {
+            if let Err(error_msg) = save_provider(app, provider_id, record) {
                 error!(
                     "[Tauri] ❌ {} config rollback failed after key remove error: {}",
-                    provider_name, error_msg
+                    provider_id, error_msg
                 );
             } else {
-                info!("[Tauri] ↩️ {} config rollback completed", provider_name);
+                info!("[Tauri] ↩️ {} config rollback completed", provider_id);
             }
         }
     }
@@ -367,22 +353,11 @@ pub fn reset_provider_config(app: &AppHandle, provider_id: &str) -> bool {
 /// 更新某个 provider 的 enabled_models（service 层：负责业务日志）
 pub fn update_provider_enabled_models(
     app: &AppHandle,
-    provider_id: &str,
+    provider_id: ProviderId,
     enabled_models: Vec<String>,
 ) -> bool {
-    let provider = match ProviderId::try_from(provider_id) {
-        Ok(provider) => provider,
-        Err(_) => {
-            error!(
-                "[Tauri] ❌ {} invalid provider_id, cannot update models",
-                provider_id
-            );
-            return false;
-        }
-    };
-
     // 调用 store 层执行实际写入，并在这里统一记录业务结果与持久化错误
-    let ok = match update_models(app, provider, enabled_models) {
+    let ok = match update_models(app, provider_id, enabled_models) {
         Ok(updated) => updated,
         Err(error_msg) => {
             error!(
