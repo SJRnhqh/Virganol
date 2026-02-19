@@ -4,16 +4,27 @@ use tauri::AppHandle;
 
 // 内部引用
 use crate::core::models::provider::ProviderId;
+use crate::core::models::providers::check::ProviderCheckTrigger;
 use crate::core::models::settings::{ConnectAndSaveProviderRequest, HealthCheckResponse};
+use crate::core::settings::bot::providers::lifecycle::check_providers_lifecycle;
 use crate::core::settings::bot::providers::service::{
-    connect_and_save, reset_provider_config, startup_check_providers,
-    update_provider_enabled_models,
+    connect_and_save, reset_provider_config, update_provider_enabled_models,
 };
 
 /// 前端 ready 后调用：触发后端检查所有已持久化的 Provider 并推送状态到前端
+// #[tauri::command]
+// pub async fn trigger_providers_startup_check(app: AppHandle) {
+//     startup_check_providers(app).await;
+// }
+
 #[tauri::command]
 pub async fn trigger_providers_startup_check(app: AppHandle) {
-    startup_check_providers(app).await;
+    check_providers_lifecycle(app, ProviderCheckTrigger::Startup).await;
+}
+
+#[tauri::command]
+pub async fn trigger_providers_manual_refresh(app: AppHandle) {
+    check_providers_lifecycle(app, ProviderCheckTrigger::ManualRefresh).await;
 }
 
 /// 前端点击"连接"时调用：健康检查 + 成功则持久化

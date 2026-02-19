@@ -11,6 +11,9 @@ export type {
   ProviderConnectionProps,
   ProviderModelProps,
   HealthCheckResponse,
+  ProviderCheckFailedPayload,
+  ProviderCheckFailureDetail,
+  ProviderCheckTrigger,
   ProviderStatusPayload,
   ConnectAndSaveProviderPayload,
 } from "./providers";

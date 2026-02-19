@@ -32,8 +32,28 @@ export interface ProviderSecretMeta {
 
 /** 对应 Rust ProviderStatusPayload（startup 推送） */
 export interface ProviderStatusPayload {
+  run_id: string;
   provider: ProviderId;
   config: ProviderRecord;
   health: HealthCheckResponse;
   secret_meta: ProviderSecretMeta;
+}
+
+export type ProviderCheckTrigger = "startup" | "manual_refresh";
+
+/** 对应 Rust ProviderCheckFailureDetail */
+export interface ProviderCheckFailureDetail {
+  code: string;
+  provider?: ProviderId;
+  message: string;
+}
+
+/** 对应 Rust ProviderCheckFailedPayload */
+export interface ProviderCheckFailedPayload {
+  run_id: string;
+  trigger: ProviderCheckTrigger;
+  code: string;
+  message: string;
+  error_count: number;
+  details: ProviderCheckFailureDetail[];
 }

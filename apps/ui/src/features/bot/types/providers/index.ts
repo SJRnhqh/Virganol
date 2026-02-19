@@ -4,6 +4,9 @@ export type { ProviderStatus, ProviderModels, ProviderState } from "./store";
 export type {
   ConnectAndSaveProviderPayload,
   HealthCheckResponse,
+  ProviderCheckFailedPayload,
+  ProviderCheckFailureDetail,
+  ProviderCheckTrigger,
   ProviderStatusPayload,
 } from "./api";
 export type { ProviderConnectionProps, ProviderModelProps } from "./base";

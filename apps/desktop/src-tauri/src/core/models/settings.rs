@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 
 // 内部引用
 use crate::core::models::provider::ProviderId;
-use crate::core::models::security::ProviderSecretMeta;
 
 /// 前端发起 connect_and_save_provider 的请求契约
 ///
@@ -54,13 +53,4 @@ impl HealthCheckResponse {
             error: Some(msg.into()),
         }
     }
-}
-
-/// 推送给前端的 Provider 状态
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ProviderStatusPayload {
-    pub provider: ProviderId,
-    pub config: ProviderRecord,
-    pub health: HealthCheckResponse,
-    pub secret_meta: ProviderSecretMeta,
 }
