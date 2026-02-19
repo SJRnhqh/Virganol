@@ -221,8 +221,29 @@ fn emit_check_failed(
 
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
 pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTrigger) {
-    // Step 1: 读取持久化快照（支持项 + 跳过项）
-    let snapshot = load_supported_providers(&app);
+    // Step 1: 初始化本轮生命周期上下文（覆盖读取 + 检查 + 推送全链路）
+    let run_id = next_run_id(trigger);
+    let started_at = Instant::now();
+
+    // Step 2: 读取持久化快照（支持项 + 跳过项）
+    let snapshot = match load_supported_providers(&app) {
+        Ok(snapshot) => snapshot,
+        Err(error_msg) => {
+            handle_lifecycle_failure(
+                &app,
+                run_id.as_str(),
+                trigger,
+                "load_snapshot_failed",
+                error_msg.as_str(),
+                vec![ProviderCheckFailureDetail {
+                    code: "load_snapshot_failed".to_string(),
+                    provider: None,
+                    message: error_msg.clone(),
+                }],
+            );
+            return;
+        }
+    };
     let loaded_total = snapshot.total;
     let supported_total = snapshot.supported.len();
     let skipped_total = snapshot.skipped_raw_ids.len();
@@ -251,10 +272,6 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
         "[Tauri] 🔎 provider check lifecycle snapshot: trigger={:?}, loaded={}, supported={}, skipped={}",
         trigger, loaded_total, supported_total, skipped_total
     );
-
-    // Step 2: 初始化本轮生命周期上下文（后续用于 started/status/completed 关联与耗时统计）
-    let run_id = next_run_id(trigger);
-    let started_at = Instant::now();
 
     // Step 3: 发出生命周期 started 事件
     if let Err(error_msg) = emit_check_started(

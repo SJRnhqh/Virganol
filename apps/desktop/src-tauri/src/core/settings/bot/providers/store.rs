@@ -7,7 +7,7 @@ use tauri::AppHandle;
 // 内部引用
 use crate::core::models::provider::ProviderId;
 use crate::core::models::settings::ProviderRecord;
-use crate::core::settings::store::{load_settings, save_settings};
+use crate::core::settings::store::{load_settings, load_settings_strict, save_settings};
 
 const STORE_KEY_SPIRIT_PROVIDERS: &str = "spirit.providers";
 static PROVIDERS_STORE_LOCK: Mutex<()> = Mutex::new(());
@@ -27,9 +27,24 @@ fn load_all_providers(app: &AppHandle) -> HashMap<String, ProviderRecord> {
         .unwrap_or_default()
 }
 
+/// 严格读取所有已保存 providers：
+/// - Ok(HashMap)：读取并反序列化成功
+/// - Ok(empty)：配置不存在（尚未写入）
+/// - Err(...)：读取或反序列化失败
+fn load_all_providers_strict(app: &AppHandle) -> Result<HashMap<String, ProviderRecord>, String> {
+    let maybe_value = load_settings_strict(app, STORE_KEY_SPIRIT_PROVIDERS)
+        .map_err(|error_msg| format!("load providers store failed: {}", error_msg))?;
+    let Some(value) = maybe_value else {
+        return Ok(HashMap::new());
+    };
+
+    serde_json::from_value(value)
+        .map_err(|error| format!("deserialize providers failed: {}", error))
+}
+
 /// 读取并过滤为“后端当前支持”的 provider 列表（startup_check 专用）
-pub fn load_supported_providers(app: &AppHandle) -> SupportedProvidersSnapshot {
-    let providers = load_all_providers(app);
+pub fn load_supported_providers(app: &AppHandle) -> Result<SupportedProvidersSnapshot, String> {
+    let providers = load_all_providers_strict(app)?;
     let total = providers.len();
     let mut supported = Vec::new();
     let mut skipped_raw_ids = Vec::new();
@@ -41,11 +56,11 @@ pub fn load_supported_providers(app: &AppHandle) -> SupportedProvidersSnapshot {
         }
     }
 
-    SupportedProvidersSnapshot {
+    Ok(SupportedProvidersSnapshot {
         total,
         supported,
         skipped_raw_ids,
-    }
+    })
 }
 
 /// 读取单个 provider 的配置快照（只读）
