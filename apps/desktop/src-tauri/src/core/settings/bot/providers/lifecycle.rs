@@ -239,9 +239,11 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
             return;
         }
     };
-    let loaded_total = snapshot.total;
-    let supported_total = snapshot.supported.len();
-    let skipped_total = snapshot.skipped_raw_ids.len();
+    let (loaded_total, supported_total, skipped_total) = (
+        snapshot.total,
+        snapshot.supported.len(),
+        snapshot.skipped_raw_ids.len(),
+    );
 
     if loaded_total == 0 {
         info!(
