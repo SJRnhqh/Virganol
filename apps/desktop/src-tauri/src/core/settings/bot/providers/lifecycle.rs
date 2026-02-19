@@ -24,17 +24,12 @@ const CHECK_CONCURRENCY_LIMIT: usize = 4;
 
 /// 生成一轮检查的唯一 run_id（后续用于 started/status/completed 关联）
 fn next_run_id(trigger: ProviderCheckTrigger) -> String {
-    let trigger_tag = match trigger {
-        ProviderCheckTrigger::Startup => "startup",
-        ProviderCheckTrigger::ManualRefresh => "manual_refresh",
-    };
-
     let timestamp_ms = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_millis())
         .unwrap_or(0);
 
-    format!("provider-check-{}-{}", trigger_tag, timestamp_ms)
+    format!("provider-check-{}-{}", trigger.as_tag(), timestamp_ms)
 }
 
 /// 推送生命周期 started 事件

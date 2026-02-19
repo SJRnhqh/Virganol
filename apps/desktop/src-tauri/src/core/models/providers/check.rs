@@ -15,6 +15,16 @@ pub enum ProviderCheckTrigger {
     ManualRefresh,
 }
 
+impl ProviderCheckTrigger {
+    /// 生命周期 run_id 中使用的触发来源标签。
+    pub fn as_tag(self) -> &'static str {
+        match self {
+            Self::Startup => "startup",
+            Self::ManualRefresh => "manual_refresh",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 /// 一轮 Provider 检查开始时推送给前端的事件载荷。
 pub struct ProviderCheckStartedPayload {
