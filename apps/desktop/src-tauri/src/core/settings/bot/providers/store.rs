@@ -5,19 +5,13 @@ use std::sync::Mutex;
 use tauri::AppHandle;
 
 // 内部引用
+use super::snapshot::{SkippedProviderDetail, SupportedProvidersSnapshot};
 use crate::core::models::provider::ProviderId;
 use crate::core::models::settings::ProviderRecord;
 use crate::core::settings::store::{load_settings, load_settings_strict, save_settings};
 
 const STORE_KEY_SPIRIT_PROVIDERS: &str = "spirit.providers";
 static PROVIDERS_STORE_LOCK: Mutex<()> = Mutex::new(());
-
-/// 启动检查用的 Provider 加载结果（已完成 provider_id 类型收敛）
-pub struct SupportedProvidersSnapshot {
-    pub total: usize,
-    pub supported: Vec<(ProviderId, ProviderRecord)>,
-    pub skipped_raw_ids: Vec<String>,
-}
 
 /// 读取所有已保存的 providers
 /// 返回 HashMap<provider_id_string, ProviderRecord>
@@ -33,33 +27,40 @@ fn load_all_providers(app: &AppHandle) -> HashMap<String, ProviderRecord> {
 /// - Err(...)：读取或反序列化失败
 fn load_all_providers_strict(app: &AppHandle) -> Result<HashMap<String, ProviderRecord>, String> {
     let maybe_value = load_settings_strict(app, STORE_KEY_SPIRIT_PROVIDERS)
+        // 上抛并且构造对应的加载错误
         .map_err(|error_msg| format!("load providers store failed: {}", error_msg))?;
     let Some(value) = maybe_value else {
         return Ok(HashMap::new());
     };
 
+    // 上抛序列化的错误
     serde_json::from_value(value)
         .map_err(|error| format!("deserialize providers failed: {}", error))
 }
 
 /// 读取并过滤为“后端当前支持”的 provider 列表（startup_check 专用）
 pub fn load_supported_providers(app: &AppHandle) -> Result<SupportedProvidersSnapshot, String> {
+    // 上抛严格夹在所有配置的错误
     let providers = load_all_providers_strict(app)?;
     let total = providers.len();
     let mut supported = Vec::new();
-    let mut skipped_raw_ids = Vec::new();
+    let mut skipped = Vec::new();
 
     for (raw_id, record) in providers {
         match ProviderId::try_from(raw_id.as_str()) {
             Ok(provider_id) => supported.push((provider_id, record)),
-            Err(_) => skipped_raw_ids.push(raw_id),
+            Err(error_msg) => skipped.push(SkippedProviderDetail {
+                raw_id,
+                code: "unsupported_provider_id".to_string(),
+                message: error_msg,
+            }),
         }
     }
 
     Ok(SupportedProvidersSnapshot {
         total,
         supported,
-        skipped_raw_ids,
+        skipped,
     })
 }
 

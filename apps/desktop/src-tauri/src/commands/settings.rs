@@ -11,12 +11,6 @@ use crate::core::settings::bot::providers::service::{
     connect_and_save, reset_provider_config, update_provider_enabled_models,
 };
 
-/// 前端 ready 后调用：触发后端检查所有已持久化的 Provider 并推送状态到前端
-// #[tauri::command]
-// pub async fn trigger_providers_startup_check(app: AppHandle) {
-//     startup_check_providers(app).await;
-// }
-
 #[tauri::command]
 pub async fn trigger_providers_startup_check(app: AppHandle) {
     check_providers_lifecycle(app, ProviderCheckTrigger::Startup).await;

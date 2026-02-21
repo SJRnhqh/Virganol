@@ -18,6 +18,7 @@ pub fn load_settings_strict(
 ) -> Result<Option<serde_json::Value>, String> {
     let store = app
         .store(SETTINGS_STORE_FILE)
+        // 上抛settings.json文件打开失败的错误
         .map_err(|error| format!("open settings store failed: {}", error))?;
     Ok(store.get(key))
 }

@@ -2,5 +2,6 @@
 // 导出内容
 pub mod lifecycle;
 pub mod service;
+mod snapshot;
 pub mod store;
 mod utils;
