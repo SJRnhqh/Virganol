@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/settings/bot/providers/snapshot.rs
+// apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/snapshot.rs
 // 内部引用
 use crate::core::models::provider::ProviderId;
 use crate::core::models::settings::ProviderRecord;

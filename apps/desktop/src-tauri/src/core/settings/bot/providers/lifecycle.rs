@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle.rs
 // 外部依赖
 use log::{error, info, warn};
-use std::time::{Instant, SystemTime, UNIX_EPOCH};
+use std::time::Instant;
 use tauri::{AppHandle, Emitter};
 use tokio::task::JoinSet;
 
@@ -18,19 +18,10 @@ use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 use crate::core::providers::connections::health;
 use crate::core::settings::bot::providers::store::load_supported_providers;
 use crate::core::settings::secrets;
+mod id;
 
 // === 默认流程：持久化配置校验与结果推送 === //
 const CHECK_CONCURRENCY_LIMIT: usize = 4;
-
-/// 生成一轮检查的唯一 run_id（后续用于 started/status/completed 关联）
-fn next_run_id(trigger: ProviderCheckTrigger) -> String {
-    let timestamp_ms = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|d| d.as_millis())
-        .unwrap_or(0);
-
-    format!("provider-check-{}-{}", trigger.as_tag(), timestamp_ms)
-}
 
 /// 推送生命周期 started 事件
 fn emit_check_started(
@@ -217,7 +208,7 @@ fn emit_check_failed(
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
 pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTrigger) {
     // Step 1: 初始化本轮生命周期上下文（覆盖读取 + 检查 + 推送全链路）
-    let run_id = next_run_id(trigger);
+    let run_id = id::next_run_id(trigger);
     let started_at = Instant::now();
 
     // Step 2: 读取持久化快照（支持项 + 跳过项）
@@ -331,10 +322,12 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     while !pending.is_empty() || !in_flight.is_empty() {
         // 1) 尽可能把任务补满到并发上限
         while in_flight.len() < CHECK_CONCURRENCY_LIMIT {
+            // FIFO 取出一个待检查 provider；队列空则停止补位
             let Some((provider_id, record)) = pending.pop_front() else {
                 break;
             };
 
+            // 提交一个健康检查任务到 in_flight，完成后返回 (provider_id, record, result)
             in_flight.spawn(async move {
                 let url = record.url.as_deref().unwrap_or("").to_string();
                 let result = health_check_with_resolved_key(provider_id, &url).await;
