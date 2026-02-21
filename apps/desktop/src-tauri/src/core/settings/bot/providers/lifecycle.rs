@@ -245,71 +245,11 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
         snapshot.skipped.len(),
     );
 
-    // 无持久化配置：仍发 completed 终态，保持生命周期事件闭环。
-    if loaded_total == 0 {
-        info!(
-            "[Tauri] 📭 No persisted providers found (trigger={:?})",
-            trigger
-        );
-        let duration_ms = started_at.elapsed().as_millis() as u64;
-        if let Err(error_msg) = emit_check_completed(
-            &app,
-            run_id.as_str(),
-            trigger,
-            ProviderCheckStats::default(),
-            duration_ms,
-        ) {
-            handle_lifecycle_failure(
-                &app,
-                run_id.as_str(),
-                trigger,
-                "emit_completed_failed",
-                error_msg.as_str(),
-                vec![ProviderCheckFailureDetail {
-                    code: "emit_completed_failed".to_string(),
-                    provider: None,
-                    message: error_msg.clone(),
-                }],
-            );
-        }
-        return;
-    }
-
     for detail in &snapshot.skipped {
         warn!(
             "[Tauri] ⚠️ Skip unsupported provider in store: raw_id={}, code={}, message={}",
             detail.raw_id, detail.code, detail.message
         );
-    }
-
-    // 无支持配置
-    if supported_total == 0 {
-        info!(
-            "[Tauri] 📭 No supported providers found in persisted configs (loaded {}, skipped {}, trigger={:?})",
-            loaded_total, skipped_total, trigger
-        );
-        let duration_ms = started_at.elapsed().as_millis() as u64;
-        if let Err(error_msg) = emit_check_completed(
-            &app,
-            run_id.as_str(),
-            trigger,
-            ProviderCheckStats::default(),
-            duration_ms,
-        ) {
-            handle_lifecycle_failure(
-                &app,
-                run_id.as_str(),
-                trigger,
-                "emit_completed_failed",
-                error_msg.as_str(),
-                vec![ProviderCheckFailureDetail {
-                    code: "emit_completed_failed".to_string(),
-                    provider: None,
-                    message: error_msg.clone(),
-                }],
-            );
-        }
-        return;
     }
 
     info!(
@@ -338,6 +278,43 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
                 message: error_msg.clone(),
             }],
         );
+        return;
+    }
+
+    // 无可检查项：started 之后仍发 completed 终态，保持生命周期事件闭环。
+    if supported_total == 0 {
+        if loaded_total == 0 {
+            info!(
+                "[Tauri] 📭 No persisted providers found (trigger={:?})",
+                trigger
+            );
+        } else {
+            info!(
+                "[Tauri] 📭 No supported providers found in persisted configs (loaded {}, skipped {}, trigger={:?})",
+                loaded_total, skipped_total, trigger
+            );
+        }
+        let duration_ms = started_at.elapsed().as_millis() as u64;
+        if let Err(error_msg) = emit_check_completed(
+            &app,
+            run_id.as_str(),
+            trigger,
+            ProviderCheckStats::default(),
+            duration_ms,
+        ) {
+            handle_lifecycle_failure(
+                &app,
+                run_id.as_str(),
+                trigger,
+                "emit_completed_failed",
+                error_msg.as_str(),
+                vec![ProviderCheckFailureDetail {
+                    code: "emit_completed_failed".to_string(),
+                    provider: None,
+                    message: error_msg.clone(),
+                }],
+            );
+        }
         return;
     }
 
