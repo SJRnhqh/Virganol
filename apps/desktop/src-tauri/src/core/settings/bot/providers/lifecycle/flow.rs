@@ -1,20 +1,15 @@
-// apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle.rs
+// apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/flow.rs
 // 外部依赖
 use log::{info, warn};
 use std::time::Instant;
 use tauri::AppHandle;
 
 // 内部引用
+use super::{errors, events, id, runner};
 use crate::core::models::providers::check::{
     ProviderCheckFailureDetail, ProviderCheckStats, ProviderCheckTrigger,
 };
 use crate::core::settings::bot::providers::store::load_supported_providers;
-mod errors;
-mod events;
-mod id;
-mod processor;
-mod resolver;
-mod runner;
 
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
 pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTrigger) {
