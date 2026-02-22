@@ -15,10 +15,10 @@ use crate::core::models::providers::check::{
 };
 use crate::core::models::security::{ProviderKeySource, ProviderSecretMeta};
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
-use crate::core::providers::connections::health;
 use crate::core::settings::bot::providers::store::load_supported_providers;
 use crate::core::settings::secrets;
 mod id;
+mod resolver;
 
 // === 默认流程：持久化配置校验与结果推送 === //
 const CHECK_CONCURRENCY_LIMIT: usize = 4;
@@ -63,14 +63,6 @@ fn handle_lifecycle_failure(
             run_id, trigger, code, message
         );
     }
-}
-
-/// 读取可用密钥并执行健康检查（env 优先，其次 keyring）
-async fn health_check_with_resolved_key(provider_id: ProviderId, url: &str) -> HealthCheckResponse {
-    let api_key = secrets::load_provider_key_from_env(provider_id)
-        .or_else(|| secrets::load_provider_key(provider_id));
-    let key = api_key.as_ref().map(|key| key.as_str()).unwrap_or("");
-    health::health_check(provider_id, url, key).await
 }
 
 /// 解析密钥来源元信息（去敏）
@@ -330,7 +322,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
             // 提交一个健康检查任务到 in_flight，完成后返回 (provider_id, record, result)
             in_flight.spawn(async move {
                 let url = record.url.as_deref().unwrap_or("").to_string();
-                let result = health_check_with_resolved_key(provider_id, &url).await;
+                let result = resolver::health_check_with_resolved_key(provider_id, &url).await;
                 (provider_id, record, result)
             });
         }

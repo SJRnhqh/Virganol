@@ -27,6 +27,7 @@ pub fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
     let entry = match Entry::new(KEYRING_SERVICE, account) {
         Ok(entry) => entry,
         Err(error) => {
+            // keyring 初始化失败：记录警告并降级为“无可用密钥”。
             log::warn!("[Tauri] ⚠️ init keyring entry failed: {}", error);
             return None;
         }
@@ -51,6 +52,7 @@ pub fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
         }
         Err(KeyringError::NoEntry) => None,
         Err(error) => {
+            // keyring 读取失败：记录警告并降级为“无可用密钥”。
             log::warn!("[Tauri] ⚠️ load key failed for {}: {}", account, error);
             None
         }
@@ -58,16 +60,8 @@ pub fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
 }
 
 /// 从环境变量读取 provider 的 API Key（开发/CI 兜底）。
-///
-/// 当前支持：
-/// - deepseek: `DEEPSEEK_API_KEY`
 pub fn load_provider_key_from_env(provider_id: ProviderId) -> Option<ProviderKey> {
-    let env_names: &[&str] = match provider_id {
-        ProviderId::Deepseek => &["DEEPSEEK_API_KEY"],
-        _ => return None,
-    };
-
-    for env_name in env_names {
+    for env_name in provider_id.env_key_names() {
         if let Ok(mut value) = std::env::var(env_name) {
             let normalized = value.trim();
             if normalized.is_empty() {

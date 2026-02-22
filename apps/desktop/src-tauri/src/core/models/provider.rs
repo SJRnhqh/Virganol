@@ -17,6 +17,14 @@ impl ProviderId {
             Self::Deepseek => "deepseek",
         }
     }
+
+    /// provider 对应的环境变量候选键（按优先级顺序）。
+    pub fn env_key_names(self) -> &'static [&'static str] {
+        match self {
+            Self::Deepseek => &["DEEPSEEK_API_KEY"],
+            _ => &[],
+        }
+    }
 }
 
 impl TryFrom<&str> for ProviderId {
