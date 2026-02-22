@@ -3,6 +3,9 @@
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
+// 内部引用
+use crate::core::models::providers::errors::ProviderError;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ProviderId {
@@ -28,13 +31,13 @@ impl ProviderId {
 }
 
 impl TryFrom<&str> for ProviderId {
-    type Error = String;
+    type Error = ProviderError;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value {
             "ollama" => Ok(Self::Ollama),
             "deepseek" => Ok(Self::Deepseek),
-            other => Err(format!("unknown provider id: {}", other)),
+            other => Err(ProviderError::UnsupportedProvider(other.to_string())),
         }
     }
 }

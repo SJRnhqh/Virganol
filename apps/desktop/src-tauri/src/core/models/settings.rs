@@ -1,4 +1,4 @@
-// apps/core/models/security.rs
+// apps/core/models/settings.rs
 // 外部方法
 use serde::{Deserialize, Serialize};
 

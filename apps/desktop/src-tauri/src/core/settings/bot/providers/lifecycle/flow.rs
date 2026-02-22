@@ -26,11 +26,11 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
                 run_id.as_str(),
                 trigger,
                 "load_snapshot_failed",
-                error_msg.as_str(),
+                error_msg.message().as_str(),
                 vec![ProviderCheckFailureDetail {
                     code: "load_snapshot_failed".to_string(),
                     provider: None,
-                    message: error_msg.clone(),
+                    message: error_msg.message().clone(),
                 }],
             );
             return;

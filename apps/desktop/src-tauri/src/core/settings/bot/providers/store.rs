@@ -5,8 +5,10 @@ use std::sync::Mutex;
 use tauri::AppHandle;
 
 // 内部引用
-use super::snapshot::{SkippedProviderDetail, SupportedProvidersSnapshot};
+use super::snapshot::SupportedProvidersSnapshot;
 use crate::core::models::provider::ProviderId;
+use crate::core::models::providers::errors::ProviderError;
+use crate::core::models::providers::skip::SkippedProviderDetail;
 use crate::core::models::settings::ProviderRecord;
 use crate::core::settings::store::{load_settings, load_settings_strict, save_settings};
 
@@ -22,25 +24,29 @@ fn load_all_providers(app: &AppHandle) -> HashMap<String, ProviderRecord> {
 }
 
 /// 严格读取所有已保存 providers：
-/// - Ok(HashMap)：读取并反序列化成功
+/// - Ok(HashMap)：读取并完成反序列化
 /// - Ok(empty)：配置不存在（尚未写入）
-/// - Err(...)：读取或反序列化失败
-fn load_all_providers_strict(app: &AppHandle) -> Result<HashMap<String, ProviderRecord>, String> {
-    let maybe_value = load_settings_strict(app, STORE_KEY_SPIRIT_PROVIDERS)
-        // 上抛并且构造对应的加载错误
-        .map_err(|error_msg| format!("load providers store failed: {}", error_msg))?;
+/// - Err(ProviderError::Io)：settings store 打开/读取失败
+/// - Err(ProviderError::Serde)：providers JSON 反序列化失败
+fn load_all_providers_strict(
+    app: &AppHandle,
+) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
+    // 如果加载配置出错则上抛对应错误
+    let maybe_value = load_settings_strict(app, STORE_KEY_SPIRIT_PROVIDERS)?;
     let Some(value) = maybe_value else {
         return Ok(HashMap::new());
     };
 
-    // 上抛序列化的错误
-    serde_json::from_value(value)
-        .map_err(|error| format!("deserialize providers failed: {}", error))
+    // 如果反序列化出错则上抛对应错误
+    let providers: HashMap<String, ProviderRecord> = serde_json::from_value(value)?;
+    Ok(providers)
 }
 
 /// 读取并过滤为“后端当前支持”的 provider 列表（startup_check 专用）
-pub fn load_supported_providers(app: &AppHandle) -> Result<SupportedProvidersSnapshot, String> {
-    // 上抛严格夹在所有配置的错误
+pub fn load_supported_providers(
+    app: &AppHandle,
+) -> Result<SupportedProvidersSnapshot, ProviderError> {
+    // 上抛严格加载所有配置的错误
     let providers = load_all_providers_strict(app)?;
     let total = providers.len();
     let mut supported = Vec::new();
@@ -49,10 +55,10 @@ pub fn load_supported_providers(app: &AppHandle) -> Result<SupportedProvidersSna
     for (raw_id, record) in providers {
         match ProviderId::try_from(raw_id.as_str()) {
             Ok(provider_id) => supported.push((provider_id, record)),
-            Err(error_msg) => skipped.push(SkippedProviderDetail {
+            Err(error) => skipped.push(SkippedProviderDetail {
                 raw_id,
-                code: "unsupported_provider_id".to_string(),
-                message: error_msg,
+                code: error.code().to_string(),
+                message: error.message(),
             }),
         }
     }

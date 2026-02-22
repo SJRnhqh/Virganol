@@ -23,6 +23,7 @@ dependencies = [
  "tauri-plugin-os",
  "tauri-plugin-shell",
  "tauri-plugin-store",
+ "thiserror 2.0.17",
  "tokio",
  "tonic",
  "tonic-build",

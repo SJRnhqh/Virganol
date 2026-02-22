@@ -3,6 +3,9 @@
 use tauri::AppHandle;
 use tauri_plugin_store::StoreExt;
 
+// 内部引用
+use crate::core::models::providers::errors::ProviderError;
+
 pub const SETTINGS_STORE_FILE: &str = "settings.json";
 
 /// 从 settings.json 按 key 读取一段 JSON 值；不存在或读取失败时返回 None。
@@ -15,11 +18,11 @@ pub fn load_settings(app: &AppHandle, key: &str) -> Option<serde_json::Value> {
 pub fn load_settings_strict(
     app: &AppHandle,
     key: &str,
-) -> Result<Option<serde_json::Value>, String> {
+) -> Result<Option<serde_json::Value>, ProviderError> {
     let store = app
         .store(SETTINGS_STORE_FILE)
         // 上抛settings.json文件打开失败的错误
-        .map_err(|error| format!("open settings store failed: {}", error))?;
+        .map_err(|error| ProviderError::Io(format!("open settings store failed: {}", error)))?;
     Ok(store.get(key))
 }
 
