@@ -13,10 +13,8 @@ use crate::core::models::providers::check::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckFailureDetail,
     ProviderCheckStartedPayload, ProviderCheckStats, ProviderCheckTrigger, ProviderStatusPayload,
 };
-use crate::core::models::security::{ProviderKeySource, ProviderSecretMeta};
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 use crate::core::settings::bot::providers::store::load_supported_providers;
-use crate::core::settings::secrets;
 mod id;
 mod resolver;
 
@@ -63,17 +61,6 @@ fn handle_lifecycle_failure(
             run_id, trigger, code, message
         );
     }
-}
-
-/// 解析密钥来源元信息（去敏）
-fn resolve_provider_secret_meta(provider_id: ProviderId) -> ProviderSecretMeta {
-    if secrets::load_provider_key_from_env(provider_id).is_some() {
-        return ProviderSecretMeta::with_source(ProviderKeySource::Env);
-    }
-    if secrets::load_provider_key(provider_id).is_some() {
-        return ProviderSecretMeta::with_source(ProviderKeySource::Keyring);
-    }
-    ProviderSecretMeta::none()
 }
 
 /// 协调 enabled_models：只保留 available_models 中仍然存在的模型
@@ -147,7 +134,7 @@ fn emit_provider_status(
         provider: provider_id,
         config,
         health,
-        secret_meta: resolve_provider_secret_meta(provider_id),
+        secret_meta: resolver::resolve_provider_secret_meta(provider_id),
     };
 
     app.emit("provider-status", &payload)
