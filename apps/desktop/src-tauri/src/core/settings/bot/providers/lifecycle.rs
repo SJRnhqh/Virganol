@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle.rs
 // 外部依赖
-use log::{error, info, warn};
+use log::{info, warn};
 use std::time::Instant;
 use tauri::AppHandle;
 
@@ -9,32 +9,12 @@ use crate::core::models::providers::check::{
     ProviderCheckFailureDetail, ProviderCheckStats, ProviderCheckTrigger,
 };
 use crate::core::settings::bot::providers::store::load_supported_providers;
+mod errors;
 mod events;
 mod id;
 mod processor;
 mod resolver;
 mod runner;
-
-/// 生命周期异常处理：记录错误并立即尝试推送 failed 事件
-fn handle_lifecycle_failure(
-    app: &AppHandle,
-    run_id: &str,
-    trigger: ProviderCheckTrigger,
-    code: &str,
-    message: &str,
-    details: Vec<ProviderCheckFailureDetail>,
-) {
-    error!("[Tauri] ❌ {}", message);
-
-    if let Err(emit_err) = events::emit_check_failed(app, run_id, trigger, code, message, details) {
-        error!("[Tauri] ❌ {}", emit_err);
-    } else {
-        error!(
-            "[Tauri] ❌ Provider check failed: run_id={}, trigger={:?}, code={}, message={}",
-            run_id, trigger, code, message
-        );
-    }
-}
 
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
 pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTrigger) {
@@ -46,7 +26,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     let snapshot = match load_supported_providers(&app) {
         Ok(snapshot) => snapshot,
         Err(error_msg) => {
-            handle_lifecycle_failure(
+            errors::handle_lifecycle_failure(
                 &app,
                 run_id.as_str(),
                 trigger,
@@ -88,7 +68,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
         loaded_total,
         skipped_total,
     ) {
-        handle_lifecycle_failure(
+        errors::handle_lifecycle_failure(
             &app,
             run_id.as_str(),
             trigger,
@@ -124,7 +104,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
             ProviderCheckStats::default(),
             duration_ms,
         ) {
-            handle_lifecycle_failure(
+            errors::handle_lifecycle_failure(
                 &app,
                 run_id.as_str(),
                 trigger,
@@ -150,7 +130,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
         if let Err(error_msg) =
             events::emit_check_completed(&app, run_id.as_str(), trigger, stats, duration_ms)
         {
-            handle_lifecycle_failure(
+            errors::handle_lifecycle_failure(
                 &app,
                 run_id.as_str(),
                 trigger,
@@ -181,7 +161,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
         lifecycle_errors.len(),
         provider_scoped_errors
     );
-    handle_lifecycle_failure(
+    errors::handle_lifecycle_failure(
         &app,
         run_id.as_str(),
         trigger,
