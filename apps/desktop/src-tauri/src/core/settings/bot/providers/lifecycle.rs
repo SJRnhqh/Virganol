@@ -64,14 +64,15 @@ fn handle_lifecycle_failure(
 }
 
 /// 协调 enabled_models：只保留 available_models 中仍然存在的模型
-/// 如果有模型被淘汰，自动写回配置文件并返回更新后的 ProviderRecord
-/// 如果无变化，直接返回原 record 的克隆
+/// 返回：
+/// - 最终生效的 ProviderRecord（回写失败时回滚为原 record）
+/// - 可选错误信息（用于上层统一收敛 warning/partial_failure）
 fn reconcile_enabled_models(
     app: &AppHandle,
     provider_id: ProviderId,
     record: &ProviderRecord,
     available_models: &[String],
-) -> ProviderRecord {
+) -> (ProviderRecord, Option<String>) {
     // 交集：只保留仍然可用的 enabled 模型
     let new_enabled = compute_enabled_models(&record.enabled_models, available_models);
 
@@ -88,37 +89,42 @@ fn reconcile_enabled_models(
                     record.enabled_models.len(),
                     updated.enabled_models.len()
                 );
-                updated
+                (updated, None)
             }
             Err(error_msg) => {
                 error!(
                     "[Tauri] ❌ {} enabled_models reconcile persist failed: {}",
                     provider_id, error_msg
                 );
-                record.clone()
+                (record.clone(), Some(error_msg))
             }
         }
     } else {
         // 无变化，原样返回
-        record.clone()
+        (record.clone(), None)
     }
 }
 
 /// 处理单个 provider 检查结果：成功时先做 enabled_models 对齐
+/// 返回：
+/// - final_record: 最终用于状态推送的配置
+/// - online: 健康检查是否成功
+/// - reconcile_error: enabled_models 回写失败时的可选错误
 fn process_provider_check_result(
     app: &AppHandle,
     provider_id: ProviderId,
     record: ProviderRecord,
     health: &HealthCheckResponse,
-) -> (ProviderRecord, bool) {
+) -> (ProviderRecord, bool, Option<String>) {
     let online = health.success;
-    let final_record = if online {
-        reconcile_enabled_models(app, provider_id, &record, &health.available_models)
-    } else {
-        record
-    };
 
-    (final_record, online)
+    if online {
+        let (final_record, reconcile_error) =
+            reconcile_enabled_models(app, provider_id, &record, &health.available_models);
+        (final_record, true, reconcile_error)
+    } else {
+        (record, false, None)
+    }
 }
 
 /// 推送单个 Provider 的状态事件
@@ -317,11 +323,22 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
         // 2) 消费一个已完成任务（完成即处理，增量推送）
         match in_flight.join_next().await {
             Some(Ok((provider_id, record, result))) => {
-                let (final_record, online) =
+                let (final_record, online, reconcile_error) =
                     process_provider_check_result(&app, provider_id, record, &result);
+
+                if let Some(error_msg) = reconcile_error {
+                    lifecycle_errors.push(ProviderCheckFailureDetail {
+                        code: "enabled_models_reconcile_persist_failed".to_string(),
+                        provider: Some(provider_id),
+                        message: error_msg,
+                    });
+                }
 
                 // 统计：这条 provider 已处理完成
                 stats.record(online);
+
+                let icon = if online { "✅" } else { "⚠️" };
+                info!("[Tauri] {} {} → online: {}", icon, provider_id, online);
 
                 if let Err(error_msg) =
                     emit_provider_status(&app, run_id.as_str(), provider_id, final_record, result)
@@ -332,11 +349,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
                         provider: Some(provider_id),
                         message: error_msg,
                     });
-                    continue;
                 }
-
-                let icon = if online { "✅" } else { "⚠️" };
-                info!("[Tauri] {} {} → online: {}", icon, provider_id, online);
             }
             Some(Err(join_error)) => {
                 let msg = format!("provider check task join failed: {}", join_error);
@@ -346,7 +359,6 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
                     provider: None,
                     message: msg,
                 });
-                continue;
             }
             None => break,
         }
