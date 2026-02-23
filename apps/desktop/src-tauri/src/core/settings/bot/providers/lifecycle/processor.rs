@@ -5,6 +5,7 @@ use tauri::AppHandle;
 
 // 内部引用
 use crate::core::models::provider::ProviderId;
+use crate::core::models::providers::error::ProviderError;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 use crate::core::settings::bot::providers::store::save_provider;
 use crate::core::settings::bot::providers::utils::compute_enabled_models;
@@ -18,7 +19,7 @@ fn reconcile_enabled_models(
     provider_id: ProviderId,
     record: &ProviderRecord,
     available_models: &[String],
-) -> (ProviderRecord, Option<String>) {
+) -> (ProviderRecord, Option<ProviderError>) {
     // 交集：只保留仍然可用的 enabled 模型
     let new_enabled = compute_enabled_models(&record.enabled_models, available_models);
 
@@ -37,12 +38,12 @@ fn reconcile_enabled_models(
                 );
                 (updated, None)
             }
-            Err(error_msg) => {
+            Err(err) => {
                 error!(
                     "[Tauri] ❌ {} enabled_models reconcile persist failed: {}",
-                    provider_id, error_msg
+                    provider_id, err.message()
                 );
-                (record.clone(), Some(error_msg))
+                (record.clone(), Some(err))
             }
         }
     } else {
@@ -61,7 +62,7 @@ pub(super) fn process_provider_check_result(
     provider_id: ProviderId,
     record: ProviderRecord,
     health: &HealthCheckResponse,
-) -> (ProviderRecord, bool, Option<String>) {
+) -> (ProviderRecord, bool, Option<ProviderError>) {
     let online = health.success;
 
     if online {

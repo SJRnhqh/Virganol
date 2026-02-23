@@ -27,15 +27,15 @@ pub fn load_settings_strict(
 }
 
 /// 将 JSON 值写入 settings.json 的指定 key（upsert 语义）。
-pub fn save_settings(app: &AppHandle, key: &str, value: serde_json::Value) -> Result<(), String> {
+pub fn save_settings(app: &AppHandle, key: &str, value: serde_json::Value) -> Result<(), ProviderError> {
     let store = app
         .store(SETTINGS_STORE_FILE)
-        .map_err(|error| format!("open settings store failed: {}", error))?;
+        .map_err(|error| ProviderError::Io(format!("open settings store failed: {}", error)))?;
 
     store.set(key, value);
     store
         .save()
-        .map_err(|error| format!("flush settings store failed: {}", error))?;
+        .map_err(|error| ProviderError::Io(format!("flush settings store failed: {}", error)))?;
 
     Ok(())
 }

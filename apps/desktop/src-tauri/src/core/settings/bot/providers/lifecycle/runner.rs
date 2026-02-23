@@ -50,11 +50,12 @@ pub(super) async fn run_provider_checks(
                 let (final_record, online, reconcile_error) =
                     processor::process_provider_check_result(app, provider_id, record, &result);
 
-                if let Some(error_msg) = reconcile_error {
+                if let Some(err) = reconcile_error {
+                    let message = err.message();
                     provider_issues.push(ProviderIssue::new(
                         provider_id,
-                        "enabled_models_reconcile_persist_failed",
-                        error_msg,
+                        err.code(),
+                        message,
                     ));
                 }
 

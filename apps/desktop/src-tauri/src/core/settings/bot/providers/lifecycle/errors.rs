@@ -8,18 +8,6 @@ use super::events;
 use crate::core::models::providers::check::ProviderCheckTrigger;
 use crate::core::models::providers::issue::ProviderIssue;
 
-/// 生命周期异常处理：记录错误并立即尝试推送 failed 事件
-pub(super) fn handle_lifecycle_failure(
-    app: &AppHandle,
-    run_id: &str,
-    trigger: ProviderCheckTrigger,
-    code: &str,
-    message: &str,
-    issues: Option<Vec<ProviderIssue>>,
-) {
-    report_lifecycle_failure(app, run_id, trigger, code, message, issues);
-}
-
 pub(super) fn report_lifecycle_failure(
     app: &AppHandle,
     run_id: &str,
@@ -29,6 +17,7 @@ pub(super) fn report_lifecycle_failure(
     issues: Option<Vec<ProviderIssue>>,
 ) {
     if let Err(emit_err) = events::emit_check_failed(app, run_id, trigger, code, message, issues) {
+        // 日志打印报错兜底
         error!(
             "[Tauri] ❌ emit providers-check-failed fallback: run_id={}, trigger={:?}, code={}, message={}, emit_err={}",
             run_id, trigger, code, message, emit_err

@@ -8,6 +8,7 @@ use tauri::AppHandle;
 use super::{errors, events, id, runner};
 use crate::core::models::providers::check::{ProviderCheckStats, ProviderCheckTrigger};
 use crate::core::settings::bot::providers::store::load_supported_providers;
+use crate::core::models::providers::error::ProviderError;
 
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
 pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTrigger) {
@@ -134,21 +135,22 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     }
 
     let provider_issue_count = provider_issues.len();
-    let error_msg = format!(
+    let err = ProviderError::LifecycleEventEmit(format!(
         "provider check finished with lifecycle_error_count={}, provider_issue_count={}",
         lifecycle_error_count, provider_issue_count
-    );
+    ));
     let issues = if provider_issues.is_empty() {
         None
     } else {
         Some(provider_issues)
     };
-    errors::handle_lifecycle_failure(
+    let message = err.message();
+    errors::report_lifecycle_failure(
         &app,
         run_id.as_str(),
         trigger,
-        "partial_failure",
-        error_msg.as_str(),
+        err.code(),
+        message.as_str(),
         issues,
     );
 }
