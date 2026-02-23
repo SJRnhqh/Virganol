@@ -7,7 +7,8 @@ use tokio::task::JoinSet;
 // 内部引用
 use super::{events, processor, resolver};
 use crate::core::models::provider::ProviderId;
-use crate::core::models::providers::check::{ProviderCheckFailureDetail, ProviderCheckStats};
+use crate::core::models::providers::check::ProviderCheckStats;
+use crate::core::models::providers::issue::ProviderIssue;
 use crate::core::models::settings::ProviderRecord;
 
 /// 并发健康检查最大并发度
@@ -18,9 +19,10 @@ pub(super) async fn run_provider_checks(
     app: &AppHandle,
     run_id: &str,
     supported: Vec<(ProviderId, ProviderRecord)>,
-) -> (ProviderCheckStats, Vec<ProviderCheckFailureDetail>) {
+) -> (ProviderCheckStats, Vec<ProviderIssue>, usize) {
     let mut stats = ProviderCheckStats::default();
-    let mut lifecycle_errors: Vec<ProviderCheckFailureDetail> = Vec::new();
+    let mut provider_issues: Vec<ProviderIssue> = Vec::new();
+    let mut lifecycle_error_count: usize = 0;
 
     let mut pending: std::collections::VecDeque<(ProviderId, ProviderRecord)> = supported.into();
     let mut in_flight = JoinSet::new();
@@ -49,11 +51,11 @@ pub(super) async fn run_provider_checks(
                     processor::process_provider_check_result(app, provider_id, record, &result);
 
                 if let Some(error_msg) = reconcile_error {
-                    lifecycle_errors.push(ProviderCheckFailureDetail {
-                        code: "enabled_models_reconcile_persist_failed".to_string(),
-                        provider: Some(provider_id),
-                        message: error_msg,
-                    });
+                    provider_issues.push(ProviderIssue::new(
+                        provider_id,
+                        "enabled_models_reconcile_persist_failed",
+                        error_msg,
+                    ));
                 }
 
                 // 统计：这条 provider 已处理完成
@@ -66,25 +68,21 @@ pub(super) async fn run_provider_checks(
                     events::emit_provider_status(app, run_id, provider_id, final_record, result)
                 {
                     error!("[Tauri] ❌ emit_status_failed: {}", error_msg);
-                    lifecycle_errors.push(ProviderCheckFailureDetail {
-                        code: "emit_status_failed".to_string(),
-                        provider: Some(provider_id),
-                        message: error_msg,
-                    });
+                    provider_issues.push(ProviderIssue::new(
+                        provider_id,
+                        "emit_status_failed",
+                        error_msg,
+                    ));
                 }
             }
             Some(Err(join_error)) => {
                 let msg = format!("provider check task join failed: {}", join_error);
                 error!("[Tauri] ❌ join_failed: {}", msg);
-                lifecycle_errors.push(ProviderCheckFailureDetail {
-                    code: "join_failed".to_string(),
-                    provider: None,
-                    message: msg,
-                });
+                lifecycle_error_count += 1;
             }
             None => break,
         }
     }
 
-    (stats, lifecycle_errors)
+    (stats, provider_issues, lifecycle_error_count)
 }

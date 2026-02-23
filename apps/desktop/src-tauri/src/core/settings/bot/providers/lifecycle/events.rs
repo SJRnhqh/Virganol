@@ -6,9 +6,10 @@ use tauri::{AppHandle, Emitter};
 use super::resolver;
 use crate::core::models::provider::ProviderId;
 use crate::core::models::providers::check::{
-    ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckFailureDetail,
-    ProviderCheckStartedPayload, ProviderCheckStats, ProviderCheckTrigger, ProviderStatusPayload,
+    ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
+    ProviderCheckStats, ProviderCheckTrigger, ProviderStatusPayload,
 };
+use crate::core::models::providers::issue::ProviderIssue;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 
 /// 推送生命周期 started 事件
@@ -80,15 +81,14 @@ pub(super) fn emit_check_failed(
     trigger: ProviderCheckTrigger,
     code: &str,
     message: &str,
-    details: Vec<ProviderCheckFailureDetail>,
+    issues: Option<Vec<ProviderIssue>>,
 ) -> Result<(), String> {
     let payload = ProviderCheckFailedPayload {
         run_id: run_id.to_string(),
         trigger,
         code: code.to_string(),
         message: message.to_string(),
-        error_count: details.len(),
-        details,
+        issues,
     };
 
     app.emit("providers-check-failed", &payload)

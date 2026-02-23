@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/models/providers/errors.rs
+// apps/desktop/src-tauri/src/core/models/providers/error.rs
 use serde::{Serialize, Serializer};
 use thiserror::Error;
 

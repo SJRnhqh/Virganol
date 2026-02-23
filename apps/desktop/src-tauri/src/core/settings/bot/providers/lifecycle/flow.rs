@@ -6,9 +6,7 @@ use tauri::AppHandle;
 
 // 内部引用
 use super::{errors, events, id, runner};
-use crate::core::models::providers::check::{
-    ProviderCheckFailureDetail, ProviderCheckStats, ProviderCheckTrigger,
-};
+use crate::core::models::providers::check::{ProviderCheckStats, ProviderCheckTrigger};
 use crate::core::settings::bot::providers::store::load_supported_providers;
 
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
@@ -21,17 +19,14 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     let snapshot = match load_supported_providers(&app) {
         Ok(snapshot) => snapshot,
         Err(error) => {
+            let message = error.message();
             errors::report_lifecycle_failure(
                 &app,
                 run_id.as_str(),
                 trigger,
                 error.code(),
-                error.message().as_str(),
-                vec![ProviderCheckFailureDetail {
-                    code: "load_snapshot_failed".to_string(),
-                    provider: None,
-                    message: error.message().clone(),
-                }],
+                message.as_str(),
+                None,
             );
             return;
         }
@@ -69,11 +64,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
             trigger,
             "emit_started_failed",
             error_msg.as_str(),
-            vec![ProviderCheckFailureDetail {
-                code: "emit_started_failed".to_string(),
-                provider: None,
-                message: error_msg.clone(),
-            }],
+            None,
         );
         return;
     }
@@ -105,23 +96,19 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
                 trigger,
                 "emit_completed_failed",
                 error_msg.as_str(),
-                vec![ProviderCheckFailureDetail {
-                    code: "emit_completed_failed".to_string(),
-                    provider: None,
-                    message: error_msg.clone(),
-                }],
+                None,
             );
         }
         return;
     }
 
     // Step 4: 并发执行健康检查并收敛统计/结构性错误
-    let (stats, lifecycle_errors) =
+    let (stats, provider_issues, lifecycle_error_count) =
         runner::run_provider_checks(&app, run_id.as_str(), snapshot.supported).await;
 
     // Step 5: 发出生命周期 completed/partial_failure 终态事件
     let duration_ms = started_at.elapsed().as_millis() as u64;
-    if lifecycle_errors.is_empty() {
+    if provider_issues.is_empty() && lifecycle_error_count == 0 {
         if let Err(error_msg) =
             events::emit_check_completed(&app, run_id.as_str(), trigger, stats, duration_ms)
         {
@@ -131,11 +118,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
                 trigger,
                 "emit_completed_failed",
                 error_msg.as_str(),
-                vec![ProviderCheckFailureDetail {
-                    code: "emit_completed_failed".to_string(),
-                    provider: None,
-                    message: error_msg.clone(),
-                }],
+                None,
             );
             return;
         }
@@ -147,21 +130,22 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
         return;
     }
 
-    let provider_scoped_errors = lifecycle_errors
-        .iter()
-        .filter(|detail| detail.provider.is_some())
-        .count();
+    let provider_issue_count = provider_issues.len();
     let error_msg = format!(
-        "provider check finished with {} lifecycle error(s), provider_scoped_errors={}",
-        lifecycle_errors.len(),
-        provider_scoped_errors
+        "provider check finished with lifecycle_error_count={}, provider_issue_count={}",
+        lifecycle_error_count, provider_issue_count
     );
+    let issues = if provider_issues.is_empty() {
+        None
+    } else {
+        Some(provider_issues)
+    };
     errors::handle_lifecycle_failure(
         &app,
         run_id.as_str(),
         trigger,
         "partial_failure",
         error_msg.as_str(),
-        lifecycle_errors,
+        issues,
     );
 }

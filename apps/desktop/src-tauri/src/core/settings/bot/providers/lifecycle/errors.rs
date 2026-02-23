@@ -5,7 +5,8 @@ use tauri::AppHandle;
 
 // 内部引用
 use super::events;
-use crate::core::models::providers::check::{ProviderCheckFailureDetail, ProviderCheckTrigger};
+use crate::core::models::providers::check::ProviderCheckTrigger;
+use crate::core::models::providers::issue::ProviderIssue;
 
 /// 生命周期异常处理：记录错误并立即尝试推送 failed 事件
 pub(super) fn handle_lifecycle_failure(
@@ -14,18 +15,9 @@ pub(super) fn handle_lifecycle_failure(
     trigger: ProviderCheckTrigger,
     code: &str,
     message: &str,
-    details: Vec<ProviderCheckFailureDetail>,
+    issues: Option<Vec<ProviderIssue>>,
 ) {
-    error!("[Tauri] ❌ {}", message);
-
-    if let Err(emit_err) = events::emit_check_failed(app, run_id, trigger, code, message, details) {
-        error!("[Tauri] ❌ {}", emit_err);
-    } else {
-        error!(
-            "[Tauri] ❌ Provider check failed: run_id={}, trigger={:?}, code={}, message={}",
-            run_id, trigger, code, message
-        );
-    }
+    report_lifecycle_failure(app, run_id, trigger, code, message, issues);
 }
 
 pub(super) fn report_lifecycle_failure(
@@ -34,11 +26,11 @@ pub(super) fn report_lifecycle_failure(
     trigger: ProviderCheckTrigger,
     code: &str,
     message: &str,
-    details: Vec<ProviderCheckFailureDetail>,
+    issues: Option<Vec<ProviderIssue>>,
 ) {
     error!("[Tauri] ❌ {}", message);
 
-    if let Err(emit_err) = events::emit_check_failed(app, run_id, trigger, code, message, details) {
+    if let Err(emit_err) = events::emit_check_failed(app, run_id, trigger, code, message, issues) {
         error!("[Tauri] ❌ {}", emit_err);
     } else {
         error!(

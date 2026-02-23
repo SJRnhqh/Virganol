@@ -2,6 +2,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::core::models::provider::ProviderId;
+use crate::core::models::providers::issue::ProviderIssue;
 use crate::core::models::security::ProviderSecretMeta;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 
@@ -102,25 +103,11 @@ pub struct ProviderCheckFailedPayload {
     pub run_id: String,
     /// 本轮检查的触发来源。
     pub trigger: ProviderCheckTrigger,
-    /// 结构化错误码（如 internal_error / emit_failed / join_failed）。
+    /// 结构化错误码。
     pub code: String,
     /// 面向前端展示或日志记录的错误信息。
     pub message: String,
-    /// 本轮生命周期结构性错误总数（可用于前端快速分支渲染）。
-    pub error_count: usize,
-    /// 结构化错误明细（可按 provider/code 进行选择性渲染）。
-    #[serde(default)]
-    pub details: Vec<ProviderCheckFailureDetail>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-/// 一条生命周期结构化错误明细。
-pub struct ProviderCheckFailureDetail {
-    /// 错误类型编码（如 emit_status_failed / join_failed）。
-    pub code: String,
-    /// 关联的 Provider（存在则表示该错误可定位到具体 Provider）。
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub provider: Option<ProviderId>,
-    /// 错误描述信息。
-    pub message: String,
+    /// Provider 级问题列表；仅在存在可定位到具体 Provider 的问题时返回。
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub issues: Option<Vec<ProviderIssue>>,
 }
