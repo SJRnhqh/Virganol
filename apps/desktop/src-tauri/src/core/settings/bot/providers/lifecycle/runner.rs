@@ -65,14 +65,16 @@ pub(super) async fn run_provider_checks(
                 let icon = if online { "✅" } else { "⚠️" };
                 info!("[Tauri] {} {} → online: {}", icon, provider_id, online);
 
-                if let Err(error_msg) =
+                if let Err(err) =
                     events::emit_provider_status(app, run_id, provider_id, final_record, result)
                 {
-                    error!("[Tauri] ❌ emit_status_failed: {}", error_msg);
+                    let message = err.message();
+                    error!("[Tauri] ❌ emit_status_failed: {}", message);
+                    
                     provider_issues.push(ProviderIssue::new(
                         provider_id,
-                        "emit_status_failed",
-                        error_msg,
+                        err.code(),
+                        message,
                     ));
                 }
             }

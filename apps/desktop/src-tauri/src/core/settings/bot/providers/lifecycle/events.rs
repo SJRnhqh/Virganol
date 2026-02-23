@@ -42,7 +42,7 @@ pub(super) fn emit_provider_status(
     provider_id: ProviderId,
     config: ProviderRecord,
     health: HealthCheckResponse,
-) -> Result<(), String> {
+) -> Result<(), ProviderError> {
     let payload = ProviderStatusPayload {
         run_id: run_id.to_string(),
         provider: provider_id,
@@ -52,7 +52,7 @@ pub(super) fn emit_provider_status(
     };
 
     app.emit("provider-status", &payload)
-        .map_err(|e| format!("emit provider-status failed: {}", e))
+        .map_err(|e| ProviderError::LifecycleEventEmit(format!("emit provider-status failed: {}", e)))
 }
 
 /// 推送生命周期 completed 事件
