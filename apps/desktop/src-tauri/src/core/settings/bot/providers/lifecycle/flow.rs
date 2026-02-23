@@ -39,8 +39,8 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
 
     for detail in &snapshot.skipped {
         warn!(
-            "[Tauri] ⚠️ Skip unsupported provider in store: raw_id={}, code={}, message={}",
-            detail.raw_id, detail.code, detail.message
+            "[Tauri] ⚠️ Skip unsupported provider in store: run_id={}, trigger={:?}, raw_id={}, code={}, message={}",
+            run_id, trigger, detail.raw_id, detail.code, detail.message
         );
     }
 

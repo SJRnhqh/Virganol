@@ -10,6 +10,8 @@ pub enum ProviderError {
     Serde(#[from] serde_json::Error),
     #[error("Unsupported provider: {0}")]
     UnsupportedProvider(String),
+    #[error("Lifecycle event emit failed: {0}")]
+    LifecycleEventEmit(String),
 }
 
 impl ProviderError {
@@ -18,6 +20,7 @@ impl ProviderError {
             Self::Io(_) => "io_error",
             Self::Serde(_) => "serde_error",
             Self::UnsupportedProvider(_) => "unsupported_provider",
+            Self::LifecycleEventEmit(_) => "lifecycle_event_emit_failed",
         }
     }
 

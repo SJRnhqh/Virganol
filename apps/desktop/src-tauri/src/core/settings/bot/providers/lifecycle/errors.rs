@@ -28,14 +28,10 @@ pub(super) fn report_lifecycle_failure(
     message: &str,
     issues: Option<Vec<ProviderIssue>>,
 ) {
-    error!("[Tauri] ❌ {}", message);
-
     if let Err(emit_err) = events::emit_check_failed(app, run_id, trigger, code, message, issues) {
-        error!("[Tauri] ❌ {}", emit_err);
-    } else {
         error!(
-            "[Tauri] ❌ Provider check failed: run_id={}, trigger={:?}, code={}, message={}",
-            run_id, trigger, code, message
+            "[Tauri] ❌ emit providers-check-failed fallback: run_id={}, trigger={:?}, code={}, message={}, emit_err={}",
+            run_id, trigger, code, message, emit_err
         );
     }
 }
