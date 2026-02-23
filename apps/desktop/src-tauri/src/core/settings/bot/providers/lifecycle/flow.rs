@@ -20,17 +20,17 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     // Step 2: 读取持久化快照（支持项 + 跳过项）
     let snapshot = match load_supported_providers(&app) {
         Ok(snapshot) => snapshot,
-        Err(error_msg) => {
-            errors::handle_lifecycle_failure(
+        Err(error) => {
+            errors::report_lifecycle_failure(
                 &app,
                 run_id.as_str(),
                 trigger,
-                "load_snapshot_failed",
-                error_msg.message().as_str(),
+                error.code(),
+                error.message().as_str(),
                 vec![ProviderCheckFailureDetail {
                     code: "load_snapshot_failed".to_string(),
                     provider: None,
-                    message: error_msg.message().clone(),
+                    message: error.message().clone(),
                 }],
             );
             return;

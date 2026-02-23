@@ -27,3 +27,23 @@ pub(super) fn handle_lifecycle_failure(
         );
     }
 }
+
+pub(super) fn report_lifecycle_failure(
+    app: &AppHandle,
+    run_id: &str,
+    trigger: ProviderCheckTrigger,
+    code: &str,
+    message: &str,
+    details: Vec<ProviderCheckFailureDetail>,
+) {
+    error!("[Tauri] ❌ {}", message);
+
+    if let Err(emit_err) = events::emit_check_failed(app, run_id, trigger, code, message, details) {
+        error!("[Tauri] ❌ {}", emit_err);
+    } else {
+        error!(
+            "[Tauri] ❌ Provider check failed: run_id={}, trigger={:?}, code={}, message={}",
+            run_id, trigger, code, message
+        );
+    }
+}
