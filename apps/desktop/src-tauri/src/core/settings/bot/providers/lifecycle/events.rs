@@ -21,7 +21,7 @@ pub(super) fn emit_check_started(
     total: usize,
     loaded_total: usize,
     skipped_total: usize,
-) -> Result<(), String> {
+) -> Result<(), ProviderError> {
     let payload = ProviderCheckStartedPayload {
         run_id: run_id.to_string(),
         trigger,
@@ -30,8 +30,9 @@ pub(super) fn emit_check_started(
         skipped_total,
     };
 
-    app.emit("providers-check-started", &payload)
-        .map_err(|e| format!("emit providers-check-started failed: {}", e))
+    app.emit("providers-check-started", &payload).map_err(|e| {
+        ProviderError::LifecycleEventEmit(format!("emit providers-check-started failed: {}", e))
+    })
 }
 
 /// 推送单个 Provider 的状态事件
@@ -61,7 +62,7 @@ pub(super) fn emit_check_completed(
     trigger: ProviderCheckTrigger,
     stats: ProviderCheckStats,
     duration_ms: u64,
-) -> Result<(), String> {
+) -> Result<(), ProviderError> {
     let payload = ProviderCheckCompletedPayload {
         run_id: run_id.to_string(),
         trigger,
@@ -72,7 +73,12 @@ pub(super) fn emit_check_completed(
     };
 
     app.emit("providers-check-completed", &payload)
-        .map_err(|e| format!("emit providers-check-completed failed: {}", e))
+        .map_err(|e| {
+            ProviderError::LifecycleEventEmit(format!(
+                "emit providers-check-completed failed: {}",
+                e
+            ))
+        })
 }
 
 /// 推送生命周期 failed 事件

@@ -18,13 +18,13 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     // Step 2: 读取持久化快照（支持项 + 跳过项）
     let snapshot = match load_supported_providers(&app) {
         Ok(snapshot) => snapshot,
-        Err(error) => {
-            let message = error.message();
+        Err(err) => {
+            let message = err.message();
             errors::report_lifecycle_failure(
                 &app,
                 run_id.as_str(),
                 trigger,
-                error.code(),
+                err.code(),
                 message.as_str(),
                 None,
             );
@@ -50,7 +50,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     );
 
     // Step 3: 发出生命周期 started 事件
-    if let Err(error_msg) = events::emit_check_started(
+    if let Err(err) = events::emit_check_started(
         &app,
         run_id.as_str(),
         trigger,
@@ -58,12 +58,13 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
         loaded_total,
         skipped_total,
     ) {
-        errors::handle_lifecycle_failure(
+        let message = err.message();
+        errors::report_lifecycle_failure(
             &app,
             run_id.as_str(),
             trigger,
-            "emit_started_failed",
-            error_msg.as_str(),
+            err.code(),
+            message.as_str(),
             None,
         );
         return;
@@ -83,19 +84,20 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
             );
         }
         let duration_ms = started_at.elapsed().as_millis() as u64;
-        if let Err(error_msg) = events::emit_check_completed(
+        if let Err(err) = events::emit_check_completed(
             &app,
             run_id.as_str(),
             trigger,
             ProviderCheckStats::default(),
             duration_ms,
         ) {
-            errors::handle_lifecycle_failure(
+            let message = err.message();
+            errors::report_lifecycle_failure(
                 &app,
                 run_id.as_str(),
                 trigger,
-                "emit_completed_failed",
-                error_msg.as_str(),
+                err.code(),
+                message.as_str(),
                 None,
             );
         }
@@ -109,15 +111,16 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     // Step 5: 发出生命周期 completed/partial_failure 终态事件
     let duration_ms = started_at.elapsed().as_millis() as u64;
     if provider_issues.is_empty() && lifecycle_error_count == 0 {
-        if let Err(error_msg) =
+        if let Err(err) =
             events::emit_check_completed(&app, run_id.as_str(), trigger, stats, duration_ms)
         {
-            errors::handle_lifecycle_failure(
+            let message = err.message();
+            errors::report_lifecycle_failure(
                 &app,
                 run_id.as_str(),
                 trigger,
-                "emit_completed_failed",
-                error_msg.as_str(),
+                err.code(),
+                message.as_str(),
                 None,
             );
             return;
