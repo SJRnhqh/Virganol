@@ -16,11 +16,21 @@ pub(super) fn report_lifecycle_failure(
     message: &str,
     issues: Option<Vec<ProviderIssue>>,
 ) {
-    if let Err(emit_err) = events::emit_check_failed(app, run_id, trigger, code, message, issues) {
+    if let Err(emit_err) = events::emit_check_failed(app, run_id, trigger, code, message, issues.clone()) {
         // 日志打印报错兜底
-        error!(
-            "[Tauri] ❌ emit providers-check-failed fallback: run_id={}, trigger={:?}, code={}, message={}, emit_err={}",
-            run_id, trigger, code, message, emit_err
-        );
+        match &issues {
+            Some(issues) => {
+                error!(
+                    "[Tauri] ❌ emit providers-check-failed fallback: run_id={}, trigger={:?}, code={}, message={}, issues={:?}, emit_err={}",
+                    run_id, trigger, code, message, issues, emit_err
+                );
+            }
+            None => {
+                error!(
+                    "[Tauri] ❌ emit providers-check-failed fallback: run_id={}, trigger={:?}, code={}, message={}, emit_err={}",
+                    run_id, trigger, code, message, emit_err
+                );
+            }
+        }
     }
 }

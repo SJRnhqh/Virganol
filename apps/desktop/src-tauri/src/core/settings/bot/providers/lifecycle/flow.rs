@@ -7,8 +7,8 @@ use tauri::AppHandle;
 // 内部引用
 use super::{errors, events, id, runner};
 use crate::core::models::providers::check::{ProviderCheckStats, ProviderCheckTrigger};
-use crate::core::settings::bot::providers::store::load_supported_providers;
 use crate::core::models::providers::error::ProviderError;
+use crate::core::settings::bot::providers::store::load_supported_providers;
 
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
 pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTrigger) {
@@ -101,17 +101,18 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
                 message.as_str(),
                 None,
             );
+            return;
         }
         return;
     }
 
     // Step 4: 并发执行健康检查并收敛统计/结构性错误
-    let (stats, provider_issues, lifecycle_error_count) =
+    let (stats, provider_issues, lifecycle_errors) =
         runner::run_provider_checks(&app, run_id.as_str(), snapshot.supported).await;
 
     // Step 5: 发出生命周期 completed/partial_failure 终态事件
     let duration_ms = started_at.elapsed().as_millis() as u64;
-    if provider_issues.is_empty() && lifecycle_error_count == 0 {
+    if provider_issues.is_empty() && lifecycle_errors.is_empty() {
         if let Err(err) =
             events::emit_check_completed(&app, run_id.as_str(), trigger, stats, duration_ms)
         {
@@ -135,7 +136,8 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     }
 
     let provider_issue_count = provider_issues.len();
-    let err = ProviderError::LifecycleEventEmit(format!(
+    let lifecycle_error_count = lifecycle_errors.len();
+    let err = ProviderError::LifecyclePartialFailure(format!(
         "provider check finished with lifecycle_error_count={}, provider_issue_count={}",
         lifecycle_error_count, provider_issue_count
     ));
