@@ -113,3 +113,43 @@ pub struct ProviderCheckFailedPayload {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub issues: Option<Vec<ProviderIssue>>,
 }
+
+// 单元测试
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // 全部成功：processed == succeeded，failed 为 0
+    #[test]
+    fn stats_all_success() {
+        let mut s = ProviderCheckStats::default();
+        s.record(true);
+        s.record(true);
+        assert_eq!(s.processed, 2);
+        assert_eq!(s.succeeded, 2);
+        assert_eq!(s.failed, 0);
+    }
+
+    // 全部失败：processed == failed，succeeded 为 0
+    #[test]
+    fn stats_all_failed() {
+        let mut s = ProviderCheckStats::default();
+        s.record(false);
+        s.record(false);
+        assert_eq!(s.processed, 2);
+        assert_eq!(s.succeeded, 0);
+        assert_eq!(s.failed, 2);
+    }
+
+    // 混合：succeeded + failed == processed
+    #[test]
+    fn stats_mixed() {
+        let mut s = ProviderCheckStats::default();
+        s.record(true);
+        s.record(false);
+        s.record(true);
+        assert_eq!(s.processed, 3);
+        assert_eq!(s.succeeded, 2);
+        assert_eq!(s.failed, 1);
+    }
+}

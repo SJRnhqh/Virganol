@@ -38,3 +38,26 @@ impl fmt::Display for ProviderErrorCode {
         f.write_str(self.as_str())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // as_str、Display、serde 序列化三者输出一致，守护前后端错误码契约
+    #[test]
+    fn as_str_display_and_serde_consistent() {
+        let cases = [
+            (ProviderErrorCode::Io, "io_error"),
+            (ProviderErrorCode::Serde, "serde_error"),
+            (ProviderErrorCode::UnsupportedProvider, "unsupported_provider"),
+            (ProviderErrorCode::LifecycleEventEmit, "lifecycle_event_emit_failed"),
+            (ProviderErrorCode::LifecycleTaskJoin, "lifecycle_task_join_failed"),
+            (ProviderErrorCode::LifecyclePartialFailure, "lifecycle_partial_failure"),
+        ];
+        for (code, expected) in cases {
+            assert_eq!(code.as_str(), expected);
+            assert_eq!(code.to_string(), expected);
+            assert_eq!(serde_json::to_string(&code).unwrap(), format!("\"{}\"", expected));
+        }
+    }
+}

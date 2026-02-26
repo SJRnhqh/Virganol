@@ -31,9 +31,8 @@ LLM Provider 后端分为两条主线：
 
 ### Phase 3：生命周期单元测试
 
-- [ ] 覆盖 `runner` 并发调度的关键场景（全部成功、部分失败、JoinError）
-- [ ] 覆盖 `flow` 编排的分支路径（空 provider、emit 失败、partial failure）
-- [ ] 覆盖 `processor` 的 reconcile 逻辑
+- [ ] `ProviderCheckStats::record` — 全部成功、全部失败、混合场景的计数正确性
+- [ ] `ProviderErrorCode::as_str` / `Display` — 每个 variant 的字符串映射与序列化一致性
 
 ### Phase 4：前端生命周期适配
 
