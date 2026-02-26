@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/settings/bot/providers/snapshot.rs
 // 内部引用
-use crate::core::models::provider::ProviderId;
+use crate::core::models::providers::id::ProviderId;
 use crate::core::models::providers::error::SkippedProviderDetail;
 use crate::core::models::settings::ProviderRecord;
 

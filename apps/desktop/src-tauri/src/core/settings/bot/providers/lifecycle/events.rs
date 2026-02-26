@@ -4,7 +4,7 @@ use tauri::{AppHandle, Emitter};
 
 // 内部引用
 use super::resolver;
-use crate::core::models::provider::ProviderId;
+use crate::core::models::providers::id::ProviderId;
 use crate::core::models::providers::check::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
     ProviderCheckStats, ProviderCheckTrigger, ProviderStatusPayload,

@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 
 // 内部引用
-use crate::core::models::provider::ProviderId;
+use crate::core::models::providers::id::ProviderId;
 
 /// 前端发起 connect_and_save_provider 的请求契约
 ///

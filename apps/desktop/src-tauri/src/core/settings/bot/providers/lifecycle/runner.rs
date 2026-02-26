@@ -6,7 +6,7 @@ use tokio::task::JoinSet;
 
 // 内部引用
 use super::{events, processor, resolver};
-use crate::core::models::provider::ProviderId;
+use crate::core::models::providers::id::ProviderId;
 use crate::core::models::providers::check::ProviderCheckStats;
 use crate::core::models::providers::error::{ProviderError, ProviderIssue};
 use crate::core::models::settings::ProviderRecord;

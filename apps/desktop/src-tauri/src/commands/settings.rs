@@ -3,7 +3,7 @@
 use tauri::AppHandle;
 
 // 内部引用
-use crate::core::models::provider::ProviderId;
+use crate::core::models::providers::id::ProviderId;
 use crate::core::models::providers::check::ProviderCheckTrigger;
 use crate::core::models::settings::{ConnectAndSaveProviderRequest, HealthCheckResponse};
 use crate::core::settings::bot::providers::lifecycle::flow::check_providers_lifecycle;

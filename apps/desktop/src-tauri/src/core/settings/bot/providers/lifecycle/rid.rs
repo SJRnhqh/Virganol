@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/id.rs
+// apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/rid.rs
 // 外部依赖
 use std::time::{SystemTime, UNIX_EPOCH};
 

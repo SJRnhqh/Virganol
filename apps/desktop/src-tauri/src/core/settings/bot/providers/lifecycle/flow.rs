@@ -5,7 +5,7 @@ use std::time::Instant;
 use tauri::AppHandle;
 
 // 内部引用
-use super::{failure, events, id, runner};
+use super::{events, failure, rid, runner};
 use crate::core::models::providers::check::{ProviderCheckStats, ProviderCheckTrigger};
 use crate::core::models::providers::error::ProviderError;
 use crate::core::settings::bot::providers::store::load_supported_providers;
@@ -13,7 +13,7 @@ use crate::core::settings::bot::providers::store::load_supported_providers;
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
 pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTrigger) {
     // Step 1: 初始化本轮生命周期上下文（覆盖读取 + 检查 + 推送全链路）
-    let run_id = id::next_run_id(trigger);
+    let run_id = rid::next_run_id(trigger);
     let started_at = Instant::now();
 
     // Step 2: 读取持久化快照（支持项 + 跳过项）

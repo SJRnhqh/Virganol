@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 
 // 内部引用
-use crate::core::models::provider::ProviderId;
+use crate::core::models::providers::id::ProviderId;
 use crate::core::models::providers::error::{ProviderErrorCode, ProviderIssue};
 use crate::core::models::security::ProviderSecretMeta;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};

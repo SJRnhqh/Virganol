@@ -4,7 +4,7 @@ use log::{error, info};
 use tauri::AppHandle;
 
 // 内部引用
-use crate::core::models::provider::ProviderId;
+use crate::core::models::providers::id::ProviderId;
 use crate::core::models::providers::error::ProviderError;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 use crate::core::settings::bot::providers::store::save_provider;
