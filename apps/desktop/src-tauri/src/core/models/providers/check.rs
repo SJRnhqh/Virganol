@@ -2,7 +2,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::core::models::provider::ProviderId;
-use crate::core::models::providers::issue::ProviderIssue;
+use crate::core::models::providers::error::ProviderIssue;
 use crate::core::models::security::ProviderSecretMeta;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 

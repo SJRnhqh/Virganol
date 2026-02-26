@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/models/providers/issue.rs
+// apps/desktop/src-tauri/src/core/models/providers/error/issue.rs
 use serde::{Deserialize, Serialize};
 
 use crate::core::models::provider::ProviderId;

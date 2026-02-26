@@ -8,8 +8,7 @@ use tokio::task::JoinSet;
 use super::{events, processor, resolver};
 use crate::core::models::provider::ProviderId;
 use crate::core::models::providers::check::ProviderCheckStats;
-use crate::core::models::providers::error::ProviderError;
-use crate::core::models::providers::issue::ProviderIssue;
+use crate::core::models::providers::error::{ProviderError, ProviderIssue};
 use crate::core::models::settings::ProviderRecord;
 
 /// 并发健康检查最大并发度

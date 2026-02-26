@@ -9,8 +9,7 @@ use crate::core::models::providers::check::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
     ProviderCheckStats, ProviderCheckTrigger, ProviderStatusPayload,
 };
-use crate::core::models::providers::error::ProviderError;
-use crate::core::models::providers::issue::ProviderIssue;
+use crate::core::models::providers::error::{ProviderError, ProviderIssue};
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 
 /// 推送生命周期 started 事件
