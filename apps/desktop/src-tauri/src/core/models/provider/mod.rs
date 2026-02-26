@@ -2,4 +2,8 @@
 // 导出内容
 pub mod check;
 pub mod error;
-pub mod id;
+mod id;
+mod snapshot;
+
+pub use id::ProviderId;
+pub use snapshot::SupportedProvidersSnapshot;

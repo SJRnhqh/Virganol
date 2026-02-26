@@ -4,7 +4,7 @@ use tauri::AppHandle;
 
 // 内部引用
 use crate::core::models::provider::check::ProviderCheckTrigger;
-use crate::core::models::provider::id::ProviderId;
+use crate::core::models::provider::ProviderId;
 use crate::core::models::settings::{ConnectAndSaveProviderRequest, HealthCheckResponse};
 use crate::core::settings::bot::providers::lifecycle::flow::check_providers_lifecycle;
 use crate::core::settings::bot::providers::service::{

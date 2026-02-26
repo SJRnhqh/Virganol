@@ -4,7 +4,7 @@ use std::future::Future;
 use std::pin::Pin;
 
 // 内部引用
-use crate::core::models::provider::id::ProviderId;
+use crate::core::models::provider::ProviderId;
 use crate::core::models::settings::HealthCheckResponse;
 
 pub type DriverFuture<'a> = Pin<Box<dyn Future<Output = HealthCheckResponse> + Send + 'a>>;
