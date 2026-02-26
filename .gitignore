@@ -29,3 +29,6 @@ bin/
 # AI
 .claude/
 AGENTS.md
+
+# IDE
+.arts/*
