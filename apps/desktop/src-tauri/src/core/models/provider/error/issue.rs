@@ -1,10 +1,10 @@
-// apps/desktop/src-tauri/src/core/models/providers/error/issue.rs
+// apps/desktop/src-tauri/src/core/models/provider/error/issue.rs
 // 外部依赖
 use serde::{Deserialize, Serialize};
 
 // 内部引用
 use super::code::ProviderErrorCode;
-use crate::core::models::providers::id::ProviderId;
+use crate::core::models::provider::id::ProviderId;
 
 /// 一条 Provider 级问题（严格绑定具体 provider，不允许 None）。
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]

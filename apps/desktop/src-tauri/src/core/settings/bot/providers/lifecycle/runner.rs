@@ -6,9 +6,9 @@ use tokio::task::JoinSet;
 
 // 内部引用
 use super::{events, processor, resolver};
-use crate::core::models::providers::id::ProviderId;
-use crate::core::models::providers::check::ProviderCheckStats;
-use crate::core::models::providers::error::{ProviderError, ProviderIssue};
+use crate::core::models::provider::check::ProviderCheckStats;
+use crate::core::models::provider::error::{ProviderError, ProviderIssue};
+use crate::core::models::provider::id::ProviderId;
 use crate::core::models::settings::ProviderRecord;
 
 /// 并发健康检查最大并发度
@@ -64,7 +64,11 @@ pub(super) async fn run_provider_checks(
                 if let Err(err) =
                     events::emit_provider_status(app, run_id, provider_id, final_record, result)
                 {
-                    provider_issues.push(ProviderIssue::new(provider_id, err.code(), err.message()));
+                    provider_issues.push(ProviderIssue::new(
+                        provider_id,
+                        err.code(),
+                        err.message(),
+                    ));
                 }
             }
             Some(Err(join_error)) => {

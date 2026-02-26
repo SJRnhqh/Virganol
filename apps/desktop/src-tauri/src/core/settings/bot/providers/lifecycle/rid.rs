@@ -3,7 +3,7 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
 // 内部引用
-use crate::core::models::providers::check::ProviderCheckTrigger;
+use crate::core::models::provider::check::ProviderCheckTrigger;
 
 /// 生成一轮检查的唯一 run_id（后续用于 started/status/completed 关联）
 pub(super) fn next_run_id(trigger: ProviderCheckTrigger) -> String {

@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/models/providers/error/skip.rs
+// apps/desktop/src-tauri/src/core/models/provider/error/skip.rs
 // 内部引用
 use super::code::ProviderErrorCode;
 

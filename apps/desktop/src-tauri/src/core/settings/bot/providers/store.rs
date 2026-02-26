@@ -6,8 +6,8 @@ use tauri::AppHandle;
 
 // 内部引用
 use super::snapshot::SupportedProvidersSnapshot;
-use crate::core::models::providers::id::ProviderId;
-use crate::core::models::providers::error::{ProviderError, SkippedProviderDetail};
+use crate::core::models::provider::error::{ProviderError, SkippedProviderDetail};
+use crate::core::models::provider::id::ProviderId;
 use crate::core::models::settings::ProviderRecord;
 use crate::core::settings::store::{load_settings, load_settings_strict, save_settings};
 

@@ -1,10 +1,10 @@
-// apps/desktop/src-tauri/src/core/models/providers/check.rs
+// apps/desktop/src-tauri/src/core/models/provider/check.rs
 // 外部依赖
 use serde::{Deserialize, Serialize};
 
 // 内部引用
-use crate::core::models::providers::id::ProviderId;
-use crate::core::models::providers::error::{ProviderErrorCode, ProviderIssue};
+use crate::core::models::provider::error::{ProviderErrorCode, ProviderIssue};
+use crate::core::models::provider::id::ProviderId;
 use crate::core::models::security::ProviderSecretMeta;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 

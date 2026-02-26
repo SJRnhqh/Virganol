@@ -4,7 +4,7 @@ use keyring::{Entry, Error as KeyringError};
 use zeroize::Zeroize;
 
 // 内部引用
-use crate::core::models::providers::id::ProviderId;
+use crate::core::models::provider::id::ProviderId;
 use crate::core::security::provider::ProviderKey;
 
 /// 应用在系统密钥库中的 service 名称（命名空间）

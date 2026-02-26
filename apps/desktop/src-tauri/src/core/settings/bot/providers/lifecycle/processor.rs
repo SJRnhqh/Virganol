@@ -4,8 +4,8 @@ use log::{error, info};
 use tauri::AppHandle;
 
 // 内部引用
-use crate::core::models::providers::id::ProviderId;
-use crate::core::models::providers::error::ProviderError;
+use crate::core::models::provider::error::ProviderError;
+use crate::core::models::provider::id::ProviderId;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 use crate::core::settings::bot::providers::store::save_provider;
 use crate::core::settings::bot::providers::utils::compute_enabled_models;
@@ -41,7 +41,8 @@ fn reconcile_enabled_models(
             Err(err) => {
                 error!(
                     "[Tauri] ❌ {} enabled_models reconcile persist failed: {}",
-                    provider_id, err.message()
+                    provider_id,
+                    err.message()
                 );
                 (record.clone(), Some(err))
             }

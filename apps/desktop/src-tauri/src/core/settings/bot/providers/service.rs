@@ -6,7 +6,7 @@ use tauri::AppHandle;
 // 内部引用
 use super::store::{load_provider_record, remove_provider, save_provider, update_models};
 use super::utils::compute_enabled_models;
-use crate::core::models::providers::id::ProviderId;
+use crate::core::models::provider::id::ProviderId;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 use crate::core::providers::connections::health;
 use crate::core::settings::secrets;

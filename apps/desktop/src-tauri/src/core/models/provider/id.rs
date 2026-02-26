@@ -1,10 +1,10 @@
-// apps/desktop/src-tauri/src/core/models/providers/id.rs
+// apps/desktop/src-tauri/src/core/models/provider/id.rs
 // 外部依赖
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
 // 内部引用
-use crate::core::models::providers::error::ProviderError;
+use crate::core::models::provider::error::ProviderError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]

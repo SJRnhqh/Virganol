@@ -4,7 +4,7 @@ use tauri::AppHandle;
 use tauri_plugin_store::StoreExt;
 
 // 内部引用
-use crate::core::models::providers::error::ProviderError;
+use crate::core::models::provider::error::ProviderError;
 
 pub const SETTINGS_STORE_FILE: &str = "settings.json";
 
@@ -27,7 +27,11 @@ pub fn load_settings_strict(
 }
 
 /// 将 JSON 值写入 settings.json 的指定 key（upsert 语义）。
-pub fn save_settings(app: &AppHandle, key: &str, value: serde_json::Value) -> Result<(), ProviderError> {
+pub fn save_settings(
+    app: &AppHandle,
+    key: &str,
+    value: serde_json::Value,
+) -> Result<(), ProviderError> {
     let store = app
         .store(SETTINGS_STORE_FILE)
         .map_err(|error| ProviderError::Io(format!("open settings store failed: {}", error)))?;
