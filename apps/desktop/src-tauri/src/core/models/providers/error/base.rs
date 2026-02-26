@@ -1,25 +1,40 @@
 // apps/desktop/src-tauri/src/core/models/providers/error/base.rs
 // 外部依赖
 use serde::{Serialize, Serializer};
-use thiserror::Error;
+use std::fmt;
 
 // 内部引用
 use super::code::ProviderErrorCode;
 
-#[derive(Debug, Error)]
+#[derive(Debug)]
 pub enum ProviderError {
-    #[error("I/O error: {0}")]
     Io(String),
-    #[error("JSON serde error: {0}")]
-    Serde(#[from] serde_json::Error),
-    #[error("Unsupported provider: {0}")]
+    Serde(serde_json::Error),
     UnsupportedProvider(String),
-    #[error("Lifecycle event emit failed: {0}")]
     LifecycleEventEmit(String),
-    #[error("Lifecycle task join failed: {0}")]
     LifecycleTaskJoin(String),
-    #[error("Lifecycle partial failure: {0}")]
     LifecyclePartialFailure(String),
+}
+
+impl fmt::Display for ProviderError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Serde(err) => write!(f, "{err}"),
+            Self::Io(msg)
+            | Self::UnsupportedProvider(msg)
+            | Self::LifecycleEventEmit(msg)
+            | Self::LifecycleTaskJoin(msg)
+            | Self::LifecyclePartialFailure(msg) => f.write_str(msg),
+        }
+    }
+}
+
+impl std::error::Error for ProviderError {}
+
+impl From<serde_json::Error> for ProviderError {
+    fn from(err: serde_json::Error) -> Self {
+        Self::Serde(err)
+    }
 }
 
 impl ProviderError {
