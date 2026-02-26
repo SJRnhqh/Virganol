@@ -1,8 +1,10 @@
 // apps/desktop/src-tauri/src/core/models/providers/check.rs
+// 外部依赖
 use serde::{Deserialize, Serialize};
 
+// 内部引用
 use crate::core::models::provider::ProviderId;
-use crate::core::models::providers::error::ProviderIssue;
+use crate::core::models::providers::error::{ProviderErrorCode, ProviderIssue};
 use crate::core::models::security::ProviderSecretMeta;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 
@@ -104,7 +106,7 @@ pub struct ProviderCheckFailedPayload {
     /// 本轮检查的触发来源。
     pub trigger: ProviderCheckTrigger,
     /// 结构化错误码。
-    pub code: String,
+    pub code: ProviderErrorCode,
     /// 面向前端展示或日志记录的错误信息。
     pub message: String,
     /// Provider 级问题列表；仅在存在可定位到具体 Provider 的问题时返回。

@@ -92,7 +92,7 @@ pub(super) fn emit_check_failed(
     let payload = ProviderCheckFailedPayload {
         run_id: run_id.to_string(),
         trigger,
-        code: code.to_string(),
+        code,
         message: message.to_string(),
         issues,
     };
