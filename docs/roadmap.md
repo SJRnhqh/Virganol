@@ -29,12 +29,12 @@ LLM Provider 后端分为两条主线：
 - [x] 简化消费侧调用模式（`report_lifecycle_failure` 直接接收 `&ProviderError`）
 - [x] 统一 message 格式规范（去除类型前缀，message 只保留纯描述，与 code 职责分离）
 
-### Phase 3：生命周期单元测试
+### ✅ Phase 3：生命周期单元测试
 
-- [ ] `ProviderCheckStats::record` — 全部成功、全部失败、混合场景的计数正确性
-- [ ] `ProviderErrorCode::as_str` / `Display` — 每个 variant 的字符串映射与序列化一致性
+- [x] `ProviderCheckStats::record` — 全部成功、全部失败、混合场景的计数正确性
+- [x] `ProviderErrorCode::as_str` / `Display` — 每个 variant 的字符串映射与序列化一致性
 
-### Phase 4：前端生命周期适配
+### 🚧 Phase 4：前端生命周期适配
 
 - [ ] 基于已有的事件体系（started / provider_status / completed / failed）搭建前端状态管理框架
 - [ ] Settings 面板的 Provider 状态渲染与交互设计
