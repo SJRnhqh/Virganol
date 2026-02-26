@@ -26,7 +26,7 @@ LLM Provider 后端分为两条主线：
 ### 🔜 Phase 2：错误 code 与 message 统一管理
 
 - [x] 将 `code()` 返回值从方法内 match 提升为独立 `ProviderErrorCode` 枚举，全链路类型安全
-- [ ] 简化消费侧调用模式（`report_lifecycle_failure` 等直接接收 `&ProviderError`）
+- [x] 简化消费侧调用模式（`report_lifecycle_failure` 直接接收 `&ProviderError`）
 - [ ] 统一 message 格式规范
 
 ### Phase 3：生命周期单元测试

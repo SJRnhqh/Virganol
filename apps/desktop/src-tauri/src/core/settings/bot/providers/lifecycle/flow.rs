@@ -5,7 +5,7 @@ use std::time::Instant;
 use tauri::AppHandle;
 
 // 内部引用
-use super::{errors, events, id, runner};
+use super::{failure, events, id, runner};
 use crate::core::models::providers::check::{ProviderCheckStats, ProviderCheckTrigger};
 use crate::core::models::providers::error::ProviderError;
 use crate::core::settings::bot::providers::store::load_supported_providers;
@@ -20,15 +20,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     let snapshot = match load_supported_providers(&app) {
         Ok(snapshot) => snapshot,
         Err(err) => {
-            let message = err.message();
-            errors::report_lifecycle_failure(
-                &app,
-                run_id.as_str(),
-                trigger,
-                err.code(),
-                message.as_str(),
-                None,
-            );
+            failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
             return;
         }
     };
@@ -59,15 +51,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
         loaded_total,
         skipped_total,
     ) {
-        let message = err.message();
-        errors::report_lifecycle_failure(
-            &app,
-            run_id.as_str(),
-            trigger,
-            err.code(),
-            message.as_str(),
-            None,
-        );
+        failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
         return;
     }
 
@@ -92,15 +76,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
             ProviderCheckStats::default(),
             duration_ms,
         ) {
-            let message = err.message();
-            errors::report_lifecycle_failure(
-                &app,
-                run_id.as_str(),
-                trigger,
-                err.code(),
-                message.as_str(),
-                None,
-            );
+            failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
             return;
         }
         return;
@@ -116,15 +92,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
         if let Err(err) =
             events::emit_check_completed(&app, run_id.as_str(), trigger, stats, duration_ms)
         {
-            let message = err.message();
-            errors::report_lifecycle_failure(
-                &app,
-                run_id.as_str(),
-                trigger,
-                err.code(),
-                message.as_str(),
-                None,
-            );
+            failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
             return;
         }
 
@@ -146,13 +114,5 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     } else {
         Some(provider_issues)
     };
-    let message = err.message();
-    errors::report_lifecycle_failure(
-        &app,
-        run_id.as_str(),
-        trigger,
-        err.code(),
-        message.as_str(),
-        issues,
-    );
+    failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, issues);
 }
