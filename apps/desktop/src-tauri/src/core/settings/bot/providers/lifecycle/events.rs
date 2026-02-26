@@ -9,7 +9,7 @@ use crate::core::models::providers::check::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
     ProviderCheckStats, ProviderCheckTrigger, ProviderStatusPayload,
 };
-use crate::core::models::providers::error::{ProviderError, ProviderIssue};
+use crate::core::models::providers::error::{ProviderError, ProviderErrorCode, ProviderIssue};
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 
 /// 推送生命周期 started 事件
@@ -85,7 +85,7 @@ pub(super) fn emit_check_failed(
     app: &AppHandle,
     run_id: &str,
     trigger: ProviderCheckTrigger,
-    code: &str,
+    code: ProviderErrorCode,
     message: &str,
     issues: Option<Vec<ProviderIssue>>,
 ) -> Result<(), ProviderError> {

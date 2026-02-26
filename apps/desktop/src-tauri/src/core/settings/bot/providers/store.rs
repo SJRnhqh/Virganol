@@ -56,7 +56,7 @@ pub fn load_supported_providers(
             Ok(provider_id) => supported.push((provider_id, record)),
             Err(error) => skipped.push(SkippedProviderDetail {
                 raw_id,
-                code: error.code().to_string(),
+                code: error.code(),
                 message: error.message(),
             }),
         }

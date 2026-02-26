@@ -1,6 +1,10 @@
 // apps/desktop/src-tauri/src/core/models/providers/error/base.rs
+// 外部依赖
 use serde::{Serialize, Serializer};
 use thiserror::Error;
+
+// 内部引用
+use super::code::ProviderErrorCode;
 
 #[derive(Debug, Error)]
 pub enum ProviderError {
@@ -19,14 +23,14 @@ pub enum ProviderError {
 }
 
 impl ProviderError {
-    pub fn code(&self) -> &'static str {
+    pub fn code(&self) -> ProviderErrorCode {
         match self {
-            Self::Io(_) => "io_error",
-            Self::Serde(_) => "serde_error",
-            Self::UnsupportedProvider(_) => "unsupported_provider",
-            Self::LifecycleEventEmit(_) => "lifecycle_event_emit_failed",
-            Self::LifecycleTaskJoin(_) => "lifecycle_task_join_failed",
-            Self::LifecyclePartialFailure(_) => "lifecycle_partial_failure",
+            Self::Io(_) => ProviderErrorCode::Io,
+            Self::Serde(_) => ProviderErrorCode::Serde,
+            Self::UnsupportedProvider(_) => ProviderErrorCode::UnsupportedProvider,
+            Self::LifecycleEventEmit(_) => ProviderErrorCode::LifecycleEventEmit,
+            Self::LifecycleTaskJoin(_) => ProviderErrorCode::LifecycleTaskJoin,
+            Self::LifecyclePartialFailure(_) => ProviderErrorCode::LifecyclePartialFailure,
         }
     }
 

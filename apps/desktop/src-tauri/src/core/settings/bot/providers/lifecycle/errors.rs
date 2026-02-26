@@ -6,13 +6,13 @@ use tauri::AppHandle;
 // 内部引用
 use super::events;
 use crate::core::models::providers::check::ProviderCheckTrigger;
-use crate::core::models::providers::error::ProviderIssue;
+use crate::core::models::providers::error::{ProviderErrorCode, ProviderIssue};
 
 pub(super) fn report_lifecycle_failure(
     app: &AppHandle,
     run_id: &str,
     trigger: ProviderCheckTrigger,
-    code: &str,
+    code: ProviderErrorCode,
     message: &str,
     issues: Option<Vec<ProviderIssue>>,
 ) {
