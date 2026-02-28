@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/constants/providers/definition.ts
+// apps/ui/src/features/bot/constants/provider/definition.ts
 // 内部引用
 import type { ProviderDefinition, ProviderId } from "@/features/bot/types";
 

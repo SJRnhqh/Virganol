@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/constants/providers/registry.ts
+// apps/ui/src/features/bot/constants/provider/registry.ts
 // 内部引用
 import type { ProviderRegistryEntry } from "@/features/bot/types";
 import {
