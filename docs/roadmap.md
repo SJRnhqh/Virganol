@@ -31,7 +31,6 @@ LLM Provider 后端分为两条主线：
 
 ### ✅ Phase 3：生命周期单元测试
 
-- [x] `ProviderCheckStats::record` — 全部成功、全部失败、混合场景的计数正确性
 - [x] `ProviderErrorCode::as_str` / `Display` — 每个 variant 的字符串映射与序列化一致性
 
 ### 🚧 Phase 4：前端生命周期适配
@@ -40,22 +39,30 @@ LLM Provider 后端分为两条主线：
 
 - [x] `useProviderCheckStore` — 生命周期全局状态（idle / checking / done / failed）
 - [x] `useProviderStore` — per-provider 状态（config / status / models）
-- [x] `constants/events.ts` — 事件名统一管理（`PROVIDER_CHECK_EVENTS`）
-- [x] `hooks/provider/handlers.ts` — 4 种事件 handler，纯逻辑，不依赖 Tauri
+- [x] `constants/events.ts` — 事件名统一管理（`PROVIDER_CHECK_EVENTS`）+ 阶段转换延迟（`PROVIDER_CHECK_DELAYS`）
+- [x] `hooks/provider/handlers.ts` — 4 种事件 handler，纯业务逻辑，不依赖 timer
+- [x] `hooks/provider/timers.ts` — 生命周期阶段转换 timer 管理（checking→终态补足、终态→idle 回归）
 - [x] `hooks/provider/listen.ts` — 注册 4 种事件监听，返回统一 cleanup
 - [x] `hooks/provider/useProviderStartup.ts` — App 启动时注册监听 + 触发 startup check
 - [x] `api/provider/check.ts` — `triggerProviderStartupCheck` / `triggerProviderManualRefresh`，共享去重逻辑
 
-#### 🚧 4.2 Settings 面板渲染与交互
+#### ✅ 4.2 全局生命周期渲染与交互
 
-- [ ] 全局检查状态展示（checking 时的 loading 指示、done/failed 的结果反馈）
+- [x] `ProviderHeader` — 基于 `phase` 的动画图标切换（Cloud / CloudCog / CloudCheck / CloudAlert）
+- [x] 手动刷新按钮：checking 阶段禁用，done/idle 可用
+- [x] checking 补足延迟（800ms）— 保证图标切换有感知
+- [x] done→idle 回归（1200ms）、failed→idle 回归（3500ms）
+- [x] `handleCompleted` 按 `failed > 0` 路由到 failed 阶段（`lifecycle_partial_failure`）
+- [x] `handleFailed` 透传后端 code/message/issues，issues 下沉到 per-provider 错误状态
+- [x] 前后端 payload 精简：只推送前端消费的字段，移除冗余统计信息
+- [x] 后端 `ProviderCheckStats` 退化为 `failed_count` 计数器
+- [x] 后端生命周期步骤重排：started 先于 snapshot 加载，前端尽早进入 checking
+
+#### 🚧 4.3 per-provider 卡片渲染
+
 - [ ] per-provider 卡片：基于 `isConnected` / `isError` / `isLoading` 的状态渲染
-- [ ] 手动刷新按钮：调用 `triggerProviderManualRefresh`
-
-#### 🚧 4.3 差异化错误展示
-
+- [ ] per-provider 的 `errorMessage` 展示（来自 `handleProviderStatus` 或 `issues` 下沉）
 - [ ] 基于 `errorCode` 区分全局生命周期错误类型（io / unsupported / partial_failure 等）
-- [ ] per-provider 的 `errorMessage` 展示（来自 `issues` 下沉）
 
 ### Phase 5：健康检查错误精细化
 
