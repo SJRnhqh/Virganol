@@ -20,9 +20,9 @@ const triggerCheckLifecycle = (command: string): Promise<void> => {
 };
 
 /** 启动时触发生命周期检查（配合 listen 使用） */
-export const triggerProvidersStartupCheck = (): Promise<void> =>
-  triggerCheckLifecycle("trigger_providers_startup_check");
+export const triggerProviderStartupCheck = (): Promise<void> =>
+  triggerCheckLifecycle("trigger_provider_startup_check");
 
 /** 手动刷新触发生命周期检查 */
-export const triggerProvidersManualRefresh = (): Promise<void> =>
-  triggerCheckLifecycle("trigger_providers_manual_refresh");
+export const triggerProviderManualRefresh = (): Promise<void> =>
+  triggerCheckLifecycle("trigger_provider_manual_refresh");

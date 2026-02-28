@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/hooks/providers/useProviderConnection.ts
+// apps/ui/src/features/bot/hooks/provider/useProviderConnection.ts
 // 外部依赖
 import { useCallback } from "react";
 

@@ -12,12 +12,12 @@ use crate::core::settings::bot::providers::service::{
 };
 
 #[tauri::command]
-pub async fn trigger_providers_startup_check(app: AppHandle) {
+pub async fn trigger_provider_startup_check(app: AppHandle) {
     check_providers_lifecycle(app, ProviderCheckTrigger::Startup).await;
 }
 
 #[tauri::command]
-pub async fn trigger_providers_manual_refresh(app: AppHandle) {
+pub async fn trigger_provider_manual_refresh(app: AppHandle) {
     check_providers_lifecycle(app, ProviderCheckTrigger::ManualRefresh).await;
 }
 

@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/hooks/providers/useProvider.ts
+// apps/ui/src/features/bot/hooks/provider/useProvider.ts
 // 内部引用
 import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
 import { useProviderStore } from "@/features/bot/store";
