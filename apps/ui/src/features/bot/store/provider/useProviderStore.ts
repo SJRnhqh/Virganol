@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/store/providers/useProviderStore.ts
+// apps/ui/src/features/bot/store/provider/useProviderStore.ts
 // 外部依赖
 import { create } from "zustand";
 

@@ -30,30 +30,71 @@ export interface ProviderSecretMeta {
   key_source: ProviderKeySource;
 }
 
-/** 对应 Rust ProviderStatusPayload（startup 推送） */
-export interface ProviderStatusPayload {
-  run_id: string;
-  provider: ProviderId;
-  config: ProviderRecord;
-  health: HealthCheckResponse;
-  secret_meta: ProviderSecretMeta;
-}
+
+// ---------------------------------------------------------------------------
+// Provider Check Lifecycle — 生命周期事件推送相关类型
+// ---------------------------------------------------------------------------
 
 export type ProviderCheckTrigger = "startup" | "manual_refresh";
 
-/** 对应 Rust ProviderCheckFailureDetail */
-export interface ProviderCheckFailureDetail {
+/** 对应 Rust ProviderIssue — 定位到具体 Provider 的问题 */
+export interface ProviderIssue {
+  /** 问题所属的 Provider */
+  provider: ProviderId;
+  /** 结构化问题编码 */
   code: string;
-  provider?: ProviderId;
+  /** 面向展示的问题描述 */
   message: string;
 }
 
-/** 对应 Rust ProviderCheckFailedPayload */
+/** 对应 Rust ProviderCheckStartedPayload — 生命周期开始事件 */
+export interface ProviderCheckStartedPayload {
+  run_id: string;
+  trigger: ProviderCheckTrigger;
+  /** 本轮实际要检查的已支持 Provider 数量 */
+  total: number;
+  /** 持久化中读取到的 Provider 总数（含不支持项） */
+  loaded_total: number;
+  /** 被跳过的不支持 Provider 数量 */
+  skipped_total: number;
+}
+
+/** 对应 Rust ProviderStatusPayload — 逐个 Provider 推送的状态事件 */
+export interface ProviderStatusPayload {
+  /** 本轮检查唯一标识，关联 started/status/completed 事件 */
+  run_id: string;
+  /** 当前状态所属的 Provider */
+  provider: ProviderId;
+  /** 已持久化的配置快照 */
+  config: ProviderRecord;
+  /** 健康检查结果 */
+  health: HealthCheckResponse;
+  /** 去敏密钥元信息 */
+  secret_meta: ProviderSecretMeta;
+}
+
+/** 对应 Rust ProviderCheckCompletedPayload — 生命周期正常结束事件 */
+export interface ProviderCheckCompletedPayload {
+  run_id: string;
+  trigger: ProviderCheckTrigger;
+  /** 本轮已处理的 Provider 数量 */
+  processed: number;
+  /** 健康检查成功数量 */
+  succeeded: number;
+  /** 健康检查失败数量 */
+  failed: number;
+  /** 本轮检查耗时（毫秒） */
+  duration_ms: number;
+}
+
+/** 对应 Rust ProviderCheckFailedPayload — 生命周期异常终止事件 */
 export interface ProviderCheckFailedPayload {
   run_id: string;
   trigger: ProviderCheckTrigger;
+  /** 结构化错误码 */
   code: string;
+  /** 面向展示或日志的错误信息 */
   message: string;
-  error_count: number;
-  details: ProviderCheckFailureDetail[];
+  /** Provider 级问题列表，仅在可定位到具体 Provider 时存在 */
+  issues?: ProviderIssue[];
 }

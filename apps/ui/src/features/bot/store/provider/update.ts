@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/store/providers/update.ts
+// apps/ui/src/features/bot/store/provider/update.ts
 // 内部引用
 import type { ProviderId, ProviderState } from "@/features/bot/types";
 
