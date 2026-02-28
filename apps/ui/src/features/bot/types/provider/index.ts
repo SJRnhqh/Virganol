@@ -1,12 +1,20 @@
 // apps/ui/src/features/bot/types/provider/index.ts
 // 导出内容
-export type { ProviderStatus, ProviderModels, ProviderState } from "./store";
+export type {
+  ProviderStatus,
+  ProviderModels,
+  ProviderState,
+  ProviderCheckPhase,
+  ProviderCheckState,
+} from "./store";
 export type {
   ConnectAndSaveProviderPayload,
   HealthCheckResponse,
+  ProviderCheckCompletedPayload,
   ProviderCheckFailedPayload,
-  ProviderCheckFailureDetail,
+  ProviderCheckStartedPayload,
   ProviderCheckTrigger,
+  ProviderIssue,
   ProviderStatusPayload,
 } from "./api";
 export type { ProviderConnectionProps, ProviderModelProps } from "./base";
