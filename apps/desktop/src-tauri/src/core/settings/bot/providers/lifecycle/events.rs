@@ -29,8 +29,8 @@ pub(super) fn emit_check_started(
         skipped_total,
     };
 
-    app.emit("providers-check-started", &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit providers-check-started failed: {}", e))
+    app.emit("providers-check-lifecycle-started", &payload).map_err(|e| {
+        ProviderError::LifecycleEventEmit(format!("emit providers-check-lifecycle-started failed: {}", e))
     })
 }
 
@@ -72,10 +72,10 @@ pub(super) fn emit_check_completed(
         duration_ms,
     };
 
-    app.emit("providers-check-completed", &payload)
+    app.emit("providers-check-lifecycle-completed", &payload)
         .map_err(|e| {
             ProviderError::LifecycleEventEmit(format!(
-                "emit providers-check-completed failed: {}",
+                "emit providers-check-lifecycle-completed failed: {}",
                 e
             ))
         })
@@ -97,7 +97,7 @@ pub(super) fn emit_check_failed(
         issues,
     };
 
-    app.emit("providers-check-failed", &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit providers-check-failed failed: {}", e))
+    app.emit("providers-check-lifecycle-failed", &payload).map_err(|e| {
+        ProviderError::LifecycleEventEmit(format!("emit providers-check-lifecycle-failed failed: {}", e))
     })
 }

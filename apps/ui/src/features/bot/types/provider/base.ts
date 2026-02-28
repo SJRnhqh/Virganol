@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/types/providers/base.ts
+// apps/ui/src/features/bot/types/provider/base.ts
 
 /** 连接状态 + 连接操作 */
 export interface ProviderConnectionProps {

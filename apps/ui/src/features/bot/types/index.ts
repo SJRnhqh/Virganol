@@ -16,4 +16,4 @@ export type {
   ProviderCheckTrigger,
   ProviderStatusPayload,
   ConnectAndSaveProviderPayload,
-} from "./providers";
+} from "./provider";

@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/types/providers/store.ts
+// apps/ui/src/features/bot/types/provider/store.ts
 // 内部引用
 import type { ProviderId } from "./config";
 

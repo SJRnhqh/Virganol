@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/types/providers/index.ts
+// apps/ui/src/features/bot/types/provider/index.ts
 // 导出内容
 export type { ProviderStatus, ProviderModels, ProviderState } from "./store";
 export type {

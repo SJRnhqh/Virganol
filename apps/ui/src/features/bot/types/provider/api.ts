@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/types/providers/api.ts
+// apps/ui/src/features/bot/types/provider/api.ts
 
 import type { ProviderId } from "./config";
 
