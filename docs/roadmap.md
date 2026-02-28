@@ -36,9 +36,26 @@ LLM Provider 后端分为两条主线：
 
 ### 🚧 Phase 4：前端生命周期适配
 
-- [ ] 基于已有的事件体系（started / provider_status / completed / failed）搭建前端状态管理框架
-- [ ] Settings 面板的 Provider 状态渲染与交互设计
-- [ ] 基于 `code` 的差异化错误展示
+#### ✅ 4.1 前端状态管理框架
+
+- [x] `useProviderCheckStore` — 生命周期全局状态（idle / checking / done / failed）
+- [x] `useProviderStore` — per-provider 状态（config / status / models）
+- [x] `constants/events.ts` — 事件名统一管理（`PROVIDER_CHECK_EVENTS`）
+- [x] `hooks/provider/handlers.ts` — 4 种事件 handler，纯逻辑，不依赖 Tauri
+- [x] `hooks/provider/listen.ts` — 注册 4 种事件监听，返回统一 cleanup
+- [x] `hooks/provider/useProviderStartup.ts` — App 启动时注册监听 + 触发 startup check
+- [x] `api/provider/check.ts` — `triggerProviderStartupCheck` / `triggerProviderManualRefresh`，共享去重逻辑
+
+#### 🚧 4.2 Settings 面板渲染与交互
+
+- [ ] 全局检查状态展示（checking 时的 loading 指示、done/failed 的结果反馈）
+- [ ] per-provider 卡片：基于 `isConnected` / `isError` / `isLoading` 的状态渲染
+- [ ] 手动刷新按钮：调用 `triggerProviderManualRefresh`
+
+#### 🚧 4.3 差异化错误展示
+
+- [ ] 基于 `errorCode` 区分全局生命周期错误类型（io / unsupported / partial_failure 等）
+- [ ] per-provider 的 `errorMessage` 展示（来自 `issues` 下沉）
 
 ### Phase 5：健康检查错误精细化
 
