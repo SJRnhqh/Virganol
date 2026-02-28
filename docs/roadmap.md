@@ -50,6 +50,10 @@ LLM Provider 后端分为两条主线：
 
 - [ ] 根据前端适配过程中暴露的问题补充后端处理
 - [ ] 视需要补充集成测试
+- [ ] `failure.rs` — `issues.clone()` 改为 move 语义，避免不必要的堆分配
+- [ ] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
+- [ ] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
+- [ ] `rid.rs` — run_id 可选加 `AtomicU64` 计数器，防止同毫秒重复
 - [ ] 生命周期功能开发完结
 
 ---
