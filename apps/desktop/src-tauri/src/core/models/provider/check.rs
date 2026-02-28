@@ -35,12 +35,6 @@ pub struct ProviderCheckStartedPayload {
     pub run_id: String,
     /// 本轮检查的触发来源。
     pub trigger: ProviderCheckTrigger,
-    /// 本轮实际要检查的“已支持” Provider 数量。
-    pub total: usize,
-    /// 持久化配置中读取到的 Provider 总数（包含不支持项）。
-    pub loaded_total: usize,
-    /// 持久化配置中被跳过的不支持 Provider 数量。
-    pub skipped_total: usize,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -63,39 +57,8 @@ pub struct ProviderStatusPayload {
 pub struct ProviderCheckCompletedPayload {
     /// 本轮检查唯一标识，用于关联 started/status/completed 事件。
     pub run_id: String,
-    /// 本轮检查的触发来源。
-    pub trigger: ProviderCheckTrigger,
-    /// 本轮已处理的 Provider 数量。
-    pub processed: usize,
-    /// 本轮健康检查成功数量。
-    pub succeeded: usize,
     /// 本轮健康检查失败数量。
     pub failed: usize,
-    /// 本轮检查耗时（毫秒）。
-    pub duration_ms: u64,
-}
-
-/// 一轮 Provider 检查的聚合统计信息。
-#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq, Eq)]
-pub struct ProviderCheckStats {
-    /// 本轮已处理的 Provider 数量。
-    pub processed: usize,
-    /// 本轮健康检查成功数量。
-    pub succeeded: usize,
-    /// 本轮健康检查失败数量。
-    pub failed: usize,
-}
-
-impl ProviderCheckStats {
-    /// 按单次检查结果累计统计。
-    pub fn record(&mut self, success: bool) {
-        self.processed += 1;
-        if success {
-            self.succeeded += 1;
-        } else {
-            self.failed += 1;
-        }
-    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -103,8 +66,6 @@ impl ProviderCheckStats {
 pub struct ProviderCheckFailedPayload {
     /// 本轮检查唯一标识，用于关联 started/status/failed 事件。
     pub run_id: String,
-    /// 本轮检查的触发来源。
-    pub trigger: ProviderCheckTrigger,
     /// 结构化错误码。
     pub code: ProviderErrorCode,
     /// 面向前端展示或日志记录的错误信息。
@@ -112,44 +73,4 @@ pub struct ProviderCheckFailedPayload {
     /// Provider 级问题列表；仅在存在可定位到具体 Provider 的问题时返回。
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub issues: Option<Vec<ProviderIssue>>,
-}
-
-// 单元测试
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    // 全部成功：processed == succeeded，failed 为 0
-    #[test]
-    fn stats_all_success() {
-        let mut s = ProviderCheckStats::default();
-        s.record(true);
-        s.record(true);
-        assert_eq!(s.processed, 2);
-        assert_eq!(s.succeeded, 2);
-        assert_eq!(s.failed, 0);
-    }
-
-    // 全部失败：processed == failed，succeeded 为 0
-    #[test]
-    fn stats_all_failed() {
-        let mut s = ProviderCheckStats::default();
-        s.record(false);
-        s.record(false);
-        assert_eq!(s.processed, 2);
-        assert_eq!(s.succeeded, 0);
-        assert_eq!(s.failed, 2);
-    }
-
-    // 混合：succeeded + failed == processed
-    #[test]
-    fn stats_mixed() {
-        let mut s = ProviderCheckStats::default();
-        s.record(true);
-        s.record(false);
-        s.record(true);
-        assert_eq!(s.processed, 3);
-        assert_eq!(s.succeeded, 2);
-        assert_eq!(s.failed, 1);
-    }
 }

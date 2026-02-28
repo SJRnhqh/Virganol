@@ -49,14 +49,10 @@ export interface ProviderIssue {
 
 /** 对应 Rust ProviderCheckStartedPayload — 生命周期开始事件 */
 export interface ProviderCheckStartedPayload {
+  /** 本轮检查唯一标识，关联 started/status/completed 事件 */
   run_id: string;
+  /** 本轮检查的触发来源 */
   trigger: ProviderCheckTrigger;
-  /** 本轮实际要检查的已支持 Provider 数量 */
-  total: number;
-  /** 持久化中读取到的 Provider 总数（含不支持项） */
-  loaded_total: number;
-  /** 被跳过的不支持 Provider 数量 */
-  skipped_total: number;
 }
 
 /** 对应 Rust ProviderStatusPayload — 逐个 Provider 推送的状态事件 */
@@ -75,22 +71,16 @@ export interface ProviderStatusPayload {
 
 /** 对应 Rust ProviderCheckCompletedPayload — 生命周期正常结束事件 */
 export interface ProviderCheckCompletedPayload {
+  /** 本轮检查唯一标识，关联 started/status/completed 事件 */
   run_id: string;
-  trigger: ProviderCheckTrigger;
-  /** 本轮已处理的 Provider 数量 */
-  processed: number;
-  /** 健康检查成功数量 */
-  succeeded: number;
   /** 健康检查失败数量 */
   failed: number;
-  /** 本轮检查耗时（毫秒） */
-  duration_ms: number;
 }
 
 /** 对应 Rust ProviderCheckFailedPayload — 生命周期异常终止事件 */
 export interface ProviderCheckFailedPayload {
+  /** 本轮检查唯一标识，关联 started/status/failed 事件 */
   run_id: string;
-  trigger: ProviderCheckTrigger;
   /** 结构化错误码 */
   code: string;
   /** 面向展示或日志的错误信息 */

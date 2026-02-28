@@ -6,7 +6,6 @@ use tokio::task::JoinSet;
 
 // 内部引用
 use super::{events, processor, resolver};
-use crate::core::models::provider::check::ProviderCheckStats;
 use crate::core::models::provider::error::{ProviderError, ProviderIssue};
 use crate::core::models::provider::ProviderId;
 use crate::core::models::settings::ProviderRecord;
@@ -14,13 +13,13 @@ use crate::core::models::settings::ProviderRecord;
 /// 并发健康检查最大并发度
 const CHECK_CONCURRENCY_LIMIT: usize = 4;
 
-/// 执行并发健康检查主循环，返回统计信息与生命周期错误明细
+/// 执行并发健康检查主循环，返回失败数量与生命周期错误明细
 pub(super) async fn run_provider_checks(
     app: &AppHandle,
     run_id: &str,
     supported: Vec<(ProviderId, ProviderRecord)>,
-) -> (ProviderCheckStats, Vec<ProviderIssue>, Vec<ProviderError>) {
-    let mut stats = ProviderCheckStats::default();
+) -> (usize, Vec<ProviderIssue>, Vec<ProviderError>) {
+    let mut failed_count: usize = 0;
     let mut provider_issues: Vec<ProviderIssue> = Vec::new();
     let mut lifecycle_errors: Vec<ProviderError> = Vec::new();
 
@@ -55,8 +54,10 @@ pub(super) async fn run_provider_checks(
                     provider_issues.push(ProviderIssue::new(provider_id, err.code(), message));
                 }
 
-                // 统计：这条 provider 已处理完成
-                stats.record(online);
+                // 统计：健康检查失败计数
+                if !online {
+                    failed_count += 1;
+                }
 
                 let icon = if online { "✅" } else { "⚠️" };
                 info!("[Tauri] {} {} → online: {}", icon, provider_id, online);
@@ -80,5 +81,5 @@ pub(super) async fn run_provider_checks(
         }
     }
 
-    (stats, provider_issues, lifecycle_errors)
+    (failed_count, provider_issues, lifecycle_errors)
 }

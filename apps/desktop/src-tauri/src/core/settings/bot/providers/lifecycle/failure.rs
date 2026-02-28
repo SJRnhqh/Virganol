@@ -15,7 +15,7 @@ pub(super) fn report_lifecycle_failure(
     error: &ProviderError,
     issues: Option<Vec<ProviderIssue>>,
 ) {
-    if let Err(emit_err) = events::emit_check_failed(app, run_id, trigger, error, issues.clone()) {
+    if let Err(emit_err) = events::emit_check_failed(app, run_id, error, issues.clone()) {
         // 日志打印报错兜底
         let code = error.code();
         let message = error.message();

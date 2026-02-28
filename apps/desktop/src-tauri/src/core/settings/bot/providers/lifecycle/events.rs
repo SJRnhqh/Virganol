@@ -6,7 +6,7 @@ use tauri::{AppHandle, Emitter};
 use super::resolver;
 use crate::core::models::provider::check::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
-    ProviderCheckStats, ProviderCheckTrigger, ProviderStatusPayload,
+    ProviderCheckTrigger, ProviderStatusPayload,
 };
 use crate::core::models::provider::error::{ProviderError, ProviderIssue};
 use crate::core::models::provider::ProviderId;
@@ -17,16 +17,10 @@ pub(super) fn emit_check_started(
     app: &AppHandle,
     run_id: &str,
     trigger: ProviderCheckTrigger,
-    total: usize,
-    loaded_total: usize,
-    skipped_total: usize,
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckStartedPayload {
         run_id: run_id.to_string(),
         trigger,
-        total,
-        loaded_total,
-        skipped_total,
     };
 
     app.emit("providers-check-lifecycle-started", &payload).map_err(|e| {
@@ -59,17 +53,11 @@ pub(super) fn emit_provider_status(
 pub(super) fn emit_check_completed(
     app: &AppHandle,
     run_id: &str,
-    trigger: ProviderCheckTrigger,
-    stats: ProviderCheckStats,
-    duration_ms: u64,
+    failed: usize,
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckCompletedPayload {
         run_id: run_id.to_string(),
-        trigger,
-        processed: stats.processed,
-        succeeded: stats.succeeded,
-        failed: stats.failed,
-        duration_ms,
+        failed,
     };
 
     app.emit("providers-check-lifecycle-completed", &payload)
@@ -85,13 +73,11 @@ pub(super) fn emit_check_completed(
 pub(super) fn emit_check_failed(
     app: &AppHandle,
     run_id: &str,
-    trigger: ProviderCheckTrigger,
     error: &ProviderError,
     issues: Option<Vec<ProviderIssue>>,
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckFailedPayload {
         run_id: run_id.to_string(),
-        trigger,
         code: error.code(),
         message: error.message(),
         issues,

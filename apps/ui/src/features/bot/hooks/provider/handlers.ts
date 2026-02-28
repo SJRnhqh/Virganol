@@ -14,10 +14,6 @@ import { clearAllTimers, scheduleCheckingDone, scheduleCheckingFailed } from "./
 export function handleStarted(payload: ProviderCheckStartedPayload) {
   clearAllTimers();
   useProviderCheckStore.getState().setChecking(payload.run_id, payload.trigger);
-
-  console.log(
-    `[handler] check started: run=${payload.run_id}, trigger=${payload.trigger}, total=${payload.total}, loaded_total=${payload.loaded_total}, skipped_total=${payload.skipped_total}`,
-  );
 }
 
 /** 单个 Provider 状态推送：将配置、连接状态、模型列表写入 providerStore */
@@ -68,7 +64,7 @@ export function handleCompleted(payload: ProviderCheckCompletedPayload) {
   }
 
   console.log(
-    `[handler] check completed: run=${payload.run_id}, succeeded=${payload.succeeded}, failed=${payload.failed}, duration=${payload.duration_ms}ms`,
+    `[handler] check completed: run=${payload.run_id}, failed=${payload.failed}`,
   );
 }
 
