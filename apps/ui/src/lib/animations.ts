@@ -184,3 +184,18 @@ export const phaseIconVariants: Variants = {
     },
   },
 };
+
+/* === 5. Provider 手动刷新按钮动画 === */
+// 点击缩放反馈，hover 背景由外层 Tailwind class 管理
+export const refreshButtonVariants: Variants = {
+  idle: {
+    scale: 1,
+  },
+  tap: {
+    scale: 0.9,
+    transition: {
+      duration: 0.08,
+      ease: "easeInOut",
+    },
+  },
+};

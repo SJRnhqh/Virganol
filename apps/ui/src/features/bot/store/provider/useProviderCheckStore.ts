@@ -22,7 +22,7 @@ export const useProviderCheckStore = create<ProviderCheckState>((set) => ({
     set({ phase: "done" }),
 
   setFailed: (code, message, issues) =>
-    set({ phase: "failed", errorCode: code, errorMessage: message, issues: issues ?? [] }),
+    set({ phase: "failed", errorCode: code, errorMessage: message ?? null, issues: issues ?? [] }),
 
   reset: () =>
     set(initialState),

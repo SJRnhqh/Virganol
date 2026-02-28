@@ -56,6 +56,6 @@ export interface ProviderCheckState {
 
   setChecking: (runId: string, trigger: ProviderCheckTrigger) => void;
   setDone: () => void;
-  setFailed: (code: string, message: string, issues?: ProviderIssue[]) => void;
+  setFailed: (code: string, message?: string, issues?: ProviderIssue[]) => void;
   reset: () => void;
 }

@@ -5,10 +5,12 @@ import { AnimatePresence, motion } from "framer-motion";
 
 // 内部引用
 import { useProviderCheckStore } from "@/features/bot/store";
-import { phaseIconVariants, pulseIconVariants } from "@/lib/animations";
+import { triggerProviderManualRefresh } from "@/features/bot/api";
+import { phaseIconVariants, pulseIconVariants, refreshButtonVariants } from "@/lib/animations";
 
 export const ProviderHeader = () => {
   const phase = useProviderCheckStore((s) => s.phase);
+  const isChecking = phase === "checking";
 
   return (
     <div className="mb-3 px-1 flex items-center justify-between">
@@ -39,12 +41,17 @@ export const ProviderHeader = () => {
             </motion.div>
           )}
         </AnimatePresence>
-        <button
+        <motion.button
           type="button"
-          className="p-0.5 rounded text-settings-panel-fg/40 cursor-pointer"
+          variants={refreshButtonVariants}
+          initial="idle"
+          whileTap={isChecking ? undefined : "tap"}
+          disabled={isChecking}
+          onClick={() => triggerProviderManualRefresh()}
+          className="p-1 rounded-md text-settings-panel-fg/40 hover:bg-settings-panel-fg/8 hover:text-settings-panel-fg/70 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-settings-panel-fg/40"
         >
           <RefreshCw className="w-4 h-4" />
-        </button>
+        </motion.button>
       </div>
     </div>
   );
