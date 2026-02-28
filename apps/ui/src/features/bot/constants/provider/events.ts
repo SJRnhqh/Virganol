@@ -6,3 +6,6 @@ export const PROVIDER_CHECK_EVENTS = {
   COMPLETED: "providers-check-lifecycle-completed",
   FAILED: "providers-check-lifecycle-failed",
 } as const;
+
+/** done → idle 回归延迟（毫秒） */
+export const DONE_IDLE_DELAY_MS = 2000;

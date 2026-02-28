@@ -146,3 +146,41 @@ export const rotatingIconVariants: Variants = {
     },
   },
 };
+
+// 脉冲呼吸动画：用于 checking 状态的 icon 明暗交替
+export const pulseIconVariants: Variants = {
+  idle: {
+    opacity: 1,
+  },
+  pulsing: {
+    opacity: [0.4, 1, 0.4],
+    transition: {
+      duration: 1.5,
+      ease: "easeInOut",
+      repeat: Infinity,
+    },
+  },
+};
+
+/* === 4. Provider 生命周期状态 icon 切换动画 === */
+// 淡入淡出 + 轻微缩放，用于 Cloud / CloudCheck 等 icon 切换
+export const phaseIconVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.8,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.18,
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.8,
+    transition: {
+      duration: 0.18,
+    },
+  },
+};

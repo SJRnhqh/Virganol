@@ -2,4 +2,4 @@
 // 导出内容
 export { PROVIDER_REGISTRY } from "./registry";
 export { PROVIDER_DEFINITIONS } from "./definition";
-export { PROVIDER_CHECK_EVENTS } from "./events";
+export { PROVIDER_CHECK_EVENTS, DONE_IDLE_DELAY_MS } from "./events";

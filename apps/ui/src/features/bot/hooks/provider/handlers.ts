@@ -6,11 +6,22 @@ import type {
   ProviderCheckFailedPayload,
   ProviderStatusPayload,
 } from "@/features/bot/types";
-import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
+import { PROVIDER_DEFINITIONS, DONE_IDLE_DELAY_MS } from "@/features/bot/constants";
 import { useProviderStore, useProviderCheckStore } from "@/features/bot/store";
 
-/** 生命周期开始：更新 checkStore 进入 checking 阶段 */
+/** 模块级 timer，用于 done → idle 回归，新一轮 check 开始时取消 */
+let doneTimer: ReturnType<typeof setTimeout> | null = null;
+
+function clearDoneTimer() {
+  if (doneTimer !== null) {
+    clearTimeout(doneTimer);
+    doneTimer = null;
+  }
+}
+
+/** 生命周期开始：取消 pending 回归 timer，更新 checkStore 进入 checking 阶段 */
 export function handleStarted(payload: ProviderCheckStartedPayload) {
+  clearDoneTimer();
   useProviderCheckStore.getState().setChecking(payload.run_id, payload.trigger);
 
   console.log(
@@ -57,9 +68,15 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
   );
 }
 
-/** 生命周期正常结束：更新 checkStore 进入 done 阶段 */
+/** 生命周期正常结束：更新 checkStore 进入 done 阶段，延迟后回归 idle */
 export function handleCompleted(payload: ProviderCheckCompletedPayload) {
+  clearDoneTimer();
   useProviderCheckStore.getState().setDone();
+
+  doneTimer = setTimeout(() => {
+    doneTimer = null;
+    useProviderCheckStore.getState().reset();
+  }, DONE_IDLE_DELAY_MS);
 
   console.log(
     `[handler] check completed: run=${payload.run_id}, succeeded=${payload.succeeded}, failed=${payload.failed}, duration=${payload.duration_ms}ms`,
