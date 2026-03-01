@@ -13,7 +13,6 @@ pub enum ProviderError {
     UnsupportedProvider(String),
     LifecycleEventEmit(String),
     LifecycleTaskJoin(String),
-    LifecyclePartialFailure(String),
 }
 
 impl fmt::Display for ProviderError {
@@ -23,8 +22,7 @@ impl fmt::Display for ProviderError {
             Self::Io(msg)
             | Self::UnsupportedProvider(msg)
             | Self::LifecycleEventEmit(msg)
-            | Self::LifecycleTaskJoin(msg)
-            | Self::LifecyclePartialFailure(msg) => f.write_str(msg),
+            | Self::LifecycleTaskJoin(msg) => f.write_str(msg),
         }
     }
 }
@@ -45,7 +43,6 @@ impl ProviderError {
             Self::UnsupportedProvider(_) => ProviderErrorCode::UnsupportedProvider,
             Self::LifecycleEventEmit(_) => ProviderErrorCode::LifecycleEventEmit,
             Self::LifecycleTaskJoin(_) => ProviderErrorCode::LifecycleTaskJoin,
-            Self::LifecyclePartialFailure(_) => ProviderErrorCode::LifecyclePartialFailure,
         }
     }
 

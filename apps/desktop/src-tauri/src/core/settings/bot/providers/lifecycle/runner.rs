@@ -1,6 +1,7 @@
 // apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/runner.rs
 // 外部依赖
-use log::{error, info};
+use log::{error, info, warn};
+use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::AppHandle;
 use tokio::task::JoinSet;
 
@@ -18,10 +19,13 @@ pub(super) async fn run_provider_checks(
     app: &AppHandle,
     run_id: &str,
     supported: Vec<(ProviderId, ProviderRecord)>,
-) -> (usize, Vec<ProviderIssue>, Vec<ProviderError>) {
+) -> (usize, Vec<ProviderIssue>, Option<ProviderError>) {
     let mut failed_count: usize = 0;
     let mut provider_issues: Vec<ProviderIssue> = Vec::new();
-    let mut lifecycle_errors: Vec<ProviderError> = Vec::new();
+    let mut join_error: Option<ProviderError> = None;
+
+    // 标记是否已记录过并发错误（保证只记录一次）
+    let has_join_error = AtomicBool::new(false);
 
     let mut pending: std::collections::VecDeque<(ProviderId, ProviderRecord)> = supported.into();
     let mut in_flight = JoinSet::new();
@@ -72,14 +76,25 @@ pub(super) async fn run_provider_checks(
                     ));
                 }
             }
-            Some(Err(join_error)) => {
-                let err = ProviderError::LifecycleTaskJoin(format!("{}", join_error));
-                error!("[Tauri] ❌ {}", err.message());
-                lifecycle_errors.push(err);
+            Some(Err(err)) => {
+                // 单次赋值：只在第一次发生时记录
+                if !has_join_error.swap(true, Ordering::AcqRel) {
+                    join_error = Some(ProviderError::LifecycleTaskJoin(format!(
+                        "{}",
+                        err
+                    )));
+                    error!("[Tauri] ❌ concurrent task error: {}", err);
+                } else {
+                    // 后续静默降级为日志打印
+                    warn!(
+                        "[Tauri] ⚠️ concurrent task error (suppressed): {}",
+                        err
+                    );
+                }
             }
             None => break,
         }
     }
 
-    (failed_count, provider_issues, lifecycle_errors)
+    (failed_count, provider_issues, join_error)
 }

@@ -63,6 +63,8 @@ LLM Provider 后端分为两条主线：
 - [x] 前后端 payload 精简：只推送前端消费的字段，移除冗余统计信息
 - [x] 后端 `ProviderCheckStats` 退化为 `failed_count` 计数器
 - [x] 后端生命周期步骤重排：started 先于 snapshot 加载，前端尽早进入 checking
+- [x] 终态语义收敛：`completed` 承载业务失败（failed_count），`failed` 承载结构性错误（code/message/issues），前后端契约已对齐
+- [ ] `failure.rs` — `issues.clone()` 改为 move 语义，避免不必要的堆分配
 
 #### 🚧 4.3 per-provider 卡片渲染
 
@@ -80,9 +82,6 @@ LLM Provider 后端分为两条主线：
 
 - [ ] 根据前端适配过程中暴露的问题补充后端处理
 - [ ] 视需要补充集成测试
-- [ ] 生命周期终态语义收敛：明确 `completed(failed_count>0)` 为业务失败、`failed` 为结构性失败（前后端注释与文案同步）
-- [ ] `partial_failure` 契约精修：补充结构性错误明细字段（或计数字段），避免仅通过 message 拼接传达
-- [ ] `failure.rs` — `issues.clone()` 改为 move 语义，避免不必要的堆分配
 - [ ] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [ ] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
 - [ ] 生命周期功能开发完结

@@ -16,8 +16,6 @@ pub enum ProviderErrorCode {
     LifecycleEventEmit,
     #[serde(rename = "lifecycle_task_join_failed")]
     LifecycleTaskJoin,
-    #[serde(rename = "lifecycle_partial_failure")]
-    LifecyclePartialFailure,
 }
 
 impl ProviderErrorCode {
@@ -28,7 +26,6 @@ impl ProviderErrorCode {
             Self::UnsupportedProvider => "unsupported_provider",
             Self::LifecycleEventEmit => "lifecycle_event_emit_failed",
             Self::LifecycleTaskJoin => "lifecycle_task_join_failed",
-            Self::LifecyclePartialFailure => "lifecycle_partial_failure",
         }
     }
 }
@@ -52,7 +49,6 @@ mod tests {
             (ProviderErrorCode::UnsupportedProvider, "unsupported_provider"),
             (ProviderErrorCode::LifecycleEventEmit, "lifecycle_event_emit_failed"),
             (ProviderErrorCode::LifecycleTaskJoin, "lifecycle_task_join_failed"),
-            (ProviderErrorCode::LifecyclePartialFailure, "lifecycle_partial_failure"),
         ];
         for (code, expected) in cases {
             assert_eq!(code.as_str(), expected);

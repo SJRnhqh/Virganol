@@ -17,11 +17,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     let started_at = Instant::now();
 
     // Step 2: 发出生命周期 started 事件
-    if let Err(err) = events::emit_check_started(
-        &app,
-        run_id.as_str(),
-        trigger,
-    ) {
+    if let Err(err) = events::emit_check_started(&app, run_id.as_str(), trigger) {
         failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
         return;
     }
@@ -65,11 +61,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
                 loaded_total, skipped_total, trigger
             );
         }
-        if let Err(err) = events::emit_check_completed(
-            &app,
-            run_id.as_str(),
-            0,
-        ) {
+        if let Err(err) = events::emit_check_completed(&app, run_id.as_str(), 0) {
             failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
             return;
         }
@@ -77,36 +69,47 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
     }
 
     // Step 4: 并发执行健康检查并收敛失败计数/结构性错误
-    let (failed_count, provider_issues, lifecycle_errors) =
+    let (failed_count, provider_issues, join_error) =
         runner::run_provider_checks(&app, run_id.as_str(), snapshot.supported).await;
 
-    // Step 5: 发出生命周期 completed/partial_failure 终态事件
-    let duration_ms = started_at.elapsed().as_millis() as u64;
-    if provider_issues.is_empty() && lifecycle_errors.is_empty() {
-        if let Err(err) =
-            events::emit_check_completed(&app, run_id.as_str(), failed_count)
-        {
-            failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
-            return;
-        }
-
-        info!(
-            "[Tauri] 🏁 Provider check completed: run_id={}, checked={}, failed={}, duration_ms={}",
-            run_id, supported_total, failed_count, duration_ms
+    // Step 5: 处理并发层结构性错误
+    if let Some(err) = join_error {
+        failure::report_lifecycle_failure(
+            &app,
+            run_id.as_str(),
+            trigger,
+            &err,
+            if provider_issues.is_empty() {
+                None
+            } else {
+                Some(provider_issues)
+            },
         );
         return;
     }
 
-    let provider_issue_count = provider_issues.len();
-    let lifecycle_error_count = lifecycle_errors.len();
-    let err = ProviderError::LifecyclePartialFailure(format!(
-        "provider check finished with lifecycle_error_count={}, provider_issue_count={}",
-        lifecycle_error_count, provider_issue_count
-    ));
-    let issues = if provider_issues.is_empty() {
-        None
-    } else {
-        Some(provider_issues)
-    };
-    failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, issues);
+    // Step 6: 处理 Per-provider 结构性错误（无 join_error 的情况）
+    if !provider_issues.is_empty() {
+        let err = ProviderError::LifecycleEventEmit(format!("provider status emit failed"));
+        failure::report_lifecycle_failure(
+            &app,
+            run_id.as_str(),
+            trigger,
+            &err,
+            Some(provider_issues),
+        );
+        return;
+    }
+
+    // Step 7: 推送生命周期completd事件
+    let duration_ms = started_at.elapsed().as_millis() as u64;
+    if let Err(err) = events::emit_check_completed(&app, run_id.as_str(), failed_count) {
+        failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
+        return;
+    }
+
+    info!(
+        "[Tauri] 🏁 Provider check completed: run_id={}, checked={}, failed={}, duration_ms={}",
+        run_id, supported_total, failed_count, duration_ms
+    );
 }
