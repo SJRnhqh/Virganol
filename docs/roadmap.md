@@ -45,6 +45,7 @@ LLM Provider 后端分为两条主线：
 （checking→终态补足、终态→idle 回归）
 - [x] `hooks/provider/runGuard.ts` — run_id 守卫函数复用（避免多处重复定义）
 - [x] 双层 run_id 防串扰 — 事件入口过滤 + 调度回调二次校验
+- [x] `rid.rs` — run_id 增加 `AtomicU64` 计数器后缀，规避同毫秒重复
 - [x] `hooks/provider/listen.ts` — 注册 4 种事件监听，返回统一 cleanup
 - [x] `hooks/provider/useProviderStartup.ts` — App 启动时注册监听 + 触发 startup check
 - [x] `api/provider/check.ts` — `triggerProviderStartupCheck` / `triggerProviderManualRefresh`，共享去重逻辑
@@ -80,7 +81,6 @@ LLM Provider 后端分为两条主线：
 - [ ] `failure.rs` — `issues.clone()` 改为 move 语义，避免不必要的堆分配
 - [ ] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [ ] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
-- [ ] `rid.rs` — run_id 可选加 `AtomicU64` 计数器，防止同毫秒重复
 - [ ] 生命周期功能开发完结
 
 ---
