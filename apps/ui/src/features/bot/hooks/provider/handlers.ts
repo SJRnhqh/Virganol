@@ -8,7 +8,12 @@ import type {
 } from "@/features/bot/types";
 import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
 import { useProviderStore, useProviderCheckStore } from "@/features/bot/store";
-import { clearAllTimers, scheduleCheckingDone, scheduleCheckingFailed } from "./timers";
+import {
+  clearAllTimers,
+  scheduleCheckingDone,
+  scheduleCheckingFailed,
+} from "./lifecycleScheduler";
+import { isCurrentRun } from "./runGuard";
 
 /** 生命周期开始：取消 pending timer，更新 checkStore 进入 checking 阶段 */
 export function handleStarted(payload: ProviderCheckStartedPayload) {
@@ -18,6 +23,13 @@ export function handleStarted(payload: ProviderCheckStartedPayload) {
 
 /** 单个 Provider 状态推送：将配置、连接状态、模型列表写入 providerStore */
 export function handleProviderStatus(payload: ProviderStatusPayload) {
+  if (!isCurrentRun(payload.run_id)) {
+    console.warn(
+      `[handler] stale provider-status ignored: run=${payload.run_id}`,
+    );
+    return;
+  }
+
   const { provider, config, health } = payload;
 
   if (!(provider in PROVIDER_DEFINITIONS)) {
@@ -57,10 +69,15 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
 
 /** 生命周期正常结束：按失败数量决定走 done 还是 failed */
 export function handleCompleted(payload: ProviderCheckCompletedPayload) {
+  if (!isCurrentRun(payload.run_id)) {
+    console.warn(`[handler] stale completed ignored: run=${payload.run_id}`);
+    return;
+  }
+
   if (payload.failed > 0) {
-    scheduleCheckingFailed("lifecycle_partial_failure");
+    scheduleCheckingFailed(payload.run_id, "lifecycle_partial_failure");
   } else {
-    scheduleCheckingDone();
+    scheduleCheckingDone(payload.run_id);
   }
 
   console.log(
@@ -70,7 +87,17 @@ export function handleCompleted(payload: ProviderCheckCompletedPayload) {
 
 /** 生命周期异常终止：更新 checkStore 进入 failed 阶段，并将可定位的 issue 写入对应 provider */
 export function handleFailed(payload: ProviderCheckFailedPayload) {
-  scheduleCheckingFailed(payload.code, payload.message, payload.issues);
+  if (!isCurrentRun(payload.run_id)) {
+    console.warn(`[handler] stale failed ignored: run=${payload.run_id}`);
+    return;
+  }
+
+  scheduleCheckingFailed(
+    payload.run_id,
+    payload.code,
+    payload.message,
+    payload.issues,
+  );
 
   // issues 中带 provider 字段的，下沉到对应 provider 的错误状态
   if (payload.issues?.length) {

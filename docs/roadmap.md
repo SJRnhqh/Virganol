@@ -40,8 +40,11 @@ LLM Provider 后端分为两条主线：
 - [x] `useProviderCheckStore` — 生命周期全局状态（idle / checking / done / failed）
 - [x] `useProviderStore` — per-provider 状态（config / status / models）
 - [x] `constants/events.ts` — 事件名统一管理（`PROVIDER_CHECK_EVENTS`）+ 阶段转换延迟（`PROVIDER_CHECK_DELAYS`）
-- [x] `hooks/provider/handlers.ts` — 4 种事件 handler，纯业务逻辑，不依赖 timer
-- [x] `hooks/provider/timers.ts` — 生命周期阶段转换 timer 管理（checking→终态补足、终态→idle 回归）
+- [x] `hooks/provider/handlers.ts` — 4 种事件 handler（含当前 run 事件过滤）
+- [x] `hooks/provider/lifecycleScheduler.ts` — 生命周期阶段转换调度
+（checking→终态补足、终态→idle 回归）
+- [x] `hooks/provider/runGuard.ts` — run_id 守卫函数复用（避免多处重复定义）
+- [x] 双层 run_id 防串扰 — 事件入口过滤 + 调度回调二次校验
 - [x] `hooks/provider/listen.ts` — 注册 4 种事件监听，返回统一 cleanup
 - [x] `hooks/provider/useProviderStartup.ts` — App 启动时注册监听 + 触发 startup check
 - [x] `api/provider/check.ts` — `triggerProviderStartupCheck` / `triggerProviderManualRefresh`，共享去重逻辑

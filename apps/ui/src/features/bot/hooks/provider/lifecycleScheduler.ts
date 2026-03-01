@@ -1,9 +1,9 @@
-// apps/ui/src/features/bot/hooks/provider/timers.ts
-// Provider 生命周期阶段转换 timer 管理
-
+// apps/ui/src/features/bot/hooks/provider/lifecycleScheduler.ts
+// 内部引用
 import type { ProviderIssue } from "@/features/bot/types";
 import { PROVIDER_CHECK_DELAYS } from "@/features/bot/constants";
 import { useProviderCheckStore } from "@/features/bot/store";
+import { isCurrentRun } from "./runGuard";
 
 /** 模块级 timer，用于 done/failed → idle 回归 */
 let idleTimer: ReturnType<typeof setTimeout> | null = null;
@@ -25,10 +25,11 @@ function clearCheckingTimer() {
 }
 
 /** 启动 idle 回归 timer */
-function scheduleIdleReset(delay: number) {
+function scheduleIdleReset(runId: string, delay: number) {
   clearIdleTimer();
   idleTimer = setTimeout(() => {
     idleTimer = null;
+    if (!isCurrentRun(runId)) return;
     useProviderCheckStore.getState().reset();
   }, delay);
 }
@@ -40,21 +41,28 @@ export function clearAllTimers() {
 }
 
 /** 补足 checking 展示后进入 done，随后回归 idle */
-export function scheduleCheckingDone() {
+export function scheduleCheckingDone(runId: string) {
   clearCheckingTimer();
   checkingTimer = setTimeout(() => {
     checkingTimer = null;
+    if (!isCurrentRun(runId)) return;
     useProviderCheckStore.getState().setDone();
-    scheduleIdleReset(PROVIDER_CHECK_DELAYS.DONE_IDLE);
+    scheduleIdleReset(runId, PROVIDER_CHECK_DELAYS.DONE_IDLE);
   }, PROVIDER_CHECK_DELAYS.CHECKING_DONE);
 }
 
 /** 补足 checking 展示后进入 failed，随后回归 idle */
-export function scheduleCheckingFailed(code: string, message?: string, issues?: ProviderIssue[]) {
+export function scheduleCheckingFailed(
+  runId: string,
+  code: string,
+  message?: string,
+  issues?: ProviderIssue[],
+) {
   clearCheckingTimer();
   checkingTimer = setTimeout(() => {
     checkingTimer = null;
+    if (!isCurrentRun(runId)) return;
     useProviderCheckStore.getState().setFailed(code, message, issues);
-    scheduleIdleReset(PROVIDER_CHECK_DELAYS.FAILED_IDLE);
+    scheduleIdleReset(runId, PROVIDER_CHECK_DELAYS.FAILED_IDLE);
   }, PROVIDER_CHECK_DELAYS.CHECKING_DONE);
 }
