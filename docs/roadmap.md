@@ -37,7 +37,7 @@ LLM Provider 后端分为两条主线：
 
 #### ✅ 4.1 前端状态管理框架
 
-- [x] `useProviderCheckStore` — 生命周期全局状态（idle / checking / done / failed）
+- [x] `useProviderCheckStore` — 生命周期全局状态（idle / checking / done / degraded / failed）
 - [x] `useProviderStore` — per-provider 状态（config / status / models）
 - [x] `constants/events.ts` — 事件名统一管理（`PROVIDER_CHECK_EVENTS`）+ 阶段转换延迟（`PROVIDER_CHECK_DELAYS`）
 - [x] `hooks/provider/handlers.ts` — 4 种事件 handler（含当前 run 事件过滤）
@@ -52,12 +52,14 @@ LLM Provider 后端分为两条主线：
 
 #### ✅ 4.2 全局生命周期渲染与交互
 
-- [x] `ProviderHeader` — 基于 `phase` 的动画图标切换（Cloud / CloudCog / CloudCheck / CloudAlert）
+- [x] `ProviderHeader` — 基于 `phase` 的动画图标切换
+（Cloud / CloudCog / CloudCheck / CloudAlert / CloudOff）
 - [x] 手动刷新按钮：checking 阶段禁用，done/idle 可用
 - [x] checking 补足延迟（800ms）— 保证图标切换有感知
-- [x] done→idle 回归（1200ms）、failed→idle 回归（3500ms）
-- [x] `handleCompleted` 按 `failed > 0` 路由到 failed 阶段（`lifecycle_partial_failure`）
-- [x] `handleFailed` 透传后端 code/message/issues，issues 下沉到 per-provider 错误状态
+- [x] done→idle 回归（1200ms）、degraded→idle 回归（2200ms）、failed→idle 回归（3500ms）
+- [x] `handleCompleted` 按 `failed > 0` 路由到 degraded 阶段（业务性错误）
+- [x] `handleFailed` 保持结构性失败语义（failed 阶段）并透传后端 code/message/issues
+- [x] 前端渲染语义分层：业务性错误（degraded/CloudAlert）与结构性错误（failed/CloudOff）分离
 - [x] 前后端 payload 精简：只推送前端消费的字段，移除冗余统计信息
 - [x] 后端 `ProviderCheckStats` 退化为 `failed_count` 计数器
 - [x] 后端生命周期步骤重排：started 先于 snapshot 加载，前端尽早进入 checking
