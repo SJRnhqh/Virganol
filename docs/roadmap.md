@@ -78,6 +78,8 @@ LLM Provider 后端分为两条主线：
 
 - [ ] 根据前端适配过程中暴露的问题补充后端处理
 - [ ] 视需要补充集成测试
+- [ ] 生命周期终态语义收敛：明确 `completed(failed_count>0)` 为业务失败、`failed` 为结构性失败（前后端注释与文案同步）
+- [ ] `partial_failure` 契约精修：补充结构性错误明细字段（或计数字段），避免仅通过 message 拼接传达
 - [ ] `failure.rs` — `issues.clone()` 改为 move 语义，避免不必要的堆分配
 - [ ] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [ ] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
