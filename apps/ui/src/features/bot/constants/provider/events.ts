@@ -13,6 +13,8 @@ export const PROVIDER_CHECK_DELAYS = {
   CHECKING_DONE: 800,
   /** done → idle 回归延迟 */
   DONE_IDLE: 1200,
+  /** degraded → idle 回归延迟 */
+  DEGRADED_IDLE: 2200,
   /** failed → idle 回归延迟 */
   FAILED_IDLE: 3500,
 } as const;

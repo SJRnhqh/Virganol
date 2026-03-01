@@ -44,7 +44,12 @@ export interface ProviderState {
 
 // ── Provider Check Store（生命周期全局状态）───
 
-export type ProviderCheckPhase = "idle" | "checking" | "done" | "failed";
+export type ProviderCheckPhase =
+  | "idle"
+  | "checking"
+  | "done"
+  | "degraded"
+  | "failed";
 
 export interface ProviderCheckState {
   phase: ProviderCheckPhase;
@@ -56,6 +61,7 @@ export interface ProviderCheckState {
 
   setChecking: (runId: string, trigger: ProviderCheckTrigger) => void;
   setDone: () => void;
+  setDegraded: (message?: string) => void;
   setFailed: (code: string, message?: string, issues?: ProviderIssue[]) => void;
   reset: () => void;
 }

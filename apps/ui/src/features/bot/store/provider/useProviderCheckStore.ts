@@ -16,14 +16,33 @@ export const useProviderCheckStore = create<ProviderCheckState>((set) => ({
   ...initialState,
 
   setChecking: (runId, trigger) =>
-    set({ phase: "checking", runId, trigger, issues: [], errorCode: null, errorMessage: null }),
+    set({
+      phase: "checking",
+      runId,
+      trigger,
+      issues: [],
+      errorCode: null,
+      errorMessage: null,
+    }),
 
   setDone: () =>
-    set({ phase: "done" }),
+    set({ phase: "done", issues: [], errorCode: null, errorMessage: null }),
+
+  setDegraded: (message) =>
+    set({
+      phase: "degraded",
+      issues: [],
+      errorCode: null,
+      errorMessage: message ?? null,
+    }),
 
   setFailed: (code, message, issues) =>
-    set({ phase: "failed", errorCode: code, errorMessage: message ?? null, issues: issues ?? [] }),
+    set({
+      phase: "failed",
+      errorCode: code,
+      errorMessage: message ?? null,
+      issues: issues ?? [],
+    }),
 
-  reset: () =>
-    set(initialState),
+  reset: () => set(initialState),
 }));

@@ -5,7 +5,7 @@ import { PROVIDER_CHECK_DELAYS } from "@/features/bot/constants";
 import { useProviderCheckStore } from "@/features/bot/store";
 import { isCurrentRun } from "./runGuard";
 
-/** 模块级 timer，用于 done/failed → idle 回归 */
+/** 模块级 timer，用于 done/degraded/failed → idle 回归 */
 let idleTimer: ReturnType<typeof setTimeout> | null = null;
 /** 模块级 timer，用于 checking → 终态补足延迟 */
 let checkingTimer: ReturnType<typeof setTimeout> | null = null;
@@ -48,6 +48,19 @@ export function scheduleCheckingDone(runId: string) {
     if (!isCurrentRun(runId)) return;
     useProviderCheckStore.getState().setDone();
     scheduleIdleReset(runId, PROVIDER_CHECK_DELAYS.DONE_IDLE);
+  }, PROVIDER_CHECK_DELAYS.CHECKING_DONE);
+}
+
+/** 补足 checking 展示后进入 degraded，随后回归 idle */
+export function scheduleCheckingDegraded(runId: string, failedCount: number) {
+  clearCheckingTimer();
+  checkingTimer = setTimeout(() => {
+    checkingTimer = null;
+    if (!isCurrentRun(runId)) return;
+    useProviderCheckStore
+      .getState()
+      .setDegraded(`${failedCount} provider check(s) failed`);
+    scheduleIdleReset(runId, PROVIDER_CHECK_DELAYS.DEGRADED_IDLE);
   }, PROVIDER_CHECK_DELAYS.CHECKING_DONE);
 }
 

@@ -10,6 +10,7 @@ import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
 import { useProviderStore, useProviderCheckStore } from "@/features/bot/store";
 import {
   clearAllTimers,
+  scheduleCheckingDegraded,
   scheduleCheckingDone,
   scheduleCheckingFailed,
 } from "./lifecycleScheduler";
@@ -67,7 +68,7 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
   );
 }
 
-/** 生命周期正常结束：按失败数量决定走 done 还是 failed */
+/** 生命周期正常结束：按失败数量决定走 done 或 degraded（业务失败） */
 export function handleCompleted(payload: ProviderCheckCompletedPayload) {
   if (!isCurrentRun(payload.run_id)) {
     console.warn(`[handler] stale completed ignored: run=${payload.run_id}`);
@@ -75,7 +76,7 @@ export function handleCompleted(payload: ProviderCheckCompletedPayload) {
   }
 
   if (payload.failed > 0) {
-    scheduleCheckingFailed(payload.run_id, "lifecycle_partial_failure");
+    scheduleCheckingDegraded(payload.run_id, payload.failed);
   } else {
     scheduleCheckingDone(payload.run_id);
   }
