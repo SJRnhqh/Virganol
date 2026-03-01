@@ -8,7 +8,6 @@ export type {
   ProviderStatus,
   ProviderModels,
   ProviderState,
-  ProviderCheckPhase,
   ProviderCheckState,
   ProviderConnectionProps,
   ProviderModelProps,

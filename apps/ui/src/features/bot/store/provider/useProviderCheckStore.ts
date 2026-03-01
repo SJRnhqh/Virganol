@@ -1,10 +1,13 @@
 // apps/ui/src/features/bot/store/provider/useProviderCheckStore.ts
+// 外部依赖
 import { create } from "zustand";
 
+// 内部引用
+import { PROVIDER_CHECK_PHASES } from "@/features/bot/constants";
 import type { ProviderCheckState } from "@/features/bot/types";
 
 const initialState = {
-  phase: "idle" as const,
+  phase: PROVIDER_CHECK_PHASES.IDLE,
   runId: null,
   trigger: null,
   issues: [],
@@ -17,7 +20,7 @@ export const useProviderCheckStore = create<ProviderCheckState>((set) => ({
 
   setChecking: (runId, trigger) =>
     set({
-      phase: "checking",
+      phase: PROVIDER_CHECK_PHASES.CHECKING,
       runId,
       trigger,
       issues: [],
@@ -26,11 +29,16 @@ export const useProviderCheckStore = create<ProviderCheckState>((set) => ({
     }),
 
   setDone: () =>
-    set({ phase: "done", issues: [], errorCode: null, errorMessage: null }),
+    set({
+      phase: PROVIDER_CHECK_PHASES.DONE,
+      issues: [],
+      errorCode: null,
+      errorMessage: null,
+    }),
 
   setDegraded: (message) =>
     set({
-      phase: "degraded",
+      phase: PROVIDER_CHECK_PHASES.DEGRADED,
       issues: [],
       errorCode: null,
       errorMessage: message ?? null,
@@ -38,7 +46,7 @@ export const useProviderCheckStore = create<ProviderCheckState>((set) => ({
 
   setFailed: (code, message, issues) =>
     set({
-      phase: "failed",
+      phase: PROVIDER_CHECK_PHASES.FAILED,
       errorCode: code,
       errorMessage: message ?? null,
       issues: issues ?? [],

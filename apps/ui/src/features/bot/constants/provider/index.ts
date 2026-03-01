@@ -5,4 +5,6 @@ export { PROVIDER_DEFINITIONS } from "./definition";
 export {
   PROVIDER_CHECK_EVENTS,
   PROVIDER_CHECK_DELAYS,
-} from "./events";
+  PROVIDER_CHECK_PHASES,
+  type ProviderCheckPhase,
+} from "./lifecycle";

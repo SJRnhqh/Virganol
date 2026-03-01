@@ -13,6 +13,7 @@ import { AnimatePresence, motion } from "framer-motion";
 // 内部引用
 import { useProviderCheckStore } from "@/features/bot/store";
 import { triggerProviderManualRefresh } from "@/features/bot/api";
+import { PROVIDER_CHECK_PHASES } from "@/features/bot/constants";
 import {
   phaseIconVariants,
   pulseIconVariants,
@@ -21,7 +22,7 @@ import {
 
 export const ProviderHeader = () => {
   const phase = useProviderCheckStore((s) => s.phase);
-  const isChecking = phase === "checking";
+  const isChecking = phase === PROVIDER_CHECK_PHASES.CHECKING;
 
   return (
     <div className="mb-3 px-1 flex items-center justify-between">
@@ -29,7 +30,7 @@ export const ProviderHeader = () => {
 
       <div className="flex items-center gap-2">
         <AnimatePresence mode="wait">
-          {phase === "idle" && (
+          {phase === PROVIDER_CHECK_PHASES.IDLE && (
             <motion.div
               key="idle"
               variants={phaseIconVariants}
@@ -40,7 +41,7 @@ export const ProviderHeader = () => {
               <Cloud className="w-5 h-5 text-settings-panel-fg/40" />
             </motion.div>
           )}
-          {phase === "checking" && (
+          {phase === PROVIDER_CHECK_PHASES.CHECKING && (
             <motion.div
               key="checking"
               variants={phaseIconVariants}
@@ -53,7 +54,7 @@ export const ProviderHeader = () => {
               </motion.div>
             </motion.div>
           )}
-          {phase === "done" && (
+          {phase === PROVIDER_CHECK_PHASES.DONE && (
             <motion.div
               key="done"
               variants={phaseIconVariants}
@@ -64,7 +65,7 @@ export const ProviderHeader = () => {
               <CloudCheck className="w-5 h-5 text-settings-panel-fg/40" />
             </motion.div>
           )}
-          {phase === "degraded" && (
+          {phase === PROVIDER_CHECK_PHASES.DEGRADED && (
             <motion.div
               key="degraded"
               variants={phaseIconVariants}
@@ -75,7 +76,7 @@ export const ProviderHeader = () => {
               <CloudAlert className="w-5 h-5 text-settings-panel-fg/40" />
             </motion.div>
           )}
-          {phase === "failed" && (
+          {phase === PROVIDER_CHECK_PHASES.FAILED && (
             <motion.div
               key="failed"
               variants={phaseIconVariants}

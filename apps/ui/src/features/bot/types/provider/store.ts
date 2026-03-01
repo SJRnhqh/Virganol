@@ -1,5 +1,6 @@
 // apps/ui/src/features/bot/types/provider/store.ts
 // 内部引用
+import type { ProviderCheckPhase } from "@/features/bot/constants/provider";
 import type { ProviderId } from "./config";
 import type { ProviderCheckTrigger, ProviderIssue } from "./api";
 
@@ -43,13 +44,6 @@ export interface ProviderState {
 }
 
 // ── Provider Check Store（生命周期全局状态）───
-
-export type ProviderCheckPhase =
-  | "idle"
-  | "checking"
-  | "done"
-  | "degraded"
-  | "failed";
 
 export interface ProviderCheckState {
   phase: ProviderCheckPhase;
