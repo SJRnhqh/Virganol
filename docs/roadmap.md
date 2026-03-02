@@ -64,7 +64,7 @@ LLM Provider 后端分为两条主线：
 - [x] 后端 `ProviderCheckStats` 退化为 `failed_count` 计数器
 - [x] 后端生命周期步骤重排：started 先于 snapshot 加载，前端尽早进入 checking
 - [x] 终态语义收敛：`completed` 承载业务失败（failed_count），`failed` 承载结构性错误（code/message/issues），前后端契约已对齐
-- [ ] `failure.rs` — `issues.clone()` 改为 move 语义，避免不必要的堆分配
+- [x] `failure.rs` — 已移除 `issues.clone()`，改为借用传递（`issues.as_deref()` + `Option<&[ProviderIssue]>`），避免不必要的堆分配
 
 #### 🚧 4.3 per-provider 卡片渲染
 
