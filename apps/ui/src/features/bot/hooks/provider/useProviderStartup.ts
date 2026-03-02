@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 // 内部引用
 import { triggerProviderStartupCheck } from "@/features/bot/api";
-import { registerCheckListeners } from "./listen";
+import { registerCheckListeners } from "@/features/bot/events";
 
 /**
  * 应用启动时：注册生命周期事件监听 + 触发 startup check

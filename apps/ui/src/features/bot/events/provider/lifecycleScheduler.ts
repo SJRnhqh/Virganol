@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/hooks/provider/lifecycleScheduler.ts
+// apps/ui/src/features/bot/events/provider/lifecycleScheduler.ts
 // 内部引用
 import type { ProviderIssue } from "@/features/bot/types";
 import { PROVIDER_CHECK_DELAYS } from "@/features/bot/constants";

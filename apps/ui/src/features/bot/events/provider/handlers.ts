@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/hooks/provider/handlers.ts
+// apps/ui/src/features/bot/events/provider/handlers.ts
 // 内部引用
 import type {
   ProviderCheckStartedPayload,
