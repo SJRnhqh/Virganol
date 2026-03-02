@@ -23,9 +23,13 @@ pub(super) fn emit_check_started(
         trigger,
     };
 
-    app.emit("providers-check-lifecycle-started", &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit providers-check-lifecycle-started failed: {}", e))
-    })
+    app.emit("providers-check-lifecycle-started", &payload)
+        .map_err(|e| {
+            ProviderError::LifecycleEventEmit(format!(
+                "emit providers-check-lifecycle-started failed: {}",
+                e
+            ))
+        })
 }
 
 /// 推送单个 Provider 的状态事件
@@ -74,7 +78,7 @@ pub(super) fn emit_check_failed(
     app: &AppHandle,
     run_id: &str,
     error: &ProviderError,
-    issues: Option<Vec<ProviderIssue>>,
+    issues: Option<&[ProviderIssue]>,
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckFailedPayload {
         run_id: run_id.to_string(),
@@ -83,7 +87,11 @@ pub(super) fn emit_check_failed(
         issues,
     };
 
-    app.emit("providers-check-lifecycle-failed", &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit providers-check-lifecycle-failed failed: {}", e))
-    })
+    app.emit("providers-check-lifecycle-failed", &payload)
+        .map_err(|e| {
+            ProviderError::LifecycleEventEmit(format!(
+                "emit providers-check-lifecycle-failed failed: {}",
+                e
+            ))
+        })
 }

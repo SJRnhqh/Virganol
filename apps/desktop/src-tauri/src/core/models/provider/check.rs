@@ -61,9 +61,9 @@ pub struct ProviderCheckCompletedPayload {
     pub failed: usize,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Serialize)]
 /// 一轮 Provider 检查异常终止时推送给前端的事件载荷。
-pub struct ProviderCheckFailedPayload {
+pub struct ProviderCheckFailedPayload<'a> {
     /// 本轮检查唯一标识，用于关联 started/status/failed 事件。
     pub run_id: String,
     /// 结构化错误码。
@@ -72,5 +72,5 @@ pub struct ProviderCheckFailedPayload {
     pub message: String,
     /// Provider 级问题列表；仅在存在可定位到具体 Provider 的问题时返回。
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub issues: Option<Vec<ProviderIssue>>,
+    pub issues: Option<&'a [ProviderIssue]>,
 }
