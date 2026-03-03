@@ -72,7 +72,7 @@ export const BaseProvider = ({
         <ProviderHeader
           icon={icon}
           name={definition.name}
-          isConnected={isConnected}
+          cardState={connection.cardState}
           open={open}
         />
       }

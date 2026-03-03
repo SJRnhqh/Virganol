@@ -68,9 +68,29 @@ LLM Provider 后端分为两条主线：
 
 #### 🚧 4.3 per-provider 卡片渲染
 
-- [ ] per-provider 卡片：基于 `isConnected` / `isError` / `isLoading` 的状态渲染
-- [ ] per-provider 的 `errorMessage` 展示（来自 `handleProviderStatus` 或 `issues` 下沉）
-- [ ] 基于 `errorCode` 区分全局生命周期错误类型（io / unsupported / partial_failure 等）
+##### ✅ 4.3.1 ProviderHeader 渲染重构
+- [x] 移除布尔标志映射（`isConnected` / `isLoading` / `isError`），直接传递 `cardState`
+- [x] 基于 `cardState` 的状态图标渲染：
+  - `unset` — 无状态图标
+  - `pending` — 旋转的 Loader2（复用 `rotatingIconVariants` 动画）
+  - `connected` — 绿色 Check 对勾
+  - `failed` — 赭石色 CircleAlert 警告图标
+- [x] 极简参数设计：`icon` / `name` / `cardState` / `open`（4 个必需参数，无冗余）
+
+##### 🚧 4.3.2 ProviderBody 渲染重构
+- [ ] 设计 4 种 `cardState` 的渲染逻辑：
+  - `unset` — 显示表单 + Connect 按钮
+  - `pending` — 显示 "Connecting..." 提示 + Connect 按钮（loading 状态）
+  - `connected` — 显示模型列表面板 + Reconnect 按钮
+  - `failed` — 显示错误信息 + Retry 按钮 + Reset 按钮
+- [ ] 精简 `ProviderBodyProps` 接口，移除冗余的布尔标志
+- [ ] 直接基于 `cardState` 做条件渲染分支
+- [ ] 按需传递表单数据（只有 `unset` 状态需要表单交互）
+
+##### 🚧 4.3.3 钩子逻辑完善
+- [ ] `useProvider` 钩子适配新的渲染需求
+- [ ] 确保钩子返回的数据结构与 Body 渲染需求对齐
+- [ ] 移除 `BaseProvider` 中的布尔标志映射逻辑
 
 ### Phase 5：健康检查错误精细化
 
