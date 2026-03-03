@@ -1,35 +1,9 @@
-// apps/ui/src/features/bot/types/provider/api.ts
-
-import type { ProviderId } from "./config";
-
-/** 对应 Rust ConnectAndSaveProviderRequest */
-export interface ConnectAndSaveProviderPayload {
-  providerId: ProviderId;
-  key: string;
-  url?: string;
-}
-
-/** 对应 Rust ProviderRecord */
-export interface ProviderRecord {
-  url?: string;
-  enabled_models: string[];
-}
-
-/** 对应 Rust HealthCheckResponse */
-export interface HealthCheckResponse {
-  success: boolean;
-  available_models: string[];
-  error?: string;
-}
-
-export type ProviderKeySource = "none" | "env" | "keyring";
-
-/** 对应 Rust ProviderSecretMeta */
-export interface ProviderSecretMeta {
-  has_key: boolean;
-  key_source: ProviderKeySource;
-}
-
+// apps/ui/src/features/bot/types/provider/contract/events.ts
+// 内部引用
+import type { ProviderId } from "../common";
+import type { ProviderSecretMeta } from "./secret";
+import type { ProviderRecord } from "./shared";
+import type { HealthCheckResponse } from "./commands";
 
 // ---------------------------------------------------------------------------
 // Provider Check Lifecycle — 生命周期事件推送相关类型

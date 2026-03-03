@@ -17,7 +17,11 @@ interface ProviderBodyProps {
   value: Record<string, string>;
   onFieldChange: (key: string, val: string) => void;
   onReset: () => void;
-  connection: ProviderConnectionProps;
+  connection: ProviderConnectionProps & {
+    isConnected: boolean;
+    isLoading: boolean;
+    isError: boolean;
+  };
   models: ProviderModelProps;
 }
 

@@ -1,11 +1,11 @@
 // apps/ui/src/features/bot/types/provider/base.ts
+// 内部引用
+import type { ProviderCardState } from "@/features/bot/constants";
 
 /** 连接状态 + 连接操作 */
 export interface ProviderConnectionProps {
-  isConnected: boolean;
-  isLoading: boolean;
-  isError: boolean;
-  errorMessage?: string;
+  cardState: ProviderCardState;
+  errorMessage: string | null;
   onConnect?: (config: Record<string, string>) => Promise<void>;
   onDisconnect?: () => void;
   onErrorReset?: () => void;

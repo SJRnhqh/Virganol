@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 
 // 内部引用
-import type { ProviderId } from "./config";
+import type { ProviderId } from "./common";
 
 export interface ProviderRegistryEntry {
   id: ProviderId;

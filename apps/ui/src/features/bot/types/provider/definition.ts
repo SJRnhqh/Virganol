@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/types/provider/definition.ts
 // 内部引用
-import type { ProviderId } from "./config";
+import type { ProviderId } from "./common";
 
 export interface ProviderField {
   key: string;

@@ -1,7 +1,7 @@
 // apps/ui/src/features/bot/hooks/provider/useProvider.ts
 // 内部引用
 import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
-import { useProviderStore } from "@/features/bot/store";
+import { useProviderCollectionStore } from "@/features/bot/store";
 import type { ProviderId } from "@/features/bot/types";
 
 import { useProviderConnection } from "./useProviderConnection";
@@ -10,12 +10,13 @@ import { useProviderModelActions } from "./useProviderModelActions";
 export const useProvider = (providerId: ProviderId) => {
   // ── 读取 Store 数据 ────────────────────────
   const definition = PROVIDER_DEFINITIONS[providerId];
-  const config = useProviderStore((state) => state.providerConfig[providerId]);
-  const status = useProviderStore((state) => state.providerStatus[providerId]);
 
-  // ── Actions ────────────────────────────────
-  const setProviderConfig = useProviderStore(
-    (state) => state.setProviderConfig,
+  // 从新 store 读取单个 Provider 状态
+  const providerState = useProviderCollectionStore(
+    (state) => state.byId[providerId],
+  );
+  const setProviderForm = useProviderCollectionStore(
+    (state) => state.setProviderForm,
   );
 
   // ── 连接逻辑 ──────────────────────────────
@@ -27,15 +28,13 @@ export const useProvider = (providerId: ProviderId) => {
   // ── 组装返回 ──────────────────────────────
   return {
     definition,
-    value: config,
+    value: providerState.form,
     onValueChange: (nextValue: Record<string, string>) =>
-      setProviderConfig(providerId, nextValue),
+      setProviderForm(providerId, nextValue),
 
     connection: {
-      isConnected: status.isConnected,
-      isLoading: status.isLoading,
-      isError: status.isError,
-      errorMessage: status.errorMessage,
+      cardState: providerState.cardState,
+      errorMessage: providerState.errorMessage,
       onConnect,
       onDisconnect,
       onErrorReset,

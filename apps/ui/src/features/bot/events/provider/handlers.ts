@@ -6,8 +6,14 @@ import type {
   ProviderCheckFailedPayload,
   ProviderStatusPayload,
 } from "@/features/bot/types";
-import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
-import { useProviderStore, useProviderCheckStore } from "@/features/bot/store";
+import {
+  PROVIDER_DEFINITIONS,
+  PROVIDER_CARD_STATES,
+} from "@/features/bot/constants";
+import {
+  useProviderCollectionStore,
+  useProviderCheckStore,
+} from "@/features/bot/store";
 import {
   clearAllTimers,
   scheduleCheckingDegraded,
@@ -38,29 +44,37 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
     return;
   }
 
-  const store = useProviderStore.getState();
+  const store = useProviderCollectionStore.getState();
 
-  // 持久化配置映射到前端字段
-  const frontendConfig: Record<string, string> = {};
-  if (config.url) frontendConfig.apiURL = config.url;
-  store.setProviderConfig(provider, frontendConfig);
+  // 更新表单字段（持久化配置映射到前端）
+  if (config.url) {
+    store.setProviderForm(provider, { apiURL: config.url });
+  }
 
-  // 连接状态
-  store.setProviderStatus(provider, {
-    isConnected: health.success,
-    isLoading: false,
-    isError: !health.success,
-    errorMessage: health.error,
-  });
+  // 更新卡片状态
+  const cardState = health.success
+    ? PROVIDER_CARD_STATES.CONNECTED
+    : PROVIDER_CARD_STATES.FAILED;
+  store.setProviderCardState(provider, cardState);
 
-  // 可用模型列表 + 已启用状态
+  // 更新错误信息
+  if (!health.success && health.error) {
+    store.setProviderError(provider, health.error);
+  } else {
+    store.clearProviderError(provider);
+  }
+
+  // 更新模型状态
   if (health.success && health.available_models.length > 0) {
-    store.setAvailableModels(provider, health.available_models);
-
     const enabledSet = new Set(config.enabled_models);
+    const enabled: Record<string, boolean> = {};
     for (const model of health.available_models) {
-      store.setModelEnabled(provider, model, enabledSet.has(model));
+      enabled[model] = enabledSet.has(model);
     }
+    store.setProviderModels(provider, {
+      available: health.available_models,
+      enabled,
+    });
   }
 
   console.log(
@@ -102,13 +116,11 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
 
   // issues 中带 provider 字段的，下沉到对应 provider 的错误状态
   if (payload.issues?.length) {
-    const store = useProviderStore.getState();
+    const store = useProviderCollectionStore.getState();
     for (const issue of payload.issues) {
       if (issue.provider in PROVIDER_DEFINITIONS) {
-        store.setProviderStatus(issue.provider, {
-          isError: true,
-          errorMessage: issue.message,
-        });
+        store.setProviderCardState(issue.provider, PROVIDER_CARD_STATES.FAILED);
+        store.setProviderError(issue.provider, issue.message);
       }
     }
   }
