@@ -12,4 +12,5 @@ export {
   providerButtonVariants,
   connectIconVariants,
   rotatingIconVariants,
+  retryIconVariants,
 } from "./animations";

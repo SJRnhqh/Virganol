@@ -12,7 +12,6 @@ import {
 import {
   ProviderFormFields,
   ProviderConnectedPanel,
-  ConnectionError,
 } from "@/features/bot/components/forms";
 import { ProviderButton } from "@/features/bot/components/buttons";
 
@@ -85,7 +84,7 @@ export const ProviderBody = ({
     );
   }
 
-  // failed 状态：显示表单 + 错误信息 + Retry 按钮
+  // failed 状态：显示表单 + Retry 按钮
   if (cardState === PROVIDER_CARD_STATES.FAILED) {
     return (
       <>
@@ -95,9 +94,10 @@ export const ProviderBody = ({
           value={value}
           onChange={onFieldChange}
         />
-        <ConnectionError
-          message={connection.errorMessage ?? undefined}
-          onRetry={() => {
+        {/* TODO: 错误信息展示待设计 */}
+        <ProviderButton
+          cardState={cardState}
+          onClick={() => {
             connection.onErrorReset?.();
             connection.onConnect?.(value);
           }}

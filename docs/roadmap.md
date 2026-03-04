@@ -78,22 +78,48 @@ LLM Provider 后端分为两条主线：
   - `failed` — 赭石色 CircleAlert 警告图标
 - [x] 极简参数设计：`icon` / `name` / `cardState` / `open`（4 个必需参数，无冗余）
 
-##### 🚧 4.3.2 ProviderBody 渲染重构
+##### ✅ 4.3.2 ProviderBody 渲染重构
 
-- [ ] 设计 4 种 `cardState` 的渲染逻辑：
+- [x] 设计 4 种 `cardState` 的渲染逻辑：
   - `unset` — 显示表单 + Connect 按钮
-  - `pending` — 显示 "Connecting..." 提示 + Connect 按钮（loading 状态）
+  - `pending` — 显示 "Connecting..." 提示 + Connecting 按钮（loading 状态）
   - `connected` — 显示模型列表面板 + Reconnect 按钮
-  - `failed` — 显示错误信息 + Retry 按钮 + Reset 按钮
-- [ ] 精简 `ProviderBodyProps` 接口，移除冗余的布尔标志
-- [ ] 直接基于 `cardState` 做条件渲染分支
-- [ ] 按需传递表单数据（只有 `unset` 状态需要表单交互）
+  - `failed` — 显示 ProviderButton（Retry 按钮）+ TODO 错误信息展示
+- [x] 精简 `ProviderBodyProps` 接口，移除冗余的布尔标志
+- [x] 直接基于 `cardState` 做条件渲染分支
+- [x] 按需传递表单数据（只有 `unset` 状态需要表单交互）
 
-##### 🚧 4.3.3 钩子逻辑完善
+##### ✅ 4.3.3 钩子逻辑完善
 
-- [ ] `useProvider` 钩子适配新的渲染需求
-- [ ] 确保钩子返回的数据结构与 Body 渲染需求对齐
-- [ ] 移除 `BaseProvider` 中的布尔标志映射逻辑
+- [x] `useProvider` 钩子适配新的渲染需求
+- [x] 确保钩子返回的数据结构与 Body 渲染需求对齐
+- [x] 移除 `BaseProvider` 中的布尔标志映射逻辑
+
+##### ✅ 4.3.4 Provider Button 架构重构
+
+- [x] 创建 `BaseProviderButton` 基础组件，统一按钮样式与动画
+- [x] 实现 4 种状态按钮：
+  - `ConnectButton` — unset 状态，Play 图标 + 跳跃动画
+  - `ConnectingButton` — pending 状态，旋转 Loader2 图标
+  - `ReconnectButton` — connected 状态，Check + RotateCcw 图标 + 悬停旋转
+  - `RetryButton` — failed 状态，RotateCcw 图标 + 悬停旋转
+- [x] 创建 `ProviderButton` 统一入口，基于 `cardState` 自动切换
+- [x] 动画系统优化：
+  - 移除 Framer Motion 中的颜色定义（避免与 Tailwind 冲突）
+  - 移除 hover scale 动画（避免"扭动"效果）
+  - 新增 `retryIconVariants` 图标旋转动画
+- [x] 目录结构优化：connection 相关按钮统一到 `buttons/provider/connection/` 子目录
+- [x] 导出管理：只导出 `ProviderButton`，内部实现细节封装
+
+##### 🚧 4.3.5 ProviderBody 表单架构重构
+
+- [ ] 表单组件解耦：将 `ProviderBody` 中的表单逻辑提取为独立组件
+- [ ] 基于 `cardState` 的表单渲染优化：
+  - `unset` — 显示完整表单 + Connect 按钮
+  - `pending` / `connected` / `failed` — 隐藏表单，只显示状态相关内容
+- [ ] 表单状态管理优化：精简 props 传递，避免冗余数据流
+- [ ] 错误信息展示设计：failed 状态下的错误信息渲染方案（目前为 TODO）
+- [ ] 表单验证与交互优化：统一表单字段验证逻辑
 
 ### Phase 5：健康检查错误精细化
 

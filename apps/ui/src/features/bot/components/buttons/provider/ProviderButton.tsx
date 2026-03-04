@@ -4,9 +4,12 @@ import {
   PROVIDER_CARD_STATES,
   type ProviderCardState,
 } from "@/features/bot/constants";
-import { ConnectButton } from "./ConnectButton";
-import { ConnectingButton } from "./ConnectingButton";
-import { ReconnectButton } from "./ReconnectButton";
+import {
+  ConnectButton,
+  ConnectingButton,
+  ReconnectButton,
+  RetryButton,
+} from "./connection";
 
 interface ProviderButtonProps {
   cardState: ProviderCardState;
@@ -26,8 +29,7 @@ export const ProviderButton = ({ cardState, onClick }: ProviderButtonProps) => {
       return <ReconnectButton onClick={onClick} />;
 
     case PROVIDER_CARD_STATES.FAILED:
-      // failed 状态不显示按钮（由 ConnectionError 组件处理）
-      return null;
+      return <RetryButton onClick={onClick} />;
 
     default:
       return null;

@@ -9,13 +9,9 @@ export const providerButtonVariants: Variants = {
   idle: {
     scale: 1,
   },
-  // hover 状态：轻微放大
+  // hover 状态：不缩放，只依赖 Tailwind 颜色过渡
   hover: {
-    scale: 1.05,
-    transition: {
-      duration: 0.15,
-      ease: "easeOut",
-    },
+    scale: 1,
   },
   // 点击状态：快速缩小再恢复
   tap: {
@@ -57,6 +53,22 @@ export const rotatingIconVariants: Variants = {
       duration: 1.5,
       ease: "linear",
       repeat: Infinity,
+    },
+  },
+};
+
+// 4. Retry/Reconnect 图标旋转动画（hover 触发）
+export const retryIconVariants: Variants = {
+  // 默认状态
+  idle: {
+    rotate: 0,
+  },
+  // hover 状态：逆时针旋转一圈
+  hover: {
+    rotate: -360,
+    transition: {
+      duration: 0.6,
+      ease: "easeInOut",
     },
   },
 };
