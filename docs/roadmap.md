@@ -69,6 +69,7 @@ LLM Provider 后端分为两条主线：
 #### 🚧 4.3 per-provider 卡片渲染
 
 ##### ✅ 4.3.1 ProviderHeader 渲染重构
+
 - [x] 移除布尔标志映射（`isConnected` / `isLoading` / `isError`），直接传递 `cardState`
 - [x] 基于 `cardState` 的状态图标渲染：
   - `unset` — 无状态图标
@@ -78,6 +79,7 @@ LLM Provider 后端分为两条主线：
 - [x] 极简参数设计：`icon` / `name` / `cardState` / `open`（4 个必需参数，无冗余）
 
 ##### 🚧 4.3.2 ProviderBody 渲染重构
+
 - [ ] 设计 4 种 `cardState` 的渲染逻辑：
   - `unset` — 显示表单 + Connect 按钮
   - `pending` — 显示 "Connecting..." 提示 + Connect 按钮（loading 状态）
@@ -88,6 +90,7 @@ LLM Provider 后端分为两条主线：
 - [ ] 按需传递表单数据（只有 `unset` 状态需要表单交互）
 
 ##### 🚧 4.3.3 钩子逻辑完善
+
 - [ ] `useProvider` 钩子适配新的渲染需求
 - [ ] 确保钩子返回的数据结构与 Body 渲染需求对齐
 - [ ] 移除 `BaseProvider` 中的布尔标志映射逻辑

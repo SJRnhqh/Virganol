@@ -4,7 +4,6 @@ import { useState } from "react";
 
 // 内部引用
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
-import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import type {
   ProviderDefinition,
   ProviderConnectionProps,
@@ -42,11 +41,6 @@ export const BaseProvider = ({
     connection.onDisconnect?.();
   };
 
-  // 将 cardState 映射为布尔标志供子组件使用
-  const isConnected = connection.cardState === PROVIDER_CARD_STATES.CONNECTED;
-  const isLoading = connection.cardState === PROVIDER_CARD_STATES.PENDING;
-  const isError = connection.cardState === PROVIDER_CARD_STATES.FAILED;
-
   return (
     <BaseExpandableMenu
       open={open}
@@ -78,16 +72,12 @@ export const BaseProvider = ({
       }
     >
       <ProviderBody
+        cardState={connection.cardState}
         fields={definition.fields}
         value={value}
         onFieldChange={updateField}
         onReset={handleReset}
-        connection={{
-          ...connection,
-          isConnected,
-          isLoading,
-          isError,
-        }}
+        connection={connection}
         models={models}
       />
     </BaseExpandableMenu>

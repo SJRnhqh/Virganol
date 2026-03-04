@@ -6,6 +6,10 @@ import type {
   ProviderModelProps,
 } from "@/features/bot/types";
 import {
+  PROVIDER_CARD_STATES,
+  type ProviderCardState,
+} from "@/features/bot/constants";
+import {
   ProviderFormFields,
   ProviderConnectedPanel,
   ConnectionError,
@@ -13,63 +17,101 @@ import {
 import { ConnectButton } from "@/features/bot/components/buttons";
 
 interface ProviderBodyProps {
+  cardState: ProviderCardState;
   fields: ProviderField[];
   value: Record<string, string>;
   onFieldChange: (key: string, val: string) => void;
   onReset: () => void;
-  connection: ProviderConnectionProps & {
-    isConnected: boolean;
-    isLoading: boolean;
-    isError: boolean;
-  };
+  connection: ProviderConnectionProps;
   models: ProviderModelProps;
 }
 
 export const ProviderBody = ({
+  cardState,
   fields,
   value,
   onFieldChange,
   onReset,
   connection,
   models,
-}: ProviderBodyProps) => (
-  <>
-    <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
+}: ProviderBodyProps) => {
+  // unset 状态：显示表单 + Connect 按钮
+  if (cardState === PROVIDER_CARD_STATES.UNSET) {
+    return (
+      <>
+        <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
+        <ProviderFormFields
+          fields={fields}
+          value={value}
+          onChange={onFieldChange}
+        />
+        <ConnectButton
+          onClick={() => connection.onConnect?.(value)}
+          isConnected={false}
+          isLoading={false}
+        />
+      </>
+    );
+  }
 
-    {connection.isConnected ? (
-      <ProviderConnectedPanel
-        fields={fields}
-        value={value}
-        onReset={onReset}
-        models={models.available}
-        enabledModels={models.enabled}
-        onToggleModel={models.onToggle}
-        onToggleAll={models.onToggleAll}
-      />
-    ) : (
-      <ProviderFormFields
-        fields={fields}
-        value={value}
-        onChange={onFieldChange}
-      />
-    )}
+  // pending 状态：显示 loading 状态的 Connect 按钮
+  if (cardState === PROVIDER_CARD_STATES.PENDING) {
+    return (
+      <>
+        <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
+        <ConnectButton
+          onClick={() => {}}
+          isConnected={false}
+          isLoading={true}
+        />
+      </>
+    );
+  }
 
-    {connection.isError && (
-      <ConnectionError
-        message={connection.errorMessage}
-        onRetry={() => {
-          connection.onErrorReset?.();
-          connection.onConnect?.(value);
-        }}
-      />
-    )}
+  // connected 状态：显示模型列表面板 + Reconnect 按钮
+  if (cardState === PROVIDER_CARD_STATES.CONNECTED) {
+    return (
+      <>
+        <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
+        <ProviderConnectedPanel
+          fields={fields}
+          value={value}
+          onReset={onReset}
+          models={models.available}
+          enabledModels={models.enabled}
+          onToggleModel={models.onToggle}
+          onToggleAll={models.onToggleAll}
+        />
+        <ConnectButton
+          onClick={() => connection.onConnect?.(value)}
+          isConnected={true}
+          isLoading={false}
+        />
+      </>
+    );
+  }
 
-    {!connection.isError && (
-      <ConnectButton
-        onClick={() => connection.onConnect?.(value)}
-        isConnected={connection.isConnected}
-        isLoading={connection.isLoading}
-      />
-    )}
-  </>
-);
+  // failed 状态：显示表单 + 错误信息 + Retry 按钮
+  if (cardState === PROVIDER_CARD_STATES.FAILED) {
+    return (
+      <>
+        <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
+        <ProviderFormFields
+          fields={fields}
+          value={value}
+          onChange={onFieldChange}
+        />
+        <ConnectionError
+          message={connection.errorMessage ?? undefined}
+          onRetry={() => {
+            connection.onErrorReset?.();
+            connection.onConnect?.(value);
+          }}
+        />
+      </>
+    );
+  }
+
+  // 兜底：理论上不应该到这里
+  return null;
+};
