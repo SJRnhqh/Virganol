@@ -1,3 +1,3 @@
 // apps/ui/src/features/bot/components/buttons/index.ts
 // 导出内容
-export { ProviderButton } from "./provider";
+export { ProviderConnectionButton } from "./provider";

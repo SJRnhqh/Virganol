@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/buttons/provider/ProviderButton.tsx
+// apps/ui/src/features/bot/components/buttons/provider/ProviderConnectionButton.tsx
 // 内部引用
 import {
   PROVIDER_CARD_STATES,
@@ -11,12 +11,12 @@ import {
   RetryButton,
 } from "./connection";
 
-interface ProviderButtonProps {
+interface ProviderConnectionButtonProps {
   cardState: ProviderCardState;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const ProviderButton = ({ cardState, onClick }: ProviderButtonProps) => {
+export const ProviderConnectionButton = ({ cardState, onClick }: ProviderConnectionButtonProps) => {
   // 根据 cardState 渲染对应的具体按钮
   switch (cardState) {
     case PROVIDER_CARD_STATES.UNSET:

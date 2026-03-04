@@ -13,7 +13,7 @@ import {
   ProviderFormFields,
   ProviderConnectedPanel,
 } from "@/features/bot/components/forms";
-import { ProviderButton } from "@/features/bot/components/buttons";
+import { ProviderConnectionButton } from "@/features/bot/components/buttons";
 
 interface ProviderBodyProps {
   cardState: ProviderCardState;
@@ -44,7 +44,7 @@ export const ProviderBody = ({
           value={value}
           onChange={onFieldChange}
         />
-        <ProviderButton
+        <ProviderConnectionButton
           cardState={cardState}
           onClick={() => connection.onConnect?.(value)}
         />
@@ -57,7 +57,7 @@ export const ProviderBody = ({
     return (
       <>
         <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
-        <ProviderButton cardState={cardState} />
+        <ProviderConnectionButton cardState={cardState} />
       </>
     );
   }
@@ -76,7 +76,7 @@ export const ProviderBody = ({
           onToggleModel={models.onToggle}
           onToggleAll={models.onToggleAll}
         />
-        <ProviderButton
+        <ProviderConnectionButton
           cardState={cardState}
           onClick={() => connection.onConnect?.(value)}
         />
@@ -95,7 +95,7 @@ export const ProviderBody = ({
           onChange={onFieldChange}
         />
         {/* TODO: 错误信息展示待设计 */}
-        <ProviderButton
+        <ProviderConnectionButton
           cardState={cardState}
           onClick={() => {
             connection.onErrorReset?.();
