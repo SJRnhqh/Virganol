@@ -84,69 +84,6 @@ export const panelSwitchVariants: Variants = {
   },
 };
 
-/* === 3. Provider Connect 按钮动画 === */
-// 可爱的连接按钮：icon 跳跃 + 整体缩放反馈 + 丝滑的颜色过渡
-export const connectButtonVariants: Variants = {
-  // 默认状态
-  idle: {
-    scale: 1,
-    color: "rgba(139, 109, 71, 0.5)",
-    backgroundColor: "transparent",
-  },
-  // hover 状态：轻放大 + 颜色变亮 + 背景出现
-  hover: {
-    scale: 1.05,
-    color: "rgba(139, 109, 71, 0.8)",
-    backgroundColor: "rgba(139, 109, 71, 0.05)",
-    transition: {
-      duration: 0.15,
-      ease: "easeOut",
-    },
-  },
-  // 点击状态：快速缩小再恢复
-  tap: {
-    scale: 0.95,
-    transition: {
-      duration: 0.08,
-      ease: "easeInOut",
-    },
-  },
-};
-
-// Icon 跳跃动画：配合按钮使用
-export const connectIconVariants: Variants = {
-  // 默认状态
-  idle: {
-    x: 0,
-  },
-  // hover 状态：icon 向右跳跃
-  hover: {
-    x: [0, 2, 0],
-    transition: {
-      duration: 0.6,
-      ease: "easeInOut",
-      repeat: Infinity,
-    },
-  },
-};
-
-// 旋转动画：用于重新连接和加载状态
-export const rotatingIconVariants: Variants = {
-  // 默认状态：不旋转
-  idle: {
-    rotate: 0,
-  },
-  // 旋转状态：持续旋转
-  rotating: {
-    rotate: 360,
-    transition: {
-      duration: 1.5,
-      ease: "linear",
-      repeat: Infinity,
-    },
-  },
-};
-
 // 脉冲呼吸动画：用于 checking 状态的 icon 明暗交替
 export const pulseIconVariants: Variants = {
   idle: {

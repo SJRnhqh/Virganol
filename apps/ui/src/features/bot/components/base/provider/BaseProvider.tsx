@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/base/providers/BaseProvider.tsx
+// apps/ui/src/features/bot/components/base/provider/BaseProvider.tsx
 // 外部依赖
 import { useState } from "react";
 
@@ -9,9 +9,7 @@ import type {
   ProviderConnectionProps,
   ProviderModelProps,
 } from "@/features/bot/types";
-
-import { ProviderHeader } from "./ProviderHeader";
-import { ProviderBody } from "./ProviderBody";
+import { ProviderHeader, ProviderBody } from "./content";
 
 interface BaseProviderProps {
   definition: ProviderDefinition;

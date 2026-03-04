@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/base/providers/ProviderHeader.tsx
+// apps/ui/src/features/bot/components/base/provider/content/ProviderHeader.tsx
 // 外部依赖
 import { Check, Loader2, CircleAlert } from "lucide-react";
 import { motion } from "framer-motion";

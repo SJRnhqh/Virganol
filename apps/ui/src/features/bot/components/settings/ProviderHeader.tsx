@@ -18,7 +18,7 @@ import {
   phaseIconVariants,
   pulseIconVariants,
   refreshButtonVariants,
-} from "@/lib/animations";
+} from "@/lib";
 
 export const ProviderHeader = () => {
   const phase = useProviderCheckStore((s) => s.phase);

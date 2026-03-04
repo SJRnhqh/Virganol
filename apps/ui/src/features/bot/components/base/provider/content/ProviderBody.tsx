@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/base/providers/ProviderBody.tsx
+// apps/ui/src/features/bot/components/base/provider/content/ProviderBody.tsx
 // 内部引用
 import type {
   ProviderField,
@@ -14,7 +14,7 @@ import {
   ProviderConnectedPanel,
   ConnectionError,
 } from "@/features/bot/components/forms";
-import { ConnectButton } from "@/features/bot/components/buttons";
+import { ProviderButton } from "@/features/bot/components/buttons";
 
 interface ProviderBodyProps {
   cardState: ProviderCardState;
@@ -45,25 +45,20 @@ export const ProviderBody = ({
           value={value}
           onChange={onFieldChange}
         />
-        <ConnectButton
+        <ProviderButton
+          cardState={cardState}
           onClick={() => connection.onConnect?.(value)}
-          isConnected={false}
-          isLoading={false}
         />
       </>
     );
   }
 
-  // pending 状态：显示 loading 状态的 Connect 按钮
+  // pending 状态：显示 loading 状态的按钮
   if (cardState === PROVIDER_CARD_STATES.PENDING) {
     return (
       <>
         <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
-        <ConnectButton
-          onClick={() => {}}
-          isConnected={false}
-          isLoading={true}
-        />
+        <ProviderButton cardState={cardState} />
       </>
     );
   }
@@ -82,10 +77,9 @@ export const ProviderBody = ({
           onToggleModel={models.onToggle}
           onToggleAll={models.onToggleAll}
         />
-        <ConnectButton
+        <ProviderButton
+          cardState={cardState}
           onClick={() => connection.onConnect?.(value)}
-          isConnected={true}
-          isLoading={false}
         />
       </>
     );
