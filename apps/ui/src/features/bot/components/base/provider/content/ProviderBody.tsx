@@ -40,6 +40,7 @@ export const ProviderBody = ({
       <>
         <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
         <ProviderFormFields
+          cardState={cardState}
           fields={fields}
           value={value}
           onChange={onFieldChange}
@@ -52,11 +53,17 @@ export const ProviderBody = ({
     );
   }
 
-  // pending 状态：显示 loading 状态的按钮
+  // pending 状态：显示表单（loading 遮罩）+ Connecting 按钮
   if (cardState === PROVIDER_CARD_STATES.PENDING) {
     return (
       <>
         <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
+        <ProviderFormFields
+          cardState={cardState}
+          fields={fields}
+          value={value}
+          onChange={onFieldChange}
+        />
         <ProviderConnectionButton cardState={cardState} />
       </>
     );
@@ -84,17 +91,18 @@ export const ProviderBody = ({
     );
   }
 
-  // failed 状态：显示表单 + Retry 按钮
+  // failed 状态：显示表单（带错误信息）+ Retry 按钮
   if (cardState === PROVIDER_CARD_STATES.FAILED) {
     return (
       <>
         <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
         <ProviderFormFields
+          cardState={cardState}
           fields={fields}
           value={value}
           onChange={onFieldChange}
+          errorMessage={connection.errorMessage}
         />
-        {/* TODO: 错误信息展示待设计 */}
         <ProviderConnectionButton
           cardState={cardState}
           onClick={() => {

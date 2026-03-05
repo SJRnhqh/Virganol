@@ -2,5 +2,3 @@
 // 导出内容
 export { ProviderFormFields } from "./ProviderFormFields";
 export { ProviderConnectedPanel } from "./ProviderConnectedPanel";
-export { ConnectionError } from "./ConnectionError";
-
