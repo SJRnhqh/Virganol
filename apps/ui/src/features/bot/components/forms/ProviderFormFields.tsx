@@ -84,44 +84,23 @@ export const ProviderFormFields = ({
     );
   }
 
-  // failed 状态：错误信息 + 表单
+  // failed 状态：只显示错误信息
   if (cardState === PROVIDER_CARD_STATES.FAILED) {
     return (
-      <div className="space-y-3">
-        {/* 错误信息 */}
+      <div className="pb-2 pl-1 pt-0">
         {errorMessage && (
-          <div className="flex items-start gap-2 px-3 py-2.5 rounded-lg bg-red-500/10 border border-red-500/30">
-            <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-            <p className="text-xs text-red-300/90 leading-relaxed">
-              {errorMessage}
-            </p>
+          <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-red-900/20 border border-red-700/40">
+            <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-red-600 mb-1">
+                Connection Failed
+              </p>
+              <p className="text-xs text-red-800/90 leading-relaxed">
+                {errorMessage}
+              </p>
+            </div>
           </div>
         )}
-
-        {/* 表单字段 */}
-        <div className="pb-2 pl-1 space-y-2 pt-0">
-          {fields.map((field) => (
-            <div key={field.key} className="grid gap-2">
-              <label className="text-[10px] uppercase tracking-widest text-settings-panel-fg/60 font-bold ml-1 select-none">
-                {field.label}
-                {field.optional && (
-                  <span className="text-settings-panel-fg/40 font-normal normal-case tracking-normal ml-1">
-                    (Optional)
-                  </span>
-                )}
-              </label>
-              <input
-                type={field.type}
-                value={value[field.key] ?? ""}
-                onChange={(e) => onChange(field.key, e.target.value)}
-                placeholder={field.placeholder}
-                className="w-full bg-settings-panel-fg/10 text-settings-panel-fg border-none rounded-lg px-3.5 py-2.5 text-xs font-mono placeholder:text-settings-panel-fg/40 shadow-inner focus:outline-none focus:bg-settings-panel-fg/15 focus:ring-1 focus:ring-settings-panel-fg/20 transition-all duration-200"
-                autoComplete={field.type === "password" ? "off" : undefined}
-                spellCheck={field.type === "text" ? false : undefined}
-              />
-            </div>
-          ))}
-        </div>
       </div>
     );
   }
