@@ -18,8 +18,8 @@ const KEYRING_SERVICE: &str = "com.virganol.app.providers";
 /// - 读取过程异常：记录 warn 日志并返回 `None`
 ///
 /// 说明：这里返回 `Option` 是为了让启动检查链路尽量不中断；
-/// 若后续用于“强校验场景”（如 connect 保存事务），可升级为 `Result<Option<String>, _>`。
-pub fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
+/// 若后续用于”强校验场景”（如 connect 保存事务），可升级为 `Result<Option<String>, _>`。
+pub(crate) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
     // keyring 的 Entry 由 (service, user/account) 唯一定位。
     // 这里将 provider_id 作为第二个索引键（account）使用。
     let account = provider_id.as_str();
@@ -60,7 +60,7 @@ pub fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
 }
 
 /// 从环境变量读取 provider 的 API Key（开发/CI 兜底）。
-pub fn load_provider_key_from_env(provider_id: ProviderId) -> Option<ProviderKey> {
+pub(crate) fn load_provider_key_from_env(provider_id: ProviderId) -> Option<ProviderKey> {
     for env_name in provider_id.env_key_names() {
         if let Ok(mut value) = std::env::var(env_name) {
             let normalized = value.trim();
@@ -87,7 +87,7 @@ pub fn load_provider_key_from_env(provider_id: ProviderId) -> Option<ProviderKey
 ///
 /// - `provider_id` 使用 ProviderId 枚举，避免无效字符串传入
 /// - `key` 允许空字符串：空时等价于删除条目
-pub fn save_provider_key(provider_id: ProviderId, key: &str) -> Result<(), String> {
+pub(crate) fn save_provider_key(provider_id: ProviderId, key: &str) -> Result<(), String> {
     let normalized_key = key.trim();
     let account = provider_id.as_str();
 
@@ -106,7 +106,7 @@ pub fn save_provider_key(provider_id: ProviderId, key: &str) -> Result<(), Strin
 ///
 /// - `provider_id` 使用 ProviderId 枚举，避免无效字符串传入
 /// - 条目不存在（`NoEntry`）视为成功（幂等）
-pub fn remove_provider_key(provider_id: ProviderId) -> Result<(), String> {
+pub(crate) fn remove_provider_key(provider_id: ProviderId) -> Result<(), String> {
     let account = provider_id.as_str();
 
     let entry = Entry::new(KEYRING_SERVICE, account)

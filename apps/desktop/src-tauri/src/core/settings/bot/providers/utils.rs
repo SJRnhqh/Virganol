@@ -4,7 +4,7 @@ use std::collections::HashSet;
 
 // 内部引用
 /// 计算 enabled_models 与 available_models 的交集
-pub fn compute_enabled_models(
+pub(crate) fn compute_enabled_models(
     enabled_models: &[String],
     available_models: &[String],
 ) -> Vec<String> {

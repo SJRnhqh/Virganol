@@ -50,6 +50,6 @@ fn registry() -> &'static HashMap<ProviderId, &'static dyn ProviderDriver> {
     })
 }
 
-pub fn get_driver(provider_id: ProviderId) -> Option<&'static dyn ProviderDriver> {
+pub(crate) fn get_driver(provider_id: ProviderId) -> Option<&'static dyn ProviderDriver> {
     registry().get(&provider_id).copied()
 }

@@ -2,7 +2,7 @@
 // 导出内容
 mod events;
 mod failure;
-pub mod flow;
+pub(crate) mod flow;
 mod processor;
 mod resolver;
 mod rid;

@@ -1,11 +1,11 @@
 // apps/desktop/src-tauri/src/core/mod.rs
 
-pub mod manager;
-pub mod models;
-pub mod providers;
-pub mod rpc;
-pub mod security;
-pub mod settings;
+pub(crate) mod manager;
+pub(crate) mod models;
+pub(crate) mod providers;
+pub(crate) mod rpc;
+pub(crate) mod security;
+pub(crate) mod settings;
 
 use tauri::AppHandle;
 use tauri::Manager;
@@ -17,7 +17,7 @@ use rpc::base_service_client::BaseServiceClient;
 use rpc::PingRequest;
 
 /// 初始化并启动 sidecar 进程
-pub fn init(app: &AppHandle) {
+pub(crate) fn init(app: &AppHandle) {
     let handle = app.clone();
     // 从 Tauri 状态中获取 SidecarManager
     let manager: SidecarState = app.state::<SidecarState>().inner().clone();

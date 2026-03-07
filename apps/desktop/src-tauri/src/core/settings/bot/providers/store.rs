@@ -40,8 +40,8 @@ fn load_all_providers_strict(
     Ok(providers)
 }
 
-/// 读取并过滤为“后端当前支持”的 provider 列表（startup_check 专用）
-pub fn load_supported_providers(
+/// 读取并过滤为”后端当前支持”的 provider 列表（startup_check 专用）
+pub(crate) fn load_supported_providers(
     app: &AppHandle,
 ) -> Result<SupportedProvidersSnapshot, ProviderError> {
     // 上抛严格加载所有配置的错误
@@ -71,14 +71,14 @@ pub fn load_supported_providers(
 /// 读取单个 provider 的配置快照（只读）
 /// - Some(record)：存在该 provider 配置
 /// - None：不存在该 provider 配置
-pub fn load_provider_record(app: &AppHandle, provider_id: ProviderId) -> Option<ProviderRecord> {
+pub(crate) fn load_provider_record(app: &AppHandle, provider_id: ProviderId) -> Option<ProviderRecord> {
     let provider_name = provider_id.as_str();
     load_all_providers(app).get(provider_name).cloned()
 }
 
 /// 保存单个 provider 的配置（upsert：有则覆盖，无则新增）
 /// 返回 Err 表示序列化或写盘失败。
-pub fn save_provider(
+pub(crate) fn save_provider(
     app: &AppHandle,
     provider_id: ProviderId,
     record: &ProviderRecord,
@@ -100,7 +100,7 @@ pub fn save_provider(
 /// - Ok(true)：删除成功
 /// - Ok(false)：该 provider 不存在
 /// - Err(...)：序列化或写盘失败
-pub fn remove_provider(app: &AppHandle, provider_id: ProviderId) -> Result<bool, ProviderError> {
+pub(crate) fn remove_provider(app: &AppHandle, provider_id: ProviderId) -> Result<bool, ProviderError> {
     // 锁住整个“读取 -> 修改 -> 写回”事务，确保删除与其他写操作顺序一致
     let _guard = PROVIDERS_STORE_LOCK
         .lock()
@@ -123,7 +123,7 @@ pub fn remove_provider(app: &AppHandle, provider_id: ProviderId) -> Result<bool,
 /// - Ok(true)：更新成功
 /// - Ok(false)：该 provider 不存在
 /// - Err(...)：序列化或写盘失败
-pub fn update_models(
+pub(crate) fn update_models(
     app: &AppHandle,
     provider_id: ProviderId,
     enabled_models: Vec<String>,

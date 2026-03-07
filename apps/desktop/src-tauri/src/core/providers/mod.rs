@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/providers/mod.rs
 // 导出内容
-pub mod connections;
-pub mod driver;
-pub mod registry;
+pub(crate) mod connections;
+pub(crate) mod driver;
+pub(crate) mod registry;

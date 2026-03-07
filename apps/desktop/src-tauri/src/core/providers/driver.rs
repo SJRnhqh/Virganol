@@ -7,9 +7,9 @@ use std::pin::Pin;
 use crate::core::models::provider::ProviderId;
 use crate::core::models::settings::HealthCheckResponse;
 
-pub type DriverFuture<'a> = Pin<Box<dyn Future<Output = HealthCheckResponse> + Send + 'a>>;
+pub(crate) type DriverFuture<'a> = Pin<Box<dyn Future<Output = HealthCheckResponse> + Send + 'a>>;
 
-pub trait ProviderDriver: Send + Sync {
+pub(crate) trait ProviderDriver: Send + Sync {
     fn provider_id(&self) -> ProviderId;
     fn health_check<'a>(&'a self, url: &'a str, key: &'a str) -> DriverFuture<'a>;
 }

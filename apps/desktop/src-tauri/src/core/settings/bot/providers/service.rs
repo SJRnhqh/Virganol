@@ -14,7 +14,7 @@ use crate::core::settings::secrets;
 // === 交互流程：响应前端LLM供应商与模型CRUD === //
 /// 接入并持久化：health_check 成功后自动保存配置
 /// 返回 HealthCheckResponse（前端根据 success 判断是否接入成功）
-pub async fn connect_and_save(
+pub(crate) async fn connect_and_save(
     app: &AppHandle,
     provider_id: ProviderId,
     url: &str,
@@ -116,7 +116,7 @@ pub async fn connect_and_save(
 }
 
 /// 重置 provider 的持久化配置
-pub fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) -> bool {
+pub(crate) fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) -> bool {
     // 1) 先快照旧配置，供异常时回滚
     let previous_record = load_provider_record(app, provider_id);
 
@@ -167,7 +167,7 @@ pub fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) -> bool {
 }
 
 /// 更新某个 provider 的 enabled_models（service 层：负责业务日志）
-pub fn update_provider_enabled_models(
+pub(crate) fn update_provider_enabled_models(
     app: &AppHandle,
     provider_id: ProviderId,
     enabled_models: Vec<String>,
