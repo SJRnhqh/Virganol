@@ -90,7 +90,7 @@ pub async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTri
 
     // Step 6: 处理 Per-provider 结构性错误（无 join_error 的情况）
     if !provider_issues.is_empty() {
-        let err = ProviderError::LifecycleEventEmit(format!("provider status emit failed"));
+        let err = ProviderError::LifecycleProviderIssue(format!("unexpected provider issues in lifecycle"));
         failure::report_lifecycle_failure(
             &app,
             run_id.as_str(),

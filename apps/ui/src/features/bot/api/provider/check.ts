@@ -1,4 +1,5 @@
 // apps/ui/src/features/bot/api/provider/check.ts
+// 外部依赖
 import { invoke } from "@tauri-apps/api/core";
 
 // 同一时刻只允许一轮生命周期检查，startup 和 manual 共享去重
