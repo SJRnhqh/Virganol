@@ -14,17 +14,10 @@ import {
   useProviderCollectionStore,
   useProviderCheckStore,
 } from "@/features/bot/store";
-import {
-  clearAllTimers,
-  scheduleCheckingDegraded,
-  scheduleCheckingDone,
-  scheduleCheckingFailed,
-} from "./lifecycleScheduler";
 import { isCurrentRun } from "./runGuard";
 
-/** 生命周期开始：取消 pending timer，更新 checkStore 进入 checking 阶段 */
+/** 生命周期开始：更新 checkStore 进入 checking 阶段 */
 export function handleStarted(payload: ProviderCheckStartedPayload) {
-  clearAllTimers();
   useProviderCheckStore.getState().setChecking(payload.run_id, payload.trigger);
 }
 
@@ -89,15 +82,12 @@ export function handleCompleted(payload: ProviderCheckCompletedPayload) {
     return;
   }
 
+  const checkStore = useProviderCheckStore.getState();
   if (payload.failed > 0) {
-    scheduleCheckingDegraded(payload.run_id, payload.failed);
+    checkStore.setDegraded(`${payload.failed} provider check(s) failed`);
   } else {
-    scheduleCheckingDone(payload.run_id);
+    checkStore.setDone();
   }
-
-  console.log(
-    `[handler] check completed: run=${payload.run_id}, failed=${payload.failed}`,
-  );
 }
 
 /** 生命周期异常终止：更新 checkStore 进入 failed 阶段，并将可定位的 issue 写入对应 provider */
@@ -107,12 +97,9 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
     return;
   }
 
-  scheduleCheckingFailed(
-    payload.run_id,
-    payload.code,
-    payload.message,
-    payload.issues,
-  );
+  useProviderCheckStore
+    .getState()
+    .setFailed(payload.code, payload.message, payload.issues);
 
   // issues 中带 provider 字段的，下沉到对应 provider 的错误状态
   if (payload.issues?.length) {
