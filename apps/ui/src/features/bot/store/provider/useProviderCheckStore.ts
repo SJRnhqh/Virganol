@@ -6,7 +6,7 @@ import { create } from "zustand";
 import { PROVIDER_CHECK_PHASES } from "@/features/bot/constants";
 import type { ProviderCheckState } from "@/features/bot/types";
 
-const initialState = {
+const emptyCheckState = {
   phase: PROVIDER_CHECK_PHASES.IDLE,
   runId: null,
   trigger: null,
@@ -16,24 +16,19 @@ const initialState = {
 };
 
 export const useProviderCheckStore = create<ProviderCheckState>((set) => ({
-  ...initialState,
+  ...emptyCheckState,
 
   setChecking: (runId, trigger) =>
     set({
+      ...emptyCheckState,
       phase: PROVIDER_CHECK_PHASES.CHECKING,
       runId,
       trigger,
-      issues: [],
-      errorCode: null,
-      errorMessage: null,
     }),
 
   setDone: () =>
     set({
       phase: PROVIDER_CHECK_PHASES.DONE,
-      issues: [],
-      errorCode: null,
-      errorMessage: null,
     }),
 
   setDegraded: (message) =>
@@ -52,5 +47,5 @@ export const useProviderCheckStore = create<ProviderCheckState>((set) => ({
       issues: issues ?? [],
     }),
 
-  reset: () => set(initialState),
+  reset: () => set(emptyCheckState),
 }));

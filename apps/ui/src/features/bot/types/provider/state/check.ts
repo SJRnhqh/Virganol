@@ -21,7 +21,7 @@ export interface ProviderCheckState {
 
   /** 切换到 checking 阶段并记录本轮 run 信息。 */
   setChecking: (runId: string, trigger: ProviderCheckTrigger) => void;
-  /** 切换到 done 阶段并清理失败信息。 */
+  /** 切换到 done 阶段 */
   setDone: () => void;
   /** 切换到 degraded 阶段（业务性失败）。 */
   setDegraded: (message?: string) => void;

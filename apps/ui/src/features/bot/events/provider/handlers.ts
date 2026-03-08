@@ -18,7 +18,8 @@ import { isCurrentRun } from "./runGuard";
 
 /** 生命周期开始：更新 checkStore 进入 checking 阶段 */
 export function handleStarted(payload: ProviderCheckStartedPayload) {
-  useProviderCheckStore.getState().setChecking(payload.run_id, payload.trigger);
+  const checkStore = useProviderCheckStore.getState();
+  checkStore.setChecking(payload.run_id, payload.trigger);
 }
 
 /** 单个 Provider 状态推送：将配置、连接状态、模型列表写入 providerStore */
