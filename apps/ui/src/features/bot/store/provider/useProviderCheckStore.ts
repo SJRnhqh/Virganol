@@ -10,7 +10,6 @@ const emptyCheckState = {
   phase: PROVIDER_CHECK_PHASES.IDLE,
   runId: null,
   trigger: null,
-  issues: [],
   errorCode: null,
   errorMessage: null,
 };
@@ -34,17 +33,15 @@ export const useProviderCheckStore = create<ProviderCheckState>((set) => ({
   setDegraded: (message) =>
     set({
       phase: PROVIDER_CHECK_PHASES.DEGRADED,
-      issues: [],
       errorCode: null,
       errorMessage: message ?? null,
     }),
 
-  setFailed: (code, message, issues) =>
+  setFailed: (code, message) =>
     set({
       phase: PROVIDER_CHECK_PHASES.FAILED,
       errorCode: code,
       errorMessage: message ?? null,
-      issues: issues ?? [],
     }),
 
   reset: () => set(emptyCheckState),

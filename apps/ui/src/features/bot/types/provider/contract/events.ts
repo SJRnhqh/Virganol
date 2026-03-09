@@ -56,6 +56,7 @@ export interface ProviderCheckFailedPayload {
   /** 本轮检查唯一标识，关联 started/status/failed 事件 */
   run_id: string;
   /** 结构化错误码 */
+  // TODO: 后续收敛为共享错误码类型，避免前端长期使用宽泛 string。
   code: string;
   /** 面向展示或日志的错误信息 */
   message: string;

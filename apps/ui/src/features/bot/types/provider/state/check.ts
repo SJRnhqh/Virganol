@@ -1,7 +1,7 @@
 // apps/ui/src/features/bot/types/provider/state/check.ts
 // 内部引用
 import type { ProviderCheckPhase } from "@/features/bot/constants";
-import type { ProviderCheckTrigger, ProviderIssue } from "../contract";
+import type { ProviderCheckTrigger } from "../contract";
 
 // ── Provider Check（生命周期全局状态）───
 
@@ -12,9 +12,8 @@ export interface ProviderCheckState {
   runId: string | null;
   /** 当前轮次触发来源（startup/manual_refresh）。 */
   trigger: ProviderCheckTrigger | null;
-  /** 可定位到具体 Provider 的问题列表。 */
-  issues: ProviderIssue[];
   /** 结构化错误码（结构性失败时使用）。 */
+  // TODO: 后续收敛为共享错误码类型，与 failed 事件契约和前端错误展示保持一致。
   errorCode: string | null;
   /** 全局错误文案（结构性失败时使用）。 */
   errorMessage: string | null;
@@ -26,7 +25,7 @@ export interface ProviderCheckState {
   /** 切换到 degraded 阶段（业务性失败）。 */
   setDegraded: (message?: string) => void;
   /** 切换到 failed 阶段（结构性失败）。 */
-  setFailed: (code: string, message?: string, issues?: ProviderIssue[]) => void;
+  setFailed: (code: string, message?: string) => void;
   /** 回到初始生命周期状态。 */
   reset: () => void;
 }

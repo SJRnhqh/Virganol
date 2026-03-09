@@ -93,17 +93,17 @@ export function handleCompleted(payload: ProviderCheckCompletedPayload) {
 
 /** 生命周期异常终止：更新 checkStore 进入 failed 阶段，并将可定位的 issue 写入对应 provider */
 export function handleFailed(payload: ProviderCheckFailedPayload) {
-  if (!isCurrentRun(payload.run_id)) {
+  const checkStore = useProviderCheckStore.getState();
+  if (checkStore.runId !== null && !isCurrentRun(payload.run_id)) {
     console.warn(`[handler] stale failed ignored: run=${payload.run_id}`);
     return;
   }
 
-  useProviderCheckStore
-    .getState()
-    .setFailed(payload.code, payload.message, payload.issues);
+  checkStore.setFailed(payload.code, payload.message);
 
   // issues 中带 provider 字段的，下沉到对应 provider 的错误状态
   if (payload.issues?.length) {
+    // TODO: 收敛 provider issue 下沉逻辑，评估是否改为更明确的 store action 或批量写入入口。
     const store = useProviderCollectionStore.getState();
     for (const issue of payload.issues) {
       if (issue.provider in PROVIDER_DEFINITIONS) {
