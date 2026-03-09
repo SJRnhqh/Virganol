@@ -107,11 +107,13 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
 
   // issues 中带 provider 字段的，下沉到对应 provider 的错误状态
   if (payload.issues?.length) {
-    // TODO: 收敛 provider issue 下沉逻辑，评估是否改为更明确的 store action 或批量写入入口。
     const store = useProviderCollectionStore.getState();
     for (const issue of payload.issues) {
+      // TODO: 若后续弱化或移除 PROVIDER_DEFINITIONS 作为静态注册源，这里的 provider 合法性判断需同步调整。
       if (issue.provider in PROVIDER_DEFINITIONS) {
         store.setProviderCardState(issue.provider, PROVIDER_CARD_STATES.FAILED);
+        // TODO: 后续若 provider 级错误码收敛为稳定契约，评估将 issue.code 一并下沉用于更细粒度渲染。
+        // TODO: 当前结构性错误会直接覆盖已有业务错误文案；若后续需要同时保留多类错误或多条 issue，需设计统一展示策略。
         store.setProviderError(issue.provider, issue.message);
       }
     }

@@ -38,7 +38,7 @@
 
 - [ ] `handleProviderStatus()` — 表单/卡片/错误/模型四块写入
 - [x] `handleCompleted()` — failed 数量路由
-- [ ] `handleFailed()` — 全局 failed 已收敛；issue 下沉待继续审查
+- [x] `handleFailed()` — 全局 failed 已收敛；issue 下沉与结构性错误兜底语义已审清
 
 ### 3. hooks/ 审查
 
