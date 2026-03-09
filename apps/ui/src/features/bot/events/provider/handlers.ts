@@ -79,12 +79,13 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
 /** 生命周期正常结束：按失败数量决定走 done 或 degraded（业务失败） */
 export function handleCompleted(payload: ProviderCheckCompletedPayload) {
   if (!isCurrentRun(payload.run_id)) {
-    console.warn(`[handler] stale completed ignored: run=${payload.run_id}`);
+    console.warn(`[React] stale completed ignored: run=${payload.run_id}`);
     return;
   }
 
   const checkStore = useProviderCheckStore.getState();
   if (payload.failed > 0) {
+    // TODO: 评估 degraded 是否仍需保留全局错误文案，或改为日志/独立展示策略。
     checkStore.setDegraded(`${payload.failed} provider check(s) failed`);
   } else {
     checkStore.setDone();
@@ -95,7 +96,7 @@ export function handleCompleted(payload: ProviderCheckCompletedPayload) {
 export function handleFailed(payload: ProviderCheckFailedPayload) {
   const checkStore = useProviderCheckStore.getState();
   if (checkStore.runId !== null && !isCurrentRun(payload.run_id)) {
-    console.warn(`[handler] stale failed ignored: run=${payload.run_id}`);
+    console.warn(`[React] stale failed ignored: run=${payload.run_id}`);
     return;
   }
 
@@ -114,6 +115,6 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
   }
 
   console.error(
-    `[handler] check failed: run=${payload.run_id}, code=${payload.code}, message=${payload.message}`,
+    `[React] check failed: run=${payload.run_id}, code=${payload.code}, message=${payload.message}`,
   );
 }
