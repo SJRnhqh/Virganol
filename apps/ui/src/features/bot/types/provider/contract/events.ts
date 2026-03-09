@@ -2,7 +2,7 @@
 // 内部引用
 import type { ProviderId } from "../common";
 import type { ProviderSecretMeta } from "./secret";
-import type { ProviderRecord } from "./shared";
+import type { ProviderRecord } from "./record";
 import type { HealthCheckResponse } from "./commands";
 
 // ---------------------------------------------------------------------------

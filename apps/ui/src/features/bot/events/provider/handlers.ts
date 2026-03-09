@@ -26,55 +26,52 @@ export function handleStarted(payload: ProviderCheckStartedPayload) {
 export function handleProviderStatus(payload: ProviderStatusPayload) {
   if (!isCurrentRun(payload.run_id)) {
     console.warn(
-      `[handler] stale provider-status ignored: run=${payload.run_id}`,
+      `[React] stale provider-status ignored: run=${payload.run_id}`,
     );
     return;
   }
 
+  // TODO: `secret_meta` 当前尚未接入前端状态与渲染，后续需结合密钥提示/UI 反馈统一消费。
   const { provider, config, health } = payload;
 
+  // TODO: 若后续弱化或移除 PROVIDER_DEFINITIONS 作为静态注册源，这里的 provider 合法性判断需同步调整。
   if (!(provider in PROVIDER_DEFINITIONS)) {
-    console.warn(`[handler] unknown provider: ${provider}, skipping`);
+    console.warn(`[React] unknown provider: ${provider}, skipping`);
     return;
   }
 
-  // TODO: 重点审查 CollectionStore 写入边界，统一评估此处 status 写入与 failed 中 issue 下沉的职责划分。
   const store = useProviderCollectionStore.getState();
 
   // 更新表单字段（持久化配置映射到前端）
+  // TODO: 待 CollectionStore 的 form 同步策略收敛后，统一处理 url 缺失/空值时的显式覆盖，避免旧值残留。
   if (config.url) {
     store.setProviderForm(provider, { apiURL: config.url });
   }
 
-  // 更新卡片状态
-  const cardState = health.success
-    ? PROVIDER_CARD_STATES.CONNECTED
-    : PROVIDER_CARD_STATES.FAILED;
-  store.setProviderCardState(provider, cardState);
-
-  // 更新错误信息
-  if (!health.success && health.error) {
-    store.setProviderError(provider, health.error);
-  } else {
-    store.clearProviderError(provider);
-  }
-
-  // 更新模型状态
-  if (health.success && health.available_models.length > 0) {
+  // 按健康检查结果同步 provider 卡片状态：成功时写入模型快照，失败时清空模型并更新错误文案。
+  if (health.success) {
     const enabledSet = new Set(config.enabled_models);
     const enabled: Record<string, boolean> = {};
+    // 将“可用模型列表”与“已启用模型列表”合并为前端渲染所需的启用映射。
     for (const model of health.available_models) {
       enabled[model] = enabledSet.has(model);
     }
+
+    store.setProviderCardState(provider, PROVIDER_CARD_STATES.CONNECTED);
+    store.clearProviderError(provider);
     store.setProviderModels(provider, {
       available: health.available_models,
       enabled,
     });
+  } else {
+    store.setProviderCardState(provider, PROVIDER_CARD_STATES.FAILED);
+    if (health.error) {
+      store.setProviderError(provider, health.error);
+    } else {
+      store.clearProviderError(provider);
+    }
+    store.setProviderModels(provider, { available: [], enabled: {} });
   }
-
-  console.log(
-    `[handler] ${provider}: online=${health.success}, models=${health.available_models.length}`,
-  );
 }
 
 /** 生命周期正常结束：按失败数量决定走 done 或 degraded（业务失败） */

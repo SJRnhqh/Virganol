@@ -12,3 +12,4 @@ export type {
   ConnectAndSaveProviderPayload,
   HealthCheckResponse,
 } from "./commands";
+export type { ProviderRecord } from "./record";

@@ -60,6 +60,7 @@ LLM Provider 后端分为两条主线：
 - [x] `handleCompleted` 按 `failed > 0` 路由到 degraded 阶段（业务性错误）
 - [x] `handleFailed` 保持结构性失败语义（failed 阶段），全局仅保留 `code/message`，`issues` 仅用于 provider
 下沉
+- [x] `handleProviderStatus` 已按成功/失败双分支收敛，修复失败时模型残留与空模型不更新问题
 - [x] 前端渲染语义分层：业务性错误（degraded/CloudAlert）与结构性错误（failed/CloudOff）分离
 - [x] 前后端 payload 精简：只推送前端消费的字段，移除冗余统计信息
 - [x] 后端 `ProviderCheckStats` 退化为 `failed_count` 计数器
