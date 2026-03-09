@@ -18,7 +18,7 @@
 - [x] 前端 types/：契约类型 + 状态类型 + 分组导出
 - [x] 前端 constants/：事件名、阶段、延迟常量，前后端对齐
 - [x] 前端 api/：启动检查、手动刷新、Provider CRUD
-- [x] 前端 events/listen.ts：4 种事件并行注册 + 统一 cleanup
+- [x] 前端 events/listen.ts：4 种事件串行注册 + 失败回滚 + 统一 cleanup
 - [x] 前端 events/runGuard.ts：run_id 防串扰
 - [x] 前端 handlers 职责净化：移除 scheduler 调用，handler 只做 payload → store action
 
@@ -41,7 +41,7 @@
 
 ### 3. hooks/ 审查
 
-- [ ] `useProviderStartup.ts` — 监听注册 + 启动触发 + cleanup
+- [ ] `useProviderStartup.ts` — 监听注册 + 启动触发 + cleanup（已确认先监听、后触发）
 - [ ] `useProviderConnection.ts` — connect / disconnect / errorReset
 - [ ] `useProvider.ts` — 状态聚合
 - [ ] `useProviderModelActions.ts` — 模型开关

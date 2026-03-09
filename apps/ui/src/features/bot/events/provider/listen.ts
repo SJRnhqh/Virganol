@@ -9,7 +9,10 @@ import type {
   ProviderCheckFailedPayload,
   ProviderStatusPayload,
 } from "@/features/bot/types";
-import { PROVIDER_CHECK_EVENTS } from "@/features/bot/constants";
+import {
+  PROVIDER_CHECK_EVENTS,
+  type ProviderCheckEvent,
+} from "@/features/bot/constants";
 import {
   handleStarted,
   handleProviderStatus,
@@ -17,31 +20,86 @@ import {
   handleFailed,
 } from "./handlers";
 
+type ListenerCleanup = () => void;
+
 /**
- * 注册 4 种生命周期事件监听，返回统一 cleanup 函数。
- * 在 App 启动时调用一次，卸载时调用返回值清理。
+ * 统一清理已注册成功的监听。
+ * 用于注册失败时回滚，或组件卸载时批量回收句柄。
+ */
+const cleanupRegisteredListeners = (cleanups: ListenerCleanup[]) => {
+  while (cleanups.length > 0) {
+    const cleanup = cleanups.pop();
+    try {
+      cleanup?.();
+    } catch (error) {
+      console.error("[React] cleanup failed:", error);
+    }
+  }
+};
+
+/**
+ * 注册单个生命周期事件监听，并收集 cleanup 句柄。
+ * 若注册失败，则回滚已成功注册的监听并抛出带事件名的错误。
+ */
+const registerListener = async (
+  checkEvent: ProviderCheckEvent,
+  register: () => Promise<ListenerCleanup>,
+  cleanups: ListenerCleanup[],
+) => {
+  try {
+    const cleanup = await register();
+    cleanups.push(cleanup);
+  } catch (error) {
+    cleanupRegisteredListeners(cleanups);
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`[React] failed to register ${checkEvent}: ${message}`);
+  }
+};
+
+/**
+ * 串行注册 4 种生命周期事件监听，并返回统一 cleanup 函数。
+ * 若中途注册失败，则回滚已成功注册的监听；在 App 启动时调用一次，卸载时调用返回值清理。
  */
 export async function registerCheckListeners(): Promise<() => void> {
-  const [offStarted, offStatus, offCompleted, offFailed] = await Promise.all([
-    listen<ProviderCheckStartedPayload>(PROVIDER_CHECK_EVENTS.STARTED, (e) =>
-      handleStarted(e.payload),
-    ),
-    listen<ProviderStatusPayload>(PROVIDER_CHECK_EVENTS.PROVIDER_STATUS, (e) =>
-      handleProviderStatus(e.payload),
-    ),
-    listen<ProviderCheckCompletedPayload>(
-      PROVIDER_CHECK_EVENTS.COMPLETED,
-      (e) => handleCompleted(e.payload),
-    ),
-    listen<ProviderCheckFailedPayload>(PROVIDER_CHECK_EVENTS.FAILED, (e) =>
-      handleFailed(e.payload),
-    ),
-  ]);
+  const cleanups: ListenerCleanup[] = [];
 
-  return () => {
-    offStarted();
-    offStatus();
-    offCompleted();
-    offFailed();
-  };
+  await registerListener(
+    PROVIDER_CHECK_EVENTS.STARTED,
+    () =>
+      listen<ProviderCheckStartedPayload>(PROVIDER_CHECK_EVENTS.STARTED, (e) =>
+        handleStarted(e.payload),
+      ),
+    cleanups,
+  );
+
+  await registerListener(
+    PROVIDER_CHECK_EVENTS.PROVIDER_STATUS,
+    () =>
+      listen<ProviderStatusPayload>(
+        PROVIDER_CHECK_EVENTS.PROVIDER_STATUS,
+        (e) => handleProviderStatus(e.payload),
+      ),
+    cleanups,
+  );
+
+  await registerListener(
+    PROVIDER_CHECK_EVENTS.COMPLETED,
+    () =>
+      listen<ProviderCheckCompletedPayload>(
+        PROVIDER_CHECK_EVENTS.COMPLETED,
+        (e) => handleCompleted(e.payload),
+      ),
+    cleanups,
+  );
+
+  await registerListener(
+    PROVIDER_CHECK_EVENTS.FAILED,
+    () =>
+      listen<ProviderCheckFailedPayload>(PROVIDER_CHECK_EVENTS.FAILED, (e) =>
+        handleFailed(e.payload),
+      ),
+    cleanups,
+  );
+
+  return () => cleanupRegisteredListeners(cleanups);
 }

@@ -28,7 +28,6 @@ bin/
 
 # AI
 .claude/
-AGENTS.md
 
 # CodeArt
 .arts/*

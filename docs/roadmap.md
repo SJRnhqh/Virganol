@@ -38,15 +38,15 @@ LLM Provider 后端分为两条主线：
 #### ✅ 4.1 前端状态管理框架
 
 - [x] `useProviderCheckStore` — 生命周期全局状态（idle / checking / done / degraded / failed）
-- [x] `useProviderStore` — per-provider 状态（config / status / models）
-- [x] `constants/events.ts` — 事件名统一管理（`PROVIDER_CHECK_EVENTS`）+ 阶段转换延迟（`PROVIDER_CHECK_DELAYS`）
-- [x] `hooks/provider/handlers.ts` — 4 种事件 handler（含当前 run 事件过滤）
+- [x] `useProviderCollectionStore` — per-provider 状态（config / status / models）
+- [x] `constants/provider/lifecycle/*.ts` — 事件名、阶段、延迟常量统一管理
+- [x] `events/provider/handlers.ts` — 4 种事件 handler（含当前 run 事件过滤）
 - [x] `hooks/provider/lifecycleScheduler.ts` — 生命周期阶段转换调度
 （checking→终态补足、终态→idle 回归）
-- [x] `hooks/provider/runGuard.ts` — run_id 守卫函数复用（避免多处重复定义）
+- [x] `events/provider/runGuard.ts` — run_id 守卫函数复用（避免多处重复定义）
 - [x] 双层 run_id 防串扰 — 事件入口过滤 + 调度回调二次校验
 - [x] `rid.rs` — run_id 增加 `AtomicU64` 计数器后缀，规避同毫秒重复
-- [x] `hooks/provider/listen.ts` — 注册 4 种事件监听，返回统一 cleanup
+- [x] `events/provider/listen.ts` — 串行注册 4 种事件监听，失败回滚已成功监听并返回统一 cleanup
 - [x] `hooks/provider/useProviderStartup.ts` — App 启动时注册监听 + 触发 startup check
 - [x] `api/provider/check.ts` — `triggerProviderStartupCheck` / `triggerProviderManualRefresh`，共享去重逻辑
 
@@ -130,6 +130,12 @@ LLM Provider 后端分为两条主线：
 ### Phase 6：收尾与补充测试
 
 - [ ] 根据前端适配过程中暴露的问题补充后端处理
+- [ ] 补齐 `secret_meta` 前端消费闭环：展示 `has_key` / `key_source`，并为 `last4` 等脱敏元信息预留接入位
+- [ ] 补齐前端安全闭环：`connect` 成功后清空内存态 `apiKey`，避免明文密钥在前端长期驻留
+- [ ] 补齐 `reset` 一致性：仅在 `reset_provider=true` 时清理本地状态，失败时保留现状并提示
+- [ ] 收敛前后端 Provider 支持范围：当前阶段统一到 `deepseek` / `ollama`，避免 `ProviderId` 与注册表漂移
+- [ ] 审计 invoke / event 暴露面，并增加前端约束，防止 Provider 直连 `fetch/axios`
+- [ ] 补充 `update_models` / `reset` / `retry` 异常一致性回归，覆盖快速切换、持久化失败与重复点击场景
 - [ ] 视需要补充集成测试
 - [ ] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [ ] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O

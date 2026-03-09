@@ -8,5 +8,6 @@ export {
   PROVIDER_CHECK_PHASES,
   PROVIDER_CARD_STATES,
   type ProviderCheckPhase,
+  type ProviderCheckEvent,
   type ProviderCardState,
 } from "./provider";

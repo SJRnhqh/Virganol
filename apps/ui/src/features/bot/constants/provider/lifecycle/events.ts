@@ -6,3 +6,6 @@ export const PROVIDER_CHECK_EVENTS = {
   COMPLETED: "providers-check-lifecycle-completed",
   FAILED: "providers-check-lifecycle-failed",
 } as const;
+
+export type ProviderCheckEvent =
+  (typeof PROVIDER_CHECK_EVENTS)[keyof typeof PROVIDER_CHECK_EVENTS];
