@@ -79,17 +79,14 @@ pub(super) async fn run_provider_checks(
             Some(Err(err)) => {
                 // 单次赋值：只在第一次发生时记录
                 if !has_join_error.swap(true, Ordering::AcqRel) {
-                    join_error = Some(ProviderError::LifecycleTaskJoin(format!(
-                        "{}",
+                    join_error = Some(ProviderError::LifecycleConcurrentCheck(format!(
+                        "concurrent check error: {}",
                         err
                     )));
-                    error!("[Tauri] ❌ concurrent task error: {}", err);
+                    error!("[Tauri] ❌ concurrent check error: {}", err);
                 } else {
                     // 后续静默降级为日志打印
-                    warn!(
-                        "[Tauri] ⚠️ concurrent task error (suppressed): {}",
-                        err
-                    );
+                    warn!("[Tauri] ⚠️ concurrent check error (suppressed): {}", err);
                 }
             }
             None => break,

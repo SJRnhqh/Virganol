@@ -38,6 +38,7 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
     return;
   }
 
+  // TODO: 重点审查 CollectionStore 写入边界，统一评估此处 status 写入与 failed 中 issue 下沉的职责划分。
   const store = useProviderCollectionStore.getState();
 
   // 更新表单字段（持久化配置映射到前端）
@@ -85,8 +86,10 @@ export function handleCompleted(payload: ProviderCheckCompletedPayload) {
 
   const checkStore = useProviderCheckStore.getState();
   if (payload.failed > 0) {
-    // TODO: 评估 degraded 是否仍需保留全局错误文案，或改为日志/独立展示策略。
-    checkStore.setDegraded(`${payload.failed} provider check(s) failed`);
+    checkStore.setDegraded();
+    console.warn(
+      `[React] ${payload.failed} provider check(s) failed during lifecycle check`,
+    );
   } else {
     checkStore.setDone();
   }

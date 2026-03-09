@@ -12,8 +12,7 @@ pub enum ProviderError {
     Serde(serde_json::Error),
     UnsupportedProvider(String),
     LifecycleEventEmit(String),
-    LifecycleTaskJoin(String),
-    LifecycleProviderIssue(String),
+    LifecycleConcurrentCheck(String),
 }
 
 impl fmt::Display for ProviderError {
@@ -23,8 +22,7 @@ impl fmt::Display for ProviderError {
             Self::Io(msg)
             | Self::UnsupportedProvider(msg)
             | Self::LifecycleEventEmit(msg)
-            | Self::LifecycleTaskJoin(msg)
-            | Self::LifecycleProviderIssue(msg) => f.write_str(msg),
+            | Self::LifecycleConcurrentCheck(msg) => f.write_str(msg),
         }
     }
 }
@@ -44,8 +42,7 @@ impl ProviderError {
             Self::Serde(_) => ProviderErrorCode::Serde,
             Self::UnsupportedProvider(_) => ProviderErrorCode::UnsupportedProvider,
             Self::LifecycleEventEmit(_) => ProviderErrorCode::LifecycleEventEmit,
-            Self::LifecycleTaskJoin(_) => ProviderErrorCode::LifecycleTaskJoin,
-            Self::LifecycleProviderIssue(_) => ProviderErrorCode::LifecycleProviderIssue,
+            Self::LifecycleConcurrentCheck(_) => ProviderErrorCode::LifecycleConcurrentCheck,
         }
     }
 

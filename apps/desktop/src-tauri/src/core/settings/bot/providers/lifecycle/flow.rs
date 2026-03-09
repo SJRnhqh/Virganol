@@ -72,8 +72,15 @@ pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderC
     let (failed_count, provider_issues, join_error) =
         runner::run_provider_checks(&app, run_id.as_str(), snapshot.supported).await;
 
-    // Step 5: 处理并发层结构性错误
-    if let Some(err) = join_error {
+    // Step 5: 处理并发检查阶段结构性错误（全局并发错误或 provider 级结构性问题）
+    // TODO: 后续若统一建设错误文案体系，需细化 join_error 与 provider_issues 同时存在时的 message 表达。
+    if let Some(err) = join_error.or_else(|| {
+        (!provider_issues.is_empty()).then(|| {
+            ProviderError::LifecycleConcurrentCheck(
+                "concurrent check error: provider issues detected".to_string(),
+            )
+        })
+    }) {
         failure::report_lifecycle_failure(
             &app,
             run_id.as_str(),
@@ -88,20 +95,7 @@ pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderC
         return;
     }
 
-    // Step 6: 处理 Per-provider 结构性错误（无 join_error 的情况）
-    if !provider_issues.is_empty() {
-        let err = ProviderError::LifecycleProviderIssue(format!("unexpected provider issues in lifecycle"));
-        failure::report_lifecycle_failure(
-            &app,
-            run_id.as_str(),
-            trigger,
-            &err,
-            Some(provider_issues),
-        );
-        return;
-    }
-
-    // Step 7: 推送生命周期completd事件
+    // Step 6: 推送生命周期completd事件
     let duration_ms = started_at.elapsed().as_millis() as u64;
     if let Err(err) = events::emit_check_completed(&app, run_id.as_str(), failed_count) {
         failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);

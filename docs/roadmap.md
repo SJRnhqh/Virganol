@@ -20,7 +20,7 @@ LLM Provider 后端分为两条主线：
 - [x] `Io` / `Serde` — 持久化读写
 - [x] `UnsupportedProvider` — 未注册的 provider
 - [x] `LifecycleEventEmit` — 事件推送失败
-- [x] `LifecycleTaskJoin` — 并发任务异常（panic/cancel）
+- [x] `LifecycleConcurrentCheck` — 并发检查阶段异常（含 panic/cancel）
 - [x] `LifecyclePartialFailure` — 生命周期终态汇总
 
 ### ✅ Phase 2：错误 code 与 message 统一管理
@@ -58,13 +58,16 @@ LLM Provider 后端分为两条主线：
 - [x] checking 补足延迟（800ms）— 保证图标切换有感知
 - [x] done→idle 回归（1200ms）、degraded→idle 回归（2200ms）、failed→idle 回归（3500ms）
 - [x] `handleCompleted` 按 `failed > 0` 路由到 degraded 阶段（业务性错误）
-- [x] `handleFailed` 保持结构性失败语义（failed 阶段）并透传后端 code/message/issues
+- [x] `handleFailed` 保持结构性失败语义（failed 阶段），全局仅保留 `code/message`，`issues` 仅用于 provider
+下沉
 - [x] 前端渲染语义分层：业务性错误（degraded/CloudAlert）与结构性错误（failed/CloudOff）分离
 - [x] 前后端 payload 精简：只推送前端消费的字段，移除冗余统计信息
 - [x] 后端 `ProviderCheckStats` 退化为 `failed_count` 计数器
 - [x] 后端生命周期步骤重排：started 先于 snapshot 加载，前端尽早进入 checking
 - [x] 终态语义收敛：`completed` 承载业务失败（failed_count），`failed` 承载结构性错误（code/message/issues），前后端契约已对齐
 - [x] `failure.rs` — 已移除 `issues.clone()`，改为借用传递（`issues.as_deref()` + `Option<&[ProviderIssue]>`），避免不必要的堆分配
+- [x] `handleFailed` 已补 `runId === null` 兜底，避免 `started` 丢失时前端误判 `failed` 为 stale
+- [x] `degraded` 语义已收敛为全局 phase；业务失败数量改走日志，不再长期占用全局错误文案
 
 #### 🚧 4.3 per-provider 卡片渲染
 

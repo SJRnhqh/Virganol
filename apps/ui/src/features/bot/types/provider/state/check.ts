@@ -23,7 +23,7 @@ export interface ProviderCheckState {
   /** 切换到 done 阶段 */
   setDone: () => void;
   /** 切换到 degraded 阶段（业务性失败）。 */
-  setDegraded: (message?: string) => void;
+  setDegraded: () => void;
   /** 切换到 failed 阶段（结构性失败）。 */
   setFailed: (code: string, message?: string) => void;
   /** 回到初始生命周期状态。 */

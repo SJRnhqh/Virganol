@@ -14,10 +14,8 @@ pub enum ProviderErrorCode {
     UnsupportedProvider,
     #[serde(rename = "lifecycle_event_emit_failed")]
     LifecycleEventEmit,
-    #[serde(rename = "lifecycle_task_join_failed")]
-    LifecycleTaskJoin,
-    #[serde(rename = "lifecycle_provider_issue")]
-    LifecycleProviderIssue,
+    #[serde(rename = "lifecycle_concurrent_check_failed")]
+    LifecycleConcurrentCheck,
 }
 
 impl ProviderErrorCode {
@@ -27,8 +25,7 @@ impl ProviderErrorCode {
             Self::Serde => "serde_error",
             Self::UnsupportedProvider => "unsupported_provider",
             Self::LifecycleEventEmit => "lifecycle_event_emit_failed",
-            Self::LifecycleTaskJoin => "lifecycle_task_join_failed",
-            Self::LifecycleProviderIssue => "lifecycle_provider_issue",
+            Self::LifecycleConcurrentCheck => "lifecycle_concurrent_check_failed",
         }
     }
 }
@@ -49,15 +46,26 @@ mod tests {
         let cases = [
             (ProviderErrorCode::Io, "io_error"),
             (ProviderErrorCode::Serde, "serde_error"),
-            (ProviderErrorCode::UnsupportedProvider, "unsupported_provider"),
-            (ProviderErrorCode::LifecycleEventEmit, "lifecycle_event_emit_failed"),
-            (ProviderErrorCode::LifecycleTaskJoin, "lifecycle_task_join_failed"),
-            (ProviderErrorCode::LifecycleProviderIssue, "lifecycle_provider_issue"),
+            (
+                ProviderErrorCode::UnsupportedProvider,
+                "unsupported_provider",
+            ),
+            (
+                ProviderErrorCode::LifecycleEventEmit,
+                "lifecycle_event_emit_failed",
+            ),
+            (
+                ProviderErrorCode::LifecycleConcurrentCheck,
+                "lifecycle_concurrent_check_failed",
+            ),
         ];
         for (code, expected) in cases {
             assert_eq!(code.as_str(), expected);
             assert_eq!(code.to_string(), expected);
-            assert_eq!(serde_json::to_string(&code).unwrap(), format!("\"{}\"", expected));
+            assert_eq!(
+                serde_json::to_string(&code).unwrap(),
+                format!("\"{}\"", expected)
+            );
         }
     }
 }

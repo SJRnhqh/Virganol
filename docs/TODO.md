@@ -1,7 +1,7 @@
 # TODO - Provider 生命周期前端审查与优化
 
 > **创建时间**: 2025-03-07
-> **预计完成**: 2025-03-09
+> **预计完成**: 待更新
 > **状态**: 进行中
 
 ## 目标
@@ -28,16 +28,17 @@
 
 ### 1. store/ 审查
 
-- [ ] `useProviderCheckStore` — 剩余 action
-  - [ ] `setDone()` / `setDegraded()` / `setFailed()` / `reset()`
+- [ ] `useProviderCheckStore` — 基本完成
+  - [x] `setDone()` / `setDegraded()` / `setFailed()`
+  - [ ] `reset()`
 - [ ] `useProviderCollectionStore` — 完整审查
   - [ ] 初始化、卡片状态、表单、模型、错误相关 action
 
 ### 2. handlers 审查（依赖 store 审查完成）
 
 - [ ] `handleProviderStatus()` — 表单/卡片/错误/模型四块写入
-- [ ] `handleCompleted()` — failed 数量路由
-- [ ] `handleFailed()` — checkStore + issue 下沉
+- [x] `handleCompleted()` — failed 数量路由
+- [ ] `handleFailed()` — 全局 failed 已收敛；issue 下沉待继续审查
 
 ### 3. hooks/ 审查
 
@@ -55,6 +56,7 @@
 
 ### 5. 修补与收尾
 
+- [x] 修复 `started` 丢失时 `failed` 事件可能被前端误判 stale 的问题
 - [ ] 修复 `handleProviderStatus` 模型更新逻辑（Issue #1）
 - [ ] 生命周期延迟编排重新设计（scheduler 已从 handler 移除，需在 store 层或独立模块重新实现）
 - [ ] 其他审查中发现的问题
