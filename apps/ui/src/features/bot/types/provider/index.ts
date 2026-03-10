@@ -15,6 +15,7 @@ export type {
   ConnectAndSaveProviderPayload,
   HealthCheckResponse,
   ProviderIssue,
+  ProviderCheckEvent,
   ProviderCheckStartedPayload,
   ProviderStatusPayload,
   ProviderCheckCompletedPayload,

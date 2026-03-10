@@ -49,6 +49,9 @@ LLM Provider 后端分为两条主线：
 - [x] `events/provider/listen.ts` — 串行注册 4 种事件监听，失败回滚已成功监听并返回统一 cleanup
 - [x] `hooks/provider/useProviderStartup.ts` — App 启动时注册监听 + 触发 startup check
 - [x] `api/provider/check.ts` — `triggerProviderStartupCheck` / `triggerProviderManualRefresh`，共享去重逻辑
+- [x] 类型系统统一收敛 — `ProviderCheckEvent` 从 constants 衍生类型迁移至
+types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId` /
+`ProviderCardState` / `ProviderCheckPhase` 模式一致
 
 #### ✅ 4.2 全局生命周期渲染与交互
 

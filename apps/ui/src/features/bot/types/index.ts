@@ -14,6 +14,7 @@ export type {
   HealthCheckResponse,
 
   // ── Provider 生命周期事件 ──
+  ProviderCheckEvent,
   ProviderIssue,
   ProviderCheckStartedPayload,
   ProviderStatusPayload,

@@ -63,3 +63,14 @@ export interface ProviderCheckFailedPayload {
   /** Provider 级问题列表，仅在可定位到具体 Provider 时存在 */
   issues?: ProviderIssue[];
 }
+
+// ---------------------------------------------------------------------------
+// Provider Check Lifecycle — 生命周期事件名类型
+// ---------------------------------------------------------------------------
+
+/** Provider 生命周期事件名（与 Rust 后端 emit 名称一一对应） */
+export type ProviderCheckEvent =
+  | "providers-check-lifecycle-started"
+  | "provider-status"
+  | "providers-check-lifecycle-completed"
+  | "providers-check-lifecycle-failed";

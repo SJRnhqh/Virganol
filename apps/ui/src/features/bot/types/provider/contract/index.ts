@@ -7,6 +7,7 @@ export type {
   ProviderStatusPayload,
   ProviderCheckCompletedPayload,
   ProviderCheckFailedPayload,
+  ProviderCheckEvent,
 } from "./events";
 export type {
   ConnectAndSaveProviderPayload,

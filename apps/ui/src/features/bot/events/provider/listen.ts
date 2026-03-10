@@ -4,15 +4,13 @@ import { listen } from "@tauri-apps/api/event";
 
 // 内部引用
 import type {
+  ProviderCheckEvent,
   ProviderCheckStartedPayload,
   ProviderCheckCompletedPayload,
   ProviderCheckFailedPayload,
   ProviderStatusPayload,
 } from "@/features/bot/types";
-import {
-  PROVIDER_CHECK_EVENTS,
-  type ProviderCheckEvent,
-} from "@/features/bot/constants";
+import { PROVIDER_CHECK_EVENTS } from "@/features/bot/constants";
 import {
   handleStarted,
   handleProviderStatus,
