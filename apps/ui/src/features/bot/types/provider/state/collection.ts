@@ -2,9 +2,9 @@
 // 内部引用
 import type { ProviderId } from "../common";
 import type {
+  ProviderState,
   ProviderFormData,
   ProviderModelState,
-  ProviderState,
 } from "./entity";
 import type { ProviderCardState } from "./card";
 

@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/constants/provider/definition.ts
 // 内部引用
-import type { ProviderDefinition, ProviderId } from "@/features/bot/types";
+import type { ProviderId, ProviderDefinition } from "@/features/bot/types";
 
 export const PROVIDER_DEFINITIONS = {
   ollama: {

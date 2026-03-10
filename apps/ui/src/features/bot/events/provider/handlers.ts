@@ -1,15 +1,15 @@
 // apps/ui/src/features/bot/events/provider/handlers.ts
 // 内部引用
 import type {
+  ProviderStatusPayload,
+  ProviderCheckFailedPayload,
   ProviderCheckStartedPayload,
   ProviderCheckCompletedPayload,
-  ProviderCheckFailedPayload,
-  ProviderStatusPayload,
 } from "@/features/bot/types";
 import { PROVIDER_IDS, PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import {
-  useProviderCollectionStore,
   useProviderCheckStore,
+  useProviderCollectionStore,
 } from "@/features/bot/store";
 import { isCurrentRun } from "./runGuard";
 
