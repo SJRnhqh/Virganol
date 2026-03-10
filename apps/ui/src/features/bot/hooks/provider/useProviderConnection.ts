@@ -1,12 +1,14 @@
 // apps/ui/src/features/bot/hooks/provider/useProviderConnection.ts
+// TODO: 重构连接逻辑钩子
+// 问题：1) 重复订阅 store actions 导致不必要重渲染；2) useCallback 依赖数组冗余；3) 业务逻辑与 handlers 重复（模型映射构造）；4) 缺少统一错误处理；5) 需要根据接口契约重新设计返回值结构。
 // 外部依赖
 import { useCallback } from "react";
 
 // 内部引用
-import { connectAndSaveProvider, resetProvider } from "@/features/bot/api";
-import { useProviderCollectionStore } from "@/features/bot/store";
-import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import type { ProviderId } from "@/features/bot/types";
+import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
+import { useProviderCollectionStore } from "@/features/bot/store";
+import { resetProvider, connectAndSaveProvider } from "@/features/bot/api";
 
 export const useProviderConnection = (providerId: ProviderId) => {
   // 获取 store actions
@@ -52,10 +54,7 @@ export const useProviderConnection = (providerId: ProviderId) => {
         });
       } else {
         setProviderCardState(providerId, PROVIDER_CARD_STATES.FAILED);
-        setProviderError(
-          providerId,
-          response.error || "Connection failed",
-        );
+        setProviderError(providerId, response.error || "Connection failed");
       }
     },
     [
@@ -76,12 +75,7 @@ export const useProviderConnection = (providerId: ProviderId) => {
     setProviderCardState(providerId, PROVIDER_CARD_STATES.UNSET);
     setProviderModels(providerId, { available: [], enabled: {} });
     clearProviderError(providerId);
-  }, [
-    providerId,
-    setProviderCardState,
-    setProviderModels,
-    clearProviderError,
-  ]);
+  }, [providerId, setProviderCardState, setProviderModels, clearProviderError]);
 
   // 错误重置操作（仅清空错误信息）
   const handleErrorReset = useCallback(() => {

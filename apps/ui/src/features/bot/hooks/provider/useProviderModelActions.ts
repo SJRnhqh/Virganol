@@ -1,11 +1,13 @@
 // apps/ui/src/features/bot/hooks/provider/useProviderModelActions.ts
+// TODO: 重构模型操作钩子
+// 问题：1) 重复订阅 store 导致不必要重渲染；2) 乐观更新回滚逻辑有并发风险；3) useCallback 依赖数组冗余；4) 需要根据接口契约重新设计返回值结构。
 // 外部依赖
 import { useCallback } from "react";
 
 // 内部引用
-import { updateEnabledModels } from "@/features/bot/api";
-import { useProviderCollectionStore } from "@/features/bot/store";
 import type { ProviderId } from "@/features/bot/types";
+import { useProviderCollectionStore } from "@/features/bot/store";
+import { updateEnabledModels } from "@/features/bot/api";
 
 // 将模型启用映射转换为启用模型列表（用于后端 API）
 const toEnabledList = (enabledMap: Record<string, boolean>) =>
