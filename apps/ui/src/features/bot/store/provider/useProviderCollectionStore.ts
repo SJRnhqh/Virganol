@@ -1,6 +1,7 @@
 // apps/ui/src/features/bot/store/provider/useProviderCollectionStore.ts
 // 外部依赖
 import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
 
 // 内部引用
 import {
@@ -31,115 +32,57 @@ const createInitialById = (): ProviderCollectionState["byId"] => {
   );
 };
 
-export const useProviderCollectionStore = create<ProviderCollectionState>(
-  (set) => ({
+export const useProviderCollectionStore = create<ProviderCollectionState>()(
+  immer((set) => ({
     // ── State ───────────────────────────────────
     byId: createInitialById(),
 
     // ── Actions ─────────────────────────────────
-    // 所有 actions 遵循统一模式：定位到 byId[providerId]，更新其特定字段，保持其他字段不变。
+    // 使用 immer 中间件，所有 actions 可直接修改 state，immer 自动处理不可变更新。
 
     // 卡片状态
     setProviderCardState: (providerId, cardState) =>
-      set((state) => ({
-        byId: {
-          ...state.byId,
-          [providerId]: {
-            ...state.byId[providerId],
-            cardState,
-          },
-        },
-      })),
+      set((state) => {
+        state.byId[providerId].cardState = cardState;
+      }),
 
     // 表单字段（合并更新）
     setProviderForm: (providerId, patch) =>
-      set((state) => ({
-        byId: {
-          ...state.byId,
-          [providerId]: {
-            ...state.byId[providerId],
-            form: {
-              ...state.byId[providerId].form,
-              ...patch,
-            },
-          },
-        },
-      })),
+      set((state) => {
+        Object.assign(state.byId[providerId].form, patch);
+      }),
 
     // 模型状态（覆盖更新）
     setProviderModels: (providerId, models) =>
-      set((state) => ({
-        byId: {
-          ...state.byId,
-          [providerId]: {
-            ...state.byId[providerId],
-            models,
-          },
-        },
-      })),
+      set((state) => {
+        state.byId[providerId].models = models;
+      }),
 
     // 模型状态（单个模型开关）
     setModelEnabled: (providerId, model, enabled) =>
-      set((state) => ({
-        byId: {
-          ...state.byId,
-          [providerId]: {
-            ...state.byId[providerId],
-            models: {
-              ...state.byId[providerId].models,
-              enabled: {
-                ...state.byId[providerId].models.enabled,
-                [model]: enabled,
-              },
-            },
-          },
-        },
-      })),
+      set((state) => {
+        state.byId[providerId].models.enabled[model] = enabled;
+      }),
 
     // 模型状态（全部模型开关）
     setAllModelsEnabled: (providerId, enabled) =>
       set((state) => {
-        const availableModels = state.byId[providerId].models.available;
-        const nextEnabled: Record<string, boolean> = {};
-        for (const model of availableModels) {
-          nextEnabled[model] = enabled;
-        }
-        return {
-          byId: {
-            ...state.byId,
-            [providerId]: {
-              ...state.byId[providerId],
-              models: {
-                ...state.byId[providerId].models,
-                enabled: nextEnabled,
-              },
-            },
-          },
-        };
+        const { available } = state.byId[providerId].models;
+        state.byId[providerId].models.enabled = Object.fromEntries(
+          available.map((model) => [model, enabled])
+        );
       }),
 
     // 错误信息（设置）
     setProviderError: (providerId, message) =>
-      set((state) => ({
-        byId: {
-          ...state.byId,
-          [providerId]: {
-            ...state.byId[providerId],
-            errorMessage: message,
-          },
-        },
-      })),
+      set((state) => {
+        state.byId[providerId].errorMessage = message;
+      }),
 
     // 错误信息（清空）
     clearProviderError: (providerId) =>
-      set((state) => ({
-        byId: {
-          ...state.byId,
-          [providerId]: {
-            ...state.byId[providerId],
-            errorMessage: null,
-          },
-        },
-      })),
-  }),
+      set((state) => {
+        state.byId[providerId].errorMessage = null;
+      }),
+  }))
 );

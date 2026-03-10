@@ -26,6 +26,7 @@
 - [x] 类型系统架构统一：`ProviderId`、`ProviderCardState`、
 `ProviderCheckPhase`、`ProviderCheckEvent` 迁移至 types 底层
 ，constants 使用 `satisfies` 约束
+- [x] `useProviderCollectionStore` 引入 `immer` 中间件，优化所有 action 嵌套更新
 
 ---
 
@@ -36,11 +37,12 @@
 - [ ] `useProviderCheckStore` — 基本完成
   - [x] `setDone()` / `setDegraded()` / `setFailed()`
   - [ ] `reset()`
-- [ ] `useProviderCollectionStore` — 进行中
+- [x] `useProviderCollectionStore` — 已完成 ✅
   - [x] 初始化逻辑优化（提取 `COMMON_INITIAL_STATE`，使用 `reduce` 函数式风格）
   - [x] 类型系统重构（`ProviderId`、`ProviderCardState`、`ProviderCheckPhase` 迁移至 types 底层）
   - [x] 职责分离（`PROVIDER_IDS` / `PROVIDER_INITIAL_FORMS` / `PROVIDER_DEFINITIONS`）
-  - [ ] 卡片状态、表单、模型、错误相关 action 审查
+  - [x] 卡片状态、表单、模型、错误相关 action 审查
+  - [x] 引入 `immer` 中间件优化嵌套更新（代码行数 146→89，-39%）
 
 ### 2. handlers 审查（依赖 store 审查完成）
 

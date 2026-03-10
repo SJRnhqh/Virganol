@@ -6,10 +6,7 @@ import type {
   ProviderCheckFailedPayload,
   ProviderStatusPayload,
 } from "@/features/bot/types";
-import {
-  PROVIDER_IDS,
-  PROVIDER_CARD_STATES,
-} from "@/features/bot/constants";
+import { PROVIDER_IDS, PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import {
   useProviderCollectionStore,
   useProviderCheckStore,
@@ -42,7 +39,6 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
   const store = useProviderCollectionStore.getState();
 
   // 更新表单字段（持久化配置映射到前端）
-  // TODO: 待 CollectionStore 的 form 同步策略收敛后，统一处理 url 缺失/空值时的显式覆盖，避免旧值残留。
   if (config.url) {
     store.setProviderForm(provider, { apiURL: config.url });
   }

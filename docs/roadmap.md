@@ -118,7 +118,14 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 目录结构优化：connection 相关按钮统一到 `buttons/provider/connection/` 子目录
 - [x] 导出管理：只导出 `ProviderButton`，内部实现细节封装
 
-##### 🚧 4.3.5 ProviderBody 表单架构重构
+##### ✅ 4.3.5 useProviderCollectionStore 优化
+
+- [x] 引入 `immer` 中间件，简化所有 action 的嵌套更新逻辑
+- [x] 所有 action 从 4-5 层嵌套简化为直接赋值（代码行数 146→89，-39%）
+- [x] `setAllModelsEnabled` 改用 `Object.fromEntries` + `map`，与整体函数式风格统一
+- [x] 完成 store 层审查：卡片状态、表单、模型、错误相关 action 全部优化完成
+
+##### 🚧 4.3.6 ProviderBody 表单架构重构
 
 - [ ] 表单组件解耦：将 `ProviderBody` 中的表单逻辑提取为独立组件
 - [ ] 基于 `cardState` 的表单渲染优化：
