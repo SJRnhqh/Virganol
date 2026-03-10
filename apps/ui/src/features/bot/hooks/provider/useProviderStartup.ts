@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 // 内部引用
+import { useProviderCheckStore } from "@/features/bot/store";
 import { triggerProviderStartupCheck } from "@/features/bot/api";
 import { registerCheckListeners } from "@/features/bot/events";
 
@@ -30,6 +31,12 @@ export const useProviderStartup = () => {
 
     bootstrap().catch((error) => {
       console.error("[React] bootstrap failed:", error);
+      useProviderCheckStore
+        .getState()
+        .setFailed(
+          "startup_bootstrap_failed",
+          error instanceof Error ? error.message : String(error),
+        );
     });
 
     return () => {
