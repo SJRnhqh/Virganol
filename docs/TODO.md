@@ -33,8 +33,11 @@
 - [ ] `useProviderCheckStore` — 基本完成
   - [x] `setDone()` / `setDegraded()` / `setFailed()`
   - [ ] `reset()`
-- [ ] `useProviderCollectionStore` — 当前重点
-  - [ ] 初始化、卡片状态、表单、模型、错误相关 action
+- [ ] `useProviderCollectionStore` — 进行中
+  - [x] 初始化逻辑优化（提取 `COMMON_INITIAL_STATE`，使用 `reduce` 函数式风格）
+  - [x] 类型系统重构（types 底层 + constants 使用 `satisfies` 约束）
+  - [x] 职责分离（`PROVIDER_IDS` / `PROVIDER_INITIAL_FORMS` / `PROVIDER_DEFINITIONS`）
+  - [ ] 卡片状态、表单、模型、错误相关 action 审查
 
 ### 2. handlers 审查（依赖 store 审查完成）
 

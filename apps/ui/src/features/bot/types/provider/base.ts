@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/types/provider/base.ts
 // 内部引用
-import type { ProviderCardState } from "@/features/bot/constants";
+import type { ProviderCardState } from "./state";
 
 /** 连接状态 + 连接操作 */
 export interface ProviderConnectionProps {

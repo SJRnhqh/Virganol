@@ -3,6 +3,7 @@
 export type { ProviderId } from "./common";
 export type { ProviderRegistryEntry } from "./registry";
 export type {
+  ProviderCardState,
   ProviderFormData,
   ProviderModelState,
   ProviderState,

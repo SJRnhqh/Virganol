@@ -1,14 +1,12 @@
 // apps/ui/src/features/bot/components/base/provider/content/ProviderBody.tsx
 // 内部引用
 import type {
+  ProviderCardState,
   ProviderField,
   ProviderConnectionProps,
   ProviderModelProps,
 } from "@/features/bot/types";
-import {
-  PROVIDER_CARD_STATES,
-  type ProviderCardState,
-} from "@/features/bot/constants";
+import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import {
   ProviderForm,
   ProviderConnectedPanel,

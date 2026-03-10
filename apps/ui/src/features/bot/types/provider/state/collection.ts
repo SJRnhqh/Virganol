@@ -1,7 +1,7 @@
 // apps/ui/src/features/bot/types/provider/state/collection.ts
 // 内部引用
 import type { ProviderId } from "@/features/bot/types/provider/common";
-import type { ProviderCardState } from "@/features/bot/constants";
+import type { ProviderCardState } from "./card";
 import type {
   ProviderFormData,
   ProviderModelState,

@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/types/provider/state/entity.ts
 // 内部引用
-import type { ProviderCardState } from "@/features/bot/constants";
+import type { ProviderCardState } from "./card";
 
 // ── Provider Entity Fields（单个 Provider 子结构）───
 

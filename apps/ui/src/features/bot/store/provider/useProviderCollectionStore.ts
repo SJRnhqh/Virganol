@@ -19,16 +19,13 @@ const COMMON_INITIAL_STATE = {
 
 // 仅负责生成 Provider 集合初始快照（byId 路由映射）。
 const createInitialById = (): ProviderCollectionState["byId"] => {
-  const byId = {} as ProviderCollectionState["byId"];
-
-  for (const providerId of PROVIDER_IDS) {
-    byId[providerId] = {
+  return PROVIDER_IDS.reduce((acc, providerId) => {
+    acc[providerId] = {
       ...COMMON_INITIAL_STATE,
       form: { ...PROVIDER_INITIAL_FORMS[providerId] },
     };
-  }
-
-  return byId;
+    return acc;
+  }, {} as ProviderCollectionState["byId"]);
 };
 
 export const useProviderCollectionStore = create<ProviderCollectionState>(

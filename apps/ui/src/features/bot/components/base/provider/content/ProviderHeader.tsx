@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 // 内部引用
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
-import type { ProviderCardState } from "@/features/bot/constants";
+import type { ProviderCardState } from "@/features/bot/types";
 import { rotatingIconVariants } from "@/lib/animations";
 
 interface ProviderHeaderProps {
