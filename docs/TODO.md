@@ -66,6 +66,9 @@
 - [x] 修复 `started` 丢失时 `failed` 事件可能被前端误判 stale 的问题
 - [x] 修复 `handleProviderStatus` 模型更新逻辑（失败时清空模型；成功时空模型也同步）
 - [ ] 生命周期延迟编排重新设计（scheduler 已从 handler 移除，需在 store 层或独立模块重新实现）
+- [ ] `handleProviderStatus` — 收敛多次零散 `set` 为单次批量更新，减少重渲染
+- [ ] 前端 `errorCode` 收敛为联合类型（替代宽泛 `string`），与后端 `ProviderErrorCode` 对齐
+- [ ] `useProviderStartup` — 启动失败时写入 `checkStore.setFailed()`，避免 UI 无感知
 - [ ] 其他审查中发现的问题
 - [ ] 提交 PR
 

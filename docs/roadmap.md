@@ -143,6 +143,14 @@ LLM Provider 后端分为两条主线：
 - [ ] 视需要补充集成测试
 - [ ] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [ ] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
+- [ ] `handleProviderStatus` — 收敛多次零散 `set` 为单次批量更新，减少不必要的状态引用变更与重渲染
+- [ ] 前端 `errorCode` 收敛为共享联合类型（`ProviderErrorCode`），替代宽泛 `string`，支持消费侧穷举匹配
+- [ ] `store.rs` — 全量读-改-写优化：评估按 provider 独立 key 存储或脏标记机制，降低 I/O 开销
+- [ ] 事件名前后端契约自动化：Rust 侧事件名抽为常量模块，或引入 codegen 消除人工对齐风险
+- [ ] `ProviderError` — 补 `source()` 错误链实现或引入 `thiserror`，提升调试时错误溯源能力
+- [ ] `reconcile_enabled_models` — 无变更路径避免 `record.clone()`，改用 owned 传递或 `Cow` 减少堆分配
+- [ ] `useProviderStartup` — 启动失败时写入 `checkStore.setFailed()`，避免监听注册全部失败后 UI 无感知
+- [ ] `PROVIDERS_STORE_LOCK` — 评估迁移至 Tauri `State<Mutex<T>>` 管理模式，为多窗口场景预留空间
 - [ ] 生命周期功能开发完结
 
 ---
