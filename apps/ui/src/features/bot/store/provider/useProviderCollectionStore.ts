@@ -84,5 +84,23 @@ export const useProviderCollectionStore = create<ProviderCollectionState>()(
       set((state) => {
         state.byId[providerId].errorMessage = null;
       }),
+
+    // 批量更新（减少重渲染）
+    updateProviderBatch: (providerId, updates) =>
+      set((state) => {
+        const provider = state.byId[providerId];
+        if (updates.cardState !== undefined) {
+          provider.cardState = updates.cardState;
+        }
+        if (updates.form !== undefined) {
+          Object.assign(provider.form, updates.form);
+        }
+        if (updates.models !== undefined) {
+          provider.models = updates.models;
+        }
+        if (updates.errorMessage !== undefined) {
+          provider.errorMessage = updates.errorMessage;
+        }
+      }),
   })),
 );

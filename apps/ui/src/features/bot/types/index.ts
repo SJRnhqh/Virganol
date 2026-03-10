@@ -25,6 +25,7 @@ export type {
   ProviderCheckPhase,
   ProviderModelState,
   ProviderCheckState,
+  ProviderBatchUpdates,
   ProviderCollectionState,
 
   // ── Provider UI Props ──

@@ -8,6 +8,18 @@ import type {
 } from "./entity";
 import type { ProviderCardState } from "./card";
 
+/** 批量更新的字段集合（所有字段可选） */
+export interface ProviderBatchUpdates {
+  /** 卡片状态 */
+  cardState?: ProviderCardState;
+  /** 表单字段补丁 */
+  form?: Partial<ProviderFormData>;
+  /** 模型状态 */
+  models?: ProviderModelState;
+  /** 错误信息（null 表示清空） */
+  errorMessage?: string | null;
+}
+
 // ── Provider Collection（薄聚合：仅路由映射）───
 
 export interface ProviderCollectionState {
@@ -61,5 +73,12 @@ export interface ProviderCollectionState {
   clearProviderError: (
     /** 目标 Provider 标识。 */
     providerId: ProviderId,
+  ) => void;
+  /** 批量更新单个 Provider 的多个字段（减少重渲染）。 */
+  updateProviderBatch: (
+    /** 目标 Provider 标识。 */
+    providerId: ProviderId,
+    /** 待更新的字段集合。 */
+    updates: ProviderBatchUpdates,
   ) => void;
 }

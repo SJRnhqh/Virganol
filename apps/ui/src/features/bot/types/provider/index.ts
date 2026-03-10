@@ -26,6 +26,7 @@ export type {
   ProviderCheckPhase,
   ProviderModelState,
   ProviderCheckState,
+  ProviderBatchUpdates,
   ProviderCollectionState,
 } from "./state";
 

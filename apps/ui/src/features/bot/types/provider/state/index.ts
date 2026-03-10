@@ -11,7 +11,7 @@ export type { ProviderCheckPhase } from "./phase";
 export type { ProviderCheckState } from "./check";
 
 // ── Provider 集合状态 ──
-export type { ProviderCollectionState } from "./collection";
+export type { ProviderBatchUpdates, ProviderCollectionState } from "./collection";
 
 // ── Provider 实体状态 ──
 export type {
