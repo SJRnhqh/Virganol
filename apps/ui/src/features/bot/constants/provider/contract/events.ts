@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/constants/provider/lifecycle/events.ts
+// apps/ui/src/features/bot/constants/provider/contract/events.ts
 // 内部引用
 import type { ProviderCheckEvent } from "@/features/bot/types";
 

@@ -1,4 +1,5 @@
 // apps/ui/src/features/bot/constants/provider/lifecycle/delays.ts
+
 /** Provider 生命周期阶段转换延迟（毫秒） */
 export const PROVIDER_CHECK_DELAYS = {
   /** checking → 终态补足延迟 */

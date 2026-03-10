@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/constants/provider/card.ts
+// apps/ui/src/features/bot/constants/provider/state/card.ts
 // 内部引用
 import type { ProviderCardState } from "@/features/bot/types";
 

@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/constants/provider/lifecycle/phases.ts
+// apps/ui/src/features/bot/constants/provider/state/phases.ts
 // 内部引用
 import type { ProviderCheckPhase } from "@/features/bot/types";
 
