@@ -4,12 +4,18 @@ import { create } from "zustand";
 
 // 内部引用
 import {
+  PROVIDER_IDS,
   PROVIDER_CARD_STATES,
-  PROVIDER_DEFINITIONS,
+  PROVIDER_INITIAL_FORMS,
 } from "@/features/bot/constants";
-import type { ProviderCollectionState, ProviderId } from "@/features/bot/types";
+import type { ProviderCollectionState } from "@/features/bot/types";
 
-const PROVIDER_IDS = Object.keys(PROVIDER_DEFINITIONS) as ProviderId[];
+// 单个 Provider 的公共初始状态（除 form 外）
+const COMMON_INITIAL_STATE = {
+  cardState: PROVIDER_CARD_STATES.UNSET,
+  models: { available: [], enabled: {} },
+  errorMessage: null,
+};
 
 // 仅负责生成 Provider 集合初始快照（byId 路由映射）。
 const createInitialById = (): ProviderCollectionState["byId"] => {
@@ -17,10 +23,8 @@ const createInitialById = (): ProviderCollectionState["byId"] => {
 
   for (const providerId of PROVIDER_IDS) {
     byId[providerId] = {
-      cardState: PROVIDER_CARD_STATES.UNSET,
-      form: { ...PROVIDER_DEFINITIONS[providerId].defaultConfig },
-      models: { available: [], enabled: {} },
-      errorMessage: null,
+      ...COMMON_INITIAL_STATE,
+      form: { ...PROVIDER_INITIAL_FORMS[providerId] },
     };
   }
 

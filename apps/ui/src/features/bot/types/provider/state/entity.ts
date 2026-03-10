@@ -4,14 +4,14 @@ import type { ProviderCardState } from "@/features/bot/constants";
 
 // ── Provider Entity Fields（单个 Provider 子结构）───
 
-interface ProviderFormData {
+export interface ProviderFormData {
   /** Provider 接口地址（如本地/远程 API URL）。 */
   apiURL?: string;
   /** Provider 密钥输入（仅前端表单态，非持久化语义）。 */
   apiKey?: string;
 }
 
-interface ProviderModelState {
+export interface ProviderModelState {
   /** 后端返回的当前可用模型列表。 */
   available: string[];
   /** 模型启用开关映射（key 为模型名，value 为是否启用）。 */

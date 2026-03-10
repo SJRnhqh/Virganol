@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/types/provider/id.ts
+// apps/ui/src/features/bot/types/provider/common/id.ts
 
 export type ProviderId =
   | "ollama"

@@ -2,7 +2,11 @@
 // 内部引用
 import type { ProviderId } from "@/features/bot/types/provider/common";
 import type { ProviderCardState } from "@/features/bot/constants";
-import type { ProviderState } from "./entity";
+import type {
+  ProviderFormData,
+  ProviderModelState,
+  ProviderState,
+} from "./entity";
 
 // ── Provider Collection（薄聚合：仅路由映射）───
 
@@ -21,14 +25,14 @@ export interface ProviderCollectionState {
     /** 目标 Provider 标识。 */
     providerId: ProviderId,
     /** 待合并的表单字段补丁。 */
-    patch: Partial<ProviderState["form"]>,
+    patch: Partial<ProviderFormData>,
   ) => void;
   /** 覆盖更新单个 Provider 的模型状态。 */
   setProviderModels: (
     /** 目标 Provider 标识。 */
     providerId: ProviderId,
     /** 要写入的模型状态快照。 */
-    models: ProviderState["models"],
+    models: ProviderModelState,
   ) => void;
   /** 更新单个 Provider 的单个模型启用状态。 */
   setModelEnabled: (

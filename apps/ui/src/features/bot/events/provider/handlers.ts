@@ -7,7 +7,7 @@ import type {
   ProviderStatusPayload,
 } from "@/features/bot/types";
 import {
-  PROVIDER_DEFINITIONS,
+  PROVIDER_IDS,
   PROVIDER_CARD_STATES,
 } from "@/features/bot/constants";
 import {
@@ -34,8 +34,7 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
   // TODO: `secret_meta` 当前尚未接入前端状态与渲染，后续需结合密钥提示/UI 反馈统一消费。
   const { provider, config, health } = payload;
 
-  // TODO: 若后续弱化或移除 PROVIDER_DEFINITIONS 作为静态注册源，这里的 provider 合法性判断需同步调整。
-  if (!(provider in PROVIDER_DEFINITIONS)) {
+  if (!PROVIDER_IDS.includes(provider)) {
     console.warn(`[React] unknown provider: ${provider}, skipping`);
     return;
   }
@@ -106,12 +105,15 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
   if (payload.issues?.length) {
     const store = useProviderCollectionStore.getState();
     for (const issue of payload.issues) {
-      // TODO: 若后续弱化或移除 PROVIDER_DEFINITIONS 作为静态注册源，这里的 provider 合法性判断需同步调整。
-      if (issue.provider in PROVIDER_DEFINITIONS) {
+      if (PROVIDER_IDS.includes(issue.provider)) {
         store.setProviderCardState(issue.provider, PROVIDER_CARD_STATES.FAILED);
         // TODO: 后续若 provider 级错误码收敛为稳定契约，评估将 issue.code 一并下沉用于更细粒度渲染。
         // TODO: 当前结构性错误会直接覆盖已有业务错误文案；若后续需要同时保留多类错误或多条 issue，需设计统一展示策略。
         store.setProviderError(issue.provider, issue.message);
+      } else {
+        console.warn(
+          `[React] unknown provider in issue: ${issue.provider}, skipping`,
+        );
       }
     }
   }

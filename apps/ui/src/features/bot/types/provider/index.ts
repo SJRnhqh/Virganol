@@ -1,5 +1,14 @@
 // apps/ui/src/features/bot/types/provider/index.ts
 // 导出内容
+export type { ProviderId } from "./common";
+export type { ProviderRegistryEntry } from "./registry";
+export type {
+  ProviderFormData,
+  ProviderModelState,
+  ProviderState,
+  ProviderCollectionState,
+  ProviderCheckState,
+} from "./state";
 export type {
   ConnectAndSaveProviderPayload,
   HealthCheckResponse,
@@ -9,8 +18,5 @@ export type {
   ProviderCheckCompletedPayload,
   ProviderCheckFailedPayload,
 } from "./contract";
-export type { ProviderCollectionState, ProviderCheckState } from "./state";
 export type { ProviderConnectionProps, ProviderModelProps } from "./base";
 export type { ProviderField, ProviderDefinition } from "./definition";
-export type { ProviderRegistryEntry } from "./registry";
-export type { ProviderId } from "./common";
