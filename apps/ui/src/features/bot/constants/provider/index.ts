@@ -10,8 +10,8 @@ export { PROVIDER_DEFINITIONS } from "./definition";
 export { PROVIDER_CHECK_EVENTS } from "./contract";
 
 // ── Provider 状态常量 ──
-export { PROVIDER_CHECK_PHASES, PROVIDER_CARD_STATES } from "./state";
 export { PROVIDER_CHECK_DELAYS } from "./lifecycle";
+export { PROVIDER_CHECK_PHASES, PROVIDER_CARD_STATES } from "./state";
 
 // ── Provider 配置常量 ──
 export { PROVIDER_INITIAL_FORMS } from "./config";

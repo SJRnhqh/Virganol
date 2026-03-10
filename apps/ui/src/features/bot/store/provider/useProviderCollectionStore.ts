@@ -4,12 +4,12 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 // 内部引用
+import type { ProviderCollectionState } from "@/features/bot/types";
 import {
   PROVIDER_IDS,
   PROVIDER_CARD_STATES,
   PROVIDER_INITIAL_FORMS,
 } from "@/features/bot/constants";
-import type { ProviderCollectionState } from "@/features/bot/types";
 
 // 单个 Provider 的公共初始状态（除 form 外）
 const COMMON_INITIAL_STATE = {
@@ -69,7 +69,7 @@ export const useProviderCollectionStore = create<ProviderCollectionState>()(
       set((state) => {
         const { available } = state.byId[providerId].models;
         state.byId[providerId].models.enabled = Object.fromEntries(
-          available.map((model) => [model, enabled])
+          available.map((model) => [model, enabled]),
         );
       }),
 
@@ -84,5 +84,5 @@ export const useProviderCollectionStore = create<ProviderCollectionState>()(
       set((state) => {
         state.byId[providerId].errorMessage = null;
       }),
-  }))
+  })),
 );

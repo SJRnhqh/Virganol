@@ -3,8 +3,8 @@
 import { create } from "zustand";
 
 // 内部引用
-import { PROVIDER_CHECK_PHASES } from "@/features/bot/constants";
 import type { ProviderCheckState } from "@/features/bot/types";
+import { PROVIDER_CHECK_PHASES } from "@/features/bot/constants";
 
 const emptyCheckState = {
   phase: PROVIDER_CHECK_PHASES.IDLE,

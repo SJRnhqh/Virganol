@@ -1,25 +1,33 @@
 // apps/ui/src/features/bot/types/provider/index.ts
 // 导出内容
+
+// ── Provider 标识与注册 ──
 export type { ProviderId } from "./common";
 export type { ProviderRegistryEntry } from "./registry";
+export type { ProviderField, ProviderDefinition } from "./definition";
+
+// ── Provider 契约类型 ──
 export type {
-  ProviderCheckPhase,
-  ProviderCardState,
-  ProviderFormData,
-  ProviderModelState,
-  ProviderState,
-  ProviderCollectionState,
-  ProviderCheckState,
-} from "./state";
-export type {
-  ConnectAndSaveProviderPayload,
-  HealthCheckResponse,
   ProviderIssue,
   ProviderCheckEvent,
-  ProviderCheckStartedPayload,
+  HealthCheckResponse,
   ProviderStatusPayload,
-  ProviderCheckCompletedPayload,
   ProviderCheckFailedPayload,
+  ProviderCheckStartedPayload,
+  ProviderCheckCompletedPayload,
+  ConnectAndSaveProviderPayload,
 } from "./contract";
-export type { ProviderConnectionProps, ProviderModelProps } from "./base";
-export type { ProviderField, ProviderDefinition } from "./definition";
+
+// ── Provider 状态类型 ──
+export type {
+  ProviderState,
+  ProviderFormData,
+  ProviderCardState,
+  ProviderCheckPhase,
+  ProviderModelState,
+  ProviderCheckState,
+  ProviderCollectionState,
+} from "./state";
+
+// ── Provider UI Props ──
+export type { ProviderModelProps, ProviderConnectionProps } from "./base";

@@ -1,12 +1,12 @@
 // apps/ui/src/features/bot/types/provider/state/collection.ts
 // 内部引用
-import type { ProviderId } from "@/features/bot/types/provider/common";
-import type { ProviderCardState } from "./card";
+import type { ProviderId } from "../common";
 import type {
   ProviderFormData,
   ProviderModelState,
   ProviderState,
 } from "./entity";
+import type { ProviderCardState } from "./card";
 
 // ── Provider Collection（薄聚合：仅路由映射）───
 

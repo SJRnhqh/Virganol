@@ -1,4 +1,4 @@
 // apps/ui/src/features/bot/store/index.ts
 // 导出内容
-export { useProviderCheckStore } from "./provider";
-export { useProviderCollectionStore } from "./provider";
+
+export { useProviderCheckStore, useProviderCollectionStore } from "./provider";

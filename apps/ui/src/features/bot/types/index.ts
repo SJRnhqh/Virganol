@@ -1,36 +1,33 @@
 // apps/ui/src/features/bot/types/index.ts
 // 导出内容
-export type {
-  // ── Provider 标识与基础类型 ──
-  ProviderId,
 
-  // ── Provider 定义与注册 ──
+export type {
+  // ── Provider 标识与注册 ──
+  ProviderId,
   ProviderField,
   ProviderDefinition,
   ProviderRegistryEntry,
 
-  // ── Provider 命令与响应 ──
-  ConnectAndSaveProviderPayload,
-  HealthCheckResponse,
-
-  // ── Provider 生命周期事件 ──
-  ProviderCheckEvent,
+  // ── Provider 契约类型 ──
   ProviderIssue,
-  ProviderCheckStartedPayload,
+  ProviderCheckEvent,
+  HealthCheckResponse,
   ProviderStatusPayload,
-  ProviderCheckCompletedPayload,
   ProviderCheckFailedPayload,
+  ProviderCheckStartedPayload,
+  ProviderCheckCompletedPayload,
+  ConnectAndSaveProviderPayload,
 
-  // ── Provider 状态管理 ──
-  ProviderCheckPhase,
-  ProviderCardState,
-  ProviderFormData,
-  ProviderModelState,
+  // ── Provider 状态类型 ──
   ProviderState,
-  ProviderCollectionState,
+  ProviderFormData,
+  ProviderCardState,
+  ProviderCheckPhase,
+  ProviderModelState,
   ProviderCheckState,
+  ProviderCollectionState,
 
   // ── Provider UI Props ──
-  ProviderConnectionProps,
   ProviderModelProps,
+  ProviderConnectionProps,
 } from "./provider";

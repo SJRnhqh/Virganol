@@ -1,9 +1,9 @@
 // apps/ui/src/features/bot/types/provider/contract/events.ts
 // 内部引用
 import type { ProviderId } from "../common";
+import type { HealthCheckResponse } from "./commands";
 import type { ProviderSecretMeta } from "./secret";
 import type { ProviderRecord } from "./record";
-import type { HealthCheckResponse } from "./commands";
 
 // ---------------------------------------------------------------------------
 // Provider Check Lifecycle — 生命周期事件推送相关类型
