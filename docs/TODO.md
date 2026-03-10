@@ -23,6 +23,8 @@
 - [x] 前端 handlers 职责净化：移除 scheduler 调用，handler 只做 payload → store action
 - [x] 前端 handlers：`handleCompleted()` / `handleFailed()` 主链路已审清，`handleProviderStatus()`
 成功/失败分支已收敛
+- [x] 类型系统架构统一：`ProviderId`、`ProviderCardState`、`ProviderCheckPhase` 迁移至 types 底层
+，constants 使用 `satisfies` 约束
 
 ---
 
@@ -35,7 +37,7 @@
   - [ ] `reset()`
 - [ ] `useProviderCollectionStore` — 进行中
   - [x] 初始化逻辑优化（提取 `COMMON_INITIAL_STATE`，使用 `reduce` 函数式风格）
-  - [x] 类型系统重构（types 底层 + constants 使用 `satisfies` 约束）
+  - [x] 类型系统重构（`ProviderId`、`ProviderCardState`、`ProviderCheckPhase` 迁移至 types 底层）
   - [x] 职责分离（`PROVIDER_IDS` / `PROVIDER_INITIAL_FORMS` / `PROVIDER_DEFINITIONS`）
   - [ ] 卡片状态、表单、模型、错误相关 action 审查
 

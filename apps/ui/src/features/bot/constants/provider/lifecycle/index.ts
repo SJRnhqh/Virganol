@@ -2,4 +2,4 @@
 // 导出内容
 export { PROVIDER_CHECK_EVENTS, type ProviderCheckEvent } from "./events";
 export { PROVIDER_CHECK_DELAYS } from "./delays";
-export { PROVIDER_CHECK_PHASES, type ProviderCheckPhase } from "./phases";
+export { PROVIDER_CHECK_PHASES } from "./phases";

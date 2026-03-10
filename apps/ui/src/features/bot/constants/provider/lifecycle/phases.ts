@@ -1,12 +1,12 @@
 // apps/ui/src/features/bot/constants/provider/lifecycle/phases.ts
-/** Provider 生命周期阶段（前端状态机） */
+// 内部引用
+import type { ProviderCheckPhase } from "@/features/bot/types";
+
+/** Provider 生命周期阶段常量 */
 export const PROVIDER_CHECK_PHASES = {
   IDLE: "idle",
   CHECKING: "checking",
   DONE: "done",
   DEGRADED: "degraded",
   FAILED: "failed",
-} as const;
-
-export type ProviderCheckPhase =
-  (typeof PROVIDER_CHECK_PHASES)[keyof typeof PROVIDER_CHECK_PHASES];
+} as const satisfies Record<string, ProviderCheckPhase>;

@@ -21,6 +21,7 @@ export type {
   ProviderCheckFailedPayload,
 
   // ── Provider 状态管理 ──
+  ProviderCheckPhase,
   ProviderCardState,
   ProviderFormData,
   ProviderModelState,

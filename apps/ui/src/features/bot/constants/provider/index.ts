@@ -10,5 +10,4 @@ export {
   PROVIDER_CHECK_DELAYS,
   PROVIDER_CHECK_PHASES,
   type ProviderCheckEvent,
-  type ProviderCheckPhase,
 } from "./lifecycle";

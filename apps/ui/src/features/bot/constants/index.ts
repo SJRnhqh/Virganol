@@ -9,6 +9,5 @@ export {
   PROVIDER_CHECK_PHASES,
   PROVIDER_CARD_STATES,
   PROVIDER_INITIAL_FORMS,
-  type ProviderCheckPhase,
   type ProviderCheckEvent,
 } from "./provider";

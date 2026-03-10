@@ -1,7 +1,7 @@
 // apps/ui/src/features/bot/types/provider/state/check.ts
 // 内部引用
-import type { ProviderCheckPhase } from "@/features/bot/constants";
 import type { ProviderCheckTrigger } from "../contract";
+import type { ProviderCheckPhase } from "./phase";
 
 // ── Provider Check（生命周期全局状态）───
 
