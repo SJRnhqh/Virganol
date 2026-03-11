@@ -1,4 +1,5 @@
 // apps/ui/src/lib/animations/providerButton.ts
+// 外部依赖
 import type { Variants } from "framer-motion";
 
 /* === Provider Button 动画组 === */
