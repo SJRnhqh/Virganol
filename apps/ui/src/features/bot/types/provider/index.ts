@@ -30,5 +30,5 @@ export type {
 } from "./state";
 
 // ── Provider UI Props ──
+export type { WithProviderId, ProviderCardProps } from "./props";
 export type { ProviderModelProps, ProviderConnectionProps } from "./base";
-export type { WithProviderId } from "./props";

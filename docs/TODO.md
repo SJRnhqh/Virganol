@@ -81,6 +81,14 @@ Props 类型复用 ✅
   - [x] 组件分层清晰：LLMProviders（页面）→ ProviderHeader/ProviderList（功能区）→ ProviderItem
   （适配层）→ BaseProvider（展示层）
   - [x] Props 传递最小化：只传必需的 `providerId`，其他数据由 Hook 派生
+- [x] **卡片组件命名优化**（2025-03-11）✅
+  - [x] `ProviderHeader` → `ProviderCardHeader`（消除与全局 Header 命名冲突）
+  - [x] `ProviderBody` → `ProviderCardBody`（语义更清晰）
+  - [x] 创建 `types/provider/props/card.ts` 定义 `ProviderCardProps` 框架
+  - [x] 创建 `types/provider/props/meta.ts` 定义 `WithProviderMeta`（name + icon）
+  - [x] 创建 `types/provider/props/form.ts` 定义 `WithProviderForm`（待完善）
+- [ ] `ProviderCardHeader` — className 使用 `cn()` 优化
+- [ ] `ProviderCardBody` — Props 分析，评估 `connection`/`models` 传递方式
 - [ ] `base/provider/BaseProvider.tsx` — 展开/收起 + 数据传递
 - [ ] `forms/provider/ProviderForm.tsx` — cardState 分发
 

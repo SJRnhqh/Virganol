@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/base/provider/content/ProviderHeader.tsx
+// apps/ui/src/features/bot/components/base/provider/content/ProviderCardHeader.tsx
 // 外部依赖
 import { Check, Loader2, CircleAlert } from "lucide-react";
 import { motion } from "framer-motion";
@@ -8,19 +8,19 @@ import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import type { ProviderCardState } from "@/features/bot/types";
 import { rotatingIconVariants } from "@/lib/animations";
 
-interface ProviderHeaderProps {
+interface ProviderCardHeaderProps {
   icon: React.ReactNode;
   name: string;
   cardState: ProviderCardState;
   open: boolean;
 }
 
-export const ProviderHeader = ({
+export const ProviderCardHeader = ({
   icon,
   name,
   cardState,
   open,
-}: ProviderHeaderProps) => (
+}: ProviderCardHeaderProps) => (
   <div className="flex items-center gap-3.5">
     <span
       className={[

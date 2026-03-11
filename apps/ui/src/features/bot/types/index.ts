@@ -29,6 +29,7 @@ export type {
 
   // ── Provider UI Props ──
   WithProviderId,
+  ProviderCardProps,
   ProviderModelProps,
   ProviderConnectionProps,
 } from "./provider";

@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/base/provider/content/ProviderBody.tsx
+// apps/ui/src/features/bot/components/base/provider/content/ProviderCardBody.tsx
 // 内部引用
 import type {
   ProviderCardState,
@@ -14,7 +14,7 @@ import {
 } from "@/features/bot/components/forms";
 import { ProviderConnectionButton } from "@/features/bot/components/buttons";
 
-interface ProviderBodyProps {
+interface ProviderCardBodyProps {
   cardState: ProviderCardState;
   fields: ProviderField[];
   formData: ProviderFormData;
@@ -24,7 +24,7 @@ interface ProviderBodyProps {
   models: ProviderModelProps;
 }
 
-export const ProviderBody = ({
+export const ProviderCardBody = ({
   cardState,
   fields,
   formData,
@@ -32,7 +32,7 @@ export const ProviderBody = ({
   onReset,
   connection,
   models,
-}: ProviderBodyProps) => {
+}: ProviderCardBodyProps) => {
   const handleFieldChange = (key: keyof ProviderFormData, val: string) => {
     updateFormData({ ...formData, [key]: val });
   };
