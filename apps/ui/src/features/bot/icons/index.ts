@@ -1,4 +1,4 @@
 // apps/ui/src/features/bot/icons/index.ts
 // 导出内容
 
-export { PROVIDER_ICONS } from "./provider";
+export { PROVIDER_ICONS, PHASE_CLOUD_ICONS } from "./provider";

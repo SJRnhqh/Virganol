@@ -28,6 +28,8 @@
 ，constants 使用 `satisfies` 约束
 - [x] `useProviderCollectionStore` 引入 `immer` 中间件，优化所有 action 嵌套更新
 - [x] 前端架构重构：icons 视觉资源层独立，消除循环依赖（-199 行代码）
+- [x] settings/provider 目录重构：消除 registry 概念，统一 provider 组件管理
+- [x] `ProviderHeader` 优化：通过 `PHASE_CLOUD_ICONS` 映射统一管理生命周期图标（106→58 行，-45%）
 
 ---
 
@@ -60,10 +62,11 @@
 
 ### 4. components/ 审查
 
-- [ ] `ProviderHeader.tsx` — phase 图标 + 刷新按钮
-- [ ] `BaseProvider.tsx` — 展开/收起 + 数据传递
-- [ ] `ProviderForm.tsx` — cardState 分发
-- [ ] `ProviderList.tsx` — 列表渲染
+- [x] `settings/provider/content/ProviderHeader.tsx` — phase 图标 + 刷新按钮 ✅
+- [x] `settings/provider/content/ProviderList.tsx` — 列表渲染 ✅
+- [x] `settings/provider/content/ProviderItem.tsx` — Hook 调用容器 ✅
+- [ ] `base/provider/BaseProvider.tsx` — 展开/收起 + 数据传递
+- [ ] `forms/provider/ProviderForm.tsx` — cardState 分发
 
 ### 5. 修补与收尾
 

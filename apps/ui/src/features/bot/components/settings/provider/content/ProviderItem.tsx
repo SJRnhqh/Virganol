@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/settings/registry/ProviderItem.tsx
+// apps/ui/src/features/bot/components/settings/provider/content/ProviderItem.tsx
 // 内部引用
 import type { ProviderId } from "@/features/bot/types";
 import { useProvider } from "@/features/bot/hooks";

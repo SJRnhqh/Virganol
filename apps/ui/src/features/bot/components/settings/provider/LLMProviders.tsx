@@ -1,7 +1,6 @@
-// apps/ui/src/features/bot/components/settings/LLMProviders.tsx
+// apps/ui/src/features/bot/components/settings/provider/LLMProviders.tsx
 // 内部引用
-import { ProviderHeader } from "./ProviderHeader";
-import { ProviderList } from "./registry";
+import { ProviderList, ProviderHeader } from "./content";
 
 export const LLMProviders = () => {
   return (

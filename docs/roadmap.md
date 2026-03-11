@@ -129,11 +129,14 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 
 - [x] 创建 `icons/` 视觉资源层，独立于 `components/`
 - [x] 统一管理 provider logo（`icons/provider/logo.tsx`）
+- [x] 统一管理生命周期图标（`icons/provider/phase.tsx`）
 - [x] 删除分散的 provider 定义文件（11 个文件合并为 1 个）
 - [x] 消除 `PROVIDER_REGISTRY` 冗余，直接使用 `PROVIDER_IDS`
 - [x] 消除循环依赖（`constants` 不再依赖 `components`）
 - [x] 严格分层：`types → constants → icons → store → events/api → hooks → components`
 - [x] 代码精简：-199 行（-89.2%）
+- [x] settings 目录重构：`registry/` → `provider/content/`，语义更清晰
+- [x] `ProviderHeader` 优化：5 个条件分支 → 1 个动态组件（106→58 行，-45%）
 
 ##### 🚧 4.3.7 ProviderBody 表单架构重构
 

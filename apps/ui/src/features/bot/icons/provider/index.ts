@@ -2,3 +2,4 @@
 // 导出内容
 
 export { PROVIDER_ICONS } from "./logo";
+export { PHASE_CLOUD_ICONS } from "./phase";

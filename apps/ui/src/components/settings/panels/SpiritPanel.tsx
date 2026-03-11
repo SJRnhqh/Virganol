@@ -1,6 +1,6 @@
 // apps/ui/src/components/settings/panels/SpiritPanel.tsx
 // 内部引用
-import { LLMProviders } from "@/features/bot/components/settings/LLMProviders";
+import { LLMProviders } from "@/features/bot/components";
 
 export const SpiritPanel = () => {
   return (
