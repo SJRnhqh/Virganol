@@ -28,6 +28,7 @@ export type {
   ProviderCollectionState,
 
   // ── Provider UI Props ──
+  WithProviderId,
   ProviderModelProps,
   ProviderConnectionProps,
 } from "./provider";

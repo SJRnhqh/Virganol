@@ -30,6 +30,14 @@
 - [x] 前端架构重构：icons 视觉资源层独立，消除循环依赖（-199 行代码）
 - [x] settings/provider 目录重构：消除 registry 概念，统一 provider 组件管理
 - [x] `ProviderHeader` 优化：通过 `PHASE_CLOUD_ICONS` 映射统一管理生命周期图标（106→58 行，-45%）
+- [x] **渲染层组件架构优化**（2025-03-11）
+  - [x] 动画文件重组：拆分 `lib/animations/common.ts`（通用）和 `lib/animations/providerLifecycle.ts`（专用）
+  - [x] `ProviderHeader` className 可读性：引入 `cn()` 多行格式 + 语义注释
+  - [x] icon 管理收拢：从调用侧手动映射迁移到 `useProvider` Hook 内部自动关联
+  - [x] Props 类型复用：创建 `types/provider/props/id.ts` 定义 `WithProviderId` 可组合类型
+  - [x] 组件分层清晰化：LLMProviders（页面）→ ProviderHeader/ProviderList（功能区）→ ProviderItem
+  （适配层）→ BaseProvider（展示层）
+  - [x] Props 传递最小化：只传必需的 `providerId`，其他数据由 Hook 派生
 
 ---
 
@@ -60,11 +68,19 @@
 - [ ] `useProvider.ts` — 状态聚合
 - [ ] `useProviderModelActions.ts` — 模型开关
 
-### 4. components/ 审查
+### 4. components/ 审查（渲染层）
 
-- [x] `settings/provider/content/ProviderHeader.tsx` — phase 图标 + 刷新按钮 ✅
-- [x] `settings/provider/content/ProviderList.tsx` — 列表渲染 ✅
-- [x] `settings/provider/content/ProviderItem.tsx` — Hook 调用容器 ✅
+- [x] `settings/provider/content/ProviderHeader.tsx` — phase 图标 + 刷新按钮，`cn()`
+多行格式优化 ✅
+- [x] `settings/provider/content/ProviderList.tsx` — 列表渲染，PROVIDER_IDS 迭代 ✅
+- [x] `settings/provider/content/ProviderItem.tsx` — Hook 调用容器，`WithProviderId`
+Props 类型复用 ✅
+- [x] **渲染层架构优化** ✅
+  - [x] icon 管理收拢到 `useProvider` Hook（消除调用侧手动映射）
+  - [x] 创建 `types/provider/props/id.ts` 定义 `WithProviderId` 可复用 Props 类型
+  - [x] 组件分层清晰：LLMProviders（页面）→ ProviderHeader/ProviderList（功能区）→ ProviderItem
+  （适配层）→ BaseProvider（展示层）
+  - [x] Props 传递最小化：只传必需的 `providerId`，其他数据由 Hook 派生
 - [ ] `base/provider/BaseProvider.tsx` — 展开/收起 + 数据传递
 - [ ] `forms/provider/ProviderForm.tsx` — cardState 分发
 

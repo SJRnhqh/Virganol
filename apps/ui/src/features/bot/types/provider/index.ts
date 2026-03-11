@@ -31,3 +31,4 @@ export type {
 
 // ── Provider UI Props ──
 export type { ProviderModelProps, ProviderConnectionProps } from "./base";
+export type { WithProviderId } from "./props";

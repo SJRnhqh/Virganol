@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 // 内部引用
 import {
+  cn,
   phaseIconVariants,
   pulseIconVariants,
   refreshButtonVariants,
@@ -48,7 +49,16 @@ export const ProviderHeader = () => {
           whileTap={isChecking ? undefined : "tap"}
           disabled={isChecking}
           onClick={() => triggerProviderManualRefresh()}
-          className="p-1 rounded-md text-settings-panel-fg/40 hover:bg-settings-panel-fg/8 hover:text-settings-panel-fg/70 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-settings-panel-fg/40"
+          className={cn(
+            // 基础样式
+            "p-1 rounded-md transition-colors cursor-pointer",
+            // 默认颜色
+            "text-settings-panel-fg/40",
+            "hover:bg-settings-panel-fg/8 hover:text-settings-panel-fg/70",
+            // 禁用状态
+            "disabled:opacity-30 disabled:cursor-not-allowed",
+            "disabled:hover:bg-transparent disabled:hover:text-settings-panel-fg/40"
+          )}
         >
           <RefreshCw className="w-4 h-4" />
         </motion.button>
