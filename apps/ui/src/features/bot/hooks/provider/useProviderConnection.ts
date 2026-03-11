@@ -5,7 +5,7 @@
 import { useCallback } from "react";
 
 // 内部引用
-import type { ProviderId } from "@/features/bot/types";
+import type { ProviderId, ProviderFormData } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import { useProviderCollectionStore } from "@/features/bot/store";
 import { resetProvider, connectAndSaveProvider } from "@/features/bot/api";
@@ -27,14 +27,14 @@ export const useProviderConnection = (providerId: ProviderId) => {
 
   // 连接操作（调用后端 API + 更新前端状态）
   const handleConnect = useCallback(
-    async (nextConfig: Record<string, string>) => {
+    async (nextFormData: ProviderFormData) => {
       // 1. 设置为 pending 状态
       setProviderCardState(providerId, PROVIDER_CARD_STATES.PENDING);
       clearProviderError(providerId);
 
       // 2. 从前端 config 字段中提取 url 和 key
-      const url = nextConfig.apiURL ?? "";
-      const key = nextConfig.apiKey ?? "";
+      const url = nextFormData.apiURL ?? "";
+      const key = nextFormData.apiKey ?? "";
 
       // 3. 调用后端 API
       const response = await connectAndSaveProvider({

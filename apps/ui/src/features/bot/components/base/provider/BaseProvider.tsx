@@ -3,39 +3,37 @@
 import { useState } from "react";
 
 // 内部引用
-import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import type {
+  ProviderFormData,
   ProviderDefinition,
   ProviderConnectionProps,
   ProviderModelProps,
 } from "@/features/bot/types";
+import { PROVIDER_INITIAL_FORMS } from "@/features/bot/constants";
+import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import { ProviderHeader, ProviderBody } from "./content";
 
 interface BaseProviderProps {
+  formData: ProviderFormData;
+  updateFormData: (formData: ProviderFormData) => void;
   definition: ProviderDefinition;
   icon: React.ReactNode;
-  value: Record<string, string>;
-  onValueChange: (value: Record<string, string>) => void;
   connection: ProviderConnectionProps;
   models: ProviderModelProps;
 }
 
 export const BaseProvider = ({
+  formData,
+  updateFormData,
   definition,
   icon,
-  value,
-  onValueChange,
   connection,
   models,
 }: BaseProviderProps) => {
   const [open, setOpen] = useState(false);
 
-  const updateField = (key: string, val: string) => {
-    onValueChange({ ...value, [key]: val });
-  };
-
   const handleReset = () => {
-    onValueChange(definition.defaultConfig);
+    updateFormData(PROVIDER_INITIAL_FORMS[definition.id]);
     connection.onDisconnect?.();
   };
 
@@ -72,8 +70,8 @@ export const BaseProvider = ({
       <ProviderBody
         cardState={connection.cardState}
         fields={definition.fields}
-        value={value}
-        onFieldChange={updateField}
+        formData={formData}
+        updateFormData={updateFormData}
         onReset={handleReset}
         connection={connection}
         models={models}

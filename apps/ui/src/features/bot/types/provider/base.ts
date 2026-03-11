@@ -1,12 +1,12 @@
 // apps/ui/src/features/bot/types/provider/base.ts
 // 内部引用
-import type { ProviderCardState } from "./state";
+import type { ProviderCardState, ProviderFormData } from "./state";
 
 /** 连接状态 + 连接操作 */
 export interface ProviderConnectionProps {
   cardState: ProviderCardState;
   errorMessage: string | null;
-  onConnect?: (config: Record<string, string>) => Promise<void>;
+  onConnect?: (formData: ProviderFormData) => Promise<void>;
   onDisconnect?: () => void;
   onErrorReset?: () => void;
 }

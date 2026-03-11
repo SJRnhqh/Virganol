@@ -1,11 +1,11 @@
 // apps/ui/src/features/bot/components/base/provider/common/BaseProviderForm.tsx
 // 内部引用
-import type { ProviderField } from "@/features/bot/types";
+import type { ProviderField, ProviderFormData } from "@/features/bot/types";
 
 interface BaseProviderFormProps {
   fields: ProviderField[];
-  value: Record<string, string>;
-  onChange: (key: string, val: string) => void;
+  formData: ProviderFormData;
+  onChange: (key: keyof ProviderFormData, val: string) => void;
   disabled?: boolean;
   labelClassName?: string;
   inputClassName?: string;
@@ -14,7 +14,7 @@ interface BaseProviderFormProps {
 
 export const BaseProviderForm = ({
   fields,
-  value,
+  formData,
   onChange,
   disabled = false,
   labelClassName,
@@ -33,7 +33,7 @@ export const BaseProviderForm = ({
           </label>
           <input
             type={field.type}
-            value={value[field.key] ?? ""}
+            value={formData[field.key] ?? ""}
             onChange={(e) => onChange(field.key, e.target.value)}
             placeholder={field.placeholder}
             className={inputClassName}

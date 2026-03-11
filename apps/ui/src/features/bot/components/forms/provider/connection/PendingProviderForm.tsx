@@ -1,23 +1,23 @@
 // apps/ui/src/features/bot/components/forms/provider/connection/PendingProviderForm.tsx
 // 内部引用
-import type { ProviderField } from "@/features/bot/types";
+import type { ProviderField, ProviderFormData } from "@/features/bot/types";
 import { BaseProviderForm } from "@/features/bot/components/base/provider/common";
 
 interface PendingProviderFormProps {
   fields: ProviderField[];
-  value: Record<string, string>;
-  onChange: (key: string, val: string) => void;
+  formData: ProviderFormData;
+  onChange: (key: keyof ProviderFormData, val: string) => void;
 }
 
 export const PendingProviderForm = ({
   fields,
-  value,
+  formData,
   onChange,
 }: PendingProviderFormProps) => {
   return (
     <BaseProviderForm
       fields={fields}
-      value={value}
+      formData={formData}
       onChange={onChange}
       disabled={true}
       labelClassName="text-[10px] uppercase tracking-widest text-settings-panel-fg/40 font-bold ml-1 select-none"

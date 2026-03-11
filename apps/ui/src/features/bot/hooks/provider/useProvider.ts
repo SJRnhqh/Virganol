@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/hooks/provider/useProvider.ts
 // 内部引用
-import type { ProviderId } from "@/features/bot/types";
+import type { ProviderId, ProviderFormData } from "@/features/bot/types";
 import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
 import { useProviderCollectionStore } from "@/features/bot/store";
 import { useProviderModelActions } from "./useProviderModelActions";
@@ -25,11 +25,12 @@ export const useProvider = (providerId: ProviderId) => {
   // ── 组装返回 ──────────────────────────────
   // TODO: 重新设计返回值结构，确保与 types/constants 的语义一致性；当前 definition/value/connection/models 的分组逻辑需要根据组件层实际消费模式优化，避免语义混乱和冗余嵌套。
   return {
+    formData: providerState.form,
+    updateFormData: (nextFormData: ProviderFormData) =>
+      useProviderCollectionStore
+        .getState()
+        .setProviderForm(providerId, nextFormData),
     definition,
-    value: providerState.form,
-    onValueChange: (nextValue: Record<string, string>) =>
-      useProviderCollectionStore.getState().setProviderForm(providerId, nextValue),
-
     connection: {
       cardState: providerState.cardState,
       errorMessage: providerState.errorMessage,

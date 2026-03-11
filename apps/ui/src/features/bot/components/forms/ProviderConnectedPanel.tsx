@@ -4,11 +4,11 @@
 import { Undo2 } from "lucide-react";
 
 // 内部引用
-import type { ProviderField } from "@/features/bot/types";
+import type { ProviderField, ProviderFormData } from "@/features/bot/types";
 
 interface ProviderConnectedPanelProps {
   fields: ProviderField[];
-  value: Record<string, string>;
+  value: ProviderFormData;
   models?: string[];
   enabledModels?: Record<string, boolean>;
   onToggleModel?: (model: string, enabled: boolean) => void;

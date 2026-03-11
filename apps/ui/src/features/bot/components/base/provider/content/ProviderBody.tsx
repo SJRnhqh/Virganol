@@ -3,6 +3,7 @@
 import type {
   ProviderCardState,
   ProviderField,
+  ProviderFormData,
   ProviderConnectionProps,
   ProviderModelProps,
 } from "@/features/bot/types";
@@ -16,8 +17,8 @@ import { ProviderConnectionButton } from "@/features/bot/components/buttons";
 interface ProviderBodyProps {
   cardState: ProviderCardState;
   fields: ProviderField[];
-  value: Record<string, string>;
-  onFieldChange: (key: string, val: string) => void;
+  formData: ProviderFormData;
+  updateFormData: (formData: ProviderFormData) => void;
   onReset: () => void;
   connection: ProviderConnectionProps;
   models: ProviderModelProps;
@@ -26,12 +27,16 @@ interface ProviderBodyProps {
 export const ProviderBody = ({
   cardState,
   fields,
-  value,
-  onFieldChange,
+  formData,
+  updateFormData,
   onReset,
   connection,
   models,
 }: ProviderBodyProps) => {
+  const handleFieldChange = (key: keyof ProviderFormData, val: string) => {
+    updateFormData({ ...formData, [key]: val });
+  };
+
   switch (cardState) {
     case PROVIDER_CARD_STATES.UNSET:
       // unset 状态：显示表单 + Connect 按钮
@@ -41,12 +46,12 @@ export const ProviderBody = ({
           <ProviderForm
             cardState={cardState}
             fields={fields}
-            value={value}
-            onChange={onFieldChange}
+            formData={formData}
+            onChange={handleFieldChange}
           />
           <ProviderConnectionButton
             cardState={cardState}
-            onClick={() => connection.onConnect?.(value)}
+            onClick={() => connection.onConnect?.(formData)}
           />
         </>
       );
@@ -59,8 +64,8 @@ export const ProviderBody = ({
           <ProviderForm
             cardState={cardState}
             fields={fields}
-            value={value}
-            onChange={onFieldChange}
+            formData={formData}
+            onChange={handleFieldChange}
           />
           <ProviderConnectionButton cardState={cardState} />
         </>
@@ -73,7 +78,7 @@ export const ProviderBody = ({
           <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
           <ProviderConnectedPanel
             fields={fields}
-            value={value}
+            value={formData}
             onReset={onReset}
             models={models.available}
             enabledModels={models.enabled}
@@ -82,7 +87,7 @@ export const ProviderBody = ({
           />
           <ProviderConnectionButton
             cardState={cardState}
-            onClick={() => connection.onConnect?.(value)}
+            onClick={() => connection.onConnect?.(formData)}
           />
         </>
       );
@@ -95,15 +100,15 @@ export const ProviderBody = ({
           <ProviderForm
             cardState={cardState}
             fields={fields}
-            value={value}
-            onChange={onFieldChange}
+            formData={formData}
+            onChange={handleFieldChange}
             errorMessage={connection.errorMessage}
           />
           <ProviderConnectionButton
             cardState={cardState}
             onClick={() => {
               connection.onErrorReset?.();
-              connection.onConnect?.(value);
+              connection.onConnect?.(formData);
             }}
           />
         </>

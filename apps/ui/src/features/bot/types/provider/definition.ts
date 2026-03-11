@@ -1,9 +1,10 @@
 // apps/ui/src/features/bot/types/provider/definition.ts
 // 内部引用
 import type { ProviderId } from "./common";
+import type { ProviderFormData } from "./state";
 
 export interface ProviderField {
-  key: string;
+  key: keyof ProviderFormData;
   label: string;
   type: "text" | "password";
   placeholder?: string;
