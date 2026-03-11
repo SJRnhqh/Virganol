@@ -2,9 +2,8 @@
 // 导出内容
 
 export {
-  // ── Provider 标识与注册 ──
+  // ── Provider 标识与定义 ──
   PROVIDER_IDS,
-  PROVIDER_REGISTRY,
   PROVIDER_DEFINITIONS,
 
   // ── Provider 契约常量 ──

@@ -2,11 +2,10 @@
 // 导出内容
 
 export type {
-  // ── Provider 标识与注册 ──
+  // ── Provider 标识与定义 ──
   ProviderId,
   ProviderField,
   ProviderDefinition,
-  ProviderRegistryEntry,
 
   // ── Provider 契约类型 ──
   ProviderIssue,

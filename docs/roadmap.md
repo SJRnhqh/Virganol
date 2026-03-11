@@ -125,7 +125,17 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] `setAllModelsEnabled` 改用 `Object.fromEntries` + `map`，与整体函数式风格统一
 - [x] 完成 store 层审查：卡片状态、表单、模型、错误相关 action 全部优化完成
 
-##### 🚧 4.3.6 ProviderBody 表单架构重构
+##### ✅ 4.3.6 前端架构重构
+
+- [x] 创建 `icons/` 视觉资源层，独立于 `components/`
+- [x] 统一管理 provider logo（`icons/provider/logo.tsx`）
+- [x] 删除分散的 provider 定义文件（11 个文件合并为 1 个）
+- [x] 消除 `PROVIDER_REGISTRY` 冗余，直接使用 `PROVIDER_IDS`
+- [x] 消除循环依赖（`constants` 不再依赖 `components`）
+- [x] 严格分层：`types → constants → icons → store → events/api → hooks → components`
+- [x] 代码精简：-199 行（-89.2%）
+
+##### 🚧 4.3.7 ProviderBody 表单架构重构
 
 - [ ] 表单组件解耦：将 `ProviderBody` 中的表单逻辑提取为独立组件
 - [ ] 基于 `cardState` 的表单渲染优化：

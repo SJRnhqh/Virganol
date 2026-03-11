@@ -1,0 +1,4 @@
+// apps/ui/src/features/bot/icons/provider/index.ts
+// 导出内容
+
+export { PROVIDER_ICONS } from "./logo";

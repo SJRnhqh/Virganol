@@ -1,9 +1,8 @@
 // apps/ui/src/features/bot/types/provider/index.ts
 // 导出内容
 
-// ── Provider 标识与注册 ──
+// ── Provider 标识与定义 ──
 export type { ProviderId } from "./common";
-export type { ProviderRegistryEntry } from "./registry";
 export type { ProviderField, ProviderDefinition } from "./definition";
 
 // ── Provider 契约类型 ──

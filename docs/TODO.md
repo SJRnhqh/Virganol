@@ -27,6 +27,7 @@
 `ProviderCheckPhase`、`ProviderCheckEvent` 迁移至 types 底层
 ，constants 使用 `satisfies` 约束
 - [x] `useProviderCollectionStore` 引入 `immer` 中间件，优化所有 action 嵌套更新
+- [x] 前端架构重构：icons 视觉资源层独立，消除循环依赖（-199 行代码）
 
 ---
 

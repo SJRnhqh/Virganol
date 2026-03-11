@@ -1,9 +1,8 @@
 // apps/ui/src/features/bot/constants/provider/index.ts
 // 导出内容
 
-// ── Provider 标识与注册 ──
+// ── Provider 标识与定义 ──
 export { PROVIDER_IDS } from "./common";
-export { PROVIDER_REGISTRY } from "./registry";
 export { PROVIDER_DEFINITIONS } from "./definition";
 
 // ── Provider 契约常量 ──
