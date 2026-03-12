@@ -72,8 +72,8 @@ export const BaseProvider = ({
       contentInnerClassName="overflow-hidden px-5"
       title={
         <ProviderCardHeader
-          meta={{ icon, name: definition.name }}
           cardState={connection.cardState}
+          meta={{ icon, name: definition.name }}
           open={open}
         />
       }

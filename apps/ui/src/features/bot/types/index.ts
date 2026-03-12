@@ -33,6 +33,7 @@ export type {
   ProviderModelProps,
   ProviderCardHeaderProps,
   ProviderConnectionProps,
+  ProviderConnectionButtonProps,
   
   // ── Provider 自定义类型 ──
   DualIconButton,

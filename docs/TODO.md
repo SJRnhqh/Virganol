@@ -38,6 +38,15 @@
   - [x] 组件分层清晰化：LLMProviders（页面）→ ProviderHeader/ProviderList（功能区）→ ProviderItem
   （适配层）→ BaseProvider（展示层）
   - [x] Props 传递最小化：只传必需的 `providerId`，其他数据由 Hook 派生
+- [x] **ProviderConnectionButton 配置驱动重构**（2025-03-13）
+  - [x] 创建 `types/provider/custom/button.ts` 定义 `DualIconButton` / `ButtonAnimation` 核心类型
+  - [x] 创建 `icons/provider/connection.tsx` 定义 `CONNECTION_BUTTON_ICONS` 映射
+  - [x] 创建 `constants/provider/connection/{labels,animations}.ts` 定义状态映射
+  - [x] 重构 `ProviderConnectionButton` 为单一配置驱动组件，删除 4 个独立按钮组件
+  - [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState` 可组合片段
+  - [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps`
+  - [x] 优化 `ProviderCardHeaderProps` 结构：`extends WithCardState` + `meta` 独立字段
+  - [x] 统一参数顺序：组件解构顺序与接口定义顺序一致（extends 字段优先）
 
 ---
 
@@ -92,7 +101,19 @@ Props 类型复用 ✅
   - [x] 创建 `types/provider/props/header.ts` 定义 `ProviderCardHeaderProps`
   - [x] `ProviderCardHeader` Props 收紧为 `meta` / `cardState` / `open`
   - [x] 新增 `icons/provider/card.tsx` 统一管理 `cardState → icon` 映射
-- [ ] `ProviderCardBody` — Props 分析，评估 `connection`/`models` 传递方式
+- [x] **ProviderConnectionButton 配置驱动重构**（2025-03-13）✅
+  - [x] 创建 `types/provider/custom/button.ts` 定义按钮核心类型
+  - [x] 创建 `icons/provider/connection.tsx` / `constants/provider/connection/` 配置映射
+  - [x] 重构为单一配置驱动组件，删除 5 个冗余组件
+  - [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState`
+  - [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps`
+- [ ] **ProviderCardBody 内容层接口收紧**（进行中）
+  - [ ] 定义 `ProviderForm` Props 接口（表单内容层）
+  - [ ] 定义 `ProviderConnectedPanel` Props 接口（已连接面板层）
+  - [ ] 基于子组件接口收紧 `ProviderCardBody` Props
+  - [ ] 评估 Reset 操作层的独立性
+  - [ ] 完成 `ProviderCardProps` 顶层接口定义
+  - [ ] 审查 `useProvider` 钩子返回值与组件 Props 对齐关系
 - [ ] `base/provider/BaseProvider.tsx` — 展开/收起 + 数据传递
 - [ ] `forms/provider/ProviderForm.tsx` — cardState 分发
 

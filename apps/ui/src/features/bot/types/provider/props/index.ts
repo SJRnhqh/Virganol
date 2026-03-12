@@ -2,5 +2,7 @@
 // 导出内容
 
 export type { WithProviderId } from "./id";
+export type { WithCardState } from "./state";
 export type { ProviderCardProps } from "./card";
 export type { ProviderCardHeaderProps } from "./header";
+export type { ProviderConnectionButtonProps } from "./button";

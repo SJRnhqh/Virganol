@@ -150,15 +150,31 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 创建 `types/provider/props/form.ts` 定义 `WithProviderForm`（data + TODO）
 - [x] Props 组合式设计：`With-` 前缀表示可复用片段，`-Props` 后缀表示完整组件 Props
 
-##### 🚧 4.3.8 ProviderBody 表单架构重构
+##### ✅ 4.3.8 ProviderConnectionButton 配置驱动重构（2025-03-13）
 
-- [ ] 表单组件解耦：将 `ProviderBody` 中的表单逻辑提取为独立组件
-- [ ] 基于 `cardState` 的表单渲染优化：
-  - `unset` — 显示完整表单 + Connect 按钮
-  - `pending` / `connected` / `failed` — 隐藏表单，只显示状态相关内容
-- [ ] 表单状态管理优化：精简 props 传递，避免冗余数据流
-- [ ] 错误信息展示设计：failed 状态下的错误信息渲染方案（目前为 TODO）
-- [ ] 表单验证与交互优化：统一表单字段验证逻辑
+- [x] 创建 `types/provider/custom/button.ts` 定义按钮核心类型：
+  - `DualIconButton` — 前置/后置图标结构
+  - `ButtonAnimation` — 动画变体 + 触发时机（hover / always）
+- [x] 创建 `icons/provider/connection.tsx` 定义 `CONNECTION_BUTTON_ICONS` 映射（cardState → 图标配置）
+- [x] 创建 `constants/provider/connection/labels.ts` 定义 `CONNECTION_STATE_LABELS` 映射（cardState → 文本）
+- [x] 创建 `constants/provider/connection/animations.ts` 定义 `CONNECTION_BUTTON_ANIMATIONS` 映射（cardState → 动画）
+- [x] 重构 `ProviderConnectionButton` 为单一配置驱动组件，替代 4 个独立按钮组件
+- [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState` 可组合片段
+- [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps extends WithCardState`
+- [x] 优化 `ProviderCardHeaderProps` 结构：`extends WithCardState` + `meta: WithProviderMeta`（独立字段）
+- [x] 统一参数顺序：组件解构顺序与接口定义顺序一致（extends 字段优先）
+- [x] 删除冗余组件：`ConnectButton` / `ConnectingButton` / `ReconnectButton` / `RetryButton` / `BaseProviderButton`
+
+##### 🚧 4.3.9 ProviderBody 内容层接口收紧
+
+**目标**：自底向上收紧接口，完成组件层架构审查的最后关键环节
+
+- [ ] 定义 `ProviderForm` Props 接口（表单内容层）
+- [ ] 定义 `ProviderConnectedPanel` Props 接口（已连接面板层）
+- [ ] 基于子组件接口收紧 `ProviderCardBody` Props
+- [ ] 评估 Reset 操作层的独立性（独立组件 vs 内嵌于 Panel）
+- [ ] 完成 `ProviderCardProps` 顶层接口定义（Header + Body 契约收敛）
+- [ ] 审查 `useProvider` 钩子返回值与组件 Props 的对齐关系
 
 ### Phase 5：健康检查错误精细化
 

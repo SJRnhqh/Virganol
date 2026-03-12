@@ -19,8 +19,8 @@ const CARD_STATE_ICON_CLASS_NAMES: Partial<Record<ProviderCardState, string>> =
   };
 
 export const ProviderCardHeader = ({
-  meta,
   cardState,
+  meta,
   open,
 }: ProviderCardHeaderProps) => {
   const CardStateIcon = PROVIDER_CARD_STATE_ICONS[cardState];
