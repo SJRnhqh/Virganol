@@ -36,3 +36,6 @@ export type {
   ProviderCardHeaderProps,
 } from "./props";
 export type { ProviderModelProps, ProviderConnectionProps } from "./base";
+
+// ── Provider 自定义类型 ──
+export type { DualIconButton, ButtonAnimation } from "./custom";
