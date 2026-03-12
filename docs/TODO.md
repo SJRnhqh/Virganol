@@ -87,7 +87,11 @@ Props 类型复用 ✅
   - [x] 创建 `types/provider/props/card.ts` 定义 `ProviderCardProps` 框架
   - [x] 创建 `types/provider/props/meta.ts` 定义 `WithProviderMeta`（name + icon）
   - [x] 创建 `types/provider/props/form.ts` 定义 `WithProviderForm`（待完善）
-- [ ] `ProviderCardHeader` — className 使用 `cn()` 优化
+- [x] `ProviderCardHeader` 收口 ✅
+  - [x] `ProviderCardHeader` className 改用 `cn()` 统一管理
+  - [x] 创建 `types/provider/props/header.ts` 定义 `ProviderCardHeaderProps`
+  - [x] `ProviderCardHeader` Props 收紧为 `meta` / `cardState` / `open`
+  - [x] 新增 `icons/provider/card.tsx` 统一管理 `cardState → icon` 映射
 - [ ] `ProviderCardBody` — Props 分析，评估 `connection`/`models` 传递方式
 - [ ] `base/provider/BaseProvider.tsx` — 展开/收起 + 数据传递
 - [ ] `forms/provider/ProviderForm.tsx` — cardState 分发

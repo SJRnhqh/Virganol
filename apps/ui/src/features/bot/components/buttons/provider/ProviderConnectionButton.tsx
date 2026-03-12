@@ -1,9 +1,7 @@
 // apps/ui/src/features/bot/components/buttons/provider/ProviderConnectionButton.tsx
 // 内部引用
-import {
-  PROVIDER_CARD_STATES,
-  type ProviderCardState,
-} from "@/features/bot/constants";
+import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
+import type { ProviderCardState } from "@/features/bot/types";
 import {
   ConnectButton,
   ConnectingButton,
@@ -16,8 +14,10 @@ interface ProviderConnectionButtonProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const ProviderConnectionButton = ({ cardState, onClick }: ProviderConnectionButtonProps) => {
-  // 根据 cardState 渲染对应的具体按钮
+export const ProviderConnectionButton = ({
+  cardState,
+  onClick,
+}: ProviderConnectionButtonProps) => {
   switch (cardState) {
     case PROVIDER_CARD_STATES.UNSET:
       return <ConnectButton onClick={onClick} />;

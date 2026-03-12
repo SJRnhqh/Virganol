@@ -31,5 +31,6 @@ export type {
   WithProviderId,
   ProviderCardProps,
   ProviderModelProps,
+  ProviderCardHeaderProps,
   ProviderConnectionProps,
 } from "./provider";

@@ -83,7 +83,7 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
   - `pending` — 旋转的 Loader2（复用 `rotatingIconVariants` 动画）
   - `connected` — 绿色 Check 对勾
   - `failed` — 赭石色 CircleAlert 警告图标
-- [x] 极简参数设计：`icon` / `name` / `cardState` / `open`（4 个必需参数，无冗余）
+- [x] Header Props 收口：`meta` / `cardState` / `open`（静态元信息与状态语义分离）
 
 ##### ✅ 4.3.2 ProviderBody 渲染重构
 
@@ -130,6 +130,7 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 创建 `icons/` 视觉资源层，独立于 `components/`
 - [x] 统一管理 provider logo（`icons/provider/logo.tsx`）
 - [x] 统一管理生命周期图标（`icons/provider/phase.tsx`）
+- [x] 统一管理 provider 卡片状态图标（`icons/provider/card.tsx`）
 - [x] 删除分散的 provider 定义文件（11 个文件合并为 1 个）
 - [x] 消除 `PROVIDER_REGISTRY` 冗余，直接使用 `PROVIDER_IDS`
 - [x] 消除循环依赖（`constants` 不再依赖 `components`）
@@ -144,6 +145,8 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 重命名 `ProviderBody` → `ProviderCardBody`，语义更清晰
 - [x] 创建 `types/provider/props/card.ts` 定义 `ProviderCardProps` 类型框架
 - [x] 创建 `types/provider/props/meta.ts` 定义 `WithProviderMeta`（name + icon）
+- [x] 创建 `types/provider/props/header.ts` 定义 `ProviderCardHeaderProps`（`meta` +
+`cardState` + `open`）
 - [x] 创建 `types/provider/props/form.ts` 定义 `WithProviderForm`（data + TODO）
 - [x] Props 组合式设计：`With-` 前缀表示可复用片段，`-Props` 后缀表示完整组件 Props
 

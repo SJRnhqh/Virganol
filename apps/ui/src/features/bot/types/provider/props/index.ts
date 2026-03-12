@@ -3,3 +3,4 @@
 
 export type { WithProviderId } from "./id";
 export type { ProviderCardProps } from "./card";
+export type { ProviderCardHeaderProps } from "./header";
