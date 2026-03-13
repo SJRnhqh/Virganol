@@ -5,18 +5,17 @@ import { useState } from "react";
 // 内部引用
 import { cn } from "@/lib";
 import type {
-  ProviderFormData,
   ProviderDefinition,
   ProviderConnectionProps,
   ProviderModelProps,
+  WithProviderForm,
 } from "@/features/bot/types";
 import { PROVIDER_INITIAL_FORMS } from "@/features/bot/constants";
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import { ProviderCardHeader, ProviderCardBody } from "./content";
 
 interface ProviderCardComponentProps {
-  formData: ProviderFormData;
-  updateFormData: (formData: ProviderFormData) => void;
+  form: WithProviderForm;
   definition: ProviderDefinition;
   icon: React.ReactNode;
   connection: ProviderConnectionProps;
@@ -24,8 +23,7 @@ interface ProviderCardComponentProps {
 }
 
 export const ProviderCard = ({
-  formData,
-  updateFormData,
+  form,
   definition,
   icon,
   connection,
@@ -34,7 +32,7 @@ export const ProviderCard = ({
   const [open, setOpen] = useState(false);
 
   const handleReset = () => {
-    updateFormData(PROVIDER_INITIAL_FORMS[definition.id]);
+    form.onUpdate(PROVIDER_INITIAL_FORMS[definition.id]);
     connection.onDisconnect?.();
   };
 
@@ -81,8 +79,7 @@ export const ProviderCard = ({
       <ProviderCardBody
         cardState={connection.cardState}
         fields={definition.fields}
-        formData={formData}
-        updateFormData={updateFormData}
+        form={form}
         onReset={handleReset}
         connection={connection}
         models={models}

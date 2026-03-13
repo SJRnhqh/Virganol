@@ -29,12 +29,16 @@ export type {
 
   // ── Provider UI Props ──
   WithProviderId,
+  WithProviderForm,
   ProviderCardProps,
   ProviderModelProps,
   ProviderCardContentProps,
   ProviderCardHeaderProps,
   ProviderConnectionProps,
   ProviderConnectionButtonProps,
+  ProviderEditableContent,
+  ProviderFailedContent,
+  ProviderConnectedContent,
 
   // ── Provider 自定义类型 ──
   IconSlot,

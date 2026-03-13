@@ -2,10 +2,10 @@
 // 内部引用
 import type {
   ProviderField,
-  ProviderFormData,
   ProviderCardState,
   ProviderModelProps,
   ProviderConnectionProps,
+  WithProviderForm,
 } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import { ProviderConnectionButton } from "@/features/bot/components/buttons";
@@ -14,8 +14,7 @@ import { ProviderCardContent } from "./ProviderCardContent";
 interface ProviderCardBodyProps {
   cardState: ProviderCardState;
   fields: ProviderField[];
-  formData: ProviderFormData;
-  updateFormData: (formData: ProviderFormData) => void;
+  form: WithProviderForm;
   onReset: () => void;
   connection: ProviderConnectionProps;
   models: ProviderModelProps;
@@ -24,64 +23,30 @@ interface ProviderCardBodyProps {
 export const ProviderCardBody = ({
   cardState,
   fields,
-  formData,
-  updateFormData,
+  form,
   onReset,
   connection,
   models,
 }: ProviderCardBodyProps) => {
-  const handleFieldChange = (key: keyof ProviderFormData, val: string) => {
-    updateFormData({ ...formData, [key]: val });
-  };
+  // 渲染内容
+  const renderContent = () => {
+    switch (cardState) {
+      case PROVIDER_CARD_STATES.UNSET:
+      case PROVIDER_CARD_STATES.PENDING:
+        return (
+          <ProviderCardContent
+            cardState={cardState}
+            cardContent={{ fields, form }}
+          />
+        );
 
-  switch (cardState) {
-    case PROVIDER_CARD_STATES.UNSET:
-      // unset 状态：显示表单 + Connect 按钮
-      return (
-        <>
-          <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
+      case PROVIDER_CARD_STATES.CONNECTED:
+        return (
           <ProviderCardContent
             cardState={cardState}
             cardContent={{
               fields,
-              formData,
-              onChange: handleFieldChange,
-            }}
-          />
-          <ProviderConnectionButton
-            cardState={cardState}
-            onClick={() => connection.onConnect?.(formData)}
-          />
-        </>
-      );
-
-    case PROVIDER_CARD_STATES.PENDING:
-      // pending 状态：显示表单（loading 遮罩）+ Connecting 按钮
-      return (
-        <>
-          <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
-          <ProviderCardContent
-            cardState={cardState}
-            cardContent={{
-              fields,
-              formData,
-              onChange: handleFieldChange,
-            }}
-          />
-          <ProviderConnectionButton cardState={cardState} />
-        </>
-      );
-
-    case PROVIDER_CARD_STATES.CONNECTED:
-      // connected 状态：显示模型列表面板 + Reconnect 按钮
-      return (
-        <>
-          <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
-          <ProviderCardContent
-            cardState={cardState}
-            cardContent={{
-              fields,
-              value: formData,
+              value: form.formData,
               onReset,
               models: models.available,
               enabledModels: models.enabled,
@@ -89,36 +54,63 @@ export const ProviderCardBody = ({
               onToggleAll: models.onToggleAll,
             }}
           />
-          <ProviderConnectionButton
-            cardState={cardState}
-            onClick={() => connection.onConnect?.(formData)}
-          />
-        </>
-      );
+        );
 
-    case PROVIDER_CARD_STATES.FAILED:
-      // failed 状态：显示错误面板 + Retry 按钮
-      return (
-        <>
-          <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
+      case PROVIDER_CARD_STATES.FAILED:
+        return (
           <ProviderCardContent
             cardState={cardState}
-            cardContent={{
-              errorMessage: connection.errorMessage,
-            }}
+            cardContent={{ errorMessage: connection.errorMessage }}
           />
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  // 渲染按钮
+  const renderButton = () => {
+    switch (cardState) {
+      case PROVIDER_CARD_STATES.UNSET:
+      case PROVIDER_CARD_STATES.CONNECTED:
+        return (
+          <ProviderConnectionButton
+            cardState={cardState}
+            onClick={() => connection.onConnect?.(form.formData)}
+          />
+        );
+
+      case PROVIDER_CARD_STATES.PENDING:
+        return <ProviderConnectionButton cardState={cardState} />;
+
+      case PROVIDER_CARD_STATES.FAILED:
+        return (
           <ProviderConnectionButton
             cardState={cardState}
             onClick={() => {
               connection.onErrorReset?.();
-              connection.onConnect?.(formData);
+              connection.onConnect?.(form.formData);
             }}
           />
-        </>
-      );
+        );
 
-    default:
-      // 兜底：理论上不应该到这里
-      return null;
-  }
+      default:
+        return null;
+    }
+  };
+
+  const content = renderContent();
+  const button = renderButton();
+
+  // 如果没有内容，直接返回 null
+  if (!content) return null;
+
+  return (
+    <>
+      <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
+      {content}
+      {button}
+    </>
+  );
 };

@@ -17,22 +17,10 @@ export const ProviderCardContent = ({
 }: ProviderCardContentProps) => {
   switch (cardState) {
     case PROVIDER_CARD_STATES.UNSET:
-      return (
-        <UnsetProviderForm
-          fields={cardContent.fields}
-          formData={cardContent.formData}
-          onChange={cardContent.onChange}
-        />
-      );
+      return <UnsetProviderForm {...cardContent} />;
 
     case PROVIDER_CARD_STATES.PENDING:
-      return (
-        <PendingProviderForm
-          fields={cardContent.fields}
-          formData={cardContent.formData}
-          onChange={cardContent.onChange}
-        />
-      );
+      return <PendingProviderForm {...cardContent} />;
 
     case PROVIDER_CARD_STATES.FAILED:
       return <ProviderErrorPanel errorMessage={cardContent.errorMessage} />;

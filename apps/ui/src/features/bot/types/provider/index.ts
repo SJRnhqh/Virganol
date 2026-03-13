@@ -32,10 +32,14 @@ export type {
 // ── Provider UI Props ──
 export type {
   WithProviderId,
+  WithProviderForm,
   ProviderCardProps,
   ProviderCardContentProps,
   ProviderCardHeaderProps,
   ProviderConnectionButtonProps,
+  ProviderEditableContent,
+  ProviderFailedContent,
+  ProviderConnectedContent,
 } from "./props";
 export type { ProviderModelProps, ProviderConnectionProps } from "./base";
 

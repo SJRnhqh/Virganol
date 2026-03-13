@@ -14,6 +14,12 @@ type ProviderCardContentMap = {
   connected: ProviderConnectedContent;
 };
 
+/**
+ * ProviderCardContent 组件 Props：基于 cardState 自动推断 cardContent 类型
+ * - unset/pending → ProviderEditableContent
+ * - failed → ProviderFailedContent
+ * - connected → ProviderConnectedContent
+ */
 export type ProviderCardContentProps = {
   [State in ProviderCardState]: {
     cardState: State;

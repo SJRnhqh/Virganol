@@ -5,7 +5,7 @@ import type { ProviderField, ProviderFormData } from "@/features/bot/types";
 interface BaseProviderFormProps {
   fields: ProviderField[];
   formData: ProviderFormData;
-  onChange: (key: keyof ProviderFormData, val: string) => void;
+  onUpdate: (formData: ProviderFormData) => void;
   disabled?: boolean;
   labelClassName?: string;
   inputClassName?: string;
@@ -15,12 +15,16 @@ interface BaseProviderFormProps {
 export const BaseProviderForm = ({
   fields,
   formData,
-  onChange,
+  onUpdate,
   disabled = false,
   labelClassName,
   inputClassName,
   optionalClassName,
 }: BaseProviderFormProps) => {
+  const handleFieldChange = (key: keyof ProviderFormData, val: string) => {
+    onUpdate({ ...formData, [key]: val });
+  };
+
   return (
     <div className="pb-2 pl-1 space-y-2 pt-0">
       {fields.map((field) => (
@@ -34,7 +38,7 @@ export const BaseProviderForm = ({
           <input
             type={field.type}
             value={formData[field.key] ?? ""}
-            onChange={(e) => onChange(field.key, e.target.value)}
+            onChange={(e) => handleFieldChange(field.key, e.target.value)}
             placeholder={field.placeholder}
             className={inputClassName}
             disabled={disabled}
