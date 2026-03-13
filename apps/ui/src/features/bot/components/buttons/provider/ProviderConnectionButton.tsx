@@ -59,8 +59,8 @@ export const ProviderConnectionButton = ({
             initial="idle"
             animate={shouldAnimate ? "hover" : "idle"}
           >
-            <icons.leading
-              className={cn("w-3.5 h-3.5", icons.leadingClassName)}
+            <icons.leading.icon
+              className={cn("w-3.5 h-3.5", icons.leading.className)}
             />
           </motion.div>
         )}
@@ -75,7 +75,9 @@ export const ProviderConnectionButton = ({
             initial="idle"
             animate={shouldAnimate ? "hover" : "idle"}
           >
-            <icons.trailing className="w-3.5 h-3.5" />
+            <icons.trailing.icon
+              className={cn("w-3.5 h-3.5", icons.trailing.className)}
+            />
           </motion.div>
         )}
       </motion.button>

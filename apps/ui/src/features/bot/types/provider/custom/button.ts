@@ -2,6 +2,9 @@
 // 外部依赖
 import type { Variants } from "framer-motion";
 
+// 内部引用
+import type { IconSlot } from "./icon";
+
 // ────────────────────────────────────────────────────────────────────────────
 // 双图标按钮结构
 // ────────────────────────────────────────────────────────────────────────────
@@ -9,13 +12,9 @@ import type { Variants } from "framer-motion";
 /** 双图标按钮结构（支持前置和后置图标的自定义按钮类型） */
 export interface DualIconButton {
   /** 前置图标（左侧） */
-  leading?: React.ComponentType<{ className?: string }>;
+  leading?: IconSlot;
   /** 后置图标（右侧） */
-  trailing?: React.ComponentType<{ className?: string }>;
-  /** 前置图标额外样式 */
-  leadingClassName?: string;
-  /** 后置图标额外样式 */
-  trailingClassName?: string;
+  trailing?: IconSlot;
 }
 
 // ────────────────────────────────────────────────────────────────────────────

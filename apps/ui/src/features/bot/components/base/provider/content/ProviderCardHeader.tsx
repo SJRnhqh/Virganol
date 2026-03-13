@@ -4,27 +4,17 @@ import { motion } from "framer-motion";
 
 // 内部引用
 import { cn, rotatingIconVariants } from "@/lib";
-import type {
-  ProviderCardState,
-  ProviderCardHeaderProps,
-} from "@/features/bot/types";
+import type { ProviderCardHeaderProps } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import { PROVIDER_CARD_STATE_ICONS } from "@/features/bot/icons";
-
-const CARD_STATE_ICON_CLASS_NAMES: Partial<Record<ProviderCardState, string>> =
-  {
-    pending: "w-4 h-4 text-settings-panel-fg/40",
-    connected: "w-4 h-4 text-settings-panel-check",
-    failed: "w-4 h-4 text-settings-panel-error",
-  };
 
 export const ProviderCardHeader = ({
   cardState,
   meta,
   open,
 }: ProviderCardHeaderProps) => {
-  const CardStateIcon = PROVIDER_CARD_STATE_ICONS[cardState];
-  const cardStateIconClassName = CARD_STATE_ICON_CLASS_NAMES[cardState];
+  const cardStateIconSlot = PROVIDER_CARD_STATE_ICONS[cardState];
+  const CardStateIcon = cardStateIconSlot?.icon;
   const metaToneClassName = open
     ? "text-settings-panel-fg"
     : "text-settings-panel-fg/55 group-hover:text-settings-panel-fg/80";
@@ -50,11 +40,15 @@ export const ProviderCardHeader = ({
             initial="idle"
             animate="rotating"
           >
-            <CardStateIcon className={cardStateIconClassName} />
+            <CardStateIcon
+              className={cn("w-4 h-4", cardStateIconSlot.className)}
+            />
           </motion.div>
         )}
         {CardStateIcon && cardState !== PROVIDER_CARD_STATES.PENDING && (
-          <CardStateIcon className={cardStateIconClassName} />
+          <CardStateIcon
+            className={cn("w-4 h-4", cardStateIconSlot.className)}
+          />
         )}
       </div>
     </div>

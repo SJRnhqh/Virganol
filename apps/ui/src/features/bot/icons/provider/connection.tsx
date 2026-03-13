@@ -11,17 +11,27 @@ export const CONNECTION_BUTTON_ICONS: Record<
   DualIconButton
 > = {
   unset: {
-    leading: Play,
+    leading: {
+      icon: Play,
+    },
   },
   pending: {
-    leading: Loader2,
+    leading: {
+      icon: Loader2,
+    },
   },
   connected: {
-    leading: Check,
-    leadingClassName: "text-settings-panel-check",
-    trailing: RotateCcw,
+    leading: {
+      icon: Check,
+      className: "text-settings-panel-check",
+    },
+    trailing: {
+      icon: RotateCcw,
+    },
   },
   failed: {
-    trailing: RotateCcw,
+    trailing: {
+      icon: RotateCcw,
+    },
   },
 };

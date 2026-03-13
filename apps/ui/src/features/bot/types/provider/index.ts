@@ -39,4 +39,4 @@ export type {
 export type { ProviderModelProps, ProviderConnectionProps } from "./base";
 
 // ── Provider 自定义类型 ──
-export type { DualIconButton, ButtonAnimation } from "./custom";
+export type { IconSlot, DualIconButton, ButtonAnimation } from "./custom";
