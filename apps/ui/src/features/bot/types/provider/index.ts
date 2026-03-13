@@ -33,9 +33,6 @@ export type {
 export type {
   WithProviderId,
   ProviderCardProps,
-  ProviderEditableContent,
-  ProviderFailedContent,
-  ProviderConnectedContent,
   ProviderCardContentProps,
   ProviderCardHeaderProps,
   ProviderConnectionButtonProps,
