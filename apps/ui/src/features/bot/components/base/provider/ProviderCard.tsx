@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/base/provider/BaseProvider.tsx
+// apps/ui/src/features/bot/components/base/provider/ProviderCard.tsx
 // 外部依赖
 import { useState } from "react";
 
@@ -14,7 +14,7 @@ import { PROVIDER_INITIAL_FORMS } from "@/features/bot/constants";
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import { ProviderCardHeader, ProviderCardBody } from "./content";
 
-interface BaseProviderProps {
+interface ProviderCardComponentProps {
   formData: ProviderFormData;
   updateFormData: (formData: ProviderFormData) => void;
   definition: ProviderDefinition;
@@ -23,14 +23,14 @@ interface BaseProviderProps {
   models: ProviderModelProps;
 }
 
-export const BaseProvider = ({
+export const ProviderCard = ({
   formData,
   updateFormData,
   definition,
   icon,
   connection,
   models,
-}: BaseProviderProps) => {
+}: ProviderCardComponentProps) => {
   const [open, setOpen] = useState(false);
 
   const handleReset = () => {

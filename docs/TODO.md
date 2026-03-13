@@ -36,11 +36,13 @@
   - [x] icon 管理收拢：从调用侧手动映射迁移到 `useProvider` Hook 内部自动关联
   - [x] Props 类型复用：创建 `types/provider/props/id.ts` 定义 `WithProviderId` 可组合类型
   - [x] 组件分层清晰化：LLMProviders（页面）→ ProviderHeader/ProviderList（功能区）→ ProviderItem
-  （适配层）→ BaseProvider（展示层）
+  （适配层）→ ProviderCard（卡片层）
   - [x] Props 传递最小化：只传必需的 `providerId`，其他数据由 Hook 派生
 - [x] **ProviderConnectionButton 配置驱动重构**（2025-03-13）
-  - [x] 创建 `types/provider/custom/button.ts` 定义 `DualIconButton` / `ButtonAnimation` 核心类型
-  - [x] 创建 `icons/provider/connection.tsx` 定义 `CONNECTION_BUTTON_ICONS` 映射
+  - [x] 创建 `types/provider/custom/button.ts`
+    定义 `DualIconButton` / `ButtonAnimation` 核心类型
+  - [x] 创建 `icons/provider/connection.tsx`
+    定义 `CONNECTION_BUTTON_ICONS` 映射
   - [x] 创建 `constants/provider/connection/{labels,animations}.ts` 定义状态映射
   - [x] 重构 `ProviderConnectionButton` 为单一配置驱动组件，删除 4 个独立按钮组件
   - [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState` 可组合片段
@@ -108,14 +110,20 @@ Props 类型复用 ✅
   - [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState`
   - [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps`
 - [ ] **ProviderCardBody 内容层接口收紧**（进行中）
-  - [ ] 定义 `ProviderForm` Props 接口（表单内容层）
+  - [x] 创建 `types/provider/props/content.ts` 定义 `cardState → cardContent` 映射约束
+  - [x] 创建 `ProviderCardContent` 统一内容路由层
+  - [x] 移除 `ProviderForm` 中转层，`UnsetProviderForm` / `PendingProviderForm` 直连内容路由
+  - [x] `FailedProviderForm` → `ProviderErrorPanel`
+  - [x] `forms/` 内容层拍平（移除 `provider/connection/` 嵌套）
+  - [x] `BaseProvider` → `ProviderCard`
+  - [ ] 收紧 `ProviderEditableContent` / `BaseProviderForm` 接口（表单内容层）
   - [ ] 定义 `ProviderConnectedPanel` Props 接口（已连接面板层）
   - [ ] 基于子组件接口收紧 `ProviderCardBody` Props
   - [ ] 评估 Reset 操作层的独立性
   - [ ] 完成 `ProviderCardProps` 顶层接口定义
   - [ ] 审查 `useProvider` 钩子返回值与组件 Props 对齐关系
-- [ ] `base/provider/BaseProvider.tsx` — 展开/收起 + 数据传递
-- [ ] `forms/provider/ProviderForm.tsx` — cardState 分发
+- [ ] `base/provider/ProviderCard.tsx` — 展开/收起 + 数据传递
+- [ ] `components/forms/ProviderConnectedPanel.tsx` — connected 内容层 Props 收口
 
 ### 5. 修补与收尾
 

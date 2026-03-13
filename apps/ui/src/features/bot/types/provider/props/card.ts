@@ -4,8 +4,8 @@ import type { WithProviderMeta } from "./meta";
 import type { WithProviderForm } from "./form";
 
 /**
- * BaseProvider 组件 Props：包含 provider 卡片渲染所需的完整数据
- * 用于 BaseProvider 组件
+ * ProviderCard 组件 Props：包含 provider 卡片渲染所需的完整数据
+ * 用于 ProviderCard 组件
  */
 export interface ProviderCardProps {
   /** 静态元数据（名称、图标） */

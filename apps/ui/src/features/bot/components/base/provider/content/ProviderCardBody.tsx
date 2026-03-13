@@ -8,11 +8,8 @@ import type {
   ProviderConnectionProps,
 } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
-import {
-  ProviderForm,
-  ProviderConnectedPanel,
-} from "@/features/bot/components/forms";
 import { ProviderConnectionButton } from "@/features/bot/components/buttons";
+import { ProviderCardContent } from "./ProviderCardContent";
 
 interface ProviderCardBodyProps {
   cardState: ProviderCardState;
@@ -43,11 +40,13 @@ export const ProviderCardBody = ({
       return (
         <>
           <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
-          <ProviderForm
+          <ProviderCardContent
             cardState={cardState}
-            fields={fields}
-            formData={formData}
-            onChange={handleFieldChange}
+            cardContent={{
+              fields,
+              formData,
+              onChange: handleFieldChange,
+            }}
           />
           <ProviderConnectionButton
             cardState={cardState}
@@ -61,11 +60,13 @@ export const ProviderCardBody = ({
       return (
         <>
           <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
-          <ProviderForm
+          <ProviderCardContent
             cardState={cardState}
-            fields={fields}
-            formData={formData}
-            onChange={handleFieldChange}
+            cardContent={{
+              fields,
+              formData,
+              onChange: handleFieldChange,
+            }}
           />
           <ProviderConnectionButton cardState={cardState} />
         </>
@@ -76,14 +77,17 @@ export const ProviderCardBody = ({
       return (
         <>
           <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
-          <ProviderConnectedPanel
-            fields={fields}
-            value={formData}
-            onReset={onReset}
-            models={models.available}
-            enabledModels={models.enabled}
-            onToggleModel={models.onToggle}
-            onToggleAll={models.onToggleAll}
+          <ProviderCardContent
+            cardState={cardState}
+            cardContent={{
+              fields,
+              value: formData,
+              onReset,
+              models: models.available,
+              enabledModels: models.enabled,
+              onToggleModel: models.onToggle,
+              onToggleAll: models.onToggleAll,
+            }}
           />
           <ProviderConnectionButton
             cardState={cardState}
@@ -93,16 +97,15 @@ export const ProviderCardBody = ({
       );
 
     case PROVIDER_CARD_STATES.FAILED:
-      // failed 状态：显示表单（带错误信息）+ Retry 按钮
+      // failed 状态：显示错误面板 + Retry 按钮
       return (
         <>
           <div className="w-full border-t border-dashed border-settings-panel-fg/60 mb-4" />
-          <ProviderForm
+          <ProviderCardContent
             cardState={cardState}
-            fields={fields}
-            formData={formData}
-            onChange={handleFieldChange}
-            errorMessage={connection.errorMessage}
+            cardContent={{
+              errorMessage: connection.errorMessage,
+            }}
           />
           <ProviderConnectionButton
             cardState={cardState}

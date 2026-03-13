@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/forms/provider/connection/PendingProviderForm.tsx
+// apps/ui/src/features/bot/components/forms/PendingProviderForm.tsx
 // 内部引用
 import type { ProviderField, ProviderFormData } from "@/features/bot/types";
 import { BaseProviderForm } from "@/features/bot/components/base/provider/common";

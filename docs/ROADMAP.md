@@ -155,21 +155,34 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 创建 `types/provider/custom/button.ts` 定义按钮核心类型：
   - `DualIconButton` — 前置/后置图标结构
   - `ButtonAnimation` — 动画变体 + 触发时机（hover / always）
-- [x] 创建 `icons/provider/connection.tsx` 定义 `CONNECTION_BUTTON_ICONS` 映射（cardState → 图标配置）
-- [x] 创建 `constants/provider/connection/labels.ts` 定义 `CONNECTION_STATE_LABELS` 映射（cardState → 文本）
-- [x] 创建 `constants/provider/connection/animations.ts` 定义 `CONNECTION_BUTTON_ANIMATIONS` 映射（cardState → 动画）
+- [x] 创建 `icons/provider/connection.tsx`
+  定义 `CONNECTION_BUTTON_ICONS` 映射（cardState → 图标配置）
+- [x] 创建 `constants/provider/connection/labels.ts`
+  定义 `CONNECTION_STATE_LABELS` 映射（cardState → 文本）
+- [x] 创建 `constants/provider/connection/animations.ts`
+  定义 `CONNECTION_BUTTON_ANIMATIONS` 映射（cardState → 动画）
 - [x] 重构 `ProviderConnectionButton` 为单一配置驱动组件，替代 4 个独立按钮组件
 - [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState` 可组合片段
-- [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps extends WithCardState`
+- [x] 创建 `types/provider/props/button.ts`
+  定义 `ProviderConnectionButtonProps extends WithCardState`
 - [x] 优化 `ProviderCardHeaderProps` 结构：`extends WithCardState` + `meta: WithProviderMeta`（独立字段）
 - [x] 统一参数顺序：组件解构顺序与接口定义顺序一致（extends 字段优先）
-- [x] 删除冗余组件：`ConnectButton` / `ConnectingButton` / `ReconnectButton` / `RetryButton` / `BaseProviderButton`
+- [x] 删除冗余组件：`ConnectButton` / `ConnectingButton` /
+  `ReconnectButton` / `RetryButton` / `BaseProviderButton`
 
 ##### 🚧 4.3.9 ProviderBody 内容层接口收紧
 
 **目标**：自底向上收紧接口，完成组件层架构审查的最后关键环节
 
-- [ ] 定义 `ProviderForm` Props 接口（表单内容层）
+- [x] 创建 `types/provider/props/content.ts`，建立 `cardState → cardContent` 映射约束
+- [x] 创建 `ProviderCardContent` 作为 Body 内容路由层，统一分发 editable / failed / connected
+- [x] 移除 `ProviderForm` 中转层，`UnsetProviderForm` / `PendingProviderForm` 直连内容路由
+- [x] `FailedProviderForm` → `ProviderErrorPanel`，失败态脱离 form 语义
+- [x] `forms/` 内容层拍平：`UnsetProviderForm` / `PendingProviderForm` /
+  `ProviderErrorPanel` 平级
+- [x] `BaseProvider` → `ProviderCard`，与 `ProviderCardHeader` /
+  `ProviderCardBody` / `ProviderCardContent` 命名对齐
+- [ ] 收紧 `ProviderEditableContent` / `BaseProviderForm` 接口（表单内容层）
 - [ ] 定义 `ProviderConnectedPanel` Props 接口（已连接面板层）
 - [ ] 基于子组件接口收紧 `ProviderCardBody` Props
 - [ ] 评估 Reset 操作层的独立性（独立组件 vs 内嵌于 Panel）

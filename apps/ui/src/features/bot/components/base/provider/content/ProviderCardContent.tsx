@@ -1,0 +1,56 @@
+// apps/ui/src/features/bot/components/base/provider/content/ProviderCardContent.tsx
+// 内部引用
+import type { ProviderCardContentProps } from "@/features/bot/types";
+import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
+import {
+  ProviderConnectedPanel,
+  ProviderErrorPanel,
+} from "@/features/bot/components/forms";
+import {
+  UnsetProviderForm,
+  PendingProviderForm,
+} from "@/features/bot/components/forms";
+
+export const ProviderCardContent = ({
+  cardState,
+  cardContent,
+}: ProviderCardContentProps) => {
+  switch (cardState) {
+    case PROVIDER_CARD_STATES.UNSET:
+      return (
+        <UnsetProviderForm
+          fields={cardContent.fields}
+          formData={cardContent.formData}
+          onChange={cardContent.onChange}
+        />
+      );
+
+    case PROVIDER_CARD_STATES.PENDING:
+      return (
+        <PendingProviderForm
+          fields={cardContent.fields}
+          formData={cardContent.formData}
+          onChange={cardContent.onChange}
+        />
+      );
+
+    case PROVIDER_CARD_STATES.FAILED:
+      return <ProviderErrorPanel errorMessage={cardContent.errorMessage} />;
+
+    case PROVIDER_CARD_STATES.CONNECTED:
+      return (
+        <ProviderConnectedPanel
+          fields={cardContent.fields}
+          value={cardContent.value}
+          models={cardContent.models}
+          enabledModels={cardContent.enabledModels}
+          onToggleModel={cardContent.onToggleModel}
+          onToggleAll={cardContent.onToggleAll}
+          onReset={cardContent.onReset}
+        />
+      );
+
+    default:
+      return null;
+  }
+};

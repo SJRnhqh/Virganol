@@ -2,4 +2,5 @@
 // 导出内容
 
 export { ProviderCardBody } from "./ProviderCardBody";
+export { ProviderCardContent } from "./ProviderCardContent";
 export { ProviderCardHeader } from "./ProviderCardHeader";

@@ -1,14 +1,14 @@
-// apps/ui/src/features/bot/components/forms/provider/connection/FailedProviderForm.tsx
+// apps/ui/src/features/bot/components/forms/ProviderErrorPanel.tsx
 // 内部引用
 import { AlertCircle } from "lucide-react";
 
-interface FailedProviderFormProps {
+interface ProviderErrorPanelProps {
   errorMessage?: string | null;
 }
 
-export const FailedProviderForm = ({
+export const ProviderErrorPanel = ({
   errorMessage,
-}: FailedProviderFormProps) => {
+}: ProviderErrorPanelProps) => {
   if (!errorMessage) return null;
 
   return (
