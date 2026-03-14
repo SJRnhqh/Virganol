@@ -2,10 +2,11 @@
 // 内部引用
 import type {
   ProviderField,
+  WithProviderForm,
   ProviderCardState,
   ProviderModelProps,
   ProviderConnectionProps,
-  WithProviderForm,
+  ProviderConnectionButtonProps,
 } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import { ProviderConnectionButton } from "@/features/bot/components/buttons";
@@ -69,39 +70,27 @@ export const ProviderCardBody = ({
     }
   };
 
-  // 渲染按钮
-  const renderButton = () => {
-    switch (cardState) {
-      case PROVIDER_CARD_STATES.UNSET:
-      case PROVIDER_CARD_STATES.CONNECTED:
-        return (
-          <ProviderConnectionButton
-            cardState={cardState}
-            onClick={() => connection.onConnect?.(form.formData)}
-          />
-        );
-
-      case PROVIDER_CARD_STATES.PENDING:
-        return <ProviderConnectionButton cardState={cardState} />;
-
-      case PROVIDER_CARD_STATES.FAILED:
-        return (
-          <ProviderConnectionButton
-            cardState={cardState}
-            onClick={() => {
-              connection.onErrorReset?.();
-              connection.onConnect?.(form.formData);
-            }}
-          />
-        );
-
-      default:
-        return null;
-    }
-  };
+  const buttonClickHandlers = {
+    [PROVIDER_CARD_STATES.UNSET]: () => connection.onConnect?.(form.formData),
+    [PROVIDER_CARD_STATES.PENDING]: undefined,
+    [PROVIDER_CARD_STATES.CONNECTED]: () =>
+      connection.onConnect?.(form.formData),
+    [PROVIDER_CARD_STATES.FAILED]: () => {
+      connection.onErrorReset?.();
+      connection.onConnect?.(form.formData);
+    },
+  } satisfies Record<
+    ProviderCardState,
+    ProviderConnectionButtonProps["onClick"] | undefined
+  >;
 
   const content = renderContent();
-  const button = renderButton();
+  const button = (
+    <ProviderConnectionButton
+      cardState={cardState}
+      onClick={buttonClickHandlers[cardState]}
+    />
+  );
 
   // 如果没有内容，直接返回 null
   if (!content) return null;
