@@ -2,5 +2,4 @@
 // 导出内容
 export { ProviderConnectedPanel } from "./ProviderConnectedPanel";
 export { ProviderErrorPanel } from "./ProviderErrorPanel";
-export { UnsetProviderForm } from "./UnsetProviderForm";
-export { PendingProviderForm } from "./PendingProviderForm";
+export { ProviderForm } from "./ProviderForm";

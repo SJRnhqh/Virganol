@@ -7,5 +7,16 @@ import { ProviderCard } from "@/features/bot/components/base";
 export const ProviderItem = ({ providerId }: WithProviderId) => {
   const provider = useProvider(providerId);
 
-  return <ProviderCard {...provider} />;
+  return (
+    <ProviderCard
+      icon={provider.icon}
+      definition={provider.definition}
+      form={{
+        formData: provider.formData,
+        onUpdate: provider.updateFormData,
+      }}
+      connection={provider.connection}
+      models={provider.models}
+    />
+  );
 };

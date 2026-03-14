@@ -3,12 +3,9 @@
 import type { ProviderCardContentProps } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import {
-  ProviderConnectedPanel,
   ProviderErrorPanel,
-} from "@/features/bot/components/forms";
-import {
-  UnsetProviderForm,
-  PendingProviderForm,
+  ProviderConnectedPanel,
+  ProviderForm,
 } from "@/features/bot/components/forms";
 
 export const ProviderCardContent = ({
@@ -17,10 +14,8 @@ export const ProviderCardContent = ({
 }: ProviderCardContentProps) => {
   switch (cardState) {
     case PROVIDER_CARD_STATES.UNSET:
-      return <UnsetProviderForm {...cardContent} />;
-
     case PROVIDER_CARD_STATES.PENDING:
-      return <PendingProviderForm {...cardContent} />;
+      return <ProviderForm cardState={cardState} {...cardContent} />;
 
     case PROVIDER_CARD_STATES.FAILED:
       return <ProviderErrorPanel errorMessage={cardContent.errorMessage} />;
