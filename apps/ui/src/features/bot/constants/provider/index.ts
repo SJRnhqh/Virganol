@@ -13,7 +13,10 @@ export { PROVIDER_CHECK_DELAYS } from "./lifecycle";
 export { PROVIDER_CHECK_PHASES, PROVIDER_CARD_STATES } from "./state";
 
 // ── Provider 配置常量 ──
-export { PROVIDER_INITIAL_FORMS } from "./config";
+export { PROVIDER_INITIAL_FORMS, PROVIDER_FORM_VARIANTS } from "./config";
 
 // ── Provider 连接常量 ──
-export { CONNECTION_STATE_LABELS, CONNECTION_BUTTON_ANIMATIONS } from "./connection";
+export {
+  CONNECTION_STATE_LABELS,
+  CONNECTION_BUTTON_ANIMATIONS,
+} from "./connection";

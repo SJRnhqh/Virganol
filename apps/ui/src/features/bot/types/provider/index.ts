@@ -31,17 +31,26 @@ export type {
 
 // ── Provider UI Props ──
 export type {
+  ProviderEditableState,
+  ProviderFailedState,
   WithProviderId,
   WithProviderForm,
+  ProviderFormContent,
+  ProviderFormProps,
+  ProviderFailedContent,
+  ProviderErrorPanelProps,
   ProviderCardProps,
   ProviderCardContentProps,
   ProviderCardHeaderProps,
   ProviderConnectionButtonProps,
-  ProviderEditableContent,
-  ProviderFailedContent,
   ProviderConnectedContent,
 } from "./props";
 export type { ProviderModelProps, ProviderConnectionProps } from "./base";
 
 // ── Provider 自定义类型 ──
-export type { IconSlot, DualIconButton, ButtonAnimation } from "./custom";
+export type {
+  IconSlot,
+  ProviderFormVariantConfig,
+  DualIconButton,
+  ButtonAnimation,
+} from "./custom";

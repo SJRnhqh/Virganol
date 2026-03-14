@@ -28,20 +28,25 @@ export type {
   ProviderCollectionState,
 
   // ── Provider UI Props ──
+  ProviderEditableState,
+  ProviderFailedState,
   WithProviderId,
   WithProviderForm,
+  ProviderFormContent,
+  ProviderFormProps,
+  ProviderFailedContent,
+  ProviderErrorPanelProps,
   ProviderCardProps,
   ProviderModelProps,
   ProviderCardContentProps,
   ProviderCardHeaderProps,
   ProviderConnectionProps,
   ProviderConnectionButtonProps,
-  ProviderEditableContent,
-  ProviderFailedContent,
   ProviderConnectedContent,
 
   // ── Provider 自定义类型 ──
   IconSlot,
+  ProviderFormVariantConfig,
   DualIconButton,
   ButtonAnimation,
 } from "./provider";

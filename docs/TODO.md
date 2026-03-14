@@ -112,13 +112,32 @@ Props 类型复用 ✅
 - [ ] **ProviderCardBody 内容层接口收紧**（进行中）
   - [x] 创建 `types/provider/props/content.ts` 定义 `cardState → cardContent` 映射约束
   - [x] 创建 `ProviderCardContent` 统一内容路由层
-  - [x] 移除 `ProviderForm` 中转层，`UnsetProviderForm` / `PendingProviderForm` 直连内容路由
+  - [x] 合并 `UnsetProviderForm` / `PendingProviderForm` /
+    `BaseProviderForm` 为单一 `ProviderForm`
+  - [x] `ProviderForm` 契约归位：
+    `ProviderFormContent` / `ProviderFormProps` /
+    `ProviderEditableState` / `ProviderFormVariantConfig`
+    与 `PROVIDER_FORM_VARIANTS`
+    已分别归位到 `types` / `constants`
   - [x] `FailedProviderForm` → `ProviderErrorPanel`
+  - [x] `ProviderErrorPanel` 契约归位：
+    `ProviderFailedContent` / `ProviderErrorPanelProps` /
+    `ProviderFailedState` 已收口
+  - [x] `ProviderErrorPanel` 图标改为复用
+    `PROVIDER_CARD_STATE_ICONS.failed`
   - [x] `forms/` 内容层拍平（移除 `provider/connection/` 嵌套）
   - [x] `BaseProvider` → `ProviderCard`
-  - [ ] 收紧 `ProviderEditableContent` / `BaseProviderForm` 接口（表单内容层）
+  - [x] 收紧 editable 内容层接口
+    （移除 `ProviderEditableContent` / `BaseProviderForm`）
+  - [x] 收紧 failed 内容层接口
+    （由 content 路由承载 `errorMessage`，组件层补 `cardState`）
   - [ ] 定义 `ProviderConnectedPanel` Props 接口（已连接面板层）
+  - [ ] 收紧 `ProviderDefinition` / `ProviderField` 的传递边界
   - [ ] 基于子组件接口收紧 `ProviderCardBody` Props
+  - [ ] 收紧 `ProviderConnectionProps`，
+    减少 `ProviderCardBody` 对旧聚合对象的依赖
+  - [ ] 评估 `ProviderCardContent` 路由职责是否继续保留，
+    或在内容层稳定后上交给 `ProviderCardBody`
   - [ ] 评估 Reset 操作层的独立性
   - [ ] 完成 `ProviderCardProps` 顶层接口定义
   - [ ] 审查 `useProvider` 钩子返回值与组件 Props 对齐关系

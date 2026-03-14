@@ -16,7 +16,8 @@ export {
 
   // ── Provider 配置常量 ──
   PROVIDER_INITIAL_FORMS,
-  
+  PROVIDER_FORM_VARIANTS,
+
   // ── Provider 连接常量 ──
   CONNECTION_STATE_LABELS,
   CONNECTION_BUTTON_ANIMATIONS,

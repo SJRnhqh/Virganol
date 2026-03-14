@@ -17,9 +17,6 @@ export const ProviderCardContent = ({
     case PROVIDER_CARD_STATES.PENDING:
       return <ProviderForm cardState={cardState} {...cardContent} />;
 
-    case PROVIDER_CARD_STATES.FAILED:
-      return <ProviderErrorPanel errorMessage={cardContent.errorMessage} />;
-
     case PROVIDER_CARD_STATES.CONNECTED:
       return (
         <ProviderConnectedPanel
@@ -30,6 +27,14 @@ export const ProviderCardContent = ({
           onToggleModel={cardContent.onToggleModel}
           onToggleAll={cardContent.onToggleAll}
           onReset={cardContent.onReset}
+        />
+      );
+
+    case PROVIDER_CARD_STATES.FAILED:
+      return (
+        <ProviderErrorPanel
+          cardState={cardState}
+          errorMessage={cardContent.errorMessage}
         />
       );
 

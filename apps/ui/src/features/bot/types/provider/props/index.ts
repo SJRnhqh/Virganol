@@ -2,14 +2,19 @@
 // 导出内容
 
 export type { WithProviderId } from "./id";
-export type { WithCardState } from "./state";
-export type { WithProviderForm } from "./form";
+export type {
+  ProviderEditableState,
+  ProviderFailedState,
+  WithCardState,
+} from "./state";
+export type {
+  WithProviderForm,
+  ProviderFormContent,
+  ProviderFormProps,
+} from "./form";
+export type { ProviderFailedContent, ProviderErrorPanelProps } from "./error";
 export type { ProviderCardProps } from "./card";
 export type { ProviderCardContentProps } from "./content";
-export type {
-  ProviderEditableContent,
-  ProviderFailedContent,
-  ProviderConnectedContent,
-} from "./content-payload";
+export type { ProviderConnectedContent } from "./content-payload";
 export type { ProviderCardHeaderProps } from "./header";
 export type { ProviderConnectionButtonProps } from "./button";

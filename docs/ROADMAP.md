@@ -176,15 +176,36 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 
 - [x] 创建 `types/provider/props/content.ts`，建立 `cardState → cardContent` 映射约束
 - [x] 创建 `ProviderCardContent` 作为 Body 内容路由层，统一分发 editable / failed / connected
-- [x] 移除 `ProviderForm` 中转层，`UnsetProviderForm` / `PendingProviderForm` 直连内容路由
-- [x] `FailedProviderForm` → `ProviderErrorPanel`，失败态脱离 form 语义
-- [x] `forms/` 内容层拍平：`UnsetProviderForm` / `PendingProviderForm` /
-  `ProviderErrorPanel` 平级
+- [x] 合并 `UnsetProviderForm` / `PendingProviderForm` /
+  `BaseProviderForm` 为单一 `ProviderForm`
+- [x] 表单内容契约归位：`types/provider/props/form.ts` 定义
+  `ProviderFormContent` / `ProviderFormProps`，`types/provider/props/state.ts`
+  定义 `ProviderEditableState`
+- [x] 表单变体配置归位：`types/provider/custom/form.ts` 定义
+  `ProviderFormVariantConfig`，`constants/provider/config/form.ts`
+  定义 `PROVIDER_FORM_VARIANTS`
+- [x] `ProviderErrorPanel` 类型收口：`types/provider/props/error.ts` 定义
+  `ProviderFailedContent` / `ProviderErrorPanelProps`，`ProviderFailedState`
+  归位到 `types/provider/props/state.ts`
+- [x] 失败态图标收口：`ProviderErrorPanel` 复用
+  `PROVIDER_CARD_STATE_ICONS.failed` 映射，避免独立维护错误图标
+- [x] `forms/` 内容层拍平：`ProviderForm` / `ProviderErrorPanel` /
+  `ProviderConnectedPanel` 平级
 - [x] `BaseProvider` → `ProviderCard`，与 `ProviderCardHeader` /
   `ProviderCardBody` / `ProviderCardContent` 命名对齐
-- [ ] 收紧 `ProviderEditableContent` / `BaseProviderForm` 接口（表单内容层）
+- [x] 收紧 editable 内容层接口：移除 `ProviderEditableContent` /
+  `BaseProviderForm`，改为 `ProviderFormContent` / `ProviderFormProps`
+- [x] 收紧 failed 内容层接口：建立 `ProviderFailedContent` →
+  `ProviderErrorPanelProps` 两层契约，避免 `cardState` 在 content 路由中重复传递
 - [ ] 定义 `ProviderConnectedPanel` Props 接口（已连接面板层）
 - [ ] 基于子组件接口收紧 `ProviderCardBody` Props
+- [ ] 收紧 `ProviderDefinition` / `ProviderField` 在内容层的传递边界，评估
+  `fields` 是否继续作为独立载荷存在
+- [ ] 收紧 `ProviderConnectionProps`：
+  拆分 `error / retry / reset / connect` 等动作语义，
+  减少 `ProviderCardBody` 对旧聚合对象的依赖
+- [ ] 评估 `ProviderCardContent` 内容路由职责是否继续保留，
+  或在 connected 分支收口后上交给 `ProviderCardBody`
 - [ ] 评估 Reset 操作层的独立性（独立组件 vs 内嵌于 Panel）
 - [ ] 完成 `ProviderCardProps` 顶层接口定义（Header + Body 契约收敛）
 - [ ] 审查 `useProvider` 钩子返回值与组件 Props 的对齐关系
