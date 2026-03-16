@@ -2,5 +2,5 @@
 // 导出内容
 
 export type { IconSlot } from "./icon";
-export type { ProviderFormVariantConfig } from "./form";
 export type { DualIconButton, ButtonAnimation } from "./button";
+export type { ProviderFormField, ProviderFormVariantConfig } from "./form";

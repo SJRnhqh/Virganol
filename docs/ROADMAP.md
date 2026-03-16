@@ -199,6 +199,11 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
   `ProviderErrorPanelProps` 两层契约，避免 `cardState` 在 content 路由中重复传递
 - [x] 定义 `ProviderConnectedPanel` Props 接口（已连接面板层）：
   `ProviderConnectedContent` 移除 `fields` 冗余，直接使用 `data.apiURL`
+- [x] **表单接口收紧**（2025-03-16）：
+  - [x] 合并 `fields` 到 `WithProviderForm` 接口（与 `formData` 内聚）
+  - [x] `ProviderFormProps` 保留 `form` 嵌套层（为未来扩展预留空间）
+  - [x] `ProviderCardContent` 修正传参：`form={cardContent}` 而非展开
+  - [x] 确认接口收紧策略：类型安全的状态-内容映射 + 防御性嵌套设计
 - [ ] 基于子组件接口收紧 `ProviderCardBody` Props
 - [x] 收紧 `ProviderDefinition` / `ProviderField` 在内容层的传递边界，评估
   `fields` 是否继续作为独立载荷存在：移除 `ProviderField.isUrl` 字段，

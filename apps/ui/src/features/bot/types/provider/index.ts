@@ -3,7 +3,6 @@
 
 // ── Provider 标识与定义 ──
 export type { ProviderId } from "./common";
-export type { ProviderField, ProviderDefinition } from "./definition";
 
 // ── Provider 契约类型 ──
 export type {
@@ -51,6 +50,7 @@ export type { ProviderModelProps, ProviderConnectionProps } from "./base";
 // ── Provider 自定义类型 ──
 export type {
   IconSlot,
+  ProviderFormField,
   ProviderFormVariantConfig,
   DualIconButton,
   ButtonAnimation,

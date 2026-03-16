@@ -4,8 +4,6 @@
 export type {
   // ── Provider 标识与定义 ──
   ProviderId,
-  ProviderField,
-  ProviderDefinition,
 
   // ── Provider 契约类型 ──
   ProviderIssue,
@@ -47,7 +45,8 @@ export type {
 
   // ── Provider 自定义类型 ──
   IconSlot,
-  ProviderFormVariantConfig,
   DualIconButton,
   ButtonAnimation,
+  ProviderFormField,
+  ProviderFormVariantConfig,
 } from "./provider";

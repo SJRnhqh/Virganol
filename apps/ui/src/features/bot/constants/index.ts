@@ -5,7 +5,6 @@ export {
   // ── Provider 标识与定义 ──
   PROVIDER_IDS,
   PROVIDER_NAMES,
-  PROVIDER_DEFINITIONS,
 
   // ── Provider 契约常量 ──
   PROVIDER_CHECK_EVENTS,
@@ -17,6 +16,7 @@ export {
 
   // ── Provider 配置常量 ──
   PROVIDER_INITIAL_FORMS,
+  PROVIDER_FORM_FIELDS,
   PROVIDER_FORM_VARIANTS,
 
   // ── Provider 连接常量 ──

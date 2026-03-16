@@ -5,20 +5,17 @@ import { useState } from "react";
 // 内部引用
 import { cn } from "@/lib";
 import type {
-  ProviderDefinition,
   ProviderConnectionProps,
   ProviderModelProps,
   WithProviderForm,
   WithProviderMeta,
 } from "@/features/bot/types";
-import { PROVIDER_INITIAL_FORMS } from "@/features/bot/constants";
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import { ProviderCardHeader, ProviderCardBody } from "./content";
 
 interface ProviderCardComponentProps {
   meta: WithProviderMeta;
   form: WithProviderForm;
-  definition: ProviderDefinition;
   connection: ProviderConnectionProps;
   models: ProviderModelProps;
 }
@@ -26,14 +23,13 @@ interface ProviderCardComponentProps {
 export const ProviderCard = ({
   meta,
   form,
-  definition,
   connection,
   models,
 }: ProviderCardComponentProps) => {
   const [open, setOpen] = useState(false);
 
   const handleReset = () => {
-    form.onUpdate(PROVIDER_INITIAL_FORMS[definition.id]);
+    form.onReset();
     connection.onDisconnect?.();
   };
 
@@ -79,7 +75,6 @@ export const ProviderCard = ({
     >
       <ProviderCardBody
         cardState={connection.cardState}
-        fields={definition.fields}
         form={form}
         onReset={handleReset}
         connection={connection}

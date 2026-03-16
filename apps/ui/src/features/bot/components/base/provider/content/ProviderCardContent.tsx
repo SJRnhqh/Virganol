@@ -15,7 +15,7 @@ export const ProviderCardContent = ({
   switch (cardState) {
     case PROVIDER_CARD_STATES.UNSET:
     case PROVIDER_CARD_STATES.PENDING:
-      return <ProviderForm cardState={cardState} {...cardContent} />;
+      return <ProviderForm cardState={cardState} form={cardContent} />;
 
     case PROVIDER_CARD_STATES.CONNECTED:
       return <ProviderConnectedPanel {...cardContent} />;

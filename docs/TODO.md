@@ -145,6 +145,10 @@ Props 类型复用 ✅
   - [x] 创建 `PROVIDER_NAMES` 常量并导出
   - [x] 合并 `icon` 和 `name` 为 `meta` 对象（`WithProviderMeta`）
   - [x] `ProviderCardContent` 统一展开传参风格，移除冗余 `default` 分支
+  - [x] **表单接口收紧**（2025-03-16）
+    - [x] 合并 `fields` 到 `WithProviderForm` 接口（与 `formData` 内聚）
+    - [x] `ProviderFormProps` 保留 `form` 嵌套层（为未来扩展预留空间）
+    - [x] `ProviderCardContent` 修正传参：`form={cardContent}` 而非展开
   - [ ] 评估 `ProviderDefinition` / `ProviderField` 的传递边界（fields 仍需用于表单渲染）
   - [ ] 基于子组件接口收紧 `ProviderCardBody` Props
   - [ ] 收紧 `ProviderConnectionProps`，

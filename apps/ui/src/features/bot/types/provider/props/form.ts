@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/types/provider/props/form.ts
 // 内部引用
-import type { ProviderField } from "../definition";
+import type { ProviderFormField } from "../custom";
 import type { ProviderFormData } from "../state";
 import type { ProviderEditableState } from "./state";
 
@@ -9,28 +9,22 @@ import type { ProviderEditableState } from "./state";
  * 用于需要表单交互的内容组件。
  */
 export interface WithProviderForm {
+  /** 表单字段配置 */
+  fields: ProviderFormField[];
   /** 当前表单数据 */
   formData: ProviderFormData;
-  /** 更新表单数据 */
-  onUpdate: (formData: ProviderFormData) => void;
-}
-
-/**
- * Provider 表单内容载荷。
- * 用于 `unset` / `pending` 两个可编辑阶段的内容路由。
- */
-export interface ProviderFormContent {
-  /** 当前 Provider 的表单字段定义 */
-  fields: ProviderField[];
-  /** 当前表单数据与更新操作 */
-  form: WithProviderForm;
+  /** 更新表单数据（支持部分更新） */
+  onUpdate: (patch: Partial<ProviderFormData>) => void;
+  /** 重置表单数据到初始值 */
+  onReset: () => void;
 }
 
 /**
  * ProviderForm 组件 Props。
- * 在表单内容载荷基础上补充当前可编辑阶段状态。
  */
-export interface ProviderFormProps extends ProviderFormContent {
+export interface ProviderFormProps {
   /** 当前表单所属的可编辑阶段状态 */
   cardState: ProviderEditableState;
+  /** 表单数据与操作 */
+  form: WithProviderForm;
 }

@@ -1,4 +1,15 @@
 // apps/ui/src/features/bot/types/provider/custom/form.ts
+// 内部引用
+import type { ProviderFormData } from "../state";
+
+/** Provider 表单字段配置（用于动态渲染表单输入控件） */
+export interface ProviderFormField {
+  key: keyof ProviderFormData;
+  label: string;
+  type: "text" | "password";
+  placeholder?: string;
+  optional?: boolean;
+}
 
 /** ProviderForm 变体配置结构 */
 export interface ProviderFormVariantConfig {

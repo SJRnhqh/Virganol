@@ -1,7 +1,6 @@
 // apps/ui/src/features/bot/components/base/provider/content/ProviderCardBody.tsx
 // 内部引用
 import type {
-  ProviderField,
   WithProviderForm,
   ProviderCardState,
   ProviderModelProps,
@@ -14,7 +13,6 @@ import { ProviderCardContent } from "./ProviderCardContent";
 
 interface ProviderCardBodyProps {
   cardState: ProviderCardState;
-  fields: ProviderField[];
   form: WithProviderForm;
   onReset: () => void;
   connection: ProviderConnectionProps;
@@ -23,7 +21,6 @@ interface ProviderCardBodyProps {
 
 export const ProviderCardBody = ({
   cardState,
-  fields,
   form,
   onReset,
   connection,
@@ -34,12 +31,7 @@ export const ProviderCardBody = ({
     switch (cardState) {
       case PROVIDER_CARD_STATES.UNSET:
       case PROVIDER_CARD_STATES.PENDING:
-        return (
-          <ProviderCardContent
-            cardState={cardState}
-            cardContent={{ fields, form }}
-          />
-        );
+        return <ProviderCardContent cardState={cardState} cardContent={form} />;
 
       case PROVIDER_CARD_STATES.CONNECTED:
         return (
