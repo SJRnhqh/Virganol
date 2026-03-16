@@ -18,27 +18,9 @@ export const ProviderCardContent = ({
       return <ProviderForm cardState={cardState} {...cardContent} />;
 
     case PROVIDER_CARD_STATES.CONNECTED:
-      return (
-        <ProviderConnectedPanel
-          fields={cardContent.fields}
-          value={cardContent.value}
-          models={cardContent.models}
-          enabledModels={cardContent.enabledModels}
-          onToggleModel={cardContent.onToggleModel}
-          onToggleAll={cardContent.onToggleAll}
-          onReset={cardContent.onReset}
-        />
-      );
+      return <ProviderConnectedPanel {...cardContent} />;
 
     case PROVIDER_CARD_STATES.FAILED:
-      return (
-        <ProviderErrorPanel
-          cardState={cardState}
-          errorMessage={cardContent.errorMessage}
-        />
-      );
-
-    default:
-      return null;
+      return <ProviderErrorPanel cardState={cardState} {...cardContent} />;
   }
 };

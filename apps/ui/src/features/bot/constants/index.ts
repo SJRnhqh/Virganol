@@ -4,6 +4,7 @@
 export {
   // ── Provider 标识与定义 ──
   PROVIDER_IDS,
+  PROVIDER_NAMES,
   PROVIDER_DEFINITIONS,
 
   // ── Provider 契约常量 ──

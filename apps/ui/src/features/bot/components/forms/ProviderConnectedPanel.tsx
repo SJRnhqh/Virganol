@@ -4,59 +4,59 @@
 import { Undo2 } from "lucide-react";
 
 // 内部引用
-import type { ProviderField, ProviderFormData } from "@/features/bot/types";
-
-interface ProviderConnectedPanelProps {
-  fields: ProviderField[];
-  value: ProviderFormData;
-  models?: string[];
-  enabledModels?: Record<string, boolean>;
-  onToggleModel?: (model: string, enabled: boolean) => void;
-  onToggleAll?: (enabled: boolean) => void;
-  onReset?: () => void;
-}
+import type { ProviderConnectedContent } from "@/features/bot/types";
 
 export const ProviderConnectedPanel = ({
-  fields,
-  value,
+  data,
   models = [],
   enabledModels = {},
   onToggleModel,
   onToggleAll,
   onReset,
-}: ProviderConnectedPanelProps) => {
-  const urlField = fields.find((field) => field.isUrl);
-  const urlValue = urlField ? value[urlField.key] : undefined;
-  const hasUrl = Boolean(urlValue);
+}: ProviderConnectedContent) => {
+  // ── 数据提取与派生状态 ────────────────────────
+  // 直接从 data 中提取 apiURL（标准化字段名）
+  const connectionUrl = data.apiURL;
+  const hasUrl = Boolean(connectionUrl);
+
+  // 模型列表状态计算
   const hasModels = models.length > 0;
   const enabledCount = models.reduce(
     (count, model) => count + ((enabledModels[model] ?? true) ? 1 : 0),
     0,
   );
+
+  // 全选开关的三态逻辑：off（全不选）/ on（全选）/ mixed（部分选中）
   const selectionState =
     !hasModels || enabledCount === 0
       ? "off"
       : enabledCount === models.length
         ? "on"
         : "mixed";
+
+  // ARIA 无障碍属性：mixed 状态需要特殊处理
   const masterAriaChecked =
     selectionState === "mixed" ? "mixed" : selectionState === "on";
 
   return (
     <div className="pb-2 pl-1 pt-0 space-y-4">
+      {/* ── 连接信息区域 ────────────────────────── */}
       <div className="flex items-center justify-between gap-3">
+        {/* 左侧：连接状态文本（显示 URL 或通用提示） */}
         <div className="text-xs text-settings-panel-fg/70">
           {hasUrl ? (
             <>
               <span className="text-settings-panel-fg/60">Connected to: </span>
               <span className="font-mono text-settings-panel-fg">
-                {urlValue}
+                {connectionUrl}
               </span>
             </>
           ) : (
             <span className="text-settings-panel-fg/60">Connection active</span>
           )}
         </div>
+
+        {/* 右侧：Reset 按钮 */}
         {onReset && (
           <button
             type="button"
@@ -76,11 +76,15 @@ export const ProviderConnectedPanel = ({
         )}
       </div>
 
+      {/* ── 模型列表区域 ────────────────────────── */}
       <div className="rounded-lg border border-dashed border-settings-panel-fg/30 overflow-hidden">
+        {/* 表头：Model 列 + Enabled 列（含全选开关） */}
         <div className="grid grid-cols-[1fr_auto] items-center gap-3 px-3 py-2 text-[10px] uppercase tracking-widest text-settings-panel-fg/50 border-b border-dashed border-settings-panel-fg/20">
           <span>Model</span>
           <div className="flex items-center gap-2 justify-end">
             <span className="text-right">Enabled</span>
+
+            {/* 全选开关：支持三态（on / off / mixed） */}
             <button
               type="button"
               role="checkbox"
@@ -100,6 +104,7 @@ export const ProviderConnectedPanel = ({
                 "data-[state=mixed]:bg-settings-panel-check/10 data-[state=mixed]:border-settings-panel-check/50",
               ].join(" ")}
             >
+              {/* 开关滑块：根据三态调整位置 */}
               <span
                 data-state={selectionState}
                 className={[
@@ -115,6 +120,7 @@ export const ProviderConnectedPanel = ({
           </div>
         </div>
 
+        {/* 模型列表内容：有模型时渲染列表，无模型时显示空状态 */}
         {hasModels ? (
           <div className="divide-y divide-dashed divide-settings-panel-fg/15">
             {models.map((model) => {
@@ -124,9 +130,12 @@ export const ProviderConnectedPanel = ({
                   key={model}
                   className="grid grid-cols-[1fr_auto] items-center gap-3 px-3 py-2 text-xs text-settings-panel-fg/70"
                 >
+                  {/* 左侧：模型名称 */}
                   <span className="font-mono text-settings-panel-fg/80">
                     {model}
                   </span>
+
+                  {/* 右侧：单个模型的启用开关 */}
                   <button
                     type="button"
                     role="switch"
@@ -140,6 +149,7 @@ export const ProviderConnectedPanel = ({
                         : "bg-settings-panel-fg/10 border-settings-panel-fg/30",
                     ].join(" ")}
                   >
+                    {/* 开关滑块 */}
                     <span
                       className={[
                         "inline-block h-3 w-3 rounded-full transition-transform",
@@ -155,6 +165,7 @@ export const ProviderConnectedPanel = ({
             })}
           </div>
         ) : (
+          // 空状态：未检测到模型
           <div className="px-3 py-3 text-xs text-settings-panel-fg/45">
             No models detected from this provider yet.
           </div>

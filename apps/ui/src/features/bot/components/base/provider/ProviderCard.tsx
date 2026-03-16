@@ -9,23 +9,24 @@ import type {
   ProviderConnectionProps,
   ProviderModelProps,
   WithProviderForm,
+  WithProviderMeta,
 } from "@/features/bot/types";
 import { PROVIDER_INITIAL_FORMS } from "@/features/bot/constants";
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import { ProviderCardHeader, ProviderCardBody } from "./content";
 
 interface ProviderCardComponentProps {
+  meta: WithProviderMeta;
   form: WithProviderForm;
   definition: ProviderDefinition;
-  icon: React.ReactNode;
   connection: ProviderConnectionProps;
   models: ProviderModelProps;
 }
 
 export const ProviderCard = ({
+  meta,
   form,
   definition,
-  icon,
   connection,
   models,
 }: ProviderCardComponentProps) => {
@@ -71,7 +72,7 @@ export const ProviderCard = ({
       title={
         <ProviderCardHeader
           cardState={connection.cardState}
-          meta={{ icon, name: definition.name }}
+          meta={meta}
           open={open}
         />
       }

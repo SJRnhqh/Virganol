@@ -49,6 +49,15 @@
   - [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps`
   - [x] 优化 `ProviderCardHeaderProps` 结构：`extends WithCardState` + `meta` 独立字段
   - [x] 统一参数顺序：组件解构顺序与接口定义顺序一致（extends 字段优先）
+- [x] **ProviderConnectedPanel 接口收紧**（2025-03-16）
+  - [x] 移除 `fields` 冗余传递，直接使用 `data.apiURL` 标准化字段
+  - [x] 重命名 `value` → `data`（语义更清晰）
+  - [x] 类型定义统一在 `content-payload.ts`
+  - [x] 移除 `ProviderField` 中的 `isUrl` 字段
+  - [x] 创建 `PROVIDER_NAMES` 常量（`constants/provider/common/name.ts`）
+  - [x] 合并 `icon` 和 `name` 为 `meta` 对象（`WithProviderMeta`）
+  - [x] `useProvider` 返回 `meta` 统一元信息
+  - [x] 优化 `ProviderCardContent` 统一展开传参风格，移除冗余 `default` 分支
 
 ---
 
@@ -131,8 +140,12 @@ Props 类型复用 ✅
     （移除 `ProviderEditableContent` / `BaseProviderForm`）
   - [x] 收紧 failed 内容层接口
     （由 content 路由承载 `errorMessage`，组件层补 `cardState`）
-  - [ ] 定义 `ProviderConnectedPanel` Props 接口（已连接面板层）
-  - [ ] 收紧 `ProviderDefinition` / `ProviderField` 的传递边界
+  - [x] 收紧 connected 内容层接口（移除 `fields` 冗余，直接使用 `data.apiURL`）
+  - [x] 移除 `ProviderField.isUrl` 字段
+  - [x] 创建 `PROVIDER_NAMES` 常量并导出
+  - [x] 合并 `icon` 和 `name` 为 `meta` 对象（`WithProviderMeta`）
+  - [x] `ProviderCardContent` 统一展开传参风格，移除冗余 `default` 分支
+  - [ ] 评估 `ProviderDefinition` / `ProviderField` 的传递边界（fields 仍需用于表单渲染）
   - [ ] 基于子组件接口收紧 `ProviderCardBody` Props
   - [ ] 收紧 `ProviderConnectionProps`，
     减少 `ProviderCardBody` 对旧聚合对象的依赖

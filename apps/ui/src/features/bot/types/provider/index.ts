@@ -35,6 +35,7 @@ export type {
   ProviderFailedState,
   WithProviderId,
   WithProviderForm,
+  WithProviderMeta,
   ProviderFormContent,
   ProviderFormProps,
   ProviderFailedContent,

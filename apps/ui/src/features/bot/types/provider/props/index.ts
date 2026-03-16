@@ -12,6 +12,7 @@ export type {
   ProviderFormContent,
   ProviderFormProps,
 } from "./form";
+export type { WithProviderMeta } from "./meta";
 export type { ProviderFailedContent, ProviderErrorPanelProps } from "./error";
 export type { ProviderCardProps } from "./card";
 export type { ProviderCardContentProps } from "./content";

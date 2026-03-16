@@ -197,18 +197,22 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
   `BaseProviderForm`，改为 `ProviderFormContent` / `ProviderFormProps`
 - [x] 收紧 failed 内容层接口：建立 `ProviderFailedContent` →
   `ProviderErrorPanelProps` 两层契约，避免 `cardState` 在 content 路由中重复传递
-- [ ] 定义 `ProviderConnectedPanel` Props 接口（已连接面板层）
+- [x] 定义 `ProviderConnectedPanel` Props 接口（已连接面板层）：
+  `ProviderConnectedContent` 移除 `fields` 冗余，直接使用 `data.apiURL`
 - [ ] 基于子组件接口收紧 `ProviderCardBody` Props
-- [ ] 收紧 `ProviderDefinition` / `ProviderField` 在内容层的传递边界，评估
-  `fields` 是否继续作为独立载荷存在
+- [x] 收紧 `ProviderDefinition` / `ProviderField` 在内容层的传递边界，评估
+  `fields` 是否继续作为独立载荷存在：移除 `ProviderField.isUrl` 字段，
+  connected 面板改用直接字段访问
 - [ ] 收紧 `ProviderConnectionProps`：
   拆分 `error / retry / reset / connect` 等动作语义，
   减少 `ProviderCardBody` 对旧聚合对象的依赖
-- [ ] 评估 `ProviderCardContent` 内容路由职责是否继续保留，
-  或在 connected 分支收口后上交给 `ProviderCardBody`
+- [x] 评估 `ProviderCardContent` 内容路由职责是否继续保留，
+  或在 connected 分支收口后上交给 `ProviderCardBody`：
+  统一展开传参风格，移除冗余 `default` 分支，保留路由职责
 - [ ] 评估 Reset 操作层的独立性（独立组件 vs 内嵌于 Panel）
 - [ ] 完成 `ProviderCardProps` 顶层接口定义（Header + Body 契约收敛）
-- [ ] 审查 `useProvider` 钩子返回值与组件 Props 的对齐关系
+- [x] 审查 `useProvider` 钩子返回值与组件 Props 的对齐关系：
+  创建 `PROVIDER_NAMES` 常量，合并 `icon` 和 `name` 为 `meta` 对象（`WithProviderMeta`）
 
 ### Phase 5：健康检查错误精细化
 

@@ -1,7 +1,7 @@
 // apps/ui/src/features/bot/hooks/provider/useProvider.ts
 // 内部引用
 import type { ProviderId, ProviderFormData } from "@/features/bot/types";
-import { PROVIDER_DEFINITIONS } from "@/features/bot/constants";
+import { PROVIDER_DEFINITIONS, PROVIDER_NAMES } from "@/features/bot/constants";
 import { PROVIDER_ICONS } from "@/features/bot/icons";
 import { useProviderCollectionStore } from "@/features/bot/store";
 import { useProviderModelActions } from "./useProviderModelActions";
@@ -27,7 +27,10 @@ export const useProvider = (providerId: ProviderId) => {
   // TODO: 重新设计返回值结构，确保与 types/constants 的语义一致性；当前 definition/value/connection/models 的分组逻辑需要根据组件层实际消费模式优化，避免语义混乱和冗余嵌套。
   return {
     providerId,
-    icon: PROVIDER_ICONS[providerId],
+    meta: {
+      name: PROVIDER_NAMES[providerId],
+      icon: PROVIDER_ICONS[providerId],
+    },
     formData: providerState.form,
     updateFormData: (nextFormData: ProviderFormData) =>
       useProviderCollectionStore

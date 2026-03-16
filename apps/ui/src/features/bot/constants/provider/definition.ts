@@ -12,7 +12,6 @@ export const PROVIDER_DEFINITIONS = {
         label: "API URL",
         type: "text",
         placeholder: "http://localhost:11434",
-        isUrl: true,
       },
       {
         key: "apiKey",
@@ -33,7 +32,6 @@ export const PROVIDER_DEFINITIONS = {
         label: "API URL",
         type: "text",
         placeholder: "http://localhost:1234",
-        isUrl: true,
       },
       {
         key: "apiKey",

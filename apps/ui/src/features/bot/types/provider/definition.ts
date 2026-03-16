@@ -9,7 +9,6 @@ export interface ProviderField {
   type: "text" | "password";
   placeholder?: string;
   optional?: boolean;
-  isUrl?: boolean;
 }
 
 export interface ProviderDefinition<T = Record<string, string>> {

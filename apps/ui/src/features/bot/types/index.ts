@@ -30,6 +30,7 @@ export type {
   // ── Provider UI Props ──
   ProviderEditableState,
   ProviderFailedState,
+  WithProviderMeta,
   WithProviderId,
   WithProviderForm,
   ProviderFormContent,

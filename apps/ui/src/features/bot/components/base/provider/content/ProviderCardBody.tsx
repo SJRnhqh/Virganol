@@ -46,8 +46,7 @@ export const ProviderCardBody = ({
           <ProviderCardContent
             cardState={cardState}
             cardContent={{
-              fields,
-              value: form.formData,
+              data: form.formData,
               onReset,
               models: models.available,
               enabledModels: models.enabled,

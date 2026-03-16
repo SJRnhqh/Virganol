@@ -9,7 +9,7 @@ export const ProviderItem = ({ providerId }: WithProviderId) => {
 
   return (
     <ProviderCard
-      icon={provider.icon}
+      meta={provider.meta}
       definition={provider.definition}
       form={{
         formData: provider.formData,

@@ -2,8 +2,8 @@
 // 导出内容
 
 // ── Provider 标识与定义 ──
-export { PROVIDER_IDS } from "./common";
 export { PROVIDER_DEFINITIONS } from "./definition";
+export { PROVIDER_IDS, PROVIDER_NAMES } from "./common";
 
 // ── Provider 契约常量 ──
 export { PROVIDER_CHECK_EVENTS } from "./contract";
