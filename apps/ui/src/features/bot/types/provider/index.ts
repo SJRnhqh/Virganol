@@ -42,6 +42,7 @@ export type {
   ProviderCardProps,
   ProviderCardContentProps,
   ProviderCardHeaderProps,
+  ProviderCardBodyProps,
   ProviderConnectionButtonProps,
   ProviderConnectedContent,
 } from "./props";

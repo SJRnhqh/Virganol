@@ -1,27 +1,18 @@
 // apps/ui/src/features/bot/components/base/provider/content/ProviderCardBody.tsx
 // 内部引用
 import type {
-  WithProviderForm,
   ProviderCardState,
-  ProviderModelProps,
-  ProviderConnectionProps,
+  ProviderCardBodyProps,
   ProviderConnectionButtonProps,
 } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import { ProviderConnectionButton } from "@/features/bot/components/buttons";
 import { ProviderCardContent } from "./ProviderCardContent";
 
-interface ProviderCardBodyProps {
-  cardState: ProviderCardState;
-  form: WithProviderForm;
-  onReset: () => void;
-  connection: ProviderConnectionProps;
-  models: ProviderModelProps;
-}
-
 export const ProviderCardBody = ({
   cardState,
   form,
+  errorMessage,
   onReset,
   connection,
   models,
@@ -52,7 +43,7 @@ export const ProviderCardBody = ({
         return (
           <ProviderCardContent
             cardState={cardState}
-            cardContent={{ errorMessage: connection.errorMessage }}
+            cardContent={{ errorMessage }}
           />
         );
 

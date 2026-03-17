@@ -118,7 +118,7 @@ Props 类型复用 ✅
   - [x] 重构为单一配置驱动组件，删除 5 个冗余组件
   - [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState`
   - [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps`
-- [ ] **ProviderCardBody 内容层接口收紧**（进行中）
+- [x] **ProviderCardBody 内容层接口收紧**（2025-03-17 完成）✅
   - [x] 创建 `types/provider/props/content.ts` 定义 `cardState → cardContent` 映射约束
   - [x] 创建 `ProviderCardContent` 统一内容路由层
   - [x] 合并 `UnsetProviderForm` / `PendingProviderForm` /
@@ -149,17 +149,14 @@ Props 类型复用 ✅
     - [x] 合并 `fields` 到 `WithProviderForm` 接口（与 `formData` 内聚）
     - [x] `ProviderFormProps` 保留 `form` 嵌套层（为未来扩展预留空间）
     - [x] `ProviderCardContent` 修正传参：`form={cardContent}` 而非展开
-  - [ ] 评估 `ProviderDefinition` / `ProviderField` 的传递边界（fields 仍需用于表单渲染）
-  - [ ] 基于子组件接口收紧 `ProviderCardBody` Props
-  - [ ] 收紧 `ProviderConnectionProps`，
-    减少 `ProviderCardBody` 对旧聚合对象的依赖
-  - [ ] 评估 `ProviderCardContent` 路由职责是否继续保留，
-    或在内容层稳定后上交给 `ProviderCardBody`
-  - [ ] 评估 Reset 操作层的独立性
-  - [ ] 完成 `ProviderCardProps` 顶层接口定义
-  - [ ] 审查 `useProvider` 钩子返回值与组件 Props 对齐关系
-- [ ] `base/provider/ProviderCard.tsx` — 展开/收起 + 数据传递
-- [ ] `components/forms/ProviderConnectedPanel.tsx` — connected 内容层 Props 收口
+  - [x] **卡片层接口收紧**（2025-03-17）
+    - [x] `cardState` 从 `ProviderConnectionProps` 独立到 `ProviderCardProps` 顶层
+    - [x] `errorMessage` 从 `ProviderConnectionProps` 独立到 `ProviderCardProps` 顶层
+    - [x] `ProviderConnectionProps` 纯操作化：移除状态字段
+    - [x] `ProviderCardProps` / `ProviderCardBodyProps` 移到 `types/provider/props/`
+    统一管理
+    - [x] 保持 `ProviderCardContent` 路由层职责，架构一致性
+  - [x] 审查 `useProvider` 钩子返回值与组件 Props 对齐关系
 
 ### 5. 修补与收尾
 

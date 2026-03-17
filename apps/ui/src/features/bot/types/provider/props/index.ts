@@ -15,6 +15,7 @@ export type {
 export type { WithProviderMeta } from "./meta";
 export type { ProviderFailedContent, ProviderErrorPanelProps } from "./error";
 export type { ProviderCardProps } from "./card";
+export type { ProviderCardBodyProps } from "./body";
 export type { ProviderCardContentProps } from "./content";
 export type { ProviderConnectedContent } from "./content-payload";
 export type { ProviderCardHeaderProps } from "./header";

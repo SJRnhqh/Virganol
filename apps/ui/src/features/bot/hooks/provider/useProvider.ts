@@ -25,6 +25,7 @@ export const useProvider = (providerId: ProviderId) => {
 
   // ── 组装返回 ──────────────────────────────
   return {
+    cardState: providerState.cardState,
     meta: {
       name: PROVIDER_NAMES[providerId],
       icon: PROVIDER_ICONS[providerId],
@@ -39,9 +40,8 @@ export const useProvider = (providerId: ProviderId) => {
           .getState()
           .setProviderForm(providerId, PROVIDER_INITIAL_FORMS[providerId]),
     },
+    errorMessage: providerState.errorMessage,
     connection: {
-      cardState: providerState.cardState,
-      errorMessage: providerState.errorMessage,
       onConnect,
       onDisconnect,
       onErrorReset,

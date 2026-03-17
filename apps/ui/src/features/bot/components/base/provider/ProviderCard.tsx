@@ -4,28 +4,18 @@ import { useState } from "react";
 
 // 内部引用
 import { cn } from "@/lib";
-import type {
-  ProviderConnectionProps,
-  ProviderModelProps,
-  WithProviderForm,
-  WithProviderMeta,
-} from "@/features/bot/types";
+import type { ProviderCardProps } from "@/features/bot/types";
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
 import { ProviderCardHeader, ProviderCardBody } from "./content";
 
-interface ProviderCardComponentProps {
-  meta: WithProviderMeta;
-  form: WithProviderForm;
-  connection: ProviderConnectionProps;
-  models: ProviderModelProps;
-}
-
 export const ProviderCard = ({
+  cardState,
   meta,
   form,
+  errorMessage,
   connection,
   models,
-}: ProviderCardComponentProps) => {
+}: ProviderCardProps) => {
   const [open, setOpen] = useState(false);
 
   const handleReset = () => {
@@ -67,16 +57,17 @@ export const ProviderCard = ({
       contentInnerClassName="overflow-hidden px-5"
       title={
         <ProviderCardHeader
-          cardState={connection.cardState}
+          cardState={cardState}
           meta={meta}
           open={open}
         />
       }
     >
       <ProviderCardBody
-        cardState={connection.cardState}
+        cardState={cardState}
         form={form}
         onReset={handleReset}
+        errorMessage={errorMessage}
         connection={connection}
         models={models}
       />

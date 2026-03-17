@@ -170,7 +170,7 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 删除冗余组件：`ConnectButton` / `ConnectingButton` /
   `ReconnectButton` / `RetryButton` / `BaseProviderButton`
 
-##### 🚧 4.3.9 ProviderBody 内容层接口收紧
+##### ✅ 4.3.9 ProviderBody 内容层接口收紧（2025-03-17）
 
 **目标**：自底向上收紧接口，完成组件层架构审查的最后关键环节
 
@@ -204,20 +204,28 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
   - [x] `ProviderFormProps` 保留 `form` 嵌套层（为未来扩展预留空间）
   - [x] `ProviderCardContent` 修正传参：`form={cardContent}` 而非展开
   - [x] 确认接口收紧策略：类型安全的状态-内容映射 + 防御性嵌套设计
-- [ ] 基于子组件接口收紧 `ProviderCardBody` Props
+- [x] **卡片层接口收紧**（2025-03-17）：
+  - [x] `cardState` 从 `ProviderConnectionProps` 独立到 `ProviderCardProps` 顶层
+  - [x] `errorMessage` 从 `ProviderConnectionProps` 独立到 `ProviderCardProps` 顶层
+  - [x] `ProviderConnectionProps` 纯操作化：移除状态字段，只保留 `onConnect` / `onDisconnect`
+   / `onErrorReset`
+  - [x] `ProviderCardProps` 移到 `types/provider/props/card.ts` 统一管理
+  - [x] `ProviderCardBodyProps` 移到 `types/provider/props/body.ts` 统一管理
+  - [x] 保持 `ProviderCardContent` 路由层职责，架构一致性
 - [x] 收紧 `ProviderDefinition` / `ProviderField` 在内容层的传递边界，评估
   `fields` 是否继续作为独立载荷存在：移除 `ProviderField.isUrl` 字段，
   connected 面板改用直接字段访问
-- [ ] 收紧 `ProviderConnectionProps`：
-  拆分 `error / retry / reset / connect` 等动作语义，
-  减少 `ProviderCardBody` 对旧聚合对象的依赖
 - [x] 评估 `ProviderCardContent` 内容路由职责是否继续保留，
   或在 connected 分支收口后上交给 `ProviderCardBody`：
   统一展开传参风格，移除冗余 `default` 分支，保留路由职责
-- [ ] 评估 Reset 操作层的独立性（独立组件 vs 内嵌于 Panel）
-- [ ] 完成 `ProviderCardProps` 顶层接口定义（Header + Body 契约收敛）
 - [x] 审查 `useProvider` 钩子返回值与组件 Props 的对齐关系：
   创建 `PROVIDER_NAMES` 常量，合并 `icon` 和 `name` 为 `meta` 对象（`WithProviderMeta`）
+
+**待后续优化**：
+
+- [ ] `handleReset` 逻辑下沉到 `form.onReset`（组件层业务逻辑下沉到 Hook 层）
+- [ ] `ProviderModelProps` 数据与操作拆分（`modelData` + `modelActions`）
+- [ ] 评估 Reset 操作层的独立性（独立组件 vs 内嵌于 Panel）
 
 ### Phase 5：健康检查错误精细化
 
