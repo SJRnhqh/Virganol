@@ -8,6 +8,7 @@ export type {
   WithCardState,
 } from "./state";
 export type { WithProviderForm, ProviderFormProps } from "./form";
+export type { WithProviderModels } from "./models";
 export type { WithProviderMeta } from "./meta";
 export type { ProviderFailedContent, ProviderErrorPanelProps } from "./error";
 export type { ProviderCardProps } from "./card";

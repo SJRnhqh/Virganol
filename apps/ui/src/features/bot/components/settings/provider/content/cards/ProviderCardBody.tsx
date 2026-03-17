@@ -29,10 +29,7 @@ export const ProviderCardBody = ({
             cardState={cardState}
             cardContent={{
               form,
-              models: models.available,
-              enabledModels: models.enabled,
-              onToggleModel: models.onToggle,
-              onToggleAll: models.onToggleAll,
+              models,
             }}
           />
         );

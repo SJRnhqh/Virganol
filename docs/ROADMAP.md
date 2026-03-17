@@ -270,12 +270,29 @@ settings/provider/
 - [ ] `ProviderConnectedPanel` 重构（175 行 → 拆分为独立子组件，提升可读性）
 - [ ] 类型文件清理与归位：
   - [ ] `base.ts` 临时文件清理（`ProviderConnectionProps` / `ProviderModelProps` 归位）
-  - [ ] `content-payload.ts` 临时文件清理（`ProviderConnectedContent` 归位到语义化位置）
-  - [ ] 创建 `types/provider/props/connection.ts` 和 `types/provider/props/models.ts`
+  - [ ] `content-payload.ts` 重命名为语义化名称（如 `connected.ts`）
+  - [ ] 创建 `types/provider/props/connection.ts`（models.ts 已完成）
 - [ ] `connection` 接口最终审查（`onConnect` / `onErrorReset` 优化空间评估）
-- [ ] `ProviderModelProps` 数据与操作拆分（`modelData` + `modelActions`）
+- [ ] `ProviderModelProps` 数据与操作拆分评估（当前 `WithProviderModels` 统一管理，后续可按需拆分）
 - [ ] 考虑重命名 `ProviderHeader` → `ProviderLifecycleHeader`（避免与 `ProviderCardHeader`
       混淆）
+
+#### 🚧 4.4 Hooks 层审查与优化（2025-03-17 开始）
+
+**目标**：优化 Hooks 层性能和并发安全性，对齐组件层接口契约
+
+- [x] `useProviderStartup` — 已完成审查 ✅
+- [ ] `useProviderConnection` — 待优化
+  - [ ] 修复重复订阅 store actions 导致的性能问题
+  - [ ] 简化 useCallback 依赖数组
+  - [ ] 统一错误处理
+- [ ] `useProvider` — 待优化
+  - [ ] 返回值结构对齐 `WithProviderModels`
+  - [ ] 优化 store selector 性能
+- [ ] `useProviderModelActions` — 待优化
+  - [ ] 修复乐观更新并发风险（请求去重/版本号机制）
+  - [ ] 优化 store selector 性能
+  - [ ] 返回值结构对齐 `WithProviderModels`
 
 ### Phase 5：健康检查错误精细化
 

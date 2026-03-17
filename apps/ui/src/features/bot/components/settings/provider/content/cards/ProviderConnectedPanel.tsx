@@ -1,5 +1,4 @@
-// apps/ui/src/features/bot/components/forms/ProviderConnectedPanel.tsx
-// TODO: 后续有空对该组件进行重构优化
+// apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderConnectedPanel.tsx
 // 外部依赖
 import { Undo2 } from "lucide-react";
 
@@ -8,10 +7,7 @@ import type { ProviderConnectedContent } from "@/features/bot/types";
 
 export const ProviderConnectedPanel = ({
   form,
-  models = [],
-  enabledModels = {},
-  onToggleModel,
-  onToggleAll,
+  models,
 }: ProviderConnectedContent) => {
   // ── 数据提取与派生状态 ────────────────────────
   // 直接从 form.formData 中提取 apiURL（标准化字段名）
@@ -19,9 +15,9 @@ export const ProviderConnectedPanel = ({
   const hasUrl = Boolean(connectionUrl);
 
   // 模型列表状态计算
-  const hasModels = models.length > 0;
-  const enabledCount = models.reduce(
-    (count, model) => count + ((enabledModels[model] ?? true) ? 1 : 0),
+  const hasModels = models.available.length > 0;
+  const enabledCount = models.available.reduce(
+    (count, model) => count + (models.enabled[model] ? 1 : 0),
     0,
   );
 
@@ -29,7 +25,7 @@ export const ProviderConnectedPanel = ({
   const selectionState =
     !hasModels || enabledCount === 0
       ? "off"
-      : enabledCount === models.length
+      : enabledCount === models.available.length
         ? "on"
         : "mixed";
 
@@ -92,7 +88,7 @@ export const ProviderConnectedPanel = ({
               data-state={selectionState}
               title="Toggle all models"
               onClick={() =>
-                onToggleAll?.(selectionState === "on" ? false : true)
+                models.onToggleAll(selectionState === "on" ? false : true)
               }
               className={[
                 "relative inline-flex h-4 w-9 items-center rounded-full border transition-all",
@@ -122,8 +118,8 @@ export const ProviderConnectedPanel = ({
         {/* 模型列表内容：有模型时渲染列表，无模型时显示空状态 */}
         {hasModels ? (
           <div className="divide-y divide-dashed divide-settings-panel-fg/15">
-            {models.map((model) => {
-              const checked = enabledModels[model] ?? true;
+            {models.available.map((model) => {
+              const checked = models.enabled[model];
               return (
                 <div
                   key={model}
@@ -139,7 +135,7 @@ export const ProviderConnectedPanel = ({
                     type="button"
                     role="switch"
                     aria-checked={checked}
-                    onClick={() => onToggleModel?.(model, !checked)}
+                    onClick={() => models.onToggle(model, !checked)}
                     className={[
                       "relative inline-flex h-4 w-9 items-center rounded-full border transition-all",
                       "shadow-inner",
