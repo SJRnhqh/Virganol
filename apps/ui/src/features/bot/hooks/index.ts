@@ -2,6 +2,7 @@
 // 导出内容
 
 export {
+  useProviderConnectedPanel,
   useProvider,
   useProviderModelActions,
   useProviderStartup,

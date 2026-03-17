@@ -4,37 +4,25 @@ import { Undo2 } from "lucide-react";
 
 // 内部引用
 import type { ProviderConnectedContent } from "@/features/bot/types";
-import { useProviderModelActions } from "@/features/bot/hooks";
+import { useProviderConnectedPanel } from "@/features/bot/hooks";
 
 export const ProviderConnectedPanel = ({
   provider,
   form,
 }: ProviderConnectedContent) => {
-  const models = useProviderModelActions(provider.id);
-
-  // ── 数据提取与派生状态 ────────────────────────
-  // 直接从 form.formData 中提取 apiURL（标准化字段名）
-  const connectionUrl = form.formData.apiURL;
-  const hasUrl = Boolean(connectionUrl);
-
-  // 模型列表状态计算
-  const hasModels = models.available.length > 0;
-  const enabledCount = models.available.reduce(
-    (count, model) => count + (models.enabled[model] ? 1 : 0),
-    0,
-  );
-
-  // 全选开关的三态逻辑：off（全不选）/ on（全选）/ mixed（部分选中）
-  const selectionState =
-    !hasModels || enabledCount === 0
-      ? "off"
-      : enabledCount === models.available.length
-        ? "on"
-        : "mixed";
-
-  // ARIA 无障碍属性：mixed 状态需要特殊处理
-  const masterAriaChecked =
-    selectionState === "mixed" ? "mixed" : selectionState === "on";
+  const {
+    connectionUrl,
+    hasUrl,
+    hasModels,
+    modelItems,
+    selectionState,
+    masterAriaChecked,
+    onToggleModel,
+    onToggleAllModels,
+  } = useProviderConnectedPanel({
+    providerId: provider.id,
+    connectionUrl: form.formData.apiURL,
+  });
 
   return (
     <div className="pb-2 pl-1 pt-0 space-y-4">
@@ -90,9 +78,7 @@ export const ProviderConnectedPanel = ({
               disabled={!hasModels}
               data-state={selectionState}
               title="Toggle all models"
-              onClick={() =>
-                models.onToggleAll(selectionState === "on" ? false : true)
-              }
+              onClick={onToggleAllModels}
               className={[
                 "relative inline-flex h-4 w-9 items-center rounded-full border transition-all",
                 "shadow-inner",
@@ -121,16 +107,15 @@ export const ProviderConnectedPanel = ({
         {/* 模型列表内容：有模型时渲染列表，无模型时显示空状态 */}
         {hasModels ? (
           <div className="divide-y divide-dashed divide-settings-panel-fg/15">
-            {models.available.map((model) => {
-              const checked = models.enabled[model];
+            {modelItems.map(({ name, checked }) => {
               return (
                 <div
-                  key={model}
+                  key={name}
                   className="grid grid-cols-[1fr_auto] items-center gap-3 px-3 py-2 text-xs text-settings-panel-fg/70"
                 >
                   {/* 左侧：模型名称 */}
                   <span className="font-mono text-settings-panel-fg/80">
-                    {model}
+                    {name}
                   </span>
 
                   {/* 右侧：单个模型的启用开关 */}
@@ -138,7 +123,7 @@ export const ProviderConnectedPanel = ({
                     type="button"
                     role="switch"
                     aria-checked={checked}
-                    onClick={() => models.onToggle(model, !checked)}
+                    onClick={() => onToggleModel(name)}
                     className={[
                       "relative inline-flex h-4 w-9 items-center rounded-full border transition-all",
                       "shadow-inner",

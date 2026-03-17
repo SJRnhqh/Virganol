@@ -83,7 +83,7 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
   - `pending` — 旋转的 Loader2（复用 `rotatingIconVariants` 动画）
   - `connected` — 绿色 Check 对勾
   - `failed` — 赭石色 CircleAlert 警告图标
-- [x] Header Props 收口：`meta` / `cardState` / `open`（静态元信息与状态语义分离）
+- [x] Header Props 收口：`provider` / `cardState` / `open`（静态元信息与状态语义分离）
 
 ##### ✅ 4.3.2 ProviderBody 渲染重构
 
@@ -144,9 +144,9 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 重命名 `ProviderHeader` → `ProviderCardHeader`，消除与全局生命周期 Header 命名冲突
 - [x] 重命名 `ProviderBody` → `ProviderCardBody`，语义更清晰
 - [x] 创建 `types/provider/props/card.ts` 定义 `ProviderCardProps` 类型框架
-- [x] 创建 `types/provider/props/meta.ts` 定义 `WithProviderMeta`（name + icon）
-- [x] 创建 `types/provider/props/header.ts` 定义 `ProviderCardHeaderProps`（`meta` +
-`cardState` + `open`）
+- [x] 创建 `types/provider/props/info.ts` 定义 `ProviderInfo`（id + name + icon）
+- [x] 创建 `types/provider/props/header.ts` 定义 `ProviderCardHeaderProps`（`provider`
++`cardState` + `open`）
 - [x] 创建 `types/provider/props/form.ts` 定义 `WithProviderForm`（data + TODO）
 - [x] Props 组合式设计：`With-` 前缀表示可复用片段，`-Props` 后缀表示完整组件 Props
 
@@ -165,7 +165,7 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState` 可组合片段
 - [x] 创建 `types/provider/props/button.ts`
   定义 `ProviderConnectionButtonProps extends WithCardState`
-- [x] 优化 `ProviderCardHeaderProps` 结构：`extends WithCardState` + `meta: WithProviderMeta`（独立字段）
+- [x] 优化 `ProviderCardHeaderProps` 结构：`extends WithCardState` + `provider: ProviderInfo`（独立字段）
 - [x] 统一参数顺序：组件解构顺序与接口定义顺序一致（extends 字段优先）
 - [x] 删除冗余组件：`ConnectButton` / `ConnectingButton` /
   `ReconnectButton` / `RetryButton` / `BaseProviderButton`
@@ -219,7 +219,7 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
   或在 connected 分支收口后上交给 `ProviderCardBody`：
   统一展开传参风格，移除冗余 `default` 分支，保留路由职责
 - [x] 审查 `useProvider` 钩子返回值与组件 Props 的对齐关系：
-  创建 `PROVIDER_NAMES` 常量，合并 `icon` 和 `name` 为 `meta` 对象（`WithProviderMeta`）
+  创建 `PROVIDER_NAMES` 常量，合并 `id` / `icon` / `name` 为 `ProviderInfo` 对象（`provider`）
 - [x] **表单操作整合与接口简化**（2025-03-17）：
   - [x] 整合 `handleReset` 逻辑到 `form.onReset`（Hook 层业务逻辑收拢）
   - [x] 移除 `ProviderCardBodyProps.onReset` 冗余参数
@@ -245,6 +245,15 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 保留 `ProviderItem` 适配层（便于未来针对特定 provider 添加特殊逻辑）
 - [x] 重命名 `ProviderHeader` → `ProviderTitle`（避免与 `ProviderCardHeader` 混淆，语义更准确）
 
+##### ✅ 4.3.11 ProviderInfo 与 Connected 局部 ViewModel 收口
+
+- [x] `providerId` + `name` + `icon` 收口为 `ProviderInfo`，`meta.ts` → `info.ts`
+- [x] `WithProviderId` 字段统一为 `id`
+- [x] `useProvider` 收紧为 card-level shell，不再聚合 `models`
+- [x] `ProviderConnectedPanel` 不再从 `ProviderCard` / `ProviderCardBody` 接收 `models`
+- [x] 新增 `useProviderConnectedPanel`，收口 connected 面板视图派生
+- [x] 删除公共 props 契约 `WithProviderModels`
+
 **最终结构**：
 
 ```txt
@@ -269,11 +278,12 @@ settings/provider/
 
 - [ ] `ProviderConnectedPanel` 重构（175 行 → 拆分为独立子组件，提升可读性）
 - [ ] 类型文件清理与归位：
-  - [ ] `base.ts` 临时文件清理（`ProviderConnectionProps` / `ProviderModelProps` 归位）
+  - [ ] `base.ts` 临时文件清理（`ProviderConnectionProps` 归位）
   - [ ] `content-payload.ts` 重命名为语义化名称（如 `connected.ts`）
-  - [ ] 创建 `types/provider/props/connection.ts`（models.ts 已完成）
+  - [ ] 创建 `types/provider/props/connection.ts`
 - [ ] `connection` 接口最终审查（`onConnect` / `onErrorReset` 优化空间评估）
-- [ ] `ProviderModelProps` 数据与操作拆分评估（当前 `WithProviderModels` 统一管理，后续可按需拆分）
+- [ ] `useProviderModelActions` / `useProviderConnectedPanel` 边界复核（局部 ViewModel
+  是否继续下沉）
 - [ ] 考虑重命名 `ProviderHeader` → `ProviderLifecycleHeader`（避免与 `ProviderCardHeader`
       混淆）
 
@@ -287,12 +297,13 @@ settings/provider/
   - [ ] 简化 useCallback 依赖数组
   - [ ] 统一错误处理
 - [ ] `useProvider` — 待优化
-  - [ ] 返回值结构对齐 `WithProviderModels`
+  - [x] 已收紧为 card-level shell（不再聚合 models）
   - [ ] 优化 store selector 性能
+- [x] `useProviderConnectedPanel` — connected 面板视图派生已抽离
 - [ ] `useProviderModelActions` — 待优化
   - [ ] 修复乐观更新并发风险（请求去重/版本号机制）
   - [ ] 优化 store selector 性能
-  - [ ] 返回值结构对齐 `WithProviderModels`
+  - [x] 消费范围已局部化，不再对齐公共 props 契约
 
 ### Phase 5：健康检查错误精细化
 
@@ -312,13 +323,13 @@ settings/provider/
 - [ ] 视需要补充集成测试
 - [ ] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [ ] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
-- [ ] `handleProviderStatus` — 收敛多次零散 `set` 为单次批量更新，减少不必要的状态引用变更与重渲染
+- [x] `handleProviderStatus` — 收敛多次零散 `set` 为单次批量更新，减少不必要的状态引用变更与重渲染
 - [ ] 前端 `errorCode` 收敛为共享联合类型（`ProviderErrorCode`），替代宽泛 `string`，支持消费侧穷举匹配
 - [ ] `store.rs` — 全量读-改-写优化：评估按 provider 独立 key 存储或脏标记机制，降低 I/O 开销
 - [ ] 事件名前后端契约自动化：Rust 侧事件名抽为常量模块，或引入 codegen 消除人工对齐风险
 - [ ] `ProviderError` — 补 `source()` 错误链实现或引入 `thiserror`，提升调试时错误溯源能力
 - [ ] `reconcile_enabled_models` — 无变更路径避免 `record.clone()`，改用 owned 传递或 `Cow` 减少堆分配
-- [ ] `useProviderStartup` — 启动失败时写入 `checkStore.setFailed()`，避免监听注册全部失败后 UI 无感知
+- [x] `useProviderStartup` — 启动失败时写入 `checkStore.setFailed()`，避免监听注册全部失败后 UI 无感知
 - [ ] `PROVIDERS_STORE_LOCK` — 评估迁移至 Tauri `State<Mutex<T>>` 管理模式，为多窗口场景预留空间
 - [ ] 生命周期功能开发完结
 

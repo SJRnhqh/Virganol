@@ -8,7 +8,8 @@
 
 完成 Provider 生命周期管理的前端审查与优化（后端已完成）。
 
-默认审查顺序：**store → handlers → hooks → components**（自底向上）；本轮已按事件主链路交叉推进，当前重点转向 `CollectionStore`。
+默认审查顺序：**store → handlers → hooks → components**（自底向上）；本轮已按事件主链路交叉推进，当前重点转向
+`hooks/` 与 `ProviderConnectedPanel` 的局部 ViewModel / 渲染边界收口。
 
 ---
 
@@ -37,7 +38,7 @@
   - [x] Props 类型复用：创建 `types/provider/props/id.ts` 定义 `WithProviderId` 可组合类型
   - [x] 组件分层清晰化：LLMProviders（页面）→ ProviderHeader/ProviderList（功能区）→ ProviderItem
   （适配层）→ ProviderCard（卡片层）
-  - [x] Props 传递最小化：只传必需的 `providerId`，其他数据由 Hook 派生
+  - [x] Props 传递最小化：只传必需的 `id`，其他数据由 Hook 派生
 - [x] **ProviderConnectionButton 配置驱动重构**（2025-03-13）
   - [x] 创建 `types/provider/custom/button.ts`
     定义 `DualIconButton` / `ButtonAnimation` 核心类型
@@ -47,16 +48,20 @@
   - [x] 重构 `ProviderConnectionButton` 为单一配置驱动组件，删除 4 个独立按钮组件
   - [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState` 可组合片段
   - [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps`
-  - [x] 优化 `ProviderCardHeaderProps` 结构：`extends WithCardState` + `meta` 独立字段
+  - [x] 优化 `ProviderCardHeaderProps` 结构：`extends WithCardState` + `provider` 独立字段
   - [x] 统一参数顺序：组件解构顺序与接口定义顺序一致（extends 字段优先）
-- [x] **ProviderConnectedPanel 接口收紧**（2025-03-16）
-  - [x] 移除 `fields` 冗余传递，直接使用 `data.apiURL` 标准化字段
-  - [x] 重命名 `value` → `data`（语义更清晰）
+- [x] **ProviderConnectedPanel 接口收紧与局部 Hook 收口**
+  - [x] 移除 `fields` 冗余传递，connected 面板直接使用 `form.formData.apiURL`
   - [x] 类型定义统一在 `content-payload.ts`
   - [x] 移除 `ProviderField` 中的 `isUrl` 字段
   - [x] 创建 `PROVIDER_NAMES` 常量（`constants/provider/common/name.ts`）
-  - [x] 合并 `icon` 和 `name` 为 `meta` 对象（`WithProviderMeta`）
-  - [x] `useProvider` 返回 `meta` 统一元信息
+  - [x] `meta.ts` → `info.ts`，`ProviderInfo` 统一承载 `id` / `name` / `icon`
+  - [x] `WithProviderId` 字段统一为 `id`
+  - [x] `useProvider` 收紧为 card-level shell：不再聚合 `models`
+  - [x] `ProviderConnectedPanel` 模型消费局部化：不再通过 `ProviderCard` / `ProviderCardBody`
+  逐层透传
+  - [x] 新增 `useProviderConnectedPanel`，收口 `hasModels` / `selectionState` / `masterAriaChecked`
+  - [x] 删除公共 props 契约 `WithProviderModels`
   - [x] 优化 `ProviderCardContent` 统一展开传参风格，移除冗余 `default` 分支
 
 ---
@@ -85,8 +90,9 @@
 
 - [x] `useProviderStartup.ts` — 监听注册 + 启动触发 + cleanup（已确认先监听、后触发）
 - [ ] `useProviderConnection.ts` — connect / disconnect / errorReset（待优化性能和接口）
-- [ ] `useProvider.ts` — 状态聚合（待优化返回值结构，对齐 `WithProviderModels`）
-- [ ] `useProviderModelActions.ts` — 模型开关（待优化并发安全和性能）
+- [ ] `useProvider.ts` — 状态聚合（已收紧为 card-level shell，待继续优化 selector 性能）
+- [x] `useProviderConnectedPanel.ts` — connected 面板视图派生已从组件抽离
+- [ ] `useProviderModelActions.ts` — 模型开关（消费范围已局部化，待优化并发安全和性能）
 
 ### 4. components/ 审查（渲染层）
 
@@ -100,17 +106,17 @@ Props 类型复用 ✅
   - [x] 创建 `types/provider/props/id.ts` 定义 `WithProviderId` 可复用 Props 类型
   - [x] 组件分层清晰：LLMProviders（页面）→ ProviderHeader/ProviderList（功能区）→ ProviderItem
   （适配层）→ BaseProvider（展示层）
-  - [x] Props 传递最小化：只传必需的 `providerId`，其他数据由 Hook 派生
+  - [x] Props 传递最小化：只传必需的 `id`，其他数据由 Hook 派生
 - [x] **卡片组件命名优化**（2025-03-11）✅
   - [x] `ProviderHeader` → `ProviderCardHeader`（消除与全局 Header 命名冲突）
   - [x] `ProviderBody` → `ProviderCardBody`（语义更清晰）
   - [x] 创建 `types/provider/props/card.ts` 定义 `ProviderCardProps` 框架
-  - [x] 创建 `types/provider/props/meta.ts` 定义 `WithProviderMeta`（name + icon）
+  - [x] 创建 `types/provider/props/info.ts` 定义 `ProviderInfo`（id + name + icon）
   - [x] 创建 `types/provider/props/form.ts` 定义 `WithProviderForm`（待完善）
 - [x] `ProviderCardHeader` 收口 ✅
   - [x] `ProviderCardHeader` className 改用 `cn()` 统一管理
   - [x] 创建 `types/provider/props/header.ts` 定义 `ProviderCardHeaderProps`
-  - [x] `ProviderCardHeader` Props 收紧为 `meta` / `cardState` / `open`
+  - [x] `ProviderCardHeader` Props 收紧为 `provider` / `cardState` / `open`
   - [x] 新增 `icons/provider/card.tsx` 统一管理 `cardState → icon` 映射
 - [x] **ProviderConnectionButton 配置驱动重构**（2025-03-13）✅
   - [x] 创建 `types/provider/custom/button.ts` 定义按钮核心类型
@@ -143,7 +149,7 @@ Props 类型复用 ✅
   - [x] 收紧 connected 内容层接口（移除 `fields` 冗余，直接使用 `data.apiURL`）
   - [x] 移除 `ProviderField.isUrl` 字段
   - [x] 创建 `PROVIDER_NAMES` 常量并导出
-  - [x] 合并 `icon` 和 `name` 为 `meta` 对象（`WithProviderMeta`）
+  - [x] 合并 `id` / `icon` / `name` 为 `ProviderInfo` 对象（`provider`）
   - [x] `ProviderCardContent` 统一展开传参风格，移除冗余 `default` 分支
   - [x] **表单接口收紧**（2025-03-16）
     - [x] 合并 `fields` 到 `WithProviderForm` 接口（与 `formData` 内聚）
@@ -168,13 +174,11 @@ Props 类型复用 ✅
     - [x] 移除 `ProviderConnectionProps.onDisconnect`（仅作为 Hook 内部实现）
     - [x] `onDisconnect` 保留在 `useProviderConnection` 中供 `form.onReset` 调用
     - [x] 更新 `ProviderConnectionProps` 注释：明确只暴露组件层需要的操作
-  - [x] **模型管理接口收紧**（2025-03-17）
-    - [x] 创建 `types/provider/props/models.ts` 定义 `WithProviderModels`
-    - [x] 收紧 `ProviderConnectedContent` 接口：`models: WithProviderModels`（必需）
-    - [x] 移除组件内冗余防御逻辑（默认值 `?? true`、可选链 `?.`）
-    - [x] 信任后端契约：`enabled` 已是 `available` 的子集，无需前端二次校验
-    - [x] 简化 `ProviderCardBody` 传参：直接传递 `models` 对象
-    - [x] 更新类型导出：`WithProviderModels` 导出到各层 index
+  - [x] **模型管理接口收紧**
+    - [x] `models` 不再作为公共 props 契约经 `ProviderCard` 链路逐层传递
+    - [x] 删除 `types/provider/props/models.ts` 与 `WithProviderModels`
+    - [x] 模型状态和操作局部化到 `ProviderConnectedPanel` + `useProviderConnectedPanel`
+    - [x] 组件内仅保留模型列表渲染所需的最小数据（`modelItems` / `selectionState` / `onToggle*`）
 - [x] **组件目录重构**（2025-03-17）
   - [x] 合并 `base/provider/`、`forms/`、`buttons/provider/` 到 `settings/provider/content/cards/`
   - [x] 统一卡片层组件管理（9 个组件集中在 `cards/` 目录）
