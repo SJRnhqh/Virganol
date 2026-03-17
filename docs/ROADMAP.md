@@ -232,15 +232,49 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
   - [x] `onDisconnect` 保留在 `useProviderConnection` 中供 `form.onReset` 调用
   - [x] 更新 `ProviderConnectionProps` 注释：明确只暴露组件层需要的操作
 
+##### ✅ 4.3.10 组件目录重构（2025-03-17）
+
+**目标**：统一卡片层组件管理，消除分散的目录结构
+
+- [x] 合并 `base/provider/`、`forms/`、`buttons/provider/` 到 `settings/provider/content/cards/`
+- [x] 迁移 9 个组件文件到统一目录
+- [x] 更新所有组件内部导入路径（改为同目录相对引用）
+- [x] 清理类型导出（移除不存在的 `ProviderFormContent`）
+- [x] 简化 `cards/index.ts` 导出（只导出 `ProviderItem`，其他组件内部使用）
+- [x] 删除空目录：`base/provider/`、`forms/`、`buttons/provider/`
+- [x] 保留 `ProviderItem` 适配层（便于未来针对特定 provider 添加特殊逻辑）
+
+**最终结构**：
+
+```txt
+settings/provider/
+├── LLMProviders.tsx
+└── content/
+    ├── ProviderHeader.tsx (全局生命周期)
+    ├── ProviderList.tsx
+    └── cards/
+        ├── ProviderItem.tsx (Hook 适配层)
+        ├── ProviderCard.tsx
+        ├── ProviderCardHeader.tsx
+        ├── ProviderCardBody.tsx
+        ├── ProviderCardContent.tsx
+        ├── ProviderConnectionButton.tsx
+        ├── ProviderForm.tsx
+        ├── ProviderErrorPanel.tsx
+        └── ProviderConnectedPanel.tsx
+```
+
 **待后续优化**：
 
-- [ ] `ProviderConnectedPanel` 重构（177 行 → 拆分为独立子组件，提升可读性）
+- [ ] `ProviderConnectedPanel` 重构（175 行 → 拆分为独立子组件，提升可读性）
 - [ ] 类型文件清理与归位：
   - [ ] `base.ts` 临时文件清理（`ProviderConnectionProps` / `ProviderModelProps` 归位）
   - [ ] `content-payload.ts` 临时文件清理（`ProviderConnectedContent` 归位到语义化位置）
   - [ ] 创建 `types/provider/props/connection.ts` 和 `types/provider/props/models.ts`
 - [ ] `connection` 接口最终审查（`onConnect` / `onErrorReset` 优化空间评估）
 - [ ] `ProviderModelProps` 数据与操作拆分（`modelData` + `modelActions`）
+- [ ] 考虑重命名 `ProviderHeader` → `ProviderLifecycleHeader`（避免与 `ProviderCardHeader`
+      混淆）
 
 ### Phase 5：健康检查错误精细化
 

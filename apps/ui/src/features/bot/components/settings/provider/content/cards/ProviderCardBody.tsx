@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/base/provider/content/ProviderCardBody.tsx
+// apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderCardBody.tsx
 // 内部引用
 import type {
   ProviderCardState,
@@ -6,7 +6,7 @@ import type {
   ProviderConnectionButtonProps,
 } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
-import { ProviderConnectionButton } from "@/features/bot/components/buttons";
+import { ProviderConnectionButton } from "./ProviderConnectionButton";
 import { ProviderCardContent } from "./ProviderCardContent";
 
 export const ProviderCardBody = ({

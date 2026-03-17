@@ -1,12 +1,10 @@
-// apps/ui/src/features/bot/components/base/provider/content/ProviderCardContent.tsx
+// apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderCardContent.tsx
 // 内部引用
 import type { ProviderCardContentProps } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
-import {
-  ProviderErrorPanel,
-  ProviderConnectedPanel,
-  ProviderForm,
-} from "@/features/bot/components/forms";
+import { ProviderErrorPanel } from "./ProviderErrorPanel";
+import { ProviderConnectedPanel } from "./ProviderConnectedPanel";
+import { ProviderForm } from "./ProviderForm";
 
 export const ProviderCardContent = ({
   cardState,

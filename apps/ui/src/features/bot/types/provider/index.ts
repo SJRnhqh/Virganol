@@ -35,7 +35,6 @@ export type {
   WithProviderId,
   WithProviderForm,
   WithProviderMeta,
-  ProviderFormContent,
   ProviderFormProps,
   ProviderFailedContent,
   ProviderErrorPanelProps,

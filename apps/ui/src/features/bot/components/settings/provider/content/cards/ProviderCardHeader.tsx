@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/base/provider/content/ProviderCardHeader.tsx
+// apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderCardHeader.tsx
 // 外部依赖
 import { motion } from "framer-motion";
 

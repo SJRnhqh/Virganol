@@ -168,6 +168,13 @@ Props 类型复用 ✅
     - [x] 移除 `ProviderConnectionProps.onDisconnect`（仅作为 Hook 内部实现）
     - [x] `onDisconnect` 保留在 `useProviderConnection` 中供 `form.onReset` 调用
     - [x] 更新 `ProviderConnectionProps` 注释：明确只暴露组件层需要的操作
+- [x] **组件目录重构**（2025-03-17）
+  - [x] 合并 `base/provider/`、`forms/`、`buttons/provider/` 到 `settings/provider/content/cards/`
+  - [x] 统一卡片层组件管理（9 个组件集中在 `cards/` 目录）
+  - [x] 更新所有导入路径（相对路径改为同目录引用）
+  - [x] 清理类型导出（移除不存在的 `ProviderFormContent`）
+  - [x] `cards/index.ts` 只导出 `ProviderItem`（其他组件内部使用）
+  - [x] 保留 `ProviderItem` 适配层（便于未来针对特定 provider 扩展）
 
 ### 5. 修补与收尾
 

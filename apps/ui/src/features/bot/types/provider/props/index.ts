@@ -7,11 +7,7 @@ export type {
   ProviderFailedState,
   WithCardState,
 } from "./state";
-export type {
-  WithProviderForm,
-  ProviderFormContent,
-  ProviderFormProps,
-} from "./form";
+export type { WithProviderForm, ProviderFormProps } from "./form";
 export type { WithProviderMeta } from "./meta";
 export type { ProviderFailedContent, ProviderErrorPanelProps } from "./error";
 export type { ProviderCardProps } from "./card";

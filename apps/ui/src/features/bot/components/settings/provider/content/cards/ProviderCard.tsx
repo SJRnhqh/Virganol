@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/base/provider/ProviderCard.tsx
+// apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderCard.tsx
 // 外部依赖
 import { useState } from "react";
 
@@ -6,7 +6,8 @@ import { useState } from "react";
 import { cn } from "@/lib";
 import type { ProviderCardProps } from "@/features/bot/types";
 import { BaseExpandableMenu } from "@/components/base/BaseExpandableMenu";
-import { ProviderCardHeader, ProviderCardBody } from "./content";
+import { ProviderCardHeader } from "./ProviderCardHeader";
+import { ProviderCardBody } from "./ProviderCardBody";
 
 export const ProviderCard = ({
   cardState,
