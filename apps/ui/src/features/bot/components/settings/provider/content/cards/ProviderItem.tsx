@@ -7,5 +7,5 @@ import { ProviderCard } from "./ProviderCard";
 export const ProviderItem = ({ providerId }: WithProviderId) => {
   const providerCard = useProvider(providerId);
 
-  return <ProviderCard {...providerCard} />;
+  return <ProviderCard providerId={providerId} {...providerCard} />;
 };

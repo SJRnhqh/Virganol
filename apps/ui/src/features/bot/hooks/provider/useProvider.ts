@@ -8,7 +8,6 @@ import {
 } from "@/features/bot/constants";
 import { PROVIDER_ICONS } from "@/features/bot/icons";
 import { useProviderCollectionStore } from "@/features/bot/store";
-import { useProviderModelActions } from "./useProviderModelActions";
 import { useProviderConnection } from "./useProviderConnection";
 
 export const useProvider = (providerId: ProviderId) => {
@@ -21,8 +20,6 @@ export const useProvider = (providerId: ProviderId) => {
   const { onConnect, onDisconnect, onErrorReset } =
     useProviderConnection(providerId);
 
-  const models = useProviderModelActions(providerId);
-
   // ── 组装返回 ──────────────────────────────
   return {
     cardState: providerState.cardState,
@@ -34,7 +31,9 @@ export const useProvider = (providerId: ProviderId) => {
       fields: PROVIDER_FORM_FIELDS[providerId],
       formData: providerState.form,
       onUpdate: (patch: Partial<ProviderFormData>) =>
-        useProviderCollectionStore.getState().setProviderForm(providerId, patch),
+        useProviderCollectionStore
+          .getState()
+          .setProviderForm(providerId, patch),
       onReset: () => {
         // 1. 重置表单数据到初始值
         useProviderCollectionStore
@@ -49,7 +48,5 @@ export const useProvider = (providerId: ProviderId) => {
       onConnect,
       onErrorReset,
     },
-
-    models,
   };
 };

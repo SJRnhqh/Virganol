@@ -10,11 +10,11 @@ import { ProviderConnectionButton } from "./ProviderConnectionButton";
 import { ProviderCardContent } from "./ProviderCardContent";
 
 export const ProviderCardBody = ({
+  providerId,
   cardState,
   form,
   errorMessage,
   connection,
-  models,
 }: ProviderCardBodyProps) => {
   // 渲染内容
   const renderContent = () => {
@@ -28,8 +28,8 @@ export const ProviderCardBody = ({
           <ProviderCardContent
             cardState={cardState}
             cardContent={{
+              providerId,
               form,
-              models,
             }}
           />
         );

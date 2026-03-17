@@ -10,12 +10,12 @@ import { ProviderCardHeader } from "./ProviderCardHeader";
 import { ProviderCardBody } from "./ProviderCardBody";
 
 export const ProviderCard = ({
+  providerId,
   cardState,
   meta,
   form,
   errorMessage,
   connection,
-  models,
 }: ProviderCardProps) => {
   const [open, setOpen] = useState(false);
 
@@ -52,19 +52,15 @@ export const ProviderCard = ({
       )}
       contentInnerClassName="overflow-hidden px-5"
       title={
-        <ProviderCardHeader
-          cardState={cardState}
-          meta={meta}
-          open={open}
-        />
+        <ProviderCardHeader cardState={cardState} meta={meta} open={open} />
       }
     >
       <ProviderCardBody
+        providerId={providerId}
         cardState={cardState}
         form={form}
         errorMessage={errorMessage}
         connection={connection}
-        models={models}
       />
     </BaseExpandableMenu>
   );

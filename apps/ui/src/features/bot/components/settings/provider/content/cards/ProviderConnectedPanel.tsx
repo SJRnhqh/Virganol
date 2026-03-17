@@ -4,11 +4,14 @@ import { Undo2 } from "lucide-react";
 
 // 内部引用
 import type { ProviderConnectedContent } from "@/features/bot/types";
+import { useProviderModelActions } from "@/features/bot/hooks";
 
 export const ProviderConnectedPanel = ({
+  providerId,
   form,
-  models,
 }: ProviderConnectedContent) => {
+  const models = useProviderModelActions(providerId);
+
   // ── 数据提取与派生状态 ────────────────────────
   // 直接从 form.formData 中提取 apiURL（标准化字段名）
   const connectionUrl = form.formData.apiURL;
