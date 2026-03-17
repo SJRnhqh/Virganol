@@ -10,9 +10,8 @@ import { ProviderCardHeader } from "./ProviderCardHeader";
 import { ProviderCardBody } from "./ProviderCardBody";
 
 export const ProviderCard = ({
-  providerId,
   cardState,
-  meta,
+  provider,
   form,
   errorMessage,
   connection,
@@ -52,11 +51,15 @@ export const ProviderCard = ({
       )}
       contentInnerClassName="overflow-hidden px-5"
       title={
-        <ProviderCardHeader cardState={cardState} meta={meta} open={open} />
+        <ProviderCardHeader
+          cardState={cardState}
+          provider={provider}
+          open={open}
+        />
       }
     >
       <ProviderCardBody
-        providerId={providerId}
+        provider={provider}
         cardState={cardState}
         form={form}
         errorMessage={errorMessage}

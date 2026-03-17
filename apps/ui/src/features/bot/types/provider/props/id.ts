@@ -3,9 +3,9 @@
 import type { ProviderId } from "../common";
 
 /**
- * 基础 Props：包含 providerId
- * 用于所有需要 providerId 的组件
+ * 基础 Props：包含 provider 标识
+ * 用于所有需要 provider id 的组件
  */
 export interface WithProviderId {
-  providerId: ProviderId;
+  id: ProviderId;
 }

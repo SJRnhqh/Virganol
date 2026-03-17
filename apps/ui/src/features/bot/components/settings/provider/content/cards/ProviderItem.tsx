@@ -4,8 +4,8 @@ import type { WithProviderId } from "@/features/bot/types";
 import { useProvider } from "@/features/bot/hooks";
 import { ProviderCard } from "./ProviderCard";
 
-export const ProviderItem = ({ providerId }: WithProviderId) => {
-  const providerCard = useProvider(providerId);
+export const ProviderItem = ({ id }: WithProviderId) => {
+  const providerCard = useProvider(id);
 
-  return <ProviderCard providerId={providerId} {...providerCard} />;
+  return <ProviderCard {...providerCard} />;
 };

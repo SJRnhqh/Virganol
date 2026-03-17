@@ -23,7 +23,8 @@ export const useProvider = (providerId: ProviderId) => {
   // ── 组装返回 ──────────────────────────────
   return {
     cardState: providerState.cardState,
-    meta: {
+    provider: {
+      id: providerId,
       name: PROVIDER_NAMES[providerId],
       icon: PROVIDER_ICONS[providerId],
     },

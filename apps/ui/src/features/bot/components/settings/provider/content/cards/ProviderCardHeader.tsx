@@ -10,28 +10,30 @@ import { PROVIDER_CARD_STATE_ICONS } from "@/features/bot/icons";
 
 export const ProviderCardHeader = ({
   cardState,
-  meta,
+  provider,
   open,
 }: ProviderCardHeaderProps) => {
   const cardStateIconSlot = PROVIDER_CARD_STATE_ICONS[cardState];
   const CardStateIcon = cardStateIconSlot?.icon;
-  const metaToneClassName = open
+  const providerToneClassName = open
     ? "text-settings-panel-fg"
     : "text-settings-panel-fg/55 group-hover:text-settings-panel-fg/80";
 
   return (
     <div className="flex items-center gap-3.5">
-      <span className={cn("transition-colors duration-200", metaToneClassName)}>
-        {meta.icon}
+      <span
+        className={cn("transition-colors duration-200", providerToneClassName)}
+      >
+        {provider.icon}
       </span>
       <div className="flex items-center gap-2">
         <span
           className={cn(
             "text-sm font-medium transition-colors",
-            metaToneClassName,
+            providerToneClassName,
           )}
         >
-          {meta.name}
+          {provider.name}
         </span>
 
         {CardStateIcon && cardState === PROVIDER_CARD_STATES.PENDING && (

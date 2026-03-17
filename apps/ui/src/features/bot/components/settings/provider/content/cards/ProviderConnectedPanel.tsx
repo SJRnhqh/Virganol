@@ -7,10 +7,10 @@ import type { ProviderConnectedContent } from "@/features/bot/types";
 import { useProviderModelActions } from "@/features/bot/hooks";
 
 export const ProviderConnectedPanel = ({
-  providerId,
+  provider,
   form,
 }: ProviderConnectedContent) => {
-  const models = useProviderModelActions(providerId);
+  const models = useProviderModelActions(provider.id);
 
   // ── 数据提取与派生状态 ────────────────────────
   // 直接从 form.formData 中提取 apiURL（标准化字段名）

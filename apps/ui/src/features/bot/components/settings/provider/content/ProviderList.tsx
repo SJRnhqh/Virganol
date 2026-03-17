@@ -7,7 +7,7 @@ export const ProviderList = () => {
   return (
     <>
       {PROVIDER_IDS.map((providerId) => (
-        <ProviderItem key={providerId} providerId={providerId} />
+        <ProviderItem key={providerId} id={providerId} />
       ))}
     </>
   );

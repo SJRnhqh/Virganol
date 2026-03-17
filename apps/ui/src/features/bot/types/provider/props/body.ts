@@ -2,15 +2,15 @@
 // 内部引用
 import type { ProviderCardState } from "../state";
 import type { ProviderConnectionProps } from "../base";
-import type { WithProviderId } from "./id";
+import type { ProviderInfo } from "./info";
 import type { WithProviderForm } from "./form";
 
 /**
  * ProviderCardBody 组件 Props
  */
 export interface ProviderCardBodyProps {
-  /** 当前 Provider 标识 */
-  providerId: WithProviderId["providerId"];
+  /** Provider 静态信息（id、名称、图标） */
+  provider: ProviderInfo;
   /** 当前卡片状态 */
   cardState: ProviderCardState;
   /** 表单数据和操作 */

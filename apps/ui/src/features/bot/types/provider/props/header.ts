@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/types/provider/props/header.ts
 // 内部引用
-import type { WithProviderMeta } from "./meta";
+import type { ProviderInfo } from "./info";
 import type { WithCardState } from "./state";
 
 /**
@@ -8,8 +8,8 @@ import type { WithCardState } from "./state";
  * 用于 ProviderCardHeader 组件
  */
 export interface ProviderCardHeaderProps extends WithCardState {
-  /** Provider 展示元数据（名称、图标） */
-  meta: WithProviderMeta;
+  /** Provider 静态信息（id、名称、图标） */
+  provider: ProviderInfo;
   /** 当前卡片是否处于展开态 */
   open: boolean;
 }
