@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/settings/provider/content/ProviderHeader.tsx
+// apps/ui/src/features/bot/components/settings/provider/content/ProviderTitle.tsx
 // 外部依赖
 import { RefreshCw } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -15,7 +15,7 @@ import { PHASE_CLOUD_ICONS } from "@/features/bot/icons";
 import { useProviderCheckStore } from "@/features/bot/store";
 import { triggerProviderManualRefresh } from "@/features/bot/api";
 
-export const ProviderHeader = () => {
+export const ProviderTitle = () => {
   const phase = useProviderCheckStore((s) => s.phase);
   const isChecking = phase === PROVIDER_CHECK_PHASES.CHECKING;
   const PhaseIcon = PHASE_CLOUD_ICONS[phase];

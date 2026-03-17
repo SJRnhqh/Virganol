@@ -243,6 +243,7 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 简化 `cards/index.ts` 导出（只导出 `ProviderItem`，其他组件内部使用）
 - [x] 删除空目录：`base/provider/`、`forms/`、`buttons/provider/`
 - [x] 保留 `ProviderItem` 适配层（便于未来针对特定 provider 添加特殊逻辑）
+- [x] 重命名 `ProviderHeader` → `ProviderTitle`（避免与 `ProviderCardHeader` 混淆，语义更准确）
 
 **最终结构**：
 
@@ -250,7 +251,7 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 settings/provider/
 ├── LLMProviders.tsx
 └── content/
-    ├── ProviderHeader.tsx (全局生命周期)
+    ├── ProviderTitle.tsx (标题栏 + 全局生命周期)
     ├── ProviderList.tsx
     └── cards/
         ├── ProviderItem.tsx (Hook 适配层)

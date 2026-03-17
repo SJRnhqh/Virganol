@@ -175,6 +175,7 @@ Props 类型复用 ✅
   - [x] 清理类型导出（移除不存在的 `ProviderFormContent`）
   - [x] `cards/index.ts` 只导出 `ProviderItem`（其他组件内部使用）
   - [x] 保留 `ProviderItem` 适配层（便于未来针对特定 provider 扩展）
+  - [x] 重命名 `ProviderHeader` → `ProviderTitle`（避免与 `ProviderCardHeader` 混淆）
 
 ### 5. 修补与收尾
 
