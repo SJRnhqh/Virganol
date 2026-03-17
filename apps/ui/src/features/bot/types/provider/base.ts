@@ -7,11 +7,3 @@ export interface ProviderConnectionProps {
   onConnect?: (formData: ProviderFormData) => Promise<void>;
   onErrorReset?: () => void;
 }
-
-/** 模型数据 + 模型操作 */
-export interface ProviderModelProps {
-  available?: string[];
-  enabled?: Record<string, boolean>;
-  onToggle?: (model: string, enabled: boolean) => void;
-  onToggleAll?: (enabled: boolean) => void;
-}

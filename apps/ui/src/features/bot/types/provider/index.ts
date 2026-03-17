@@ -46,7 +46,7 @@ export type {
   ProviderConnectionButtonProps,
   ProviderConnectedContent,
 } from "./props";
-export type { ProviderModelProps, ProviderConnectionProps } from "./base";
+export type { ProviderConnectionProps } from "./base";
 
 // ── Provider 自定义类型 ──
 export type {

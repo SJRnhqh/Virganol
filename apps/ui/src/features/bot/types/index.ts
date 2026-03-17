@@ -36,7 +36,6 @@ export type {
   ProviderFailedContent,
   ProviderErrorPanelProps,
   ProviderCardProps,
-  ProviderModelProps,
   ProviderCardContentProps,
   ProviderCardHeaderProps,
   ProviderCardBodyProps,

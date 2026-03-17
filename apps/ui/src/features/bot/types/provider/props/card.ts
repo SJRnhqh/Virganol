@@ -4,7 +4,8 @@
 import type { WithProviderMeta } from "./meta";
 import type { WithProviderForm } from "./form";
 import type { WithCardState } from "./state";
-import type { ProviderConnectionProps, ProviderModelProps } from "../base";
+import type { WithProviderModels } from "./models";
+import type { ProviderConnectionProps } from "../base";
 
 /**
  * ProviderCard 组件 Props：包含 provider 卡片渲染所需的完整数据
@@ -18,5 +19,5 @@ export interface ProviderCardProps extends WithCardState {
   /** 错误信息（无错误时为 null） */
   errorMessage: string | null;
   connection: ProviderConnectionProps;
-  models: ProviderModelProps;
+  models: WithProviderModels;
 }
