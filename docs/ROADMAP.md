@@ -220,12 +220,27 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
   统一展开传参风格，移除冗余 `default` 分支，保留路由职责
 - [x] 审查 `useProvider` 钩子返回值与组件 Props 的对齐关系：
   创建 `PROVIDER_NAMES` 常量，合并 `icon` 和 `name` 为 `meta` 对象（`WithProviderMeta`）
+- [x] **表单操作整合与接口简化**（2025-03-17）：
+  - [x] 整合 `handleReset` 逻辑到 `form.onReset`（Hook 层业务逻辑收拢）
+  - [x] 移除 `ProviderCardBodyProps.onReset` 冗余参数
+  - [x] 移除 `ProviderCard` 中 `onReset={form.onReset}` 冗余传参
+  - [x] `ProviderConnectedContent` 合并 `data` + `onReset` 为单一 `form` 字段
+  - [x] `ProviderConnectedPanel` 改用 `form.formData` 和 `form.onReset`
+  - [x] 更新 `ProviderCardBodyProps` TODO 注释（移除已完成的 onReset 收紧项）
+- [x] **连接操作接口简化**（2025-03-17）：
+  - [x] 移除 `ProviderConnectionProps.onDisconnect`（仅作为 Hook 内部实现）
+  - [x] `onDisconnect` 保留在 `useProviderConnection` 中供 `form.onReset` 调用
+  - [x] 更新 `ProviderConnectionProps` 注释：明确只暴露组件层需要的操作
 
 **待后续优化**：
 
-- [ ] `handleReset` 逻辑下沉到 `form.onReset`（组件层业务逻辑下沉到 Hook 层）
+- [ ] `ProviderConnectedPanel` 重构（177 行 → 拆分为独立子组件，提升可读性）
+- [ ] 类型文件清理与归位：
+  - [ ] `base.ts` 临时文件清理（`ProviderConnectionProps` / `ProviderModelProps` 归位）
+  - [ ] `content-payload.ts` 临时文件清理（`ProviderConnectedContent` 归位到语义化位置）
+  - [ ] 创建 `types/provider/props/connection.ts` 和 `types/provider/props/models.ts`
+- [ ] `connection` 接口最终审查（`onConnect` / `onErrorReset` 优化空间评估）
 - [ ] `ProviderModelProps` 数据与操作拆分（`modelData` + `modelActions`）
-- [ ] 评估 Reset 操作层的独立性（独立组件 vs 内嵌于 Panel）
 
 ### Phase 5：健康检查错误精细化
 

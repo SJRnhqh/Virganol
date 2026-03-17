@@ -7,16 +7,15 @@ import { Undo2 } from "lucide-react";
 import type { ProviderConnectedContent } from "@/features/bot/types";
 
 export const ProviderConnectedPanel = ({
-  data,
+  form,
   models = [],
   enabledModels = {},
   onToggleModel,
   onToggleAll,
-  onReset,
 }: ProviderConnectedContent) => {
   // ── 数据提取与派生状态 ────────────────────────
-  // 直接从 data 中提取 apiURL（标准化字段名）
-  const connectionUrl = data.apiURL;
+  // 直接从 form.formData 中提取 apiURL（标准化字段名）
+  const connectionUrl = form.formData.apiURL;
   const hasUrl = Boolean(connectionUrl);
 
   // 模型列表状态计算
@@ -57,13 +56,13 @@ export const ProviderConnectedPanel = ({
         </div>
 
         {/* 右侧：Reset 按钮 */}
-        {onReset && (
+        {form.onReset && (
           <button
             type="button"
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
-              onReset();
+              form.onReset();
             }}
             className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 text-settings-panel-fg/50 hover:text-settings-panel-fg/80 hover:bg-settings-panel-fg/5 transition-all duration-200 rounded-md group cursor-pointer"
             title="Reset connection"

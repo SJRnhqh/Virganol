@@ -18,11 +18,6 @@ export const ProviderCard = ({
 }: ProviderCardProps) => {
   const [open, setOpen] = useState(false);
 
-  const handleReset = () => {
-    form.onReset();
-    connection.onDisconnect?.();
-  };
-
   return (
     <BaseExpandableMenu
       open={open}
@@ -66,7 +61,6 @@ export const ProviderCard = ({
       <ProviderCardBody
         cardState={cardState}
         form={form}
-        onReset={handleReset}
         errorMessage={errorMessage}
         connection={connection}
         models={models}

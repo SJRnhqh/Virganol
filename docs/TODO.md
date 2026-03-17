@@ -157,6 +157,17 @@ Props 类型复用 ✅
     统一管理
     - [x] 保持 `ProviderCardContent` 路由层职责，架构一致性
   - [x] 审查 `useProvider` 钩子返回值与组件 Props 对齐关系
+  - [x] **表单操作整合与接口简化**（2025-03-17）
+    - [x] 整合 `handleReset` 逻辑到 `form.onReset`（Hook 层业务逻辑收拢）
+    - [x] 移除 `ProviderCardBodyProps.onReset` 冗余参数
+    - [x] 移除 `ProviderCard` 中 `onReset={form.onReset}` 冗余传参
+    - [x] `ProviderConnectedContent` 合并 `data` + `onReset` 为单一 `form` 字段
+    - [x] `ProviderConnectedPanel` 改用 `form.formData` 和 `form.onReset`
+    - [x] 更新 `ProviderCardBodyProps` TODO 注释（移除已完成的 onReset 收紧项）
+  - [x] **连接操作接口简化**（2025-03-17）
+    - [x] 移除 `ProviderConnectionProps.onDisconnect`（仅作为 Hook 内部实现）
+    - [x] `onDisconnect` 保留在 `useProviderConnection` 中供 `form.onReset` 调用
+    - [x] 更新 `ProviderConnectionProps` 注释：明确只暴露组件层需要的操作
 
 ### 5. 修补与收尾
 

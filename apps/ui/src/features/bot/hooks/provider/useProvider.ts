@@ -35,15 +35,18 @@ export const useProvider = (providerId: ProviderId) => {
       formData: providerState.form,
       onUpdate: (patch: Partial<ProviderFormData>) =>
         useProviderCollectionStore.getState().setProviderForm(providerId, patch),
-      onReset: () =>
+      onReset: () => {
+        // 1. 重置表单数据到初始值
         useProviderCollectionStore
           .getState()
-          .setProviderForm(providerId, PROVIDER_INITIAL_FORMS[providerId]),
+          .setProviderForm(providerId, PROVIDER_INITIAL_FORMS[providerId]);
+        // 2. 调用后端清理 + 重置前端状态（onDisconnect 作为内部实现）
+        onDisconnect();
+      },
     },
     errorMessage: providerState.errorMessage,
     connection: {
       onConnect,
-      onDisconnect,
       onErrorReset,
     },
 

@@ -13,7 +13,6 @@ export const ProviderCardBody = ({
   cardState,
   form,
   errorMessage,
-  onReset,
   connection,
   models,
 }: ProviderCardBodyProps) => {
@@ -29,8 +28,7 @@ export const ProviderCardBody = ({
           <ProviderCardContent
             cardState={cardState}
             cardContent={{
-              data: form.formData,
-              onReset,
+              form,
               models: models.available,
               enabledModels: models.enabled,
               onToggleModel: models.onToggle,
