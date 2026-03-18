@@ -40,7 +40,7 @@ export type {
   ProviderCardBodyProps,
   ProviderConnectionProps,
   ProviderConnectionButtonProps,
-  ProviderConnectedContent,
+  ProviderConnectedPanelProps,
 
   // ── Provider 自定义类型 ──
   IconSlot,

@@ -9,7 +9,7 @@
 完成 Provider 生命周期管理的前端审查与优化（后端已完成）。
 
 默认审查顺序：**store → handlers → hooks → components**（自底向上）；本轮已按事件主链路交叉推进，当前重点转向
-`hooks/` 与 `ProviderConnectedPanel` 的局部 ViewModel / 渲染边界收口。
+`ProviderConnectedPanel` 的纯渲染精修，以及旧 `connection` 接口的最终审查与收口。
 
 ---
 
@@ -52,7 +52,7 @@
   - [x] 统一参数顺序：组件解构顺序与接口定义顺序一致（extends 字段优先）
 - [x] **ProviderConnectedPanel 接口收紧与局部 Hook 收口**
   - [x] 移除 `fields` 冗余传递，connected 面板直接使用 `form.formData.apiURL`
-  - [x] 类型定义统一在 `content-payload.ts`
+  - [x] 类型定义重命名并归位到 `connected.ts`（`ProviderConnectedPanelProps`）
   - [x] 移除 `ProviderField` 中的 `isUrl` 字段
   - [x] 创建 `PROVIDER_NAMES` 常量（`constants/provider/common/name.ts`）
   - [x] `meta.ts` → `info.ts`，`ProviderInfo` 统一承载 `id` / `name` / `icon`
@@ -60,9 +60,11 @@
   - [x] `useProvider` 收紧为 card-level shell：不再聚合 `models`
   - [x] `ProviderConnectedPanel` 模型消费局部化：不再通过 `ProviderCard` / `ProviderCardBody`
   逐层透传
-  - [x] 新增 `useProviderConnectedPanel`，收口 `hasModels` / `selectionState` / `masterAriaChecked`
+  - [x] 新增 `useProviderConnectedPanel`，最终收口为
+  `modelItems` / `allSelected` / `onToggleModel` / `onToggleAllModels`
   - [x] 删除公共 props 契约 `WithProviderModels`
   - [x] 优化 `ProviderCardContent` 统一展开传参风格，移除冗余 `default` 分支
+  - [x] `ProviderCardContent` connected / failed 分支改为显式传参，统一内容路由风格
 
 ---
 
@@ -91,10 +93,12 @@
 - [x] `useProviderStartup.ts` — 监听注册 + 启动触发 + cleanup（已确认先监听、后触发）
 - [ ] `useProviderConnection.ts` — connect / disconnect / errorReset（待优化性能和接口）
 - [ ] `useProvider.ts` — 状态聚合（已收紧为 card-level shell，待继续优化 selector 性能）
-- [x] `useProviderConnectedPanel.ts` — connected 面板视图派生已从组件抽离
+- [x] `useProviderConnectedPanel.ts` — connected 面板视图派生已从组件抽离，接口已收口为双态全选 ViewModel
 - [ ] `useProviderModelActions.ts` — 模型开关（消费范围已局部化，待优化并发安全和性能）
 
 ### 4. components/ 审查（渲染层）
+
+当前审查结论：除 `ProviderConnectedPanel` 纯渲染结构仍可继续精修，以及旧 `connection` 接口仍待收口外，其余卡片组件边界已基本稳定。
 
 - [x] `settings/provider/content/ProviderHeader.tsx` — phase 图标 + 刷新按钮，`cn()`
 多行格式优化 ✅
@@ -146,7 +150,7 @@ Props 类型复用 ✅
     （移除 `ProviderEditableContent` / `BaseProviderForm`）
   - [x] 收紧 failed 内容层接口
     （由 content 路由承载 `errorMessage`，组件层补 `cardState`）
-  - [x] 收紧 connected 内容层接口（移除 `fields` 冗余，直接使用 `data.apiURL`）
+  - [x] 收紧 connected 内容层接口（移除 `fields` 冗余，直接使用 `form.formData.apiURL`）
   - [x] 移除 `ProviderField.isUrl` 字段
   - [x] 创建 `PROVIDER_NAMES` 常量并导出
   - [x] 合并 `id` / `icon` / `name` 为 `ProviderInfo` 对象（`provider`）
@@ -167,8 +171,8 @@ Props 类型复用 ✅
     - [x] 整合 `handleReset` 逻辑到 `form.onReset`（Hook 层业务逻辑收拢）
     - [x] 移除 `ProviderCardBodyProps.onReset` 冗余参数
     - [x] 移除 `ProviderCard` 中 `onReset={form.onReset}` 冗余传参
-    - [x] `ProviderConnectedContent` 合并 `data` + `onReset` 为单一 `form` 字段
-    - [x] `ProviderConnectedPanel` 改用 `form.formData` 和 `form.onReset`
+    - [x] `ProviderConnectedPanelProps` 保留 `provider` + `form` 两个稳定语义块
+    - [x] `ProviderConnectedPanel` 当前直接使用 `provider.id` 与 `form.formData.apiURL`
     - [x] 更新 `ProviderCardBodyProps` TODO 注释（移除已完成的 onReset 收紧项）
   - [x] **连接操作接口简化**（2025-03-17）
     - [x] 移除 `ProviderConnectionProps.onDisconnect`（仅作为 Hook 内部实现）
@@ -178,7 +182,7 @@ Props 类型复用 ✅
     - [x] `models` 不再作为公共 props 契约经 `ProviderCard` 链路逐层传递
     - [x] 删除 `types/provider/props/models.ts` 与 `WithProviderModels`
     - [x] 模型状态和操作局部化到 `ProviderConnectedPanel` + `useProviderConnectedPanel`
-    - [x] 组件内仅保留模型列表渲染所需的最小数据（`modelItems` / `selectionState` / `onToggle*`）
+    - [x] 组件内仅保留模型列表渲染所需的最小数据（`modelItems` / `allSelected` / `onToggle*`）
 - [x] **组件目录重构**（2025-03-17）
   - [x] 合并 `base/provider/`、`forms/`、`buttons/provider/` 到 `settings/provider/content/cards/`
   - [x] 统一卡片层组件管理（9 个组件集中在 `cards/` 目录）
@@ -190,6 +194,7 @@ Props 类型复用 ✅
 - [x] **ProviderConnectedPanel 渲染优化**（2025-03-18）✅
   - [x] 移除 Reset 按钮（将在 Body 层独立实现 ProviderCardActions）
   - [x] 移除表头（"Model" / "Enabled" 冗余标签）
+  - [x] 移除空模型分支：connected 面板不再渲染空态 UI（当前契约下 connected 必有模型）
   - [x] 连接信息图标化：有 URL 显示 Link 图标 + URL，无 URL 显示 Zap 图标 + "Active"
   - [x] 工具栏移至顶部：连接信息 + 全选操作整合在顶部工具栏
   - [x] 全部 className 改用 `cn()` + 注释分组，提升可读性
@@ -199,10 +204,12 @@ Props 类型复用 ✅
     - [x] 移除复选框边框和背景，改为纯符号交互
     - [x] 单个模型：`-` 表示已启用（点击禁用），`+` 表示未启用（点击启用）
     - [x] 全选操作：`-` 表示全选（点击全不选），`+` 表示未全选（点击全选）
-    - [x] 简化 mixed 状态：与 off 状态统一显示 `+`，语义为"点击全选"
+    - [x] 全选状态收口为双态：仅保留 `allSelected`，非全选统一显示 `+`
     - [x] 移除所有动画效果，保持极简风格
     - [x] 符号移至左侧，模型名称在右侧
-    - [x] 代码从 200 行精简到 178 行（-11%）
+    - [x] 代码继续精简：空态分支与三态选择逻辑已移除
+
+- [ ] `ProviderConnectedPanel.tsx` — 继续精修纯渲染结构（图标映射 / Toggle 子组件 / 行容器职责）
 
 ### 5. 修补与收尾
 
@@ -212,7 +219,8 @@ Props 类型复用 ✅
 - [x] `handleProviderStatus` — 收敛多次零散 `set` 为单次批量更新，减少重渲染
 - [ ] 前端 `errorCode` 收敛为联合类型（替代宽泛 `string`），与后端 `ProviderErrorCode` 对齐
 - [x] `useProviderStartup` — 启动失败时写入 `checkStore.setFailed()`，避免 UI 无感知
-- [ ] **🚨 紧急：实现 ProviderCardActions（Reset 功能）** — Reset 按钮已从 ConnectedPanel 移除，需尽快在 Body 层实现独立的 Actions 区域，否则用户无法重置连接
+- [ ] **🚨 紧急：实现 ProviderCardActions（Reset 功能）** — Reset 按钮已从 ConnectedPanel 移除
+需尽快在 Body 层实现独立的 Actions 区域，否则用户无法重置连接
 - [ ] 其他审查中发现的问题
 - [ ] 提交 PR
 

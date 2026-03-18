@@ -6,8 +6,6 @@ import { useCallback } from "react";
 import type { ProviderId } from "@/features/bot/types";
 import { useProviderModelActions } from "./useProviderModelActions";
 
-type ProviderModelSelectionState = "off" | "on" | "mixed";
-
 interface UseProviderConnectedPanelParams {
   providerId: ProviderId;
 }
@@ -18,10 +16,8 @@ interface ConnectedModelItem {
 }
 
 interface UseProviderConnectedPanelResult {
-  hasModels: boolean;
   modelItems: ConnectedModelItem[];
-  selectionState: ProviderModelSelectionState;
-  masterAriaChecked: boolean | "mixed";
+  allSelected: boolean;
   onToggleModel: (model: string) => void;
   onToggleAllModels: () => void;
 }
@@ -36,22 +32,13 @@ export const useProviderConnectedPanel = ({
     name: model,
     checked: enabled[model],
   }));
-  const hasModels = modelItems.length > 0;
 
   const enabledCount = modelItems.reduce(
     (count, model) => count + (model.checked ? 1 : 0),
     0,
   );
 
-  const selectionState: ProviderModelSelectionState =
-    !hasModels || enabledCount === 0
-      ? "off"
-      : enabledCount === modelItems.length
-        ? "on"
-        : "mixed";
-
-  const masterAriaChecked: boolean | "mixed" =
-    selectionState === "mixed" ? "mixed" : selectionState === "on";
+  const allSelected = enabledCount === modelItems.length;
 
   const handleToggleModel = useCallback(
     (model: string) => {
@@ -61,14 +48,12 @@ export const useProviderConnectedPanel = ({
   );
 
   const handleToggleAllModels = useCallback(() => {
-    onToggleAll(selectionState !== "on");
-  }, [onToggleAll, selectionState]);
+    onToggleAll(!allSelected);
+  }, [allSelected, onToggleAll]);
 
   return {
-    hasModels,
     modelItems,
-    selectionState,
-    masterAriaChecked,
+    allSelected,
     onToggleModel: handleToggleModel,
     onToggleAllModels: handleToggleAllModels,
   };

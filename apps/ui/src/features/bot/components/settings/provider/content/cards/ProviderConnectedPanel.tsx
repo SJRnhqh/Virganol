@@ -4,23 +4,17 @@ import { Link, Zap, Plus, Minus } from "lucide-react";
 
 // 内部引用
 import { cn } from "@/lib";
-import type { ProviderConnectedContent } from "@/features/bot/types";
+import type { ProviderConnectedPanelProps } from "@/features/bot/types";
 import { useProviderConnectedPanel } from "@/features/bot/hooks";
 
 export const ProviderConnectedPanel = ({
   provider,
   form,
-}: ProviderConnectedContent) => {
-  const {
-    hasModels,
-    modelItems,
-    selectionState,
-    masterAriaChecked,
-    onToggleModel,
-    onToggleAllModels,
-  } = useProviderConnectedPanel({
-    providerId: provider.id,
-  });
+}: ProviderConnectedPanelProps) => {
+  const { modelItems, allSelected, onToggleModel, onToggleAllModels } =
+    useProviderConnectedPanel({
+      providerId: provider.id,
+    });
 
   return (
     <div className="pb-2 pl-1 pt-0">
@@ -67,8 +61,7 @@ export const ProviderConnectedPanel = ({
           <button
             type="button"
             role="checkbox"
-            aria-checked={masterAriaChecked}
-            disabled={!hasModels}
+            aria-checked={allSelected}
             title="Toggle all models"
             onClick={onToggleAllModels}
             className={cn(
@@ -79,12 +72,10 @@ export const ProviderConnectedPanel = ({
               "text-settings-panel-fg/60",
               // 光标
               "cursor-pointer",
-              // 禁用状态
-              "disabled:opacity-40 disabled:cursor-not-allowed",
             )}
           >
             {/* 全选符号：未全选显示 +，全选显示 - */}
-            {selectionState === "on" ? (
+            {allSelected ? (
               <Minus className="w-4 h-4" />
             ) : (
               <Plus className="w-4 h-4" />
@@ -92,67 +83,53 @@ export const ProviderConnectedPanel = ({
           </button>
         </div>
 
-        {/* 模型列表内容：有模型时渲染列表，无模型时显示空状态 */}
-        {hasModels ? (
-          <div className="divide-y divide-dashed divide-settings-panel-fg/15">
-            {modelItems.map(({ name, checked }) => {
-              return (
-                <div
-                  key={name}
+        {/* 模型列表内容 */}
+        <div className="divide-y divide-dashed divide-settings-panel-fg/15">
+          {modelItems.map(({ name, checked }) => {
+            return (
+              <div
+                key={name}
+                className={cn(
+                  // 布局
+                  "grid grid-cols-[auto_1fr] items-center gap-3",
+                  // 间距
+                  "px-3 py-2",
+                  // 文本样式
+                  "text-xs text-settings-panel-fg/70",
+                )}
+              >
+                {/* 左侧：加减符号 */}
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={checked}
+                  onClick={() => onToggleModel(name)}
                   className={cn(
-                    // 布局
-                    "grid grid-cols-[auto_1fr] items-center gap-3",
-                    // 间距
-                    "px-3 py-2",
+                    // 基础布局
+                    "inline-flex items-center justify-center",
+                    "w-5 h-5",
                     // 文本样式
-                    "text-xs text-settings-panel-fg/70",
+                    "text-settings-panel-fg/60",
+                    // 光标
+                    "cursor-pointer",
                   )}
                 >
-                  {/* 左侧：加减符号 */}
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={checked}
-                    onClick={() => onToggleModel(name)}
-                    className={cn(
-                      // 基础布局
-                      "inline-flex items-center justify-center",
-                      "w-5 h-5",
-                      // 文本样式
-                      "text-settings-panel-fg/60",
-                      // 光标
-                      "cursor-pointer",
-                    )}
-                  >
-                    {/* 未启用显示加号，已启用显示减号 */}
-                    {checked ? (
-                      <Minus className="w-4 h-4" />
-                    ) : (
-                      <Plus className="w-4 h-4" />
-                    )}
-                  </button>
+                  {/* 未启用显示加号，已启用显示减号 */}
+                  {checked ? (
+                    <Minus className="w-4 h-4" />
+                  ) : (
+                    <Plus className="w-4 h-4" />
+                  )}
+                </button>
 
-                  {/* 右侧：模型名称 */}
-                  <span className="font-mono text-settings-panel-fg/80">
-                    {name}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          // 空状态：未检测到模型
-          <div
-            className={cn(
-              // 间距
-              "px-3 py-3",
-              // 文本样式
-              "text-xs text-settings-panel-fg/45",
-            )}
-          >
-            No models detected from this provider yet.
-          </div>
-        )}
+                {/* 右侧：模型名称 */}
+                <span className="font-mono text-settings-panel-fg/80">
+                  {name}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

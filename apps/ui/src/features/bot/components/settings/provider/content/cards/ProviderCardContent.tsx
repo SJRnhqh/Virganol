@@ -16,9 +16,19 @@ export const ProviderCardContent = ({
       return <ProviderForm cardState={cardState} form={cardContent} />;
 
     case PROVIDER_CARD_STATES.CONNECTED:
-      return <ProviderConnectedPanel {...cardContent} />;
+      return (
+        <ProviderConnectedPanel
+          provider={cardContent.provider}
+          form={cardContent.form}
+        />
+      );
 
     case PROVIDER_CARD_STATES.FAILED:
-      return <ProviderErrorPanel cardState={cardState} {...cardContent} />;
+      return (
+        <ProviderErrorPanel
+          cardState={cardState}
+          errorMessage={cardContent.errorMessage}
+        />
+      );
   }
 };

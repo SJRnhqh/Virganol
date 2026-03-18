@@ -59,8 +59,8 @@ export const ProviderCard = ({
       }
     >
       <ProviderCardBody
-        provider={provider}
         cardState={cardState}
+        provider={provider}
         form={form}
         errorMessage={errorMessage}
         connection={connection}

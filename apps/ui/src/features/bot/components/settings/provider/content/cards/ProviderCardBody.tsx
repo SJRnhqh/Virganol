@@ -10,8 +10,8 @@ import { ProviderConnectionButton } from "./ProviderConnectionButton";
 import { ProviderCardContent } from "./ProviderCardContent";
 
 export const ProviderCardBody = ({
-  provider,
   cardState,
+  provider,
   form,
   errorMessage,
   connection,

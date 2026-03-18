@@ -16,6 +16,6 @@ export interface ProviderCardProps extends WithCardState {
   form: WithProviderForm;
   /** 错误信息（无错误时为 null） */
   errorMessage: string | null;
-  /** 卡片级连接操作 */
+  /** 卡片级连接操作 TODO*/
   connection: ProviderConnectionProps;
 }

@@ -13,6 +13,6 @@ export type { ProviderFailedContent, ProviderErrorPanelProps } from "./error";
 export type { ProviderCardProps } from "./card";
 export type { ProviderCardBodyProps } from "./body";
 export type { ProviderCardContentProps } from "./content";
-export type { ProviderConnectedContent } from "./content-payload";
+export type { ProviderConnectedPanelProps } from "./connected";
 export type { ProviderCardHeaderProps } from "./header";
 export type { ProviderConnectionButtonProps } from "./button";
