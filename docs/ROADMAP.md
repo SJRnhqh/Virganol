@@ -276,7 +276,7 @@ settings/provider/
 
 **待后续优化**：
 
-- [ ] `ProviderConnectedPanel` 重构（175 行 → 拆分为独立子组件，提升可读性）
+- [x] `ProviderConnectedPanel` 重构（175 行 → 200 行，已完成渲染优化）✅
 - [ ] 类型文件清理与归位：
   - [ ] `base.ts` 临时文件清理（`ProviderConnectionProps` 归位）
   - [ ] `content-payload.ts` 重命名为语义化名称（如 `connected.ts`）
@@ -286,6 +286,32 @@ settings/provider/
   是否继续下沉）
 - [ ] 考虑重命名 `ProviderHeader` → `ProviderLifecycleHeader`（避免与 `ProviderCardHeader`
       混淆）
+
+##### ✅ 4.3.12 ProviderConnectedPanel 渲染优化（2025-03-18）
+
+**目标**：优化 connected 面板布局，提升信息层次和视觉清晰度
+
+- [x] 移除 Reset 按钮（将在 Body 层独立实现 `ProviderCardActions`）
+- [x] 移除表头（"Model" / "Enabled" 冗余标签）
+- [x] 连接信息图标化：
+  - [x] 有 URL：`Link` 图标 + URL
+  - [x] 无 URL：`Zap` 图标 + "Active"
+- [x] 工具栏移至顶部：连接信息 + 全选操作整合在顶部工具栏
+- [x] 全部 className 改用 `cn()` + 注释分组，提升可读性
+- [x] 布局优化：模型列表优先，辅助信息在顶部工具栏
+
+**新布局结构**：
+```
+┌─────────────────────────────────────┐
+│ 🔗 localhost:11434    Select all [] │ ← 顶部工具栏
+├─────────────────────────────────────┤
+│ deepseek-chat              [switch] │ ← 模型列表
+│ qwen-2.5                   [switch] │
+└─────────────────────────────────────┘
+```
+
+**🚨 紧急待办**：
+- [ ] 实现 `ProviderCardActions` 组件（Reset 功能）— Reset 按钮已从 ConnectedPanel 移除，需尽快在 Body 层实现独立的 Actions 区域，否则用户无法重置连接
 
 #### 🚧 4.4 Hooks 层审查与优化（2025-03-17 开始）
 

@@ -187,6 +187,13 @@ Props 类型复用 ✅
   - [x] `cards/index.ts` 只导出 `ProviderItem`（其他组件内部使用）
   - [x] 保留 `ProviderItem` 适配层（便于未来针对特定 provider 扩展）
   - [x] 重命名 `ProviderHeader` → `ProviderTitle`（避免与 `ProviderCardHeader` 混淆）
+- [x] **ProviderConnectedPanel 渲染优化**（2025-03-18）✅
+  - [x] 移除 Reset 按钮（将在 Body 层独立实现 ProviderCardActions）
+  - [x] 移除表头（"Model" / "Enabled" 冗余标签）
+  - [x] 连接信息图标化：有 URL 显示 Link 图标 + URL，无 URL 显示 Zap 图标 + "Active"
+  - [x] 工具栏移至顶部：连接信息 + 全选操作整合在顶部工具栏
+  - [x] 全部 className 改用 `cn()` + 注释分组，提升可读性
+  - [x] 布局优化：模型列表优先，辅助信息在顶部工具栏
 
 ### 5. 修补与收尾
 
@@ -196,6 +203,7 @@ Props 类型复用 ✅
 - [x] `handleProviderStatus` — 收敛多次零散 `set` 为单次批量更新，减少重渲染
 - [ ] 前端 `errorCode` 收敛为联合类型（替代宽泛 `string`），与后端 `ProviderErrorCode` 对齐
 - [x] `useProviderStartup` — 启动失败时写入 `checkStore.setFailed()`，避免 UI 无感知
+- [ ] **🚨 紧急：实现 ProviderCardActions（Reset 功能）** — Reset 按钮已从 ConnectedPanel 移除，需尽快在 Body 层实现独立的 Actions 区域，否则用户无法重置连接
 - [ ] 其他审查中发现的问题
 - [ ] 提交 PR
 
