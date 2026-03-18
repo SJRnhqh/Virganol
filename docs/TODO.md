@@ -194,6 +194,7 @@ Props 类型复用 ✅
   - [x] 工具栏移至顶部：连接信息 + 全选操作整合在顶部工具栏
   - [x] 全部 className 改用 `cn()` + 注释分组，提升可读性
   - [x] 布局优化：模型列表优先，辅助信息在顶部工具栏
+  - [x] Hook 接口收紧：移除冗余的 `hasUrl` 和 `connectionUrl` 参数，组件直接使用 `form.formData.apiURL`
 
 ### 5. 修补与收尾
 

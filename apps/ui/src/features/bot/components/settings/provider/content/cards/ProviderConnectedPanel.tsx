@@ -12,8 +12,6 @@ export const ProviderConnectedPanel = ({
   form,
 }: ProviderConnectedContent) => {
   const {
-    connectionUrl,
-    hasUrl,
     hasModels,
     modelItems,
     selectionState,
@@ -22,7 +20,6 @@ export const ProviderConnectedPanel = ({
     onToggleAllModels,
   } = useProviderConnectedPanel({
     providerId: provider.id,
-    connectionUrl: form.formData.apiURL,
   });
 
   return (
@@ -51,11 +48,11 @@ export const ProviderConnectedPanel = ({
         >
           {/* 左侧：连接信息（图标 + 文本） */}
           <div className="flex items-center gap-2 text-xs text-settings-panel-fg/70">
-            {hasUrl ? (
+            {form.formData.apiURL ? (
               <>
                 <Link className="w-3.5 h-3.5 text-settings-panel-fg/50" />
                 <span className="font-mono text-settings-panel-fg">
-                  {connectionUrl}
+                  {form.formData.apiURL}
                 </span>
               </>
             ) : (

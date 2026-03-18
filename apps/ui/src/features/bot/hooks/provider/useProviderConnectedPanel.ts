@@ -10,7 +10,6 @@ type ProviderModelSelectionState = "off" | "on" | "mixed";
 
 interface UseProviderConnectedPanelParams {
   providerId: ProviderId;
-  connectionUrl?: string;
 }
 
 interface ConnectedModelItem {
@@ -19,8 +18,6 @@ interface ConnectedModelItem {
 }
 
 interface UseProviderConnectedPanelResult {
-  connectionUrl?: string;
-  hasUrl: boolean;
   hasModels: boolean;
   modelItems: ConnectedModelItem[];
   selectionState: ProviderModelSelectionState;
@@ -31,12 +28,10 @@ interface UseProviderConnectedPanelResult {
 
 export const useProviderConnectedPanel = ({
   providerId,
-  connectionUrl,
 }: UseProviderConnectedPanelParams): UseProviderConnectedPanelResult => {
   const { available, enabled, onToggle, onToggleAll } =
     useProviderModelActions(providerId);
 
-  const hasUrl = Boolean(connectionUrl);
   const modelItems: ConnectedModelItem[] = available.map((model) => ({
     name: model,
     checked: enabled[model],
@@ -70,8 +65,6 @@ export const useProviderConnectedPanel = ({
   }, [onToggleAll, selectionState]);
 
   return {
-    connectionUrl,
-    hasUrl,
     hasModels,
     modelItems,
     selectionState,

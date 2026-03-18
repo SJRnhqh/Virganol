@@ -299,6 +299,11 @@ settings/provider/
 - [x] 工具栏移至顶部：连接信息 + 全选操作整合在顶部工具栏
 - [x] 全部 className 改用 `cn()` + 注释分组，提升可读性
 - [x] 布局优化：模型列表优先，辅助信息在顶部工具栏
+- [x] Hook 接口收紧：
+  - [x] 移除冗余的 `hasUrl` 派生字段（直接判断 `connectionUrl` 真值）
+  - [x] 移除 `connectionUrl` 参数和返回值（组件直接使用 `form.formData.apiURL`）
+  - [x] `useProviderConnectedPanel` 参数从 2 个减少到 1 个，返回值从 8 个减少到 6 个
+  - [x] Hook 职责更纯粹：只负责模型相关逻辑，不再传递表单数据
 
 **新布局结构**：
 ```
