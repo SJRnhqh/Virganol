@@ -12,7 +12,10 @@ export type { ProviderInfo } from "./info";
 export type { ProviderFailedContent, ProviderErrorPanelProps } from "./error";
 export type { ProviderCardProps } from "./card";
 export type { ProviderCardBodyProps } from "./body";
-export type { ProviderCardContentProps } from "./content";
+export type {
+  ProviderCardContentProps,
+  ProviderCardContentPropsByState,
+} from "./content";
 export type { ProviderConnectedPanelProps } from "./connected";
 export type { ProviderCardHeaderProps } from "./header";
 export type {

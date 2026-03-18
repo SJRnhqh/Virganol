@@ -40,6 +40,7 @@ export type {
   ProviderErrorPanelProps,
   ProviderCardProps,
   ProviderCardContentProps,
+  ProviderCardContentPropsByState,
   ProviderCardHeaderProps,
   ProviderCardBodyProps,
   ProviderConnectionButtonProps,

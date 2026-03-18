@@ -132,6 +132,8 @@ Props 类型复用 ✅
   - [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps`
 - [x] **ProviderCardBody 内容层接口收紧**（2025-03-17 完成）✅
   - [x] 创建 `types/provider/props/content.ts` 定义 `cardState → cardContent` 映射约束
+  - [x] 新增 `ProviderCardContentPropsByState`，将 Body 层内容路由
+  约束为 `cardState → props` 映射，而非宽泛 `ReactNode`
   - [x] 创建 `ProviderCardContent` 统一内容路由层
   - [x] 合并 `UnsetProviderForm` / `PendingProviderForm` /
     `BaseProviderForm` 为单一 `ProviderForm`
@@ -157,6 +159,8 @@ Props 类型复用 ✅
   - [x] 创建 `PROVIDER_NAMES` 常量并导出
   - [x] 合并 `id` / `icon` / `name` 为 `ProviderInfo` 对象（`provider`）
   - [x] `ProviderCardContent` 统一展开传参风格，移除冗余 `default` 分支
+  - [x] `ProviderCardBody` 内容分发改为 `contentPropsByState` 映射，并
+  保留 `content` / `button` 组装位，为后续 `ProviderCardActions` 预留空间
   - [x] **表单接口收紧**（2025-03-16）
     - [x] 合并 `fields` 到 `WithProviderForm` 接口（与 `formData` 内聚）
     - [x] `ProviderFormProps` 保留 `form` 嵌套层（为未来扩展预留空间）

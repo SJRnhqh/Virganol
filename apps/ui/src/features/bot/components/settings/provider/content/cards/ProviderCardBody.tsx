@@ -3,6 +3,7 @@
 import type {
   ProviderCardState,
   ProviderCardBodyProps,
+  ProviderCardContentPropsByState,
   ProviderConnectionButtonProps,
 } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
@@ -16,36 +17,27 @@ export const ProviderCardBody = ({
   errorMessage,
   connection,
 }: ProviderCardBodyProps) => {
-  // 渲染内容
-  const renderContent = () => {
-    switch (cardState) {
-      case PROVIDER_CARD_STATES.UNSET:
-      case PROVIDER_CARD_STATES.PENDING:
-        return <ProviderCardContent cardState={cardState} cardContent={form} />;
-
-      case PROVIDER_CARD_STATES.CONNECTED:
-        return (
-          <ProviderCardContent
-            cardState={cardState}
-            cardContent={{
-              provider,
-              form,
-            }}
-          />
-        );
-
-      case PROVIDER_CARD_STATES.FAILED:
-        return (
-          <ProviderCardContent
-            cardState={cardState}
-            cardContent={{ errorMessage }}
-          />
-        );
-
-      default:
-        return null;
-    }
-  };
+  const contentPropsByState = {
+    [PROVIDER_CARD_STATES.UNSET]: {
+      cardState: PROVIDER_CARD_STATES.UNSET,
+      cardContent: form,
+    },
+    [PROVIDER_CARD_STATES.PENDING]: {
+      cardState: PROVIDER_CARD_STATES.PENDING,
+      cardContent: form,
+    },
+    [PROVIDER_CARD_STATES.CONNECTED]: {
+      cardState: PROVIDER_CARD_STATES.CONNECTED,
+      cardContent: {
+        provider,
+        form,
+      },
+    },
+    [PROVIDER_CARD_STATES.FAILED]: {
+      cardState: PROVIDER_CARD_STATES.FAILED,
+      cardContent: { errorMessage },
+    },
+  } satisfies ProviderCardContentPropsByState;
 
   const buttonClickHandlers = {
     [PROVIDER_CARD_STATES.UNSET]: () => connection.onConnect?.(form.formData),
@@ -61,16 +53,13 @@ export const ProviderCardBody = ({
     ProviderConnectionButtonProps["onClick"] | undefined
   >;
 
-  const content = renderContent();
+  const content = <ProviderCardContent {...contentPropsByState[cardState]} />;
   const button = (
     <ProviderConnectionButton
       cardState={cardState}
       onClick={buttonClickHandlers[cardState]}
     />
   );
-
-  // 如果没有内容，直接返回 null
-  if (!content) return null;
 
   return (
     <>

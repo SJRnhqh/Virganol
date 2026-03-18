@@ -175,6 +175,8 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 **目标**：自底向上收紧接口，完成组件层架构审查的最后关键环节
 
 - [x] 创建 `types/provider/props/content.ts`，建立 `cardState → cardContent` 映射约束
+- [x] 新增 `ProviderCardContentPropsByState`，将 Body 层内容路由进一步收
+紧为 `cardState → props` 映射
 - [x] 创建 `ProviderCardContent` 作为 Body 内容路由层，统一分发 editable / failed / connected
 - [x] 合并 `UnsetProviderForm` / `PendingProviderForm` /
   `BaseProviderForm` 为单一 `ProviderForm`
@@ -219,6 +221,8 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 评估 `ProviderCardContent` 内容路由职责是否继续保留，
   或在 connected 分支收口后上交给 `ProviderCardBody`：
   统一展开传参风格，移除冗余 `default` 分支，保留路由职责
+- [x] `ProviderCardBody` 内容分发改为 `contentPropsByState` 映射，替代宽
+泛 `ReactNode` 约束，并保留 `content` / `button` 组装位供后续 `ProviderCardActions` 扩展
 - [x] 审查 `useProvider` 钩子返回值与组件 Props 的对齐关系：
   创建 `PROVIDER_NAMES` 常量，合并 `id` / `icon` / `name` 为 `ProviderInfo` 对象（`provider`）
 - [x] **表单操作整合与接口简化**（2025-03-17）：
