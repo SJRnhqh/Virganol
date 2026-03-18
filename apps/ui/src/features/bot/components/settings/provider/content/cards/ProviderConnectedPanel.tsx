@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderConnectedPanel.tsx
 // 外部依赖
-import { Link, Zap } from "lucide-react";
+import { Link, Zap, Plus, Minus } from "lucide-react";
 
 // 内部引用
 import { cn } from "@/lib";
@@ -69,53 +69,26 @@ export const ProviderConnectedPanel = ({
             role="checkbox"
             aria-checked={masterAriaChecked}
             disabled={!hasModels}
-            data-state={selectionState}
             title="Toggle all models"
             onClick={onToggleAllModels}
             className={cn(
-              // 布局
-              "flex items-center gap-2",
+              // 基础布局
+              "inline-flex items-center justify-center",
+              "w-5 h-5",
               // 文本样式
-              "text-xs text-settings-panel-fg/60",
+              "text-settings-panel-fg/60",
+              // 光标
+              "cursor-pointer",
               // 禁用状态
               "disabled:opacity-40 disabled:cursor-not-allowed",
             )}
           >
-            <span className="text-right">Select all</span>
-            {/* 全选开关：支持三态（on / off / mixed） */}
-            <span
-              className={cn(
-                // 基础布局
-                "relative inline-flex h-4 w-9 items-center rounded-full border transition-all",
-                // 视觉效果
-                "shadow-inner",
-                // 三态样式：on
-                "data-[state=on]:bg-settings-panel-check/20 data-[state=on]:border-settings-panel-check/60",
-                // 三态样式：off
-                "data-[state=off]:bg-settings-panel-fg/10 data-[state=off]:border-settings-panel-fg/30",
-                // 三态样式：mixed
-                "data-[state=mixed]:bg-settings-panel-check/10 data-[state=mixed]:border-settings-panel-check/50",
-              )}
-              data-state={selectionState}
-            >
-              {/* 开关滑块：根据三态调整位置 */}
-              <span
-                data-state={selectionState}
-                className={cn(
-                  // 基础样式
-                  "inline-block h-3 w-3 rounded-full transition-transform",
-                  // 内阴影
-                  "shadow-[inset_0_1px_1px_rgba(0,0,0,0.25)]",
-                  // 三态位置与颜色：on
-                  "data-[state=on]:translate-x-4 data-[state=on]:bg-settings-panel-check",
-                  // 三态位置与颜色：off
-                  "data-[state=off]:translate-x-1 data-[state=off]:bg-settings-panel-fg/50",
-                  // 三态位置与颜色：mixed
-                  "data-[state=mixed]:translate-x-2 data-[state=mixed]:bg-settings-panel-check/80",
-                  "data-[state=mixed]:ring-1 data-[state=mixed]:ring-settings-panel-check/50",
-                )}
-              />
-            </span>
+            {/* 全选符号：未全选显示 +，全选显示 - */}
+            {selectionState === "on" ? (
+              <Minus className="w-4 h-4" />
+            ) : (
+              <Plus className="w-4 h-4" />
+            )}
           </button>
         </div>
 
@@ -128,19 +101,14 @@ export const ProviderConnectedPanel = ({
                   key={name}
                   className={cn(
                     // 布局
-                    "grid grid-cols-[1fr_auto] items-center gap-3",
+                    "grid grid-cols-[auto_1fr] items-center gap-3",
                     // 间距
                     "px-3 py-2",
                     // 文本样式
                     "text-xs text-settings-panel-fg/70",
                   )}
                 >
-                  {/* 左侧：模型名称 */}
-                  <span className="font-mono text-settings-panel-fg/80">
-                    {name}
-                  </span>
-
-                  {/* 右侧：单个模型的启用开关 */}
+                  {/* 左侧：加减符号 */}
                   <button
                     type="button"
                     role="switch"
@@ -148,31 +116,26 @@ export const ProviderConnectedPanel = ({
                     onClick={() => onToggleModel(name)}
                     className={cn(
                       // 基础布局
-                      "relative inline-flex h-4 w-9 items-center rounded-full border transition-all",
-                      // 视觉效果
-                      "shadow-inner",
-                      // 开启状态
-                      checked &&
-                        "bg-settings-panel-check/20 border-settings-panel-check/60",
-                      // 关闭状态
-                      !checked &&
-                        "bg-settings-panel-fg/10 border-settings-panel-fg/30",
+                      "inline-flex items-center justify-center",
+                      "w-5 h-5",
+                      // 文本样式
+                      "text-settings-panel-fg/60",
+                      // 光标
+                      "cursor-pointer",
                     )}
                   >
-                    {/* 开关滑块 */}
-                    <span
-                      className={cn(
-                        // 基础样式
-                        "inline-block h-3 w-3 rounded-full transition-transform",
-                        // 内阴影
-                        "shadow-[inset_0_1px_1px_rgba(0,0,0,0.25)]",
-                        // 开启状态
-                        checked && "translate-x-4 bg-settings-panel-check",
-                        // 关闭状态
-                        !checked && "translate-x-1 bg-settings-panel-fg/50",
-                      )}
-                    />
+                    {/* 未启用显示加号，已启用显示减号 */}
+                    {checked ? (
+                      <Minus className="w-4 h-4" />
+                    ) : (
+                      <Plus className="w-4 h-4" />
+                    )}
                   </button>
+
+                  {/* 右侧：模型名称 */}
+                  <span className="font-mono text-settings-panel-fg/80">
+                    {name}
+                  </span>
                 </div>
               );
             })}
