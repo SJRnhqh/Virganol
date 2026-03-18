@@ -9,7 +9,7 @@
 完成 Provider 生命周期管理的前端审查与优化（后端已完成）。
 
 默认审查顺序：**store → handlers → hooks → components**（自底向上）；本轮已按事件主链路交叉推进，当前重点转向
-`ProviderConnectedPanel` 的纯渲染精修，以及旧 `connection` 接口的最终审查与收口。
+旧 `connection` 接口的最终审查与收口，以及 `ProviderConnectedPanel` 相关局部 hooks 的审查与完善。
 
 ---
 
@@ -88,17 +88,19 @@
 - [x] `handleCompleted()` — failed 数量路由
 - [x] `handleFailed()` — 全局 failed 已收敛；issue 下沉与结构性错误兜底语义已审清
 
-### 3. hooks/ 审查
+### 3. hooks/ 审查（当前主线）
 
 - [x] `useProviderStartup.ts` — 监听注册 + 启动触发 + cleanup（已确认先监听、后触发）
-- [ ] `useProviderConnection.ts` — connect / disconnect / errorReset（待优化性能和接口）
+- [ ] `useProviderConnection.ts` — connect / disconnect / errorReset（旧 `connection`
+接口主审查对象）
 - [ ] `useProvider.ts` — 状态聚合（已收紧为 card-level shell，待继续优化 selector 性能）
 - [x] `useProviderConnectedPanel.ts` — connected 面板视图派生已从组件抽离，接口已收口为双态全选 ViewModel
-- [ ] `useProviderModelActions.ts` — 模型开关（消费范围已局部化，待优化并发安全和性能）
+- [ ] `useProviderModelActions.ts` — 模型开关（`ProviderConnectedPanel` 相关局部 hook 主审查对象）
 
 ### 4. components/ 审查（渲染层）
 
-当前审查结论：除 `ProviderConnectedPanel` 纯渲染结构仍可继续精修，以及旧 `connection` 接口仍待收口外，其余卡片组件边界已基本稳定。
+当前审查结论：`ProviderConnectedPanel` 组件层已基本稳定；后续组件侧仅保留按需微调。下一步重点不
+再是 card 渲染结构，而是旧 `connection` 接口和 `ProviderConnectedPanel` 相关局部 hooks。
 
 - [x] `settings/provider/content/ProviderHeader.tsx` — phase 图标 + 刷新按钮，`cn()`
 多行格式优化 ✅
@@ -209,7 +211,7 @@ Props 类型复用 ✅
     - [x] 符号移至左侧，模型名称在右侧
     - [x] 代码继续精简：空态分支与三态选择逻辑已移除
 
-- [ ] `ProviderConnectedPanel.tsx` — 继续精修纯渲染结构（图标映射 / Toggle 子组件 / 行容器职责）
+- [ ] `ProviderConnectedPanel.tsx` — 如有需要再做纯渲染微调（图标映射 / 行容器职责），不作为当前主线
 
 ### 5. 修补与收尾
 
@@ -223,6 +225,13 @@ Props 类型复用 ✅
 需尽快在 Body 层实现独立的 Actions 区域，否则用户无法重置连接
 - [ ] 其他审查中发现的问题
 - [ ] 提交 PR
+
+## 下一步主线
+
+- [ ] 旧 `connection` 接口审查与收口：聚焦 `ProviderConnectionProps`、
+`useProviderConnection.ts` 与 `ProviderCardBody` 中的连接动作编排
+- [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善：聚焦 `useProviderModelActions.ts`
+与 `useProviderConnectedPanel.ts`
 
 ---
 

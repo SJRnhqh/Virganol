@@ -1,20 +1,19 @@
 // apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderConnectedPanel.tsx
 // 外部依赖
-import { Link, Zap, Plus, Minus } from "lucide-react";
+import { Link, Zap } from "lucide-react";
 
 // 内部引用
 import { cn } from "@/lib";
 import type { ProviderConnectedPanelProps } from "@/features/bot/types";
 import { useProviderConnectedPanel } from "@/features/bot/hooks";
+import { ProviderModelToggleButton } from "./ProviderModelToggleButton";
 
 export const ProviderConnectedPanel = ({
   provider,
   form,
 }: ProviderConnectedPanelProps) => {
   const { modelItems, allSelected, onToggleModel, onToggleAllModels } =
-    useProviderConnectedPanel({
-      providerId: provider.id,
-    });
+    useProviderConnectedPanel(provider.id);
 
   return (
     <div className="pb-2 pl-1 pt-0">
@@ -58,29 +57,11 @@ export const ProviderConnectedPanel = ({
           </div>
 
           {/* 右侧：全选操作 */}
-          <button
-            type="button"
+          <ProviderModelToggleButton
+            checked={allSelected}
             role="checkbox"
-            aria-checked={allSelected}
-            title="Toggle all models"
             onClick={onToggleAllModels}
-            className={cn(
-              // 基础布局
-              "inline-flex items-center justify-center",
-              "w-5 h-5",
-              // 文本样式
-              "text-settings-panel-fg/60",
-              // 光标
-              "cursor-pointer",
-            )}
-          >
-            {/* 全选符号：未全选显示 +，全选显示 - */}
-            {allSelected ? (
-              <Minus className="w-4 h-4" />
-            ) : (
-              <Plus className="w-4 h-4" />
-            )}
-          </button>
+          />
         </div>
 
         {/* 模型列表内容 */}
@@ -99,28 +80,11 @@ export const ProviderConnectedPanel = ({
                 )}
               >
                 {/* 左侧：加减符号 */}
-                <button
-                  type="button"
+                <ProviderModelToggleButton
+                  checked={checked}
                   role="switch"
-                  aria-checked={checked}
                   onClick={() => onToggleModel(name)}
-                  className={cn(
-                    // 基础布局
-                    "inline-flex items-center justify-center",
-                    "w-5 h-5",
-                    // 文本样式
-                    "text-settings-panel-fg/60",
-                    // 光标
-                    "cursor-pointer",
-                  )}
-                >
-                  {/* 未启用显示加号，已启用显示减号 */}
-                  {checked ? (
-                    <Minus className="w-4 h-4" />
-                  ) : (
-                    <Plus className="w-4 h-4" />
-                  )}
-                </button>
+                />
 
                 {/* 右侧：模型名称 */}
                 <span className="font-mono text-settings-panel-fg/80">

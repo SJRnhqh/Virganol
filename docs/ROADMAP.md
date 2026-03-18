@@ -282,9 +282,9 @@ settings/provider/
   - [ ] `base.ts` 临时文件清理（`ProviderConnectionProps` 归位）
   - [x] `content-payload.ts` 重命名为 `connected.ts`
   - [ ] 创建 `types/provider/props/connection.ts`
-- [ ] `connection` 接口最终审查（`onConnect` / `onErrorReset` 优化空间评估）
-- [ ] `useProviderModelActions` / `useProviderConnectedPanel` 边界复核（局部 ViewModel
-  是否继续下沉）
+- [ ] 旧 `connection` 接口最终审查（`ProviderConnectionProps` / `useProviderConnection.ts`
+      / `ProviderCardBody` 动作编排）
+- [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善（`useProviderModelActions.ts` / `useProviderConnectedPanel.ts`）
 - [ ] 考虑重命名 `ProviderHeader` → `ProviderLifecycleHeader`（避免与 `ProviderCardHeader`
       混淆）
 
@@ -343,7 +343,7 @@ settings/provider/
 **目标**：优化 Hooks 层性能和并发安全性，对齐组件层接口契约
 
 - [x] `useProviderStartup` — 已完成审查 ✅
-- [ ] `useProviderConnection` — 待优化
+- [ ] `useProviderConnection` — 待优化（旧 `connection` 接口主审查对象）
   - [ ] 修复重复订阅 store actions 导致的性能问题
   - [ ] 简化 useCallback 依赖数组
   - [ ] 统一错误处理
@@ -351,10 +351,15 @@ settings/provider/
   - [x] 已收紧为 card-level shell（不再聚合 models）
   - [ ] 优化 store selector 性能
 - [x] `useProviderConnectedPanel` — connected 面板视图派生已抽离，并收口为双态全选 ViewModel
-- [ ] `useProviderModelActions` — 待优化
+- [ ] `useProviderModelActions` — 待优化（`ProviderConnectedPanel` 相关局部 hook 主审查对象）
   - [ ] 修复乐观更新并发风险（请求去重/版本号机制）
   - [ ] 优化 store selector 性能
   - [x] 消费范围已局部化，不再对齐公共 props 契约
+
+**当前下一步主线**：
+
+- [ ] 旧 `connection` 接口审查与收口
+- [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善
 
 ### Phase 5：健康检查错误精细化
 

@@ -40,6 +40,7 @@ export type {
   ProviderCardBodyProps,
   ProviderConnectionProps,
   ProviderConnectionButtonProps,
+  ProviderModelToggleButtonProps,
   ProviderConnectedPanelProps,
 
   // ── Provider 自定义类型 ──

@@ -15,4 +15,7 @@ export type { ProviderCardBodyProps } from "./body";
 export type { ProviderCardContentProps } from "./content";
 export type { ProviderConnectedPanelProps } from "./connected";
 export type { ProviderCardHeaderProps } from "./header";
-export type { ProviderConnectionButtonProps } from "./button";
+export type {
+  ProviderConnectionButtonProps,
+  ProviderModelToggleButtonProps,
+} from "./button";

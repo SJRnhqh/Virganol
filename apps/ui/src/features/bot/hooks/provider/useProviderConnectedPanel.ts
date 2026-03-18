@@ -6,10 +6,6 @@ import { useCallback } from "react";
 import type { ProviderId } from "@/features/bot/types";
 import { useProviderModelActions } from "./useProviderModelActions";
 
-interface UseProviderConnectedPanelParams {
-  providerId: ProviderId;
-}
-
 interface ConnectedModelItem {
   name: string;
   checked: boolean;
@@ -22,9 +18,9 @@ interface UseProviderConnectedPanelResult {
   onToggleAllModels: () => void;
 }
 
-export const useProviderConnectedPanel = ({
-  providerId,
-}: UseProviderConnectedPanelParams): UseProviderConnectedPanelResult => {
+export const useProviderConnectedPanel = (
+  providerId: ProviderId,
+): UseProviderConnectedPanelResult => {
   const { available, enabled, onToggle, onToggleAll } =
     useProviderModelActions(providerId);
 
