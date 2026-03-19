@@ -1,268 +1,161 @@
-# TODO - Provider 生命周期前端审查与优化
+# TODO - Provider 生命周期前端任务板
 
-> **创建时间**: 2025-03-07
-> **预计完成**: 待更新
-> **状态**: 进行中
+> 创建时间：2025-03-07
+> 当前状态：进行中
+> 维护方式：仅保留当前结论与待办，历史展开过程以 `ROADMAP.md` 为准
 
 ## 目标
 
-完成 Provider 生命周期管理的前端审查与优化（后端已完成）。
+完成当前阶段 Provider 生命周期前端收尾，并保证以下边界成立：
 
-默认审查顺序：**store → handlers → hooks → components**（自底向上）；本轮已按事件主链路交叉推进，当前组件层接口已基本收口，
-后续重点转向 `reset` 设计落位（`ProviderCardActions`）以及 `ProviderConnectedPanel` 相关局部 hooks
-的审查与完善。
+- 当前运行时仅启用 `deepseek` / `ollama`；其余 provider 保留占位定义，但不参与本阶段 UI / lifecycle /
+CRUD 链路
+- 仅聚焦 `Tauri ↔ React` 生命周期与安全持久化
+- Provider 改动同时满足生命周期链路与 CRUD 链路一致性
 
----
-
-## 已完成
-
-- [x] 后端 Rust：Workspace 重构、可见性收紧、生命周期逻辑优化、错误处理
-- [x] 前端 types/：契约类型 + 状态类型 + 分组导出
-- [x] 前端 constants/：事件名、阶段、延迟常量，前后端对齐
-- [x] 前端 api/：启动检查、手动刷新、Provider CRUD
-- [x] 前端 events/listen.ts：4 种事件串行注册 + 失败回滚 + 统一 cleanup
-- [x] 前端 events/runGuard.ts：run_id 防串扰
-- [x] 前端 handlers 职责净化：移除 scheduler 调用，handler 只做 payload → store action
-- [x] 前端 handlers：`handleCompleted()` / `handleFailed()` 主链路已审清，`handleProviderStatus()`
-成功/失败分支已收敛
-- [x] 类型系统架构统一：`ProviderId`、`ProviderCardState`、
-`ProviderCheckPhase`、`ProviderCheckEvent` 迁移至 types 底层
-，constants 使用 `satisfies` 约束
-- [x] `useProviderCollectionStore` 引入 `immer` 中间件，优化所有 action 嵌套更新
-- [x] 前端架构重构：icons 视觉资源层独立，消除循环依赖（-199 行代码）
-- [x] settings/provider 目录重构：消除 registry 概念，统一 provider 组件管理
-- [x] `ProviderHeader` 优化：通过 `PHASE_CLOUD_ICONS` 映射统一管理生命周期图标（106→58 行，-45%）
-- [x] **渲染层组件架构优化**（2025-03-11）
-  - [x] 动画文件重组：拆分 `lib/animations/common.ts`（通用）和 `lib/animations/providerLifecycle.ts`（专用）
-  - [x] `ProviderHeader` className 可读性：引入 `cn()` 多行格式 + 语义注释
-  - [x] icon 管理收拢：从调用侧手动映射迁移到 `useProvider` Hook 内部自动关联
-  - [x] Props 类型复用：创建 `types/provider/props/id.ts` 定义 `WithProviderId` 可组合类型
-  - [x] 组件分层清晰化：LLMProviders（页面）→ ProviderHeader/ProviderList（功能区）→ ProviderItem
-  （适配层）→ ProviderCard（卡片层）
-  - [x] Props 传递最小化：只传必需的 `id`，其他数据由 Hook 派生
-- [x] **ProviderConnectionButton 配置驱动重构**（2025-03-13）
-  - [x] 创建 `types/provider/custom/button.ts`
-    定义 `DualIconButton` / `ButtonAnimation` 核心类型
-  - [x] 创建 `icons/provider/connection.tsx`
-    定义 `CONNECTION_BUTTON_ICONS` 映射
-  - [x] 创建 `constants/provider/connection/{labels,animations}.ts` 定义状态映射
-  - [x] 重构 `ProviderConnectionButton` 为单一配置驱动组件，删除 4 个独立按钮组件
-  - [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState` 可组合片段
-  - [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps`
-  - [x] 优化 `ProviderCardHeaderProps` 结构：`extends WithCardState` + `provider` 独立字段
-  - [x] 统一参数顺序：组件解构顺序与接口定义顺序一致（extends 字段优先）
-  - [x] 按钮动作类型统一：`ProviderConnectionButtonProps` / `ProviderModelToggleButtonProps`
-    共享 `ProviderButtonAction`，组件内部桥接 DOM click，编排层只面向业务动作
-- [x] **ProviderConnectedPanel 接口收紧与局部 Hook 收口**
-  - [x] 移除 `fields` 冗余传递，connected 面板改为消费 `connectionInfo.apiURL`
-  - [x] 类型定义重命名并归位到 `connected.ts`（`ProviderConnectedPanelProps`）
-  - [x] 移除 `ProviderField` 中的 `isUrl` 字段
-  - [x] 创建 `PROVIDER_NAMES` 常量（`constants/provider/common/name.ts`）
-  - [x] `meta.ts` → `info.ts`，`ProviderInfo` 统一承载 `id` / `name` / `icon`
-  - [x] `WithProviderId` 字段统一为 `id`
-  - [x] `useProvider` 收紧为 card-level shell：不再聚合 `models`
-  - [x] `ProviderConnectedPanel` 模型消费局部化：不再通过 `ProviderCard` / `ProviderCardBody`
-  逐层透传
-  - [x] 新增 `useProviderConnectedPanel`，最终收口为
-  `modelItems` / `allSelected` / `onToggleModel` / `onToggleAllModels`
-  - [x] 删除公共 props 契约 `WithProviderModels`
-  - [x] 优化 `ProviderCardContent` 统一展开传参风格，移除冗余 `default` 分支
-  - [x] `ProviderCardContent` connected / failed 分支改为显式传参，统一内容路由风格
+默认审查顺序仍为：`store → handlers → hooks → components`
 
 ---
 
-## 待办
+## 当前结论
 
-### 1. store/ 审查
-
-- [x] `useProviderCheckStore` — 基本完成 ✅
-  - [x] `setDone()` / `setDegraded()` / `setFailed()`
-  - [x] `reset()`
-- [x] `useProviderCollectionStore` — 已完成 ✅
-  - [x] 初始化逻辑优化（提取 `COMMON_INITIAL_STATE`，使用 `reduce` 函数式风格）
-  - [x] 类型系统重构（`ProviderId`、`ProviderCardState`、`ProviderCheckPhase` 迁移至 types 底层）
-  - [x] 职责分离（`PROVIDER_IDS` / `PROVIDER_INITIAL_FORMS` / `PROVIDER_DEFINITIONS`）
-  - [x] 卡片状态、表单、模型、错误相关 action 审查
-  - [x] 引入 `immer` 中间件优化嵌套更新（代码行数 146→89，-39%）
-
-### 2. handlers 审查（依赖 store 审查完成）
-
-- [x] `handleProviderStatus()` — 成功/失败分支已收敛；与 `CollectionStore` 的写入边界待继续复核
-- [x] `handleCompleted()` — failed 数量路由
-- [x] `handleFailed()` — 全局 failed 已收敛；issue 下沉与结构性错误兜底语义已审清
-
-### 3. hooks/ 审查（当前主线）
-
-- [x] `useProviderStartup.ts` — 监听注册 + 启动触发 + cleanup（已确认先监听、后触发）
-- [x] `useProviderConnection.ts` — connect / disconnect / retry（旧 `connection`
-接口已完成审查与收口）
-- [ ] `useProvider.ts` — 状态聚合（已收紧为 card-level shell，待继续优化 selector 性能）
-- [x] `useProviderConnectedPanel.ts` — connected 面板视图派生已从组件抽离，接口已收口为双态全选 ViewModel
-- [ ] `useProviderModelActions.ts` — 模型开关（`ProviderConnectedPanel` 相关局部 hook 主审查对象）
-
-### 4. components/ 审查（渲染层）
-
-当前审查结论：`ProviderCard` 子树组件接口已基本稳定；后续组件侧主线不再是 card 渲染结构调整，而是
-`reset` 的语义设计与落位，以及 `ProviderConnectedPanel` 相关局部 hooks。
-
-- [x] `settings/provider/content/ProviderHeader.tsx` — phase 图标 + 刷新按钮，`cn()`
-多行格式优化 ✅
-- [x] `settings/provider/content/ProviderList.tsx` — 列表渲染，PROVIDER_IDS 迭代 ✅
-- [x] `settings/provider/content/ProviderItem.tsx` — Hook 调用容器，`WithProviderId`
-Props 类型复用 ✅
-- [x] **渲染层架构优化** ✅
-  - [x] icon 管理收拢到 `useProvider` Hook（消除调用侧手动映射）
-  - [x] 创建 `types/provider/props/id.ts` 定义 `WithProviderId` 可复用 Props 类型
-  - [x] 组件分层清晰：LLMProviders（页面）→ ProviderHeader/ProviderList（功能区）→ ProviderItem
-  （适配层）→ BaseProvider（展示层）
-  - [x] Props 传递最小化：只传必需的 `id`，其他数据由 Hook 派生
-- [x] **卡片组件命名优化**（2025-03-11）✅
-  - [x] `ProviderHeader` → `ProviderCardHeader`（消除与全局 Header 命名冲突）
-  - [x] `ProviderBody` → `ProviderCardBody`（语义更清晰）
-  - [x] 创建 `types/provider/props/card.ts` 定义 `ProviderCardProps` 框架
-  - [x] 创建 `types/provider/props/info.ts` 定义 `ProviderInfo`（id + name + icon）
-  - [x] 创建 `types/provider/props/form.ts` 定义 `WithProviderForm`（待完善）
-- [x] `ProviderCardHeader` 收口 ✅
-  - [x] `ProviderCardHeader` className 改用 `cn()` 统一管理
-  - [x] 创建 `types/provider/props/header.ts` 定义 `ProviderCardHeaderProps`
-  - [x] `ProviderCardHeader` Props 收紧为 `provider` / `cardState` / `open`
-  - [x] 新增 `icons/provider/card.tsx` 统一管理 `cardState → icon` 映射
-- [x] **ProviderConnectionButton 配置驱动重构**（2025-03-13）✅
-  - [x] 创建 `types/provider/custom/button.ts` 定义按钮核心类型
-  - [x] 创建 `icons/provider/connection.tsx` / `constants/provider/connection/` 配置映射
-  - [x] 重构为单一配置驱动组件，删除 5 个冗余组件
-  - [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState`
-  - [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps`
-  - [x] 引入 `ProviderButtonAction` 统一按钮动作语义，避免编排层依赖 DOM 事件类型
-- [x] **ProviderCardBody 内容层接口收紧**（2025-03-17 完成）✅
-  - [x] 创建 `types/provider/props/content.ts` 定义 `cardState → cardContent` 映射约束
-  - [x] 新增 `ProviderCardContentPropsByState`，将 Body 层内容路由
-  约束为 `cardState → props` 映射，而非宽泛 `ReactNode`
-  - [x] 创建 `ProviderCardContent` 统一内容路由层
-  - [x] 合并 `UnsetProviderForm` / `PendingProviderForm` /
-    `BaseProviderForm` 为单一 `ProviderForm`
-  - [x] `ProviderForm` 契约归位：
-    `ProviderFormContent` / `ProviderFormProps` /
-    `ProviderEditableState` / `ProviderFormVariantConfig`
-    与 `PROVIDER_FORM_VARIANTS`
-    已分别归位到 `types` / `constants`
-  - [x] `FailedProviderForm` → `ProviderErrorPanel`
-  - [x] `ProviderErrorPanel` 契约归位：
-    `ProviderFailedContent` / `ProviderErrorPanelProps` /
-    `ProviderFailedState` 已收口
-  - [x] `ProviderErrorPanel` 图标改为复用
-    `PROVIDER_CARD_STATE_ICONS.failed`
-  - [x] `forms/` 内容层拍平（移除 `provider/connection/` 嵌套）
-  - [x] `BaseProvider` → `ProviderCard`
-  - [x] 收紧 editable 内容层接口
-    （移除 `ProviderEditableContent` / `BaseProviderForm`）
-  - [x] 收紧 failed 内容层接口
-    （由 content 路由承载 `errorMessage`，组件层补 `cardState`）
-  - [x] 收紧 connected 内容层接口（移除 `fields` 冗余，改为直接使用 `connectionInfo.apiURL`）
-  - [x] 移除 `ProviderField.isUrl` 字段
-  - [x] 创建 `PROVIDER_NAMES` 常量并导出
-  - [x] 合并 `id` / `icon` / `name` 为 `ProviderInfo` 对象（`provider`）
-  - [x] `ProviderCardContent` 统一展开传参风格，移除冗余 `default` 分支
-  - [x] `ProviderCardBody` 内容分发改为 `contentPropsByState` 映射，并
-  保留 `content` / `button` 组装位，为后续 `ProviderCardActions` 预留空间
-  - [x] **表单接口收紧**（2025-03-16）
-    - [x] 合并 `fields` 到 `WithProviderForm` 接口（与 `formData` 内聚）
-    - [x] `ProviderFormProps` 保留 `form` 嵌套层（为未来扩展预留空间）
-    - [x] `ProviderCardContent` 修正传参：`form={cardContent}` 而非展开
-  - [x] **卡片层接口收紧**（2025-03-17）
-    - [x] `cardState` 从 `ProviderConnectionProps` 独立到 `ProviderCardProps` 顶层
-    - [x] `errorMessage` 从 `ProviderConnectionProps` 独立到 `ProviderCardProps` 顶层
-    - [x] `ProviderConnectionProps` 纯操作化：移除状态字段
-    - [x] `ProviderCardProps` / `ProviderCardBodyProps` 移到 `types/provider/props/`
-    统一管理；当前 `ProviderCardBodyProps` 已收口为 `ProviderCardProps` 语义别名，避免重复定义漂移
-    - [x] 保持 `ProviderCardContent` 路由层职责，架构一致性
-  - [x] 审查 `useProvider` 钩子返回值与组件 Props 对齐关系
-  - [x] **表单操作整合与接口简化**（2025-03-17）
-    - [x] 整合 `handleReset` 逻辑到 `form.onReset`（Hook 层业务逻辑收拢）
-    - [x] 移除 `ProviderCardBodyProps.onReset` 冗余参数
-    - [x] 移除 `ProviderCard` 中 `onReset={form.onReset}` 冗余传参
-    - [x] `ProviderConnectedPanelProps` 保留 `provider` + `connectionInfo` 两个稳定语义块
-    - [x] `ProviderConnectedPanel` 当前直接使用 `provider.id` 与 `connectionInfo.apiURL`
-    - [x] 更新 `ProviderCardBodyProps` TODO 注释（移除已完成的 onReset 收紧项）
-  - [x] **连接操作接口简化**（2025-03-17）
-    - [x] 移除 `ProviderConnectionProps.onDisconnect`（仅作为 Hook 内部实现）
-    - [x] `onDisconnect` 保留在 `useProviderConnection` 中供 `form.onReset` 调用
-    - [x] 更新 `ProviderConnectionProps` 注释：明确只暴露组件层需要的操作
-  - [x] **模型管理接口收紧**
-    - [x] `models` 不再作为公共 props 契约经 `ProviderCard` 链路逐层传递
-    - [x] 删除 `types/provider/props/models.ts` 与 `WithProviderModels`
-    - [x] 模型状态和操作局部化到 `ProviderConnectedPanel` + `useProviderConnectedPanel`
-    - [x] 组件内仅保留模型列表渲染所需的最小数据（`modelItems` / `allSelected` / `onToggle*`）
-- [x] **组件目录重构**（2025-03-17）
-  - [x] 合并 `base/provider/`、`forms/`、`buttons/provider/` 到 `settings/provider/content/cards/`
-  - [x] 统一卡片层组件管理（9 个组件集中在 `cards/` 目录）
-  - [x] 更新所有导入路径（相对路径改为同目录引用）
-  - [x] 清理类型导出（移除不存在的 `ProviderFormContent`）
-  - [x] `cards/index.ts` 只导出 `ProviderItem`（其他组件内部使用）
-  - [x] 保留 `ProviderItem` 适配层（便于未来针对特定 provider 扩展）
-  - [x] 重命名 `ProviderHeader` → `ProviderTitle`（避免与 `ProviderCardHeader` 混淆）
-- [x] **ProviderConnectedPanel 渲染优化**（2025-03-18）✅
-  - [x] 移除 Reset 按钮（将在 Body 层独立实现 ProviderCardActions）
-  - [x] 移除表头（"Model" / "Enabled" 冗余标签）
-  - [x] 移除空模型分支：connected 面板不再渲染空态 UI（当前契约下 connected 必有模型）
-  - [x] 连接信息图标化：有 URL 显示 Link 图标 + URL，无 URL 显示 Zap 图标 + "Active"
-  - [x] 工具栏移至顶部：连接信息 + 全选操作整合在顶部工具栏
-  - [x] 全部 className 改用 `cn()` + 注释分组，提升可读性
-  - [x] 布局优化：模型列表优先，辅助信息在顶部工具栏
-  - [x] Hook 接口收紧：移除冗余的 `hasUrl` 和 `connectionUrl` 参数，组件直接使用 `connectionInfo.apiURL`
-  - [x] 交互方式优化：从胶囊开关改为加减符号
-    - [x] 移除复选框边框和背景，改为纯符号交互
-    - [x] 单个模型：`-` 表示已启用（点击禁用），`+` 表示未启用（点击启用）
-    - [x] 全选操作：`-` 表示全选（点击全不选），`+` 表示未全选（点击全选）
-    - [x] 全选状态收口为双态：仅保留 `allSelected`，非全选统一显示 `+`
-    - [x] 移除所有动画效果，保持极简风格
-    - [x] 符号移至左侧，模型名称在右侧
-    - [x] 代码继续精简：空态分支与三态选择逻辑已移除
-
-- [ ] `ProviderConnectedPanel.tsx` — 如有需要再做纯渲染微调（图标映射 / 行容器职责），不作为当前主线
-
-### 5. 修补与收尾
-
-- [x] 修复 `started` 丢失时 `failed` 事件可能被前端误判 stale 的问题
-- [x] 修复 `handleProviderStatus` 模型更新逻辑（失败时清空模型；成功时空模型也同步）
-- [ ] 生命周期延迟编排重新设计（scheduler 已从 handler 移除，需在 store 层或独立模块重新实现）
-- [x] `handleProviderStatus` — 收敛多次零散 `set` 为单次批量更新，减少重渲染
-- [ ] 前端 `errorCode` 收敛为联合类型（替代宽泛 `string`），与后端 `ProviderErrorCode` 对齐
-- [x] `useProviderStartup` — 启动失败时写入 `checkStore.setFailed()`，避免 UI 无感知
-- [ ] **🚨 紧急：实现 ProviderCardActions（Reset 功能）** — Reset 按钮已从 ConnectedPanel 移除
-需尽快在 Body 层实现独立的 Actions 区域，否则用户无法重置连接
-- [ ] 其他审查中发现的问题
-- [ ] 提交 PR
-
-## 下一步主线
-
-- [x] 旧 `connection` 接口审查与收口（2025-03-19）
-  - [x] `ProviderConnectionProps` → `WithProviderConnection`，迁移至 `props/connection.ts`
-  ，删除 `base.ts`
-  - [x] 移除 `onErrorReset`，新增 `onRetry`（封装清错误 + 重连逻辑，消除 Body 层实现泄漏）
-  - [x] `useProviderConnection` 重构：移除 4 个重复 store 订阅，改用 `getState()`；依赖数组精简为
-  `[providerId]`；批量更新改用 `updateProviderBatch`
-  - [x] `ProviderCardBody` 连接动作编排收紧：FAILED 状态从两行调用收敛为单行 `connection.onRetry?.(form.formData)`
-  - [x] 按钮动画简化：`connected` / `failed` 状态移除 hover/click 旋转动画，统一为无动效；删除
-  `retryIconVariants` / `reconnectIconVariants`；`AnimationTrigger` 新增 `"none"`
-   ，`ButtonAnimation.variant` 改为可选
-- [ ] `reset` 设计与 `ProviderCardActions` 落位：明确 body 层 actions 区域的语义、接口与复位链路
-- [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善：聚焦 `useProviderModelActions.ts`
-与 `useProviderConnectedPanel.ts`
+- store / handlers 主链路已基本完成，生命周期事件消费、run_id 防串扰与状态落盘语义已对齐
+- `ProviderCard` 子树组件接口已基本收口，当前不再是主要风险点
+- 组件层后续主线不再是结构重构，而是 `reset` 的语义设计与最小可用落位
+- 当前 PR 若要可提交，重点应放在：生命周期闭环、`reset` 一致性、`update_models` 并发安全、范围收敛与前端密钥内存清理
 
 ---
 
-## 已知问题
+## 已完成摘要
 
-### Issue #1: 生命周期延迟编排待重建
+### 生命周期主链路
 
-**背景**: 原 `lifecycleScheduler.ts` 负责 checking→终态补足延迟 + 终态→idle 回归，已从 handler 中移除以净化职责。
+- [x] `useProviderCheckStore` / `useProviderCollectionStore` 已完成基础形态收口
+- [x] 生命周期事件监听、失败回滚、run_id 守卫、startup check 触发链路已打通
+- [x] `handleStarted` / `handleCompleted` / `handleFailed` / `handleProviderStatus`
+已完成主链路收敛
+- [x] `handleProviderStatus` 已修复失败时模型残留、成功时空模型不同步等问题
 
-**待决**: scheduler 归属位置（store 内部 subscribe / 独立模块），全部审查完成后再设计。
+### 类型与契约
+
+- [x] `ProviderId` / `ProviderCardState` / `ProviderCheckPhase` / `ProviderCheckEvent`
+已统一收口到底层 types
+- [x] `constants` 使用 `satisfies` 对齐底层联合类型
+- [x] 前后端生命周期事件与主要 payload 契约已对齐
+
+### 组件层
+
+- [x] `ProviderCard` 子树分层稳定：`ProviderItem → ProviderCard → ProviderCardBody
+→ ProviderCardContent → leaf`
+- [x] `ProviderCardHeader` / `ProviderConnectionButton` / `ProviderConnectedPanel`
+已完成主要接口收口
+- [x] `ProviderConnectedPanelProps` 已收紧为 `provider + connectionInfo`
+- [x] `ProviderCardBodyProps` 已收口为 `ProviderCardProps` 语义别名，避免重复定义漂移
+- [x] 按钮动作类型已统一为 `ProviderButtonAction`，组件内部桥接 DOM click，编排层不再依赖事件对象类型
+
+### Hook 层
+
+- [x] `useProviderStartup` 已完成
+- [x] `useProviderConnection` 已完成旧 `connection` 接口收口
+- [x] `useProviderConnectedPanel` 已收口为 connected 面板局部 ViewModel
+- [ ] `useProviderModelActions` 仍待完成并发与订阅优化
+- [ ] `useProvider` 仍有 selector 性能优化空间
+
+---
+
+## PR 提交前必须项
+
+### 1. 生命周期闭环
+
+- [ ] 生命周期延迟编排补齐，或在本次 PR 中明确降 scope
+  - 背景：原 scheduler 已从 handler 中移除，当前 checking → 终态补足 / 终态 → idle 回归尚未重新落位
+  - 要求：不能让这次“生命周期 PR”在生命周期编排上留一个悬空口子
+
+### 2. Reset 最小闭环
+
+- [ ] 设计并实现最小可用的 `reset` 入口
+  - 目标不是复杂交互，而是保证用户有稳定的 reset 通路
+  - 推荐落位：`ProviderCardBody` 的 actions 区域，或独立 `ProviderCardActions`
+
+- [ ] 修正 `reset` 返回值一致性
+  - 仅当 `reset_provider === true` 时才清理本地状态
+  - `false` 时保留现状并提供最小失败反馈
+
+### 3. 模型链路一致性
+
+- [ ] 完成 `useProviderModelActions.ts` 收口
+  - 处理重复订阅问题
+  - 处理乐观更新回滚的并发风险
+  - 保证 `update_models` 与当前 CRUD 语义一致
+
+### 4. 范围收敛
+
+- [x] 前端运行时范围已收敛到 `deepseek` / `ollama`
+  - 当前要求是“仅启用”，不是“删除所有未来 provider 定义”
+  - 已收敛 `PROVIDER_IDS` 与卡片渲染入口
+  - 其余 provider 暂时保留类型、名称、表单等占位定义
+
+### 5. 安全闭环
+
+- [ ] `connect` 成功后清空前端内存态 `apiKey`
+  - 当前 `ProviderFormData` 仍保留 `apiKey`
+  - 本次 PR 既然涉及安全持久化，这一步不能继续后置
+
+---
+
+## 可顺手完成但不必阻塞 PR
+
+- [ ] `useProvider` selector 性能优化
+- [ ] 前端 `errorCode` 收敛为共享联合类型
+- [ ] `ProviderConnectedPanel.tsx` 纯渲染微调
+- [ ] `secret_meta` 的前端消费闭环
+
+---
+
+## 明确后移项
+
+以下内容不是本次 PR 的阻塞项，除非在实现过程中顺手完成，否则不强行纳入：
+
+- [ ] 更细粒度的健康检查错误模型与前端展示
+- [ ] 事件名 / payload 自动化 codegen
+- [ ] `store.rs` 读改写优化
+- [ ] `resolver.rs` 密钥读取去重
+- [ ] 额外的组件视觉微调
+
+---
+
+## 下一步执行顺序
+
+1. 先决定生命周期 scheduler 是补齐还是降 scope
+2. 落 `reset` 的最小入口与返回值一致性
+3. 收 `useProviderModelActions`
+4. 收敛前端 Provider 范围到 `deepseek / ollama`
+5. 补 `connect` 成功后的 `apiKey` 清理
+
+---
+
+## 分析结论
+
+从当前代码状态看，如果抛开测试覆盖与更细的体验打磨，这次 PR 的主要风险已经不在组件结构本身，而在链路一致性。
+
+更具体地说：
+
+- 组件层：`ProviderCard` 子树接口已经足够稳定，后续只需承接 `reset`
+- Hook 层：`useProviderModelActions` 仍是当前最需要继续处理的点
+- CRUD 一致性：`reset` 和 `update_models` 仍需补到“行为正确”而不只是“界面能点”
+- 生命周期语义：scheduler 不能继续悬空
+- 安全边界：前端内存态 `apiKey` 清理与 Provider 支持范围收敛需要在本次阶段内完成
+
+因此，这份 TODO 的重心已经重新调整为：
+
+1. 生命周期闭环
+2. reset 最小闭环
+3. hook 层并发与一致性
+4. 范围与安全收尾
 
 ---
 
 ## 备注
 
-- 本文档用于短期任务跟踪，完成后归档并删除
-- 配合 `roadmap.md` 使用（中长期规划）
+- 本文档只追踪当前任务重心，不再记录细碎开发日志
+- 更完整的阶段演进与历史背景请查看 `docs/ROADMAP.md`
