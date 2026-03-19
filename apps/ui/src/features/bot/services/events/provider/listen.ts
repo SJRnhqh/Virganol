@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/events/provider/listen.ts
+// apps/ui/src/features/bot/services/events/provider/listen.ts
 // 外部依赖
 import { listen } from "@tauri-apps/api/event";
 

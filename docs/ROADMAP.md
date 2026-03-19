@@ -40,15 +40,15 @@ LLM Provider 后端分为两条主线：
 - [x] `useProviderCheckStore` — 生命周期全局状态（idle / checking / done / degraded / failed）
 - [x] `useProviderCollectionStore` — per-provider 状态（config / status / models）
 - [x] `constants/provider/lifecycle/*.ts` — 事件名、阶段、延迟常量统一管理
-- [x] `events/provider/handlers.ts` — 4 种事件 handler（含当前 run 事件过滤）
+- [x] `services/events/provider/handlers.ts` — 4 种事件 handler（含当前 run 事件过滤）
 - [x] `hooks/provider/lifecycleScheduler.ts` — 生命周期阶段转换调度
 （checking→终态补足、终态→idle 回归）
-- [x] `events/provider/runGuard.ts` — run_id 守卫函数复用（避免多处重复定义）
+- [x] `services/events/provider/runGuard.ts` — run_id 守卫函数复用（避免多处重复定义）
 - [x] 双层 run_id 防串扰 — 事件入口过滤 + 调度回调二次校验
 - [x] `rid.rs` — run_id 增加 `AtomicU64` 计数器后缀，规避同毫秒重复
-- [x] `events/provider/listen.ts` — 串行注册 4 种事件监听，失败回滚已成功监听并返回统一 cleanup
+- [x] `services/events/provider/listen.ts` — 串行注册 4 种事件监听，失败回滚已成功监听并返回统一 cleanup
 - [x] `hooks/provider/useProviderStartup.ts` — App 启动时注册监听 + 触发 startup check
-- [x] `api/provider/check.ts` — `triggerProviderStartupCheck` / `triggerProviderManualRefresh`，共享去重逻辑
+- [x] `services/api/provider/check.ts` — `triggerProviderStartupCheck` / `triggerProviderManualRefresh`，共享去重逻辑
 - [x] 类型系统统一收敛 — `ProviderCheckEvent` 从 constants 衍生类型迁移至
 types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId` /
 `ProviderCardState` / `ProviderCheckPhase` 模式一致
@@ -134,7 +134,8 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 删除分散的 provider 定义文件（11 个文件合并为 1 个）
 - [x] 消除 `PROVIDER_REGISTRY` 冗余，直接使用 `PROVIDER_IDS`
 - [x] 消除循环依赖（`constants` 不再依赖 `components`）
-- [x] 严格分层：`types → constants → icons → store → events/api → hooks → components`
+- [x] 对外边界层收口：`api/` 与 `events/` 统一归入 `services/`
+- [x] 严格分层：`types → constants → icons → store → services → hooks → components`
 - [x] 代码精简：-199 行（-89.2%）
 - [x] settings 目录重构：`registry/` → `provider/content/`，语义更清晰
 - [x] `ProviderHeader` 优化：5 个条件分支 → 1 个动态组件（106→58 行，-45%）

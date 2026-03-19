@@ -13,7 +13,7 @@ import {
 import { PROVIDER_CHECK_PHASES } from "@/features/bot/constants";
 import { PHASE_CLOUD_ICONS } from "@/features/bot/icons";
 import { useProviderCheckStore } from "@/features/bot/store";
-import { triggerProviderManualRefresh } from "@/features/bot/api";
+import { triggerProviderManualRefresh } from "@/features/bot/services";
 
 export const ProviderTitle = () => {
   const phase = useProviderCheckStore((s) => s.phase);
@@ -57,7 +57,7 @@ export const ProviderTitle = () => {
             "hover:bg-settings-panel-fg/8 hover:text-settings-panel-fg/70",
             // 禁用状态
             "disabled:opacity-30 disabled:cursor-not-allowed",
-            "disabled:hover:bg-transparent disabled:hover:text-settings-panel-fg/40"
+            "disabled:hover:bg-transparent disabled:hover:text-settings-panel-fg/40",
           )}
         >
           <RefreshCw className="w-4 h-4" />

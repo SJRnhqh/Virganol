@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/api/providers.ts
+// apps/ui/src/features/bot/services/api/providers.ts
 import { invoke } from "@tauri-apps/api/core";
 import type {
   ConnectAndSaveProviderPayload,

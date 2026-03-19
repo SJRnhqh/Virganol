@@ -7,7 +7,7 @@ import { useCallback } from "react";
 // 内部引用
 import type { ProviderId } from "@/features/bot/types";
 import { useProviderCollectionStore } from "@/features/bot/store";
-import { updateEnabledModels } from "@/features/bot/api";
+import { updateEnabledModels } from "@/features/bot/services";
 
 // 将模型启用映射转换为启用模型列表（用于后端 API）
 const toEnabledList = (enabledMap: Record<string, boolean>) =>

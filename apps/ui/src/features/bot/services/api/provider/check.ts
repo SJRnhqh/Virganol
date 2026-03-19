@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/api/provider/check.ts
+// apps/ui/src/features/bot/services/api/provider/check.ts
 // 外部依赖
 import { invoke } from "@tauri-apps/api/core";
 

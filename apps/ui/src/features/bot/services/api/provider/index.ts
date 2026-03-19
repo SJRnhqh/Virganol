@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/api/provider/index.ts
+// apps/ui/src/features/bot/services/api/provider/index.ts
 // 导出内容
 
 export {

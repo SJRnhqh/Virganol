@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import type { ProviderId, ProviderFormData } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import { useProviderCollectionStore } from "@/features/bot/store";
-import { resetProvider, connectAndSaveProvider } from "@/features/bot/api";
+import { resetProvider, connectAndSaveProvider } from "@/features/bot/services";
 
 export const useProviderConnection = (providerId: ProviderId) => {
   // 连接操作（调用后端 API + 批量更新前端状态）

@@ -13,13 +13,18 @@ CRUD 链路
 - 仅聚焦 `Tauri ↔ React` 生命周期与安全持久化
 - Provider 改动同时满足生命周期链路与 CRUD 链路一致性
 
-默认审查顺序仍为：`store → handlers → hooks → components`
+当前前端主线已收口为：`types → constants → icons → store → services → hooks
+→ components → views`
+
+默认审查顺序调整为：`store → services → hooks → components`
+其中 `services` 统一承接所有与桌面层/后端交互相关的 `api` 与 `events` 边界。
 
 ---
 
 ## 当前结论
 
 - store / handlers 主链路已基本完成，生命周期事件消费、run_id 防串扰与状态落盘语义已对齐
+- 目录结构已完成一轮收口：`api/` 与 `events/` 已统一归入 `services/`，前端分层主线更清晰
 - `ProviderCard` 子树组件接口已基本收口，当前不再是主要风险点
 - 组件层后续主线不再是结构重构，而是 `reset` 的语义设计与最小可用落位
 - 当前 PR 若要可提交，重点应放在：生命周期闭环、`reset` 一致性、`update_models` 并发安全、范围收敛与前端密钥内存清理
@@ -109,6 +114,10 @@ CRUD 链路
 - [ ] 前端 `errorCode` 收敛为共享联合类型
 - [ ] `ProviderConnectedPanel.tsx` 纯渲染微调
 - [ ] `secret_meta` 的前端消费闭环
+- [ ] `connect / retry` 成功后的模型状态一致性
+  - 避免前端默认全选与后端保留 `enabled_models` 交集之间出现短时漂移
+- [ ] 手动刷新触发链路的 Promise 消费
+  - 避免 `triggerProviderManualRefresh()` 的 rejected promise 在 UI 侧悬空
 
 ---
 
