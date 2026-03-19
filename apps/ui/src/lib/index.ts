@@ -12,6 +12,5 @@ export {
   providerButtonVariants,
   pulseIconVariants,
   refreshButtonVariants,
-  retryIconVariants,
   rotatingIconVariants,
 } from "./animations";

@@ -282,15 +282,12 @@ settings/provider/
 **待后续优化**：
 
 - [x] `ProviderConnectedPanel` 重构（175 行 → 178 行，已完成渲染优化与交互重构）✅
-- [ ] 类型文件清理与归位：
-  - [ ] `base.ts` 临时文件清理（`ProviderConnectionProps` 归位）
+- [x] 类型文件清理与归位：
+  - [x] `base.ts` 已删除，`ProviderConnectionProps` → `WithProviderConnection`，迁移至 `props/connection.ts`
   - [x] `content-payload.ts` 重命名为 `connected.ts`
-  - [ ] 创建 `types/provider/props/connection.ts`
-- [ ] 旧 `connection` 接口最终审查（`ProviderConnectionProps` / `useProviderConnection.ts`
-      / `ProviderCardBody` 动作编排）
+  - [x] 创建 `types/provider/props/connection.ts`
+- [x] 旧 `connection` 接口最终审查已完成（2025-03-19）
 - [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善（`useProviderModelActions.ts` / `useProviderConnectedPanel.ts`）
-- [ ] 考虑重命名 `ProviderHeader` → `ProviderLifecycleHeader`（避免与 `ProviderCardHeader`
-      混淆）
 
 ##### ✅ 4.3.12 ProviderConnectedPanel 渲染优化（2025-03-18）
 
@@ -347,10 +344,12 @@ settings/provider/
 **目标**：优化 Hooks 层性能和并发安全性，对齐组件层接口契约
 
 - [x] `useProviderStartup` — 已完成审查 ✅
-- [ ] `useProviderConnection` — 待优化（旧 `connection` 接口主审查对象）
-  - [ ] 修复重复订阅 store actions 导致的性能问题
-  - [ ] 简化 useCallback 依赖数组
-  - [ ] 统一错误处理
+- [x] `useProviderConnection` — 已完成审查与重构（2025-03-19）✅
+  - [x] 移除 4 个重复 store 订阅，改用 `getState()` 直接调用
+  - [x] useCallback 依赖数组精简为 `[providerId]`
+  - [x] 批量更新改用 `updateProviderBatch`，减少重渲染
+  - [x] 新增 `onRetry`（清错误 + 重连封装），移除 `onErrorReset`
+  - [x] 返回值收口为 `{ onConnect, onDisconnect, onRetry }`
 - [ ] `useProvider` — 待优化
   - [x] 已收紧为 card-level shell（不再聚合 models）
   - [ ] 优化 store selector 性能
@@ -362,7 +361,7 @@ settings/provider/
 
 **当前下一步主线**：
 
-- [ ] 旧 `connection` 接口审查与收口
+- [x] 旧 `connection` 接口审查与收口 ✅
 - [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善
 
 ### Phase 5：健康检查错误精细化

@@ -44,10 +44,7 @@ export const ProviderCardBody = ({
     [PROVIDER_CARD_STATES.PENDING]: undefined,
     [PROVIDER_CARD_STATES.CONNECTED]: () =>
       connection.onConnect?.(form.formData),
-    [PROVIDER_CARD_STATES.FAILED]: () => {
-      connection.onErrorReset?.();
-      connection.onConnect?.(form.formData);
-    },
+    [PROVIDER_CARD_STATES.FAILED]: () => connection.onRetry?.(form.formData),
   } satisfies Record<
     ProviderCardState,
     ProviderConnectionButtonProps["onClick"] | undefined

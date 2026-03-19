@@ -57,19 +57,3 @@ export const rotatingIconVariants: Variants = {
     },
   },
 };
-
-// 4. Retry/Reconnect 图标旋转动画（hover 触发）
-export const retryIconVariants: Variants = {
-  // 默认状态
-  idle: {
-    rotate: 0,
-  },
-  // hover 状态：逆时针旋转一圈
-  hover: {
-    rotate: -360,
-    transition: {
-      duration: 0.6,
-      ease: "easeInOut",
-    },
-  },
-};

@@ -232,8 +232,16 @@ Props 类型复用 ✅
 
 ## 下一步主线
 
-- [ ] 旧 `connection` 接口审查与收口：聚焦 `ProviderConnectionProps`、
-`useProviderConnection.ts` 与 `ProviderCardBody` 中的连接动作编排
+- [x] 旧 `connection` 接口审查与收口（2025-03-19）
+  - [x] `ProviderConnectionProps` → `WithProviderConnection`，迁移至 `props/connection.ts`
+  ，删除 `base.ts`
+  - [x] 移除 `onErrorReset`，新增 `onRetry`（封装清错误 + 重连逻辑，消除 Body 层实现泄漏）
+  - [x] `useProviderConnection` 重构：移除 4 个重复 store 订阅，改用 `getState()`；依赖数组精简为
+  `[providerId]`；批量更新改用 `updateProviderBatch`
+  - [x] `ProviderCardBody` 连接动作编排收紧：FAILED 状态从两行调用收敛为单行 `connection.onRetry?.(form.formData)`
+  - [x] 按钮动画简化：`connected` / `failed` 状态移除 hover/click 旋转动画，统一为无动效；删除
+  `retryIconVariants` / `reconnectIconVariants`；`AnimationTrigger` 新增 `"none"`
+   ，`ButtonAnimation.variant` 改为可选
 - [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善：聚焦 `useProviderModelActions.ts`
 与 `useProviderConnectedPanel.ts`
 

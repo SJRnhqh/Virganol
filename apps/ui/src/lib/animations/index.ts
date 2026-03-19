@@ -5,7 +5,6 @@ export { pulseIconVariants } from "./common";
 export {
   connectIconVariants,
   providerButtonVariants,
-  retryIconVariants,
   rotatingIconVariants,
 } from "./providerButton";
 export { phaseIconVariants, refreshButtonVariants } from "./providerLifecycle";

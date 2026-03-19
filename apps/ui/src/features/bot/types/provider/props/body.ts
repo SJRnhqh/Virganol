@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/types/provider/props/body.ts
 // 内部引用
-import type { ProviderConnectionProps } from "../base";
+import type { WithProviderConnection } from "./connection";
 import type { ProviderInfo } from "./info";
 import type { WithProviderForm } from "./form";
 import type { WithCardState } from "./state";
@@ -15,6 +15,6 @@ export interface ProviderCardBodyProps extends WithCardState {
   form: WithProviderForm;
   /** 错误信息 */
   errorMessage: string | null;
-  /** 卡片级连接操作 TODO*/
-  connection: ProviderConnectionProps;
+  /** 卡片级连接操作 */
+  connection: WithProviderConnection;
 }

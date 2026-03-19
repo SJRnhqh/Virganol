@@ -17,7 +17,7 @@ export const useProvider = (providerId: ProviderId) => {
   );
 
   // ── 连接逻辑 ──────────────────────────────
-  const { onConnect, onDisconnect, onErrorReset } =
+  const { onConnect, onDisconnect, onRetry } =
     useProviderConnection(providerId);
 
   // ── 组装返回 ──────────────────────────────
@@ -47,7 +47,7 @@ export const useProvider = (providerId: ProviderId) => {
     errorMessage: providerState.errorMessage,
     connection: {
       onConnect,
-      onErrorReset,
+      onRetry,
     },
   };
 };

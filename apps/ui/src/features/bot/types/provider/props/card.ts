@@ -3,7 +3,7 @@
 import type { ProviderInfo } from "./info";
 import type { WithProviderForm } from "./form";
 import type { WithCardState } from "./state";
-import type { ProviderConnectionProps } from "../base";
+import type { WithProviderConnection } from "./connection";
 
 /**
  * ProviderCard 组件 Props：包含 provider 卡片渲染所需的完整数据
@@ -16,6 +16,6 @@ export interface ProviderCardProps extends WithCardState {
   form: WithProviderForm;
   /** 错误信息（无错误时为 null） */
   errorMessage: string | null;
-  /** 卡片级连接操作 TODO*/
-  connection: ProviderConnectionProps;
+  /** 卡片级连接操作 */
+  connection: WithProviderConnection;
 }

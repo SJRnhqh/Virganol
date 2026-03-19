@@ -22,12 +22,12 @@ export interface DualIconButton {
 // ────────────────────────────────────────────────────────────────────────────
 
 /** 动画触发时机 */
-export type AnimationTrigger = "hover" | "always";
+export type AnimationTrigger = "hover" | "always" | "none";
 
 /** 按钮动画结构 */
 export interface ButtonAnimation {
-  /** Framer Motion 动画变体 */
-  variant: Variants;
+  /** Framer Motion 动画变体（trigger 为 none 时可省略） */
+  variant?: Variants;
   /** 动画触发时机 */
   trigger: AnimationTrigger;
 }
