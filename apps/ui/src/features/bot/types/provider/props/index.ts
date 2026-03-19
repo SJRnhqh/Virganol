@@ -17,7 +17,10 @@ export type {
   ProviderCardContentProps,
   ProviderCardContentPropsByState,
 } from "./content";
-export type { ProviderConnectedPanelProps } from "./connected";
+export type {
+  ProviderConnectionInfo,
+  ProviderConnectedPanelProps,
+} from "./connected";
 export type { ProviderCardHeaderProps } from "./header";
 export type {
   ProviderConnectionButtonProps,

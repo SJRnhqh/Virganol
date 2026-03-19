@@ -42,6 +42,7 @@ export type {
   WithProviderConnection,
   ProviderConnectionButtonProps,
   ProviderModelToggleButtonProps,
+  ProviderConnectionInfo,
   ProviderConnectedPanelProps,
 
   // ── Provider 自定义类型 ──

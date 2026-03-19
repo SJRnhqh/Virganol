@@ -200,8 +200,8 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 收紧 failed 内容层接口：建立 `ProviderFailedContent` →
   `ProviderErrorPanelProps` 两层契约，避免 `cardState` 在 content 路由中重复传递
 - [x] 定义 `ProviderConnectedPanel` Props 接口（已连接面板层）：
-  `ProviderConnectedPanelProps` 保留 `provider` + `form` 两个稳定语义块，
-  组件当前直接使用 `provider.id` 与 `form.formData.apiURL`
+  `ProviderConnectedPanelProps` 收紧为 `provider` + `connectionInfo` 两个稳定语义块，
+  组件当前直接使用 `provider.id` 与 `connectionInfo.apiURL`
 - [x] **表单接口收紧**（2025-03-16）：
   - [x] 合并 `fields` 到 `WithProviderForm` 接口（与 `formData` 内聚）
   - [x] `ProviderFormProps` 保留 `form` 嵌套层（为未来扩展预留空间）
@@ -229,8 +229,8 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
   - [x] 整合 `handleReset` 逻辑到 `form.onReset`（Hook 层业务逻辑收拢）
   - [x] 移除 `ProviderCardBodyProps.onReset` 冗余参数
   - [x] 移除 `ProviderCard` 中 `onReset={form.onReset}` 冗余传参
-  - [x] `ProviderConnectedPanelProps` 维持 `provider` + `form` 语义边界，避免继续拆成零散字段
-  - [x] `ProviderConnectedPanel` 当前直接消费 `provider.id` 与 `form.formData.apiURL`
+  - [x] `ProviderConnectedPanelProps` 维持 `provider` + `connectionInfo` 语义边界，避免继续拆成零散字段
+  - [x] `ProviderConnectedPanel` 当前直接消费 `provider.id` 与 `connectionInfo.apiURL`
   - [x] 更新 `ProviderCardBodyProps` TODO 注释（移除已完成的 onReset 收紧项）
 - [x] **连接操作接口简化**（2025-03-17）：
   - [x] 移除 `ProviderConnectionProps.onDisconnect`（仅作为 Hook 内部实现）
@@ -304,7 +304,7 @@ settings/provider/
 - [x] 布局优化：模型列表优先，辅助信息在顶部工具栏
 - [x] Hook 接口收紧：
   - [x] 移除冗余的 `hasUrl` 派生字段（直接判断 `connectionUrl` 真值）
-  - [x] 移除 `connectionUrl` 参数和返回值（组件直接使用 `form.formData.apiURL`）
+  - [x] 移除 `connectionUrl` 参数和返回值（组件直接使用 `connectionInfo.apiURL`）
   - [x] `useProviderConnectedPanel` 参数从 2 个减少到 1 个，返回值最终收口为 4 个（`modelItems`
   / `allSelected` / `onToggleModel` / `onToggleAllModels`）
   - [x] Hook 职责更纯粹：只负责模型相关逻辑，不再传递表单数据

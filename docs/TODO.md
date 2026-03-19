@@ -51,7 +51,7 @@
   - [x] 优化 `ProviderCardHeaderProps` 结构：`extends WithCardState` + `provider` 独立字段
   - [x] 统一参数顺序：组件解构顺序与接口定义顺序一致（extends 字段优先）
 - [x] **ProviderConnectedPanel 接口收紧与局部 Hook 收口**
-  - [x] 移除 `fields` 冗余传递，connected 面板直接使用 `form.formData.apiURL`
+  - [x] 移除 `fields` 冗余传递，connected 面板改为消费 `connectionInfo.apiURL`
   - [x] 类型定义重命名并归位到 `connected.ts`（`ProviderConnectedPanelProps`）
   - [x] 移除 `ProviderField` 中的 `isUrl` 字段
   - [x] 创建 `PROVIDER_NAMES` 常量（`constants/provider/common/name.ts`）
@@ -154,7 +154,7 @@ Props 类型复用 ✅
     （移除 `ProviderEditableContent` / `BaseProviderForm`）
   - [x] 收紧 failed 内容层接口
     （由 content 路由承载 `errorMessage`，组件层补 `cardState`）
-  - [x] 收紧 connected 内容层接口（移除 `fields` 冗余，直接使用 `form.formData.apiURL`）
+  - [x] 收紧 connected 内容层接口（移除 `fields` 冗余，改为直接使用 `connectionInfo.apiURL`）
   - [x] 移除 `ProviderField.isUrl` 字段
   - [x] 创建 `PROVIDER_NAMES` 常量并导出
   - [x] 合并 `id` / `icon` / `name` 为 `ProviderInfo` 对象（`provider`）
@@ -177,8 +177,8 @@ Props 类型复用 ✅
     - [x] 整合 `handleReset` 逻辑到 `form.onReset`（Hook 层业务逻辑收拢）
     - [x] 移除 `ProviderCardBodyProps.onReset` 冗余参数
     - [x] 移除 `ProviderCard` 中 `onReset={form.onReset}` 冗余传参
-    - [x] `ProviderConnectedPanelProps` 保留 `provider` + `form` 两个稳定语义块
-    - [x] `ProviderConnectedPanel` 当前直接使用 `provider.id` 与 `form.formData.apiURL`
+    - [x] `ProviderConnectedPanelProps` 保留 `provider` + `connectionInfo` 两个稳定语义块
+    - [x] `ProviderConnectedPanel` 当前直接使用 `provider.id` 与 `connectionInfo.apiURL`
     - [x] 更新 `ProviderCardBodyProps` TODO 注释（移除已完成的 onReset 收紧项）
   - [x] **连接操作接口简化**（2025-03-17）
     - [x] 移除 `ProviderConnectionProps.onDisconnect`（仅作为 Hook 内部实现）
@@ -205,7 +205,7 @@ Props 类型复用 ✅
   - [x] 工具栏移至顶部：连接信息 + 全选操作整合在顶部工具栏
   - [x] 全部 className 改用 `cn()` + 注释分组，提升可读性
   - [x] 布局优化：模型列表优先，辅助信息在顶部工具栏
-  - [x] Hook 接口收紧：移除冗余的 `hasUrl` 和 `connectionUrl` 参数，组件直接使用 `form.formData.apiURL`
+  - [x] Hook 接口收紧：移除冗余的 `hasUrl` 和 `connectionUrl` 参数，组件直接使用 `connectionInfo.apiURL`
   - [x] 交互方式优化：从胶囊开关改为加减符号
     - [x] 移除复选框边框和背景，改为纯符号交互
     - [x] 单个模型：`-` 表示已启用（点击禁用），`+` 表示未启用（点击启用）

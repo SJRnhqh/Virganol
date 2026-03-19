@@ -19,7 +19,7 @@ export const ProviderCardContent = ({
       return (
         <ProviderConnectedPanel
           provider={cardContent.provider}
-          form={cardContent.form}
+          connectionInfo={cardContent.connectionInfo}
         />
       );
 

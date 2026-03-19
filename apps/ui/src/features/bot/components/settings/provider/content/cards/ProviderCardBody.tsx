@@ -30,7 +30,9 @@ export const ProviderCardBody = ({
       cardState: PROVIDER_CARD_STATES.CONNECTED,
       cardContent: {
         provider,
-        form,
+        connectionInfo: {
+          apiURL: form.formData.apiURL,
+        },
       },
     },
     [PROVIDER_CARD_STATES.FAILED]: {
