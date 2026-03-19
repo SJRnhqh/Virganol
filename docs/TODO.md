@@ -27,7 +27,7 @@ CRUD 链路
 - 目录结构已完成一轮收口：`api/` 与 `events/` 已统一归入 `services/`，前端分层主线更清晰
 - `ProviderCard` 子树组件接口已基本收口，当前不再是主要风险点
 - 组件层后续主线不再是结构重构，而是 `reset` 的语义设计与最小可用落位
-- 当前 PR 若要可提交，重点应放在：生命周期闭环、`reset` 一致性、`update_models` 并发安全、范围收敛与前端密钥内存清理
+- 当前 PR 若要可提交，重点应放在：生命周期闭环、`reset` 一致性、`update_models` 并发安全与范围收敛
 
 ---
 
@@ -102,9 +102,8 @@ CRUD 链路
 
 ### 5. 安全闭环
 
-- [ ] `connect` 成功后清空前端内存态 `apiKey`
-  - 当前 `ProviderFormData` 仍保留 `apiKey`
-  - 本次 PR 既然涉及安全持久化，这一步不能继续后置
+- [x] `connect` 成功后清空前端内存态 `apiKey`
+  - 成功分支已在前端 store 中清空表单态密钥，失败时仍保留输入供用户修正
 
 ---
 
@@ -139,7 +138,6 @@ CRUD 链路
 2. 落 `reset` 的最小入口与返回值一致性
 3. 收 `useProviderModelActions`
 4. 收敛前端 Provider 范围到 `deepseek / ollama`
-5. 补 `connect` 成功后的 `apiKey` 清理
 
 ---
 
@@ -153,7 +151,7 @@ CRUD 链路
 - Hook 层：`useProviderModelActions` 仍是当前最需要继续处理的点
 - CRUD 一致性：`reset` 和 `update_models` 仍需补到“行为正确”而不只是“界面能点”
 - 生命周期语义：scheduler 不能继续悬空
-- 安全边界：前端内存态 `apiKey` 清理与 Provider 支持范围收敛需要在本次阶段内完成
+- 安全边界：当前阻塞项已回到密钥持久化边界与 Provider 支持范围收敛本身，不再包含前端明文 `apiKey` 长期驻留问题
 
 因此，这份 TODO 的重心已经重新调整为：
 

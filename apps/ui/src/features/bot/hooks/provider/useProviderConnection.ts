@@ -34,6 +34,7 @@ export const useProviderConnection = (providerId: ProviderId) => {
       // 4. 根据结果批量更新状态
       if (response.success) {
         store.updateProviderBatch(providerId, {
+          form: { apiKey: "" },
           cardState: PROVIDER_CARD_STATES.CONNECTED,
           models: {
             available: response.available_models,
