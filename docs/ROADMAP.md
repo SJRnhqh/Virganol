@@ -52,6 +52,9 @@ LLM Provider 后端分为两条主线：
 - [x] 卡片已完成 `cardState` 驱动渲染，`ProviderCardHeader` / `ProviderCardBody` / `ProviderCardContent`
 / `ProviderConnectionButton` 结构稳定。
 - [x] 卡片内容契约已收紧：`ProviderInfo`、`provider + connectionInfo`、`ProviderCardProps` 等边界已统一。
+- [x] `ProviderCardActions` / `ProviderResetButton` 已落位，reset 仅在 `connected / failed`
+状态显示。
+- [x] `reset` 语义已从 `form` 收回到 `connection`，表单层仅保留输入相关操作。
 - [x] 组件目录已统一到 `settings/provider/content/cards/`，局部视图派生已抽离到 `useProviderConnectedPanel`。
 - [x] `ProviderConnectionButton` 已完成配置驱动重构；`ProviderConnectedPanel` 已完成布局和交互简化。
 - [x] 前端分层已收口为 `types → constants → icons → store → services → hooks → components`。
@@ -70,7 +73,9 @@ settings/provider/
         ├── ProviderCardHeader.tsx
         ├── ProviderCardBody.tsx
         ├── ProviderCardContent.tsx
+        ├── ProviderCardActions.tsx
         ├── ProviderConnectionButton.tsx
+        ├── ProviderResetButton.tsx
         ├── ProviderForm.tsx
         ├── ProviderErrorPanel.tsx
         └── ProviderConnectedPanel.tsx
@@ -78,7 +83,6 @@ settings/provider/
 
 **当前仍待完成**：
 
-- [ ] `ProviderCardActions`（Reset 入口）仍未落位。Reset 已从 ConnectedPanel 移除，需要在 Body 层补稳定入口。
 - [ ] `ProviderConnectedPanel` 相关局部 hooks 仍待继续审查与完善，主对象为 `useProviderModelActions.ts`
 / `useProviderConnectedPanel.ts`。
 
@@ -95,6 +99,7 @@ settings/provider/
   - [x] 返回值收口为 `{ onConnect, onDisconnect, onRetry }`
 - [ ] `useProvider` — 待优化
   - [x] 已收紧为 card-level shell（不再聚合 models）
+  - [x] `onReset` 已从 `form` 语义块迁移到 `connection` 语义块
   - [ ] 优化 store selector 性能
 - [x] `useProviderConnectedPanel` — connected 面板视图派生已抽离，并收口为双态全选 ViewModel
 - [ ] `useProviderModelActions` — 待优化（`ProviderConnectedPanel` 相关局部 hook 主审查对象）
@@ -105,7 +110,7 @@ settings/provider/
 **当前下一步主线**：
 
 - [x] 旧 `connection` 接口审查与收口 ✅
-- [ ] `reset` 设计与 `ProviderCardActions` 落位
+- [x] `reset` 设计与 `ProviderCardActions` 落位
 - [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善
 
 ### Phase 5：健康检查错误精细化

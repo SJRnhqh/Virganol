@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/components/buttons/provider/ProviderConnectionButton.tsx
+// apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderConnectionButton.tsx
 // 外部依赖
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -33,56 +33,54 @@ export const ProviderConnectionButton = ({
   const disabled = cardState === PROVIDER_CARD_STATES.PENDING;
 
   return (
-    <div className="px-5 pb-2 pt-0 flex justify-end">
-      <motion.button
-        variants={providerButtonVariants}
-        initial="idle"
-        whileHover={!disabled ? "hover" : undefined}
-        whileTap={!disabled ? "tap" : undefined}
-        onHoverStart={() => setIsHovering(true)}
-        onHoverEnd={() => setIsHovering(false)}
-        onClick={() => {
-          void onClick?.();
-        }}
-        disabled={disabled}
-        className={cn(
-          // 布局
-          "flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium",
-          // 颜色
-          "text-settings-panel-fg/50 hover:text-settings-panel-fg/80 hover:bg-settings-panel-fg/5",
-          // 状态
-          "transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
-        )}
-      >
-        {/* 前置图标 */}
-        {icons.leading && (
-          <motion.div
-            variants={animation.variant}
-            initial="idle"
-            animate={shouldAnimate ? "hover" : "idle"}
-          >
-            <icons.leading.icon
-              className={cn("w-3.5 h-3.5", icons.leading.className)}
-            />
-          </motion.div>
-        )}
+    <motion.button
+      variants={providerButtonVariants}
+      initial="idle"
+      whileHover={!disabled ? "hover" : undefined}
+      whileTap={!disabled ? "tap" : undefined}
+      onHoverStart={() => setIsHovering(true)}
+      onHoverEnd={() => setIsHovering(false)}
+      onClick={() => {
+        void onClick?.();
+      }}
+      disabled={disabled}
+      className={cn(
+        // 布局
+        "flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium",
+        // 颜色
+        "text-settings-panel-fg/50 hover:text-settings-panel-fg/80 hover:bg-settings-panel-fg/5",
+        // 状态
+        "transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
+      )}
+    >
+      {/* 前置图标 */}
+      {icons.leading && (
+        <motion.div
+          variants={animation.variant}
+          initial="idle"
+          animate={shouldAnimate ? "hover" : "idle"}
+        >
+          <icons.leading.icon
+            className={cn("w-3.5 h-3.5", icons.leading.className)}
+          />
+        </motion.div>
+      )}
 
-        {/* 文本标签 */}
-        {label}
+      {/* 文本标签 */}
+      {label}
 
-        {/* 后置图标 */}
-        {icons.trailing && (
-          <motion.div
-            variants={animation.variant}
-            initial="idle"
-            animate={shouldAnimate ? "hover" : "idle"}
-          >
-            <icons.trailing.icon
-              className={cn("w-3.5 h-3.5", icons.trailing.className)}
-            />
-          </motion.div>
-        )}
-      </motion.button>
-    </div>
+      {/* 后置图标 */}
+      {icons.trailing && (
+        <motion.div
+          variants={animation.variant}
+          initial="idle"
+          animate={shouldAnimate ? "hover" : "idle"}
+        >
+          <icons.trailing.icon
+            className={cn("w-3.5 h-3.5", icons.trailing.className)}
+          />
+        </motion.div>
+      )}
+    </motion.button>
   );
 };

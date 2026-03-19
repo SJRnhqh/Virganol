@@ -20,6 +20,16 @@ export const useProvider = (providerId: ProviderId) => {
   const { onConnect, onDisconnect, onRetry } =
     useProviderConnection(providerId);
 
+  const handleReset = () => {
+    // 1. 重置表单数据到初始值
+    useProviderCollectionStore
+      .getState()
+      .setProviderForm(providerId, PROVIDER_INITIAL_FORMS[providerId]);
+
+    // 2. 调用后端清理 + 重置前端状态
+    void onDisconnect();
+  };
+
   // ── 组装返回 ──────────────────────────────
   return {
     cardState: providerState.cardState,
@@ -35,18 +45,11 @@ export const useProvider = (providerId: ProviderId) => {
         useProviderCollectionStore
           .getState()
           .setProviderForm(providerId, patch),
-      onReset: () => {
-        // 1. 重置表单数据到初始值
-        useProviderCollectionStore
-          .getState()
-          .setProviderForm(providerId, PROVIDER_INITIAL_FORMS[providerId]);
-        // 2. 调用后端清理 + 重置前端状态（onDisconnect 作为内部实现）
-        onDisconnect();
-      },
     },
     errorMessage: providerState.errorMessage,
     connection: {
       onConnect,
+      onReset: handleReset,
       onRetry,
     },
   };

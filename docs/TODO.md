@@ -54,6 +54,8 @@ CRUD 链路
 → ProviderCardContent → leaf`
 - [x] `ProviderCardHeader` / `ProviderConnectionButton` / `ProviderConnectedPanel`
 已完成主要接口收口
+- [x] `ProviderCardActions` / `ProviderResetButton` 已落位，`connected / failed` 下提供独立
+reset 入口
 - [x] `ProviderConnectedPanelProps` 已收紧为 `provider + connectionInfo`
 - [x] `ProviderCardBodyProps` 已收口为 `ProviderCardProps` 语义别名，避免重复定义漂移
 - [x] 按钮动作类型已统一为 `ProviderButtonAction`，组件内部桥接 DOM click，编排层不再依赖事件对象类型
@@ -62,6 +64,7 @@ CRUD 链路
 
 - [x] `useProviderStartup` 已完成
 - [x] `useProviderConnection` 已完成旧 `connection` 接口收口
+- [x] `onReset` 已从 `form` 语义块迁移到 `connection` 语义块，reset 不再作为表单动作暴露
 - [x] `useProviderConnectedPanel` 已收口为 connected 面板局部 ViewModel
 - [ ] `useProviderModelActions` 仍待完成并发与订阅优化
 - [ ] `useProvider` 仍有 selector 性能优化空间
@@ -78,9 +81,10 @@ CRUD 链路
 
 ### 2. Reset 最小闭环
 
-- [ ] 设计并实现最小可用的 `reset` 入口
-  - 目标不是复杂交互，而是保证用户有稳定的 reset 通路
-  - 推荐落位：`ProviderCardBody` 的 actions 区域，或独立 `ProviderCardActions`
+- [x] 设计并实现最小可用的 `reset` 入口
+  - `ProviderCardBody` 已新增 `ProviderCardActions` 路由层，`connected / failed` 下提供 `Reset`
+  入口
+  - `reset` 语义已从 `form` 收回到 `connection`，表单层仅保留输入相关操作
 
 - [ ] 修正 `reset` 返回值一致性
   - 仅当 `reset_provider === true` 时才清理本地状态

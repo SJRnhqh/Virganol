@@ -15,8 +15,6 @@ export interface WithProviderForm {
   formData: ProviderFormData;
   /** 更新表单数据（支持部分更新） */
   onUpdate: (patch: Partial<ProviderFormData>) => void;
-  /** 重置表单数据到初始值 */
-  onReset: () => void;
 }
 
 /**

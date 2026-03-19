@@ -24,3 +24,11 @@ export interface ProviderModelToggleButtonProps {
   /** 点击后触发的业务动作 */
   onClick: ProviderButtonAction;
 }
+
+/**
+ * ProviderResetButton 组件 Props：重置按钮所需的输入
+ */
+export interface ProviderResetButtonProps {
+  /** 点击后触发的业务动作 */
+  onClick?: ProviderButtonAction;
+}
