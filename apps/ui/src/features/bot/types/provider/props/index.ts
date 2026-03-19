@@ -23,6 +23,7 @@ export type {
 } from "./connected";
 export type { ProviderCardHeaderProps } from "./header";
 export type {
+  ProviderButtonAction,
   ProviderConnectionButtonProps,
   ProviderModelToggleButtonProps,
 } from "./button";

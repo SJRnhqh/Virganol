@@ -16,7 +16,7 @@ export const ProviderModelToggleButton = ({
       type="button"
       role={role}
       aria-checked={checked}
-      onClick={onClick}
+      onClick={() => void onClick()}
       className={cn(
         // 基础布局
         "inline-flex items-center justify-center",

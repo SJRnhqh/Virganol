@@ -41,7 +41,9 @@ export const ProviderConnectionButton = ({
         whileTap={!disabled ? "tap" : undefined}
         onHoverStart={() => setIsHovering(true)}
         onHoverEnd={() => setIsHovering(false)}
-        onClick={onClick}
+        onClick={() => {
+          void onClick?.();
+        }}
         disabled={disabled}
         className={cn(
           // 布局

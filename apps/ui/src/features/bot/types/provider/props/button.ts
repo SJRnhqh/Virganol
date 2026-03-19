@@ -2,12 +2,15 @@
 // 内部引用
 import type { WithCardState } from "./state";
 
+/** Provider 按钮触发的业务动作。 */
+export type ProviderButtonAction = () => void | Promise<void>;
+
 /**
  * ProviderConnectionButton 组件 Props：连接按钮所需的输入
  */
 export interface ProviderConnectionButtonProps extends WithCardState {
-  /** 点击事件处理器 */
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  /** 点击后触发的业务动作 */
+  onClick?: ProviderButtonAction;
 }
 
 /**
@@ -18,6 +21,6 @@ export interface ProviderModelToggleButtonProps {
   checked: boolean;
   /** 无障碍语义角色 */
   role: "checkbox" | "switch";
-  /** 点击事件处理器 */
-  onClick: () => void;
+  /** 点击后触发的业务动作 */
+  onClick: ProviderButtonAction;
 }

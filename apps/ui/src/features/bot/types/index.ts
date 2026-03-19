@@ -40,6 +40,7 @@ export type {
   ProviderCardHeaderProps,
   ProviderCardBodyProps,
   WithProviderConnection,
+  ProviderButtonAction,
   ProviderConnectionButtonProps,
   ProviderModelToggleButtonProps,
   ProviderConnectionInfo,

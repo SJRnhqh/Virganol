@@ -4,7 +4,7 @@ import type {
   ProviderCardState,
   ProviderCardBodyProps,
   ProviderCardContentPropsByState,
-  ProviderConnectionButtonProps,
+  ProviderButtonAction,
 } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import { ProviderConnectionButton } from "./ProviderConnectionButton";
@@ -47,10 +47,7 @@ export const ProviderCardBody = ({
     [PROVIDER_CARD_STATES.CONNECTED]: () =>
       connection.onConnect?.(form.formData),
     [PROVIDER_CARD_STATES.FAILED]: () => connection.onRetry?.(form.formData),
-  } satisfies Record<
-    ProviderCardState,
-    ProviderConnectionButtonProps["onClick"] | undefined
-  >;
+  } satisfies Record<ProviderCardState, ProviderButtonAction | undefined>;
 
   const content = <ProviderCardContent {...contentPropsByState[cardState]} />;
   const button = (

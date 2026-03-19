@@ -169,6 +169,8 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] 统一参数顺序：组件解构顺序与接口定义顺序一致（extends 字段优先）
 - [x] 删除冗余组件：`ConnectButton` / `ConnectingButton` /
   `ReconnectButton` / `RetryButton` / `BaseProviderButton`
+- [x] 统一按钮动作语义：`ProviderConnectionButtonProps` /
+  `ProviderModelToggleButtonProps` 共享 `ProviderButtonAction`，组件内部桥接 DOM click，编排层不再依赖事件对象类型
 
 ##### ✅ 4.3.9 ProviderBody 内容层接口收紧（2025-03-17）
 
@@ -210,10 +212,10 @@ types 底层联合类型，constants 改用 `satisfies` 约束，与 `ProviderId
 - [x] **卡片层接口收紧**（2025-03-17）：
   - [x] `cardState` 从 `ProviderConnectionProps` 独立到 `ProviderCardProps` 顶层
   - [x] `errorMessage` 从 `ProviderConnectionProps` 独立到 `ProviderCardProps` 顶层
-  - [x] `ProviderConnectionProps` 纯操作化：移除状态字段，只保留 `onConnect` / `onDisconnect`
-   / `onErrorReset`
+  - [x] `ProviderConnectionProps` 纯操作化：移除状态字段，只保留组件层需要的连接动作
   - [x] `ProviderCardProps` 移到 `types/provider/props/card.ts` 统一管理
   - [x] `ProviderCardBodyProps` 移到 `types/provider/props/body.ts` 统一管理
+  - [x] `ProviderCardBodyProps` 已收口为 `ProviderCardProps` 语义别名，避免重复定义漂移
   - [x] 保持 `ProviderCardContent` 路由层职责，架构一致性
 - [x] 收紧 `ProviderDefinition` / `ProviderField` 在内容层的传递边界，评估
   `fields` 是否继续作为独立载荷存在：移除 `ProviderField.isUrl` 字段，
@@ -362,6 +364,7 @@ settings/provider/
 **当前下一步主线**：
 
 - [x] 旧 `connection` 接口审查与收口 ✅
+- [ ] `reset` 设计与 `ProviderCardActions` 落位
 - [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善
 
 ### Phase 5：健康检查错误精细化

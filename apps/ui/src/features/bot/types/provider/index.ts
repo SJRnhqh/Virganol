@@ -43,6 +43,7 @@ export type {
   ProviderCardContentPropsByState,
   ProviderCardHeaderProps,
   ProviderCardBodyProps,
+  ProviderButtonAction,
   ProviderConnectionButtonProps,
   ProviderModelToggleButtonProps,
   ProviderConnectionInfo,

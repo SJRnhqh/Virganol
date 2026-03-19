@@ -1,20 +1,9 @@
 // apps/ui/src/features/bot/types/provider/props/body.ts
 // 内部引用
-import type { WithProviderConnection } from "./connection";
-import type { ProviderInfo } from "./info";
-import type { WithProviderForm } from "./form";
-import type { WithCardState } from "./state";
+import type { ProviderCardProps } from "./card";
 
 /**
- * ProviderCardBody 组件 Props
+ * ProviderCardBody 组件 Props。
+ * 当前与 ProviderCardProps 保持一致，保留独立语义名以便后续分叉时局部演进。
  */
-export interface ProviderCardBodyProps extends WithCardState {
-  /** Provider 静态信息（id、名称、图标） */
-  provider: ProviderInfo;
-  /** 表单数据和操作 */
-  form: WithProviderForm;
-  /** 错误信息 */
-  errorMessage: string | null;
-  /** 卡片级连接操作 */
-  connection: WithProviderConnection;
-}
+export type ProviderCardBodyProps = ProviderCardProps;

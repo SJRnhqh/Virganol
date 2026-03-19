@@ -8,8 +8,9 @@
 
 完成 Provider 生命周期管理的前端审查与优化（后端已完成）。
 
-默认审查顺序：**store → handlers → hooks → components**（自底向上）；本轮已按事件主链路交叉推进，当前重点转向
-旧 `connection` 接口的最终审查与收口，以及 `ProviderConnectedPanel` 相关局部 hooks 的审查与完善。
+默认审查顺序：**store → handlers → hooks → components**（自底向上）；本轮已按事件主链路交叉推进，当前组件层接口已基本收口，
+后续重点转向 `reset` 设计落位（`ProviderCardActions`）以及 `ProviderConnectedPanel` 相关局部 hooks
+的审查与完善。
 
 ---
 
@@ -50,6 +51,8 @@
   - [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps`
   - [x] 优化 `ProviderCardHeaderProps` 结构：`extends WithCardState` + `provider` 独立字段
   - [x] 统一参数顺序：组件解构顺序与接口定义顺序一致（extends 字段优先）
+  - [x] 按钮动作类型统一：`ProviderConnectionButtonProps` / `ProviderModelToggleButtonProps`
+    共享 `ProviderButtonAction`，组件内部桥接 DOM click，编排层只面向业务动作
 - [x] **ProviderConnectedPanel 接口收紧与局部 Hook 收口**
   - [x] 移除 `fields` 冗余传递，connected 面板改为消费 `connectionInfo.apiURL`
   - [x] 类型定义重命名并归位到 `connected.ts`（`ProviderConnectedPanelProps`）
@@ -91,16 +94,16 @@
 ### 3. hooks/ 审查（当前主线）
 
 - [x] `useProviderStartup.ts` — 监听注册 + 启动触发 + cleanup（已确认先监听、后触发）
-- [ ] `useProviderConnection.ts` — connect / disconnect / errorReset（旧 `connection`
-接口主审查对象）
+- [x] `useProviderConnection.ts` — connect / disconnect / retry（旧 `connection`
+接口已完成审查与收口）
 - [ ] `useProvider.ts` — 状态聚合（已收紧为 card-level shell，待继续优化 selector 性能）
 - [x] `useProviderConnectedPanel.ts` — connected 面板视图派生已从组件抽离，接口已收口为双态全选 ViewModel
 - [ ] `useProviderModelActions.ts` — 模型开关（`ProviderConnectedPanel` 相关局部 hook 主审查对象）
 
 ### 4. components/ 审查（渲染层）
 
-当前审查结论：`ProviderConnectedPanel` 组件层已基本稳定；后续组件侧仅保留按需微调。下一步重点不
-再是 card 渲染结构，而是旧 `connection` 接口和 `ProviderConnectedPanel` 相关局部 hooks。
+当前审查结论：`ProviderCard` 子树组件接口已基本稳定；后续组件侧主线不再是 card 渲染结构调整，而是
+`reset` 的语义设计与落位，以及 `ProviderConnectedPanel` 相关局部 hooks。
 
 - [x] `settings/provider/content/ProviderHeader.tsx` — phase 图标 + 刷新按钮，`cn()`
 多行格式优化 ✅
@@ -130,6 +133,7 @@ Props 类型复用 ✅
   - [x] 重构为单一配置驱动组件，删除 5 个冗余组件
   - [x] 创建 `types/provider/props/state.ts` 定义 `WithCardState`
   - [x] 创建 `types/provider/props/button.ts` 定义 `ProviderConnectionButtonProps`
+  - [x] 引入 `ProviderButtonAction` 统一按钮动作语义，避免编排层依赖 DOM 事件类型
 - [x] **ProviderCardBody 内容层接口收紧**（2025-03-17 完成）✅
   - [x] 创建 `types/provider/props/content.ts` 定义 `cardState → cardContent` 映射约束
   - [x] 新增 `ProviderCardContentPropsByState`，将 Body 层内容路由
@@ -170,7 +174,7 @@ Props 类型复用 ✅
     - [x] `errorMessage` 从 `ProviderConnectionProps` 独立到 `ProviderCardProps` 顶层
     - [x] `ProviderConnectionProps` 纯操作化：移除状态字段
     - [x] `ProviderCardProps` / `ProviderCardBodyProps` 移到 `types/provider/props/`
-    统一管理
+    统一管理；当前 `ProviderCardBodyProps` 已收口为 `ProviderCardProps` 语义别名，避免重复定义漂移
     - [x] 保持 `ProviderCardContent` 路由层职责，架构一致性
   - [x] 审查 `useProvider` 钩子返回值与组件 Props 对齐关系
   - [x] **表单操作整合与接口简化**（2025-03-17）
@@ -242,6 +246,7 @@ Props 类型复用 ✅
   - [x] 按钮动画简化：`connected` / `failed` 状态移除 hover/click 旋转动画，统一为无动效；删除
   `retryIconVariants` / `reconnectIconVariants`；`AnimationTrigger` 新增 `"none"`
    ，`ButtonAnimation.variant` 改为可选
+- [ ] `reset` 设计与 `ProviderCardActions` 落位：明确 body 层 actions 区域的语义、接口与复位链路
 - [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善：聚焦 `useProviderModelActions.ts`
 与 `useProviderConnectedPanel.ts`
 
