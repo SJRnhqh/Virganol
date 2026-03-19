@@ -54,9 +54,11 @@ LLM Provider 后端分为两条主线：
 - [x] 卡片内容契约已收紧：`ProviderInfo`、`provider + connectionInfo`、`ProviderCardProps` 等边界已统一。
 - [x] `ProviderCardActions` / `ProviderResetButton` 已落位，reset 仅在 `connected / failed`
 状态显示。
+- [x] reset 动作区已收为右侧同行布局：主按钮 + icon-only reset，交互保持克制。
 - [x] `reset` 语义已从 `form` 收回到 `connection`，表单层仅保留输入相关操作。
 - [x] 组件目录已统一到 `settings/provider/content/cards/`，局部视图派生已抽离到 `useProviderConnectedPanel`。
 - [x] `ProviderConnectionButton` 已完成配置驱动重构；`ProviderConnectedPanel` 已完成布局和交互简化。
+- [x] `ProviderModelToggleButton` 已补基础 hover / active / focus 反馈，维持极简风格同时增强点击感知。
 - [x] 前端分层已收口为 `types → constants → icons → store → services → hooks → components`。
 
 **当前结构**：

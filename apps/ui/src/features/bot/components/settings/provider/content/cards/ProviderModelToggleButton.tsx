@@ -20,9 +20,13 @@ export const ProviderModelToggleButton = ({
       className={cn(
         // 基础布局
         "inline-flex items-center justify-center",
-        "w-5 h-5",
+        "w-5 h-5 rounded-md",
         // 文本样式
-        "text-settings-panel-fg/60",
+        "text-settings-panel-fg/60 hover:text-settings-panel-fg/85",
+        // 交互反馈
+        "hover:bg-settings-panel-fg/8 active:scale-95",
+        "transition-[color,background-color,transform] duration-150",
+        "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-settings-panel-fg/20",
         // 光标
         "cursor-pointer",
       )}

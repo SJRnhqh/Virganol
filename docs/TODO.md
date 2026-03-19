@@ -56,9 +56,11 @@ CRUD 链路
 已完成主要接口收口
 - [x] `ProviderCardActions` / `ProviderResetButton` 已落位，`connected / failed` 下提供独立
 reset 入口
+- [x] reset 动作区已收为右侧同行布局：主按钮 + icon-only reset，交互保持克制
 - [x] `ProviderConnectedPanelProps` 已收紧为 `provider + connectionInfo`
 - [x] `ProviderCardBodyProps` 已收口为 `ProviderCardProps` 语义别名，避免重复定义漂移
 - [x] 按钮动作类型已统一为 `ProviderButtonAction`，组件内部桥接 DOM click，编排层不再依赖事件对象类型
+- [x] `ProviderModelToggleButton` 已补基础 hover / active / focus 反馈，点击感知更明确
 
 ### Hook 层
 
@@ -85,10 +87,6 @@ reset 入口
   - `ProviderCardBody` 已新增 `ProviderCardActions` 路由层，`connected / failed` 下提供 `Reset`
   入口
   - `reset` 语义已从 `form` 收回到 `connection`，表单层仅保留输入相关操作
-
-- [ ] 修正 `reset` 返回值一致性
-  - 仅当 `reset_provider === true` 时才清理本地状态
-  - `false` 时保留现状并提供最小失败反馈
 
 ### 3. 模型链路一致性
 

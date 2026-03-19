@@ -24,7 +24,7 @@ export const ProviderCardActions = ({
     case PROVIDER_CARD_STATES.CONNECTED:
     case PROVIDER_CARD_STATES.FAILED:
       return (
-        <div className="px-5 pb-2 pt-0 flex flex-col items-end gap-1.5">
+        <div className="px-5 pb-2 pt-0 flex items-center justify-end gap-1">
           <ProviderConnectionButton
             cardState={cardState}
             onClick={actions.primaryAction}
