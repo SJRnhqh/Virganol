@@ -25,7 +25,7 @@ CRUD 链路
 
 - store / handlers 主链路已基本完成，生命周期事件消费、run_id 防串扰与状态落盘语义已对齐
 - 目录结构已完成一轮收口：`api/` 与 `events/` 已统一归入 `services/`，前端分层主线更清晰
-- 事件层已补 `active provider guard`，在保留未来 provider 占位定义的前提下避免当前运行时范围收敛带来的类型噪音
+- `events/provider` 已收口为 `listen + handlers(check + validators)`，并补齐运行时白名单 guard
 - `ProviderCard` 子树组件接口已基本收口，当前不再是主要风险点
 - 组件层后续主线不再是结构重构，而是 `reset` 的语义设计与最小可用落位
 - 当前 PR 若要可提交，重点应放在：生命周期闭环、`reset` 一致性、`update_models` 并发安全与范围收敛
@@ -48,8 +48,8 @@ CRUD 链路
 已统一收口到底层 types
 - [x] `constants` 使用 `satisfies` 对齐底层联合类型
 - [x] 前后端生命周期事件与主要 payload 契约已对齐
-- [x] 事件层已通过 `active provider guard` 隔离“当前运行时启用范围”与“全量 Provider 定义”，避免保留占位定义时的
-`ProviderId` 类型漂移噪音
+- [x] 事件处理目录已收口为 `handlers/check + validators`
+- [x] `active provider guard` 已隔离“当前运行时启用范围”与“全量 Provider 定义”，避免 `ProviderId` 类型漂移噪音
 
 ### 组件层
 
@@ -81,7 +81,7 @@ reset 入口
 ### 1. 生命周期闭环
 
 - [ ] 生命周期延迟编排补齐，或在本次 PR 中明确降 scope
-  - 背景：原 scheduler 已从 handler 中移除，当前 checking → 终态补足 / 终态 → idle 回归尚未重新落位
+  - 背景：`events/provider/handlers` 结构已收口，但 checking → 终态补足 / 终态 → idle 回归尚未重新落位
   - 要求：不能让这次“生命周期 PR”在生命周期编排上留一个悬空口子
 
 ### 2. Reset 最小闭环
@@ -105,7 +105,7 @@ reset 入口
   - 已收敛 `PROVIDER_IDS` 与卡片渲染入口
   - 其余 provider 暂时保留类型、名称、表单等占位定义
 - [x] 事件层已新增 `active provider guard`
-  - 当前仅在 `services/events/provider` 内部消费，用于把生命周期 payload 中的宽 `ProviderId` 收窄到当前运行时白名单
+  - 当前仅在 `services/events/provider/handlers/validators` 内部消费
   - 目标是先消除编辑器 / TS 噪音，不提前放开其它 provider，也不把临时范围收敛扩散到 hooks 主线
 
 ### 5. 安全闭环
@@ -142,10 +142,10 @@ reset 入口
 
 ## 下一步执行顺序
 
-1. 先决定生命周期 scheduler 是补齐还是降 scope
-2. 落 `reset` 的最小入口与返回值一致性
-3. 收 `useProviderModelActions`
-4. 收敛前端 Provider 范围到 `deepseek / ollama`
+1. 在 `events/provider/handlers` 落生命周期 scheduler
+2. 收 `useProviderModelActions`
+3. 补 `reset` 返回值与本地状态一致性
+4. 处理 `useProvider` selector 性能收尾
 
 ---
 

@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/services/events/provider/handlers.ts
+// apps/ui/src/features/bot/services/events/provider/handlers/check.ts
 // 内部引用
 import type {
   ProviderStatusPayload,
@@ -11,8 +11,7 @@ import {
   useProviderCheckStore,
   useProviderCollectionStore,
 } from "@/features/bot/store";
-import { isActiveProviderId } from "./activeProviderGuard";
-import { isCurrentRun } from "./runGuard";
+import { isActiveProviderId, isCurrentRun } from "./validators";
 
 /** 生命周期开始：更新 checkStore 进入 checking 阶段 */
 export function handleStarted(payload: ProviderCheckStartedPayload) {

@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/services/events/provider/runGuard.ts
+// apps/ui/src/features/bot/services/events/provider/handlers/validators/runGuard.ts
 // 内部引用
 import { useProviderCheckStore } from "@/features/bot/store";
 

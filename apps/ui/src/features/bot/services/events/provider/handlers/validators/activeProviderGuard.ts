@@ -1,6 +1,7 @@
+// apps/ui/src/features/bot/services/events/provider/handlers/validators/activeProviderGuard.ts
 // 内部引用
-import { PROVIDER_IDS } from "@/features/bot/constants";
 import type { ProviderId } from "@/features/bot/types";
+import { PROVIDER_IDS } from "@/features/bot/constants";
 
 /**
  * 当前运行时启用的 Provider ID。
