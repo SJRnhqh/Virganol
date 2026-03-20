@@ -11,6 +11,7 @@ import {
   useProviderCheckStore,
   useProviderCollectionStore,
 } from "@/features/bot/store";
+import { adaptProviderStatusToBatchUpdates } from "./adapters";
 import { isActiveProviderId, isCurrentRun } from "./validators";
 
 /** 生命周期开始：更新 checkStore 进入 checking 阶段 */
@@ -36,37 +37,12 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
     return;
   }
 
-  // 准备表单更新（持久化配置映射到前端）
-  const formPatch = config.url ? { apiURL: config.url } : undefined;
-
-  // 按健康检查结果准备状态更新
-  let cardState, models, errorMessage;
-
-  if (health.success) {
-    const enabledSet = new Set(config.enabled_models);
-    const enabled: Record<string, boolean> = {};
-    // 将”可用模型列表”与”已启用模型列表”合并为前端渲染所需的启用映射。
-    for (const model of health.available_models) {
-      enabled[model] = enabledSet.has(model);
-    }
-
-    cardState = PROVIDER_CARD_STATES.CONNECTED;
-    models = { available: health.available_models, enabled };
-    errorMessage = null;
-  } else {
-    cardState = PROVIDER_CARD_STATES.FAILED;
-    models = { available: [], enabled: {} };
-    errorMessage = health.error || null;
-  }
-
   // 批量更新（一次 set 调用，减少重渲染）
   const store = useProviderCollectionStore.getState();
-  store.updateProviderBatch(provider, {
-    form: formPatch,
-    cardState,
-    models,
-    errorMessage,
-  });
+  store.updateProviderBatch(
+    provider,
+    adaptProviderStatusToBatchUpdates({ config, health }),
+  );
 }
 
 /** 生命周期正常结束：按失败数量决定走 done 或 degraded（业务失败） */

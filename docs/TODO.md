@@ -25,7 +25,8 @@ CRUD 链路
 
 - store / handlers 主链路已基本完成，生命周期事件消费、run_id 防串扰与状态落盘语义已对齐
 - 目录结构已完成一轮收口：`api/` 与 `events/` 已统一归入 `services/`，前端分层主线更清晰
-- `events/provider` 已收口为 `listen + handlers(check + validators)`，并补齐运行时白名单 guard
+- `events/provider` 已收口为 `listen + handlers(check + validators + adapters/status)`，
+并补齐运行时白名单 guard
 - `ProviderCard` 子树组件接口已基本收口，当前不再是主要风险点
 - 组件层后续主线不再是结构重构，而是 `reset` 的语义设计与最小可用落位
 - 当前 PR 若要可提交，重点应放在：生命周期闭环、`reset` 一致性、`update_models` 并发安全与范围收敛
@@ -48,7 +49,7 @@ CRUD 链路
 已统一收口到底层 types
 - [x] `constants` 使用 `satisfies` 对齐底层联合类型
 - [x] 前后端生命周期事件与主要 payload 契约已对齐
-- [x] 事件处理目录已收口为 `handlers/check + validators`
+- [x] 事件处理目录已收口为 `handlers/check + validators + adapters/status`
 - [x] `active provider guard` 已隔离“当前运行时启用范围”与“全量 Provider 定义”，避免 `ProviderId` 类型漂移噪音
 
 ### 组件层

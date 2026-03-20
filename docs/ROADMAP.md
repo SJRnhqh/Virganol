@@ -36,7 +36,8 @@ LLM Provider 后端分为两条主线：
 守卫。
 - [x] 类型系统已对齐：`ProviderCheckEvent` / `ProviderId` / `ProviderCardState` /
 `ProviderCheckPhase` 已统一收口到底层 `types`，`constants` 使用 `satisfies` 约束。
-- [x] `events/provider` 已收口为 `listen + handlers(check + validators)`，为后续 scheduler
+- [x] `events/provider` 已收口为 `listen + handlers(check + validators + adapters/status)`，
+为后续 scheduler
 补位留出稳定入口。
 - [x] 事件层已补 `active provider guard`，将当前运行时启用范围的收窄控制在 `handlers/validators` 内部，
 避免保留未来 provider 占位定义时出现类型漂移噪音。
