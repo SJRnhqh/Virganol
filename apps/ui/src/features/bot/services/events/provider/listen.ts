@@ -1,4 +1,7 @@
 // apps/ui/src/features/bot/services/events/provider/listen.ts
+// TODO: 当前 listen -> handlers -> schedulers 链路已具备可用功能，
+// 但调度清理边界仍待专项审查。提交当前版本可以作为阶段性结果，
+// 后续需在充分理解整体时序后再决定是否继续收口或回调实现细节。
 // 外部依赖
 import { listen } from "@tauri-apps/api/event";
 
@@ -17,6 +20,7 @@ import {
   handleCompleted,
   handleProviderStatus,
 } from "./handlers";
+import { disposeCheckPhaseScheduler } from "./handlers/schedulers";
 
 type ListenerCleanup = () => void;
 
@@ -25,6 +29,8 @@ type ListenerCleanup = () => void;
  * 用于注册失败时回滚，或组件卸载时批量回收句柄。
  */
 const cleanupRegisteredListeners = (cleanups: ListenerCleanup[]) => {
+  disposeCheckPhaseScheduler();
+
   while (cleanups.length > 0) {
     const cleanup = cleanups.pop();
     try {

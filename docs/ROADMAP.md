@@ -36,9 +36,8 @@ LLM Provider 后端分为两条主线：
 守卫。
 - [x] 类型系统已对齐：`ProviderCheckEvent` / `ProviderId` / `ProviderCardState` /
 `ProviderCheckPhase` 已统一收口到底层 `types`，`constants` 使用 `satisfies` 约束。
-- [x] `events/provider` 已收口为 `listen + handlers(check + validators + adapters/status)`，
-为后续 scheduler
-补位留出稳定入口。
+- [x] `events/provider` 已收口为 `listen + handlers(check + validators +
+adapters/status + schedulers/checkPhase)`。
 - [x] 事件层已补 `active provider guard`，将当前运行时启用范围的收窄控制在 `handlers/validators` 内部，
 避免保留未来 provider 占位定义时出现类型漂移噪音。
 
@@ -49,6 +48,7 @@ LLM Provider 后端分为两条主线：
 - [x] `handleProviderStatus` 已修复失败时模型残留、成功时空模型不同步等问题。
 - [x] 前后端 payload 已精简，后端统计已收敛为 `failed_count`，`started → status → completed/failed`
 时序已对齐。
+- [x] checking → terminal → idle 的前端 phase scheduler 已落位，并在监听清理时统一释放 timer。
 
 #### 🚧 4.3 per-provider 卡片渲染
 
@@ -118,7 +118,7 @@ settings/provider/
 
 - [x] 旧 `connection` 接口审查与收口 ✅
 - [x] `reset` 设计与 `ProviderCardActions` 落位
-- [ ] 在 `events/provider/handlers` 补生命周期 scheduler
+- [ ] `useProviderModelActions` 并发与订阅优化
 - [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善
 
 ### Phase 5：健康检查错误精细化

@@ -1,4 +1,8 @@
 // apps/ui/src/features/bot/services/events/provider/handlers/check.ts
+// TODO: 当前 check handlers 已接入 validators / adapters / schedulers，
+// 功能链路已经打通，但该实现尚未完成一轮系统性审查。
+// 在完全消化事件时序与 store 写入边界之前，应视为“可提交的阶段版本”，
+// 而不是最终定稿。
 // 内部引用
 import type {
   ProviderStatusPayload,
@@ -12,12 +16,16 @@ import {
   useProviderCollectionStore,
 } from "@/features/bot/store";
 import { adaptProviderStatusToBatchUpdates } from "./adapters";
+import {
+  scheduleCheckCompleted,
+  scheduleCheckFailed,
+  scheduleCheckStarted,
+} from "./schedulers";
 import { isActiveProviderId, isCurrentRun } from "./validators";
 
-/** 生命周期开始：更新 checkStore 进入 checking 阶段 */
+/** 生命周期开始：交由 phase scheduler 进入 checking 阶段 */
 export function handleStarted(payload: ProviderCheckStartedPayload) {
-  const checkStore = useProviderCheckStore.getState();
-  checkStore.setChecking(payload.run_id, payload.trigger);
+  scheduleCheckStarted(payload.run_id, payload.trigger);
 }
 
 /** 单个 Provider 状态推送：将配置、连接状态、模型列表写入 providerStore */
@@ -45,25 +53,24 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
   );
 }
 
-/** 生命周期正常结束：按失败数量决定走 done 或 degraded（业务失败） */
+/** 生命周期正常结束：按失败数量决定走 done / degraded，并交由 scheduler 编排终态回归 */
 export function handleCompleted(payload: ProviderCheckCompletedPayload) {
   if (!isCurrentRun(payload.run_id)) {
     console.warn(`[React] stale completed ignored: run=${payload.run_id}`);
     return;
   }
 
-  const checkStore = useProviderCheckStore.getState();
   if (payload.failed > 0) {
-    checkStore.setDegraded();
+    scheduleCheckCompleted(payload.run_id, "degraded");
     console.warn(
       `[React] ${payload.failed} provider check(s) failed during lifecycle check`,
     );
   } else {
-    checkStore.setDone();
+    scheduleCheckCompleted(payload.run_id, "done");
   }
 }
 
-/** 生命周期异常终止：更新 checkStore 进入 failed 阶段，并将可定位的 issue 写入对应 provider */
+/** 生命周期异常终止：failed 终态交由 scheduler 编排，并将可定位的 issue 写入对应 provider */
 export function handleFailed(payload: ProviderCheckFailedPayload) {
   const checkStore = useProviderCheckStore.getState();
   if (checkStore.runId !== null && !isCurrentRun(payload.run_id)) {
@@ -71,7 +78,7 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
     return;
   }
 
-  checkStore.setFailed(payload.code, payload.message);
+  scheduleCheckFailed(payload.run_id, payload.code, payload.message);
 
   // issues 中带 provider 字段的，下沉到对应 provider 的错误状态
   if (payload.issues?.length) {

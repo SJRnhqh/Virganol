@@ -25,8 +25,8 @@ CRUD 链路
 
 - store / handlers 主链路已基本完成，生命周期事件消费、run_id 防串扰与状态落盘语义已对齐
 - 目录结构已完成一轮收口：`api/` 与 `events/` 已统一归入 `services/`，前端分层主线更清晰
-- `events/provider` 已收口为 `listen + handlers(check + validators + adapters/status)`，
-并补齐运行时白名单 guard
+- `events/provider` 已收口为 `listen + handlers(check + validators +
+adapters/status + schedulers/checkPhase)`，生命周期事件处理边界已基本清晰
 - `ProviderCard` 子树组件接口已基本收口，当前不再是主要风险点
 - 组件层后续主线不再是结构重构，而是 `reset` 的语义设计与最小可用落位
 - 当前 PR 若要可提交，重点应放在：生命周期闭环、`reset` 一致性、`update_models` 并发安全与范围收敛
@@ -42,6 +42,10 @@ CRUD 链路
 - [x] `handleStarted` / `handleCompleted` / `handleFailed` / `handleProviderStatus`
 已完成主链路收敛
 - [x] `handleProviderStatus` 已修复失败时模型残留、成功时空模型不同步等问题
+- [x] checking → terminal → idle 的 phase scheduler 已落位，并在监听清理时统一释放 timer
+- [ ] 调度实现仍待专项审查
+  - 当前不是“未实现”，而是“已可用但还需要系统性复核理解”
+  - 当前版本可以作为阶段性提交，但不视为最终定稿
 
 ### 类型与契约
 
@@ -49,7 +53,7 @@ CRUD 链路
 已统一收口到底层 types
 - [x] `constants` 使用 `satisfies` 对齐底层联合类型
 - [x] 前后端生命周期事件与主要 payload 契约已对齐
-- [x] 事件处理目录已收口为 `handlers/check + validators + adapters/status`
+- [x] 事件处理目录已收口为 `handlers/check + validators + adapters/status + schedulers/checkPhase`
 - [x] `active provider guard` 已隔离“当前运行时启用范围”与“全量 Provider 定义”，避免 `ProviderId` 类型漂移噪音
 
 ### 组件层
@@ -81,9 +85,13 @@ reset 入口
 
 ### 1. 生命周期闭环
 
-- [ ] 生命周期延迟编排补齐，或在本次 PR 中明确降 scope
-  - 背景：`events/provider/handlers` 结构已收口，但 checking → 终态补足 / 终态 → idle 回归尚未重新落位
-  - 要求：不能让这次“生命周期 PR”在生命周期编排上留一个悬空口子
+- [x] 生命周期延迟编排已补齐
+  - `events/provider/handlers/schedulers` 已接管 checking → terminal → idle 的 phase
+  时序
+  - 监听清理时会统一释放 scheduler timer，避免卸载后残留写入
+- [ ] 生命周期调度实现仍待专项审查
+  - 重点是 listen / handlers / schedulers 的 cleanup 边界与职责收口
+  - 当前适合先提交阶段版本，后续再结合理解深度决定是否继续重构
 
 ### 2. Reset 最小闭环
 
@@ -143,10 +151,10 @@ reset 入口
 
 ## 下一步执行顺序
 
-1. 在 `events/provider/handlers` 落生命周期 scheduler
-2. 收 `useProviderModelActions`
-3. 补 `reset` 返回值与本地状态一致性
-4. 处理 `useProvider` selector 性能收尾
+1. 收 `useProviderModelActions`
+2. 补 `reset` 返回值与本地状态一致性
+3. 处理 `useProvider` selector 性能收尾
+4. 评估 `errorCode` 联合类型与 `secret_meta` 消费闭环
 
 ---
 
@@ -159,15 +167,15 @@ reset 入口
 - 组件层：`ProviderCard` 子树接口已经足够稳定，后续只需承接 `reset`
 - Hook 层：`useProviderModelActions` 仍是当前最需要继续处理的点
 - CRUD 一致性：`reset` 和 `update_models` 仍需补到“行为正确”而不只是“界面能点”
-- 生命周期语义：scheduler 不能继续悬空
+- 生命周期语义：当前全局 phase 调度已补齐，剩余风险转回 hooks 与 CRUD 一致性
 - 安全边界：当前阻塞项已回到密钥持久化边界与 Provider 支持范围收敛本身，不再包含前端明文 `apiKey` 长期驻留问题
 
 因此，这份 TODO 的重心已经重新调整为：
 
-1. 生命周期闭环
+1. hook 层并发与一致性
 2. reset 最小闭环
-3. hook 层并发与一致性
-4. 范围与安全收尾
+3. 范围与安全收尾
+4. 类型与元信息收尾
 
 ---
 
