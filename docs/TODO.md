@@ -25,6 +25,7 @@ CRUD 链路
 
 - store / handlers 主链路已基本完成，生命周期事件消费、run_id 防串扰与状态落盘语义已对齐
 - 目录结构已完成一轮收口：`api/` 与 `events/` 已统一归入 `services/`，前端分层主线更清晰
+- 事件层已补 `active provider guard`，在保留未来 provider 占位定义的前提下避免当前运行时范围收敛带来的类型噪音
 - `ProviderCard` 子树组件接口已基本收口，当前不再是主要风险点
 - 组件层后续主线不再是结构重构，而是 `reset` 的语义设计与最小可用落位
 - 当前 PR 若要可提交，重点应放在：生命周期闭环、`reset` 一致性、`update_models` 并发安全与范围收敛
@@ -47,6 +48,8 @@ CRUD 链路
 已统一收口到底层 types
 - [x] `constants` 使用 `satisfies` 对齐底层联合类型
 - [x] 前后端生命周期事件与主要 payload 契约已对齐
+- [x] 事件层已通过 `active provider guard` 隔离“当前运行时启用范围”与“全量 Provider 定义”，避免保留占位定义时的
+`ProviderId` 类型漂移噪音
 
 ### 组件层
 
@@ -101,6 +104,9 @@ reset 入口
   - 当前要求是“仅启用”，不是“删除所有未来 provider 定义”
   - 已收敛 `PROVIDER_IDS` 与卡片渲染入口
   - 其余 provider 暂时保留类型、名称、表单等占位定义
+- [x] 事件层已新增 `active provider guard`
+  - 当前仅在 `services/events/provider` 内部消费，用于把生命周期 payload 中的宽 `ProviderId` 收窄到当前运行时白名单
+  - 目标是先消除编辑器 / TS 噪音，不提前放开其它 provider，也不把临时范围收敛扩散到 hooks 主线
 
 ### 5. 安全闭环
 

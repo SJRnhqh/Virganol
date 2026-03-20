@@ -6,11 +6,12 @@ import type {
   ProviderCheckStartedPayload,
   ProviderCheckCompletedPayload,
 } from "@/features/bot/types";
-import { PROVIDER_IDS, PROVIDER_CARD_STATES } from "@/features/bot/constants";
+import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import {
   useProviderCheckStore,
   useProviderCollectionStore,
 } from "@/features/bot/store";
+import { isActiveProviderId } from "./activeProviderGuard";
 import { isCurrentRun } from "./runGuard";
 
 /** 生命周期开始：更新 checkStore 进入 checking 阶段 */
@@ -31,7 +32,7 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
   // TODO: `secret_meta` 当前尚未接入前端状态与渲染，后续需结合密钥提示/UI 反馈统一消费。
   const { provider, config, health } = payload;
 
-  if (!PROVIDER_IDS.includes(provider)) {
+  if (!isActiveProviderId(provider)) {
     console.warn(`[React] unknown provider: ${provider}, skipping`);
     return;
   }
@@ -101,7 +102,7 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
   if (payload.issues?.length) {
     const store = useProviderCollectionStore.getState();
     for (const issue of payload.issues) {
-      if (PROVIDER_IDS.includes(issue.provider)) {
+      if (isActiveProviderId(issue.provider)) {
         store.setProviderCardState(issue.provider, PROVIDER_CARD_STATES.FAILED);
         // TODO: 后续若 provider 级错误码收敛为稳定契约，评估将 issue.code 一并下沉用于更细粒度渲染。
         // TODO: 当前结构性错误会直接覆盖已有业务错误文案；若后续需要同时保留多类错误或多条 issue，需设计统一展示策略。

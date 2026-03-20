@@ -36,6 +36,8 @@ LLM Provider 后端分为两条主线：
 守卫。
 - [x] 类型系统已对齐：`ProviderCheckEvent` / `ProviderId` / `ProviderCardState` /
 `ProviderCheckPhase` 已统一收口到底层 `types`，`constants` 使用 `satisfies` 约束。
+- [x] 事件层已补 `active provider guard`，将当前运行时启用范围的收窄控制在 `services/events/provider`
+内部，避免保留未来 provider 占位定义时出现类型漂移噪音。
 
 #### ✅ 4.2 全局生命周期渲染与交互
 
@@ -128,6 +130,8 @@ settings/provider/
 - [x] 补齐前端安全闭环：`connect` 成功后清空内存态 `apiKey`，避免明文密钥在前端长期驻留
 - [ ] 补齐 `reset` 一致性：仅在 `reset_provider=true` 时清理本地状态，失败时保留现状并提示
 - [ ] 收敛前后端 Provider 支持范围：当前阶段统一到 `deepseek` / `ollama`，避免 `ProviderId` 与注册表漂移
+  - [x] 前端事件层已先补运行时白名单 guard，避免宽 `ProviderId` 直接渗入当前运行时范围
+  - [ ] `ProviderId` / 注册表 / 桌面端支持范围的彻底统一仍待后续阶段一起收口
 - [ ] 审计 invoke / event 暴露面，并增加前端约束，防止 Provider 直连 `fetch/axios`
 - [ ] 补充 `update_models` / `reset` / `retry` 异常一致性回归，覆盖快速切换、持久化失败与重复点击场景
 - [ ] 视需要补充集成测试
