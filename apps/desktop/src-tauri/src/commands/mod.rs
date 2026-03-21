@@ -1,3 +1,3 @@
 // apps/desktop/src-tauri/src/commands/mod.rs
-
-pub mod settings;
+// 导出内容
+pub(crate) mod settings;
