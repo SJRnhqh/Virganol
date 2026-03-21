@@ -6,4 +6,5 @@ export {
   handleFailed,
   handleCompleted,
   handleProviderStatus,
+  disposeProviderCheckHandlers,
 } from "./check";

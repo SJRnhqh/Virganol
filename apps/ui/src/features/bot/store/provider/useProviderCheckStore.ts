@@ -35,9 +35,10 @@ export const useProviderCheckStore = create<ProviderCheckState>((set) => ({
       phase: PROVIDER_CHECK_PHASES.DEGRADED,
     }),
 
-  setFailed: (code, message) =>
+  setFailed: (code, message, runId) =>
     set({
       phase: PROVIDER_CHECK_PHASES.FAILED,
+      ...(runId !== undefined ? { runId } : {}),
       errorCode: code,
       errorMessage: message,
     }),

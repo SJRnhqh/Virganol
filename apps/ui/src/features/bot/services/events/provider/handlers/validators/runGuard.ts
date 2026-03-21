@@ -2,19 +2,21 @@
 // 内部引用
 import { useProviderCheckStore } from "@/features/bot/store";
 
-/**
- * 判断某个事件/回调所属的 run_id 是否仍是当前活跃轮次。
- * 用于防止旧 run 的延迟事件写入最新状态。
- */
-export function isCurrentRun(runId: string): boolean {
-  return useProviderCheckStore.getState().runId === runId;
-}
+export type RunDisposition = "current" | "orphan" | "stale";
 
 /**
- * 判断某个事件是否属于已过时的轮次。
- * 与 isCurrentRun 的区别：runId 为 null（started 未到达）时返回 false，允许事件继续处理。
+ * 统一判定某个事件所属 run_id 与当前前端活跃轮次的关系。
+ *
+ * - current: 与当前活跃 run 一致，可正常消费
+ * - orphan: 前端尚未登记 run_id（例如 started 未到达），仅部分事件允许兜底处理
+ * - stale: 明确属于旧 run，应直接丢弃避免串扰
  */
-export function isStaleRun(runId: string): boolean {
+export function resolveRunDisposition(runId: string): RunDisposition {
   const currentRunId = useProviderCheckStore.getState().runId;
-  return currentRunId !== null && currentRunId !== runId;
+
+  if (currentRunId === null) {
+    return "orphan";
+  }
+
+  return currentRunId === runId ? "current" : "stale";
 }

@@ -54,7 +54,7 @@ dispatchers + schedulers` 五层，scheduler 移除 store/validators 依赖成�
 独立收口到 `dispatchers/checkPhase`，`ProviderCheckTrigger` 补入 types 导出链路。
 - [x] 事件 handler 全量审查完成：四个 handler 均已收口，
   `check.ts` 无 store/constants 直接依赖，
-  `isStaleRun` 新增、`dispatchProviderIssue` 新增。
+  `run disposition` 判定已补 orphan/stale 区分、`dispatchProviderIssue` 新增。
 - [x] scheduler 深度重构：`scheduleTerminal` 抽取、timer 语义重命名、
   `PROVIDER_CHECK_DELAYS` 拆分为 `CHECKING_DELAY` + `PROVIDER_IDLE_DELAY`
   （`TerminalPhase` 映射）。
@@ -141,6 +141,8 @@ settings/provider/
 ### Phase 6：收尾与补充测试
 
 - [ ] 根据前端适配过程中暴露的问题补充后端处理
+- [ ] 补齐 orphan failed 的 run 认领顺序一致性，避免 scheduler / checkStore 对当前 run 的认知短暂分裂
+- [ ] 明确 orphan failed 的 `trigger` 语义：前端兜底接受 `null` 或后端 failed payload 补齐
 - [ ] 补齐 `secret_meta` 前端消费闭环：展示 `has_key` / `key_source`，并为 `last4` 等脱敏元信息预留接入位
 - [x] 补齐前端安全闭环：`connect` 成功后清空内存态 `apiKey`，避免明文密钥在前端长期驻留
 - [ ] 补齐 `reset` 一致性：仅在 `reset_provider=true` 时清理本地状态，失败时保留现状并提示

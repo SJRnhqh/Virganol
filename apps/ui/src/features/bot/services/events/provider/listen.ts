@@ -19,8 +19,8 @@ import {
   handleStarted,
   handleCompleted,
   handleProviderStatus,
+  disposeProviderCheckHandlers,
 } from "./handlers";
-import { disposeCheckPhaseScheduler } from "./handlers/schedulers";
 
 type ListenerCleanup = () => void;
 
@@ -29,7 +29,7 @@ type ListenerCleanup = () => void;
  * 用于注册失败时回滚，或组件卸载时批量回收句柄。
  */
 const cleanupRegisteredListeners = (cleanups: ListenerCleanup[]) => {
-  disposeCheckPhaseScheduler();
+  disposeProviderCheckHandlers();
 
   while (cleanups.length > 0) {
     const cleanup = cleanups.pop();

@@ -67,6 +67,15 @@ const scheduleTerminal = (
   }, getCompensationDelay());
 };
 
+const claimFailedRunIfNeeded = (runId: string) => {
+  if (activeRunId !== null) return;
+
+  // failed 可能在 started 之前到达；此时认领本轮 run，
+  // 让终态展示与 idle 回归仍能复用统一调度语义。
+  activeRunId = runId;
+  checkingStartedAt = null;
+};
+
 // --- started: 进入 checking 阶段 ---
 
 export function scheduleCheckStarted(runId: string, onChecking: () => void) {
@@ -94,6 +103,7 @@ export function scheduleCheckFailed(
   onFailed: () => void,
   onIdle: () => void,
 ) {
+  claimFailedRunIfNeeded(runId);
   scheduleTerminal(runId, PROVIDER_IDLE_DELAYS.failed, onFailed, onIdle);
 }
 

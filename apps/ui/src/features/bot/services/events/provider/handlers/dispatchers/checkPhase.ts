@@ -33,15 +33,22 @@ export const dispatchDegraded = () => {
   useProviderCheckStore.getState().setDegraded();
 };
 
-export const dispatchFailed = (code: string, message: string) => {
-  useProviderCheckStore.getState().setFailed(code, message);
+export const dispatchFailed = (
+  code: string,
+  message: string,
+  runId?: string,
+) => {
+  useProviderCheckStore.getState().setFailed(code, message, runId);
 };
 
 export const dispatchReset = () => {
   useProviderCheckStore.getState().reset();
 };
 
-export const dispatchProviderIssue = (provider: ActiveProviderId, message: string) => {
+export const dispatchProviderIssue = (
+  provider: ActiveProviderId,
+  message: string,
+) => {
   const store = useProviderCollectionStore.getState();
   store.setProviderCardState(provider, PROVIDER_CARD_STATES.FAILED);
   store.setProviderError(provider, message);

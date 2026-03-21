@@ -48,7 +48,7 @@ adapters/status + schedulers/checkPhase)`，生命周期事件处理边界已基
   scheduler 为纯时序模块（仅依赖 constants），dispatch 独立到 `dispatchers/checkPhase`
 - [x] 事件 handler 全量审查完成：四个 handler 均已收口，
   `check.ts` 无 store/constants 直接依赖，
-  `isStaleRun` 新增处理 started 未到达场景，
+  `run disposition` 判定已补齐 orphan/stale 区分，`failed` 可兜底承接 started 未到达场景，
   `dispatchProviderIssue` 新增收口 issues 写入
 - [x] scheduler 深度重构：`scheduleTerminal` 抽取消除重复，
   timer 语义重命名为 `toTerminalTimer` / `toIdleTimer`，
@@ -100,7 +100,11 @@ reset 入口
   - 监听清理时会统一释放 scheduler timer，避免卸载后残留写入
 - [ ] 生命周期调度实现仍待专项审查
   - 重点是 listen / handlers / schedulers 的 cleanup 边界与职责收口
-  - 当前适合先提交阶段版本，后续再结合理解深度决定是否继续重构
+  - 当前剩余阻塞点已收敛到 orphan failed 的局部一致性，而不是整体结构重构
+- [ ] 补齐 orphan failed 的 run 认领顺序一致性
+  - 避免 scheduler 已认领 run、但 `checkStore.runId` 仍未写入的短暂语义缝隙
+- [ ] 明确 orphan failed 的 `trigger` 语义
+  - 当前异常失败态已可补 `runId`，但 `trigger` 仍可能为空；需明确是前端兜底接受 `null`，还是后端 failed payload 补齐
 
 ### 2. Reset 最小闭环
 
@@ -160,10 +164,11 @@ reset 入口
 
 ## 下一步执行顺序
 
-1. 收 `useProviderModelActions`
-2. 补 `reset` 返回值与本地状态一致性
-3. 处理 `useProvider` selector 性能收尾
-4. 评估 `errorCode` 联合类型与 `secret_meta` 消费闭环
+1. 补 orphan failed 的 run / trigger 语义闭环
+2. 收 `useProviderModelActions`
+3. 补 `reset` 返回值与本地状态一致性
+4. 处理 `useProvider` selector 性能收尾
+5. 评估 `errorCode` 联合类型与 `secret_meta` 消费闭环
 
 ---
 
@@ -176,7 +181,8 @@ reset 入口
 - 组件层：`ProviderCard` 子树接口已经足够稳定，后续只需承接 `reset`
 - Hook 层：`useProviderModelActions` 仍是当前最需要继续处理的点
 - CRUD 一致性：`reset` 和 `update_models` 仍需补到“行为正确”而不只是“界面能点”
-- 生命周期语义：当前全局 phase 调度已补齐，剩余风险转回 hooks 与 CRUD 一致性
+- 生命周期语义：当前全局 phase 调度已补齐，剩余风险已收敛到 orphan failed 的 run / trigger 闭环，
+以及 hooks 与 CRUD 一致性
 - 安全边界：当前阻塞项已回到密钥持久化边界与 Provider 支持范围收敛本身，不再包含前端明文 `apiKey` 长期驻留问题
 
 因此，这份 TODO 的重心已经重新调整为：
