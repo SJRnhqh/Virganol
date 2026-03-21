@@ -84,8 +84,12 @@ reset 入口
 - [x] `useProviderStartup` 已完成
 - [x] `useProviderConnection` 已完成旧 `connection` 接口收口
 - [x] `onReset` 已从 `form` 语义块迁移到 `connection` 语义块，reset 不再作为表单动作暴露
-- [x] `useProviderConnectedPanel` 已收口为 connected 面板局部 ViewModel
-- [ ] `useProviderModelActions` 仍待完成并发与订阅优化
+- [x] `useProviderModelList`（原 `useProviderConnectedPanel`）已完成内联合并：
+  `useProviderModelActions` 已删除，模型数据与开关动作统一收口到
+  `useProviderModelList`，store 订阅拆分为独立 selector，
+  callback 依赖数组精简为 `[providerId]`
+- [ ] `useProviderModelList` 乐观更新并发安全性仍待评估
+  （快速连续点击场景与 `allSelected` 闭包时序问题）
 - [ ] `useProvider` 仍有 selector 性能优化空间
 
 ---
@@ -168,7 +172,7 @@ reset 入口
 ## 下一步执行顺序
 
 1. 补 orphan failed 的 run / trigger 语义闭环
-2. 收 `useProviderModelActions`
+2. ~~收 `useProviderModelActions`~~ ✅ 已合并至 `useProviderModelList`
 3. 补 `reset` 返回值与本地状态一致性
 4. 处理 `useProvider` selector 性能收尾
 5. 评估 `errorCode` 联合类型与 `secret_meta` 消费闭环
@@ -182,7 +186,8 @@ reset 入口
 更具体地说：
 
 - 组件层：`ProviderCard` 子树接口已经足够稳定，后续只需承接 `reset`
-- Hook 层：`useProviderModelActions` 仍是当前最需要继续处理的点
+- Hook 层：`useProviderModelList` 乐观更新并发安全性仍待评估，
+  `useProvider` selector 性能为当前剩余优化点
 - CRUD 一致性：`reset` 和 `update_models` 仍需补到“行为正确”而不只是“界面能点”
 - 生命周期语义：当前全局 phase 调度已补齐，剩余风险已收敛到 orphan failed 的 run / trigger 闭环，
 以及 hooks 与 CRUD 一致性

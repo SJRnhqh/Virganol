@@ -5,7 +5,7 @@ import { Link, Zap } from "lucide-react";
 // 内部引用
 import { cn } from "@/lib";
 import type { ProviderConnectedPanelProps } from "@/features/bot/types";
-import { useProviderConnectedPanel } from "@/features/bot/hooks";
+import { useProviderModelList } from "@/features/bot/hooks";
 import { ProviderModelToggleButton } from "./ProviderModelToggleButton";
 
 export const ProviderConnectedPanel = ({
@@ -13,7 +13,7 @@ export const ProviderConnectedPanel = ({
   connectionInfo,
 }: ProviderConnectedPanelProps) => {
   const { modelItems, allSelected, onToggleModel, onToggleAllModels } =
-    useProviderConnectedPanel(provider.id);
+    useProviderModelList(provider.id);
 
   return (
     <div className="pb-2 pl-1 pt-0">

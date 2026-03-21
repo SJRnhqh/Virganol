@@ -72,7 +72,8 @@ dispatchers + schedulers` 五层，scheduler 移除 store/validators 依赖成�
 状态显示。
 - [x] reset 动作区已收为右侧同行布局：主按钮 + icon-only reset，交互保持克制。
 - [x] `reset` 语义已从 `form` 收回到 `connection`，表单层仅保留输入相关操作。
-- [x] 组件目录已统一到 `settings/provider/content/cards/`，局部视图派生已抽离到 `useProviderConnectedPanel`。
+- [x] 组件目录已统一到 `settings/provider/content/cards/`，
+  局部视图派生已抽离到 `useProviderModelList`（原 `useProviderConnectedPanel`）。
 - [x] `ProviderConnectionButton` 已完成配置驱动重构；`ProviderConnectedPanel` 已完成布局和交互简化。
 - [x] `ProviderModelToggleButton` 已补基础 hover / active / focus 反馈，维持极简风格同时增强点击感知。
 - [x] 前端分层已收口为 `types → constants → icons → store → services → hooks → components`。
@@ -101,8 +102,9 @@ settings/provider/
 
 **当前仍待完成**：
 
-- [ ] `ProviderConnectedPanel` 相关局部 hooks 仍待继续审查与完善，主对象为 `useProviderModelActions.ts`
-/ `useProviderConnectedPanel.ts`。
+- [x] `useProviderModelActions` 已合并入 `useProviderModelList`，
+  文件已删除，store 订阅拆分、callback 依赖精简已完成。
+- [ ] `useProviderModelList` 乐观更新并发安全性仍待评估。
 
 #### 🚧 4.4 Hooks 层审查与优化（2025-03-17 开始）
 
@@ -119,18 +121,17 @@ settings/provider/
   - [x] 已收紧为 card-level shell（不再聚合 models）
   - [x] `onReset` 已从 `form` 语义块迁移到 `connection` 语义块
   - [ ] 优化 store selector 性能
-- [x] `useProviderConnectedPanel` — connected 面板视图派生已抽离，并收口为双态全选 ViewModel
-- [ ] `useProviderModelActions` — 待优化（`ProviderConnectedPanel` 相关局部 hook 主审查对象）
-  - [ ] 修复乐观更新并发风险（请求去重/版本号机制）
-  - [ ] 优化 store selector 性能
-  - [x] 消费范围已局部化，不再对齐公共 props 契约
+- [x] `useProviderModelList`（原 `useProviderConnectedPanel`）—
+  已内联合并 `useProviderModelActions`，store 订阅拆分为独立 selector，
+  callback 依赖精简，旧文件已删除
+  - [ ] 乐观更新并发安全性（快速连续点击 / `allSelected` 时序）仍待评估
 
 **当前下一步主线**：
 
 - [x] 旧 `connection` 接口审查与收口 ✅
 - [x] `reset` 设计与 `ProviderCardActions` 落位
-- [ ] `useProviderModelActions` 并发与订阅优化
-- [ ] `ProviderConnectedPanel` 相关局部 hooks 审查与完善
+- [x] `useProviderModelList` 内联合并完成（原 `useProviderModelActions` 已删除）
+- [ ] `useProviderModelList` 乐观更新并发安全性评估
 
 ### Phase 5：健康检查错误精细化
 
