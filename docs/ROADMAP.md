@@ -124,14 +124,15 @@ settings/provider/
 - [x] `useProviderModelList`（原 `useProviderConnectedPanel`）—
   已内联合并 `useProviderModelActions`，store 订阅拆分为独立 selector，
   callback 依赖精简，旧文件已删除
-  - [ ] 乐观更新并发安全性（快速连续点击 / `allSelected` 时序）仍待评估
+  - [ ] 乐观更新并发安全性（快速连续点击 / `allSelected` 时序）
+    后移至下一阶段，不阻塞本次 PR
 
 **当前下一步主线**：
 
 - [x] 旧 `connection` 接口审查与收口 ✅
 - [x] `reset` 设计与 `ProviderCardActions` 落位
 - [x] `useProviderModelList` 内联合并完成（原 `useProviderModelActions` 已删除）
-- [ ] `useProviderModelList` 乐观更新并发安全性评估
+- [ ] `useProviderModelList` 并发安全性评估（后移，不阻塞本次 PR）
 
 ### Phase 5：健康检查错误精细化
 

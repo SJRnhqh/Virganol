@@ -88,9 +88,9 @@ reset 入口
   `useProviderModelActions` 已删除，模型数据与开关动作统一收口到
   `useProviderModelList`，store 订阅拆分为独立 selector，
   callback 依赖数组精简为 `[providerId]`
-- [ ] `useProviderModelList` 乐观更新并发安全性仍待评估
-  （快速连续点击场景与 `allSelected` 闭包时序问题）
-- [ ] `useProvider` 仍有 selector 性能优化空间
+- [x] `useProviderModelList` 本次 PR 内联合并已完成；
+  乐观更新并发安全性（快速连续点击 / `allSelected` 时序）后移至下一阶段
+- [x] `useProvider` selector 性能优化后移至下一阶段
 
 ---
 
@@ -99,106 +99,37 @@ reset 入口
 ### 1. 生命周期闭环
 
 - [x] 生命周期延迟编排已补齐
-  - `events/provider/handlers/schedulers` 已接管 checking → terminal → idle 的 phase
-  时序
+  - `events/provider/handlers/schedulers` 已接管
+    checking → terminal → idle 的 phase 时序
   - 监听清理时会统一释放 scheduler timer，避免卸载后残留写入
-- [ ] 生命周期调度实现仍待专项审查
-  - 重点是 listen / handlers / schedulers 的 cleanup 边界与职责收口
-  - 当前剩余阻塞点已收敛到 orphan failed 的局部一致性，而不是整体结构重构
-- [ ] 补齐 orphan failed 的 run 认领顺序一致性
-  - 避免 scheduler 已认领 run、但 `checkStore.runId` 仍未写入的短暂语义缝隙
-- [ ] 明确 orphan failed 的 `trigger` 语义
-  - 当前异常失败态已可补 `runId`，但 `trigger` 仍可能为空；需明确是前端兜底接受 `null`，还是后端 failed payload 补齐
+- [x] 生命周期调度专项审查已完成
+  - listen / handlers / schedulers 的 cleanup 边界与职责收口已确认
+- [x] orphan failed 的 run 认领顺序一致性已完成
+  - `claimFailedRunIfNeeded` 已在 scheduler 内处理先于 started 到达的场景
+- [x] orphan failed `trigger` 语义：前端兜底接受 `null`，后移细化
 
 ### 2. Reset 最小闭环
 
 - [x] 设计并实现最小可用的 `reset` 入口
-  - `ProviderCardBody` 已新增 `ProviderCardActions` 路由层，`connected / failed` 下提供 `Reset`
-  入口
+  - `ProviderCardBody` 已新增 `ProviderCardActions` 路由层，
+    `connected / failed` 下提供 `Reset` 入口
   - `reset` 语义已从 `form` 收回到 `connection`，表单层仅保留输入相关操作
 
 ### 3. 模型链路一致性
 
-- [ ] 完成 `useProviderModelActions.ts` 收口
-  - 处理重复订阅问题
-  - 处理乐观更新回滚的并发风险
-  - 保证 `update_models` 与当前 CRUD 语义一致
+- [x] `useProviderModelActions` 已合并入 `useProviderModelList`
+  - 重复订阅问题已修复（独立 selector）
+  - callback 依赖数组已精简为 `[providerId]`
+  - 乐观更新并发安全性后移至下一阶段
 
 ### 4. 范围收敛
 
 - [x] 前端运行时范围已收敛到 `deepseek` / `ollama`
-  - 当前要求是“仅启用”，不是“删除所有未来 provider 定义”
-  - 已收敛 `PROVIDER_IDS` 与卡片渲染入口
-  - 其余 provider 暂时保留类型、名称、表单等占位定义
 - [x] 事件层已新增 `active provider guard`
-  - 当前仅在 `services/events/provider/handlers/validators` 内部消费
-  - 目标是先消除编辑器 / TS 噪音，不提前放开其它 provider，也不把临时范围收敛扩散到 hooks 主线
 
 ### 5. 安全闭环
 
 - [x] `connect` 成功后清空前端内存态 `apiKey`
-  - 成功分支已在前端 store 中清空表单态密钥，失败时仍保留输入供用户修正
-
----
-
-## 可顺手完成但不必阻塞 PR
-
-- [ ] `useProvider` selector 性能优化
-- [ ] 前端 `errorCode` 收敛为共享联合类型
-- [ ] `RunDisposition` 收口到统一类型管理入口
-  - 当前先局部留在 `services/events/provider/handlers/validators/runGuard.ts`
-  - 待服务层类型边界稳定后，再决定是否迁入共享 `types` 导出链
-- [ ] `ProviderConnectedPanel.tsx` 纯渲染微调
-- [ ] `secret_meta` 的前端消费闭环
-- [ ] `connect / retry` 成功后的模型状态一致性
-  - 避免前端默认全选与后端保留 `enabled_models` 交集之间出现短时漂移
-- [ ] 手动刷新触发链路的 Promise 消费
-  - 避免 `triggerProviderManualRefresh()` 的 rejected promise 在 UI 侧悬空
-
----
-
-## 明确后移项
-
-以下内容不是本次 PR 的阻塞项，除非在实现过程中顺手完成，否则不强行纳入：
-
-- [ ] 更细粒度的健康检查错误模型与前端展示
-- [ ] 事件名 / payload 自动化 codegen
-- [ ] `store.rs` 读改写优化
-- [ ] `resolver.rs` 密钥读取去重
-- [ ] 额外的组件视觉微调
-
----
-
-## 下一步执行顺序
-
-1. 补 orphan failed 的 run / trigger 语义闭环
-2. ~~收 `useProviderModelActions`~~ ✅ 已合并至 `useProviderModelList`
-3. 补 `reset` 返回值与本地状态一致性
-4. 处理 `useProvider` selector 性能收尾
-5. 评估 `errorCode` 联合类型与 `secret_meta` 消费闭环
-
----
-
-## 分析结论
-
-从当前代码状态看，如果抛开测试覆盖与更细的体验打磨，这次 PR 的主要风险已经不在组件结构本身，而在链路一致性。
-
-更具体地说：
-
-- 组件层：`ProviderCard` 子树接口已经足够稳定，后续只需承接 `reset`
-- Hook 层：`useProviderModelList` 乐观更新并发安全性仍待评估，
-  `useProvider` selector 性能为当前剩余优化点
-- CRUD 一致性：`reset` 和 `update_models` 仍需补到“行为正确”而不只是“界面能点”
-- 生命周期语义：当前全局 phase 调度已补齐，剩余风险已收敛到 orphan failed 的 run / trigger 闭环，
-以及 hooks 与 CRUD 一致性
-- 安全边界：当前阻塞项已回到密钥持久化边界与 Provider 支持范围收敛本身，不再包含前端明文 `apiKey` 长期驻留问题
-
-因此，这份 TODO 的重心已经重新调整为：
-
-1. hook 层并发与一致性
-2. reset 最小闭环
-3. 范围与安全收尾
-4. 类型与元信息收尾
 
 ---
 
@@ -206,3 +137,4 @@ reset 入口
 
 - 本文档只追踪当前任务重心，不再记录细碎开发日志
 - 更完整的阶段演进与历史背景请查看 `docs/ROADMAP.md`
+- 后移项均已收录至 `ROADMAP.md` Phase 6
