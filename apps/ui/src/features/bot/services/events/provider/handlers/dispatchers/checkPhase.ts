@@ -17,6 +17,13 @@ export const dispatchChecking = (
   useProviderCheckStore.getState().setChecking(runId, trigger);
 };
 
+export const dispatchProviderBatch = (
+  provider: ActiveProviderId,
+  updates: ProviderBatchUpdates,
+) => {
+  useProviderCollectionStore.getState().updateProviderBatch(provider, updates);
+};
+
 export const dispatchDone = () => {
   useProviderCheckStore.getState().setDone();
 };
@@ -31,11 +38,4 @@ export const dispatchFailed = (code: string, message: string) => {
 
 export const dispatchReset = () => {
   useProviderCheckStore.getState().reset();
-};
-
-export const dispatchProviderBatch = (
-  provider: ActiveProviderId,
-  updates: ProviderBatchUpdates,
-) => {
-  useProviderCollectionStore.getState().updateProviderBatch(provider, updates);
 };

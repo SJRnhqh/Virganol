@@ -1,18 +1,21 @@
 // apps/ui/src/features/bot/services/events/provider/handlers/schedulers/checkPhaseScheduler.ts
 // 内部引用
-import { PROVIDER_CHECK_DELAYS } from "@/features/bot/constants";
-
-type CheckTerminalPhase = "done" | "degraded";
-type TimerHandle = ReturnType<typeof setTimeout>;
+import type { CheckTerminalPhase, TimerHandle } from "@/features/bot/types";
+import {
+  PROVIDER_CHECKING_DELAY,
+  PROVIDER_IDLE_DELAYS,
+} from "@/features/bot/constants";
 
 // --- 模块状态 ---
 
 // 当前活跃轮次的 run_id，用于防止旧轮次 timer 回调写入状态
 let activeRunId: string | null = null;
-// checking 阶段开始时间戳，用于计算补足延迟，保证 checking 至少持续 CHECKING_DONE ms
+// checking 阶段开始时间戳，用于计算补足延迟，保证 checking 至少持续 CHECKING_DELAY ms
 let checkingStartedAt: number | null = null;
-let terminalTimer: TimerHandle | null = null;
-let idleResetTimer: TimerHandle | null = null;
+// checking → 终态的过渡计时器（含补足延迟）
+let toTerminalTimer: TimerHandle | null = null;
+// 终态 → idle 的过渡计时器（展示时长结束后回归）
+let toIdleTimer: TimerHandle | null = null;
 
 // --- 内部工具 ---
 
@@ -22,33 +25,46 @@ const clearTimer = (timer: TimerHandle | null): null => {
 };
 
 const clearScheduledTimers = () => {
-  terminalTimer = clearTimer(terminalTimer);
-  idleResetTimer = clearTimer(idleResetTimer);
+  toTerminalTimer = clearTimer(toTerminalTimer);
+  toIdleTimer = clearTimer(toIdleTimer);
 };
 
-const getCheckingCompensationDelay = () => {
+const getCompensationDelay = () => {
   if (checkingStartedAt === null) return 0;
-  const elapsedMs = Date.now() - checkingStartedAt;
-  return Math.max(0, PROVIDER_CHECK_DELAYS.CHECKING_DONE - elapsedMs);
+  return Math.max(
+    0,
+    PROVIDER_CHECKING_DELAY - (Date.now() - checkingStartedAt),
+  );
 };
-
-const getIdleDelayForTerminalPhase = (phase: CheckTerminalPhase) =>
-  phase === "degraded"
-    ? PROVIDER_CHECK_DELAYS.DEGRADED_IDLE
-    : PROVIDER_CHECK_DELAYS.DONE_IDLE;
 
 const scheduleIdleReset = (
   runId: string,
   delayMs: number,
   onIdle: () => void,
 ) => {
-  idleResetTimer = setTimeout(() => {
+  toIdleTimer = setTimeout(() => {
     if (activeRunId !== runId) return;
     onIdle();
     activeRunId = null;
     checkingStartedAt = null;
-    idleResetTimer = null;
+    toIdleTimer = null;
   }, delayMs);
+};
+
+const scheduleTerminal = (
+  runId: string,
+  idleDelayMs: number,
+  onTerminal: () => void,
+  onIdle: () => void,
+) => {
+  clearScheduledTimers();
+
+  toTerminalTimer = setTimeout(() => {
+    if (activeRunId !== runId) return;
+    onTerminal();
+    toTerminalTimer = null;
+    scheduleIdleReset(runId, idleDelayMs, onIdle);
+  }, getCompensationDelay());
 };
 
 // --- started: 进入 checking 阶段 ---
@@ -68,15 +84,7 @@ export function scheduleCheckCompleted(
   onTerminal: () => void,
   onIdle: () => void,
 ) {
-  terminalTimer = clearTimer(terminalTimer);
-  idleResetTimer = clearTimer(idleResetTimer);
-
-  terminalTimer = setTimeout(() => {
-    if (activeRunId !== runId) return;
-    onTerminal();
-    terminalTimer = null;
-    scheduleIdleReset(runId, getIdleDelayForTerminalPhase(phase), onIdle);
-  }, getCheckingCompensationDelay());
+  scheduleTerminal(runId, PROVIDER_IDLE_DELAYS[phase], onTerminal, onIdle);
 }
 
 // --- failed: checking → failed → idle ---
@@ -86,15 +94,7 @@ export function scheduleCheckFailed(
   onFailed: () => void,
   onIdle: () => void,
 ) {
-  terminalTimer = clearTimer(terminalTimer);
-  idleResetTimer = clearTimer(idleResetTimer);
-
-  terminalTimer = setTimeout(() => {
-    if (activeRunId !== runId) return;
-    onFailed();
-    terminalTimer = null;
-    scheduleIdleReset(runId, PROVIDER_CHECK_DELAYS.FAILED_IDLE, onIdle);
-  }, getCheckingCompensationDelay());
+  scheduleTerminal(runId, PROVIDER_IDLE_DELAYS.failed, onFailed, onIdle);
 }
 
 // --- dispose: 清理所有 timer 与模块状态 ---

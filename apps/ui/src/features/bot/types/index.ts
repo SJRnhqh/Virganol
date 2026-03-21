@@ -1,6 +1,8 @@
 // apps/ui/src/features/bot/types/index.ts
 // 导出内容
 
+export type { TimerHandle } from "./shared";
+
 export type {
   // ── Provider 标识与定义 ──
   ProviderId,
@@ -21,6 +23,8 @@ export type {
   ProviderFormData,
   ProviderCardState,
   ProviderCheckPhase,
+  TerminalPhase,
+  CheckTerminalPhase,
   ProviderModelState,
   ProviderCheckState,
   ProviderBatchUpdates,

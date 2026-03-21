@@ -2,9 +2,9 @@
 
 export {
   dispatchChecking,
+  dispatchProviderBatch,
   dispatchDone,
   dispatchDegraded,
   dispatchFailed,
   dispatchReset,
-  dispatchProviderBatch,
 } from "./checkPhase";

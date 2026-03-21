@@ -23,6 +23,8 @@ export type {
   ProviderFormData,
   ProviderCardState,
   ProviderCheckPhase,
+  TerminalPhase,
+  CheckTerminalPhase,
   ProviderModelState,
   ProviderCheckState,
   ProviderBatchUpdates,

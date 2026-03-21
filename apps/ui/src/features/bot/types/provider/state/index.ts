@@ -5,7 +5,7 @@
 export type { ProviderCardState } from "./card";
 
 // ── Provider 生命周期阶段 ──
-export type { ProviderCheckPhase } from "./phase";
+export type { ProviderCheckPhase, TerminalPhase, CheckTerminalPhase } from "./phase";
 
 // ── Provider 全局检查状态 ──
 export type { ProviderCheckState } from "./check";
