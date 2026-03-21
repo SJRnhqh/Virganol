@@ -3,6 +3,7 @@
 export {
   dispatchChecking,
   dispatchProviderBatch,
+  dispatchProviderIssue,
   dispatchDone,
   dispatchDegraded,
   dispatchFailed,

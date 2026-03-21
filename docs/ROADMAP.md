@@ -52,8 +52,9 @@ adapters/status + schedulers/checkPhase)`。
 - [x] 事件服务层完成专项审查：`handlers/` 已收口为 `check（编排）+ validators + adapters +
 dispatchers + schedulers` 五层，scheduler 移除 store/validators 依赖成为纯时序模块，dispatch 逻辑
 独立收口到 `dispatchers/checkPhase`，`ProviderCheckTrigger` 补入 types 导出链路。
-- [x] 事件 handler 逐项审查：`handleStarted` / `handleProviderStatus` / `handleCompleted`
-  已完成，validate → adapt → dispatch 层次边界清晰，store 写入统一收口到 dispatchers。
+- [x] 事件 handler 全量审查完成：四个 handler 均已收口，
+  `check.ts` 无 store/constants 直接依赖，
+  `isStaleRun` 新增、`dispatchProviderIssue` 新增。
 - [x] scheduler 深度重构：`scheduleTerminal` 抽取、timer 语义重命名、
   `PROVIDER_CHECK_DELAYS` 拆分为 `CHECKING_DELAY` + `PROVIDER_IDLE_DELAY`
   （`TerminalPhase` 映射）。

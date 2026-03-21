@@ -9,3 +9,12 @@ import { useProviderCheckStore } from "@/features/bot/store";
 export function isCurrentRun(runId: string): boolean {
   return useProviderCheckStore.getState().runId === runId;
 }
+
+/**
+ * 判断某个事件是否属于已过时的轮次。
+ * 与 isCurrentRun 的区别：runId 为 null（started 未到达）时返回 false，允许事件继续处理。
+ */
+export function isStaleRun(runId: string): boolean {
+  const currentRunId = useProviderCheckStore.getState().runId;
+  return currentRunId !== null && currentRunId !== runId;
+}

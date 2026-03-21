@@ -4,6 +4,7 @@ import type {
   ProviderCheckTrigger,
   ProviderBatchUpdates,
 } from "@/features/bot/types";
+import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import {
   useProviderCheckStore,
   useProviderCollectionStore,
@@ -38,4 +39,10 @@ export const dispatchFailed = (code: string, message: string) => {
 
 export const dispatchReset = () => {
   useProviderCheckStore.getState().reset();
+};
+
+export const dispatchProviderIssue = (provider: ActiveProviderId, message: string) => {
+  const store = useProviderCollectionStore.getState();
+  store.setProviderCardState(provider, PROVIDER_CARD_STATES.FAILED);
+  store.setProviderError(provider, message);
 };

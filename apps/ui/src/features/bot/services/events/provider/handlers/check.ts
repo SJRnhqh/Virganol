@@ -6,8 +6,6 @@ import type {
   ProviderCheckStartedPayload,
   ProviderCheckCompletedPayload,
 } from "@/features/bot/types";
-import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
-import { useProviderCheckStore, useProviderCollectionStore } from "@/features/bot/store";
 import { adaptProviderStatusToBatchUpdates } from "./adapters";
 import {
   dispatchChecking,
@@ -16,13 +14,14 @@ import {
   dispatchFailed,
   dispatchReset,
   dispatchProviderBatch,
+  dispatchProviderIssue,
 } from "./dispatchers";
 import {
   scheduleCheckStarted,
   scheduleCheckCompleted,
   scheduleCheckFailed,
 } from "./schedulers";
-import { isActiveProviderId, isCurrentRun } from "./validators";
+import { isActiveProviderId, isCurrentRun, isStaleRun } from "./validators";
 
 /** 生命周期开始：validate → schedule，进入 checking 阶段 */
 export function handleStarted(payload: ProviderCheckStartedPayload) {
@@ -69,8 +68,7 @@ export function handleCompleted(payload: ProviderCheckCompletedPayload) {
 
 /** 生命周期异常终止：validate → schedule failed → idle，per-provider issue 下沉 */
 export function handleFailed(payload: ProviderCheckFailedPayload) {
-  const checkStore = useProviderCheckStore.getState();
-  if (checkStore.runId !== null && !isCurrentRun(payload.run_id)) {
+  if (isStaleRun(payload.run_id)) {
     console.warn(`[React] stale failed ignored: run=${payload.run_id}`);
     return;
   }
@@ -82,13 +80,11 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
   );
 
   if (payload.issues?.length) {
-    const store = useProviderCollectionStore.getState();
     for (const issue of payload.issues) {
       if (isActiveProviderId(issue.provider)) {
-        store.setProviderCardState(issue.provider, PROVIDER_CARD_STATES.FAILED);
         // TODO: 后续若 provider 级错误码收敛为稳定契约，评估将 issue.code 一并下沉用于更细粒度渲染。
         // TODO: 当前结构性错误会直接覆盖已有业务错误文案；若后续需要同时保留多类错误或多条 issue，需设计统一展示策略。
-        store.setProviderError(issue.provider, issue.message);
+        dispatchProviderIssue(issue.provider, issue.message);
       } else {
         console.warn(`[React] unknown provider in issue: ${issue.provider}, skipping`);
       }

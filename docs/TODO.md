@@ -46,9 +46,10 @@ adapters/status + schedulers/checkPhase)`，生命周期事件处理边界已基
 - [x] 调度层专项审查已完成：`handlers/` 收口为五层
   （check / validators / adapters / dispatchers / schedulers），
   scheduler 为纯时序模块（仅依赖 constants），dispatch 独立到 `dispatchers/checkPhase`
-- [x] 事件 handler 逐项审查：`handleStarted` / `handleProviderStatus` /
-  `handleCompleted` 已完成，validate → adapt → dispatch 层次边界清晰，
-  store 写入统一收口到 dispatchers
+- [x] 事件 handler 全量审查完成：四个 handler 均已收口，
+  `check.ts` 无 store/constants 直接依赖，
+  `isStaleRun` 新增处理 started 未到达场景，
+  `dispatchProviderIssue` 新增收口 issues 写入
 - [x] scheduler 深度重构：`scheduleTerminal` 抽取消除重复，
   timer 语义重命名为 `toTerminalTimer` / `toIdleTimer`，
   `PROVIDER_CHECK_DELAYS` 拆分为 `CHECKING_DELAY` + `PROVIDER_IDLE_DELAY`（phase 映射）
