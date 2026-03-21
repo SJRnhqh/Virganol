@@ -1,5 +1,7 @@
-import { MainLayout } from "@/layouts/MainLayout";
-import { useProviderStartup } from "@/features/bot/hooks";
+// apps/ui/src/App.tsx
+// 内部引用
+import { useProviderStartup } from "./features";
+import { MainLayout } from "./layouts";
 
 function App() {
   useProviderStartup();

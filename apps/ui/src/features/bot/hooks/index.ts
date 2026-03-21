@@ -1,3 +1,8 @@
 // apps/ui/src/features/bot/hooks/index.ts
 // 导出内容
-export { useProviderStartup, useProvider } from "./providers";
+
+export {
+  useProviderModelList,
+  useProvider,
+  useProviderStartup,
+} from "./provider";

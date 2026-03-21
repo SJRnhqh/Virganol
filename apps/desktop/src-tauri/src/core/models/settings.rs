@@ -1,4 +1,9 @@
+// apps/core/models/settings.rs
+// 外部方法
 use serde::{Deserialize, Serialize};
+
+// 内部引用
+use super::provider::ProviderId;
 
 /// 前端发起 connect_and_save_provider 的请求契约
 ///
@@ -8,7 +13,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ConnectAndSaveProviderRequest {
-    pub provider_id: String,
+    pub provider_id: ProviderId,
     pub url: Option<String>,
     pub key: String,
 }
@@ -48,12 +53,4 @@ impl HealthCheckResponse {
             error: Some(msg.into()),
         }
     }
-}
-
-/// 推送给前端的 Provider 状态
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ProviderStatusPayload {
-    pub provider_id: String,
-    pub config: ProviderRecord,
-    pub health: HealthCheckResponse,
 }
