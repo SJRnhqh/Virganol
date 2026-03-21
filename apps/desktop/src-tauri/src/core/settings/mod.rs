@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/settings/mod.rs
-
-pub mod bot;
+// 导出内容
+pub(crate) mod bot;
 mod secrets;
-pub mod store;
+pub(crate) mod store;

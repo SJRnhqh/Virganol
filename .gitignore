@@ -28,4 +28,15 @@ bin/
 
 # AI
 .claude/
-AGENTS.md
+
+# CodeArt
+.arts/*
+
+# Zed
+.zed/
+
+# Rust
+/target
+
+# Tauri
+**/gen/schemas
