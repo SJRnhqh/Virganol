@@ -8,6 +8,7 @@ export type {
   // ── Provider 契约类型 ──
   ProviderIssue,
   ProviderCheckEvent,
+  ProviderCheckTrigger,
   HealthCheckResponse,
   ProviderStatusPayload,
   ProviderCheckFailedPayload,

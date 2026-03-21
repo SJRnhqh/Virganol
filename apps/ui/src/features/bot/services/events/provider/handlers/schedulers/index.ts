@@ -2,7 +2,7 @@
 
 export {
   disposeCheckPhaseScheduler,
+  scheduleCheckStarted,
   scheduleCheckCompleted,
   scheduleCheckFailed,
-  scheduleCheckStarted,
 } from "./checkPhaseScheduler";

@@ -1,8 +1,4 @@
 // apps/ui/src/features/bot/services/events/provider/handlers/check.ts
-// TODO: 当前 check handlers 已接入 validators / adapters / schedulers，
-// 功能链路已经打通，但该实现尚未完成一轮系统性审查。
-// 在完全消化事件时序与 store 写入边界之前，应视为“可提交的阶段版本”，
-// 而不是最终定稿。
 // 内部引用
 import type {
   ProviderStatusPayload,
@@ -11,29 +7,34 @@ import type {
   ProviderCheckCompletedPayload,
 } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
-import {
-  useProviderCheckStore,
-  useProviderCollectionStore,
-} from "@/features/bot/store";
+import { useProviderCheckStore, useProviderCollectionStore } from "@/features/bot/store";
 import { adaptProviderStatusToBatchUpdates } from "./adapters";
 import {
+  dispatchChecking,
+  dispatchDone,
+  dispatchDegraded,
+  dispatchFailed,
+  dispatchReset,
+} from "./dispatchers";
+import {
+  scheduleCheckStarted,
   scheduleCheckCompleted,
   scheduleCheckFailed,
-  scheduleCheckStarted,
 } from "./schedulers";
 import { isActiveProviderId, isCurrentRun } from "./validators";
 
-/** 生命周期开始：交由 phase scheduler 进入 checking 阶段 */
+/** 生命周期开始：validate → schedule，进入 checking 阶段 */
 export function handleStarted(payload: ProviderCheckStartedPayload) {
-  scheduleCheckStarted(payload.run_id, payload.trigger);
+  scheduleCheckStarted(
+    payload.run_id,
+    () => dispatchChecking(payload.run_id, payload.trigger),
+  );
 }
 
-/** 单个 Provider 状态推送：将配置、连接状态、模型列表写入 providerStore */
+/** 单个 Provider 状态推送：validate → adapt → 批量写入 providerStore */
 export function handleProviderStatus(payload: ProviderStatusPayload) {
   if (!isCurrentRun(payload.run_id)) {
-    console.warn(
-      `[React] stale provider-status ignored: run=${payload.run_id}`,
-    );
+    console.warn(`[React] stale provider-status ignored: run=${payload.run_id}`);
     return;
   }
 
@@ -45,32 +46,30 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
     return;
   }
 
-  // 批量更新（一次 set 调用，减少重渲染）
-  const store = useProviderCollectionStore.getState();
-  store.updateProviderBatch(
+  useProviderCollectionStore.getState().updateProviderBatch(
     provider,
     adaptProviderStatusToBatchUpdates({ config, health }),
   );
 }
 
-/** 生命周期正常结束：按失败数量决定走 done / degraded，并交由 scheduler 编排终态回归 */
+/** 生命周期正常结束：validate → 按失败数量 schedule done / degraded → idle */
 export function handleCompleted(payload: ProviderCheckCompletedPayload) {
   if (!isCurrentRun(payload.run_id)) {
     console.warn(`[React] stale completed ignored: run=${payload.run_id}`);
     return;
   }
 
-  if (payload.failed > 0) {
-    scheduleCheckCompleted(payload.run_id, "degraded");
-    console.warn(
-      `[React] ${payload.failed} provider check(s) failed during lifecycle check`,
-    );
-  } else {
-    scheduleCheckCompleted(payload.run_id, "done");
+  const phase = payload.failed > 0 ? "degraded" : "done";
+  const onTerminal = phase === "degraded" ? dispatchDegraded : dispatchDone;
+
+  if (phase === "degraded") {
+    console.warn(`[React] ${payload.failed} provider check(s) failed during lifecycle check`);
   }
+
+  scheduleCheckCompleted(payload.run_id, phase, onTerminal, dispatchReset);
 }
 
-/** 生命周期异常终止：failed 终态交由 scheduler 编排，并将可定位的 issue 写入对应 provider */
+/** 生命周期异常终止：validate → schedule failed → idle，per-provider issue 下沉 */
 export function handleFailed(payload: ProviderCheckFailedPayload) {
   const checkStore = useProviderCheckStore.getState();
   if (checkStore.runId !== null && !isCurrentRun(payload.run_id)) {
@@ -78,9 +77,12 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
     return;
   }
 
-  scheduleCheckFailed(payload.run_id, payload.code, payload.message);
+  scheduleCheckFailed(
+    payload.run_id,
+    () => dispatchFailed(payload.code, payload.message),
+    dispatchReset,
+  );
 
-  // issues 中带 provider 字段的，下沉到对应 provider 的错误状态
   if (payload.issues?.length) {
     const store = useProviderCollectionStore.getState();
     for (const issue of payload.issues) {
@@ -90,14 +92,10 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
         // TODO: 当前结构性错误会直接覆盖已有业务错误文案；若后续需要同时保留多类错误或多条 issue，需设计统一展示策略。
         store.setProviderError(issue.provider, issue.message);
       } else {
-        console.warn(
-          `[React] unknown provider in issue: ${issue.provider}, skipping`,
-        );
+        console.warn(`[React] unknown provider in issue: ${issue.provider}, skipping`);
       }
     }
   }
 
-  console.error(
-    `[React] check failed: run=${payload.run_id}, code=${payload.code}, message=${payload.message}`,
-  );
+  console.error(`[React] check failed: run=${payload.run_id}, code=${payload.code}, message=${payload.message}`);
 }

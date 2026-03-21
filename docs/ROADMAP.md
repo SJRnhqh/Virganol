@@ -49,6 +49,9 @@ adapters/status + schedulers/checkPhase)`。
 - [x] 前后端 payload 已精简，后端统计已收敛为 `failed_count`，`started → status → completed/failed`
 时序已对齐。
 - [x] checking → terminal → idle 的前端 phase scheduler 已落位，并在监听清理时统一释放 timer。
+- [x] 事件服务层完成专项审查：`handlers/` 已收口为 `check（编排）+ validators + adapters +
+dispatchers + schedulers` 五层，scheduler 移除 store/validators 依赖成为纯时序模块，dispatch 逻辑
+独立收口到 `dispatchers/checkPhase`，`ProviderCheckTrigger` 补入 types 导出链路。
 
 #### 🚧 4.3 per-provider 卡片渲染
 

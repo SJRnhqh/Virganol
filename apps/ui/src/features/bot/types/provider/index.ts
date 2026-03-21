@@ -8,6 +8,7 @@ export type { ProviderId } from "./common";
 export type {
   ProviderIssue,
   ProviderCheckEvent,
+  ProviderCheckTrigger,
   HealthCheckResponse,
   ProviderStatusPayload,
   ProviderCheckFailedPayload,

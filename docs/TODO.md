@@ -43,8 +43,8 @@ adapters/status + schedulers/checkPhase)`，生命周期事件处理边界已基
 已完成主链路收敛
 - [x] `handleProviderStatus` 已修复失败时模型残留、成功时空模型不同步等问题
 - [x] checking → terminal → idle 的 phase scheduler 已落位，并在监听清理时统一释放 timer
-- [ ] 调度实现仍待专项审查
-  - 当前不是“未实现”，而是“已可用但还需要系统性复核理解”
+- [x] 调度层专项审查已完成：`handlers/` 收口为五层（check / validators / adapters / dispatchers
+/ schedulers），scheduler 为纯时序模块（仅依赖 constants），dispatch 独立到 `dispatchers/checkPhase`“未实现”，而是“已可用但还需要系统性复核理解”
   - 当前版本可以作为阶段性提交，但不视为最终定稿
 
 ### 类型与契约
@@ -53,7 +53,7 @@ adapters/status + schedulers/checkPhase)`，生命周期事件处理边界已基
 已统一收口到底层 types
 - [x] `constants` 使用 `satisfies` 对齐底层联合类型
 - [x] 前后端生命周期事件与主要 payload 契约已对齐
-- [x] 事件处理目录已收口为 `handlers/check + validators + adapters/status + schedulers/checkPhase`
+- [x] 事件处理目录已收口为 `handlers/check + validators + adapters + dispatchers + schedulers`
 - [x] `active provider guard` 已隔离“当前运行时启用范围”与“全量 Provider 定义”，避免 `ProviderId` 类型漂移噪音
 
 ### 组件层
