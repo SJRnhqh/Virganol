@@ -2,6 +2,8 @@
 // 内部引用
 import { useProviderCheckStore } from "@/features/bot/store";
 
+// TODO: `RunDisposition` 未来应收口到统一的类型管理入口；
+// 当前先局部留在 validator 内部，待服务层类型边界稳定后再决定具体目录与导出链。
 export type RunDisposition = "current" | "orphan" | "stale";
 
 /**

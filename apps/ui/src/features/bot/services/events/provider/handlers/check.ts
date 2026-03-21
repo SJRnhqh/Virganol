@@ -41,6 +41,8 @@ const warnIgnoredRun = (
   disposition: "orphan" | "stale",
   runId: string,
 ) => {
+  // TODO: 当前日志尚未统一管理，先以内聚在 handler 层的局部辅助函数承接；
+  // 后续若建设统一日志/错误上报入口，再评估迁移到同层 logging 模块。
   console.warn(`[React] ${disposition} ${event} ignored: run=${runId}`);
 };
 

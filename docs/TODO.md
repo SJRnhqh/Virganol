@@ -141,6 +141,9 @@ reset 入口
 
 - [ ] `useProvider` selector 性能优化
 - [ ] 前端 `errorCode` 收敛为共享联合类型
+- [ ] `RunDisposition` 收口到统一类型管理入口
+  - 当前先局部留在 `services/events/provider/handlers/validators/runGuard.ts`
+  - 待服务层类型边界稳定后，再决定是否迁入共享 `types` 导出链
 - [ ] `ProviderConnectedPanel.tsx` 纯渲染微调
 - [ ] `secret_meta` 的前端消费闭环
 - [ ] `connect / retry` 成功后的模型状态一致性
