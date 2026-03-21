@@ -1,9 +1,19 @@
 // apps/ui/src/features/bot/services/events/provider/handlers/dispatchers/checkPhase.ts
 // 内部引用
-import type { ProviderCheckTrigger } from "@/features/bot/types";
-import { useProviderCheckStore } from "@/features/bot/store";
+import type {
+  ProviderCheckTrigger,
+  ProviderBatchUpdates,
+} from "@/features/bot/types";
+import {
+  useProviderCheckStore,
+  useProviderCollectionStore,
+} from "@/features/bot/store";
+import type { ActiveProviderId } from "../validators/activeProviderGuard";
 
-export const dispatchChecking = (runId: string, trigger: ProviderCheckTrigger) => {
+export const dispatchChecking = (
+  runId: string,
+  trigger: ProviderCheckTrigger,
+) => {
   useProviderCheckStore.getState().setChecking(runId, trigger);
 };
 
@@ -21,4 +31,11 @@ export const dispatchFailed = (code: string, message: string) => {
 
 export const dispatchReset = () => {
   useProviderCheckStore.getState().reset();
+};
+
+export const dispatchProviderBatch = (
+  provider: ActiveProviderId,
+  updates: ProviderBatchUpdates,
+) => {
+  useProviderCollectionStore.getState().updateProviderBatch(provider, updates);
 };

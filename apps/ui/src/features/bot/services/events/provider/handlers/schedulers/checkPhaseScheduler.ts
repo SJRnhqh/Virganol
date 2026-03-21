@@ -7,7 +7,9 @@ type TimerHandle = ReturnType<typeof setTimeout>;
 
 // --- 模块状态 ---
 
+// 当前活跃轮次的 run_id，用于防止旧轮次 timer 回调写入状态
 let activeRunId: string | null = null;
+// checking 阶段开始时间戳，用于计算补足延迟，保证 checking 至少持续 CHECKING_DONE ms
 let checkingStartedAt: number | null = null;
 let terminalTimer: TimerHandle | null = null;
 let idleResetTimer: TimerHandle | null = null;
@@ -35,7 +37,11 @@ const getIdleDelayForTerminalPhase = (phase: CheckTerminalPhase) =>
     ? PROVIDER_CHECK_DELAYS.DEGRADED_IDLE
     : PROVIDER_CHECK_DELAYS.DONE_IDLE;
 
-const scheduleIdleReset = (runId: string, delayMs: number, onIdle: () => void) => {
+const scheduleIdleReset = (
+  runId: string,
+  delayMs: number,
+  onIdle: () => void,
+) => {
   idleResetTimer = setTimeout(() => {
     if (activeRunId !== runId) return;
     onIdle();
@@ -47,10 +53,7 @@ const scheduleIdleReset = (runId: string, delayMs: number, onIdle: () => void) =
 
 // --- started: 进入 checking 阶段 ---
 
-export function scheduleCheckStarted(
-  runId: string,
-  onChecking: () => void,
-) {
+export function scheduleCheckStarted(runId: string, onChecking: () => void) {
   clearScheduledTimers();
   activeRunId = runId;
   checkingStartedAt = Date.now();

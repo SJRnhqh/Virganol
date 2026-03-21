@@ -6,4 +6,5 @@ export {
   dispatchDegraded,
   dispatchFailed,
   dispatchReset,
+  dispatchProviderBatch,
 } from "./checkPhase";

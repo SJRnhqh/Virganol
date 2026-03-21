@@ -52,6 +52,8 @@ adapters/status + schedulers/checkPhase)`。
 - [x] 事件服务层完成专项审查：`handlers/` 已收口为 `check（编排）+ validators + adapters +
 dispatchers + schedulers` 五层，scheduler 移除 store/validators 依赖成为纯时序模块，dispatch 逻辑
 独立收口到 `dispatchers/checkPhase`，`ProviderCheckTrigger` 补入 types 导出链路。
+- [x] 事件 handler 逐项审查：`handleStarted` / `handleProviderStatus` 已完成，validate →
+adapt → dispatch 层次边界清晰，store 写入统一收口到 dispatchers，`dispatchProviderBatch` 新增。
 
 #### 🚧 4.3 per-provider 卡片渲染
 

@@ -7,7 +7,10 @@ import type {
   ProviderCheckCompletedPayload,
 } from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
-import { useProviderCheckStore, useProviderCollectionStore } from "@/features/bot/store";
+import {
+  useProviderCheckStore,
+  useProviderCollectionStore,
+} from "@/features/bot/store";
 import { adaptProviderStatusToBatchUpdates } from "./adapters";
 import {
   dispatchChecking,
@@ -15,6 +18,7 @@ import {
   dispatchDegraded,
   dispatchFailed,
   dispatchReset,
+  dispatchProviderBatch,
 } from "./dispatchers";
 import {
   scheduleCheckStarted,
@@ -25,16 +29,17 @@ import { isActiveProviderId, isCurrentRun } from "./validators";
 
 /** 生命周期开始：validate → schedule，进入 checking 阶段 */
 export function handleStarted(payload: ProviderCheckStartedPayload) {
-  scheduleCheckStarted(
-    payload.run_id,
-    () => dispatchChecking(payload.run_id, payload.trigger),
+  scheduleCheckStarted(payload.run_id, () =>
+    dispatchChecking(payload.run_id, payload.trigger),
   );
 }
 
-/** 单个 Provider 状态推送：validate → adapt → 批量写入 providerStore */
+/** 单个 Provider 状态推送：validate → adapt → dispatch 批量更新 */
 export function handleProviderStatus(payload: ProviderStatusPayload) {
   if (!isCurrentRun(payload.run_id)) {
-    console.warn(`[React] stale provider-status ignored: run=${payload.run_id}`);
+    console.warn(
+      `[React] stale provider-status ignored: run=${payload.run_id}`,
+    );
     return;
   }
 
@@ -46,7 +51,7 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
     return;
   }
 
-  useProviderCollectionStore.getState().updateProviderBatch(
+  dispatchProviderBatch(
     provider,
     adaptProviderStatusToBatchUpdates({ config, health }),
   );
@@ -63,7 +68,9 @@ export function handleCompleted(payload: ProviderCheckCompletedPayload) {
   const onTerminal = phase === "degraded" ? dispatchDegraded : dispatchDone;
 
   if (phase === "degraded") {
-    console.warn(`[React] ${payload.failed} provider check(s) failed during lifecycle check`);
+    console.warn(
+      `[React] ${payload.failed} provider check(s) failed during lifecycle check`,
+    );
   }
 
   scheduleCheckCompleted(payload.run_id, phase, onTerminal, dispatchReset);
@@ -92,10 +99,14 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
         // TODO: 当前结构性错误会直接覆盖已有业务错误文案；若后续需要同时保留多类错误或多条 issue，需设计统一展示策略。
         store.setProviderError(issue.provider, issue.message);
       } else {
-        console.warn(`[React] unknown provider in issue: ${issue.provider}, skipping`);
+        console.warn(
+          `[React] unknown provider in issue: ${issue.provider}, skipping`,
+        );
       }
     }
   }
 
-  console.error(`[React] check failed: run=${payload.run_id}, code=${payload.code}, message=${payload.message}`);
+  console.error(
+    `[React] check failed: run=${payload.run_id}, code=${payload.code}, message=${payload.message}`,
+  );
 }
