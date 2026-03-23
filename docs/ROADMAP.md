@@ -72,6 +72,10 @@ dispatchers + schedulers` 五层，scheduler 移除 store/validators 依赖成�
 状态显示。
 - [x] reset 动作区已收为右侧同行布局：主按钮 + icon-only reset，交互保持克制。
 - [x] `reset` 语义已从 `form` 收回到 `connection`，表单层仅保留输入相关操作。
+- [x] `onReset` 完整内聚至 `useProviderConnection`，`onDisconnect` 已消除；
+  `useProvider` 聚合层无业务逻辑片段，职责收紧为纯契约聚合。
+- [x] `useProvider` 改用 `useShallow` 细粒度订阅，
+  `models` 变更不再触发整卡片重渲染。
 - [x] 组件目录已统一到 `settings/provider/content/cards/`，
   局部视图派生已抽离到 `useProviderModelList`（原 `useProviderConnectedPanel`）。
 - [x] `ProviderConnectionButton` 已完成配置驱动重构；`ProviderConnectedPanel` 已完成布局和交互简化。

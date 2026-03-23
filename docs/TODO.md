@@ -6,7 +6,8 @@
 
 - [x] `useProvider` — 改用 `useShallow` 细粒度订阅，避免 models 变更触发整卡片重渲染
 - [x] `useProvider` / `useProviderConnection` 职责边界 —
-  `onReset` 在 `useProvider` 聚合层定义合理，无多余 re-export 层
+  `onReset` 完整内聚至 `useProviderConnection`，`onDisconnect` 已消除，
+  `useProvider` 聚合层无业务逻辑片段
 - [ ] `useProviderModelList` — 评估乐观更新并发安全性
   （快速连续点击 / `allSelected` 时序问题）
 - [ ] `useProviderStartup` 失败路径可见性 — 确认 `setFailed()` 已有对应 UI 展示路径，避免启动失败无感知

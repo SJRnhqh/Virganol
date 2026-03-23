@@ -4,11 +4,7 @@ import { useShallow } from "zustand/react/shallow";
 
 // 内部引用
 import type { ProviderId, ProviderFormData } from "@/features/bot/types";
-import {
-  PROVIDER_FORM_FIELDS,
-  PROVIDER_NAMES,
-  PROVIDER_INITIAL_FORMS,
-} from "@/features/bot/constants";
+import { PROVIDER_FORM_FIELDS, PROVIDER_NAMES } from "@/features/bot/constants";
 import { PROVIDER_ICONS } from "@/features/bot/icons";
 import { useProviderCollectionStore } from "@/features/bot/store";
 import { useProviderConnection } from "./useProviderConnection";
@@ -24,18 +20,7 @@ export const useProvider = (providerId: ProviderId) => {
   );
 
   // ── 连接逻辑 ──────────────────────────────
-  const { onConnect, onDisconnect, onRetry } =
-    useProviderConnection(providerId);
-
-  const handleReset = () => {
-    // 1. 重置表单数据到初始值
-    useProviderCollectionStore
-      .getState()
-      .setProviderForm(providerId, PROVIDER_INITIAL_FORMS[providerId]);
-
-    // 2. 调用后端清理 + 重置前端状态
-    void onDisconnect();
-  };
+  const { onConnect, onRetry, onReset } = useProviderConnection(providerId);
 
   // ── 组装返回 ──────────────────────────────
   return {
@@ -56,8 +41,8 @@ export const useProvider = (providerId: ProviderId) => {
     errorMessage,
     connection: {
       onConnect,
-      onReset: handleReset,
       onRetry,
+      onReset,
     },
   };
 };
