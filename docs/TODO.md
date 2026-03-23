@@ -10,7 +10,8 @@
   `useProvider` 聚合层无业务逻辑片段
 - [ ] `useProviderModelList` — 评估乐观更新并发安全性
   （快速连续点击 / `allSelected` 时序问题）
-- [ ] `useProviderStartup` 失败路径可见性 — 确认 `setFailed()` 已有对应 UI 展示路径，避免启动失败无感知
+- [x] `useProviderStartup` 失败路径可见性 — `failed` phase 已映射 `CloudOff` 图标；
+  结构性错误无具体 provider 归属，message 展示待 `errorCode` 统一后一并处理
 
 ## 前端轻量清理（Phase 6 子集）
 

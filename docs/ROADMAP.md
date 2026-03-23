@@ -168,7 +168,8 @@ settings/provider/
 - [ ] 事件名前后端契约自动化：Rust 侧事件名抽为常量模块，或引入 codegen 消除人工对齐风险
 - [ ] `ProviderError` — 补 `source()` 错误链实现或引入 `thiserror`，提升调试时错误溯源能力
 - [ ] `reconcile_enabled_models` — 无变更路径避免 `record.clone()`，改用 owned 传递或 `Cow` 减少堆分配
-- [x] `useProviderStartup` — 启动失败时写入 `checkStore.setFailed()`，避免监听注册全部失败后 UI 无感知
+- [x] `useProviderStartup` — 启动失败时写入 `checkStore.setFailed()`，
+  `failed` phase 已映射 `CloudOff` 图标；结构性错误 message 展示待 `errorCode` 统一后处理
 - [ ] `PROVIDERS_STORE_LOCK` — 评估迁移至 Tauri `State<Mutex<T>>` 管理模式，为多窗口场景预留空间
 - [ ] 生命周期功能开发完结
 
