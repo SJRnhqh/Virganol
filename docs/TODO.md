@@ -4,9 +4,9 @@
 
 ## Hooks 审查（Phase 4.4 收尾）
 
-- [ ] `useProvider` — 优化 store selector 性能，避免整对象订阅触发不必要重渲染
-- [ ] `useProvider` / `useProviderConnection` 职责边界 — `onReset` 迁移后确认 `useProvider`
-是否存在多余 re-export 层
+- [x] `useProvider` — 改用 `useShallow` 细粒度订阅，避免 models 变更触发整卡片重渲染
+- [x] `useProvider` / `useProviderConnection` 职责边界 —
+  `onReset` 在 `useProvider` 聚合层定义合理，无多余 re-export 层
 - [ ] `useProviderModelList` — 评估乐观更新并发安全性
   （快速连续点击 / `allSelected` 时序问题）
 - [ ] `useProviderStartup` 失败路径可见性 — 确认 `setFailed()` 已有对应 UI 展示路径，避免启动失败无感知

@@ -117,10 +117,11 @@ settings/provider/
   - [x] 批量更新改用 `updateProviderBatch`，减少重渲染
   - [x] 新增 `onRetry`（清错误 + 重连封装），移除 `onErrorReset`
   - [x] 返回值收口为 `{ onConnect, onDisconnect, onRetry }`
-- [ ] `useProvider` — 待优化
+- [x] `useProvider` — 审查与优化已完成
   - [x] 已收紧为 card-level shell（不再聚合 models）
   - [x] `onReset` 已从 `form` 语义块迁移到 `connection` 语义块
-  - [ ] 优化 store selector 性能
+  - [x] 改用 `useShallow` 细粒度订阅，避免 `models` 变更触发整卡片重渲染
+  - [x] 职责边界确认：`onReset` 聚合层定义合理，无多余 re-export 层
 - [x] `useProviderModelList`（原 `useProviderConnectedPanel`）—
   已内联合并 `useProviderModelActions`，store 订阅拆分为独立 selector，
   callback 依赖精简，旧文件已删除
