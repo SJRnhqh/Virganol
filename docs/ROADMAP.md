@@ -25,7 +25,7 @@ LLM Provider 后端分为两条主线：
 
 - [x] `ProviderErrorCode::as_str` / `Display` / serde 一致性测试已补齐。
 
-### 🚧 Phase 4：前端生命周期适配
+### ✅ Phase 4：前端生命周期适配
 
 > 已完成部分仅保留当前结论；未完成项继续保留细节。
 
@@ -61,7 +61,7 @@ dispatchers + schedulers` 五层，scheduler 移除 store/validators 依赖成�
 - [x] 类型层次重构：`CheckTerminalPhase → TerminalPhase → ProviderCheckPhase`
   三层组合收口到 `phase.ts`，`TimerHandle` 迁入 `types/shared/`。
 
-#### 🚧 4.3 per-provider 卡片渲染
+#### ✅ 4.3 per-provider 卡片渲染
 
 **已完成摘要**：
 
@@ -104,13 +104,7 @@ settings/provider/
         └── ProviderConnectedPanel.tsx
 ```
 
-**当前仍待完成**：
-
-- [x] `useProviderModelActions` 已合并入 `useProviderModelList`，
-  文件已删除，store 订阅拆分、callback 依赖精简已完成。
-- [ ] `useProviderModelList` 乐观更新并发安全性仍待评估。
-
-#### 🚧 4.4 Hooks 层审查与优化（2025-03-17 开始）
+#### ✅ 4.4 Hooks 层审查与优化
 
 **目标**：优化 Hooks 层性能和并发安全性，对齐组件层接口契约
 
@@ -120,24 +114,17 @@ settings/provider/
   - [x] useCallback 依赖数组精简为 `[providerId]`
   - [x] 批量更新改用 `updateProviderBatch`，减少重渲染
   - [x] 新增 `onRetry`（清错误 + 重连封装），移除 `onErrorReset`
-  - [x] 返回值收口为 `{ onConnect, onDisconnect, onRetry }`
+  - [x] 返回值收口为 `{ onConnect, onReset, onRetry }`，`onDisconnect` 已消除
 - [x] `useProvider` — 审查与优化已完成
   - [x] 已收紧为 card-level shell（不再聚合 models）
   - [x] `onReset` 已从 `form` 语义块迁移到 `connection` 语义块
   - [x] 改用 `useShallow` 细粒度订阅，避免 `models` 变更触发整卡片重渲染
-  - [x] 职责边界确认：`onReset` 聚合层定义合理，无多余 re-export 层
+  - [x] 职责边界确认：`onReset` 完整内聚至 `useProviderConnection`，聚合层无业务逻辑
 - [x] `useProviderModelList`（原 `useProviderConnectedPanel`）—
   已内联合并 `useProviderModelActions`，store 订阅拆分为独立 selector，
   callback 依赖精简，旧文件已删除
-  - [ ] 乐观更新并发安全性（快速连续点击 / `allSelected` 时序）
-    后移至下一阶段，不阻塞本次 PR
-
-**当前下一步主线**：
-
-- [x] 旧 `connection` 接口审查与收口 ✅
-- [x] `reset` 设计与 `ProviderCardActions` 落位
-- [x] `useProviderModelList` 内联合并完成（原 `useProviderModelActions` 已删除）
-- [ ] `useProviderModelList` 并发安全性评估（后移，不阻塞本次 PR）
+  - [x] 乐观更新并发安全性：`pendingRef` 互斥锁防并发，
+    两个 action 共享同一飞行状态标记，快速连续点击已拦截
 
 ### Phase 5：健康检查错误精细化
 

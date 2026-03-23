@@ -8,8 +8,8 @@
 - [x] `useProvider` / `useProviderConnection` 职责边界 —
   `onReset` 完整内聚至 `useProviderConnection`，`onDisconnect` 已消除，
   `useProvider` 聚合层无业务逻辑片段
-- [ ] `useProviderModelList` — 评估乐观更新并发安全性
-  （快速连续点击 / `allSelected` 时序问题）
+- [x] `useProviderModelList` — 改用 `useShallow` 合并订阅，`every` 简化全选派生；
+  `pendingRef` 互斥锁防并发，两个 action 共享同一飞行状态标记
 - [x] `useProviderStartup` 失败路径可见性 — `failed` phase 已映射 `CloudOff` 图标；
   结构性错误无具体 provider 归属，message 展示待 `errorCode` 统一后一并处理
 
