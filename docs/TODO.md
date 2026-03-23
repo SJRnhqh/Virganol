@@ -20,7 +20,7 @@
 - [ ] `secret_meta` 前端消费闭环：展示 `has_key` / `key_source`，
   为 `last4` 等脱敏元信息预留接入位
 - [ ] `ProviderCardActions` 按钮缺少 loading 状态 — reset / connect 操作期间补 pending UI 保护，防止重复触发
-- [ ] 前端事件名常量化 — listen 字符串抽为 `EVENT_NAMES` 常量对象，消除硬编码，与后端常量化方向对齐
+- [x] 前端事件名常量化 — `PROVIDER_CHECK_EVENTS` 常量已覆盖全部 listen 调用，硬编码已消除
 
 ## 审查顺序
 
@@ -30,4 +30,4 @@
 4. `reset` 一致性
 5. `errorCode` 收敛
 6. `secret_meta` 消费闭环
-7. 事件名常量化 + `ProviderCardActions` loading 状态
+7. `ProviderCardActions` loading 状态
