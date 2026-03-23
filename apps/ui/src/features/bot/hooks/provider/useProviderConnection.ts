@@ -4,7 +4,7 @@ import { useCallback } from "react";
 
 // 内部引用
 import type { ProviderId, ProviderFormData } from "@/features/bot/types";
-import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
+import { PROVIDER_CARD_STATES, PROVIDER_INITIAL_FORMS } from "@/features/bot/constants";
 import { useProviderCollectionStore } from "@/features/bot/store";
 import { resetProvider, connectAndSaveProvider } from "@/features/bot/services";
 
@@ -54,11 +54,12 @@ export const useProviderConnection = (providerId: ProviderId) => {
     [providerId],
   );
 
-  // 断开连接操作（删除后端配置 + 重置前端状态）
-  const handleDisconnect = useCallback(async () => {
+  // 重置操作（重置表单 + 删除后端配置 + 重置前端状态）
+  const handleReset = useCallback(async () => {
+    const store = useProviderCollectionStore.getState();
+    store.setProviderForm(providerId, PROVIDER_INITIAL_FORMS[providerId]);
     await resetProvider(providerId);
-
-    useProviderCollectionStore.getState().updateProviderBatch(providerId, {
+    store.updateProviderBatch(providerId, {
       cardState: PROVIDER_CARD_STATES.UNSET,
       models: { available: [], enabled: {} },
       errorMessage: null,
@@ -76,7 +77,7 @@ export const useProviderConnection = (providerId: ProviderId) => {
 
   return {
     onConnect: handleConnect,
-    onDisconnect: handleDisconnect,
+    onReset: handleReset,
     onRetry: handleRetry,
   };
 };
