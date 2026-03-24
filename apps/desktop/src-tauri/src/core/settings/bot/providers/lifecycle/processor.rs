@@ -69,6 +69,8 @@ pub(super) fn process_provider_check_result(
     if online {
         let (final_record, reconcile_error) =
             reconcile_enabled_models(app, provider_id, &record, &health.available_models);
+        // TODO: reconcile_error 会被上层推入 provider_issues 进而触发 lifecycle_failed，
+        // 但此时 provider 本身 online，仅模型列表写盘失败。是否应降级为 warn 而非终止生命周期，语义待确认。
         (final_record, true, reconcile_error)
     } else {
         (record, false, None)

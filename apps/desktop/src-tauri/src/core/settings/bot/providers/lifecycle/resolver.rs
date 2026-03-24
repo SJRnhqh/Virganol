@@ -7,6 +7,8 @@ use crate::core::providers::connections::health;
 use crate::core::settings::secrets;
 
 /// 读取可用密钥并执行健康检查（env 优先，其次 keyring）
+// TODO: health_check_with_resolved_key 与 resolve_provider_secret_meta 各自独立读取密钥，
+// keyring 属于系统调用，每个 provider 会被调用两次。可合并为一次解析，将 key 与 source 一并返回复用。
 pub(super) async fn health_check_with_resolved_key(
     provider_id: ProviderId,
     url: &str,

@@ -25,6 +25,7 @@ pub(super) async fn run_provider_checks(
     let mut join_error: Option<ProviderError> = None;
 
     // 标记是否已记录过并发错误（保证只记录一次）
+    // TODO: join_next().await 串行消费，has_join_error 无并发写竞争，AtomicBool 可简化为普通 bool
     let has_join_error = AtomicBool::new(false);
 
     let mut pending: std::collections::VecDeque<(ProviderId, ProviderRecord)> = supported.into();

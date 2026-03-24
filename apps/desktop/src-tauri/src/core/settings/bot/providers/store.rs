@@ -89,6 +89,8 @@ pub(crate) fn save_provider(
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
 
     let provider_name = provider_id.as_str();
+    // TODO: 此处使用软读 load_all_providers，store 损坏时静默返回空 Map 并覆盖写回，
+    // 会导致其他 provider 配置静默丢失。应改用 load_all_providers_strict，读取失败时上抛错误。
     let mut providers = load_all_providers(app);
     providers.insert(provider_name.to_string(), record.clone());
 
@@ -107,6 +109,7 @@ pub(crate) fn remove_provider(app: &AppHandle, provider_id: ProviderId) -> Resul
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
 
     let provider_name = provider_id.as_str();
+    // TODO: 同 save_provider，软读静默兜底存在覆盖丢失风险，应改用 load_all_providers_strict。
     let mut providers = load_all_providers(app);
     let existed = providers.remove(provider_name).is_some();
 
@@ -134,6 +137,7 @@ pub(crate) fn update_models(
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
 
     let provider_name = provider_id.as_str();
+    // TODO: 同 save_provider，软读静默兜底存在覆盖丢失风险，应改用 load_all_providers_strict。
     let mut providers = load_all_providers(app);
 
     let Some(record) = providers.get_mut(provider_name) else {
