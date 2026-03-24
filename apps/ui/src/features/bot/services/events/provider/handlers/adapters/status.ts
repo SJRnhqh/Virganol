@@ -36,6 +36,7 @@ export function adaptProviderStatusToBatchUpdates({
     form: formPatch,
     cardState: PROVIDER_CARD_STATES.FAILED,
     models: { available: [], enabled: {} },
+    // TODO: health.error 若为空字符串 ""，|| 会将其转为 null，语义不准确，应改为 ?? null。
     errorMessage: health.error || null,
   };
 }

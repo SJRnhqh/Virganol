@@ -80,3 +80,51 @@
 | 持久化读写 | `providers/store.rs` | ✅ 已审查，TODO-4 记录 |
 | 密钥解析 | `lifecycle/resolver.rs` | ✅ 已审查，TODO-5 记录 |
 | 检查结果处理 | `lifecycle/processor.rs` | ✅ 已审查，TODO-6 记录 |
+| 监听注册层 | `services/events/provider/listen.ts` | ✅ 已审查 |
+| 事件处理层 | `services/events/provider/handlers/check.ts` | ✅ 已审查，TODO-7 记录 |
+| 适配层 | `handlers/adapters/status.ts` | ✅ 已审查，TODO-8 记录 |
+| 调度层 | `handlers/schedulers/checkPhaseScheduler.ts` | ✅ 已审查，TODO-10 记录 |
+| 分发层 | `handlers/dispatchers/checkPhase.ts` | ✅ 已审查，TODO-9 记录 |
+| 校验层 | `handlers/validators/runGuard.ts` | ✅ 已审查 |
+| 校验层 | `handlers/validators/activeProviderGuard.ts` | ✅ 已审查 |
+
+---
+
+## 前端 · adapters/status.ts
+
+**[TODO-8] `||` 应改为 `??`，避免空字符串被误转为 null**
+
+- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/adapters/status.ts`
+- 描述：`health.error || null` 在 `health.error` 为空字符串时会错误地返回 null，语义不准确，应改为 `health.error ?? null`。
+- 优先级：中，存在潜在语义错误。
+
+---
+
+## 前端 · dispatchers/checkPhase.ts
+
+**[TODO-9] `dispatchProviderIssue` 分两次 store 更新，与批量更新风格不一致**
+
+- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/dispatchers/checkPhase.ts`
+- 描述：`dispatchProviderIssue` 分两次调用 `setProviderCardState` + `setProviderError`，触发两次 store 更新；与 `dispatchProviderBatch` 使用 `updateProviderBatch` 一次性批量更新的风格不一致。
+- 建议：统一为一次批量更新调用。
+- 优先级：低，功能正确，风格一致性问题。
+
+---
+
+## 前端 · schedulers/checkPhaseScheduler.ts
+
+**[TODO-10] scheduler 单例隐含跨层假设，无自身防护**
+
+- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/schedulers/checkPhaseScheduler.ts`
+- 描述：scheduler 是模块级单例，隐含「同一时刻只有一轮检查」的前提，该保证由 `check.ts` 层的 `checkInFlight` 跨层提供，scheduler 本身无防护。与 TODO-7 关联。
+- 优先级：低，当前链路正确，依赖关系脆弱。
+
+---
+
+## 前端 · handlers/check.ts
+
+**[TODO-7] handleStarted 重复触发无防护，依赖跨层隐性去重**
+
+- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/check.ts`
+- 描述：`handleStarted` 不做 `resolveRunDisposition` 校验，重复触发时第二个 started 会直接覆盖第一轮调度状态。当前安全性依赖 `check.ts` 层的 `checkInFlight` 跨层去重保证，属于隐性依赖。
+- 优先级：低，当前链路正确，但依赖关系脆弱。
