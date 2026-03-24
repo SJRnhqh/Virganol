@@ -3,6 +3,9 @@
 import { invoke } from "@tauri-apps/api/core";
 
 // 同一时刻只允许一轮生命周期检查，startup 和 manual 共享去重
+// TODO: startup 进行中调用 manual refresh 会静默复用 startup 的 promise，
+// 调用方无从感知自己的请求是否真正被执行。需明确 manual refresh 的语义：
+// 是「确保一次新检查」还是「只要检查在跑就算」
 let checkInFlight: Promise<void> | null = null;
 
 const triggerCheckLifecycle = (command: string): Promise<void> => {

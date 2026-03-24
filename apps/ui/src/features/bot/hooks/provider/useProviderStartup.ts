@@ -31,6 +31,8 @@ export const useProviderStartup = () => {
       await triggerProviderStartupCheck();
     };
 
+    // TODO: bootstrap 错误目前无法区分来源（registerCheckListeners 失败 vs triggerProviderStartupCheck 失败）
+    // 可拆分 try/catch 分别捕获，用不同错误码上报，便于排查
     bootstrap().catch((error) => {
       console.error("[React] bootstrap failed:", error);
       useProviderCheckStore
