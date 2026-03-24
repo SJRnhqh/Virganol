@@ -87,6 +87,31 @@
 | 分发层 | `handlers/dispatchers/checkPhase.ts` | ✅ 已审查，TODO-9 记录 |
 | 校验层 | `handlers/validators/runGuard.ts` | ✅ 已审查 |
 | 校验层 | `handlers/validators/activeProviderGuard.ts` | ✅ 已审查 |
+| check store | `store/provider/useProviderCheckStore.ts` | ✅ 已审查，TODO-11 记录 |
+| collection store | `store/provider/useProviderCollectionStore.ts` | ✅ 已审查 |
+| 状态类型 | `types/provider/state/` | ✅ 已审查，TODO-12 记录 |
+| 常量层 | `constants/provider/lifecycle/` | ✅ 已审查 |
+| 常量层 | `constants/provider/contract/` | ✅ 已审查 |
+
+---
+
+## 前端 · store/provider/useProviderCheckStore.ts
+
+**[TODO-11] `setFailed` 中 `message` 为 undefined 时写入 undefined，与类型声明不符**
+
+- 文件：`apps/ui/src/features/bot/store/provider/useProviderCheckStore.ts`
+- 描述：`setFailed(code, message, runId)` 中 `message` 可选，未传时为 `undefined`，直接赋给 `errorMessage` 导致实际写入 `undefined`，与类型声明 `string | null` 不符。应改为 `message ?? null`。
+- 优先级：中，潜在类型不一致 bug。
+
+---
+
+## 前端 · types/provider/state/collection.ts
+
+**[TODO-12] `ProviderBatchUpdates.errorMessage` 的 undefined/null 语义区分属于隐性契约**
+
+- 文件：`apps/ui/src/features/bot/types/provider/state/collection.ts`
+- 描述：`errorMessage` 字段 `undefined` 表示「不更新」，`null` 表示「清空」，该语义区分仅靠调用方约定，类型层面无法强制，属于隐性契约。后续可考虑显式建模。
+- 优先级：低，功能正确，类型语义设计问题。
 
 ---
 
