@@ -202,13 +202,15 @@
 | 跳过明细 | `models/provider/error/skip.rs` | ✅ 已审查，TODO-21 记录 |
 | 监听注册层 | `services/events/provider/listen.ts` | ✅ 已审查 |
 | 事件处理层 | `services/events/provider/handlers/check.ts` | ✅ 已审查，TODO-7 记录 |
-| 适配层 | `handlers/adapters/status.ts` | ✅ 已审查，TODO-8 记录 |
+| 适配层 | `handlers/adapters/status.ts` | ✅ 已审查，TODO-8 / TODO-28 记录 |
 | 调度层 | `handlers/schedulers/checkPhaseScheduler.ts` | ✅ 已审查，TODO-10 记录 |
 | 分发层 | `handlers/dispatchers/checkPhase.ts` | ✅ 已审查，TODO-9 记录 |
-| 校验层 | `handlers/validators/runGuard.ts` | ✅ 已审查 |
-| 校验层 | `handlers/validators/activeProviderGuard.ts` | ✅ 已审查 |
+| 校验层 | `handlers/validators/runGuard.ts` | ✅ 已审查，TODO-26 / TODO-27 记录 |
+| 校验层 | `handlers/validators/activeProviderGuard.ts` | ✅ 已审查，TODO-29 记录 |
 | check store | `store/provider/useProviderCheckStore.ts` | ✅ 已审查，TODO-11 记录 |
 | collection store | `store/provider/useProviderCollectionStore.ts` | ✅ 已审查 |
+| Provider ID 类型 | `types/provider/common/id.ts` | ✅ 已审查，TODO-24 记录 |
+| 状态类型 | `types/provider/state/phase.ts` | ✅ 已审查，TODO-25 记录 |
 | 状态类型 | `types/provider/state/` | ✅ 已审查，TODO-12 记录 |
 | 常量层 | `constants/provider/lifecycle/` | ✅ 已审查 |
 | 常量层 | `constants/provider/contract/` | ✅ 已审查 |
@@ -243,6 +245,13 @@
 - 描述：`health.error || null` 在 `health.error` 为空字符串时会错误地返回 null，语义不准确，应改为 `health.error ?? null`。
 - 优先级：中，存在潜在语义错误。
 
+**[TODO-28] `success: true` 但 `available_models: []` 时与检查失败状态无法区分**
+
+- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/adapters/status.ts`
+- 描述：`health.success === true` 时适配结果若 `available_models` 为空数组，则 `models: { available: [], enabled: {} }` 与 `health.success === false` 时的结果完全相同，UI 层无法区分「健康但无模型」和「检查失败」两种状态。此外，`config.url` 为空字符串时 `formPatch` 为 `undefined`，会静默忽略后端下发的「清空 URL」操作。
+- 需确认：后端是否可能出现 `success: true` + `available_models: []` 的组合？如果是 ollama 无模型的合法状态，需要在适配层区分处理。
+- 优先级：中，存在潜在语义混淆，影响 UI 展示正确性。
+
 ---
 
 ## 前端 · dispatchers/checkPhase.ts
@@ -273,3 +282,54 @@
 - 文件：`apps/ui/src/features/bot/services/events/provider/handlers/check.ts`
 - 描述：`handleStarted` 不做 `resolveRunDisposition` 校验，重复触发时第二个 started 会直接覆盖第一轮调度状态。当前安全性依赖 `check.ts` 层的 `checkInFlight` 跨层去重保证，属于隐性依赖。
 - 优先级：低，当前链路正确，但依赖关系脆弱。
+
+---
+
+## 前端 · types/provider/common/id.ts
+
+**[TODO-24] `ProviderId` 类型宽度与运行时激活集合长期不一致**
+
+- 文件：`apps/ui/src/features/bot/types/provider/common/id.ts`
+- 描述：类型层面定义了 10 个 provider，但 `PROVIDER_IDS` 运行时只激活 2 个（ollama / deepseek），其余 8 个被注释掉。接收 `ProviderId` 的函数在类型上必须处理全部 10 个变体，但实际永远不会收到其中 8 个；`byId` 是 `Record<ProviderId, ProviderState>`，对未激活 provider 的键访问类型上合法但运行时返回 `undefined`，类型与运行时不一致。
+- 建议：补注释说明「类型集合是完整枚举，运行时激活集合在 constants/PROVIDER_IDS 中另行控制」；或提供 `isProviderId` 守卫函数用于事件层运行时校验。
+- 优先级：中，存在类型-运行时裂缝，规模扩展时易引发 bug。
+
+---
+
+## 前端 · types/provider/state/phase.ts
+
+**[TODO-25] `degraded` 语义未注释，phase 状态机转换路径无类型约束**
+
+- 文件：`apps/ui/src/features/bot/types/provider/state/phase.ts`
+- 描述：`degraded` 表示「部分 provider 检查失败」还是「后端返回降级信号」语义不明，对前端展示逻辑影响大。`CheckTerminalPhase` 与 `TerminalPhase` 的分层设计意图也未注释。此外，状态机的合法转换路径完全隐藏在 store action 和事件处理器中，类型层面无任何约束。
+- 建议：补 JSDoc 说明 `degraded` 的精确语义及各分组类型的设计意图。
+- 优先级：低，功能正确，可读性与可维护性问题。
+
+---
+
+## 前端 · validators/runGuard.ts
+
+**[TODO-26] `RunDisposition` 类型定义在 validator 内部，消费方未显式依赖**
+
+- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/validators/runGuard.ts`
+- 描述：`RunDisposition` 类型定义在 validator 层内部（注释已说明是临时决定），但 `check.ts` 消费时只做字符串字面量比较，未显式导入该类型，使类型定义的存在意义降低。`"orphan"` / `"stale"` 分开的设计动机（handleFailed 的 orphan 兜底场景）必须靠阅读调用方才能理解，属于反向依赖。
+- 建议：将 `RunDisposition` 提升到 `types/provider/state/` 统一管理；补注释说明三值区分的设计动机。
+- 优先级：低，功能正确，类型组织与可读性问题。与 ROADMAP Phase 6.3 `RunDisposition` 收口条目关联。
+
+**[TODO-27] 空字符串 `runId` 未做防御，`"orphan"` 消费者行为不一致**
+
+- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/validators/runGuard.ts`
+- 描述：① `resolveRunDisposition` 接受 `runId: string` 但未对空字符串防御，后端推送 `run_id: ""` 时行为不确定。② `handleProviderStatus` / `handleCompleted` 对 `orphan` 直接丢弃，`handleFailed` 对 `orphan` 接受并继续处理，三种策略完全由调用方自行维护，`resolveRunDisposition` 本身无法表达「哪些事件允许 orphan 兜底」。
+- 建议：① 补 `if (!runId) return "orphan"` 防御空字符串；② 补注释说明 orphan 兜底策略差异的设计依据。
+- 优先级：低，当前链路正确，边界未收口。
+
+---
+
+## 前端 · validators/activeProviderGuard.ts
+
+**[TODO-29] `isActiveProviderId` 线性扫描，未来扩展时可改为 Set 查找**
+
+- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/validators/activeProviderGuard.ts`
+- 描述：`(PROVIDER_IDS as readonly ProviderId[]).includes(providerId)` 每次调用线性扫描数组。当前 provider 数量极小影响可忽略，但随规模增长会成为热路径瓶颈。同时类型断言将 `readonly ["ollama", "deepseek"]` 宽化为 `readonly ProviderId[]`，若 `ProviderId` 新增值而 `PROVIDER_IDS` 未更新，类型系统不会报错，`satisfies` 约束应在 `constants/id.ts` 处补强。
+- 建议：将 `PROVIDER_IDS` 改为 `Set` 或在 guard 内部构建 `Set`；确认 `satisfies` 约束已覆盖新增 provider 场景。
+- 优先级：低，功能正确，性能与类型安全小优化。
