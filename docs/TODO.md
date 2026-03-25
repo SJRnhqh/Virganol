@@ -176,7 +176,7 @@
 | ------ | ------ | ------ |
 | App 入口 | `App.tsx` | ✅ 已审查 |
 | 启动钩子 | `useProviderStartup.ts` | ✅ 已审查，TODO-1 / TODO-13 记录 |
-| API 触发层 | `check.ts` | ✅ 已审查，TODO-2 记录 |
+| API 触发层 | `check.ts` | ✅ 已审查，TODO-2 / TODO-34 记录 |
 | 命令层 | `commands/settings.rs` | ✅ 已审查 |
 | 生命周期入口 | `lifecycle/flow.rs` | ✅ 已审查，TODO-14 / TODO-15 记录 |
 | 事件推送 | `lifecycle/events.rs` | ✅ 已审查，TODO-17 记录 |
@@ -200,15 +200,15 @@
 | 错误码 | `models/provider/error/code.rs` | ✅ 已审查 |
 | Provider 问题 | `models/provider/error/issue.rs` | ✅ 已审查 |
 | 跳过明细 | `models/provider/error/skip.rs` | ✅ 已审查，TODO-21 记录 |
-| 监听注册层 | `services/events/provider/listen.ts` | ✅ 已审查 |
-| 事件处理层 | `services/events/provider/handlers/check.ts` | ✅ 已审查，TODO-7 记录 |
+| 监听注册层 | `services/events/provider/listen.ts` | ✅ 已审查，TODO-32 记录 |
+| 事件处理层 | `services/events/provider/handlers/check.ts` | ✅ 已审查，TODO-7 / TODO-33 记录 |
 | 适配层 | `handlers/adapters/status.ts` | ✅ 已审查，TODO-8 / TODO-28 记录 |
 | 调度层 | `handlers/schedulers/checkPhaseScheduler.ts` | ✅ 已审查，TODO-10 记录 |
 | 分发层 | `handlers/dispatchers/checkPhase.ts` | ✅ 已审查，TODO-9 记录 |
 | 校验层 | `handlers/validators/runGuard.ts` | ✅ 已审查，TODO-26 / TODO-27 记录 |
 | 校验层 | `handlers/validators/activeProviderGuard.ts` | ✅ 已审查，TODO-29 记录 |
-| check store | `store/provider/useProviderCheckStore.ts` | ✅ 已审查，TODO-11 记录 |
-| collection store | `store/provider/useProviderCollectionStore.ts` | ✅ 已审查 |
+| check store | `store/provider/useProviderCheckStore.ts` | ✅ 已审查，TODO-11 / TODO-31 记录 |
+| collection store | `store/provider/useProviderCollectionStore.ts` | ✅ 已审查，TODO-30 记录 |
 | Provider ID 类型 | `types/provider/common/id.ts` | ✅ 已审查，TODO-24 记录 |
 | 状态类型 | `types/provider/state/phase.ts` | ✅ 已审查，TODO-25 记录 |
 | 状态类型 | `types/provider/state/` | ✅ 已审查，TODO-12 记录 |
@@ -224,6 +224,13 @@
 - 文件：`apps/ui/src/features/bot/store/provider/useProviderCheckStore.ts`
 - 描述：`setFailed(code, message, runId)` 中 `message` 可选，未传时为 `undefined`，直接赋给 `errorMessage` 导致实际写入 `undefined`，与类型声明 `string | null` 不符。应改为 `message ?? null`。
 - 优先级：中，潜在类型不一致 bug。
+
+**[TODO-31] `setDone` / `setDegraded` 未显式清除 error 字段，隐性依赖 `setChecking` 先行**
+
+- 文件：`apps/ui/src/features/bot/store/provider/useProviderCheckStore.ts`
+- 描述：`setDone` / `setDegraded` 只更新 `phase`，不重置 `errorCode` / `errorMessage`。实践中 `setChecking` 总先于两者调用（其内部展开 `emptyCheckState` 会清除 error 字段），功能正确；但若调用顺序变化（如测试直接调 `setDone`），旧 error 状态会残留，属于隐性时序依赖。
+- 建议：`setDone` / `setDegraded` 补显式 `errorCode: null, errorMessage: null`，消除对 `setChecking` 先行的隐式要求。
+- 优先级：低，隐性契约收口。
 
 ---
 
@@ -283,6 +290,13 @@
 - 描述：`handleStarted` 不做 `resolveRunDisposition` 校验，重复触发时第二个 started 会直接覆盖第一轮调度状态。当前安全性依赖 `check.ts` 层的 `checkInFlight` 跨层去重保证，属于隐性依赖。
 - 优先级：低，当前链路正确，但依赖关系脆弱。
 
+**[TODO-33] `handleFailed` orphan 路径双重日志，级别语义混乱**
+
+- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/check.ts`
+- 描述：`disposition === "orphan"` 时，第 103 行输出 `console.warn`（orphan failed accepted），第 128 行紧接着又输出 `console.error`（check failed），同一次事件触发两条性质不同的日志。调试时 warn 暗示「边缘但可接受」，error 暗示「严重异常」，两者并存语义矛盾。
+- 建议：orphan 路径只保留 warn，将 `console.error` 限定在 `disposition === "current"` 路径内，或在输出前按 disposition 区分日志级别。
+- 优先级：低，调试体验问题。
+
 ---
 
 ## 前端 · types/provider/common/id.ts
@@ -333,3 +347,36 @@
 - 描述：`(PROVIDER_IDS as readonly ProviderId[]).includes(providerId)` 每次调用线性扫描数组。当前 provider 数量极小影响可忽略，但随规模增长会成为热路径瓶颈。同时类型断言将 `readonly ["ollama", "deepseek"]` 宽化为 `readonly ProviderId[]`，若 `ProviderId` 新增值而 `PROVIDER_IDS` 未更新，类型系统不会报错，`satisfies` 约束应在 `constants/id.ts` 处补强。
 - 建议：将 `PROVIDER_IDS` 改为 `Set` 或在 guard 内部构建 `Set`；确认 `satisfies` 约束已覆盖新增 provider 场景。
 - 优先级：低，功能正确，性能与类型安全小优化。
+
+---
+
+## 前端 · store/provider/useProviderCollectionStore.ts
+
+**[TODO-30] 初始化时 `models` 字段跨 provider 共享同一对象引用**
+
+- 文件：`apps/ui/src/features/bot/store/provider/useProviderCollectionStore.ts`
+- 描述：`createInitialById` 展开 `COMMON_INITIAL_STATE` 时，`models: { available: [], enabled: {} }` 是浅拷贝，所有 provider 的初始 `models` 字段指向同一个对象。immer 首次 mutation 时会正确创建独立 draft，功能上无 bug；但初始状态下 `byId.deepseek.models === byId.ollama.models` 为 `true`，在测试断言或 store 调试时可能产生混淆。
+- 建议：在 `createInitialById` 中对 `models` 做显式独立初始化：`models: { available: [], enabled: {} }`。
+- 优先级：低，当前功能正确，防御性修缮。
+
+---
+
+## 前端 · services/events/provider/listen.ts
+
+**[TODO-32] 注册失败回滚时无意义地调用 `disposeCheckPhaseScheduler`**
+
+- 文件：`apps/ui/src/features/bot/services/events/provider/listen.ts`
+- 描述：`cleanupRegisteredListeners` 在注册失败回滚路径和组件卸载路径中被复用，其中包含 `disposeCheckPhaseScheduler()`。注册失败时 scheduler 从未被使用过，dispose 是空操作，语义上是噪音；若 scheduler 未来引入初始化副作用，提前 dispose 可能产生预期外影响。
+- 建议：将 `disposeCheckPhaseScheduler()` 从回滚路径中拆分，只在组件卸载清理路径中调用。
+- 优先级：低，当前无副作用，语义收口。
+
+---
+
+## 前端 · services/api/provider/check.ts
+
+**[TODO-34] `triggerProviderManualRefresh` 调用方无 catch，invoke 失败时产生 unhandled rejection**
+
+- 文件：`apps/ui/src/features/bot/services/api/provider/check.ts`
+- 描述：`triggerCheckLifecycle` 在 `.catch` 中 re-throw 错误。startup 路径由 `useProviderStartup` 的 `.catch` 承接；但 `triggerProviderManualRefresh` 的调用方（`ProviderTitle` 组件）以 `onClick={() => triggerProviderManualRefresh()}` 调用，未附加 `.catch`，invoke 失败时产生 unhandled promise rejection，用户无任何错误反馈。
+- 建议：在 `ProviderTitle` 调用处补 `.catch` 处理，或在 `triggerProviderManualRefresh` 内部消化错误并通过 store 写入失败状态。
+- 优先级：低，手动刷新失败时用户无感知。
