@@ -176,6 +176,9 @@
 | ------ | ------ | ------ |
 | App 入口 | `App.tsx` | ✅ 已审查 |
 | 启动钩子 | `useProviderStartup.ts` | ✅ 已审查，TODO-1 / TODO-13 记录 |
+| 模型钩子 | `useProviderModelList.ts` | ✅ 已审查，TODO-35 / TODO-36 记录 |
+| 连接钩子 | `useProviderConnection.ts` | ✅ 已审查，TODO-37 / TODO-38 / TODO-39 / TODO-40 记录 |
+| 聚合钩子 | `useProvider.ts` | ✅ 已审查 |
 | API 触发层 | `check.ts` | ✅ 已审查，TODO-2 / TODO-34 记录 |
 | 命令层 | `commands/settings.rs` | ✅ 已审查 |
 | 生命周期入口 | `lifecycle/flow.rs` | ✅ 已审查，TODO-14 / TODO-15 记录 |
@@ -380,3 +383,52 @@
 - 描述：`triggerCheckLifecycle` 在 `.catch` 中 re-throw 错误。startup 路径由 `useProviderStartup` 的 `.catch` 承接；但 `triggerProviderManualRefresh` 的调用方（`ProviderTitle` 组件）以 `onClick={() => triggerProviderManualRefresh()}` 调用，未附加 `.catch`，invoke 失败时产生 unhandled promise rejection，用户无任何错误反馈。
 - 建议：在 `ProviderTitle` 调用处补 `.catch` 处理，或在 `triggerProviderManualRefresh` 内部消化错误并通过 store 写入失败状态。
 - 优先级：低，手动刷新失败时用户无感知。
+
+---
+
+## 前端 · hooks/provider/useProviderModelList.ts
+
+**[TODO-35] `allSelected` 在模型列表为空时返回 `true`，语义误导**
+
+- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderModelList.ts`
+- 描述：`available.every((model) => enabled[model])` 在 `available` 为空数组时因 vacuous truth 始终返回 `true`，导致无模型时全选按钮呈现为「已全选」（Minus 图标），语义误导用户。
+- 建议：改为 `available.length > 0 && available.every((model) => enabled[model])`。
+- 优先级：中，存在误导性 UI 状态。
+
+**[TODO-36] 全量回滚逐条调用 `setModelEnabled`，触发 N 次 store 更新**
+
+- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderModelList.ts`
+- 描述：`handleToggleAllModels` 失败回滚时对 `current.available` 每个 model 单独调用 `setModelEnabled`，触发 N 次 immer set 和 N 次订阅通知。应一次性还原整个 models 对象，减少不必要的渲染触发。
+- 建议：改为调用 `setProviderModels(providerId, { available: current.available, enabled: previousMap })`，一次批量还原。
+- 优先级：低，功能正确，性能小优化。
+
+---
+
+## 前端 · hooks/provider/useProviderConnection.ts
+
+**[TODO-37] `handleConnect` 未捕获异常，invoke 抛出时卡片永远卡在 PENDING**
+
+- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderConnection.ts`
+- 描述：`connectAndSaveProvider(...)` 若直接抛出（非返回 `{success: false}`），外层无 try/catch，卡片状态停在 `PENDING` 无法自动恢复，用户无法感知失败也无法重试。`handleRetry` 先清空错误再调 `handleConnect`，同样走此路径，错误已清空但新错误不会写入。
+- 建议：在 `handleConnect` 的 await 外包 try/catch，catch 时写入 `FAILED` 状态与错误信息。
+- 优先级：中，真实可触路径。
+
+**[TODO-38] `handleReset` 表单先清空，后端失败时无回退**
+
+- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderConnection.ts`
+- 描述：`setProviderForm(PROVIDER_INITIAL_FORMS[...])` 在 `await resetProvider(...)` 之前执行，若后端抛出，表单已被清空但 `cardState` 未回退，用户丢失输入且界面无错误提示。
+- 建议：将表单清空移至 `resetProvider` 成功后执行，或在 catch 中还原表单并写入错误状态。
+- 优先级：中，数据丢失场景。
+
+**[TODO-39] `handleConnect` 成功时总将所有模型重置为启用，覆盖用户已有偏好**
+
+- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderConnection.ts`
+- 描述：`enabled` 初始化为 `Object.fromEntries(available_models.map(m => [m, true]))`。在 CONNECTED 状态下重新连接（更新配置），用户之前手动禁用的模型会被静默全部重新启用，用户无感知。
+- 需确认语义：重新连接是否应视为「重新初始化」而全量覆盖，还是应与旧 enabled 状态做 merge 保留用户偏好？
+- 优先级：低，语义未收口。
+
+**[TODO-40] `response.error || "Connection failed"` 应改为 `??`**
+
+- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderConnection.ts`
+- 描述：`response.error || "Connection failed"` 在 `response.error` 为空字符串时会错误地回退到默认文案，与 TODO-8 中 adapters 层同类问题一致，应改为 `response.error ?? "Connection failed"` 以准确区分 null/undefined 与空字符串。
+- 优先级：低，潜在语义错误，与 TODO-8 同类。
