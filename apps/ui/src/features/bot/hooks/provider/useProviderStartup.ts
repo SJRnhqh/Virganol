@@ -33,6 +33,13 @@ export const useProviderStartup = () => {
 
     // TODO: bootstrap 错误目前无法区分来源（registerCheckListeners 失败 vs triggerProviderStartupCheck 失败）
     // 可拆分 try/catch 分别捕获，用不同错误码上报，便于排查
+    // TODO: bootstrap 错误目前无法区分来源（registerCheckListeners 失败 vs triggerProviderStartupCheck 失败）
+    // 可拆分 try/catch 分别捕获，用不同错误码上报，便于排查
+    //
+    // 注意：若 triggerProviderStartupCheck 失败，cleanup 已赋值（listeners 已注册成功），
+    // 此处不主动调用 cleanup()，监听器保持活跃直到组件卸载时由 effect 清理。
+    // 这意味着 failed 状态期间若后端推来残留事件，handlers 仍会处理并可能覆盖 failed 状态。
+    // 如需在 bootstrap 失败后立即拆除监听器，应在此处调用 cleanup?.()（见 TODO-13）。
     bootstrap().catch((error) => {
       console.error("[React] bootstrap failed:", error);
       useProviderCheckStore
