@@ -57,7 +57,6 @@
 
 ---
 
-
 **[TODO-3] AtomicBool 可简化为普通 bool**
 
 - 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/runner.rs`
@@ -66,9 +65,8 @@
 
 ---
 
-
 | 区域 | 文件 | 状态 |
-|------|------|------|
+| ------ | ------ | ------ |
 | App 入口 | `App.tsx` | ✅ 已审查 |
 | 启动钩子 | `useProviderStartup.ts` | ✅ 已审查，TODO-1 记录 |
 | API 触发层 | `check.ts` | ✅ 已审查，TODO-2 记录 |
