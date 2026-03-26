@@ -217,6 +217,24 @@
 | 状态类型 | `types/provider/state/` | ✅ 已审查，TODO-12 记录 |
 | 常量层 | `constants/provider/lifecycle/` | ✅ 已审查 |
 | 常量层 | `constants/provider/contract/` | ✅ 已审查 |
+| 连接钩子 | `hooks/provider/useProviderConnection.ts` | ✅ 已审查，TODO-37~40 记录 |
+| 模型钩子 | `hooks/provider/useProviderModelList.ts` | ✅ 已审查，TODO-35 / TODO-36 记录 |
+| 封装钩子 | `hooks/provider/useProvider.ts` | ✅ 已审查 |
+| 组件层 | `components/settings/provider/LLMProviders.tsx` | ✅ 已审查 |
+| 组件层 | `components/settings/provider/content/ProviderTitle.tsx` | ✅ 已审查，TODO-34 联动 |
+| 组件层 | `components/settings/provider/content/ProviderList.tsx` | ✅ 已审查 |
+| 组件层 | `components/settings/provider/content/cards/ProviderItem.tsx` | ✅ 已审查 |
+| 组件层 | `components/settings/provider/content/cards/ProviderCard.tsx` | ✅ 已审查 |
+| 组件层 | `components/settings/provider/content/cards/ProviderCardHeader.tsx` | ✅ 已审查 |
+| 组件层 | `components/settings/provider/content/cards/ProviderCardBody.tsx` | ✅ 已审查 |
+| 组件层 | `components/settings/provider/content/cards/ProviderCardContent.tsx` | ✅ 已审查，TODO-43 记录 |
+| 组件层 | `components/settings/provider/content/cards/ProviderCardActions.tsx` | ✅ 已审查，TODO-43 记录 |
+| 组件层 | `components/settings/provider/content/cards/ProviderConnectionButton.tsx` | ✅ 已审查 |
+| 组件层 | `components/settings/provider/content/cards/ProviderResetButton.tsx` | ✅ 已审查，TODO-42 记录 |
+| 组件层 | `components/settings/provider/content/cards/ProviderConnectedPanel.tsx` | ✅ 已审查，TODO-41 记录 |
+| 组件层 | `components/settings/provider/content/cards/ProviderForm.tsx` | ✅ 已审查 |
+| 组件层 | `components/settings/provider/content/cards/ProviderErrorPanel.tsx` | ✅ 已审查 |
+| 组件层 | `components/settings/provider/content/cards/ProviderModelToggleButton.tsx` | ✅ 已审查 |
 
 ---
 
@@ -432,3 +450,32 @@
 - 文件：`apps/ui/src/features/bot/hooks/provider/useProviderConnection.ts`
 - 描述：`response.error || "Connection failed"` 在 `response.error` 为空字符串时会错误地回退到默认文案，与 TODO-8 中 adapters 层同类问题一致，应改为 `response.error ?? "Connection failed"` 以准确区分 null/undefined 与空字符串。
 - 优先级：低，潜在语义错误，与 TODO-8 同类。
+
+---
+
+## 前端 · components/settings/provider（组件层）
+
+**[TODO-41] `ProviderConnectedPanel` 模型列表为空时无空态 UI**
+
+- 文件：`apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderConnectedPanel.tsx`
+- 描述：`modelItems` 为空时渲染空白的 `divide-y` 容器，无任何占位提示，用户无法判断是加载中还是 provider 确实没有可用模型。
+- 建议：在列表区域补「No models available」空态占位，与 `allSelected` 空数组语义修复（TODO-35）配合。
+- 优先级：低，UX 缺口。
+
+---
+
+**[TODO-42] `ProviderResetButton` 缺少 `disabled` prop，重置进行中可重复触发**
+
+- 文件：`apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderResetButton.tsx`
+- 描述：`ProviderResetButton` 无 `disabled` 状态，`handleReset`（TODO-38）进行中用户可再次点击，导致并发发起两次 reset 请求；第二次执行时表单已被第一次清空，状态不一致风险升高。
+- 建议：向 `ProviderResetButton` 传入 `disabled` prop，并在 `ProviderCardActions` 的 CONNECTED/FAILED 分支中，于 reset 进行中将其禁用；或在 `handleReset` 入口加 in-flight 互斥锁。
+- 优先级：中，与 TODO-38 联动，并发重置风险。
+
+---
+
+**[TODO-43] `ProviderCardContent` / `ProviderCardActions` switch 无 default 分支**
+
+- 文件：`apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderCardContent.tsx`、`ProviderCardActions.tsx`
+- 描述：两处 switch 均无 `default` 分支，若 `cardState` 出现枚举外的意外值（如后端新增状态、类型断言失误），React 会静默渲染 `undefined`，页面空白且无任何日志提示，调试困难。
+- 建议：各补一个 `default` 分支，返回 `null` 并附 `console.warn`，或用 TypeScript `exhaustive check`（`cardState satisfies never`）在编译期捕获遗漏。
+- 优先级：低，防御性收口。
