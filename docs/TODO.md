@@ -70,13 +70,12 @@
 
 ---
 
-## 前端 · useProviderStartup
+## ✅ 已完成
 
-**[TODO-1] bootstrap 错误来源无法区分**
+**[TODO-1] bootstrap 错误来源无法区分** ✅
 
-- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderStartup.ts`
-- 描述：`bootstrap().catch` 统一用 `startup_bootstrap_failed`，无法区分是 `registerCheckListeners` 失败还是 `triggerProviderStartupCheck` 失败。
-- 建议：拆分 try/catch，分别捕获并上报不同错误码，便于排查。
+- 拆分 `registerCheckListeners` / `triggerProviderStartupCheck` 各自 try/catch，分别上报 `startup_listener_failed` / `startup_trigger_failed`。
+- 补竞态保护注释，`cleanup!()` 修正类型，`bootstrap().catch` 兜底。
 
 ---
 
