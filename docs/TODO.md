@@ -114,15 +114,10 @@
 
 - 确认设计合理：单例依赖上层 `checkInFlight` 保证互斥，职责分层清晰，注释已更新说明。
 
----
+**[TODO-11] `setFailed` 中 `message` 为 undefined 时写入 undefined，与类型声明不符** ✅
 
-## 前端 · store/provider/useProviderCheckStore.ts
-
-**[TODO-11] `setFailed` 中 `message` 为 undefined 时写入 undefined，与类型声明不符**
-
-- 文件：`apps/ui/src/features/bot/store/provider/useProviderCheckStore.ts`
-- 描述：`setFailed(code, message, runId)` 中 `message` 可选，未传时为 `undefined`，直接赋给 `errorMessage` 导致实际写入 `undefined`，与类型声明 `string | null` 不符。应改为 `message ?? null`。
-- 优先级：中，潜在类型不一致 bug。
+- `message` 参数改为必填 `string`（从源头消除 undefined 可能），同步更新类型定义 `check.ts`。
+- `runId` 的 conditional spread 改为 `runId: runId ?? null`，字段风格与 `errorCode`/`errorMessage` 统一。
 
 ---
 
