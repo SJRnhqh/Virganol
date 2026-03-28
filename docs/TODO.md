@@ -77,27 +77,14 @@
 - 拆分 `registerCheckListeners` / `triggerProviderStartupCheck` 各自 try/catch，分别上报 `startup_listener_failed` / `startup_trigger_failed`。
 - 补竞态保护注释，`cleanup!()` 修正类型，`bootstrap().catch` 兜底。
 
----
+**[TODO-2] manual refresh 在 startup 期间的静默丢弃行为** ✅
 
-## 前端 · check.ts
+- 确认语义为「只要检查在跑就算」，复用 startup promise 属预期行为，补注释说明设计决策。
+- 补隐性契约注释（`checkInFlight` 单例前提）及 invoke 不可取消的预期行为注释。
 
-**[TODO-2] manual refresh 在 startup 期间的静默丢弃行为**
+**[TODO-3] AtomicBool 可简化为普通 bool** ✅
 
-- 文件：`apps/ui/src/features/bot/services/api/provider/check.ts`
-- 描述：`startup` 与 `manual` 共享同一 in-flight 锁。startup 进行中触发 manual refresh，会静默复用 startup 的 promise，调用方无从感知自己的请求是否被真正执行。
-- 需确认语义：manual refresh 是「确保一次新检查」还是「只要检查在跑就算」。
-- 补充①：`checkInFlight` 是模块级单例，隐含「`useProviderStartup` 只在 App 顶层调用一次」的前提，与 TODO-7/TODO-10 同属跨层隐性契约，建议补注释说明。
-- 补充②：组件卸载时 in-flight 的 `invoke` 不会被取消（后端检查仍会执行），事件推回来时监听器已不存在，属于有意设计，建议补注释说明这是预期行为。
-
----
-
-## 后端 · runner.rs
-
-**[TODO-3] AtomicBool 可简化为普通 bool**
-
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/runner.rs`
-- 描述：`has_join_error` 仅在 `join_next().await` 串行消费分支中读写，不存在并发写竞争，`AtomicBool` 的 AcqRel 保序多余，可改为普通 `bool`。
-- 优先级：低，不影响正确性。
+- `has_join_error` 改为普通 `mut bool`，移除 `AtomicBool` / `Ordering` import。
 
 ---
 

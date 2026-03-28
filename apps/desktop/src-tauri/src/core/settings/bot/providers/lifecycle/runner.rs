@@ -1,7 +1,6 @@
 // apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/runner.rs
 // 外部依赖
 use log::{error, info, warn};
-use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::AppHandle;
 use tokio::task::JoinSet;
 
@@ -25,8 +24,8 @@ pub(super) async fn run_provider_checks(
     let mut join_error: Option<ProviderError> = None;
 
     // 标记是否已记录过并发错误（保证只记录一次）
-    // TODO: join_next().await 串行消费，has_join_error 无并发写竞争，AtomicBool 可简化为普通 bool
-    let has_join_error = AtomicBool::new(false);
+    // join_next().await 串行消费，无并发写竞争，普通 bool 即可
+    let mut has_join_error = false;
 
     let mut pending: std::collections::VecDeque<(ProviderId, ProviderRecord)> = supported.into();
     let mut in_flight = JoinSet::new();
@@ -79,7 +78,8 @@ pub(super) async fn run_provider_checks(
             }
             Some(Err(err)) => {
                 // 单次赋值：只在第一次发生时记录
-                if !has_join_error.swap(true, Ordering::AcqRel) {
+                if !has_join_error {
+                    has_join_error = true;
                     join_error = Some(ProviderError::LifecycleConcurrentCheck(format!(
                         "concurrent check error: {}",
                         err
