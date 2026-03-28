@@ -86,36 +86,17 @@
 
 - `has_join_error` 改为普通 `mut bool`，移除 `AtomicBool` / `Ordering` import。
 
----
+**[TODO-4] 写操作内部使用软读，store 损坏时静默覆盖丢失** ✅
 
-## 后端 · store.rs
+- `save_provider` / `remove_provider` / `update_models` 改用 `load_all_providers_strict`，读取失败时上抛错误，不再静默覆盖写回。
 
-**[TODO-4] 写操作内部使用软读，store 损坏时静默覆盖丢失**
+**[TODO-5] keyring 密钥每个 provider 被读取两次** ✅
 
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/store.rs`
-- 描述：`save_provider` / `remove_provider` / `update_models` 内部调用 `load_all_providers`（软读，失败时静默返回空 HashMap），store 文件损坏时会用空 Map 覆盖写回，导致其他 provider 配置静默丢失。
-- 建议：改用 `load_all_providers_strict`，读取失败时上抛错误。
-- 优先级：中，数据安全问题。
+- 两函数合并为 `health_check_with_secret_meta`，一次解析同时返回 `HealthCheckResponse` + `ProviderSecretMeta`，keyring 系统调用从两次降为一次。
 
----
+**[TODO-6] reconcile_error 升级为 lifecycle_failed 语义待确认** ✅
 
-## 后端 · resolver.rs
-
-**[TODO-5] keyring 密钥每个 provider 被读取两次**
-
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/resolver.rs`
-- 描述：`health_check_with_resolved_key` 与 `resolve_provider_secret_meta` 各自独立读取密钥，keyring 属于系统调用，每个 provider 会被调用两次。
-- 建议：合并为一次解析，将 key 与 key_source 一并返回复用。
-- 优先级：低，性能小优化。
-
-## 后端 · processor.rs
-
-**[TODO-6] reconcile_error 升级为 lifecycle_failed 语义待确认**
-
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/processor.rs`
-- 描述：`reconcile_error`（模型列表写盘失败）会被上层推入 `provider_issues` 进而触发 `lifecycle_failed`，但此时 provider 本身 online，仅本地模型列表未更新成功。
-- 需确认：是否应降级为 warn 日志而非终止整个生命周期。
-- 优先级：中，语义设计问题。
+- 确认当前归入 `provider_issues` 触发 `lifecycle_failed` 在现有错误设计框架下自洽（写盘失败属结构性错误）。后续统一错误处理精细化阶段再引入 `infra_warnings` 分层上报，代码注释已更新说明设计意图。
 
 ---
 

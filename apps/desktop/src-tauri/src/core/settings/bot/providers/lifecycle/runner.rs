@@ -42,14 +42,15 @@ pub(super) async fn run_provider_checks(
             // 提交一个健康检查任务到 in_flight，完成后返回 (provider_id, record, result)
             in_flight.spawn(async move {
                 let url = record.url.as_deref().unwrap_or("").to_string();
-                let result = resolver::health_check_with_resolved_key(provider_id, &url).await;
-                (provider_id, record, result)
+                let (result, secret_meta) =
+                    resolver::health_check_with_secret_meta(provider_id, &url).await;
+                (provider_id, record, result, secret_meta)
             });
         }
 
         // 2) 消费一个已完成任务（完成即处理，增量推送）
         match in_flight.join_next().await {
-            Some(Ok((provider_id, record, result))) => {
+            Some(Ok((provider_id, record, result, secret_meta))) => {
                 let (final_record, online, reconcile_error) =
                     processor::process_provider_check_result(app, provider_id, record, &result);
 
@@ -67,7 +68,7 @@ pub(super) async fn run_provider_checks(
                 info!("[Tauri] {} {} → online: {}", icon, provider_id, online);
 
                 if let Err(err) =
-                    events::emit_provider_status(app, run_id, provider_id, final_record, result)
+                    events::emit_provider_status(app, run_id, provider_id, final_record, result, secret_meta)
                 {
                     provider_issues.push(ProviderIssue::new(
                         provider_id,
