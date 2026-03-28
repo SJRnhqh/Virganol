@@ -49,6 +49,8 @@ export const dispatchProviderIssue = (
   provider: ActiveProviderId,
   message: string,
 ) => {
+  // TODO: 此处分两次调用 setProviderCardState + setProviderError，触发两次 store 更新。
+  // 与 dispatchProviderBatch 使用 updateProviderBatch 一次性批量更新的风格不一致，应统一。
   const store = useProviderCollectionStore.getState();
   store.setProviderCardState(provider, PROVIDER_CARD_STATES.FAILED);
   store.setProviderError(provider, message);

@@ -30,6 +30,9 @@ export function disposeProviderCheckHandlers() {
 }
 
 /** 生命周期开始：validate → schedule，进入 checking 阶段 */
+// TODO: handleStarted 是唯一不做 resolveRunDisposition 校验的 handler，因为它本身建立 current run。
+// 若后端重复触发 started（并发两轮检查），第二个会直接覆盖第一轮调度状态，无防护。
+// 当前依赖 check.ts 层的 checkInFlight 去重保证不会发生，但这是跨层隐性依赖，需留意。
 export function handleStarted(payload: ProviderCheckStartedPayload) {
   scheduleCheckStarted(payload.run_id, () =>
     dispatchChecking(payload.run_id, payload.trigger),

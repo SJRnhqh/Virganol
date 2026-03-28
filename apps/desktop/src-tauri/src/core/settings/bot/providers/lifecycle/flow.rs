@@ -95,7 +95,7 @@ pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderC
         return;
     }
 
-    // Step 6: 推送生命周期completd事件
+    // Step 6: 推送生命周期completed事件
     let duration_ms = started_at.elapsed().as_millis() as u64;
     if let Err(err) = events::emit_check_completed(&app, run_id.as_str(), failed_count) {
         failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);

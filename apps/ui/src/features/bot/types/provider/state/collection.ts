@@ -9,6 +9,8 @@ import type {
 import type { ProviderCardState } from "./card";
 
 /** 批量更新的字段集合（所有字段可选） */
+// TODO: errorMessage 的 undefined（不更新）与 null（清空）语义区分仅靠调用方约定，
+// 类型层面无法强制，属于隐性契约。后续可考虑显式建模（如 { clear: true } 或独立字段）。
 export interface ProviderBatchUpdates {
   /** 卡片状态 */
   cardState?: ProviderCardState;
