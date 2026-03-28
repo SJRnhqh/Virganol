@@ -71,7 +71,10 @@ pub(crate) fn load_supported_providers(
 /// 读取单个 provider 的配置快照（只读）
 /// - Some(record)：存在该 provider 配置
 /// - None：不存在该 provider 配置
-pub(crate) fn load_provider_record(app: &AppHandle, provider_id: ProviderId) -> Option<ProviderRecord> {
+pub(crate) fn load_provider_record(
+    app: &AppHandle,
+    provider_id: ProviderId,
+) -> Option<ProviderRecord> {
     let provider_name = provider_id.as_str();
     load_all_providers(app).get(provider_name).cloned()
 }
@@ -89,7 +92,7 @@ pub(crate) fn save_provider(
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
 
     let provider_name = provider_id.as_str();
-    let mut providers = load_all_providers(app);
+    let mut providers = load_all_providers_strict(app)?;
     providers.insert(provider_name.to_string(), record.clone());
 
     let value = serde_json::to_value(&providers)?;
@@ -100,14 +103,17 @@ pub(crate) fn save_provider(
 /// - Ok(true)：删除成功
 /// - Ok(false)：该 provider 不存在
 /// - Err(...)：序列化或写盘失败
-pub(crate) fn remove_provider(app: &AppHandle, provider_id: ProviderId) -> Result<bool, ProviderError> {
+pub(crate) fn remove_provider(
+    app: &AppHandle,
+    provider_id: ProviderId,
+) -> Result<bool, ProviderError> {
     // 锁住整个“读取 -> 修改 -> 写回”事务，确保删除与其他写操作顺序一致
     let _guard = PROVIDERS_STORE_LOCK
         .lock()
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
 
     let provider_name = provider_id.as_str();
-    let mut providers = load_all_providers(app);
+    let mut providers = load_all_providers_strict(app)?;
     let existed = providers.remove(provider_name).is_some();
 
     if !existed {
@@ -134,7 +140,7 @@ pub(crate) fn update_models(
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
 
     let provider_name = provider_id.as_str();
-    let mut providers = load_all_providers(app);
+    let mut providers = load_all_providers_strict(app)?;
 
     let Some(record) = providers.get_mut(provider_name) else {
         return Ok(false);

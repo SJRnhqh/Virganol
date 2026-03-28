@@ -1,7 +1,6 @@
 // apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/runner.rs
 // 外部依赖
 use log::{error, info, warn};
-use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::AppHandle;
 use tokio::task::JoinSet;
 
@@ -25,7 +24,8 @@ pub(super) async fn run_provider_checks(
     let mut join_error: Option<ProviderError> = None;
 
     // 标记是否已记录过并发错误（保证只记录一次）
-    let has_join_error = AtomicBool::new(false);
+    // join_next().await 串行消费，无并发写竞争，普通 bool 即可
+    let mut has_join_error = false;
 
     let mut pending: std::collections::VecDeque<(ProviderId, ProviderRecord)> = supported.into();
     let mut in_flight = JoinSet::new();
@@ -42,14 +42,15 @@ pub(super) async fn run_provider_checks(
             // 提交一个健康检查任务到 in_flight，完成后返回 (provider_id, record, result)
             in_flight.spawn(async move {
                 let url = record.url.as_deref().unwrap_or("").to_string();
-                let result = resolver::health_check_with_resolved_key(provider_id, &url).await;
-                (provider_id, record, result)
+                let (result, secret_meta) =
+                    resolver::health_check_with_secret_meta(provider_id, &url).await;
+                (provider_id, record, result, secret_meta)
             });
         }
 
         // 2) 消费一个已完成任务（完成即处理，增量推送）
         match in_flight.join_next().await {
-            Some(Ok((provider_id, record, result))) => {
+            Some(Ok((provider_id, record, result, secret_meta))) => {
                 let (final_record, online, reconcile_error) =
                     processor::process_provider_check_result(app, provider_id, record, &result);
 
@@ -67,7 +68,7 @@ pub(super) async fn run_provider_checks(
                 info!("[Tauri] {} {} → online: {}", icon, provider_id, online);
 
                 if let Err(err) =
-                    events::emit_provider_status(app, run_id, provider_id, final_record, result)
+                    events::emit_provider_status(app, run_id, provider_id, final_record, result, secret_meta)
                 {
                     provider_issues.push(ProviderIssue::new(
                         provider_id,
@@ -78,7 +79,8 @@ pub(super) async fn run_provider_checks(
             }
             Some(Err(err)) => {
                 // 单次赋值：只在第一次发生时记录
-                if !has_join_error.swap(true, Ordering::AcqRel) {
+                if !has_join_error {
+                    has_join_error = true;
                     join_error = Some(ProviderError::LifecycleConcurrentCheck(format!(
                         "concurrent check error: {}",
                         err
