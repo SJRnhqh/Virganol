@@ -3,13 +3,13 @@
 use tauri::{AppHandle, Emitter};
 
 // 内部引用
-use super::resolver;
 use crate::core::models::provider::check::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
     ProviderCheckTrigger, ProviderStatusPayload,
 };
 use crate::core::models::provider::error::{ProviderError, ProviderIssue};
 use crate::core::models::provider::ProviderId;
+use crate::core::models::security::ProviderSecretMeta;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 
 /// 推送生命周期 started 事件
@@ -39,13 +39,14 @@ pub(super) fn emit_provider_status(
     provider_id: ProviderId,
     config: ProviderRecord,
     health: HealthCheckResponse,
+    secret_meta: ProviderSecretMeta,
 ) -> Result<(), ProviderError> {
     let payload = ProviderStatusPayload {
         run_id: run_id.to_string(),
         provider: provider_id,
         config,
         health,
-        secret_meta: resolver::resolve_provider_secret_meta(provider_id),
+        secret_meta,
     };
 
     app.emit("provider-status", &payload).map_err(|e| {
