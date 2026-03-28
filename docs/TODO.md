@@ -98,46 +98,21 @@
 
 - 确认当前归入 `provider_issues` 触发 `lifecycle_failed` 在现有错误设计框架下自洽（写盘失败属结构性错误）。后续统一错误处理精细化阶段再引入 `infra_warnings` 分层上报，代码注释已更新说明设计意图。
 
----
+**[TODO-7] handleStarted 重复触发无防护，依赖跨层隐性去重** ✅
 
-## 前端 · handlers/check.ts
+- 确认设计决策：重复触发防护由上层 `checkInFlight` 保证，属已知跨层依赖，注释已更新说明。
 
-**[TODO-7] handleStarted 重复触发无防护，依赖跨层隐性去重**
+**[TODO-8] `||` 应改为 `??`，避免空字符串被误转为 null** ✅
 
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/check.ts`
-- 描述：`handleStarted` 不做 `resolveRunDisposition` 校验，重复触发时第二个 started 会直接覆盖第一轮调度状态。当前安全性依赖 `check.ts` 层的 `checkInFlight` 跨层去重保证，属于隐性依赖。
-- 优先级：低，当前链路正确，但依赖关系脆弱。
+- `health.error || null` 改为 `health.error ?? null`，语义更精确，不对空字符串做额外假设。
 
----
+**[TODO-9] `dispatchProviderIssue` 分两次 store 更新，与批量更新风格不一致** ✅
 
-## 前端 · adapters/status.ts
+- 改用 `updateProviderBatch` 一次性批量更新，与 `dispatchProviderBatch` 风格统一。
 
-**[TODO-8] `||` 应改为 `??`，避免空字符串被误转为 null**
+**[TODO-10] scheduler 单例隐含跨层假设，无自身防护** ✅
 
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/adapters/status.ts`
-- 描述：`health.error || null` 在 `health.error` 为空字符串时会错误地返回 null，语义不准确，应改为 `health.error ?? null`。
-- 优先级：中，存在潜在语义错误。
-
----
-
-## 前端 · dispatchers/checkPhase.ts
-
-**[TODO-9] `dispatchProviderIssue` 分两次 store 更新，与批量更新风格不一致**
-
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/dispatchers/checkPhase.ts`
-- 描述：`dispatchProviderIssue` 分两次调用 `setProviderCardState` + `setProviderError`，触发两次 store 更新；与 `dispatchProviderBatch` 使用 `updateProviderBatch` 一次性批量更新的风格不一致。
-- 建议：统一为一次批量更新调用。
-- 优先级：低，功能正确，风格一致性问题。
-
----
-
-## 前端 · schedulers/checkPhaseScheduler.ts
-
-**[TODO-10] scheduler 单例隐含跨层假设，无自身防护**
-
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/schedulers/checkPhaseScheduler.ts`
-- 描述：scheduler 是模块级单例，隐含「同一时刻只有一轮检查」的前提，该保证由 `check.ts` 层的 `checkInFlight` 跨层提供，scheduler 本身无防护。与 TODO-7 关联。
-- 优先级：低，当前链路正确，依赖关系脆弱。
+- 确认设计合理：单例依赖上层 `checkInFlight` 保证互斥，职责分层清晰，注释已更新说明。
 
 ---
 
