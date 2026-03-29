@@ -38,11 +38,9 @@ export const useProviderCheckStore = create<ProviderCheckState>((set) => ({
   setFailed: (code, message, runId) =>
     set({
       phase: PROVIDER_CHECK_PHASES.FAILED,
-      ...(runId !== undefined ? { runId } : {}),
       errorCode: code,
-      // TODO: message 参数为 undefined 时不会自动转为 null，导致 errorMessage 实际写入 undefined，
-      // 与类型声明 string | null 不符，应改为 message ?? null。
       errorMessage: message,
+      runId: runId ?? null,
     }),
 
   reset: () => set(emptyCheckState),
