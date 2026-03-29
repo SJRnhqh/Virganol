@@ -41,13 +41,13 @@ export const useProviderStartup = () => {
       }
 
       // 2) 触发后端 startup check（时序保证：先监听再触发）
-      // 注意：此处失败时 cleanup 已赋值（listeners 已注册成功），监听器保持活跃直到组件卸载时由 effect 清理。
-      // 这意味着 failed 状态期间若后端推来残留事件，handlers 仍会处理并可能覆盖 failed 状态。
-      // 如需在 bootstrap 失败后立即拆除监听器，应在此处调用 cleanup()（见 TODO-13）。
+      // 失败时立即调用 cleanup() 拆除监听器：startup check 属一次性生命周期，
+      // 触发失败意味着本轮 check 已废，保留监听器只会让残留事件覆盖 failed 状态。
       try {
         await triggerProviderStartupCheck();
       } catch (error) {
         console.error("[React] triggerProviderStartupCheck failed:", error);
+        cleanup();
         useProviderCheckStore
           .getState()
           .setFailed(

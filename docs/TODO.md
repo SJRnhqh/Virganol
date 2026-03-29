@@ -119,24 +119,13 @@
 - `message` 参数改为必填 `string`（从源头消除 undefined 可能），同步更新类型定义 `check.ts`。
 - `runId` 的 conditional spread 改为 `runId: runId ?? null`，字段风格与 `errorCode`/`errorMessage` 统一。
 
----
+**[TODO-12] `ProviderBatchUpdates.errorMessage` 的 undefined/null 语义区分属于隐性契约** ✅
 
-## 前端 · types/provider/state/collection.ts
+- `errorMessage` 字段 JSDoc 补全三值语义说明（`undefined` 不更新 / `null` 清空 / `string` 写入），并注明未来可替换为结构化错误体而无需改动 store 实现。
 
-**[TODO-12] `ProviderBatchUpdates.errorMessage` 的 undefined/null 语义区分属于隐性契约**
+**[TODO-13] bootstrap 失败后监听器未主动拆除** ✅
 
-- 文件：`apps/ui/src/features/bot/types/provider/state/collection.ts`
-- 描述：`errorMessage` 字段 `undefined` 表示「不更新」，`null` 表示「清空」，该语义区分仅靠调用方约定，类型层面无法强制，属于隐性契约。后续可考虑显式建模。
-- 优先级：低，功能正确，类型语义设计问题。
-
----
-
-**[TODO-13] bootstrap 失败后监听器未主动拆除**
-
-- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderStartup.ts`
-- 描述：`triggerProviderStartupCheck` 失败时，`cleanup` 已赋值（4 个监听器已注册成功），但 `.catch` 分支未调用 `cleanup()`，监听器持续活跃直到组件卸载。store 已处于 failed 状态，但后端若此时推来残留事件，handlers 仍会处理并可能覆盖 failed 状态，导致状态机出现非预期回退。
-- 需确认语义：bootstrap 失败后是否应立即拆除监听器，还是保留以等待后端自行恢复？
-- 优先级：低，当前场景概率低，但语义未收口。
+- `triggerProviderStartupCheck` 失败时在 catch 块内立即调用 `cleanup()`，拆除已注册的监听器，防止残留事件覆盖 failed 状态。
 
 ---
 
