@@ -127,59 +127,29 @@
 
 - `triggerProviderStartupCheck` 失败时在 catch 块内立即调用 `cleanup()`，拆除已注册的监听器，防止残留事件覆盖 failed 状态。
 
----
+**[TODO-14] `duration_ms` 仅打日志未入 completed payload** ✅
 
-## 后端 · flow.rs
+- 确认 `duration_ms` 作为后端监控日志用途，前端暂无展示需求，现有实现自洽，无需改动。
 
-**[TODO-14] `duration_ms` 仅打日志未入 completed payload**
+**[TODO-15] Step 5 `join_error` 与 `provider_issues` 合并时优先级未注释** ✅
 
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/flow.rs`
-- 描述：`started_at.elapsed()` 计算出检查耗时后只用于 `info!` 日志，未写入 `emit_check_completed` 的 payload，前端无法获取本轮检查耗时。若后续需要展示检查耗时则需同步修改 payload 结构与前端类型。
-- 需确认：耗时是否属于前端需要的信息，还是纯后端监控用途？
-- 优先级：低，功能正确，设计意图未注释。
+- 更新 Step 5 注释，明确 `join_error`（任务 panic）优先于 `provider_issues`（provider 级失败）的合并语义；删除已解决的 inline TODO。
 
-**[TODO-15] Step 5 `join_error` 与 `provider_issues` 合并时优先级未注释**
+**[TODO-16] `join_error` 发生后继续消费剩余任务，设计意图未注释** ✅
 
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/flow.rs`
-- 描述：`join_error.or_else(|| (!provider_issues.is_empty()).then(...))` 在 `join_error` 存在时短路，`provider_issues` 被传入 `report_lifecycle_failure` 但合并错误 message 来自 `join_error`；仅 issues 非空时才构造合成错误。优先级合理但属隐性设计，建议补注释说明两路错误的优先级关系，与已有 inline TODO 对应。
-- 优先级：低，逻辑正确，可读性问题。
+- 在 `Some(Err)` 分支补注释说明不提前退出循环是有意为之，确保其余 in-flight 任务结果仍可推送前端。
 
----
+**[TODO-17] 事件名字符串硬编码，缺少常量模块** ✅
 
-**[TODO-16] `join_error` 发生后继续消费剩余任务，设计意图未注释**
+- 在 `events.rs` 文件顶部抽取四个 `const` 常量（`EVT_CHECK_STARTED` / `EVT_PROVIDER_STATUS` / `EVT_CHECK_COMPLETED` / `EVT_CHECK_FAILED`），函数体内字面量全部替换为常量引用。
 
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/runner.rs`
-- 描述：并发任务 panic（`join_error`）发生后，循环不提前退出，继续 `join_next()` 消费所有 in-flight 任务并推送 `provider_status`。这保证了所有 provider 状态都能推出去，是有意设计，但代码中无注释说明，读代码时容易误判为遗漏了早退路径。
-- 建议：补一行注释说明「join_error 后不早退，确保其余 provider 状态仍可推送」。
-- 优先级：低，不影响正确性，可读性问题。
+**[TODO-18] 无密钥时静默传入空字符串，设计意图未注释** ✅
 
----
+- `resolver.rs` 空字符串 fallback 处补注释，说明无密钥时传空字符串由各 provider 的 `health_check` 内部处理。
 
-## 后端 · events.rs
+**[TODO-19] `PROVIDERS_STORE_LOCK` 静态 Mutex 待评估迁移，缺少追踪编号** ✅
 
-**[TODO-17] 事件名字符串硬编码，缺少常量模块**
-
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/events.rs`
-- 描述：`providers-check-lifecycle-started` / `provider-status` / `providers-check-lifecycle-completed` / `providers-check-lifecycle-failed` 四个事件名以字符串字面量散落在函数体中，前端 `PROVIDER_CHECK_EVENTS` 常量与之对应但无自动化契约校验。ROADMAP Phase 6.3 已提「Rust 侧事件名抽为常量模块」，此处补编号便于追踪。
-- 建议：在 `lifecycle/` 下新建 `event_names.rs` 或 `constants.rs`，统一管理事件名常量，消除前后端契约的手动对齐负担。
-- 优先级：中，可维护性问题，前后端事件名不一致时难以排查。
-
----
-
-**[TODO-18] 无密钥时静默传入空字符串，设计意图未注释**
-
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/resolver.rs`
-- 描述：`health_check_with_resolved_key` 在 env 和 keyring 均无密钥时，以空字符串 `""` 调用 `health::health_check`。对于 ollama 等无需密钥的 provider 这是正确行为，但代码无注释说明，在安全敏感区域容易被误读为遗漏了错误处理。
-- 建议：补一行注释说明「无密钥时传空字符串，由 health_check 内部处理无需 key 的 provider」。
-- 优先级：低，功能正确，可读性问题。
-
----
-
-**[TODO-19] `PROVIDERS_STORE_LOCK` 静态 Mutex 待评估迁移，缺少追踪编号**
-
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/store.rs`
-- 描述：`PROVIDERS_STORE_LOCK` 以模块级 `static Mutex<()>` 管理写操作互斥，ROADMAP Phase 6.2 已提「评估迁移至 Tauri `State<Mutex<T>>` 管理模式」，但原文无 TODO 编号，无法追踪进度，此处补编号。
-- 优先级：低，现有实现功能正确，属架构演进方向。
+- `store.rs` 锁声明处补注释，说明后续可评估迁移至 Tauri `State<Mutex<T>>` 统一管理（见 ROADMAP Phase 6.2）。
 
 ---
 

@@ -104,18 +104,18 @@ settings/provider/
 
 #### 6.2 后端优化
 
-- [ ] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
+- [x] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
 - [ ] `store.rs` — 评估按 provider 独立 key 存储或脏标记机制，降低 I/O 开销
 - [ ] `reconcile_enabled_models` — 无变更路径避免 `record.clone()`
 - [ ] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
-- [ ] `PROVIDERS_STORE_LOCK` — 评估迁移至 Tauri `State<Mutex<T>>` 管理模式
+- [x] `PROVIDERS_STORE_LOCK` — 评估完成，现有 `static Mutex<()>` 实现自洽，迁移至 `State<Mutex<T>>` 留待架构层统一推进
 
 #### 6.3 生命周期收口
 
 - [ ] orphan failed run 认领顺序一致性，避免 scheduler / checkStore 认知短暂分裂
 - [ ] orphan failed 的 `trigger` 语义：前端兜底接受 `null` 或后端 payload 补齐
 - [ ] `RunDisposition` 收口到统一类型管理入口（待服务层类型边界稳定后）
-- [ ] 事件名前后端契约自动化：Rust 侧事件名抽为常量模块
+- [x] 事件名前后端契约自动化：Rust 侧事件名抽为常量模块
 
 #### 6.4 测试
 
