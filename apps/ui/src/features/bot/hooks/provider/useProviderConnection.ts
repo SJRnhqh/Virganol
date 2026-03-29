@@ -4,7 +4,10 @@ import { useCallback } from "react";
 
 // 内部引用
 import type { ProviderId, ProviderFormData } from "@/features/bot/types";
-import { PROVIDER_CARD_STATES, PROVIDER_INITIAL_FORMS } from "@/features/bot/constants";
+import {
+  PROVIDER_CARD_STATES,
+  PROVIDER_INITIAL_FORMS,
+} from "@/features/bot/constants";
 import { useProviderCollectionStore } from "@/features/bot/store";
 import { resetProvider, connectAndSaveProvider } from "@/features/bot/services";
 

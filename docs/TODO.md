@@ -98,193 +98,82 @@
 
 - 确认当前归入 `provider_issues` 触发 `lifecycle_failed` 在现有错误设计框架下自洽（写盘失败属结构性错误）。后续统一错误处理精细化阶段再引入 `infra_warnings` 分层上报，代码注释已更新说明设计意图。
 
----
+**[TODO-7] handleStarted 重复触发无防护，依赖跨层隐性去重** ✅
 
-## 前端 · handlers/check.ts
+- 确认设计决策：重复触发防护由上层 `checkInFlight` 保证，属已知跨层依赖，注释已更新说明。
 
-**[TODO-7] handleStarted 重复触发无防护，依赖跨层隐性去重**
+**[TODO-8] `||` 应改为 `??`，避免空字符串被误转为 null** ✅
 
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/check.ts`
-- 描述：`handleStarted` 不做 `resolveRunDisposition` 校验，重复触发时第二个 started 会直接覆盖第一轮调度状态。当前安全性依赖 `check.ts` 层的 `checkInFlight` 跨层去重保证，属于隐性依赖。
-- 优先级：低，当前链路正确，但依赖关系脆弱。
+- `health.error || null` 改为 `health.error ?? null`，语义更精确，不对空字符串做额外假设。
 
----
+**[TODO-9] `dispatchProviderIssue` 分两次 store 更新，与批量更新风格不一致** ✅
 
-## 前端 · adapters/status.ts
+- 改用 `updateProviderBatch` 一次性批量更新，与 `dispatchProviderBatch` 风格统一。
 
-**[TODO-8] `||` 应改为 `??`，避免空字符串被误转为 null**
+**[TODO-10] scheduler 单例隐含跨层假设，无自身防护** ✅
 
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/adapters/status.ts`
-- 描述：`health.error || null` 在 `health.error` 为空字符串时会错误地返回 null，语义不准确，应改为 `health.error ?? null`。
-- 优先级：中，存在潜在语义错误。
+- 确认设计合理：单例依赖上层 `checkInFlight` 保证互斥，职责分层清晰，注释已更新说明。
 
----
+**[TODO-11] `setFailed` 中 `message` 为 undefined 时写入 undefined，与类型声明不符** ✅
 
-## 前端 · dispatchers/checkPhase.ts
+- `message` 参数改为必填 `string`（从源头消除 undefined 可能），同步更新类型定义 `check.ts`。
+- `runId` 的 conditional spread 改为 `runId: runId ?? null`，字段风格与 `errorCode`/`errorMessage` 统一。
 
-**[TODO-9] `dispatchProviderIssue` 分两次 store 更新，与批量更新风格不一致**
+**[TODO-12] `ProviderBatchUpdates.errorMessage` 的 undefined/null 语义区分属于隐性契约** ✅
 
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/dispatchers/checkPhase.ts`
-- 描述：`dispatchProviderIssue` 分两次调用 `setProviderCardState` + `setProviderError`，触发两次 store 更新；与 `dispatchProviderBatch` 使用 `updateProviderBatch` 一次性批量更新的风格不一致。
-- 建议：统一为一次批量更新调用。
-- 优先级：低，功能正确，风格一致性问题。
+- `errorMessage` 字段 JSDoc 补全三值语义说明（`undefined` 不更新 / `null` 清空 / `string` 写入），并注明未来可替换为结构化错误体而无需改动 store 实现。
 
----
+**[TODO-13] bootstrap 失败后监听器未主动拆除** ✅
 
-## 前端 · schedulers/checkPhaseScheduler.ts
+- `triggerProviderStartupCheck` 失败时在 catch 块内立即调用 `cleanup()`，拆除已注册的监听器，防止残留事件覆盖 failed 状态。
 
-**[TODO-10] scheduler 单例隐含跨层假设，无自身防护**
+**[TODO-14] `duration_ms` 仅打日志未入 completed payload** ✅
 
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/schedulers/checkPhaseScheduler.ts`
-- 描述：scheduler 是模块级单例，隐含「同一时刻只有一轮检查」的前提，该保证由 `check.ts` 层的 `checkInFlight` 跨层提供，scheduler 本身无防护。与 TODO-7 关联。
-- 优先级：低，当前链路正确，依赖关系脆弱。
+- 确认 `duration_ms` 作为后端监控日志用途，前端暂无展示需求，现有实现自洽，无需改动。
 
----
+**[TODO-15] Step 5 `join_error` 与 `provider_issues` 合并时优先级未注释** ✅
 
-## 前端 · store/provider/useProviderCheckStore.ts
+- 更新 Step 5 注释，明确 `join_error`（任务 panic）优先于 `provider_issues`（provider 级失败）的合并语义；删除已解决的 inline TODO。
 
-**[TODO-11] `setFailed` 中 `message` 为 undefined 时写入 undefined，与类型声明不符**
+**[TODO-16] `join_error` 发生后继续消费剩余任务，设计意图未注释** ✅
 
-- 文件：`apps/ui/src/features/bot/store/provider/useProviderCheckStore.ts`
-- 描述：`setFailed(code, message, runId)` 中 `message` 可选，未传时为 `undefined`，直接赋给 `errorMessage` 导致实际写入 `undefined`，与类型声明 `string | null` 不符。应改为 `message ?? null`。
-- 优先级：中，潜在类型不一致 bug。
+- 在 `Some(Err)` 分支补注释说明不提前退出循环是有意为之，确保其余 in-flight 任务结果仍可推送前端。
 
----
+**[TODO-17] 事件名字符串硬编码，缺少常量模块** ✅
 
-## 前端 · types/provider/state/collection.ts
+- 在 `events.rs` 文件顶部抽取四个 `const` 常量（`EVT_CHECK_STARTED` / `EVT_PROVIDER_STATUS` / `EVT_CHECK_COMPLETED` / `EVT_CHECK_FAILED`），函数体内字面量全部替换为常量引用。
 
-**[TODO-12] `ProviderBatchUpdates.errorMessage` 的 undefined/null 语义区分属于隐性契约**
+**[TODO-18] 无密钥时静默传入空字符串，设计意图未注释** ✅
 
-- 文件：`apps/ui/src/features/bot/types/provider/state/collection.ts`
-- 描述：`errorMessage` 字段 `undefined` 表示「不更新」，`null` 表示「清空」，该语义区分仅靠调用方约定，类型层面无法强制，属于隐性契约。后续可考虑显式建模。
-- 优先级：低，功能正确，类型语义设计问题。
+- `resolver.rs` 空字符串 fallback 处补注释，说明无密钥时传空字符串由各 provider 的 `health_check` 内部处理。
 
----
+**[TODO-19] `PROVIDERS_STORE_LOCK` 静态 Mutex 待评估迁移，缺少追踪编号** ✅
 
-**[TODO-13] bootstrap 失败后监听器未主动拆除**
+- `store.rs` 锁声明处补注释，说明后续可评估迁移至 Tauri `State<Mutex<T>>` 统一管理（见 ROADMAP Phase 6.2）。
 
-- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderStartup.ts`
-- 描述：`triggerProviderStartupCheck` 失败时，`cleanup` 已赋值（4 个监听器已注册成功），但 `.catch` 分支未调用 `cleanup()`，监听器持续活跃直到组件卸载。store 已处于 failed 状态，但后端若此时推来残留事件，handlers 仍会处理并可能覆盖 failed 状态，导致状态机出现非预期回退。
-- 需确认语义：bootstrap 失败后是否应立即拆除监听器，还是保留以等待后端自行恢复？
-- 优先级：低，当前场景概率低，但语义未收口。
+**[TODO-20] 健康检查每次创建新 `reqwest::Client`，无连接复用** ✅
 
----
+- 两处 `Client::new()` 上方补注释，说明当前实现自洽，规模扩展后可提升为 `OnceLock<Client>` 复用连接池。
 
-## 后端 · flow.rs
+**[TODO-21] `SkippedProviderDetail` 缺少 `::new()` 构造函数** ✅
 
-**[TODO-14] `duration_ms` 仅打日志未入 completed payload**
+- 补 `impl SkippedProviderDetail { fn new(...) }`，与 `ProviderIssue::new()` 风格统一；`store.rs` 调用方同步更新。
 
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/flow.rs`
-- 描述：`started_at.elapsed()` 计算出检查耗时后只用于 `info!` 日志，未写入 `emit_check_completed` 的 payload，前端无法获取本轮检查耗时。若后续需要展示检查耗时则需同步修改 payload 结构与前端类型。
-- 需确认：耗时是否属于前端需要的信息，还是纯后端监控用途？
-- 优先级：低，功能正确，设计意图未注释。
+**[TODO-22] `ProviderError` 无 `source()` 错误链** ✅
 
-**[TODO-15] Step 5 `join_error` 与 `provider_issues` 合并时优先级未注释**
+- 属错误精细化处理阶段（Phase 5.2）工作，在 `base.rs` 补 inline TODO 标记，留待统一处理时覆写 `source()` 或引入 `thiserror`。
 
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/flow.rs`
-- 描述：`join_error.or_else(|| (!provider_issues.is_empty()).then(...))` 在 `join_error` 存在时短路，`provider_issues` 被传入 `report_lifecycle_failure` 但合并错误 message 来自 `join_error`；仅 issues 非空时才构造合成错误。优先级合理但属隐性设计，建议补注释说明两路错误的优先级关系，与已有 inline TODO 对应。
-- 优先级：低，逻辑正确，可读性问题。
+**[TODO-23] `connect_and_save` 内联密钥回退逻辑，与 `resolver.rs` 重复** ✅
 
----
+- 属 CRUD 链路优化，不在本阶段生命周期查漏补缺范围内；在 `service.rs` 密钥回退处补 inline TODO，说明后续可提取到 `secrets` 层统一管理。
 
-**[TODO-16] `join_error` 发生后继续消费剩余任务，设计意图未注释**
+**[TODO-24] `ProviderId` 类型宽度与运行时激活集合长期不一致** ✅
 
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/runner.rs`
-- 描述：并发任务 panic（`join_error`）发生后，循环不提前退出，继续 `join_next()` 消费所有 in-flight 任务并推送 `provider_status`。这保证了所有 provider 状态都能推出去，是有意设计，但代码中无注释说明，读代码时容易误判为遗漏了早退路径。
-- 建议：补一行注释说明「join_error 后不早退，确保其余 provider 状态仍可推送」。
-- 优先级：低，不影响正确性，可读性问题。
+- 在 `id.ts` 补注释说明类型集合为完整枚举，运行时激活集合由 `constants/PROVIDER_IDS` 另行控制。
 
----
+**[TODO-25] `degraded` 语义未注释，phase 状态机转换路径无类型约束** ✅
 
-## 后端 · events.rs
-
-**[TODO-17] 事件名字符串硬编码，缺少常量模块**
-
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/events.rs`
-- 描述：`providers-check-lifecycle-started` / `provider-status` / `providers-check-lifecycle-completed` / `providers-check-lifecycle-failed` 四个事件名以字符串字面量散落在函数体中，前端 `PROVIDER_CHECK_EVENTS` 常量与之对应但无自动化契约校验。ROADMAP Phase 6.3 已提「Rust 侧事件名抽为常量模块」，此处补编号便于追踪。
-- 建议：在 `lifecycle/` 下新建 `event_names.rs` 或 `constants.rs`，统一管理事件名常量，消除前后端契约的手动对齐负担。
-- 优先级：中，可维护性问题，前后端事件名不一致时难以排查。
-
----
-
-**[TODO-18] 无密钥时静默传入空字符串，设计意图未注释**
-
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/resolver.rs`
-- 描述：`health_check_with_resolved_key` 在 env 和 keyring 均无密钥时，以空字符串 `""` 调用 `health::health_check`。对于 ollama 等无需密钥的 provider 这是正确行为，但代码无注释说明，在安全敏感区域容易被误读为遗漏了错误处理。
-- 建议：补一行注释说明「无密钥时传空字符串，由 health_check 内部处理无需 key 的 provider」。
-- 优先级：低，功能正确，可读性问题。
-
----
-
-**[TODO-19] `PROVIDERS_STORE_LOCK` 静态 Mutex 待评估迁移，缺少追踪编号**
-
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/store.rs`
-- 描述：`PROVIDERS_STORE_LOCK` 以模块级 `static Mutex<()>` 管理写操作互斥，ROADMAP Phase 6.2 已提「评估迁移至 Tauri `State<Mutex<T>>` 管理模式」，但原文无 TODO 编号，无法追踪进度，此处补编号。
-- 优先级：低，现有实现功能正确，属架构演进方向。
-
----
-
-## 后端 · deepseek.rs / ollama.rs
-
-**[TODO-20] 健康检查每次创建新 `reqwest::Client`，无连接复用**
-
-- 文件：`apps/desktop/src-tauri/src/core/providers/connections/deepseek.rs` / `ollama.rs`
-- 描述：`deepseek_check` 与 `ollama_check` 每次调用均执行 `reqwest::Client::new()`，不复用连接池。在 runner 并发检查多个 provider 时，会建立多条独立 TCP 连接，增加延迟与系统开销。
-- 建议：将 `reqwest::Client` 提升为模块级 `OnceLock<Client>` 或通过 Tauri `State` 注入共享实例。
-- 优先级：低，当前 provider 数量少影响有限，规模扩展后明显。
-
----
-
-## 后端 · error/skip.rs
-
-**[TODO-21] `SkippedProviderDetail` 缺少 `::new()` 构造函数**
-
-- 文件：`apps/desktop/src-tauri/src/core/models/provider/error/skip.rs`
-- 描述：`SkippedProviderDetail` 直接用字段初始化构造，而 `ProviderIssue` 已有 `::new()` 风格，两者不统一。ROADMAP Phase 6.2 已提此项，此处补编号便于追踪。
-- 优先级：低，风格一致性问题。
-
----
-
-## 后端 · error/base.rs
-
-**[TODO-22] `ProviderError` 无 `source()` 错误链**
-
-- 文件：`apps/desktop/src-tauri/src/core/models/provider/error/base.rs`
-- 描述：`ProviderError` 实现了 `std::error::Error` 但未覆写 `source()`，`Serde` variant 包裹的原始错误无法通过错误链追溯。ROADMAP Phase 5.2 已提「补 `source()` 或引入 `thiserror`」，此处补编号。
-- 优先级：低，影响错误溯源能力，不影响功能正确性。
-
----
-
-## 后端 · service.rs
-
-**[TODO-23] `connect_and_save` 内联密钥回退逻辑，与 `resolver.rs` 重复**
-
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/service.rs`
-- 描述：`connect_and_save` 内部实现了 `env → keyring` 密钥回退优先级，与 `resolver.rs` 中 `health_check_with_resolved_key` 各自独立维护同一套规则。若优先级逻辑需要调整，须同步修改两处，存在遗漏风险。
-- 建议：将密钥解析逻辑统一收口到 `resolver.rs` 或新建 `secrets` 层统一管理，`service.rs` 调用即可。
-- 优先级：中，可维护性问题，与 TODO-5 关联。
-
----
-
-## 前端 · types/provider/common/id.ts
-
-**[TODO-24] `ProviderId` 类型宽度与运行时激活集合长期不一致**
-
-- 文件：`apps/ui/src/features/bot/types/provider/common/id.ts`
-- 描述：类型层面定义了 10 个 provider，但 `PROVIDER_IDS` 运行时只激活 2 个（ollama / deepseek），其余 8 个被注释掉。接收 `ProviderId` 的函数在类型上必须处理全部 10 个变体，但实际永远不会收到其中 8 个；`byId` 是 `Record<ProviderId, ProviderState>`，对未激活 provider 的键访问类型上合法但运行时返回 `undefined`，类型与运行时不一致。
-- 建议：补注释说明「类型集合是完整枚举，运行时激活集合在 constants/PROVIDER_IDS 中另行控制」；或提供 `isProviderId` 守卫函数用于事件层运行时校验。
-- 优先级：中，存在类型-运行时裂缝，规模扩展时易引发 bug。
-
----
-
-## 前端 · types/provider/state/phase.ts
-
-**[TODO-25] `degraded` 语义未注释，phase 状态机转换路径无类型约束**
-
-- 文件：`apps/ui/src/features/bot/types/provider/state/phase.ts`
-- 描述：`degraded` 表示「部分 provider 检查失败」还是「后端返回降级信号」语义不明，对前端展示逻辑影响大。`CheckTerminalPhase` 与 `TerminalPhase` 的分层设计意图也未注释。此外，状态机的合法转换路径完全隐藏在 store action 和事件处理器中，类型层面无任何约束。
-- 建议：补 JSDoc 说明 `degraded` 的精确语义及各分组类型的设计意图。
-- 优先级：低，功能正确，可读性与可维护性问题。
+- `CheckTerminalPhase` JSDoc 补全 `degraded` 精确语义：流程正常结束但存在部分 provider 连接失败（业务性失败，非结构性错误）。
 
 ---
 

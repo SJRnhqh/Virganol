@@ -12,15 +12,21 @@ pub(super) async fn health_check_with_secret_meta(
     provider_id: ProviderId,
     url: &str,
 ) -> (HealthCheckResponse, ProviderSecretMeta) {
-    let (api_key, secret_meta) =
-        if let Some(k) = secrets::load_provider_key_from_env(provider_id) {
-            (Some(k), ProviderSecretMeta::with_source(ProviderKeySource::Env))
-        } else if let Some(k) = secrets::load_provider_key(provider_id) {
-            (Some(k), ProviderSecretMeta::with_source(ProviderKeySource::Keyring))
-        } else {
-            (None, ProviderSecretMeta::none())
-        };
+    let (api_key, secret_meta) = if let Some(k) = secrets::load_provider_key_from_env(provider_id) {
+        (
+            Some(k),
+            ProviderSecretMeta::with_source(ProviderKeySource::Env),
+        )
+    } else if let Some(k) = secrets::load_provider_key(provider_id) {
+        (
+            Some(k),
+            ProviderSecretMeta::with_source(ProviderKeySource::Keyring),
+        )
+    } else {
+        (None, ProviderSecretMeta::none())
+    };
 
+    // 无密钥时传空字符串；ollama 等无需 key 的 provider 由 health_check 内部自行忽略。
     let key = api_key.as_ref().map(|k| k.as_str()).unwrap_or("");
     let response = health::health_check(provider_id, url, key).await;
     (response, secret_meta)

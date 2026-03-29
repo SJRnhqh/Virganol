@@ -12,6 +12,12 @@ use crate::core::models::provider::ProviderId;
 use crate::core::models::security::ProviderSecretMeta;
 use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 
+// 事件名常量（与前端 PROVIDER_CHECK_EVENTS 保持一致）
+const EVT_CHECK_STARTED: &str = "providers-check-lifecycle-started";
+const EVT_PROVIDER_STATUS: &str = "provider-status";
+const EVT_CHECK_COMPLETED: &str = "providers-check-lifecycle-completed";
+const EVT_CHECK_FAILED: &str = "providers-check-lifecycle-failed";
+
 /// 推送生命周期 started 事件
 pub(super) fn emit_check_started(
     app: &AppHandle,
@@ -23,13 +29,9 @@ pub(super) fn emit_check_started(
         trigger,
     };
 
-    app.emit("providers-check-lifecycle-started", &payload)
-        .map_err(|e| {
-            ProviderError::LifecycleEventEmit(format!(
-                "emit providers-check-lifecycle-started failed: {}",
-                e
-            ))
-        })
+    app.emit(EVT_CHECK_STARTED, &payload).map_err(|e| {
+        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_STARTED, e))
+    })
 }
 
 /// 推送单个 Provider 的状态事件
@@ -49,8 +51,8 @@ pub(super) fn emit_provider_status(
         secret_meta,
     };
 
-    app.emit("provider-status", &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit provider-status failed: {}", e))
+    app.emit(EVT_PROVIDER_STATUS, &payload).map_err(|e| {
+        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_PROVIDER_STATUS, e))
     })
 }
 
@@ -65,13 +67,9 @@ pub(super) fn emit_check_completed(
         failed,
     };
 
-    app.emit("providers-check-lifecycle-completed", &payload)
-        .map_err(|e| {
-            ProviderError::LifecycleEventEmit(format!(
-                "emit providers-check-lifecycle-completed failed: {}",
-                e
-            ))
-        })
+    app.emit(EVT_CHECK_COMPLETED, &payload).map_err(|e| {
+        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_COMPLETED, e))
+    })
 }
 
 /// 推送生命周期 failed 事件
@@ -88,11 +86,7 @@ pub(super) fn emit_check_failed(
         issues,
     };
 
-    app.emit("providers-check-lifecycle-failed", &payload)
-        .map_err(|e| {
-            ProviderError::LifecycleEventEmit(format!(
-                "emit providers-check-lifecycle-failed failed: {}",
-                e
-            ))
-        })
+    app.emit(EVT_CHECK_FAILED, &payload).map_err(|e| {
+        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_FAILED, e))
+    })
 }

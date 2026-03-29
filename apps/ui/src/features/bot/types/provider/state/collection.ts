@@ -9,8 +9,6 @@ import type {
 import type { ProviderCardState } from "./card";
 
 /** 批量更新的字段集合（所有字段可选） */
-// TODO: errorMessage 的 undefined（不更新）与 null（清空）语义区分仅靠调用方约定，
-// 类型层面无法强制，属于隐性契约。后续可考虑显式建模（如 { clear: true } 或独立字段）。
 export interface ProviderBatchUpdates {
   /** 卡片状态 */
   cardState?: ProviderCardState;
@@ -18,7 +16,18 @@ export interface ProviderBatchUpdates {
   form?: Partial<ProviderFormData>;
   /** 模型状态 */
   models?: ProviderModelState;
-  /** 错误信息（null 表示清空） */
+  /**
+   * 错误信息，三值语义：
+   * - `undefined`（字段缺失）：不更新，store 保留原值
+   * - `null`：清空错误信息
+   * - `string`：写入新错误信息
+   *
+   * 调用方须遵守此约定；单独的 `setProviderError` / `clearProviderError`
+   * 在只需操作错误字段时可替代批量更新，语义更显式。
+   *
+   * 此字段可在未来替换为结构化错误体（如 `{ code: string; message: string }`），
+   * 三值语义与 store 实现均无需改动，仅替换类型 `T` 即可。
+   */
   errorMessage?: string | null;
 }
 

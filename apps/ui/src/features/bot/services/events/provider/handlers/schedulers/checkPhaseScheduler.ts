@@ -7,8 +7,7 @@ import {
 } from "@/features/bot/constants";
 
 // --- 模块状态 ---
-// TODO: scheduler 是模块级单例，隐含「同一时刻只有一轮检查」的前提假设。
-// 该保证当前由 check.ts 层的 checkInFlight 跨层提供，scheduler 本身无防护。与 TODO-7 关联。
+// 单例设计依赖「同一时刻只有一轮检查」的前提，由上层 checkInFlight 保证，属已知跨层依赖。
 
 // 当前活跃轮次的 run_id，用于防止旧轮次 timer 回调写入状态
 let activeRunId: string | null = null;

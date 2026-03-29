@@ -73,7 +73,9 @@ pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderC
         runner::run_provider_checks(&app, run_id.as_str(), snapshot.supported).await;
 
     // Step 5: 处理并发检查阶段结构性错误（全局并发错误或 provider 级结构性问题）
-    // TODO: 后续若统一建设错误文案体系，需细化 join_error 与 provider_issues 同时存在时的 message 表达。
+    // 优先级：join_error（任务 panic）> provider_issues（个别 provider 结构性失败）。
+    // join_error 存在时直接作为错误主体，provider_issues 若非空仍一并传入 payload；
+    // 无 join_error 时若 issues 非空则手动构造等价错误；两者皆无则跳过进入 Step 6。
     if let Some(err) = join_error.or_else(|| {
         (!provider_issues.is_empty()).then(|| {
             ProviderError::LifecycleConcurrentCheck(

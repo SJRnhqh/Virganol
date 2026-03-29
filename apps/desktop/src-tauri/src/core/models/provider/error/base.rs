@@ -27,6 +27,8 @@ impl fmt::Display for ProviderError {
     }
 }
 
+// TODO(Phase 5.2): 覆写 `source()`，将 `Serde` variant 包裹的 `serde_json::Error` 暴露给错误链，
+// 或引入 `thiserror` 统一派生，提升错误溯源能力。
 impl std::error::Error for ProviderError {}
 
 impl From<serde_json::Error> for ProviderError {
