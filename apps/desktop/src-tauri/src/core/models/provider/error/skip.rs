@@ -9,3 +9,18 @@ pub struct SkippedProviderDetail {
     pub code: ProviderErrorCode,
     pub message: String,
 }
+
+impl SkippedProviderDetail {
+    /// 构造一条被跳过的 provider 明细。
+    pub fn new(
+        raw_id: impl Into<String>,
+        code: ProviderErrorCode,
+        message: impl Into<String>,
+    ) -> Self {
+        Self {
+            raw_id: raw_id.into(),
+            code,
+            message: message.into(),
+        }
+    }
+}

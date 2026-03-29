@@ -67,9 +67,14 @@ pub(super) async fn run_provider_checks(
                 let icon = if online { "✅" } else { "⚠️" };
                 info!("[Tauri] {} {} → online: {}", icon, provider_id, online);
 
-                if let Err(err) =
-                    events::emit_provider_status(app, run_id, provider_id, final_record, result, secret_meta)
-                {
+                if let Err(err) = events::emit_provider_status(
+                    app,
+                    run_id,
+                    provider_id,
+                    final_record,
+                    result,
+                    secret_meta,
+                ) {
                     provider_issues.push(ProviderIssue::new(
                         provider_id,
                         err.code(),
@@ -78,6 +83,7 @@ pub(super) async fn run_provider_checks(
                 }
             }
             Some(Err(err)) => {
+                // 不提前退出循环：即使发生 panic，其余 in-flight 任务的结果仍需消费并推送给前端。
                 // 单次赋值：只在第一次发生时记录
                 if !has_join_error {
                     has_join_error = true;

@@ -1,6 +1,9 @@
 // apps/ui/src/features/bot/services/events/provider/handlers/adapters/status.ts
 // 内部引用
-import type { ProviderBatchUpdates, ProviderStatusPayload } from "@/features/bot/types";
+import type {
+  ProviderBatchUpdates,
+  ProviderStatusPayload,
+} from "@/features/bot/types";
 import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 
 /**
@@ -36,7 +39,6 @@ export function adaptProviderStatusToBatchUpdates({
     form: formPatch,
     cardState: PROVIDER_CARD_STATES.FAILED,
     models: { available: [], enabled: {} },
-    // TODO: health.error 若为空字符串 ""，|| 会将其转为 null，语义不准确，应改为 ?? null。
-    errorMessage: health.error || null,
+    errorMessage: health.error ?? null,
   };
 }

@@ -56,7 +56,9 @@ export const useProviderModelList = (providerId: ProviderId) => {
           useProviderCollectionStore
             .getState()
             .setModelEnabled(providerId, model, previous);
-          console.error(`[React] rollback single model: ${providerId}/${model}`);
+          console.error(
+            `[React] rollback single model: ${providerId}/${model}`,
+          );
         }
       } finally {
         pendingRef.current = false;

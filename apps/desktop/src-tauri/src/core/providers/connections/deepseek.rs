@@ -17,6 +17,7 @@ pub(crate) async fn deepseek_check(key: &str) -> HealthCheckResponse {
     let endpoint = format!("{}/v1/models", base);
     info!("[Tauri][DeepSeek] → {}", endpoint);
 
+    // 每次调用新建 Client；provider 数量少时影响有限，规模扩展后可提升为 OnceLock<Client> 复用连接池。
     let resp = match reqwest::Client::new()
         .get(&endpoint)
         .bearer_auth(key.trim())

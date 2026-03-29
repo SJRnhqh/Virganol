@@ -11,6 +11,7 @@ use crate::core::models::settings::ProviderRecord;
 use crate::core::settings::store::{load_settings, load_settings_strict, save_settings};
 
 const STORE_KEY_SPIRIT_PROVIDERS: &str = "spirit.providers";
+// 写操作互斥锁；后续可评估迁移至 Tauri State<Mutex<T>> 统一管理生命周期（见 ROADMAP Phase 6.2）。
 static PROVIDERS_STORE_LOCK: Mutex<()> = Mutex::new(());
 
 /// 读取所有已保存的 providers
@@ -53,11 +54,11 @@ pub(crate) fn load_supported_providers(
     for (raw_id, record) in providers {
         match ProviderId::try_from(raw_id.as_str()) {
             Ok(provider_id) => supported.push((provider_id, record)),
-            Err(error) => skipped.push(SkippedProviderDetail {
+            Err(error) => skipped.push(SkippedProviderDetail::new(
                 raw_id,
-                code: error.code(),
-                message: error.message(),
-            }),
+                error.code(),
+                error.message(),
+            )),
         }
     }
 

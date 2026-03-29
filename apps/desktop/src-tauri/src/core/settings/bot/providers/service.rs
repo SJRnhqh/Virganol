@@ -31,6 +31,8 @@ pub(crate) async fn connect_and_save(
 
     // 2) 若本次未输入 key，则尝试回退：env -> keyring
     // 前端输入 > env > keyring
+    // TODO(CRUD): env → keyring 回退逻辑与 lifecycle/resolver.rs 重复维护，
+    // 后续可提取到 secrets 层统一管理，两处共同调用。
     let fallback_key = if normalized_key.is_empty() {
         secrets::load_provider_key_from_env(provider_id)
             .or_else(|| secrets::load_provider_key(provider_id))

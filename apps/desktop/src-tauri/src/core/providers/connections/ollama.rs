@@ -16,6 +16,7 @@ pub(crate) async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
     let endpoint = format!("{}/api/tags", base);
     info!("[Tauri][Ollama] → {}", endpoint);
 
+    // 每次调用新建 Client；provider 数量少时影响有限，规模扩展后可提升为 OnceLock<Client> 复用连接池。
     let mut request = reqwest::Client::new()
         .get(&endpoint)
         .timeout(std::time::Duration::from_secs(5));
