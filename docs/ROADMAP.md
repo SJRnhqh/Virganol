@@ -69,6 +69,7 @@ settings/provider/
 - `useProviderModelList`：`useShallow` 合并订阅，`every` 简化全选派生，
   `pendingRef` 互斥锁防并发
 - `useProviderStartup`：`failed` phase 映射 `CloudOff` 图标，结构性错误有视觉反馈
+- `useProviderStartup`：bootstrap 失败后立即拆除监听器，防止残留事件覆盖 failed 状态
 
 ### 🚧 Phase 5：交互式 CRUD 链路完善
 
@@ -89,7 +90,7 @@ settings/provider/
   替代宽泛 `string`，支持消费侧穷举匹配
 - [ ] 健康检查错误精细化：网络/认证/超时纳入 `ProviderError` 体系，
   区分不可达与业务"不在线"语义
-- [ ] `ProviderError` — 补 `source()` 错误链或引入 `thiserror`，提升错误溯源能力
+- [ ] `ProviderError` — 补 `source()` 错误链或引入 `thiserror`，提升错误溯源能力（inline TODO 已标记，留待错误精细化阶段统一处理）
 - [ ] 前端适配健康检查细粒度错误展示
 
 ### 🚧 Phase 6：收尾与安全加固
@@ -107,7 +108,7 @@ settings/provider/
 - [x] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
 - [ ] `store.rs` — 评估按 provider 独立 key 存储或脏标记机制，降低 I/O 开销
 - [ ] `reconcile_enabled_models` — 无变更路径避免 `record.clone()`
-- [ ] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
+- [x] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [x] `PROVIDERS_STORE_LOCK` — 评估完成，现有 `static Mutex<()>` 实现自洽，迁移至 `State<Mutex<T>>` 留待架构层统一推进
 
 #### 6.3 生命周期收口
