@@ -1,47 +1,47 @@
 # Repository Guidelines
 
-## 适用范围
+## Scope
 
-- 供 AI 编码代理（如 Codex）与贡献者共同遵循。
-- 作用域：仓库根目录及全部子目录。
+- Applies to AI coding agents (such as Codex) and human contributors.
+- Scope: the repository root and all subdirectories.
 
-## 当前阶段范围
+## Current Phase Scope
 
-- 当前阶段仅关注 **Tauri ↔ React** 的 Provider 生命周期与安全持久化，不涉及 sidecar 新功能。
-- 当前范围仅限 **deepseek** 与 **ollama**。
-- Provider 改动需同时保证生命周期链路与 CRUD 链路一致。
+- The current phase only focuses on the **Tauri ↔ React** provider lifecycle and secure persistence. Sidecar feature work is out of scope.
+- The current scope is limited to **deepseek** and **ollama**.
+- Any provider change must keep the lifecycle flow and CRUD flow consistent.
 
-## 文档导航
+## Documentation Map
 
-- `docs/ARCHITECTURE.md`：系统分层、Landlord-Tenant 模型、跨层职责边界。
-- `docs/ROADMAP.md`：Provider 生命周期中长期演进路线、已完成阶段与后续 phase。
-- `docs/TODO.md`：当前短期冲刺与前端审查顺序；默认按 `store → handlers → hooks → components` 自底向上推进。
-- 涉及字段、事件、命令、状态语义变更时，需同步更新对应文档。
+- `docs/ARCHITECTURE.md`: system layers, the Landlord-Tenant model, and cross-layer responsibility boundaries.
+- `docs/ROADMAP.md`: the medium- and long-term evolution plan for the provider lifecycle, including completed phases and upcoming work.
+- `docs/TODO.md`: the current short-term sprint backlog and frontend review order. By default, progress bottom-up as `store → handlers → hooks → components`.
+- If fields, events, commands, or state semantics change, update the corresponding documentation in the same change.
 
-## 项目结构
+## Project Structure
 
-- `apps/ui/`：React + TS 前端（核心在 `src/features/`）。
-- `apps/desktop/`：Tauri + Rust（`commands/`、`core/`）。
-- `apps/server/`：Go gRPC sidecar（`cmd/agent/`、`internal/`、`pkg/service/`、`proto/`）。
+- `apps/ui/`: React + TypeScript frontend, with most core logic under `src/features/`.
+- `apps/desktop/`: Tauri + Rust desktop runtime, mainly under `commands/` and `core/`.
+- `apps/server/`: Go gRPC sidecar, mainly under `cmd/agent/`, `internal/`, `pkg/service/`, and `proto/`.
 
-## 开发与校验
+## Development And Validation
 
-- `pnpm dev`：启动桌面开发（含 sidecar）。
-- `pnpm dev:ui`：仅启动前端。
-- `bash .github/ci/ui-lint.sh`：前端 lint。
-- `bash .github/ci/go-test.sh`：Go 测试。
-- `bash .github/ci/rust-check.sh`：Rust 检查。
+- `pnpm dev`: start desktop development, including the sidecar.
+- `pnpm dev:ui`: start the frontend only.
+- `bash .github/ci/ui-lint.sh`: run frontend lint checks.
+- `bash .github/ci/go-test.sh`: run Go tests.
+- `bash .github/ci/rust-check.sh`: run Rust checks.
 
-## 代码与提交流程
+## Code And Commit Workflow
 
-- TS/React：2 空格缩进，组件 `PascalCase`，Hook `useXxx`。
-- Rust/Go：遵循语言默认规范（Rust `snake_case`、Go `gofmt`）。
-- Commit 建议：`emoji + type + 小写开头英文描述`（示例：`🔧 fix: ...`）且不需要具体细节。
-- 提交前至少通过 UI lint、Go test、Rust check。
+- TS/React: use 2-space indentation, `PascalCase` for components, and `useXxx` for hooks.
+- Rust/Go: follow the language defaults, including Rust `snake_case` and `gofmt`.
+- Recommended commit format: `emoji + type + lowercase English summary` such as `🔧 fix: ...`, without excessive detail.
+- Before committing, at minimum pass UI lint, Go tests, and Rust checks.
 
-## 安全要求
+## Security Requirements
 
-- 禁止日志输出 API Key/Token。
-- 不通过前端事件或响应回传明文密钥；敏感数据优先在桌面层处理。
-- 不让前端直接直连 Provider；Provider 接入优先经桌面层处理。
-- Provider 改动必须验证 `connect` / `retry` / `reset` / `update_models` 一致性。
+- Never log API keys or tokens.
+- Never return plaintext secrets through frontend events or responses. Sensitive data should be handled in the desktop layer whenever possible.
+- The frontend must not connect to providers directly. Provider access should go through the desktop layer first.
+- Any provider change must verify consistency across `connect`, `retry`, `reset`, and `update_models`.
