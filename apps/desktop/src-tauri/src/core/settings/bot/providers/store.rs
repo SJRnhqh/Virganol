@@ -54,11 +54,11 @@ pub(crate) fn load_supported_providers(
     for (raw_id, record) in providers {
         match ProviderId::try_from(raw_id.as_str()) {
             Ok(provider_id) => supported.push((provider_id, record)),
-            Err(error) => skipped.push(SkippedProviderDetail {
+            Err(error) => skipped.push(SkippedProviderDetail::new(
                 raw_id,
-                code: error.code(),
-                message: error.message(),
-            }),
+                error.code(),
+                error.message(),
+            )),
         }
     }
 

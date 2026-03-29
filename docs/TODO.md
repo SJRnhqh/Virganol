@@ -151,69 +151,29 @@
 
 - `store.rs` 锁声明处补注释，说明后续可评估迁移至 Tauri `State<Mutex<T>>` 统一管理（见 ROADMAP Phase 6.2）。
 
----
+**[TODO-20] 健康检查每次创建新 `reqwest::Client`，无连接复用** ✅
 
-## 后端 · deepseek.rs / ollama.rs
+- 两处 `Client::new()` 上方补注释，说明当前实现自洽，规模扩展后可提升为 `OnceLock<Client>` 复用连接池。
 
-**[TODO-20] 健康检查每次创建新 `reqwest::Client`，无连接复用**
+**[TODO-21] `SkippedProviderDetail` 缺少 `::new()` 构造函数** ✅
 
-- 文件：`apps/desktop/src-tauri/src/core/providers/connections/deepseek.rs` / `ollama.rs`
-- 描述：`deepseek_check` 与 `ollama_check` 每次调用均执行 `reqwest::Client::new()`，不复用连接池。在 runner 并发检查多个 provider 时，会建立多条独立 TCP 连接，增加延迟与系统开销。
-- 建议：将 `reqwest::Client` 提升为模块级 `OnceLock<Client>` 或通过 Tauri `State` 注入共享实例。
-- 优先级：低，当前 provider 数量少影响有限，规模扩展后明显。
+- 补 `impl SkippedProviderDetail { fn new(...) }`，与 `ProviderIssue::new()` 风格统一；`store.rs` 调用方同步更新。
 
----
+**[TODO-22] `ProviderError` 无 `source()` 错误链** ✅
 
-## 后端 · error/skip.rs
+- 属错误精细化处理阶段（Phase 5.2）工作，在 `base.rs` 补 inline TODO 标记，留待统一处理时覆写 `source()` 或引入 `thiserror`。
 
-**[TODO-21] `SkippedProviderDetail` 缺少 `::new()` 构造函数**
+**[TODO-23] `connect_and_save` 内联密钥回退逻辑，与 `resolver.rs` 重复** ✅
 
-- 文件：`apps/desktop/src-tauri/src/core/models/provider/error/skip.rs`
-- 描述：`SkippedProviderDetail` 直接用字段初始化构造，而 `ProviderIssue` 已有 `::new()` 风格，两者不统一。ROADMAP Phase 6.2 已提此项，此处补编号便于追踪。
-- 优先级：低，风格一致性问题。
+- 属 CRUD 链路优化，不在本阶段生命周期查漏补缺范围内；在 `service.rs` 密钥回退处补 inline TODO，说明后续可提取到 `secrets` 层统一管理。
 
----
+**[TODO-24] `ProviderId` 类型宽度与运行时激活集合长期不一致** ✅
 
-## 后端 · error/base.rs
+- 在 `id.ts` 补注释说明类型集合为完整枚举，运行时激活集合由 `constants/PROVIDER_IDS` 另行控制。
 
-**[TODO-22] `ProviderError` 无 `source()` 错误链**
+**[TODO-25] `degraded` 语义未注释，phase 状态机转换路径无类型约束** ✅
 
-- 文件：`apps/desktop/src-tauri/src/core/models/provider/error/base.rs`
-- 描述：`ProviderError` 实现了 `std::error::Error` 但未覆写 `source()`，`Serde` variant 包裹的原始错误无法通过错误链追溯。ROADMAP Phase 5.2 已提「补 `source()` 或引入 `thiserror`」，此处补编号。
-- 优先级：低，影响错误溯源能力，不影响功能正确性。
-
----
-
-## 后端 · service.rs
-
-**[TODO-23] `connect_and_save` 内联密钥回退逻辑，与 `resolver.rs` 重复**
-
-- 文件：`apps/desktop/src-tauri/src/core/settings/bot/providers/service.rs`
-- 描述：`connect_and_save` 内部实现了 `env → keyring` 密钥回退优先级，与 `resolver.rs` 中 `health_check_with_resolved_key` 各自独立维护同一套规则。若优先级逻辑需要调整，须同步修改两处，存在遗漏风险。
-- 建议：将密钥解析逻辑统一收口到 `resolver.rs` 或新建 `secrets` 层统一管理，`service.rs` 调用即可。
-- 优先级：中，可维护性问题，与 TODO-5 关联。
-
----
-
-## 前端 · types/provider/common/id.ts
-
-**[TODO-24] `ProviderId` 类型宽度与运行时激活集合长期不一致**
-
-- 文件：`apps/ui/src/features/bot/types/provider/common/id.ts`
-- 描述：类型层面定义了 10 个 provider，但 `PROVIDER_IDS` 运行时只激活 2 个（ollama / deepseek），其余 8 个被注释掉。接收 `ProviderId` 的函数在类型上必须处理全部 10 个变体，但实际永远不会收到其中 8 个；`byId` 是 `Record<ProviderId, ProviderState>`，对未激活 provider 的键访问类型上合法但运行时返回 `undefined`，类型与运行时不一致。
-- 建议：补注释说明「类型集合是完整枚举，运行时激活集合在 constants/PROVIDER_IDS 中另行控制」；或提供 `isProviderId` 守卫函数用于事件层运行时校验。
-- 优先级：中，存在类型-运行时裂缝，规模扩展时易引发 bug。
-
----
-
-## 前端 · types/provider/state/phase.ts
-
-**[TODO-25] `degraded` 语义未注释，phase 状态机转换路径无类型约束**
-
-- 文件：`apps/ui/src/features/bot/types/provider/state/phase.ts`
-- 描述：`degraded` 表示「部分 provider 检查失败」还是「后端返回降级信号」语义不明，对前端展示逻辑影响大。`CheckTerminalPhase` 与 `TerminalPhase` 的分层设计意图也未注释。此外，状态机的合法转换路径完全隐藏在 store action 和事件处理器中，类型层面无任何约束。
-- 建议：补 JSDoc 说明 `degraded` 的精确语义及各分组类型的设计意图。
-- 优先级：低，功能正确，可读性与可维护性问题。
+- `CheckTerminalPhase` JSDoc 补全 `degraded` 精确语义：流程正常结束但存在部分 provider 连接失败（业务性失败，非结构性错误）。
 
 ---
 
