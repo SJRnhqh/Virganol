@@ -212,91 +212,42 @@
 
 - 合并为按 disposition 区分的单条日志：orphan 路径输出 `console.warn`，current 路径输出 `console.error`，消除语义矛盾。
 
----
+**[TODO-34] `triggerProviderManualRefresh` 调用方无 catch，invoke 失败时产生 unhandled rejection** ✅
 
-## 前端 · services/api/provider/check.ts
+- `triggerProviderManualRefresh` 改为 void 返回，内部 `.catch(() => {})` 静默消化错误；invoke 失败已在 `triggerCheckLifecycle` 的 `.catch` 中 `console.error` 记录，无需二次上抛。startup 路径仍保持 re-throw 供 `useProviderStartup` 感知。
 
-**[TODO-34] `triggerProviderManualRefresh` 调用方无 catch，invoke 失败时产生 unhandled rejection**
+**[TODO-35] `allSelected` 在模型列表为空时返回 `true`，语义误导** ✅
 
-- 文件：`apps/ui/src/features/bot/services/api/provider/check.ts`
-- 描述：`triggerCheckLifecycle` 在 `.catch` 中 re-throw 错误。startup 路径由 `useProviderStartup` 的 `.catch` 承接；但 `triggerProviderManualRefresh` 的调用方（`ProviderTitle` 组件）以 `onClick={() => triggerProviderManualRefresh()}` 调用，未附加 `.catch`，invoke 失败时产生 unhandled promise rejection，用户无任何错误反馈。
-- 建议：在 `ProviderTitle` 调用处补 `.catch` 处理，或在 `triggerProviderManualRefresh` 内部消化错误并通过 store 写入失败状态。
-- 优先级：低，手动刷新失败时用户无感知。
+- 场景不存在：后端 `available_models` 为空时直接返回 `success: false`（见 TODO-28），空 `available` 不会出现在正常链路中，防御性修改无必要。
 
----
+**[TODO-36] 全量回滚逐条调用 `setModelEnabled`，触发 N 次 store 更新** ✅
 
-## 前端 · hooks/provider/useProviderModelList.ts
+- 回滚改为一次性调用 `setProviderModels(providerId, { available: current.available, enabled: previousMap })`，消除逐条更新。
 
-**[TODO-35] `allSelected` 在模型列表为空时返回 `true`，语义误导**
+**[TODO-37] `handleConnect` 未捕获异常，invoke 抛出时卡片永远卡在 PENDING** ✅
 
-- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderModelList.ts`
-- 描述：`available.every((model) => enabled[model])` 在 `available` 为空数组时因 vacuous truth 始终返回 `true`，导致无模型时全选按钮呈现为「已全选」（Minus 图标），语义误导用户。
-- 建议：改为 `available.length > 0 && available.every((model) => enabled[model])`。
-- 优先级：中，存在误导性 UI 状态。
+- 属于 CRUD 链路健壮化范畴，对应 ROADMAP Phase 5.1 异常一致性回归，留待 Phase 5 工作分支处理。
 
-**[TODO-36] 全量回滚逐条调用 `setModelEnabled`，触发 N 次 store 更新**
+**[TODO-38] `handleReset` 表单先清空，后端失败时无回退** ✅
 
-- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderModelList.ts`
-- 描述：`handleToggleAllModels` 失败回滚时对 `current.available` 每个 model 单独调用 `setModelEnabled`，触发 N 次 immer set 和 N 次订阅通知。应一次性还原整个 models 对象，减少不必要的渲染触发。
-- 建议：改为调用 `setProviderModels(providerId, { available: current.available, enabled: previousMap })`，一次批量还原。
-- 优先级：低，功能正确，性能小优化。
+- 属于 CRUD 链路健壮化范畴，对应 ROADMAP Phase 5.1 `reset` 一致性条目，留待 Phase 5 工作分支处理。
 
----
+**[TODO-39] `handleConnect` 成功时总将所有模型重置为启用，覆盖用户已有偏好** ✅
 
-## 前端 · hooks/provider/useProviderConnection.ts
+- 属于 CRUD 链路语义决策，已补入 ROADMAP Phase 5.1：`connect` 重连时模型 enabled 状态全量重置 vs merge 偏好，留待 Phase 5 工作分支处理。
 
-**[TODO-37] `handleConnect` 未捕获异常，invoke 抛出时卡片永远卡在 PENDING**
+**[TODO-40] `response.error || "Connection failed"` 应改为 `??`** ✅
 
-- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderConnection.ts`
-- 描述：`connectAndSaveProvider(...)` 若直接抛出（非返回 `{success: false}`），外层无 try/catch，卡片状态停在 `PENDING` 无法自动恢复，用户无法感知失败也无法重试。`handleRetry` 先清空错误再调 `handleConnect`，同样走此路径，错误已清空但新错误不会写入。
-- 建议：在 `handleConnect` 的 await 外包 try/catch，catch 时写入 `FAILED` 状态与错误信息。
-- 优先级：中，真实可触路径。
+- `||` 改为 `??`，空字符串不再误回退到默认文案。
 
-**[TODO-38] `handleReset` 表单先清空，后端失败时无回退**
+**[TODO-41] `ProviderConnectedPanel` 模型列表为空时无空态 UI** ✅
 
-- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderConnection.ts`
-- 描述：`setProviderForm(PROVIDER_INITIAL_FORMS[...])` 在 `await resetProvider(...)` 之前执行，若后端抛出，表单已被清空但 `cardState` 未回退，用户丢失输入且界面无错误提示。
-- 建议：将表单清空移至 `resetProvider` 成功后执行，或在 catch 中还原表单并写入错误状态。
-- 优先级：中，数据丢失场景。
+- 场景不存在：后端无模型时直接返回 `success: false`，不会进入 CONNECTED 状态（见 TODO-35/TODO-28），防御性 UI 修改无必要。
 
-**[TODO-39] `handleConnect` 成功时总将所有模型重置为启用，覆盖用户已有偏好**
+**[TODO-42] `ProviderResetButton` 缺少 `disabled` prop，重置进行中可重复触发** ✅
 
-- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderConnection.ts`
-- 描述：`enabled` 初始化为 `Object.fromEntries(available_models.map(m => [m, true]))`。在 CONNECTED 状态下重新连接（更新配置），用户之前手动禁用的模型会被静默全部重新启用，用户无感知。
-- 需确认语义：重新连接是否应视为「重新初始化」而全量覆盖，还是应与旧 enabled 状态做 merge 保留用户偏好？
-- 优先级：低，语义未收口。
+- 与 TODO-38 联动，属于 CRUD 链路 UI 保护范畴，已覆盖在 ROADMAP Phase 5.1 `ProviderCardActions` loading 状态条目下，留待 Phase 5 工作分支一并处理。
 
-**[TODO-40] `response.error || "Connection failed"` 应改为 `??`**
+**[TODO-43] `ProviderCardContent` / `ProviderCardActions` switch 无 default 分支** ✅
 
-- 文件：`apps/ui/src/features/bot/hooks/provider/useProviderConnection.ts`
-- 描述：`response.error || "Connection failed"` 在 `response.error` 为空字符串时会错误地回退到默认文案，与 TODO-8 中 adapters 层同类问题一致，应改为 `response.error ?? "Connection failed"` 以准确区分 null/undefined 与空字符串。
-- 优先级：低，潜在语义错误，与 TODO-8 同类。
-
----
-
-## 前端 · components/settings/provider（组件层）
-
-**[TODO-41] `ProviderConnectedPanel` 模型列表为空时无空态 UI**
-
-- 文件：`apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderConnectedPanel.tsx`
-- 描述：`modelItems` 为空时渲染空白的 `divide-y` 容器，无任何占位提示，用户无法判断是加载中还是 provider 确实没有可用模型。
-- 建议：在列表区域补「No models available」空态占位，与 `allSelected` 空数组语义修复（TODO-35）配合。
-- 优先级：低，UX 缺口。
-
----
-
-**[TODO-42] `ProviderResetButton` 缺少 `disabled` prop，重置进行中可重复触发**
-
-- 文件：`apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderResetButton.tsx`
-- 描述：`ProviderResetButton` 无 `disabled` 状态，`handleReset`（TODO-38）进行中用户可再次点击，导致并发发起两次 reset 请求；第二次执行时表单已被第一次清空，状态不一致风险升高。
-- 建议：向 `ProviderResetButton` 传入 `disabled` prop，并在 `ProviderCardActions` 的 CONNECTED/FAILED 分支中，于 reset 进行中将其禁用；或在 `handleReset` 入口加 in-flight 互斥锁。
-- 优先级：中，与 TODO-38 联动，并发重置风险。
-
----
-
-**[TODO-43] `ProviderCardContent` / `ProviderCardActions` switch 无 default 分支**
-
-- 文件：`apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderCardContent.tsx`、`ProviderCardActions.tsx`
-- 描述：两处 switch 均无 `default` 分支，若 `cardState` 出现枚举外的意外值（如后端新增状态、类型断言失误），React 会静默渲染 `undefined`，页面空白且无任何日志提示，调试困难。
-- 建议：各补一个 `default` 分支，返回 `null` 并附 `console.warn`，或用 TypeScript `exhaustive check`（`cardState satisfies never`）在编译期捕获遗漏。
-- 优先级：低，防御性收口。
+- `cardState` 有明确类型约束，枚举外的值在编译期已被拦截，运行时防御冗余，不修。
