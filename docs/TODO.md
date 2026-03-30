@@ -175,83 +175,42 @@
 
 - `CheckTerminalPhase` JSDoc 补全 `degraded` 精确语义：流程正常结束但存在部分 provider 连接失败（业务性失败，非结构性错误）。
 
----
+**[TODO-26] `RunDisposition` 类型定义在 validator 内部，消费方未显式依赖** ✅
 
-## 前端 · validators/runGuard.ts
+- 三值设计动机注释已在 `runGuard.ts` 函数 JSDoc 中完整说明（current / orphan / stale 语义及兜底场景）。
+- 类型提升至统一 types 目录暂缓，待服务层类型边界稳定后统一处理（代码内 TODO 注释已保留追踪）。
 
-**[TODO-26] `RunDisposition` 类型定义在 validator 内部，消费方未显式依赖**
+**[TODO-27] 空字符串 `runId` 未做防御，`"orphan"` 消费者行为不一致** ✅
 
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/validators/runGuard.ts`
-- 描述：`RunDisposition` 类型定义在 validator 层内部（注释已说明是临时决定），但 `check.ts` 消费时只做字符串字面量比较，未显式导入该类型，使类型定义的存在意义降低。`"orphan"` / `"stale"` 分开的设计动机（handleFailed 的 orphan 兜底场景）必须靠阅读调用方才能理解，属于反向依赖。
-- 建议：将 `RunDisposition` 提升到 `types/provider/state/` 统一管理；补注释说明三值区分的设计动机。
-- 优先级：低，功能正确，类型组织与可读性问题。与 ROADMAP Phase 6.3 `RunDisposition` 收口条目关联。
+- 空字符串场景不存在：store 初始值为 `null`，后端 `run_id` 为 UUID，防御无必要。
+- orphan 策略差异已有注释覆盖：`runGuard.ts` JSDoc 说明「仅部分事件允许兜底」，`handleFailed` 的 warn 日志说明 orphan accepted 语义，设计意图可读。
 
-**[TODO-27] 空字符串 `runId` 未做防御，`"orphan"` 消费者行为不一致**
+**[TODO-28] `success: true` 但 `available_models: []` 时与检查失败状态无法区分** ✅
 
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/validators/runGuard.ts`
-- 描述：① `resolveRunDisposition` 接受 `runId: string` 但未对空字符串防御，后端推送 `run_id: ""` 时行为不确定。② `handleProviderStatus` / `handleCompleted` 对 `orphan` 直接丢弃，`handleFailed` 对 `orphan` 接受并继续处理，三种策略完全由调用方自行维护，`resolveRunDisposition` 本身无法表达「哪些事件允许 orphan 兜底」。
-- 建议：① 补 `if (!runId) return "orphan"` 防御空字符串；② 补注释说明 orphan 兜底策略差异的设计依据。
-- 优先级：低，当前链路正确，边界未收口。
+- 后端已在源头消除：Ollama 无模型时直接返回 `success: false`（`"No models available"`），不存在 `success: true` + `available_models: []` 的组合，语义混淆场景不会发生。
+- `config.url` 空字符串静默忽略：后端只将持久化配置原样推回，不会主动下发空字符串清空 URL，`formPatch: undefined` 保持不动是正确行为。
 
----
+**[TODO-29] `isActiveProviderId` 线性扫描，未来扩展时可改为 Set 查找** ✅
 
-**[TODO-28] `success: true` 但 `available_models: []` 时与检查失败状态无法区分**
+- 线性扫描：`PROVIDER_IDS` 当前只有 2 个元素，非热路径，无性能问题，等规模增长再优化。
+- `satisfies` 约束：`constants/provider/common/id.ts` 已有 `as const satisfies readonly ProviderId[]`，新增 `ProviderId` 时若 `PROVIDER_IDS` 未同步更新，TypeScript 编译期即报错，类型安全已覆盖。
 
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/adapters/status.ts`
-- 描述：`health.success === true` 时适配结果若 `available_models` 为空数组，则 `models: { available: [], enabled: {} }` 与 `health.success === false` 时的结果完全相同，UI 层无法区分「健康但无模型」和「检查失败」两种状态。此外，`config.url` 为空字符串时 `formPatch` 为 `undefined`，会静默忽略后端下发的「清空 URL」操作。
-- 需确认：后端是否可能出现 `success: true` + `available_models: []` 的组合？如果是 ollama 无模型的合法状态，需要在适配层区分处理。
-- 优先级：中，存在潜在语义混淆，影响 UI 展示正确性。
+**[TODO-30] 初始化时 `models` 字段跨 provider 共享同一对象引用** ✅
 
----
+- `createInitialById` 中补显式 `models: { available: [], enabled: {} }`，每个 provider 初始化时获得独立对象引用；同步从 `COMMON_INITIAL_STATE` 中移除 `models` 字段，消除死代码。
 
-## 前端 · validators/activeProviderGuard.ts
+**[TODO-31] `setDone` / `setDegraded` 未显式清除 error 字段，隐性依赖 `setChecking` 先行** ✅
 
-**[TODO-29] `isActiveProviderId` 线性扫描，未来扩展时可改为 Set 查找**
+- 生命周期 action 不应孤立调用，`setChecking` 先行是状态机正常链路的固有约束，非隐性依赖。测试应覆盖完整链路而非单个 action，不修。
 
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/validators/activeProviderGuard.ts`
-- 描述：`(PROVIDER_IDS as readonly ProviderId[]).includes(providerId)` 每次调用线性扫描数组。当前 provider 数量极小影响可忽略，但随规模增长会成为热路径瓶颈。同时类型断言将 `readonly ["ollama", "deepseek"]` 宽化为 `readonly ProviderId[]`，若 `ProviderId` 新增值而 `PROVIDER_IDS` 未更新，类型系统不会报错，`satisfies` 约束应在 `constants/id.ts` 处补强。
-- 建议：将 `PROVIDER_IDS` 改为 `Set` 或在 guard 内部构建 `Set`；确认 `satisfies` 约束已覆盖新增 provider 场景。
-- 优先级：低，功能正确，性能与类型安全小优化。
+**[TODO-32] 注册失败回滚时无意义地调用 `disposeCheckPhaseScheduler`** ✅
 
----
+- 无论注册成功或失败，`cleanupRegisteredListeners` 彻底清理所有资源是正确语义，scheduler dispose 对未启动的实例是 no-op，无害。两路复用同一清理函数比拆分更优雅。
+- 同步删除 `listen.ts` 顶部遗留的阶段性 TODO 注释，链路审查已完成。
 
-## 前端 · store/provider/useProviderCollectionStore.ts
+**[TODO-33] `handleFailed` orphan 路径双重日志，级别语义混乱** ✅
 
-**[TODO-30] 初始化时 `models` 字段跨 provider 共享同一对象引用**
-
-- 文件：`apps/ui/src/features/bot/store/provider/useProviderCollectionStore.ts`
-- 描述：`createInitialById` 展开 `COMMON_INITIAL_STATE` 时，`models: { available: [], enabled: {} }` 是浅拷贝，所有 provider 的初始 `models` 字段指向同一个对象。immer 首次 mutation 时会正确创建独立 draft，功能上无 bug；但初始状态下 `byId.deepseek.models === byId.ollama.models` 为 `true`，在测试断言或 store 调试时可能产生混淆。
-- 建议：在 `createInitialById` 中对 `models` 做显式独立初始化：`models: { available: [], enabled: {} }`。
-- 优先级：低，当前功能正确，防御性修缮。
-
----
-
-**[TODO-31] `setDone` / `setDegraded` 未显式清除 error 字段，隐性依赖 `setChecking` 先行**
-
-- 文件：`apps/ui/src/features/bot/store/provider/useProviderCheckStore.ts`
-- 描述：`setDone` / `setDegraded` 只更新 `phase`，不重置 `errorCode` / `errorMessage`。实践中 `setChecking` 总先于两者调用（其内部展开 `emptyCheckState` 会清除 error 字段），功能正确；但若调用顺序变化（如测试直接调 `setDone`），旧 error 状态会残留，属于隐性时序依赖。
-- 建议：`setDone` / `setDegraded` 补显式 `errorCode: null, errorMessage: null`，消除对 `setChecking` 先行的隐式要求。
-- 优先级：低，隐性契约收口。
-
----
-
-## 前端 · services/events/provider/listen.ts
-
-**[TODO-32] 注册失败回滚时无意义地调用 `disposeCheckPhaseScheduler`**
-
-- 文件：`apps/ui/src/features/bot/services/events/provider/listen.ts`
-- 描述：`cleanupRegisteredListeners` 在注册失败回滚路径和组件卸载路径中被复用，其中包含 `disposeCheckPhaseScheduler()`。注册失败时 scheduler 从未被使用过，dispose 是空操作，语义上是噪音；若 scheduler 未来引入初始化副作用，提前 dispose 可能产生预期外影响。
-- 建议：将 `disposeCheckPhaseScheduler()` 从回滚路径中拆分，只在组件卸载清理路径中调用。
-- 优先级：低，当前无副作用，语义收口。
-
----
-
-**[TODO-33] `handleFailed` orphan 路径双重日志，级别语义混乱**
-
-- 文件：`apps/ui/src/features/bot/services/events/provider/handlers/check.ts`
-- 描述：`disposition === "orphan"` 时，第 103 行输出 `console.warn`（orphan failed accepted），第 128 行紧接着又输出 `console.error`（check failed），同一次事件触发两条性质不同的日志。调试时 warn 暗示「边缘但可接受」，error 暗示「严重异常」，两者并存语义矛盾。
-- 建议：orphan 路径只保留 warn，将 `console.error` 限定在 `disposition === "current"` 路径内，或在输出前按 disposition 区分日志级别。
-- 优先级：低，调试体验问题。
+- 合并为按 disposition 区分的单条日志：orphan 路径输出 `console.warn`，current 路径输出 `console.error`，消除语义矛盾。
 
 ---
 

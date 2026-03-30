@@ -98,12 +98,6 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
     return;
   }
 
-  if (disposition === "orphan") {
-    console.warn(
-      `[React] orphan failed accepted without active run: run=${payload.run_id}`,
-    );
-  }
-
   scheduleCheckFailed(
     payload.run_id,
     () => dispatchFailed(payload.code, payload.message, payload.run_id),
@@ -124,7 +118,13 @@ export function handleFailed(payload: ProviderCheckFailedPayload) {
     }
   }
 
-  console.error(
-    `[React] check failed: run=${payload.run_id}, code=${payload.code}, message=${payload.message}`,
-  );
+  if (disposition === "orphan") {
+    console.warn(
+      `[React] check failed (orphan): run=${payload.run_id}, code=${payload.code}, message=${payload.message}`,
+    );
+  } else {
+    console.error(
+      `[React] check failed: run=${payload.run_id}, code=${payload.code}, message=${payload.message}`,
+    );
+  }
 }
