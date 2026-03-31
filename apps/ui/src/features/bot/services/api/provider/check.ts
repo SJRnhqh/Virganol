@@ -34,5 +34,6 @@ export const triggerProviderStartupCheck = (): Promise<void> =>
   triggerCheckLifecycle("trigger_provider_startup_check");
 
 /** 手动刷新触发生命周期检查 */
-export const triggerProviderManualRefresh = (): Promise<void> =>
-  triggerCheckLifecycle("trigger_provider_manual_refresh");
+export const triggerProviderManualRefresh = (): void => {
+  triggerCheckLifecycle("trigger_provider_manual_refresh").catch(() => {});
+};
