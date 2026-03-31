@@ -1,24 +1,24 @@
 # TODO — feat/spirit-crud-buildup
 
-CRUD 链路从用户手势出发，沿请求链向后穿透，再沿响应链向前检查状态回写。
-三条操作（connect / reset / update_models）各自独立走完三段，按顺序推进。
+聚焦 connect 链路的全栈审查与重构。
+以 API 层为轴心：向后穿透后端契约，向前审查前端垂直链路。
+审查过程中发现的问题直接补入对应任务项。
 
 ---
 
-## connect
+## 1. API 层重组
 
-- [ ] 手势层：`ProviderConnectionButton` → `useProviderConnection.onConnect` props 传递与前置状态变更
-- [ ] 请求链：`connectAndSaveProvider` invoke 序列化 → `connect_and_save_provider` 命令入参 → `connect_and_save` 业务逻辑（健康检查 / 密钥处理 / 回滚）→ store 读写
-- [ ] 响应链：response 字段消费完整性 → 成功/失败路径状态回写对称性 → `useProviderCollectionStore` 更新正确性
+- [ ] `services/api/providers.ts` → `services/api/provider/crud.ts`
+- [ ] 更新所有 import 引用
 
-## reset
+## 2. connect 后端审查
 
-- [ ] 手势层：`ProviderResetButton` → `useProviderConnection.onReset` 调用时序与前置状态
-- [ ] 请求链：`resetProvider` invoke → `reset_provider` 命令 → `reset_provider_config` 业务逻辑（config + key 原子性 / 回滚）→ store 读写
-- [ ] 响应链：失败时前端状态回滚一致性
+- [ ] invoke 参数序列化 → `connect_and_save_provider` command 入参契约
+- [ ] `connect_and_save` 业务逻辑：健康检查 / 密钥处理 / 回滚路径
+- [ ] store 读写：`save_provider` / `load_provider_record` 行为
 
-## update_models
+## 3. connect 前端审查
 
-- [ ] 手势层：模型 toggle → `useProviderModelList` 并发互斥与 `pendingRef` 锁逻辑
-- [ ] 请求链：`updateEnabledModels` invoke → `update_enabled_models` 命令 → `update_provider_enabled_models` → store 读写
-- [ ] 响应链：结果反馈缺失（当前仅 console）→ UI 状态同步
+- [ ] `useProviderConnection.onConnect`：调用链与前置状态变更
+- [ ] `useProviderCollectionStore`：成功/失败路径状态回写对称性
+- [ ] 组件 / 类型 / 常量 / 图标配套完整性

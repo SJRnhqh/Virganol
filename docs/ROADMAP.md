@@ -85,7 +85,14 @@ settings/provider/
   覆盖快速切换、持久化失败与重复点击场景
 - [ ] `connect` 重连语义：确认重新连接时模型 enabled 状态是全量重置还是与旧偏好 merge
 
-#### 5.2 错误体系收敛
+#### 5.2 CRUD 链路审查（reset / update_models）
+
+- [ ] reset 后端：invoke `reset_provider` 契约 → `reset_provider_config`（config + key 原子性 / 回滚）→ store 读写
+- [ ] reset 前端：`useProviderConnection.onReset` 调用链 → 失败时前端状态回滚一致性 → 组件 / 类型 / 常量配套
+- [ ] update_models 后端：invoke `update_enabled_models` 契约 → `update_provider_enabled_models` → store 读写
+- [ ] update_models 前端：`useProviderModelList` 调用链（并发互斥 / `pendingRef` 锁）→ 结果反馈补齐 → 组件 / 类型 / 常量配套
+
+#### 5.3 错误体系收敛
 
 - [ ] 前端 `errorCode` 收敛为联合类型 `ProviderErrorCode`，
   替代宽泛 `string`，支持消费侧穷举匹配
