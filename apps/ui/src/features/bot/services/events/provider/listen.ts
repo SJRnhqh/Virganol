@@ -1,7 +1,4 @@
 // apps/ui/src/features/bot/services/events/provider/listen.ts
-// TODO: 当前 listen -> handlers -> schedulers 链路已具备可用功能，
-// 但调度清理边界仍待专项审查。提交当前版本可以作为阶段性结果，
-// 后续需在充分理解整体时序后再决定是否继续收口或回调实现细节。
 // 外部依赖
 import { listen } from "@tauri-apps/api/event";
 

@@ -82,11 +82,9 @@ export const useProviderModelList = (providerId: ProviderId) => {
       const enabledList = next ? [...current.available] : [];
       const ok = await updateEnabledModels(providerId, enabledList);
       if (!ok) {
-        current.available.forEach((model) => {
-          useProviderCollectionStore
-            .getState()
-            .setModelEnabled(providerId, model, previousMap[model] ?? true);
-        });
+        useProviderCollectionStore
+          .getState()
+          .setProviderModels(providerId, { available: current.available, enabled: previousMap });
         console.error(`[React] rollback all models: ${providerId}`);
       }
     } finally {

@@ -14,7 +14,6 @@ import {
 // 单个 Provider 的公共初始状态（除 form 外）
 const COMMON_INITIAL_STATE = {
   cardState: PROVIDER_CARD_STATES.UNSET,
-  models: { available: [], enabled: {} },
   errorMessage: null,
 };
 
@@ -24,6 +23,7 @@ const createInitialById = (): ProviderCollectionState["byId"] => {
     (acc, providerId) => {
       acc[providerId] = {
         ...COMMON_INITIAL_STATE,
+        models: { available: [], enabled: {} },
         form: { ...PROVIDER_INITIAL_FORMS[providerId] },
       };
       return acc;
