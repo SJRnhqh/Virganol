@@ -11,11 +11,17 @@ use crate::core::settings::bot::providers::service::{
     connect_and_save, reset_provider_config, update_provider_enabled_models,
 };
 
+/// Triggers the provider lifecycle check on application startup.
+///
+/// 应用启动时触发 Provider 生命周期检查。
 #[tauri::command]
 pub(crate) async fn trigger_provider_startup_check(app: AppHandle) {
     check_providers_lifecycle(app, ProviderCheckTrigger::Startup).await;
 }
 
+/// Triggers the provider lifecycle check on manual refresh.
+///
+/// 手动刷新时触发 Provider 生命周期检查。
 #[tauri::command]
 pub(crate) async fn trigger_provider_manual_refresh(app: AppHandle) {
     check_providers_lifecycle(app, ProviderCheckTrigger::ManualRefresh).await;

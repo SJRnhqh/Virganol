@@ -8,13 +8,13 @@
 
 ## 1. API 层重组
 
-- [ ] `services/api/providers.ts` → `services/api/provider/crud.ts`
-- [ ] 更新所有 import 引用
+- [x] `services/api/providers.ts` → `services/api/provider/crud.ts`
+- [x] 更新所有 import 引用
 
 ## 2. connect 后端审查
 
-- [ ] invoke 参数序列化 → `connect_and_save_provider` command 入参契约
-- [ ] `connect_and_save` 业务逻辑：健康检查 / 密钥处理 / 回滚路径
+- [x] invoke 参数序列化 → `connect_and_save_provider` command 入参契约（url 简化完成）
+- [ ] `connect_and_save` 业务逻辑：健康检查 / 密钥处理 / 回滚路径（已审查，逻辑完整）
 - [ ] store 读写：`save_provider` / `load_provider_record` 行为
 
 ## 3. connect 前端审查

@@ -14,8 +14,8 @@ use super::provider::ProviderId;
 #[serde(rename_all = "camelCase")]
 pub struct ConnectAndSaveProviderRequest {
     pub provider_id: ProviderId,
-    pub url: Option<String>,
     pub key: String,
+    pub url: Option<String>,
 }
 
 /// 单个 Provider 的持久化记录
