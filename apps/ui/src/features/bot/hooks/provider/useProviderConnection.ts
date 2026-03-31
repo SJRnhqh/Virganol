@@ -50,7 +50,7 @@ export const useProviderConnection = (providerId: ProviderId) => {
       } else {
         store.updateProviderBatch(providerId, {
           cardState: PROVIDER_CARD_STATES.FAILED,
-          errorMessage: response.error || "Connection failed",
+          errorMessage: response.error ?? "Connection failed",
         });
       }
     },

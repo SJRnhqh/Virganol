@@ -1,47 +1,107 @@
-# Repository Guidelines
+# Virganol Development Guidelines
 
-## 适用范围
+Virganol is an AI-native desktop IDE for scientists and engineers, built with a
+React frontend, a Tauri/Rust desktop runtime, and a Go sidecar.
 
-- 供 AI 编码代理（如 Codex）与贡献者共同遵循。
-- 作用域：仓库根目录及全部子目录。
+This document defines Virganol's stable project-level development guidance.
+Feature-specific architecture, roadmap details, and branch task execution
+details should be maintained under `docs/`, not in this file.
 
-## 当前阶段范围
+## Project Structure
 
-- 当前阶段仅关注 **Tauri ↔ React** 的 Provider 生命周期与安全持久化，不涉及 sidecar 新功能。
-- 当前范围仅限 **deepseek** 与 **ollama**。
-- Provider 改动需同时保证生命周期链路与 CRUD 链路一致。
+```txt
+Virganol/
+├── apps/
+│   ├── ui/        # Frontend application
+│   ├── desktop/   # Desktop runtime
+│   └── server/    # Sidecar service
+├── docs/          # Project documentation
+└── README.md
+```
 
-## 文档导航
+## Documentation Responsibilities
 
-- `docs/ARCHITECTURE.md`：系统分层、Landlord-Tenant 模型、跨层职责边界。
-- `docs/ROADMAP.md`：Provider 生命周期中长期演进路线、已完成阶段与后续 phase。
-- `docs/TODO.md`：当前短期冲刺与前端审查顺序；默认按 `store → handlers → hooks → components` 自底向上推进。
-- 涉及字段、事件、命令、状态语义变更时，需同步更新对应文档。
+```txt
+docs/
+├── ARCHITECTURE.md  # System-level architecture overview
+├── CONTRIBUTING.md  # Project-level contribution guide
+├── CHANGELOG.md     # Version-level change history
+├── ROADMAP.md       # Version-level roadmap and progress
+└── TODO.md          # Branch-level task breakdown
+```
 
-## 项目结构
+## Development Workflow
 
-- `apps/ui/`：React + TS 前端（核心在 `src/features/`）。
-- `apps/desktop/`：Tauri + Rust（`commands/`、`core/`）。
-- `apps/server/`：Go gRPC sidecar（`cmd/agent/`、`internal/`、`pkg/service/`、`proto/`）。
+The workflow is defined from coarse to fine: version development, feature
+development, and branch development. Releases are promoted from completed
+publishable development versions, but not every development version becomes a
+release. A version may contain one or more features, and a feature may span one
+or more working branches. Working branches merge into the corresponding feature
+branch first, feature branches merge into the active `version` branch, and the
+`version` branch merges into `dev` only after version-level verification is
+complete.
 
-## 开发与校验
+```txt
+development version
+├── version integration
+│   ├── feature development (repeat per feature as needed)
+│   │   ├── branch development
+│   │   │   └── commits → PR → merge into feature branch
+│   │   ├── feature verification and completion
+│   │   └── merge feature branch into version branch
+│   ├── version verification, docs, and closeout
+│   └── merge version branch into dev
+└── release promotion (when publishable: dev → main)
+```
 
-- `pnpm dev`：启动桌面开发（含 sidecar）。
-- `pnpm dev:ui`：仅启动前端。
-- `bash .github/ci/ui-lint.sh`：前端 lint。
-- `bash .github/ci/go-test.sh`：Go 测试。
-- `bash .github/ci/rust-check.sh`：Rust 检查。
+### Version Development Lifecycle
 
-## 代码与提交流程
+- A development version should start from `dev` and use a dedicated `version`
+  management branch.
+- Each development version should be defined by `ROADMAP.md`, including scope,
+  planned features, progress, and next steps.
+- A development version may contain one or more `feat/*` branches, each of
+  which should complete its own feature lifecycle before merging back into the
+  active `version` branch.
+- A development version is complete only after its planned feature work,
+  version-level validation, and relevant documentation updates, including
+  `ROADMAP.md` and `CHANGELOG.md`, are finished.
+- A completed `version` branch should merge back into `dev`.
 
-- TS/React：2 空格缩进，组件 `PascalCase`，Hook `useXxx`。
-- Rust/Go：遵循语言默认规范（Rust `snake_case`、Go `gofmt`）。
-- Commit 建议：`emoji + type + 小写开头英文描述`（示例：`🔧 fix: ...`）且不需要具体细节。
-- 提交前至少通过 UI lint、Go test、Rust check。
+### Feature Development Lifecycle
 
-## 安全要求
+- A feature should start from the active `version` branch and use a dedicated
+  `feat/*` integration branch.
+- Each feature should follow the scoped intent defined by the active
+  `ROADMAP.md`.
+- A feature may use one or more working branches as needed, but branch-level
+  execution details belong to the branch lifecycle.
+- A feature is complete only after its scoped implementation, end-to-end
+  validation, test coverage, and relevant updates are finished.
+- A completed `feat/*` branch should merge back into the active `version`
+  branch through PR.
 
-- 禁止日志输出 API Key/Token。
-- 不通过前端事件或响应回传明文密钥；敏感数据优先在桌面层处理。
-- 不让前端直接直连 Provider；Provider 接入优先经桌面层处理。
-- Provider 改动必须验证 `connect` / `retry` / `reset` / `update_models` 一致性。
+### Working Branch Development Lifecycle
+
+- A working branch should start from the active `feat/*` branch and stay
+  narrowly scoped to one task or one coherent change set.
+- Working branches may use names such as `feat/<feature>-<task>`, depending on the change
+  type.
+- `TODO.md` should track the active branch-level tasks while the working branch
+  is in progress.
+- A working branch is complete only after its scoped implementation,
+  validation, and necessary updates are finished.
+- A completed working branch should merge back into the corresponding `feat/*`
+  branch through PR.
+- Commit messages should stay short and consistent, using `emoji + type +
+  lowercase English summary`.
+
+### Release Lifecycle
+
+- A release should begin only from a completed and publishable state in `dev`.
+- Each release should be documented by the relevant `CHANGELOG.md`,
+  validation results, and release notes before promotion.
+- A release is complete only after the approved state is merged from `dev`
+  into `main`.
+- `main` should reflect release history only, while `dev` remains the rolling
+  development line after release.

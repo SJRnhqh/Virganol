@@ -83,6 +83,7 @@ settings/provider/
   操作期间补 pending UI 保护，防止重复触发
 - [ ] `update_models` / `reset` / `retry` 异常一致性回归，
   覆盖快速切换、持久化失败与重复点击场景
+- [ ] `connect` 重连语义：确认重新连接时模型 enabled 状态是全量重置还是与旧偏好 merge
 
 #### 5.2 错误体系收敛
 
