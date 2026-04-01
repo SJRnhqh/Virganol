@@ -5,8 +5,9 @@ use std::sync::Mutex;
 use tauri::AppHandle;
 
 // 内部引用
+use crate::core::bot::models::provider::ProviderId;
 use crate::core::models::provider::error::{ProviderError, SkippedProviderDetail};
-use crate::core::models::provider::{ProviderId, SupportedProvidersSnapshot};
+use crate::core::models::provider::SupportedProvidersSnapshot;
 use crate::core::models::settings::ProviderRecord;
 use crate::core::settings::store::{load_settings, load_settings_strict, save_settings};
 

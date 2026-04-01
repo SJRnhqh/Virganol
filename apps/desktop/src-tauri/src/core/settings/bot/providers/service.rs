@@ -5,7 +5,7 @@ use tauri::AppHandle;
 
 // 内部引用
 use super::store::{load_provider_record, remove_provider, save_provider, update_models};
-use crate::core::models::provider::ProviderId;
+use crate::core::bot::models::provider::ProviderId;
 use crate::core::settings::secrets;
 
 // === 交互流程：响应前端LLM供应商与模型CRUD === //

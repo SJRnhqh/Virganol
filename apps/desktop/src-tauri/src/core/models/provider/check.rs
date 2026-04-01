@@ -4,8 +4,8 @@ use serde::{Deserialize, Serialize};
 
 // 内部引用
 use crate::core::bot::models::provider::connection::HealthCheckResponse;
+use crate::core::bot::models::provider::ProviderId;
 use crate::core::models::provider::error::{ProviderErrorCode, ProviderIssue};
-use crate::core::models::provider::id::ProviderId;
 use crate::core::models::security::ProviderSecretMeta;
 use crate::core::models::settings::ProviderRecord;
 

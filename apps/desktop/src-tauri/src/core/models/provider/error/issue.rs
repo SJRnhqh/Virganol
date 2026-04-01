@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 // 内部引用
 use super::code::ProviderErrorCode;
-use crate::core::models::provider::id::ProviderId;
+use crate::core::bot::models::provider::ProviderId;
 
 /// 一条 Provider 级问题（严格绑定具体 provider，不允许 None）。
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]

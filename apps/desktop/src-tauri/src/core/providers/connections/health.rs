@@ -1,5 +1,5 @@
 use crate::core::bot::models::provider::connection::HealthCheckResponse;
-use crate::core::models::provider::ProviderId;
+use crate::core::bot::models::provider::ProviderId;
 use crate::core::providers::registry;
 
 /// connections 层统一健康检查入口

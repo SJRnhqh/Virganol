@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/models/provider/id.rs
+// apps/desktop/src-tauri/src/core/bot/models/provider/id.rs
 // 外部依赖
 use serde::{Deserialize, Serialize};
 use std::fmt;
