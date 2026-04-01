@@ -1,7 +1,6 @@
 // apps/desktop/src-tauri/src/core/settings/bot/providers/snapshot.rs
 // 内部引用
-use super::error::SkippedProviderDetail;
-use crate::core::bot::models::provider::ProviderId;
+use crate::core::bot::models::provider::{ProviderId, SkippedProviderDetail};
 use crate::core::models::settings::ProviderRecord;
 
 /// 启动检查用的 Provider 加载结果（已完成 provider_id 类型收敛）

@@ -4,7 +4,7 @@ use tauri::AppHandle;
 use tauri_plugin_store::StoreExt;
 
 // 内部引用
-use crate::core::models::provider::error::ProviderError;
+use crate::core::bot::models::provider::ProviderError;
 
 pub(crate) const SETTINGS_STORE_FILE: &str = "settings.json";
 
