@@ -16,39 +16,33 @@ use crate::core::settings::secrets;
 pub(crate) async fn connect_and_save(
     app: &AppHandle,
     provider_id: ProviderId,
-    url: &str,
     key: &str,
+    url: &str,
 ) -> HealthCheckResponse {
     // 1) 先归一化前端传入的 key（去掉首尾空白）
     let normalized_key = key.trim();
-    // 若本次输入了新 key，先记录旧 key 快照，用于后续异常回滚
-    let previous_persisted_key = if normalized_key.is_empty() {
-        None
-    } else {
-        secrets::load_provider_key(provider_id)
-    };
+    // 无条件记录旧 key 快照，用于后续异常回滚
+    let previous_persisted_key = secrets::load_provider_key(provider_id);
 
-    // 2) 若本次未输入 key，则尝试回退：env -> keyring
-    // 前端输入 > env > keyring
-    // TODO(CRUD): env → keyring 回退逻辑与 lifecycle/resolver.rs 重复维护，
-    // 后续可提取到 secrets 层统一管理，两处共同调用。
-    let fallback_key = if normalized_key.is_empty() {
+    // 2) 密钥解析：若未输入则尝试回退 (env -> keyring)，否则使用当前输入
+    let resolved_key_guard = if normalized_key.is_empty() {
         secrets::load_provider_key_from_env(provider_id)
             .or_else(|| secrets::load_provider_key(provider_id))
     } else {
         None
     };
-    // 3) 最终用于健康检查的 key：优先 fallback，其次当前输入（可能为空）
-    let key_for_check = fallback_key
-        .as_ref()
-        .map(|resolved| resolved.as_str())
-        .unwrap_or(normalized_key);
-    // 4) 用解析后的 key 执行健康检查
-    let result = health::health_check(provider_id, url, key_for_check).await;
+
+    // 3) 用解析后的密钥执行健康检查
+    let result = health::health_check(
+        provider_id,
+        url,
+        resolved_key_guard.as_ref().map(|k| k.as_str()).unwrap_or(normalized_key)
+    ).await;
 
     if result.success {
         if !normalized_key.is_empty() {
-            if let Err(error_msg) = secrets::save_provider_key(provider_id, key_for_check) {
+            // 决定要保存的 Key：如果是用户显式输入的，由于 health_check 已过，直接存 normalized_key
+            if let Err(error_msg) = secrets::save_provider_key(provider_id, normalized_key) {
                 error!(
                     "[Tauri] ❌ {} key persist failed: {}",
                     provider_id, error_msg

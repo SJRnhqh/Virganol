@@ -4,7 +4,7 @@ use tauri::AppHandle;
 
 // 内部引用
 use crate::core::bot::models::{ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderId};
-use crate::core::bot::services::settings::provider::crud::connect_and_save;
+use crate::core::bot::services::connect_and_save;
 use crate::core::models::provider::check::ProviderCheckTrigger;
 use crate::core::settings::bot::providers::lifecycle::flow::check_providers_lifecycle;
 use crate::core::settings::bot::providers::service::{
@@ -34,7 +34,7 @@ pub(crate) async fn connect_and_save_provider(
     payload: ConnectAndSaveProviderRequest,
 ) -> HealthCheckResponse {
     let url = payload.url.as_deref().unwrap_or("");
-    connect_and_save(&app, payload.provider_id, url, &payload.key).await
+    connect_and_save(&app, payload.provider_id, &payload.key, url).await
 }
 
 /// 前端点击删除时调用：移除一个 Provider 配置

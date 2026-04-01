@@ -1,3 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/mod.rs
 // 导出内容
-pub(crate) mod provider;
+mod provider;
+
+pub(crate) use provider::connect_and_save;
