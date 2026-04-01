@@ -3,7 +3,7 @@
 use tauri::{AppHandle, Emitter};
 
 // 内部引用
-use crate::core::bot::models::HealthCheckResponse;
+use crate::core::bot::models::provider::connection::HealthCheckResponse;
 use crate::core::models::provider::check::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
     ProviderCheckTrigger, ProviderStatusPayload,

@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/bot/models.rs
+// apps/desktop/src-tauri/src/core/bot/models/provider/connection.rs
 // 外部依赖
 use serde::{Deserialize, Serialize};
 

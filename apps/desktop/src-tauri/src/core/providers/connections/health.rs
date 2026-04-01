@@ -1,4 +1,4 @@
-use crate::core::bot::models::HealthCheckResponse;
+use crate::core::bot::models::provider::connection::HealthCheckResponse;
 use crate::core::models::provider::ProviderId;
 use crate::core::providers::registry;
 

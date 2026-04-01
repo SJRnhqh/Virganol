@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/resolver.rs
 // 内部引用
-use crate::core::bot::models::HealthCheckResponse;
+use crate::core::bot::models::provider::connection::HealthCheckResponse;
 use crate::core::models::provider::ProviderId;
 use crate::core::models::security::{ProviderKeySource, ProviderSecretMeta};
 use crate::core::providers::connections::health;

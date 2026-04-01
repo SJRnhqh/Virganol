@@ -3,7 +3,7 @@
 use log::{debug, error, info};
 
 // 内部引用
-use crate::core::bot::models::HealthCheckResponse;
+use crate::core::bot::models::provider::connection::HealthCheckResponse;
 
 const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
 
