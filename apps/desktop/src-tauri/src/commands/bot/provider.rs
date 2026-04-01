@@ -1,11 +1,11 @@
-// apps/desktop/src-tauri/src/commands/settings.rs
+// apps/desktop/src-tauri/src/commands/bot/provider.rs
 // 外部依赖
 use tauri::AppHandle;
 
 // 内部引用
+use crate::core::bot::models::{ConnectAndSaveProviderRequest, HealthCheckResponse};
 use crate::core::models::provider::check::ProviderCheckTrigger;
 use crate::core::models::provider::ProviderId;
-use crate::core::models::settings::{ConnectAndSaveProviderRequest, HealthCheckResponse};
 use crate::core::settings::bot::providers::lifecycle::flow::check_providers_lifecycle;
 use crate::core::settings::bot::providers::service::{
     connect_and_save, reset_provider_config, update_provider_enabled_models,
