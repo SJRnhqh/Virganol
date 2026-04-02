@@ -6,8 +6,9 @@ use tokio::task::JoinSet;
 
 // 内部引用
 use super::{events, processor, resolver};
-use crate::core::bot::models::provider::{ProviderError, ProviderId, ProviderIssue};
-use crate::core::models::settings::ProviderRecord;
+use crate::core::bot::models::provider::{
+    ProviderError, ProviderId, ProviderIssue, ProviderRecord,
+};
 
 /// 并发健康检查最大并发度
 const CHECK_CONCURRENCY_LIMIT: usize = 4;

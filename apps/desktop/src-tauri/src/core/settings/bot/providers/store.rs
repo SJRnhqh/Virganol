@@ -5,10 +5,10 @@ use std::sync::Mutex;
 use tauri::AppHandle;
 
 // 内部引用
-use crate::core::bot::models::provider::ProviderId;
-use crate::core::bot::models::provider::{ProviderError, SkippedProviderDetail};
+use crate::core::bot::models::provider::{
+    ProviderError, ProviderId, ProviderRecord, SkippedProviderDetail,
+};
 use crate::core::models::provider::SupportedProvidersSnapshot;
-use crate::core::models::settings::ProviderRecord;
 use crate::core::settings::store::{load_settings, load_settings_strict, save_settings};
 
 const STORE_KEY_SPIRIT_PROVIDERS: &str = "spirit.providers";

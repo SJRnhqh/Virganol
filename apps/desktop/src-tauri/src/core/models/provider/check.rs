@@ -4,10 +4,9 @@ use serde::{Deserialize, Serialize};
 
 // 内部引用
 use crate::core::bot::models::provider::{
-    HealthCheckResponse, ProviderErrorCode, ProviderId, ProviderIssue,
+    HealthCheckResponse, ProviderErrorCode, ProviderId, ProviderIssue, ProviderRecord,
 };
 use crate::core::models::security::ProviderSecretMeta;
-use crate::core::models::settings::ProviderRecord;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]

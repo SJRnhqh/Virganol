@@ -16,6 +16,7 @@
 - [x] 目录结构重构：核心逻辑向 `core/bot/{models, services}` 迁移内聚
 - [x] invoke 参数序列化 → `connect_and_save_provider` command 入参契约（url 简化完成）
 - [x] `ProviderError` 迁移重构：从旧位置迁移至 `core/bot/models/provider/error/` 目录
+- [x] `ProviderRecord` 迁移重构：从 `core/models/settings.rs` 迁移至 `core/bot/models/provider/record.rs`
 - [x] `connect_and_save` 业务逻辑深度审查：
   - [x] 密钥解析中间变量简化（消灭 `key_for_check`）
   - [x] 快照改为有条件（仅用户显式输入 key 时记录，与回滚条件对称）
@@ -26,6 +27,7 @@
   - [ ] 密钥回退逻辑（env -> keyring）与 `lifecycle/resolver.rs` 的重复性评估
     - [ ] TODO: 考察 `secrets` 层函数重构，以消灭 `resolved_key_guard` 的显式 `None` 分支
 - [ ] store 读写：`save_provider` / `load_provider_record` 行为
+  - [ ] 实现 provider 级别锁，串行化同一 provider 的 connect 流程，避免高并发下状态互相覆盖
 
 ## 3. connect 前端审查
 

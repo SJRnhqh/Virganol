@@ -2,4 +2,6 @@
 // 导出内容
 pub(crate) mod provider;
 
-pub use provider::{ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderId};
+pub use provider::{
+    ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderId, ProviderRecord,
+};

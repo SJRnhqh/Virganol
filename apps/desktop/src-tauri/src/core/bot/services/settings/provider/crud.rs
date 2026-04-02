@@ -4,8 +4,7 @@ use log::{error, info};
 use tauri::AppHandle;
 
 // 内部引用
-use crate::core::bot::models::{HealthCheckResponse, ProviderId};
-use crate::core::models::settings::ProviderRecord;
+use crate::core::bot::models::{HealthCheckResponse, ProviderId, ProviderRecord};
 use crate::core::providers::connections::health;
 use crate::core::settings::bot::providers::store::{load_provider_record, save_provider};
 use crate::core::settings::bot::providers::utils::compute_enabled_models;
@@ -41,8 +40,12 @@ pub(crate) async fn connect_and_save(
     let result = health::health_check(
         provider_id,
         normalized_url,
-        resolved_key_guard.as_ref().map(|k| k.as_str()).unwrap_or(normalized_key)
-    ).await;
+        resolved_key_guard
+            .as_ref()
+            .map(|k| k.as_str())
+            .unwrap_or(normalized_key),
+    )
+    .await;
 
     if result.success {
         if !normalized_key.is_empty() {
@@ -80,7 +83,7 @@ pub(crate) async fn connect_and_save(
             },
             enabled_models: next_enabled_models,
         };
-        
+
         if let Err(error_msg) = save_provider(app, provider_id, &record) {
             error!(
                 "[Tauri] ❌ {} provider config persist failed: {}",

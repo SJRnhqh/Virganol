@@ -1,5 +1,5 @@
-// apps/core/models/settings.rs
-// 外部方法
+// apps/desktop/src-tauri/src/core/bot/models/provider/record.rs
+// 外部依赖
 use serde::{Deserialize, Serialize};
 
 /// 单个 Provider 的持久化记录
