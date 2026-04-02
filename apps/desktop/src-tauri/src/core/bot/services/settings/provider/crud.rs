@@ -5,8 +5,8 @@ use tauri::AppHandle;
 
 // 内部引用
 use super::compute_enabled_models;
+use super::health_check;
 use crate::core::bot::models::{HealthCheckResponse, ProviderId, ProviderRecord};
-use crate::core::providers::connections::health;
 use crate::core::settings::bot::providers::store::{load_provider_record, save_provider};
 use crate::core::settings::secrets;
 
@@ -37,7 +37,7 @@ pub(crate) async fn connect_and_save(
     };
 
     // 3) 用解析后的密钥执行健康检查
-    let result = health::health_check(
+    let result = health_check(
         provider_id,
         normalized_url,
         resolved_key_guard
