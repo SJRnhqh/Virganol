@@ -4,10 +4,10 @@ use log::{error, info};
 use tauri::AppHandle;
 
 // 内部引用
+use super::compute_enabled_models;
 use crate::core::bot::models::{HealthCheckResponse, ProviderId, ProviderRecord};
 use crate::core::providers::connections::health;
 use crate::core::settings::bot::providers::store::{load_provider_record, save_provider};
-use crate::core::settings::bot::providers::utils::compute_enabled_models;
 use crate::core::settings::secrets;
 
 /// 接入并持久化：health_check 成功后自动保存配置

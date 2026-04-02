@@ -19,6 +19,7 @@
 - [x] `ProviderRecord` 迁移重构：从 `core/models/settings.rs` 迁移至 `core/bot/models/provider/record.rs`
 - [x] `ProviderKey` 迁移重构：从 `core/security/provider.rs` 迁移至 `core/bot/models/provider/key.rs`
 - [x] Keyring 命名空间常量上提：统一收口到 `core/bot/constants/keyring.rs`
+- [x] `compute_enabled_models` 迁移重构：收口到 `core/bot/services/settings/provider/selection.rs` 并统一调用入口
 - [x] `connect_and_save` 业务逻辑深度审查：
   - [x] 密钥解析中间变量简化（消灭 `key_for_check`）
   - [x] 快照改为有条件（仅用户显式输入 key 时记录，与回滚条件对称）

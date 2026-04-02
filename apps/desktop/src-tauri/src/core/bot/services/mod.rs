@@ -2,4 +2,4 @@
 // 导出内容
 mod settings;
 
-pub(crate) use settings::connect_and_save;
+pub(crate) use settings::{compute_enabled_models, connect_and_save};

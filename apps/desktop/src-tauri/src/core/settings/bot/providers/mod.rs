@@ -3,4 +3,3 @@
 pub(crate) mod lifecycle;
 pub(crate) mod service;
 pub(crate) mod store;
-pub(crate) mod utils;
