@@ -3,5 +3,5 @@
 pub(crate) mod provider;
 
 pub use provider::{
-    ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderId, ProviderRecord,
+    ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderId, ProviderKey, ProviderRecord,
 };

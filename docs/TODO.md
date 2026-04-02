@@ -17,6 +17,8 @@
 - [x] invoke 参数序列化 → `connect_and_save_provider` command 入参契约（url 简化完成）
 - [x] `ProviderError` 迁移重构：从旧位置迁移至 `core/bot/models/provider/error/` 目录
 - [x] `ProviderRecord` 迁移重构：从 `core/models/settings.rs` 迁移至 `core/bot/models/provider/record.rs`
+- [x] `ProviderKey` 迁移重构：从 `core/security/provider.rs` 迁移至 `core/bot/models/provider/key.rs`
+- [x] Keyring 命名空间常量上提：统一收口到 `core/bot/constants/keyring.rs`
 - [x] `connect_and_save` 业务逻辑深度审查：
   - [x] 密钥解析中间变量简化（消灭 `key_for_check`）
   - [x] 快照改为有条件（仅用户显式输入 key 时记录，与回滚条件对称）
