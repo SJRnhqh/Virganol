@@ -19,10 +19,15 @@ pub(crate) async fn connect_and_save(
     key: &str,
     url: &str,
 ) -> HealthCheckResponse {
-    // 1) 先归一化前端传入的 key（去掉首尾空白）
+    // 1) 归一化前端传入的 key 和 url（去掉首尾空白）
     let normalized_key = key.trim();
-    // 无条件记录旧 key 快照，用于后续异常回滚
-    let previous_persisted_key = secrets::load_provider_key(provider_id);
+    let normalized_url = url.trim();
+    // 用户显式输入了 key 时，记录旧 key 快照用于后续异常回滚
+    let previous_persisted_key = if !normalized_key.is_empty() {
+        secrets::load_provider_key(provider_id)
+    } else {
+        None
+    };
 
     // 2) 密钥解析：若未输入则尝试回退 (env -> keyring)，否则使用当前输入
     let resolved_key_guard = if normalized_key.is_empty() {
@@ -35,7 +40,7 @@ pub(crate) async fn connect_and_save(
     // 3) 用解析后的密钥执行健康检查
     let result = health::health_check(
         provider_id,
-        url,
+        normalized_url,
         resolved_key_guard.as_ref().map(|k| k.as_str()).unwrap_or(normalized_key)
     ).await;
 
@@ -50,8 +55,9 @@ pub(crate) async fn connect_and_save(
                 return HealthCheckResponse::fail("Failed to persist provider key");
             }
         } else {
+            // 用户未显式输入 key：来源可能是 env / keyring / 无需密钥，均无需持久化
             info!(
-                "[Tauri] ⏭️ {} skip key persist: using env or existing key",
+                "[Tauri] ⏭️ {} skip key persist: no user-supplied key",
                 provider_id
             );
         }
@@ -66,15 +72,15 @@ pub(crate) async fn connect_and_save(
         };
 
         // 健康检查通过，持久化写入配置
-        let trimmed_url = url.trim();
         let record = ProviderRecord {
-            url: if trimmed_url.is_empty() {
+            url: if normalized_url.is_empty() {
                 None
             } else {
-                Some(trimmed_url.to_string())
+                Some(normalized_url.to_string())
             },
             enabled_models: next_enabled_models,
         };
+        
         if let Err(error_msg) = save_provider(app, provider_id, &record) {
             error!(
                 "[Tauri] ❌ {} provider config persist failed: {}",
