@@ -118,6 +118,7 @@ settings/provider/
 - [ ] `reconcile_enabled_models` — 无变更路径避免 `record.clone()`
 - [x] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [x] `PROVIDERS_STORE_LOCK` — 评估完成，现有 `static Mutex<()>` 实现自洽，迁移至 `State<Mutex<T>>` 留待架构层统一推进
+- [ ] `core/bot/models` 可见性收紧 — 完成 lifecycle 链路迁移后，将领域内部类型（`ProviderKey` / `ProviderRecord` / `ProviderIssue` / `SkippedProviderDetail`）从 `pub` 收紧为 `pub(crate)`，仅保留跨层契约类型（`ConnectAndSaveProviderRequest` / `HealthCheckResponse` / `ProviderId` / `ProviderError`）为 `pub`
 
 #### 6.3 生命周期收口
 

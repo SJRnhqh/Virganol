@@ -46,6 +46,10 @@
   - [x] 模块导出链路：`key.rs → provider/mod.rs → settings/mod.rs → services/mod.rs`
   - [x] 所有调用方引用路径更新，旧路径 `core::settings::secrets` 完全清除
   - [x] 可见性统一：所有函数 `pub(crate)`，通过 mod re-export 有限暴露
+- [x] `SupportedProvidersSnapshot` 迁移重构：
+  - [x] 类型迁移：`core/models/provider/snapshot.rs` → `core/bot/models/provider/snapshot.rs`
+  - [x] 导入路径更新：`persistence.rs` 改为从 `core::bot::models` 导入
+  - [x] 旧文件清理：删除 `core/models/provider/snapshot.rs`
 - [ ] 密钥解析逻辑优化（待评估）：
   - [ ] 密钥回退逻辑（env -> keyring）与 `lifecycle/resolver.rs` 的重复性评估
   - [ ] 考察 `key` 层函数重构，以消灭 `resolved_key_guard` 的显式 `None` 分支

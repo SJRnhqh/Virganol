@@ -7,8 +7,9 @@ use tauri::AppHandle;
 // 内部引用
 use super::super::{load_settings, load_settings_strict, save_settings};
 use crate::core::bot::constants::SPIRIT_PROVIDERS_KEY;
-use crate::core::bot::models::{ProviderError, ProviderId, ProviderRecord, SkippedProviderDetail};
-use crate::core::models::provider::SupportedProvidersSnapshot;
+use crate::core::bot::models::{
+    ProviderError, ProviderId, ProviderRecord, SkippedProviderDetail, SupportedProvidersSnapshot,
+};
 
 // 写操作互斥锁；后续可评估迁移至 Tauri State<Mutex<T>> 统一管理生命周期（见 ROADMAP Phase 6.2）。
 static PROVIDERS_STORE_LOCK: Mutex<()> = Mutex::new(());
