@@ -39,12 +39,12 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            // Settings持久化设置的命令
-            commands::settings::trigger_provider_startup_check,
-            commands::settings::trigger_provider_manual_refresh,
-            commands::settings::connect_and_save_provider,
-            commands::settings::reset_provider,
-            commands::settings::update_enabled_models,
+            // Bot Provider 相关的命令
+            commands::bot::provider::trigger_provider_startup_check,
+            commands::bot::provider::trigger_provider_manual_refresh,
+            commands::bot::provider::connect_and_save_provider,
+            commands::bot::provider::reset_provider,
+            commands::bot::provider::update_enabled_models,
             // SSH 命令
             tmp::ssh::test_ssh_params,
             // PTY 命令

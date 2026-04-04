@@ -1,23 +1,23 @@
-// apps/desktop/src-tauri/src/core/settings/bot/providers/store.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/persistence.rs
 // 外部依赖
 use std::collections::HashMap;
 use std::sync::Mutex;
 use tauri::AppHandle;
 
 // 内部引用
-use crate::core::models::provider::error::{ProviderError, SkippedProviderDetail};
-use crate::core::models::provider::{ProviderId, SupportedProvidersSnapshot};
-use crate::core::models::settings::ProviderRecord;
-use crate::core::settings::store::{load_settings, load_settings_strict, save_settings};
+use super::super::{load_settings, load_settings_strict, save_settings};
+use crate::core::bot::constants::SPIRIT_PROVIDERS_KEY;
+use crate::core::bot::models::{
+    ProviderError, ProviderId, ProviderRecord, SkippedProviderDetail, SupportedProvidersSnapshot,
+};
 
-const STORE_KEY_SPIRIT_PROVIDERS: &str = "spirit.providers";
 // 写操作互斥锁；后续可评估迁移至 Tauri State<Mutex<T>> 统一管理生命周期（见 ROADMAP Phase 6.2）。
 static PROVIDERS_STORE_LOCK: Mutex<()> = Mutex::new(());
 
 /// 读取所有已保存的 providers
 /// 返回 HashMap<provider_id_string, ProviderRecord>
 fn load_all_providers(app: &AppHandle) -> HashMap<String, ProviderRecord> {
-    load_settings(app, STORE_KEY_SPIRIT_PROVIDERS)
+    load_settings(app, SPIRIT_PROVIDERS_KEY)
         .and_then(|value| serde_json::from_value(value).ok())
         .unwrap_or_default()
 }
@@ -31,7 +31,7 @@ fn load_all_providers_strict(
     app: &AppHandle,
 ) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
     // 如果加载配置出错则上抛对应错误
-    let maybe_value = load_settings_strict(app, STORE_KEY_SPIRIT_PROVIDERS)?;
+    let maybe_value = load_settings_strict(app, SPIRIT_PROVIDERS_KEY)?;
     let Some(value) = maybe_value else {
         return Ok(HashMap::new());
     };
@@ -41,7 +41,7 @@ fn load_all_providers_strict(
     Ok(providers)
 }
 
-/// 读取并过滤为”后端当前支持”的 provider 列表（startup_check 专用）
+/// 读取并过滤为"后端当前支持"的 provider 列表（startup_check 专用）
 pub(crate) fn load_supported_providers(
     app: &AppHandle,
 ) -> Result<SupportedProvidersSnapshot, ProviderError> {
@@ -87,7 +87,7 @@ pub(crate) fn save_provider(
     provider_id: ProviderId,
     record: &ProviderRecord,
 ) -> Result<(), ProviderError> {
-    // 锁住整个“读取 -> 修改 -> 写回”事务，避免并发写入互相覆盖
+    // 锁住整个"读取 -> 修改 -> 写回"事务，避免并发写入互相覆盖
     let _guard = PROVIDERS_STORE_LOCK
         .lock()
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
@@ -97,7 +97,7 @@ pub(crate) fn save_provider(
     providers.insert(provider_name.to_string(), record.clone());
 
     let value = serde_json::to_value(&providers)?;
-    save_settings(app, STORE_KEY_SPIRIT_PROVIDERS, value)
+    save_settings(app, SPIRIT_PROVIDERS_KEY, value)
 }
 
 /// 删除某个 provider 的配置
@@ -108,7 +108,7 @@ pub(crate) fn remove_provider(
     app: &AppHandle,
     provider_id: ProviderId,
 ) -> Result<bool, ProviderError> {
-    // 锁住整个“读取 -> 修改 -> 写回”事务，确保删除与其他写操作顺序一致
+    // 锁住整个"读取 -> 修改 -> 写回"事务，确保删除与其他写操作顺序一致
     let _guard = PROVIDERS_STORE_LOCK
         .lock()
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
@@ -122,7 +122,7 @@ pub(crate) fn remove_provider(
     }
 
     let value = serde_json::to_value(&providers)?;
-    save_settings(app, STORE_KEY_SPIRIT_PROVIDERS, value)?;
+    save_settings(app, SPIRIT_PROVIDERS_KEY, value)?;
     Ok(true)
 }
 
@@ -135,7 +135,7 @@ pub(crate) fn update_models(
     provider_id: ProviderId,
     enabled_models: Vec<String>,
 ) -> Result<bool, ProviderError> {
-    // 锁住整个“读取 -> 修改 -> 写回”事务，避免并发请求互相覆盖结果
+    // 锁住整个"读取 -> 修改 -> 写回"事务，避免并发请求互相覆盖结果
     let _guard = PROVIDERS_STORE_LOCK
         .lock()
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
@@ -151,6 +151,6 @@ pub(crate) fn update_models(
     record.enabled_models = enabled_models;
 
     let value = serde_json::to_value(&providers)?;
-    save_settings(app, STORE_KEY_SPIRIT_PROVIDERS, value)?;
+    save_settings(app, SPIRIT_PROVIDERS_KEY, value)?;
     Ok(true)
 }

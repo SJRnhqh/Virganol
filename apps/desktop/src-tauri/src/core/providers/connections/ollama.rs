@@ -3,7 +3,7 @@
 use log::{debug, error, info};
 
 // 内部引用
-use crate::core::models::settings::HealthCheckResponse;
+use crate::core::bot::models::provider::HealthCheckResponse;
 
 /// Ollama 健康检查：GET {url}/api/tags → 解析模型列表
 /// `key` 为可选，非空时附带 Bearer 认证头，空字符串时直接忽略

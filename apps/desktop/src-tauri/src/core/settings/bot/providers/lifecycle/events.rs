@@ -3,14 +3,14 @@
 use tauri::{AppHandle, Emitter};
 
 // 内部引用
+use crate::core::bot::models::provider::{
+    HealthCheckResponse, ProviderError, ProviderId, ProviderIssue, ProviderRecord,
+};
 use crate::core::models::provider::check::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
     ProviderCheckTrigger, ProviderStatusPayload,
 };
-use crate::core::models::provider::error::{ProviderError, ProviderIssue};
-use crate::core::models::provider::ProviderId;
 use crate::core::models::security::ProviderSecretMeta;
-use crate::core::models::settings::{HealthCheckResponse, ProviderRecord};
 
 // 事件名常量（与前端 PROVIDER_CHECK_EVENTS 保持一致）
 const EVT_CHECK_STARTED: &str = "providers-check-lifecycle-started";

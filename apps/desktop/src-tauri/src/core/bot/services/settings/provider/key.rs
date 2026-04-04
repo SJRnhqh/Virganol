@@ -1,14 +1,11 @@
-// apps/desktop/src-tauri/src/core/settings/secrets.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/key.rs
 // 外部依赖
 use keyring::{Entry, Error as KeyringError};
 use zeroize::Zeroize;
 
 // 内部引用
-use crate::core::models::provider::ProviderId;
-use crate::core::security::provider::ProviderKey;
-
-/// 应用在系统密钥库中的 service 名称（命名空间）
-const KEYRING_SERVICE: &str = "com.virganol.app.providers";
+use crate::core::bot::constants::PROVIDER_KEYRING_SERVICE;
+use crate::core::bot::models::{ProviderId, ProviderKey};
 
 /// 从系统密钥库读取 provider 的 API Key。
 ///
@@ -24,7 +21,7 @@ pub(crate) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> 
     // 这里将 provider_id 作为第二个索引键（account）使用。
     let account = provider_id.as_str();
 
-    let entry = match Entry::new(KEYRING_SERVICE, account) {
+    let entry = match Entry::new(PROVIDER_KEYRING_SERVICE, account) {
         Ok(entry) => entry,
         Err(error) => {
             // keyring 初始化失败：记录警告并降级为“无可用密钥”。
@@ -95,7 +92,7 @@ pub(crate) fn save_provider_key(provider_id: ProviderId, key: &str) -> Result<()
         return remove_provider_key(provider_id);
     }
 
-    let entry = Entry::new(KEYRING_SERVICE, account)
+    let entry = Entry::new(PROVIDER_KEYRING_SERVICE, account)
         .map_err(|error| format!("init keyring entry failed: {}", error))?;
     entry
         .set_password(normalized_key)
@@ -109,7 +106,7 @@ pub(crate) fn save_provider_key(provider_id: ProviderId, key: &str) -> Result<()
 pub(crate) fn remove_provider_key(provider_id: ProviderId) -> Result<(), String> {
     let account = provider_id.as_str();
 
-    let entry = Entry::new(KEYRING_SERVICE, account)
+    let entry = Entry::new(PROVIDER_KEYRING_SERVICE, account)
         .map_err(|error| format!("init keyring entry failed: {}", error))?;
 
     match entry.delete_credential() {
