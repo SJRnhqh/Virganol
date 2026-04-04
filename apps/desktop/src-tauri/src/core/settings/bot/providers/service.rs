@@ -6,9 +6,8 @@ use tauri::AppHandle;
 // 内部引用
 use crate::core::bot::models::provider::ProviderId;
 use crate::core::bot::services::{
-    load_provider_record, remove_provider, save_provider, update_models,
+    load_provider_record, remove_provider, remove_provider_key, save_provider, update_models,
 };
-use crate::core::settings::secrets;
 
 // === 交互流程：响应前端LLM供应商与模型CRUD === //
 
@@ -34,7 +33,7 @@ pub(crate) fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) ->
     }
 
     // 3) 再删除系统密钥库中的 key（幂等：不存在也应算成功）
-    let key_removed = match secrets::remove_provider_key(provider_id) {
+    let key_removed = match remove_provider_key(provider_id) {
         Ok(()) => true,
         Err(error_msg) => {
             error!(

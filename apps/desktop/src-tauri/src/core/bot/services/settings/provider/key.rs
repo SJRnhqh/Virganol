@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/settings/secrets.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/key.rs
 // 外部依赖
 use keyring::{Entry, Error as KeyringError};
 use zeroize::Zeroize;

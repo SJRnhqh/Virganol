@@ -4,11 +4,11 @@ use log::{error, info};
 use tauri::AppHandle;
 
 // 内部引用
-use super::compute_enabled_models;
-use super::health_check;
-use super::{load_provider_record, save_provider};
+use super::{
+    compute_enabled_models, health_check, load_provider_key, load_provider_key_from_env,
+    load_provider_record, remove_provider_key, save_provider, save_provider_key,
+};
 use crate::core::bot::models::{HealthCheckResponse, ProviderId, ProviderRecord};
-use crate::core::settings::secrets;
 
 /// 接入并持久化：health_check 成功后自动保存配置
 /// 返回 HealthCheckResponse（前端根据 success 判断是否接入成功）
@@ -23,15 +23,14 @@ pub(crate) async fn connect_and_save(
     let normalized_url = url.trim();
     // 用户显式输入了 key 时，记录旧 key 快照用于后续异常回滚
     let previous_persisted_key = if !normalized_key.is_empty() {
-        secrets::load_provider_key(provider_id)
+        load_provider_key(provider_id)
     } else {
         None
     };
 
     // 2) 密钥解析：若未输入则尝试回退 (env -> keyring)，否则使用当前输入
     let resolved_key_guard = if normalized_key.is_empty() {
-        secrets::load_provider_key_from_env(provider_id)
-            .or_else(|| secrets::load_provider_key(provider_id))
+        load_provider_key_from_env(provider_id).or_else(|| load_provider_key(provider_id))
     } else {
         None
     };
@@ -50,7 +49,7 @@ pub(crate) async fn connect_and_save(
     if result.success {
         if !normalized_key.is_empty() {
             // 决定要保存的 Key：如果是用户显式输入的，由于 health_check 已过，直接存 normalized_key
-            if let Err(error_msg) = secrets::save_provider_key(provider_id, normalized_key) {
+            if let Err(error_msg) = save_provider_key(provider_id, normalized_key) {
                 error!(
                     "[Tauri] ❌ {} key persist failed: {}",
                     provider_id, error_msg
@@ -94,10 +93,10 @@ pub(crate) async fn connect_and_save(
             if !normalized_key.is_empty() {
                 let rollback_result = if let Some(previous_key) = previous_persisted_key.as_ref() {
                     // 回滚 keyring 旧密钥
-                    secrets::save_provider_key(provider_id, previous_key.as_str())
+                    save_provider_key(provider_id, previous_key.as_str())
                 } else {
                     // 删除新添加密钥
-                    secrets::remove_provider_key(provider_id)
+                    remove_provider_key(provider_id)
                 };
 
                 if let Err(rollback_error) = rollback_result {

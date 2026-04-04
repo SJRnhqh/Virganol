@@ -40,9 +40,15 @@
   - [x] 常量迁移：`STORE_KEY_SPIRIT_PROVIDERS` → `SPIRIT_PROVIDERS_KEY`，收口到 `core/bot/constants/settings.rs`
   - [x] 模块导出链路：`persistence.rs → provider/mod.rs → settings/mod.rs → services/mod.rs`
   - [x] 所有调用方引用路径更新（crud.rs / service.rs / lifecycle/*）
-- [ ] secrets 密钥管理迁移重构（待评估）：
+- [x] 密钥管理迁移重构：
+  - [x] 函数迁移：`core/settings/secrets.rs` → `core/bot/services/settings/provider/key.rs`
+  - [x] 命名优化：`secrets` → `key`，与 `persistence` 形成对称结构
+  - [x] 模块导出链路：`key.rs → provider/mod.rs → settings/mod.rs → services/mod.rs`
+  - [x] 所有调用方引用路径更新，旧路径 `core::settings::secrets` 完全清除
+  - [x] 可见性统一：所有函数 `pub(crate)`，通过 mod re-export 有限暴露
+- [ ] 密钥解析逻辑优化（待评估）：
   - [ ] 密钥回退逻辑（env -> keyring）与 `lifecycle/resolver.rs` 的重复性评估
-  - [ ] 考察 `secrets` 层函数重构，以消灭 `resolved_key_guard` 的显式 `None` 分支
+  - [ ] 考察 `key` 层函数重构，以消灭 `resolved_key_guard` 的显式 `None` 分支
 - [ ] provider 级别锁优化：
   - [ ] 实现 provider 级别锁，串行化同一 provider 的 connect 流程，避免高并发下状态互相覆盖
 
