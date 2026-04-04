@@ -5,3 +5,5 @@ export {
   triggerProviderStartupCheck,
   triggerProviderManualRefresh,
 } from "./check";
+
+export { connectAndSaveProvider } from "./crud";

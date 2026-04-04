@@ -1,8 +1,7 @@
-// apps/desktop/src-tauri/src/core/settings/bot/providers/utils.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/selection.rs
 // 外部依赖
 use std::collections::HashSet;
 
-// 内部引用
 /// 计算 enabled_models 与 available_models 的交集
 pub(crate) fn compute_enabled_models(
     enabled_models: &[String],

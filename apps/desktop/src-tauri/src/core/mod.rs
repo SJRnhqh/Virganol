@@ -1,10 +1,10 @@
 // apps/desktop/src-tauri/src/core/mod.rs
 
+pub(crate) mod bot;
 pub(crate) mod manager;
 pub(crate) mod models;
 pub(crate) mod providers;
 pub(crate) mod rpc;
-pub(crate) mod security;
 pub(crate) mod settings;
 
 use tauri::AppHandle;
