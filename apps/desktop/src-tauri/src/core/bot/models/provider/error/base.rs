@@ -1,10 +1,10 @@
-// apps/desktop/src-tauri/src/core/models/provider/error/base.rs
+// apps/desktop/src-tauri/src/core/bot/models/provider/error/base.rs
 // 外部依赖
 use serde::{Serialize, Serializer};
 use std::fmt;
 
 // 内部引用
-use super::code::ProviderErrorCode;
+use super::ProviderErrorCode;
 
 #[derive(Debug)]
 pub enum ProviderError {

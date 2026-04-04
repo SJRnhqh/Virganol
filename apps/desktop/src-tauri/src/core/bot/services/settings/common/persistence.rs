@@ -1,16 +1,15 @@
-// apps/desktop/src-tauri/src/core/settings/store.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/common/persistence.rs
 // 外部依赖
 use tauri::AppHandle;
 use tauri_plugin_store::StoreExt;
 
 // 内部引用
-use crate::core::models::provider::error::ProviderError;
-
-pub(crate) const SETTINGS_STORE_FILE: &str = "settings.json";
+use crate::core::bot::constants::SETTINGS_FILE;
+use crate::core::bot::models::ProviderError;
 
 /// 从 settings.json 按 key 读取一段 JSON 值；不存在或读取失败时返回 None。
 pub(crate) fn load_settings(app: &AppHandle, key: &str) -> Option<serde_json::Value> {
-    let store = app.store(SETTINGS_STORE_FILE).ok()?;
+    let store = app.store(SETTINGS_FILE).ok()?;
     store.get(key)
 }
 
@@ -20,7 +19,7 @@ pub(crate) fn load_settings_strict(
     key: &str,
 ) -> Result<Option<serde_json::Value>, ProviderError> {
     let store = app
-        .store(SETTINGS_STORE_FILE)
+        .store(SETTINGS_FILE)
         // 上抛settings.json文件打开失败的错误
         .map_err(|error| ProviderError::Io(format!("open settings store failed: {}", error)))?;
     Ok(store.get(key))
@@ -33,7 +32,7 @@ pub(crate) fn save_settings(
     value: serde_json::Value,
 ) -> Result<(), ProviderError> {
     let store = app
-        .store(SETTINGS_STORE_FILE)
+        .store(SETTINGS_FILE)
         .map_err(|error| ProviderError::Io(format!("open settings store failed: {}", error)))?;
 
     store.set(key, value);

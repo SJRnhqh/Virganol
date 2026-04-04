@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::sync::OnceLock;
 
 // 内部引用
-use crate::core::models::provider::ProviderId;
+use crate::core::bot::models::provider::ProviderId;
 use crate::core::providers::connections::{deepseek, ollama};
 
 use super::driver::{DriverFuture, ProviderDriver};
