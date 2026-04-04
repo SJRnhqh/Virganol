@@ -85,7 +85,15 @@ settings/provider/
   覆盖快速切换、持久化失败与重复点击场景
 - [ ] `connect` 重连语义：确认重新连接时模型 enabled 状态是全量重置还是与旧偏好 merge
 
-#### 5.2 CRUD 链路审查（reset / update_models）
+#### 5.2 CRUD 链路审查
+
+**connect 前端审查**：
+
+- [ ] `useProviderConnection.onConnect`：调用链与前置状态变更
+- [ ] `useProviderCollectionStore`：成功/失败路径状态回写对称性
+- [ ] 组件 / 类型 / 常量 / 图标配套完整性
+
+**reset / update_models**：
 
 - [ ] reset 后端：invoke `reset_provider` 契约 → `reset_provider_config`（config + key 原子性 / 回滚）→ store 读写
 - [ ] reset 前端：`useProviderConnection.onReset` 调用链 → 失败时前端状态回滚一致性 → 组件 / 类型 / 常量配套
@@ -119,6 +127,8 @@ settings/provider/
 - [x] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [x] `PROVIDERS_STORE_LOCK` — 评估完成，现有 `static Mutex<()>` 实现自洽，迁移至 `State<Mutex<T>>` 留待架构层统一推进
 - [ ] `core/bot/models` 可见性收紧 — 完成 lifecycle 链路迁移后，将领域内部类型（`ProviderKey` / `ProviderRecord` / `ProviderIssue` / `SkippedProviderDetail`）从 `pub` 收紧为 `pub(crate)`，仅保留跨层契约类型（`ConnectAndSaveProviderRequest` / `HealthCheckResponse` / `ProviderId` / `ProviderError`）为 `pub`
+- [ ] 密钥解析逻辑优化 — 密钥回退逻辑（env → keyring）与 `lifecycle/resolver.rs` 的重复性评估，考察 `key` 层函数重构以消灭 `resolved_key_guard` 的显式 `None` 分支
+- [ ] provider 级别锁优化 — 实现 per-provider 锁，串行化同一 provider 的 connect 流程，避免高并发下状态互相覆盖
 
 #### 6.3 生命周期收口
 

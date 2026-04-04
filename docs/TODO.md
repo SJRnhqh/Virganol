@@ -1,17 +1,20 @@
 # TODO — feat/spirit-crud-buildup
 
-聚焦 connect 链路的全栈审查与重构。
-以 API 层为轴心：向后穿透后端契约，向前审查前端垂直链路。
-审查过程中发现的问题直接补入对应任务项。
+本分支聚焦 connect 链路后端重构。
+从 command 层 `connect_and_save_provider` 向下审查至 `crud.rs::connect_and_save` 函数，
+对其调用的所有后端函数进行领域内聚迁移（`core/bot/{models, services, constants}`），
+提升代码目录可维护性。不涉及业务逻辑深度优化，仅完成结构重构。
 
 ---
 
-## 1. API 层重组
+## 已完成的重构
+
+### 1. API 层重组
 
 - [x] `services/api/providers.ts` → `services/api/provider/crud.ts`
 - [x] 更新所有 import 引用
 
-## 2. connect 后端审查
+### 2. connect 后端结构重构
 
 - [x] 目录结构重构：核心逻辑向 `core/bot/{models, services}` 迁移内聚
 - [x] invoke 参数序列化 → `connect_and_save_provider` command 入参契约（url 简化完成）
@@ -28,8 +31,6 @@
   - [x] key 持久化 / 跳过逻辑、日志措辞修正
   - [x] `ProviderRecord` 状态合并逻辑（`compute_enabled_models` 调用点确认）
   - [x] Store 持久化失败后的 Keyring 回滚路径验证
-  - [ ] 密钥回退逻辑（env -> keyring）与 `lifecycle/resolver.rs` 的重复性评估
-    - [ ] TODO: 考察 `secrets` 层函数重构，以消灭 `resolved_key_guard` 的显式 `None` 分支
 - [x] common 层持久化迁移重构：
   - [x] 通用 JSON I/O 函数迁移：`core/settings/store.rs` → `core/bot/services/settings/common/persistence.rs`
   - [x] 常量迁移：`SETTINGS_STORE_FILE` → `SETTINGS_FILE`，收口到 `core/bot/constants/settings.rs`
@@ -50,14 +51,15 @@
   - [x] 类型迁移：`core/models/provider/snapshot.rs` → `core/bot/models/provider/snapshot.rs`
   - [x] 导入路径更新：`persistence.rs` 改为从 `core::bot::models` 导入
   - [x] 旧文件清理：删除 `core/models/provider/snapshot.rs`
-- [ ] 密钥解析逻辑优化（待评估）：
-  - [ ] 密钥回退逻辑（env -> keyring）与 `lifecycle/resolver.rs` 的重复性评估
-  - [ ] 考察 `key` 层函数重构，以消灭 `resolved_key_guard` 的显式 `None` 分支
-- [ ] provider 级别锁优化：
-  - [ ] 实现 provider 级别锁，串行化同一 provider 的 connect 流程，避免高并发下状态互相覆盖
 
-## 3. connect 前端审查
+## 重构总结
 
-- [ ] `useProviderConnection.onConnect`：调用链与前置状态变更
-- [ ] `useProviderCollectionStore`：成功/失败路径状态回写对称性
-- [ ] 组件 / 类型 / 常量 / 图标配套完整性
+✅ **connect 链路后端结构重构完成**
+
+所有与 LLM Provider 接入 CRUD 相关的后端代码已完成领域内聚迁移：
+
+- Models 层：`core/bot/models/provider/*`
+- Services 层：`core/bot/services/settings/provider/*`
+- Constants 层：`core/bot/constants/*`
+
+业务逻辑优化（密钥解析重复性、provider 级别锁等）已记录到 ROADMAP.md Phase 6.2，留待后续分支处理。
