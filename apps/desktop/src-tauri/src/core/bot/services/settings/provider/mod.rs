@@ -7,7 +7,7 @@ mod persistence;
 mod selection;
 
 pub(crate) use connection::health_check;
-pub(crate) use crud::connect_and_save;
+pub(crate) use crud::{connect_and_save, reset_provider_config, update_provider_enabled_models};
 pub(crate) use key::{
     load_provider_key, load_provider_key_from_env, remove_provider_key, save_provider_key,
 };

@@ -53,9 +53,10 @@ Audit dimensions:
 
 ### 3. Reset & Update Models Chain Migration
 
-- [ ] Migrate `reset_provider` related functions
-- [ ] Migrate `update_enabled_models` related functions
-- [ ] Verify CRUD chain completeness
+- [x] Migrate `reset_provider_config` to `crud.rs`
+- [x] Migrate `update_provider_enabled_models` to `crud.rs`
+- [x] Update export chain and remove old `service.rs`
+- [x] Verify CRUD chain completeness
 
 ---
 
