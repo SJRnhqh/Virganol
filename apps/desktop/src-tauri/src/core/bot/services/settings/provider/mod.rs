@@ -4,6 +4,6 @@ mod connection;
 mod crud;
 mod selection;
 
-pub use connection::health_check;
+pub(crate) use connection::health_check;
 pub(crate) use crud::connect_and_save;
 pub(crate) use selection::compute_enabled_models;

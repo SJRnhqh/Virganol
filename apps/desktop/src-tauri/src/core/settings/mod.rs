@@ -2,4 +2,3 @@
 // 导出内容
 pub(crate) mod bot;
 pub(crate) mod secrets;
-pub(crate) mod store;

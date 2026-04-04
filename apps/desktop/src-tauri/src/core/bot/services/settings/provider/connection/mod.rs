@@ -2,4 +2,4 @@
 // 导出内容
 mod health;
 
-pub use health::health_check;
+pub(crate) use health::health_check;

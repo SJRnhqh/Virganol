@@ -8,8 +8,8 @@ use tauri::AppHandle;
 use crate::core::bot::models::provider::{
     ProviderError, ProviderId, ProviderRecord, SkippedProviderDetail,
 };
+use crate::core::bot::services::{load_settings, load_settings_strict, save_settings};
 use crate::core::models::provider::SupportedProvidersSnapshot;
-use crate::core::settings::store::{load_settings, load_settings_strict, save_settings};
 
 const STORE_KEY_SPIRIT_PROVIDERS: &str = "spirit.providers";
 // 写操作互斥锁；后续可评估迁移至 Tauri State<Mutex<T>> 统一管理生命周期（见 ROADMAP Phase 6.2）。
