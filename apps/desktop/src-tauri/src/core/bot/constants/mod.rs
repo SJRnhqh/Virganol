@@ -4,4 +4,4 @@ mod keyring;
 mod settings;
 
 pub(crate) use keyring::PROVIDER_KEYRING_SERVICE;
-pub(crate) use settings::SETTINGS_FILE;
+pub(crate) use settings::{SETTINGS_FILE, SPIRIT_PROVIDERS_KEY};

@@ -7,8 +7,8 @@ use tauri::AppHandle;
 // 内部引用
 use super::{events, failure, rid, runner};
 use crate::core::bot::models::provider::ProviderError;
+use crate::core::bot::services::load_supported_providers;
 use crate::core::models::provider::check::ProviderCheckTrigger;
-use crate::core::settings::bot::providers::store::load_supported_providers;
 
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
 pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTrigger) {

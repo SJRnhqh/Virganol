@@ -35,8 +35,15 @@
   - [x] 常量迁移：`SETTINGS_STORE_FILE` → `SETTINGS_FILE`，收口到 `core/bot/constants/settings.rs`
   - [x] 模块导出链路优化：`persistence.rs → common/mod.rs → settings/mod.rs → services/mod.rs`
   - [x] 命名语义优化：`store` → `persistence`，避免前端状态管理混淆
-- [ ] store 读写：`save_provider` / `load_provider_record` 行为
-  - [ ] provider 专用持久化函数迁移：`core/settings/bot/providers/store.rs` → `core/bot/services/settings/provider/persistence.rs`
+- [x] provider 专用持久化迁移重构：
+  - [x] 函数迁移：`core/settings/bot/providers/store.rs` → `core/bot/services/settings/provider/persistence.rs`
+  - [x] 常量迁移：`STORE_KEY_SPIRIT_PROVIDERS` → `SPIRIT_PROVIDERS_KEY`，收口到 `core/bot/constants/settings.rs`
+  - [x] 模块导出链路：`persistence.rs → provider/mod.rs → settings/mod.rs → services/mod.rs`
+  - [x] 所有调用方引用路径更新（crud.rs / service.rs / lifecycle/*）
+- [ ] secrets 密钥管理迁移重构（待评估）：
+  - [ ] 密钥回退逻辑（env -> keyring）与 `lifecycle/resolver.rs` 的重复性评估
+  - [ ] 考察 `secrets` 层函数重构，以消灭 `resolved_key_guard` 的显式 `None` 分支
+- [ ] provider 级别锁优化：
   - [ ] 实现 provider 级别锁，串行化同一 provider 的 connect 流程，避免高并发下状态互相覆盖
 
 ## 3. connect 前端审查

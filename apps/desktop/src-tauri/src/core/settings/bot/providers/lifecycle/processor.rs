@@ -7,8 +7,7 @@ use tauri::AppHandle;
 use crate::core::bot::models::provider::{
     HealthCheckResponse, ProviderError, ProviderId, ProviderRecord,
 };
-use crate::core::bot::services::compute_enabled_models;
-use crate::core::settings::bot::providers::store::save_provider;
+use crate::core::bot::services::{compute_enabled_models, save_provider};
 
 /// 协调 enabled_models：只保留 available_models 中仍然存在的模型
 /// 返回：

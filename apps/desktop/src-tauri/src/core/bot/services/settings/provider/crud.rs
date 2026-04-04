@@ -6,8 +6,8 @@ use tauri::AppHandle;
 // 内部引用
 use super::compute_enabled_models;
 use super::health_check;
+use super::{load_provider_record, save_provider};
 use crate::core::bot::models::{HealthCheckResponse, ProviderId, ProviderRecord};
-use crate::core::settings::bot::providers::store::{load_provider_record, save_provider};
 use crate::core::settings::secrets;
 
 /// 接入并持久化：health_check 成功后自动保存配置
