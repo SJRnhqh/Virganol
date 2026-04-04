@@ -72,12 +72,12 @@ Audit dimensions:
 - Error handling consistency (`ProviderError` integration)
 - Visibility constraints (`pub(crate)` review)
 
-### 3. Reset & Update Models Chain Migration
+### 3. CRUD Manager Split
 
-- [x] Migrate `reset_provider_config` to `crud.rs`
-- [x] Migrate `update_provider_enabled_models` to `crud.rs`
-- [x] Update export chain and remove old `service.rs`
-- [x] Verify CRUD chain completeness
+- [x] Split former `crud.rs` into `manager/connect.rs`, `manager/reset.rs`, and `manager/update.rs`
+- [x] Add `manager/mod.rs` as the internal CRUD aggregation boundary
+- [x] Update provider export chain to re-export CRUD entrypoints via `manager`
+- [x] Remove obsolete `crud.rs` and keep external service interface stable
 
 ---
 
