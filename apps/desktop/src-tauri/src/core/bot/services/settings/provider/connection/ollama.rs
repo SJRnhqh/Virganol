@@ -1,13 +1,13 @@
-// apps/desktop/scr-tauri/src/core/providers/connections/ollama.rs
+// apps/desktop/scr-tauri/src/core/bot/services/settings/provider/connection/ollama.rs
 // 外部依赖
 use log::{debug, error, info};
 
 // 内部引用
-use crate::core::bot::models::provider::HealthCheckResponse;
+use crate::core::bot::models::HealthCheckResponse;
 
 /// Ollama 健康检查：GET {url}/api/tags → 解析模型列表
 /// `key` 为可选，非空时附带 Bearer 认证头，空字符串时直接忽略
-pub(crate) async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
+pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
     if url.trim().is_empty() {
         return HealthCheckResponse::fail("Missing URL");
     }

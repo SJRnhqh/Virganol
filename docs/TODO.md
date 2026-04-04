@@ -33,7 +33,19 @@ Audit all functions called by `connect_and_save`:
 
 **Health Check** (`connection/health.rs`)
 
-- [ ] `health_check` → registry → driver implementations
+**Refactoring Complete**:
+
+- [x] Migrate to `services/settings/provider/connection/` module
+- [x] Establish strict visibility hierarchy (`pub(crate)` → `pub(self)` → `pub(super)` → `private`)
+- [x] Extract `ProviderDriver` trait to `core/bot/interfaces`
+- [x] Apply principle of least privilege
+
+**Audit Pending**:
+
+- [ ] `health_check` function implementation audit
+- [ ] `get_driver` registry mechanism audit
+- [ ] `deepseek_check` / `ollama_check` implementation audit
+- [ ] Error handling consistency audit
 
 **Persistence** (`persistence.rs`)
 

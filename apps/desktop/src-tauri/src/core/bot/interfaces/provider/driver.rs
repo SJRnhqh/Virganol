@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/providers/driver.rs
+// apps/desktop/src-tauri/src/core/bot/interfaces/provider/driver.rs
 // 外部依赖
 use std::future::Future;
 use std::pin::Pin;

@@ -1,13 +1,12 @@
-// apps/desktop/src-tauri/src/core/providers/registry.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/registry.rs
 // 外部依赖
 use std::collections::HashMap;
 use std::sync::OnceLock;
 
 // 内部引用
-use crate::core::bot::models::provider::ProviderId;
-use crate::core::providers::connections::{deepseek, ollama};
-
-use super::driver::{DriverFuture, ProviderDriver};
+use super::{deepseek_check, ollama_check};
+use crate::core::bot::interfaces::{DriverFuture, ProviderDriver};
+use crate::core::bot::models::ProviderId;
 
 struct DeepseekDriver;
 struct OllamaDriver;
@@ -17,7 +16,7 @@ impl ProviderDriver for DeepseekDriver {
         ProviderId::Deepseek
     }
     fn health_check<'a>(&'a self, _url: &'a str, key: &'a str) -> DriverFuture<'a> {
-        Box::pin(async move { deepseek::deepseek_check(key).await })
+        Box::pin(async move { deepseek_check(key).await })
     }
 }
 
@@ -26,7 +25,7 @@ impl ProviderDriver for OllamaDriver {
         ProviderId::Ollama
     }
     fn health_check<'a>(&'a self, url: &'a str, key: &'a str) -> DriverFuture<'a> {
-        Box::pin(async move { ollama::ollama_check(url, key).await })
+        Box::pin(async move { ollama_check(url, key).await })
     }
 }
 
@@ -50,6 +49,6 @@ fn registry() -> &'static HashMap<ProviderId, &'static dyn ProviderDriver> {
     })
 }
 
-pub(crate) fn get_driver(provider_id: ProviderId) -> Option<&'static dyn ProviderDriver> {
+pub(super) fn get_driver(provider_id: ProviderId) -> Option<&'static dyn ProviderDriver> {
     registry().get(&provider_id).copied()
 }
