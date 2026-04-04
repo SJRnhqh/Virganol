@@ -1,12 +1,11 @@
-// apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/failure.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/failure.rs
 // 外部依赖
 use log::error;
 use tauri::AppHandle;
 
 // 内部引用
-use super::events;
-use crate::core::bot::models::provider::{ProviderError, ProviderIssue};
-use crate::core::models::provider::check::ProviderCheckTrigger;
+use super::emit_check_failed;
+use crate::core::bot::models::{ProviderCheckTrigger, ProviderError, ProviderIssue};
 
 pub(super) fn report_lifecycle_failure(
     app: &AppHandle,
@@ -15,7 +14,7 @@ pub(super) fn report_lifecycle_failure(
     error: &ProviderError,
     issues: Option<Vec<ProviderIssue>>,
 ) {
-    if let Err(emit_err) = events::emit_check_failed(app, run_id, error, issues.as_deref()) {
+    if let Err(emit_err) = emit_check_failed(app, run_id, error, issues.as_deref()) {
         // 日志打印报错兜底
         let code = error.code();
         let message = error.message();

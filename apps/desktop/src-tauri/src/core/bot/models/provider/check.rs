@@ -1,12 +1,12 @@
-// apps/desktop/src-tauri/src/core/models/provider/check.rs
+// apps/desktop/src-tauri/src/core/bot/models/provider/check.rs
 // 外部依赖
 use serde::{Deserialize, Serialize};
 
 // 内部引用
 use crate::core::bot::models::provider::{
     HealthCheckResponse, ProviderErrorCode, ProviderId, ProviderIssue, ProviderRecord,
+    ProviderSecretMeta,
 };
-use crate::core::models::security::ProviderSecretMeta;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]

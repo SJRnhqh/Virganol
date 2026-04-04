@@ -2,9 +2,7 @@
 
 pub(crate) mod bot;
 pub(crate) mod manager;
-pub(crate) mod models;
 pub(crate) mod rpc;
-pub(crate) mod settings;
 
 use tauri::AppHandle;
 use tauri::Manager;

@@ -16,9 +16,18 @@ Complete backend refactoring and audit for LLM provider CRUD operations, focusin
 
 ### 1. Lifecycle Chain Migration
 
-- [ ] Migrate lifecycle-related functions to `core/bot/` domain
-- [ ] Verify lifecycle chain integration with refactored structure
-- [ ] Update imports and module visibility
+- [x] Migrate lifecycle-related functions to `core/bot/` domain
+  - Moved from `core/settings/bot/providers/lifecycle/` to `core/bot/services/settings/provider/lifecycle/`
+  - All 8 modules migrated: flow, processor, runner, resolver, events, failure, rid, mod
+- [x] Verify lifecycle chain integration with refactored structure
+  - Commands layer updated to use new import paths
+  - Compilation verified successfully
+- [x] Update imports and module visibility
+  - Established strict visibility hierarchy:
+    - `pub(crate)`: `check_providers_lifecycle` (single public interface)
+    - `pub(self)`: internal module functions
+    - `pub(super)`: parent-only access
+  - All old import paths removed
 
 ### 2. Connect Chain Audit
 
@@ -74,7 +83,9 @@ Audit dimensions:
 
 ## Completion Criteria
 
-- All provider CRUD backend code migrated to bot domain
-- Connect chain fully audited with documented findings
-- Reset and update_models chains refactored and verified
-- Module structure aligned with domain-driven design principles
+- [x] All provider CRUD backend code migrated to bot domain
+- [x] Connect chain fully audited with documented findings
+- [x] Reset and update_models chains refactored and verified
+- [x] Module structure aligned with domain-driven design principles
+
+---

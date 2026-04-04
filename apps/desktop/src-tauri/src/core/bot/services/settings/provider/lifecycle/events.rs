@@ -1,16 +1,13 @@
-// apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/events.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/events.rs
 // 外部依赖
 use tauri::{AppHandle, Emitter};
 
 // 内部引用
-use crate::core::bot::models::provider::{
-    HealthCheckResponse, ProviderError, ProviderId, ProviderIssue, ProviderRecord,
+use crate::core::bot::models::{
+    HealthCheckResponse, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
+    ProviderCheckStartedPayload, ProviderCheckTrigger, ProviderError, ProviderId, ProviderIssue,
+    ProviderRecord, ProviderSecretMeta, ProviderStatusPayload,
 };
-use crate::core::models::provider::check::{
-    ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
-    ProviderCheckTrigger, ProviderStatusPayload,
-};
-use crate::core::models::security::ProviderSecretMeta;
 
 // 事件名常量（与前端 PROVIDER_CHECK_EVENTS 保持一致）
 const EVT_CHECK_STARTED: &str = "providers-check-lifecycle-started";

@@ -1,9 +1,9 @@
-// apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/resolver.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/resolver.rs
 // 内部引用
-use crate::core::bot::models::provider::{HealthCheckResponse, ProviderId};
-use crate::core::bot::services::health_check;
-use crate::core::bot::services::{load_provider_key, load_provider_key_from_env};
-use crate::core::models::security::{ProviderKeySource, ProviderSecretMeta};
+use crate::core::bot::models::{
+    HealthCheckResponse, ProviderId, ProviderKeySource, ProviderSecretMeta,
+};
+use crate::core::bot::services::{health_check, load_provider_key, load_provider_key_from_env};
 
 /// 一次性解析密钥并执行健康检查，同时返回密钥来源元信息（env 优先，其次 keyring）
 /// 避免 keyring 系统调用被重复触发两次

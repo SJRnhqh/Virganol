@@ -3,6 +3,8 @@
 pub(crate) mod provider;
 
 pub use provider::{
-    ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderError, ProviderId, ProviderKey,
-    ProviderRecord, SkippedProviderDetail, SupportedProvidersSnapshot,
+    ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderCheckCompletedPayload,
+    ProviderCheckFailedPayload, ProviderCheckStartedPayload, ProviderCheckTrigger, ProviderError,
+    ProviderId, ProviderIssue, ProviderKey, ProviderKeySource, ProviderRecord, ProviderSecretMeta,
+    ProviderStatusPayload, SkippedProviderDetail, SupportedProvidersSnapshot,
 };

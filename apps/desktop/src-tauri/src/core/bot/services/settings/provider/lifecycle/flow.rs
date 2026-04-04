@@ -1,24 +1,26 @@
-// apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/flow.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/flow.rs
 // 外部依赖
 use log::{info, warn};
 use std::time::Instant;
 use tauri::AppHandle;
 
 // 内部引用
-use super::{events, failure, rid, runner};
-use crate::core::bot::models::provider::ProviderError;
+use super::{
+    emit_check_completed, emit_check_started, next_run_id, report_lifecycle_failure,
+    run_provider_checks,
+};
+use crate::core::bot::models::{ProviderCheckTrigger, ProviderError};
 use crate::core::bot::services::load_supported_providers;
-use crate::core::models::provider::check::ProviderCheckTrigger;
 
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
 pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTrigger) {
     // Step 1: 初始化本轮生命周期上下文（覆盖读取 + 检查 + 推送全链路）
-    let run_id = rid::next_run_id(trigger);
+    let run_id = next_run_id(trigger);
     let started_at = Instant::now();
 
     // Step 2: 发出生命周期 started 事件
-    if let Err(err) = events::emit_check_started(&app, run_id.as_str(), trigger) {
-        failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
+    if let Err(err) = emit_check_started(&app, run_id.as_str(), trigger) {
+        report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
         return;
     }
 
@@ -26,7 +28,7 @@ pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderC
     let snapshot = match load_supported_providers(&app) {
         Ok(snapshot) => snapshot,
         Err(err) => {
-            failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
+            report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
             return;
         }
     };
@@ -61,8 +63,8 @@ pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderC
                 loaded_total, skipped_total, trigger
             );
         }
-        if let Err(err) = events::emit_check_completed(&app, run_id.as_str(), 0) {
-            failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
+        if let Err(err) = emit_check_completed(&app, run_id.as_str(), 0) {
+            report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
             return;
         }
         return;
@@ -70,7 +72,7 @@ pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderC
 
     // Step 4: 并发执行健康检查并收敛失败计数/结构性错误
     let (failed_count, provider_issues, join_error) =
-        runner::run_provider_checks(&app, run_id.as_str(), snapshot.supported).await;
+        run_provider_checks(&app, run_id.as_str(), snapshot.supported).await;
 
     // Step 5: 处理并发检查阶段结构性错误（全局并发错误或 provider 级结构性问题）
     // 优先级：join_error（任务 panic）> provider_issues（个别 provider 结构性失败）。
@@ -83,7 +85,7 @@ pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderC
             )
         })
     }) {
-        failure::report_lifecycle_failure(
+        report_lifecycle_failure(
             &app,
             run_id.as_str(),
             trigger,
@@ -99,8 +101,8 @@ pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderC
 
     // Step 6: 推送生命周期completed事件
     let duration_ms = started_at.elapsed().as_millis() as u64;
-    if let Err(err) = events::emit_check_completed(&app, run_id.as_str(), failed_count) {
-        failure::report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
+    if let Err(err) = emit_check_completed(&app, run_id.as_str(), failed_count) {
+        report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
         return;
     }
 

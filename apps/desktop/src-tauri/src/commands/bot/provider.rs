@@ -3,12 +3,13 @@
 use tauri::AppHandle;
 
 // 内部引用
-use crate::core::bot::models::{ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderId};
-use crate::core::bot::services::{
-    connect_and_save, reset_provider_config, update_provider_enabled_models,
+use crate::core::bot::models::{
+    ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderCheckTrigger, ProviderId,
 };
-use crate::core::models::provider::check::ProviderCheckTrigger;
-use crate::core::settings::bot::providers::lifecycle::flow::check_providers_lifecycle;
+use crate::core::bot::services::{
+    check_providers_lifecycle, connect_and_save, reset_provider_config,
+    update_provider_enabled_models,
+};
 
 /// Triggers the provider lifecycle check on application startup.
 ///

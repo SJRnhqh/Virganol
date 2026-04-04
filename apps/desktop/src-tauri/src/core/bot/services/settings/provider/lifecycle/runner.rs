@@ -1,14 +1,12 @@
-// apps/desktop/src-tauri/src/core/settings/bot/providers/lifecycle/runner.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/runner.rs
 // 外部依赖
 use log::{error, info, warn};
 use tauri::AppHandle;
 use tokio::task::JoinSet;
 
 // 内部引用
-use super::{events, processor, resolver};
-use crate::core::bot::models::provider::{
-    ProviderError, ProviderId, ProviderIssue, ProviderRecord,
-};
+use super::{emit_provider_status, health_check_with_secret_meta, process_provider_check_result};
+use crate::core::bot::models::{ProviderError, ProviderId, ProviderIssue, ProviderRecord};
 
 /// 并发健康检查最大并发度
 const CHECK_CONCURRENCY_LIMIT: usize = 4;
@@ -42,8 +40,7 @@ pub(super) async fn run_provider_checks(
             // 提交一个健康检查任务到 in_flight，完成后返回 (provider_id, record, result)
             in_flight.spawn(async move {
                 let url = record.url.as_deref().unwrap_or("").to_string();
-                let (result, secret_meta) =
-                    resolver::health_check_with_secret_meta(provider_id, &url).await;
+                let (result, secret_meta) = health_check_with_secret_meta(provider_id, &url).await;
                 (provider_id, record, result, secret_meta)
             });
         }
@@ -52,7 +49,7 @@ pub(super) async fn run_provider_checks(
         match in_flight.join_next().await {
             Some(Ok((provider_id, record, result, secret_meta))) => {
                 let (final_record, online, reconcile_error) =
-                    processor::process_provider_check_result(app, provider_id, record, &result);
+                    process_provider_check_result(app, provider_id, record, &result);
 
                 if let Some(err) = reconcile_error {
                     let message = err.message();
@@ -67,7 +64,7 @@ pub(super) async fn run_provider_checks(
                 let icon = if online { "✅" } else { "⚠️" };
                 info!("[Tauri] {} {} → online: {}", icon, provider_id, online);
 
-                if let Err(err) = events::emit_provider_status(
+                if let Err(err) = emit_provider_status(
                     app,
                     run_id,
                     provider_id,

@@ -1,5 +1,5 @@
-// apps/desktop/src-tauri/src/core/models/security.rs
-
+// apps/desktop/src-tauri/src/core/bot/models/provider/security.rs
+// 外部依赖
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]

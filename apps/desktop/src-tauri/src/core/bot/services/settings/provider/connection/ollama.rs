@@ -1,4 +1,4 @@
-// apps/desktop/scr-tauri/src/core/bot/services/settings/provider/connection/ollama.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/ollama.rs
 // 外部依赖
 use log::{debug, error, info};
 
