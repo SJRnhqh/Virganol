@@ -33,6 +33,13 @@ Complete backend refactoring and audit for LLM provider CRUD operations, focusin
 
 Audit all functions called by `connect_and_save`:
 
+**Manager Layer** (`manager/connect.rs`)
+
+- [x] `connect_and_save` main flow audit
+  - Refactored to early return pattern for improved readability
+  - Verified key rollback logic correctness (env/keyring priority semantics)
+  - Confirmed business logic integrity across all edge cases
+
 **Key Management** (`key.rs`)
 
 - [ ] `load_provider_key`
