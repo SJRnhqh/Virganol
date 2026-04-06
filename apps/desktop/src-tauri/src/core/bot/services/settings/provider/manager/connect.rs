@@ -71,7 +71,21 @@ pub(crate) async fn connect_and_save(
     }
 
     // 5) 复用历史启用状态，并与本次可用模型做交集对齐
-    let previous_record = load_provider_record(app, provider_id);
+    let previous_record = match load_provider_record(app, provider_id) {
+        Ok(record) => record,
+        Err(e) => {
+            error!(
+                "[Tauri] ❌ {} load previous config failed: {}",
+                provider_id, e
+            );
+            // TODO: 结构性错误应与健康检查失败区分，考虑扩展 HealthCheckResponse
+            // 添加 error_code 字段，让前端能识别 io_error/serde_error 等系统级错误
+            return HealthCheckResponse::fail(format!(
+                "Failed to load provider config: {}",
+                e.message()
+            ));
+        }
+    };
     let next_enabled_models = match previous_record {
         Some(record) => {
             // 重连：保留用户偏好，仅保留交集（已启用且仍可用的模型）
@@ -93,12 +107,7 @@ pub(crate) async fn connect_and_save(
         enabled_models: next_enabled_models,
     };
 
-    if let Err(error_msg) = save_provider(app, provider_id, &record) {
-        error!(
-            "[Tauri] ❌ {} provider config persist failed: {}",
-            provider_id, error_msg
-        );
-
+    if let Err(e) = save_provider(app, provider_id, &record) {
         // 仅当本次显式输入了 key 时，才需要回滚 keyring 变更
         if !normalized_key.is_empty() {
             let rollback_result = if let Some(previous_key) = previous_persisted_key.as_ref() {
@@ -119,9 +128,12 @@ pub(crate) async fn connect_and_save(
             }
         }
 
-        return HealthCheckResponse::fail("Failed to persist provider config");
+        // TODO: 结构性错误应与健康检查失败区分，考虑扩展 HealthCheckResponse
+        // 添加 error_code 字段，让前端能识别 io_error/serde_error 等系统级错误
+        return HealthCheckResponse::fail(format!(
+            "Failed to persist provider config: {}",
+            e.message()
+        ));
     }
-
-    info!("[Tauri] 💾 {} persisted", provider_id);
     result
 }

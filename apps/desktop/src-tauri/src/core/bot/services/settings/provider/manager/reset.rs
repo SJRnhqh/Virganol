@@ -10,7 +10,16 @@ use crate::core::bot::models::ProviderId;
 /// 重置 provider 的持久化配置
 pub(crate) fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) -> bool {
     // 1) 先快照旧配置，供异常时回滚
-    let previous_record = load_provider_record(app, provider_id);
+    let previous_record = match load_provider_record(app, provider_id) {
+        Ok(record) => record,
+        Err(e) => {
+            error!(
+                "[Tauri] ❌ {} load previous config failed: {}",
+                provider_id, e
+            );
+            return false;
+        }
+    };
 
     // 2) 先删除普通配置（settings.json 中的 spirit.providers.{id}）
     let config_removed = match remove_provider(app, provider_id) {

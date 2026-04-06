@@ -123,6 +123,7 @@ settings/provider/
 
 - [x] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
 - [ ] `store.rs` — 评估按 provider 独立 key 存储或脏标记机制，降低 I/O 开销
+- [ ] `persistence.rs` — 引入 `ProvidersStore` cache，避免 `load_supported_providers` / `load_provider_record` 重复 I/O + 反序列化（触发条件：providers 数量 >20 或单次请求内多次读取）
 - [ ] `reconcile_enabled_models` — 无变更路径避免 `record.clone()`
 - [x] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [x] `PROVIDERS_STORE_LOCK` — 评估完成，现有 `static Mutex<()>` 实现自洽，迁移至 `State<Mutex<T>>` 留待架构层统一推进

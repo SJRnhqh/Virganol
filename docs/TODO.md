@@ -77,8 +77,21 @@ Audit all functions called by `connect_and_save`:
 
 **Persistence** (`persistence.rs`)
 
-- [ ] `load_provider_record`
-- [ ] `save_provider`
+- [x] `load_provider_record` - unified strict error handling, code simplification
+- [x] `save_provider` - code simplification, return value optimization
+
+Audit completed:
+
+- Unified strict error handling (`Result<_, ProviderError>`)
+- Simplified function naming (removed `_strict` suffix)
+- Code simplification (removed redundant variables)
+- Added performance optimization markers (TODO + ROADMAP)
+- Adapted callers (`connect.rs`, `reset.rs`)
+
+Deferred optimizations:
+
+- Error refinement (Phase 5.3)
+- Cache optimization (Phase 6.2, trigger conditions not met)
 
 Audit dimensions:
 
