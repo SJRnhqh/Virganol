@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/bot/services/settings/provider/selection.rs
+// apps/desktop/src-tauri/src/core/bot/helpers/provider/intersection.rs
 // 外部依赖
 use std::collections::HashSet;
 

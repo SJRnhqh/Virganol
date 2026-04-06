@@ -5,9 +5,10 @@ use tauri::AppHandle;
 
 // 内部引用
 use super::super::{
-    compute_enabled_models, health_check, load_provider_key, load_provider_key_from_env,
-    load_provider_record, remove_provider_key, save_provider, save_provider_key,
+    health_check, load_provider_key, load_provider_key_from_env, load_provider_record,
+    remove_provider_key, save_provider, save_provider_key,
 };
+use crate::core::bot::helpers::compute_enabled_models;
 use crate::core::bot::models::{HealthCheckResponse, ProviderId, ProviderRecord};
 
 /// 接入并持久化：health_check 成功后自动保存配置

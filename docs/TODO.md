@@ -41,13 +41,16 @@ Audit all functions called by `connect_and_save`:
   - Confirmed business logic integrity across all edge cases
   - Changed first connection behavior: empty enabled_models list (requires explicit user selection)
 
-**Business Logic** (`selection.rs`)
+**Business Logic** (`helpers/provider/intersection.rs`)
 
 - [x] `compute_enabled_models`
   - Verified intersection logic correctness (preserves user preferences)
   - Confirmed HashSet optimization for O(1) lookup performance
   - Added comprehensive documentation (English + Chinese, with examples)
   - Implementation is optimal and follows Rust community best practices
+  - Refactored from `services/settings/provider/selection.rs` to `helpers/provider/intersection.rs`
+  - Established `helpers` module for domain-specific utility functions
+  - Applied `pub(crate)` visibility for simplicity (Rust community best practice)
 
 **Key Management** (`key.rs`)
 
@@ -90,6 +93,17 @@ Audit dimensions:
 - [x] Add `manager/mod.rs` as the internal CRUD aggregation boundary
 - [x] Update provider export chain to re-export CRUD entrypoints via `manager`
 - [x] Remove obsolete `crud.rs` and keep external service interface stable
+
+### 4. Code Quality Improvements
+
+- [x] Add `rustfmt.toml` for code formatting standards
+  - Configured basic rules: edition=2021, max_width=100, tab_spaces=4
+  - Included bilingual documentation (English + Chinese)
+  - Documented stable vs unstable features
+- [x] Establish helpers module architecture
+  - Created `core/bot/helpers/` for domain-specific utility functions
+  - Applied consistent `pub(crate)` visibility (simple over clever)
+  - Documented module structure and visibility philosophy
 
 ---
 

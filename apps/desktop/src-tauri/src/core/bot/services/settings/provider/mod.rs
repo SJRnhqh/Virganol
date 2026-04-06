@@ -5,7 +5,6 @@ mod key;
 mod lifecycle;
 mod manager;
 mod persistence;
-mod selection;
 
 pub(crate) use connection::health_check;
 pub(crate) use key::{
@@ -16,4 +15,3 @@ pub(crate) use manager::{connect_and_save, reset_provider_config, update_provide
 pub(crate) use persistence::{
     load_provider_record, load_supported_providers, remove_provider, save_provider, update_models,
 };
-pub(crate) use selection::compute_enabled_models;
