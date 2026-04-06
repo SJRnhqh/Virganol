@@ -3,7 +3,7 @@
 use crate::core::bot::models::{
     HealthCheckResponse, ProviderId, ProviderKeySource, ProviderSecretMeta,
 };
-use crate::core::bot::services::{health_check, load_provider_key, load_provider_key_from_env};
+use crate::core::bot::services::{health_check, load_provider_env, load_provider_key};
 
 /// 一次性解析密钥并执行健康检查，同时返回密钥来源元信息（env 优先，其次 keyring）
 /// 避免 keyring 系统调用被重复触发两次
@@ -11,7 +11,7 @@ pub(super) async fn health_check_with_secret_meta(
     provider_id: ProviderId,
     url: &str,
 ) -> (HealthCheckResponse, ProviderSecretMeta) {
-    let (api_key, secret_meta) = if let Some(k) = load_provider_key_from_env(provider_id) {
+    let (api_key, secret_meta) = if let Some(k) = load_provider_env(provider_id) {
         (
             Some(k),
             ProviderSecretMeta::with_source(ProviderKeySource::Env),

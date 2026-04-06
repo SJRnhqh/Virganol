@@ -57,7 +57,7 @@ pub(crate) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> 
 }
 
 /// 从环境变量读取 provider 的 API Key（开发/CI 兜底）。
-pub(crate) fn load_provider_key_from_env(provider_id: ProviderId) -> Option<ProviderKey> {
+pub(crate) fn load_provider_env(provider_id: ProviderId) -> Option<ProviderKey> {
     for env_name in provider_id.env_key_names() {
         if let Ok(mut value) = std::env::var(env_name) {
             let normalized = value.trim();

@@ -5,8 +5,8 @@ use tauri::AppHandle;
 
 // 内部引用
 use super::super::{
-    health_check, load_provider_key, load_provider_key_from_env, load_provider_record,
-    remove_provider_key, save_provider, save_provider_key,
+    health_check, load_provider_env, load_provider_key, load_provider_record, remove_provider_key,
+    save_provider, save_provider_key,
 };
 use crate::core::bot::helpers::compute_enabled_models;
 use crate::core::bot::models::{HealthCheckResponse, ProviderId, ProviderRecord};
@@ -31,7 +31,7 @@ pub(crate) async fn connect_and_save(
 
     // 2) 密钥解析：若未输入则尝试回退 (env -> keyring)，否则使用当前输入
     let resolved_key_guard = if normalized_key.is_empty() {
-        load_provider_key_from_env(provider_id).or_else(|| load_provider_key(provider_id))
+        load_provider_env(provider_id).or_else(|| load_provider_key(provider_id))
     } else {
         None
     };
