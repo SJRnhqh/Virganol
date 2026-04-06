@@ -87,7 +87,7 @@ Audit all functions called by `connect_and_save`:
 
 **Key Management audit complete** - all functions reviewed, optimized, and migrated to modular structure.
 
-**Health Check** (`connection/health.rs`)
+**Health Check** (`connection/`)
 
 **Refactoring Complete**:
 
@@ -95,13 +95,22 @@ Audit all functions called by `connect_and_save`:
 - [x] Establish strict visibility hierarchy (`pub(crate)` → `pub(self)` → `pub(super)` → `private`)
 - [x] Extract `ProviderDriver` trait to `core/bot/interfaces`
 - [x] Apply principle of least privilege
+- [x] Tighten `health_check` visibility to `pub(self)` (provider module internal only)
 
-**Audit Pending**:
+**Interface Audit Complete**:
 
-- [ ] `health_check` function implementation audit
-- [ ] `get_driver` registry mechanism audit
-- [ ] `deepseek_check` / `ollama_check` implementation audit
-- [ ] Error handling consistency audit
+- [x] `health_check` function interface verified
+  - Signature: `async fn(ProviderId, &str, &str) -> HealthCheckResponse`
+  - Called correctly by `manager/connect.rs` and `lifecycle/resolver.rs`
+  - Visibility restricted to `pub(self)` (module internal)
+  - Error handling consistent with caller expectations
+
+**Implementation audit deferred** (out of scope for CRUD chain refactoring):
+
+- Driver registry mechanism (`get_driver`)
+- Provider-specific implementations (`deepseek_check` / `ollama_check`)
+- HTTP client error handling details
+- See ROADMAP Phase 6+ for health check subsystem optimization
 
 **Persistence** (`persistence.rs`)
 
