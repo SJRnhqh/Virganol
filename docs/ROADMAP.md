@@ -153,6 +153,7 @@ settings/provider/
 - [x] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
 - [ ] `store.rs` — 评估按 provider 独立 key 存储或脏标记机制，降低 I/O 开销
 - [ ] `persistence.rs` — 引入 `ProvidersStore` cache，避免 `load_supported_providers` / `load_provider_record` 重复 I/O + 反序列化（触发条件：providers 数量 >20 或单次请求内多次读取）
+- [ ] `persistence.rs` — **[BUG_RISK]** 统一 provider 键生成策略：`save_provider` 使用 `provider_id.to_string()`（依赖 Display trait），而 `remove_provider` / `update_models` 使用 `provider_id.as_str()`。如果未来 `ProviderId::Display` 实现与 `as_str()` 结果不一致（如添加前缀 `"Provider(deepseek)"`），会导致保存/查询键不匹配，删除和更新操作失败。应统一使用 `as_str().to_string()` 作为稳定的存储键
 - [ ] `reconcile_enabled_models` — 无变更路径避免 `record.clone()`
 - [x] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [x] `PROVIDERS_STORE_LOCK` — 评估完成，现有 `static Mutex<()>` 实现自洽，迁移至 `State<Mutex<T>>` 留待架构层统一推进
