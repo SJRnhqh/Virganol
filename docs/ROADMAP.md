@@ -83,9 +83,19 @@ settings/provider/
   操作期间补 pending UI 保护，防止重复触发
 - [ ] `update_models` / `reset` / `retry` 异常一致性回归，
   覆盖快速切换、持久化失败与重复点击场景
-- [ ] `connect` 重连语义：确认重新连接时模型 enabled 状态是全量重置还是与旧偏好 merge
+- [x] `connect` 重连语义：确认重新连接时模型 enabled 状态是全量重置还是与旧偏好 merge
+  - 已实现：重连时保留交集（已启用且仍可用的模型），首次连接为空列表
 
 #### 5.2 CRUD 链路审查
+
+**connect 后端审查**：
+
+- [x] `connect_and_save` 主流程审查完成
+  - 密钥解析逻辑（env → keyring 回退）
+  - 健康检查调用
+  - 持久化事务（config + key 原子性 / 回滚）
+  - enabled_models 计算逻辑（首次/重连语义）
+  - 错误处理一致性
 
 **connect 前端审查**：
 
@@ -93,12 +103,31 @@ settings/provider/
 - [ ] `useProviderCollectionStore`：成功/失败路径状态回写对称性
 - [ ] 组件 / 类型 / 常量 / 图标配套完整性
 
-**reset / update_models**：
+**reset 后端审查**：
 
-- [ ] reset 后端：invoke `reset_provider` 契约 → `reset_provider_config`（config + key 原子性 / 回滚）→ store 读写
-- [ ] reset 前端：`useProviderConnection.onReset` 调用链 → 失败时前端状态回滚一致性 → 组件 / 类型 / 常量配套
-- [ ] update_models 后端：invoke `update_enabled_models` 契约 → `update_provider_enabled_models` → store 读写
-- [ ] update_models 前端：`useProviderModelList` 调用链（并发互斥 / `pendingRef` 锁）→ 结果反馈补齐 → 组件 / 类型 / 常量配套
+- [x] `reset_provider_config` 审查完成
+  - config + key 原子性删除
+  - 回滚逻辑验证（key 删除失败时回滚 config）
+  - 错误处理一致性
+
+**reset 前端审查**：
+
+- [ ] `useProviderConnection.onReset` 调用链
+- [ ] 失败时前端状态回滚一致性
+- [ ] 组件 / 类型 / 常量配套
+
+**update_models 后端审查**：
+
+- [x] `update_provider_enabled_models` 审查完成
+  - invoke 契约验证
+  - store 读写逻辑
+  - 错误处理一致性
+
+**update_models 前端审查**：
+
+- [ ] `useProviderModelList` 调用链（并发互斥 / `pendingRef` 锁）
+- [ ] 结果反馈补齐
+- [ ] 组件 / 类型 / 常量配套
 
 #### 5.3 错误体系收敛
 
@@ -123,12 +152,15 @@ settings/provider/
 
 - [x] `resolver.rs` — 密钥解析合并为单次，同时返回 key + meta，消除重复 I/O
 - [ ] `store.rs` — 评估按 provider 独立 key 存储或脏标记机制，降低 I/O 开销
+- [ ] `persistence.rs` — 引入 `ProvidersStore` cache，避免 `load_supported_providers` / `load_provider_record` 重复 I/O + 反序列化（触发条件：providers 数量 >20 或单次请求内多次读取）
+- [ ] `persistence.rs` — **[BUG_RISK]** 统一 provider 键生成策略：`save_provider` 使用 `provider_id.to_string()`（依赖 Display trait），而 `remove_provider` / `update_models` 使用 `provider_id.as_str()`。如果未来 `ProviderId::Display` 实现与 `as_str()` 结果不一致（如添加前缀 `"Provider(deepseek)"`），会导致保存/查询键不匹配，删除和更新操作失败。应统一使用 `as_str().to_string()` 作为稳定的存储键
 - [ ] `reconcile_enabled_models` — 无变更路径避免 `record.clone()`
 - [x] `SkippedProviderDetail` 补 `::new()` 构造函数，与 `ProviderIssue` 风格统一
 - [x] `PROVIDERS_STORE_LOCK` — 评估完成，现有 `static Mutex<()>` 实现自洽，迁移至 `State<Mutex<T>>` 留待架构层统一推进
 - [ ] `core/bot/models` 可见性收紧 — 完成 lifecycle 链路迁移后，将领域内部类型（`ProviderKey` / `ProviderRecord` / `ProviderIssue` / `SkippedProviderDetail`）从 `pub` 收紧为 `pub(crate)`，仅保留跨层契约类型（`ConnectAndSaveProviderRequest` / `HealthCheckResponse` / `ProviderId` / `ProviderError`）为 `pub`
 - [ ] 密钥解析逻辑优化 — 密钥回退逻辑（env → keyring）与 `lifecycle/resolver.rs` 的重复性评估，考察 `key` 层函数重构以消灭 `resolved_key_guard` 的显式 `None` 分支
 - [ ] provider 级别锁优化 — 实现 per-provider 锁，串行化同一 provider 的 connect 流程，避免高并发下状态互相覆盖
+- [ ] 健康检查子系统优化 — Driver 注册表机制审查、provider 实现细节优化（`deepseek_check` / `ollama_check`）、HTTP 客户端错误处理精细化（网络/认证/超时区分）
 
 #### 6.3 生命周期收口
 

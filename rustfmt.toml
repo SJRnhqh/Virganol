@@ -1,0 +1,34 @@
+# Rust Code Formatting Configuration
+# Rust 代码格式化配置
+#
+# Usage: Run `cargo fmt` to auto-format all Rust code
+# 使用方法：运行 `cargo fmt` 自动格式化所有 Rust 代码
+#
+# Documentation: https://rust-lang.github.io/rustfmt/
+
+# ============================================================================
+# Basic Configuration (Stable Features)
+# 基础配置（稳定功能）
+# ============================================================================
+
+# Rust edition to use for formatting
+# 使用的 Rust 版本（影响语法解析）
+edition = "2021"
+
+# Maximum width of each line
+# 每行最大字符数
+max_width = 100
+
+# Number of spaces per tab
+# 每个缩进的空格数
+tab_spaces = 4
+
+# ============================================================================
+# Future Configuration (Unstable Features - Requires Nightly)
+# 未来配置（实验性功能 - 需要 nightly 版本）
+# ============================================================================
+# Uncomment the following lines if using nightly Rust:
+# 如果使用 nightly 版本，可以取消下面的注释：
+#
+# imports_granularity = "Crate"      # Group imports by crate
+# group_imports = "StdExternalCrate" # Order: std → external → internal
