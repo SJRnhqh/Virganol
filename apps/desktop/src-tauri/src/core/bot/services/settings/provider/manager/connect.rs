@@ -72,8 +72,14 @@ pub(crate) async fn connect_and_save(
     // 5) 复用历史启用状态，并与本次可用模型做交集对齐
     let previous_record = load_provider_record(app, provider_id);
     let next_enabled_models = match previous_record {
-        Some(record) => compute_enabled_models(&record.enabled_models, &result.available_models),
-        None => result.available_models.clone(),
+        Some(record) => {
+            // 重连：保留用户偏好，仅保留交集（已启用且仍可用的模型）
+            compute_enabled_models(&record.enabled_models, &result.available_models)
+        }
+        None => {
+            // 首次连接：不自动启用任何模型，等待用户显式选择
+            vec![]
+        }
     };
 
     // 6) 持久化写入配置

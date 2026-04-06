@@ -39,6 +39,15 @@ Audit all functions called by `connect_and_save`:
   - Refactored to early return pattern for improved readability
   - Verified key rollback logic correctness (env/keyring priority semantics)
   - Confirmed business logic integrity across all edge cases
+  - Changed first connection behavior: empty enabled_models list (requires explicit user selection)
+
+**Business Logic** (`selection.rs`)
+
+- [x] `compute_enabled_models`
+  - Verified intersection logic correctness (preserves user preferences)
+  - Confirmed HashSet optimization for O(1) lookup performance
+  - Added comprehensive documentation (English + Chinese, with examples)
+  - Implementation is optimal and follows Rust community best practices
 
 **Key Management** (`key.rs`)
 
@@ -67,10 +76,6 @@ Audit all functions called by `connect_and_save`:
 
 - [ ] `load_provider_record`
 - [ ] `save_provider`
-
-**Business Logic** (`selection.rs`)
-
-- [ ] `compute_enabled_models`
 
 Audit dimensions:
 
