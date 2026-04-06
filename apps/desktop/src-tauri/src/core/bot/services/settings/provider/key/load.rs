@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/bot/services/settings/provider/key.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/key/load.rs
 // 外部依赖
 use keyring::{Entry, Error as KeyringError};
 use zeroize::Zeroize;
@@ -15,7 +15,7 @@ use crate::core::bot::models::{ProviderId, ProviderKey};
 /// - 读取过程异常：记录 warn 日志并返回 `None`
 ///
 /// 说明：这里返回 `Option` 是为了让启动检查链路尽量不中断；
-/// 若后续用于”强校验场景”（如 connect 保存事务），可升级为 `Result<Option<String>, _>`。
+/// 若后续用于"强校验场景"（如 connect 保存事务），可升级为 `Result<Option<String>, _>`。
 pub(crate) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
     // keyring 的 Entry 由 (service, user/account) 唯一定位。
     // 这里将 provider_id 作为第二个索引键（account）使用。
@@ -24,7 +24,7 @@ pub(crate) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> 
     let entry = match Entry::new(PROVIDER_KEYRING_SERVICE, account) {
         Ok(entry) => entry,
         Err(error) => {
-            // keyring 初始化失败：记录警告并降级为“无可用密钥”。
+            // keyring 初始化失败：记录警告并降级为"无可用密钥"。
             log::warn!("[Tauri] ⚠️ init keyring entry failed: {}", error);
             return None;
         }
@@ -49,7 +49,7 @@ pub(crate) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> 
         }
         Err(KeyringError::NoEntry) => None,
         Err(error) => {
-            // keyring 读取失败：记录警告并降级为“无可用密钥”。
+            // keyring 读取失败：记录警告并降级为"无可用密钥"。
             log::warn!("[Tauri] ⚠️ load key failed for {}: {}", account, error);
             None
         }
