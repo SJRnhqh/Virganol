@@ -2,4 +2,4 @@
 // 导出内容
 mod persistence;
 
-pub(crate) use persistence::{load_settings, load_settings_strict, save_settings};
+pub(crate) use persistence::{load_settings, save_settings};
