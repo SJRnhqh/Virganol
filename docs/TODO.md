@@ -73,11 +73,19 @@ Audit all functions called by `connect_and_save`:
   - Removed redundant variables (`account`)
   - Error wrapping to `ProviderError::Keyring`
   - Idempotent delete (NoEntry treated as success)
+- [x] `load_provider_key` - migrated to `key/load.rs`
+  - Functional style refactoring with `inspect_err` + `?`
+  - Removed redundant variables (`account`)
+  - Extracted `normalize_and_wrap_key` helper (DRY principle)
+  - Zero-copy optimization preserved (trim + zeroize)
+  - Graceful error handling (warn logs + None fallback)
+- [x] `load_provider_env` - migrated to `key/load.rs`
+  - Refactored from `for` loop to `find_map` functional style
+  - Shared `normalize_and_wrap_key` helper with `load_provider_key`
+  - Minimized sensitive data lifetime (immediate consumption)
+  - Log only on success (empty values silently skipped)
 
-**Audit Pending**:
-
-- [ ] `load_provider_key` - audit and migrate to `key/load.rs`
-- [ ] `load_provider_key_from_env` - audit and migrate to `key/load.rs` or separate file
+**Key Management audit complete** - all functions reviewed, optimized, and migrated to modular structure.
 
 **Health Check** (`connection/health.rs`)
 
