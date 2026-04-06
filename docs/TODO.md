@@ -52,12 +52,32 @@ Audit all functions called by `connect_and_save`:
   - Established `helpers` module for domain-specific utility functions
   - Applied `pub(crate)` visibility for simplicity (Rust community best practice)
 
-**Key Management** (`key.rs`)
+**Key Management** (`key/`)
 
-- [ ] `load_provider_key`
-- [ ] `load_provider_key_from_env`
-- [ ] `save_provider_key`
-- [ ] `remove_provider_key`
+**Refactoring Complete**:
+
+- [x] Migrate to `services/settings/provider/key/` module structure
+- [x] Establish strict visibility hierarchy (`pub(super)` → `pub(self)`)
+- [x] Add `ProviderError::Keyring` variant for unified error handling
+- [x] Update `ProviderErrorCode` with `keyring_error` mapping
+
+**Audit Complete**:
+
+- [x] `save_provider_key` - migrated to `key/save.rs`
+  - Unified error handling (`Result<(), ProviderError>`)
+  - Removed redundant variables (`account`)
+  - Error wrapping to `ProviderError::Keyring`
+  - Caller simplified in `connect.rs` (direct `e.message()` propagation)
+- [x] `remove_provider_key` - migrated to `key/remove.rs`
+  - Unified error handling (`Result<(), ProviderError>`)
+  - Removed redundant variables (`account`)
+  - Error wrapping to `ProviderError::Keyring`
+  - Idempotent delete (NoEntry treated as success)
+
+**Audit Pending**:
+
+- [ ] `load_provider_key` - audit and migrate to `key/load.rs`
+- [ ] `load_provider_key_from_env` - audit and migrate to `key/load.rs` or separate file
 
 **Health Check** (`connection/health.rs`)
 

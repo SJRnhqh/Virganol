@@ -79,38 +79,3 @@ pub(crate) fn load_provider_key_from_env(provider_id: ProviderId) -> Option<Prov
 
     None
 }
-
-/// 将 provider 的 API Key 写入系统密钥库。
-///
-/// - `provider_id` 使用 ProviderId 枚举，避免无效字符串传入
-/// - `key` 允许空字符串：空时等价于删除条目
-pub(crate) fn save_provider_key(provider_id: ProviderId, key: &str) -> Result<(), String> {
-    let normalized_key = key.trim();
-    let account = provider_id.as_str();
-
-    if normalized_key.is_empty() {
-        return remove_provider_key(provider_id);
-    }
-
-    let entry = Entry::new(PROVIDER_KEYRING_SERVICE, account)
-        .map_err(|error| format!("init keyring entry failed: {}", error))?;
-    entry
-        .set_password(normalized_key)
-        .map_err(|error| format!("save key failed for {}: {}", account, error))
-}
-
-/// 从系统密钥库删除 provider 的 API Key。
-///
-/// - `provider_id` 使用 ProviderId 枚举，避免无效字符串传入
-/// - 条目不存在（`NoEntry`）视为成功（幂等）
-pub(crate) fn remove_provider_key(provider_id: ProviderId) -> Result<(), String> {
-    let account = provider_id.as_str();
-
-    let entry = Entry::new(PROVIDER_KEYRING_SERVICE, account)
-        .map_err(|error| format!("init keyring entry failed: {}", error))?;
-
-    match entry.delete_credential() {
-        Ok(()) | Err(KeyringError::NoEntry) => Ok(()),
-        Err(error) => Err(format!("remove key failed for {}: {}", account, error)),
-    }
-}

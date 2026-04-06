@@ -55,12 +55,8 @@ pub(crate) async fn connect_and_save(
     // 4) 持久化密钥（仅用户显式输入时）
     if !normalized_key.is_empty() {
         // 用户显式输入的 key 已通过健康检查，持久化到 keyring
-        if let Err(error_msg) = save_provider_key(provider_id, normalized_key) {
-            error!(
-                "[Tauri] ❌ {} key persist failed: {}",
-                provider_id, error_msg
-            );
-            return HealthCheckResponse::fail("Failed to persist provider key");
+        if let Err(e) = save_provider_key(provider_id, normalized_key) {
+            return HealthCheckResponse::fail(e.message());
         }
     } else {
         // 用户未显式输入 key：来源可能是 env / keyring / 无需密钥，均无需持久化
@@ -74,16 +70,9 @@ pub(crate) async fn connect_and_save(
     let previous_record = match load_provider_record(app, provider_id) {
         Ok(record) => record,
         Err(e) => {
-            error!(
-                "[Tauri] ❌ {} load previous config failed: {}",
-                provider_id, e
-            );
             // TODO: 结构性错误应与健康检查失败区分，考虑扩展 HealthCheckResponse
             // 添加 error_code 字段，让前端能识别 io_error/serde_error 等系统级错误
-            return HealthCheckResponse::fail(format!(
-                "Failed to load provider config: {}",
-                e.message()
-            ));
+            return HealthCheckResponse::fail(e.message());
         }
     };
     let next_enabled_models = match previous_record {
@@ -118,10 +107,11 @@ pub(crate) async fn connect_and_save(
                 remove_provider_key(provider_id)
             };
 
-            if let Err(rollback_error) = rollback_result {
+            // 回滚失败不影响主错误返回，仅记录 error 日志供运维排查 keyring 状态不一致问题
+            if let Err(re) = rollback_result {
                 error!(
                     "[Tauri] ❌ {} key rollback failed after config persist error: {}",
-                    provider_id, rollback_error
+                    provider_id, re
                 );
             } else {
                 info!("[Tauri] ↩️ {} key rollback completed", provider_id);
@@ -130,10 +120,7 @@ pub(crate) async fn connect_and_save(
 
         // TODO: 结构性错误应与健康检查失败区分，考虑扩展 HealthCheckResponse
         // 添加 error_code 字段，让前端能识别 io_error/serde_error 等系统级错误
-        return HealthCheckResponse::fail(format!(
-            "Failed to persist provider config: {}",
-            e.message()
-        ));
+        return HealthCheckResponse::fail(e.message());
     }
     result
 }
