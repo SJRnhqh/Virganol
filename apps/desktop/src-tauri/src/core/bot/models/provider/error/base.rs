@@ -13,6 +13,7 @@ pub enum ProviderError {
     UnsupportedProvider(String),
     LifecycleEventEmit(String),
     LifecycleConcurrentCheck(String),
+    Keyring(String),
 }
 
 impl fmt::Display for ProviderError {
@@ -22,7 +23,8 @@ impl fmt::Display for ProviderError {
             Self::Io(msg)
             | Self::UnsupportedProvider(msg)
             | Self::LifecycleEventEmit(msg)
-            | Self::LifecycleConcurrentCheck(msg) => f.write_str(msg),
+            | Self::LifecycleConcurrentCheck(msg)
+            | Self::Keyring(msg) => f.write_str(msg),
         }
     }
 }
@@ -45,6 +47,7 @@ impl ProviderError {
             Self::UnsupportedProvider(_) => ProviderErrorCode::UnsupportedProvider,
             Self::LifecycleEventEmit(_) => ProviderErrorCode::LifecycleEventEmit,
             Self::LifecycleConcurrentCheck(_) => ProviderErrorCode::LifecycleConcurrentCheck,
+            Self::Keyring(_) => ProviderErrorCode::Keyring,
         }
     }
 

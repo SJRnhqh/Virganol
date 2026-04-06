@@ -5,7 +5,7 @@ use std::sync::Mutex;
 use tauri::AppHandle;
 
 // 内部引用
-use super::super::{load_settings, load_settings_strict, save_settings};
+use super::super::{load_settings, save_settings};
 use crate::core::bot::constants::SPIRIT_PROVIDERS_KEY;
 use crate::core::bot::models::{
     ProviderError, ProviderId, ProviderRecord, SkippedProviderDetail, SupportedProvidersSnapshot,
@@ -14,24 +14,14 @@ use crate::core::bot::models::{
 // 写操作互斥锁；后续可评估迁移至 Tauri State<Mutex<T>> 统一管理生命周期（见 ROADMAP Phase 6.2）。
 static PROVIDERS_STORE_LOCK: Mutex<()> = Mutex::new(());
 
-/// 读取所有已保存的 providers
-/// 返回 HashMap<provider_id_string, ProviderRecord>
-fn load_all_providers(app: &AppHandle) -> HashMap<String, ProviderRecord> {
-    load_settings(app, SPIRIT_PROVIDERS_KEY)
-        .and_then(|value| serde_json::from_value(value).ok())
-        .unwrap_or_default()
-}
-
-/// 严格读取所有已保存 providers：
+/// 读取所有已保存 providers：
 /// - Ok(HashMap)：读取并完成反序列化
 /// - Ok(empty)：配置不存在（尚未写入）
 /// - Err(ProviderError::Io)：settings store 打开/读取失败
 /// - Err(ProviderError::Serde)：providers JSON 反序列化失败
-fn load_all_providers_strict(
-    app: &AppHandle,
-) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
+fn load_all_providers(app: &AppHandle) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
     // 如果加载配置出错则上抛对应错误
-    let maybe_value = load_settings_strict(app, SPIRIT_PROVIDERS_KEY)?;
+    let maybe_value = load_settings(app, SPIRIT_PROVIDERS_KEY)?;
     let Some(value) = maybe_value else {
         return Ok(HashMap::new());
     };
@@ -46,7 +36,7 @@ pub(crate) fn load_supported_providers(
     app: &AppHandle,
 ) -> Result<SupportedProvidersSnapshot, ProviderError> {
     // 上抛严格加载所有配置的错误
-    let providers = load_all_providers_strict(app)?;
+    let providers = load_all_providers(app)?;
     let total = providers.len();
     let mut supported = Vec::new();
     let mut skipped = Vec::new();
@@ -69,15 +59,22 @@ pub(crate) fn load_supported_providers(
     })
 }
 
-/// 读取单个 provider 的配置快照（只读）
-/// - Some(record)：存在该 provider 配置
-/// - None：不存在该 provider 配置
+/// 读取单个 provider 的配置快照（只读，严格错误处理）
+/// - Ok(Some(record))：存在该 provider 配置
+/// - Ok(None)：不存在该 provider 配置
+/// - Err(ProviderError::Io)：settings store 打开/读取失败
+/// - Err(ProviderError::Serde)：providers JSON 反序列化失败
+///
+/// TODO: 当前使用 clone (~150 bytes)，如果未来 ProviderRecord 字段增多（如添加
+/// model_configs、usage_history 等）或调用频率变高（如自动重连），可考虑引入
+/// ProvidersCache 结构返回引用，避免重复反序列化和内存分配。
 pub(crate) fn load_provider_record(
     app: &AppHandle,
     provider_id: ProviderId,
-) -> Option<ProviderRecord> {
-    let provider_name = provider_id.as_str();
-    load_all_providers(app).get(provider_name).cloned()
+) -> Result<Option<ProviderRecord>, ProviderError> {
+    let providers = load_all_providers(app)?;
+    // TODO: 性能优化点 - 当 ProviderRecord 变大或调用频率变高时，考虑返回引用
+    Ok(providers.get(provider_id.as_str()).cloned())
 }
 
 /// 保存单个 provider 的配置（upsert：有则覆盖，无则新增）
@@ -92,9 +89,8 @@ pub(crate) fn save_provider(
         .lock()
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
 
-    let provider_name = provider_id.as_str();
-    let mut providers = load_all_providers_strict(app)?;
-    providers.insert(provider_name.to_string(), record.clone());
+    let mut providers = load_all_providers(app)?;
+    providers.insert(provider_id.to_string(), record.clone());
 
     let value = serde_json::to_value(&providers)?;
     save_settings(app, SPIRIT_PROVIDERS_KEY, value)
@@ -114,7 +110,7 @@ pub(crate) fn remove_provider(
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
 
     let provider_name = provider_id.as_str();
-    let mut providers = load_all_providers_strict(app)?;
+    let mut providers = load_all_providers(app)?;
     let existed = providers.remove(provider_name).is_some();
 
     if !existed {
@@ -141,7 +137,7 @@ pub(crate) fn update_models(
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
 
     let provider_name = provider_id.as_str();
-    let mut providers = load_all_providers_strict(app)?;
+    let mut providers = load_all_providers(app)?;
 
     let Some(record) = providers.get_mut(provider_name) else {
         return Ok(false);
