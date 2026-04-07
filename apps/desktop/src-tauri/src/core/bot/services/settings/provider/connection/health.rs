@@ -1,10 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/health.rs
 // 内部引用
+use super::get_driver;
 use crate::core::bot::models::{HealthCheckResponse, ProviderId};
 
-use super::get_driver;
-
-/// connections 层统一健康检查入口
+/// Unified health check entry point for the connection layer.
+///
+/// connection 层统一健康检查入口，根据 provider ID 路由到对应 driver 实现。
 pub(crate) async fn health_check(
     provider_id: ProviderId,
     url: &str,

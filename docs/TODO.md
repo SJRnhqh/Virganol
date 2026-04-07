@@ -16,9 +16,14 @@ Audit and refine the health check subsystem under `services/settings/provider/co
 
 **File**: `apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/registry.rs`
 
-- [ ] Verify `get_driver()` lookup logic
-- [ ] Confirm registered providers align with frontend whitelist (deepseek/ollama)
-- [ ] Evaluate `OnceLock<HashMap>` initialization pattern
+- [x] Verify `get_driver()` lookup logic
+- [x] Confirm registered providers align with frontend whitelist (deepseek/ollama)
+- [x] Evaluate `OnceLock<HashMap>` initialization pattern
+
+**Additional files reviewed**:
+
+- [x] `health.rs` - routing logic correct, error fallback in place
+- [x] `interfaces/provider/driver.rs` - trait design sound, lifetime annotations correct
 
 ### 2. Provider Implementation Audit
 
