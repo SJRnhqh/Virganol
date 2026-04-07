@@ -93,8 +93,25 @@ development version
   validation, and necessary updates are finished.
 - A completed working branch should merge back into the corresponding `feat/*`
   branch through PR.
-- Commit messages should stay short and consistent, using `emoji + type +
-  lowercase English summary`.
+
+### Commit Message Convention
+
+Commit messages follow the format: `<emoji> <type>: <subject>` (max 100 characters).
+
+**Rules**:
+
+- Subject must be lowercase, no trailing period
+- Body and footer require blank line separation if present
+- Enforced by commitlint via husky hooks (note: some IDEs may bypass)
+
+**Types by branch**:
+
+- `main`: `🌱 init`, `🚀 release`
+- `dev`: `📦 version`
+- `version`: `🎉 epic`, `⚗️ verify`, `📜 closeout`
+- `feat/*`: `📝 docs`, `✨ feat`, `🎨 style`, `🔧 fix`, `🔨 refactor`, `🧹 chore`, `🧪 test`
+
+**Example**: `🌱 init: seedling of Virganol planted`
 
 ### Release Lifecycle
 

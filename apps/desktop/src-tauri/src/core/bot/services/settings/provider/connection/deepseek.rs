@@ -9,18 +9,17 @@ const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
 
 /// DeepSeek 健康检查：GET {base_url}/v1/models + Bearer token → 解析模型列表
 pub(super) async fn deepseek_check(key: &str) -> HealthCheckResponse {
-    if key.trim().is_empty() {
-        return HealthCheckResponse::fail("Missing API key (input or DEEPSEEK_API_KEY)");
+    if key.is_empty() {
+        return HealthCheckResponse::fail("Missing API key");
     }
 
-    let base = DEEPSEEK_BASE_URL.trim_end_matches('/');
-    let endpoint = format!("{}/v1/models", base);
+    let endpoint = format!("{}/v1/models", DEEPSEEK_BASE_URL);
     info!("[Tauri][DeepSeek] → {}", endpoint);
 
     // 每次调用新建 Client；provider 数量少时影响有限，规模扩展后可提升为 OnceLock<Client> 复用连接池。
     let resp = match reqwest::Client::new()
         .get(&endpoint)
-        .bearer_auth(key.trim())
+        .bearer_auth(key)
         .timeout(std::time::Duration::from_secs(5))
         .send()
         .await
