@@ -32,10 +32,19 @@ Audit and refine the health check subsystem under `services/settings/provider/co
 - `apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/deepseek.rs`
 - `apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/ollama.rs`
 
-- [ ] HTTP client error handling (network/timeout/auth distinction)
-- [ ] Response parsing robustness (empty models, malformed JSON)
-- [ ] Evaluate per-call `Client::new()` vs shared connection pool
-- [ ] Timeout configuration (current: 5s hardcoded)
+**Ollama**:
+
+- [x] HTTP client error handling (network/timeout/auth distinction)
+- [x] Response parsing robustness (empty models, malformed JSON)
+- [x] Evaluate per-call `Client::new()` vs shared connection pool
+- [x] Timeout configuration (current: 5s hardcoded)
+
+**Deepseek**:
+
+- [x] HTTP client error handling (network/timeout/auth distinction)
+- [x] Response parsing robustness (empty models, malformed JSON)
+- [x] Evaluate per-call `Client::new()` vs shared connection pool
+- [x] Timeout configuration (current: 5s hardcoded)
 
 ### 3. Error Granularity Enhancement
 

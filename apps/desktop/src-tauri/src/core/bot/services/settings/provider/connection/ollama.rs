@@ -8,11 +8,11 @@ use crate::core::bot::models::HealthCheckResponse;
 /// Ollama 健康检查：GET {url}/api/tags → 解析模型列表
 /// `key` 为可选，非空时附带 Bearer 认证头，空字符串时直接忽略
 pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
-    if url.trim().is_empty() {
+    if url.is_empty() {
         return HealthCheckResponse::fail("Missing URL");
     }
 
-    let base = url.trim().trim_end_matches('/');
+    let base = url.trim_end_matches('/');
     let endpoint = format!("{}/api/tags", base);
     info!("[Tauri][Ollama] → {}", endpoint);
 
@@ -20,8 +20,8 @@ pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
     let mut request = reqwest::Client::new()
         .get(&endpoint)
         .timeout(std::time::Duration::from_secs(5));
-    if !key.trim().is_empty() {
-        request = request.bearer_auth(key.trim());
+    if !key.is_empty() {
+        request = request.bearer_auth(key);
     }
 
     let resp = match request.send().await {
