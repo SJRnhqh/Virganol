@@ -6,7 +6,7 @@
 
 ## Scope
 
-Audit and refine the health check subsystem under `services/settings/provider/connection/`, focusing on error granularity, driver implementation, and response structure.
+Audit and refine the health check subsystem under `services/settings/provider/connection/`, focusing on driver implementation and code quality.
 
 ---
 
@@ -46,36 +46,28 @@ Audit and refine the health check subsystem under `services/settings/provider/co
 - [x] Evaluate per-call `Client::new()` vs shared connection pool
 - [x] Timeout configuration (current: 5s hardcoded)
 
-### 3. Error Granularity Enhancement
+### 3. Code Quality Improvements
 
-**Context**: ROADMAP Phase 5.3 — distinguish network/auth/timeout failures
+- [x] Remove redundant `trim()` calls (upstream already normalizes input)
+- [x] Simplify error messages (remove misleading env var hints)
+- [x] Remove unnecessary `trim_end_matches` on constants
 
-- [ ] Define new `ProviderErrorCode` variants for health check failures:
-  - Network unreachable
-  - Authentication failed (401/403)
-  - Timeout
-  - Invalid response format
-- [ ] Map `reqwest::Error` to fine-grained error codes
-- [ ] Update `HealthCheckResponse` to carry `error_code` field
+---
 
-### 4. Response Structure Extension
+## Findings & Deferred Optimizations
 
-**File**: `apps/desktop/src-tauri/src/core/bot/models/provider/check.rs`
+**Current implementation is sound**. The following optimizations are identified but deferred to later phases:
 
-- [ ] Add `error_code: Option<ProviderErrorCode>` to `HealthCheckResponse`
-- [ ] Distinguish system errors (io/serde) from health check failures
-- [ ] Update `connect.rs` TODO comments (L74, L122) after structure finalized
-
-### 5. Integration Verification
-
-- [ ] Ensure `health_check()` error codes propagate to `connect_and_save`
-- [ ] Verify frontend can consume fine-grained error codes
-- [ ] Update error handling in `manager/connect.rs` if needed
+- **Error granularity** (Phase 5.3): Distinguish network/auth/timeout failures with fine-grained error codes
+- **Connection pool** (Phase 6.2): Replace per-call `Client::new()` with `OnceLock<Client>`
+- **Timeout configuration** (Phase 6.2): Make 5s timeout configurable
+- **Log standardization** (Phase 6.x): Unify log format and levels
 
 ---
 
 ## Out of Scope
 
+- Error code mapping and `HealthCheckResponse` structure extension (Phase 5.3)
 - Frontend error display logic (Phase 5 frontend audit)
 - Lifecycle chain integration (Phase 6.3)
 - Per-provider locking mechanism (Phase 6.2 optimization)
