@@ -6,6 +6,6 @@ mod ollama;
 mod registry;
 
 pub(self) use deepseek::deepseek_check;
-pub(crate) use health::health_check;
+pub(super) use health::health_check;
 pub(self) use ollama::ollama_check;
 pub(self) use registry::get_driver;
