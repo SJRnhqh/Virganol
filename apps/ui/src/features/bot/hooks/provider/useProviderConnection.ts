@@ -42,7 +42,7 @@ export const useProviderConnection = (providerId: ProviderId) => {
           models: {
             available: response.available_models,
             enabled: Object.fromEntries(
-              response.available_models.map((model) => [model, true]),
+              response.available_models.map((model) => [model, false]),
             ),
           },
           errorMessage: null,

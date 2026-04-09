@@ -62,8 +62,9 @@ LLM Provider 接入分为两条主线：
 
 ### 🚧 Phase 6：全局优化与收尾
 
-#### 6.1 错误精细化处理
+#### 6.1 契约语义与错误精细化
 
+- [ ] **契约语义边界明确**：`connect_and_save` 返回专用 `ConnectResponse`（含 `enabled_models`），不复用 `HealthCheckResponse`
 - [ ] 健康检查错误细分（网络不可达 / 认证失败 / 超时 / 响应格式错误）
 - [ ] 扩展 `HealthCheckResponse` 添加 `error_code` 字段
 - [ ] 前端适配细粒度错误展示

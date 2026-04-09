@@ -26,25 +26,26 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 
 #### 1.1 API Layer
 
-- [ ] `services/api/provider/connect.ts` - invoke contract and error handling
-- [ ] Request payload construction (providerId/key/url normalization)
-- [ ] Response parsing and error mapping
+- [x] `services/api/provider/connect.ts` - invoke contract and error handling
+- [x] Request payload construction (providerId/key/url normalization)
+- [x] Response parsing and error mapping (error granularity deferred to Phase 6.1)
 
 #### 1.2 Hooks Layer
 
-- [ ] `useProviderConnection.onConnect` - call chain and pre-state mutations
-- [ ] Loading state management (prevent duplicate triggers)
+- [x] `useProviderConnection.onConnect` - call chain and pre-state mutations
+- [x] Loading state management (prevent duplicate triggers)
 - [ ] Error boundary integration
 
 #### 1.3 Store Layer
 
-- [ ] `useProviderCollectionStore` - success/failure path symmetry
-- [ ] State rollback on failure
-- [ ] `apiKey` memory cleanup after success
+- [x] `useProviderCollectionStore` - success/failure path symmetry
+- [x] State rollback on failure (design already prevents issue: FAILED state hides form, Retry reuses formData from store)
+- [x] `apiKey` memory cleanup after success
+- [x] **Fixed**: `enabled` models initialized to `false` (aligned with backend `enabled_models: []`)
 
 #### 1.4 Components Layer
 
-- [ ] `ProviderConnectionButton` - loading UI and disabled state
+- [x] `ProviderConnectionButton` - loading UI and disabled state (PENDING state disables button to prevent duplicate clicks)
 - [ ] `ProviderForm` - input validation and normalization
 - [ ] `ProviderErrorPanel` - error display consistency
 
