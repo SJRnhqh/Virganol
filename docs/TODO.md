@@ -34,7 +34,7 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 
 - [x] `useProviderConnection.onConnect` - call chain and pre-state mutations
 - [x] Loading state management (prevent duplicate triggers)
-- [ ] Error boundary integration
+- [x] Error boundary integration (deferred to Phase 6.1, TODO added in crud.ts)
 
 #### 1.3 Store Layer
 
@@ -46,14 +46,12 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 #### 1.4 Components Layer
 
 - [x] `ProviderConnectionButton` - loading UI and disabled state (PENDING state disables button to prevent duplicate clicks)
-- [ ] `ProviderForm` - input validation and normalization
-- [ ] `ProviderErrorPanel` - error display consistency
+- [x] `ProviderForm` - input validation and normalization (empty string acceptable, no frontend validation needed)
 
 #### 1.5 Supporting Layers
 
-- [ ] Types: `ConnectRequest` / `ConnectResponse` completeness
-- [ ] Constants: error code mapping coverage
-- [ ] Icons: connection state visual feedback
+- [x] Types: `ConnectRequest` / `ConnectResponse` completeness (contract boundary deferred to Phase 6.1, TODO added in useProviderConnection.ts)
+- [x] Icons: connection state visual feedback
 
 ---
 

@@ -26,45 +26,29 @@ LLM Provider 接入分为两条主线：
 
 #### 5.1 connect 链路
 
-**后端**：
-
 - [x] `connect_and_save` 主流程审查（密钥解析 / 健康检查 / 持久化事务 / enabled_models 计算）
 - [x] 健康检查子系统审查（registry / driver / deepseek / ollama 实现）
 - [x] 代码质量优化（删除冗余 trim / 简化错误提示）
-
-**前端**：
-
-- [ ] `useProviderConnection.onConnect` 调用链审查
-- [ ] `useProviderCollectionStore` 成功/失败路径状态回写对称性
-- [ ] 组件 / 类型 / 常量配套完整性
+- [x] 前端调用链审查（hooks 层冗余清理 / payload 简化 / 状态回写对称性）
+- [ ] 组件 / 类型 / 常量 / 图标配套完整性
+- [ ] `connect_and_save` 返回专用 `ConnectResponse`（含 `enabled_models`），不复用 `HealthCheckResponse`
 
 #### 5.2 reset 链路
 
-**后端**：
-
 - [x] `reset_provider_config` 审查（config + key 原子性删除 / 回滚逻辑）
-
-**前端**：
-
-- [ ] `useProviderConnection.onReset` 调用链审查
-- [ ] 失败时前端状态回滚一致性
+- [ ] 前端调用链审查（状态回滚一致性 / 错误处理）
+- [ ] 组件 / 类型 / 常量配套
 
 #### 5.3 update_models 链路
 
-**后端**：
-
 - [x] `update_provider_enabled_models` 审查（invoke 契约 / store 读写）
-
-**前端**：
-
-- [ ] `useProviderModelList` 调用链审查（并发互斥 / `pendingRef` 锁）
-- [ ] 结果反馈补齐
+- [ ] 前端调用链审查（并发互斥 / `pendingRef` 锁 / 结果反馈）
+- [ ] 组件 / 类型 / 常量配套
 
 ### 🚧 Phase 6：全局优化与收尾
 
 #### 6.1 契约语义与错误精细化
 
-- [ ] **契约语义边界明确**：`connect_and_save` 返回专用 `ConnectResponse`（含 `enabled_models`），不复用 `HealthCheckResponse`
 - [ ] 健康检查错误细分（网络不可达 / 认证失败 / 超时 / 响应格式错误）
 - [ ] 扩展 `HealthCheckResponse` 添加 `error_code` 字段
 - [ ] 前端适配细粒度错误展示

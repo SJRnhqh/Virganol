@@ -39,6 +39,8 @@ export const connectAndSaveProvider = async ({
       );
     }
     return response;
+    // TODO: 全链路错误精细化管理 — invoke 异常被吞并为 { success: false }，
+    //   前端无法区分业务失败与 IPC 系统级异常，待 Phase 6.1 统一处理。
   } catch (error) {
     const ms = (performance.now() - startTime).toFixed(2);
     const msg = error instanceof Error ? error.message : String(error);
