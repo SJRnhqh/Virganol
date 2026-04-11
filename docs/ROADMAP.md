@@ -32,6 +32,7 @@ LLM Provider 接入分为两条主线：
 - [x] 前端调用链审查（hooks 层冗余清理 / payload 简化 / 状态回写对称性）
 - [ ] 组件 / 类型 / 常量 / 图标配套完整性
 - [ ] `connect_and_save` 返回专用 `ConnectResponse`（含 `enabled_models`），不复用 `HealthCheckResponse`
+- [ ] 前端form清空完整性：connect成功后清空apiKey与apiURL，确保form生命周期与store数据同步
 
 #### 5.2 reset 链路
 
