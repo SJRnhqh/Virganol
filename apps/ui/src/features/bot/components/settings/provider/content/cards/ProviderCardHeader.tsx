@@ -36,22 +36,22 @@ export const ProviderCardHeader = ({
           {provider.name}
         </span>
 
-        {CardStateIcon && cardState === PROVIDER_CARD_STATES.PENDING && (
-          <motion.div
-            variants={rotatingIconVariants}
-            initial="idle"
-            animate="rotating"
-          >
+        {CardStateIcon &&
+          (cardState === PROVIDER_CARD_STATES.PENDING ? (
+            <motion.div
+              variants={rotatingIconVariants}
+              initial="idle"
+              animate="rotating"
+            >
+              <CardStateIcon
+                className={cn("w-4 h-4", cardStateIconSlot.className)}
+              />
+            </motion.div>
+          ) : (
             <CardStateIcon
               className={cn("w-4 h-4", cardStateIconSlot.className)}
             />
-          </motion.div>
-        )}
-        {CardStateIcon && cardState !== PROVIDER_CARD_STATES.PENDING && (
-          <CardStateIcon
-            className={cn("w-4 h-4", cardStateIconSlot.className)}
-          />
-        )}
+          ))}
       </div>
     </div>
   );

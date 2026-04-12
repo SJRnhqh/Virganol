@@ -30,7 +30,10 @@ LLM Provider 接入分为两条主线：
 - [x] 健康检查子系统审查（registry / driver / deepseek / ollama 实现）
 - [x] 代码质量优化（删除冗余 trim / 简化错误提示）
 - [x] 前端调用链审查（hooks 层冗余清理 / payload 简化 / 状态回写对称性）
-- [ ] 组件 / 类型 / 常量 / 图标配套完整性
+- [x] 组件审查完整性（ProviderCardHeader / ProviderForm / ProviderCardContent / ProviderConnectionButton / ProviderCardActions）
+- [x] 常量驱动设计验证（CONNECTION_STATE_LABELS / CONNECTION_BUTTON_ICONS / CONNECTION_BUTTON_ANIMATIONS）
+- [x] 类型安全检查（ConnectAndSaveProviderPayload / HealthCheckResponse 契约）
+- [x] 图标语义完整（connect/connecting/retry/reset 各状态icon映射）
 - [ ] `connect_and_save` 返回专用 `ConnectResponse`（含 `enabled_models`），不复用 `HealthCheckResponse`
 - [ ] 前端form清空完整性：connect成功后清空apiKey与apiURL，确保form生命周期与store数据同步
 
