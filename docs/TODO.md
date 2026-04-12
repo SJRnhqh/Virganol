@@ -71,27 +71,29 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 - [x] Persistence layer validation (load/remove/save contracts, lock consistency)
 - [x] Error handling and logging (ProviderError propagation, message() method)
 
-#### 2.2 Hooks Layer
+#### 2.3 Hooks Layer
 
-- [ ] `useProviderConnection.onReset` - call chain and state cleanup
-- [ ] Confirmation dialog integration
-- [ ] Loading state management
+- [x] `useProviderConnection.handleReset` - success check + batch state reset
+- [x] Error handling with logging placeholder (deferred to Phase 6.2)
+- [x] Form cleanup consolidated into batch update
 
-#### 2.3 Store Layer
+#### 2.4 Store Layer
 
-- [ ] `useProviderCollectionStore` - state cleanup on success
-- [ ] State preservation on failure (no premature cleanup)
+- [x] `useProviderCollectionStore` - state cleanup design verified
+- [x] `updateProviderBatch` supports form replacement (complete)
+- [x] Three-value errorMessage semantics proper
 
-#### 2.4 Components Layer
+#### 2.5 Types & Constants Layer
 
-- [ ] `ProviderResetButton` - loading UI and confirmation flow
-- [ ] `ProviderCard` - state transition after reset
+- [x] `ProviderBatchUpdates` interface complete and flexible
+- [x] `CONNECTION_STATE_LABELS` mapping covers all states
+- [x] Error structure extensible to Phase 6.2
 
-#### 2.5 Supporting Layers
+#### 2.6 Components Layer
 
-- [ ] Types: `ResetResponse` completeness
-- [ ] Constants: reset-related error codes
-- [ ] Icons: reset state visual feedback
+- [ ] `ProviderResetButton` - icon and interaction review
+- [ ] `ProviderCardActions` - reset button integration
+- [ ] Confirmation dialog (if needed) and UX polish
 
 ---
 

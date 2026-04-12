@@ -53,16 +53,22 @@ export const useProviderConnection = (providerId: ProviderId) => {
     [providerId],
   );
 
-  // 重置操作（重置表单 + 删除后端配置 + 重置前端状态）
+  // 重置操作（删除后端配置 + 重置前端状态）
   const handleReset = useCallback(async () => {
-    const store = useProviderCollectionStore.getState();
-    store.setProviderForm(providerId, PROVIDER_INITIAL_FORMS[providerId]);
-    await resetProvider(providerId);
-    store.updateProviderBatch(providerId, {
-      cardState: PROVIDER_CARD_STATES.UNSET,
-      models: { available: [], enabled: {} },
-      errorMessage: null,
-    });
+    const success = await resetProvider(providerId);
+    if (success) {
+      const store = useProviderCollectionStore.getState();
+      store.updateProviderBatch(providerId, {
+        form: PROVIDER_INITIAL_FORMS[providerId],
+        cardState: PROVIDER_CARD_STATES.UNSET,
+        models: { available: [], enabled: {} },
+        errorMessage: null,
+      });
+    } else {
+      // TODO: 前端错误处理与用户反馈 — reset 失败时需显示错误提示，
+      //   待 Phase 6.2 实现结构化错误响应与错误显示方案
+      console.error(`[React] reset_provider ${providerId} failed`);
+    }
   }, [providerId]);
 
   // 重试操作（清空错误 + 重新连接）

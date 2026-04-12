@@ -42,8 +42,9 @@ LLM Provider 接入分为两条主线：
 - [x] `reset_provider_config` 审查（config + key 原子性删除 / 回滚逻辑）
 - [x] API迁移：resetProvider 迁至 crud.ts（目前保持boolean返回）
 - [ ] `resetProvider` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约（待 Phase 6.2）
-- [ ] 前端调用链审查（状态回滚一致性 / 错误处理）
-- [ ] 组件 / 类型 / 常量配套
+- [x] 前端钩子层审查（success检查 + batch状态更新 + 错误日志占位）
+- [x] 前端store/types/constants完整性验证（无需优化）
+- [ ] 前端组件层审查与美化（ProviderResetButton / ProviderCardActions 交互流程）
 
 #### 5.3 update_models 链路
 
