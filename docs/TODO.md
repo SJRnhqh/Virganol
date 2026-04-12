@@ -61,8 +61,9 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 
 #### 2.1 API Layer
 
-- [ ] `services/api/provider/reset.ts` - invoke contract and error handling
-- [ ] Response handling (success/failure distinction)
+- [x] `services/api/provider/crud.ts` - resetProvider migrated from providers.ts
+- [x] Invoke contract and error handling (boolean return, deferred structure to Phase 6.2)
+- [x] Response handling (success/failure distinction in hook layer)
 
 #### 2.2 Hooks Layer
 

@@ -6,6 +6,7 @@ import { invoke } from "@tauri-apps/api/core";
 import type {
   ConnectAndSaveProviderPayload,
   HealthCheckResponse,
+  ProviderId,
 } from "@/features/bot/types";
 
 /** 接入新 Provider：健康检查 + 成功则持久化 */
@@ -46,5 +47,19 @@ export const connectAndSaveProvider = async ({
     const msg = error instanceof Error ? error.message : String(error);
     console.error(`[API] connect_and_save invoke error (${ms}ms):`, msg);
     return { success: false, available_models: [], error: msg };
+  }
+};
+
+/** 重置一个 Provider 的持久化配置 */
+export const resetProvider = async (
+  providerId: ProviderId,
+): Promise<boolean> => {
+  try {
+    const result = await invoke<boolean>("reset_provider", { providerId });
+    console.log(`[API] reset_provider ${providerId}:`, result);
+    return result;
+  } catch (error) {
+    console.error("[API] reset_provider error:", error);
+    return false;
   }
 };

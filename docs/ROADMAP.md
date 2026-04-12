@@ -40,6 +40,8 @@ LLM Provider 接入分为两条主线：
 #### 5.2 reset 链路
 
 - [x] `reset_provider_config` 审查（config + key 原子性删除 / 回滚逻辑）
+- [x] API迁移：resetProvider 迁至 crud.ts（目前保持boolean返回）
+- [ ] `resetProvider` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约（待 Phase 6.2）
 - [ ] 前端调用链审查（状态回滚一致性 / 错误处理）
 - [ ] 组件 / 类型 / 常量配套
 

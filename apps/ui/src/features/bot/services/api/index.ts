@@ -6,4 +6,4 @@ export {
   triggerProviderManualRefresh,
   connectAndSaveProvider,
 } from "./provider";
-export { resetProvider, updateEnabledModels } from "./providers";
+export { updateEnabledModels } from "./providers";
