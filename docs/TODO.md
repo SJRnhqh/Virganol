@@ -65,6 +65,12 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 - [x] Invoke contract and error handling (boolean return, deferred structure to Phase 6.2)
 - [x] Response handling (success/failure distinction in hook layer)
 
+#### 2.2 Backend Service Layer
+
+- [x] `reset_provider_config` flow review (snapshot → config delete → key delete → rollback)
+- [x] Persistence layer validation (load/remove/save contracts, lock consistency)
+- [x] Error handling and logging (ProviderError propagation, message() method)
+
 #### 2.2 Hooks Layer
 
 - [ ] `useProviderConnection.onReset` - call chain and state cleanup

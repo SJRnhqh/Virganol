@@ -24,10 +24,11 @@ pub(crate) fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) ->
     // 2) 先删除普通配置（settings.json 中的 spirit.providers.{id}）
     let config_removed = match remove_provider(app, provider_id) {
         Ok(removed) => removed,
-        Err(error_msg) => {
+        Err(e) => {
             error!(
                 "[Tauri] ❌ {} config remove persist failed: {}",
-                provider_id, error_msg
+                provider_id,
+                e.message()
             );
             return false;
         }
@@ -35,15 +36,17 @@ pub(crate) fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) ->
 
     if !config_removed {
         error!("[Tauri] ❌ {} not found, cannot reset config", provider_id);
+        return false;
     }
 
     // 3) 再删除系统密钥库中的 key（幂等：不存在也应算成功）
     let key_removed = match remove_provider_key(provider_id) {
         Ok(()) => true,
-        Err(error_msg) => {
+        Err(e) => {
             error!(
                 "[Tauri] ❌ {} key remove failed: {}",
-                provider_id, error_msg
+                provider_id,
+                e.message()
             );
             false
         }
@@ -52,10 +55,11 @@ pub(crate) fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) ->
     // 4) key 删除失败时，回滚已删除的配置
     if config_removed && !key_removed {
         if let Some(record) = previous_record.as_ref() {
-            if let Err(error_msg) = save_provider(app, provider_id, record) {
+            if let Err(e) = save_provider(app, provider_id, record) {
                 error!(
                     "[Tauri] ❌ {} config rollback failed after key remove error: {}",
-                    provider_id, error_msg
+                    provider_id,
+                    e.message()
                 );
             } else {
                 info!("[Tauri] ↩️ {} config rollback completed", provider_id);

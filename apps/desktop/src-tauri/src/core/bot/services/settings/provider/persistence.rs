@@ -109,9 +109,8 @@ pub(crate) fn remove_provider(
         .lock()
         .map_err(|_| ProviderError::Io("providers store lock poisoned".to_string()))?;
 
-    let provider_name = provider_id.as_str();
     let mut providers = load_all_providers(app)?;
-    let existed = providers.remove(provider_name).is_some();
+    let existed = providers.remove(provider_id.as_str()).is_some();
 
     if !existed {
         return Ok(false);
