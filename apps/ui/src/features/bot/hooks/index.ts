@@ -5,4 +5,5 @@ export {
   useProviderModelList,
   useProvider,
   useProviderStartup,
+  useProviderReset,
 } from "./provider";

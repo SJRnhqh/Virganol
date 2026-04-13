@@ -4,12 +4,10 @@ import { useCallback } from "react";
 
 // 内部引用
 import type { ProviderId, ProviderFormData } from "@/features/bot/types";
-import {
-  PROVIDER_CARD_STATES,
-  PROVIDER_INITIAL_FORMS,
-} from "@/features/bot/constants";
+import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import { useProviderCollectionStore } from "@/features/bot/store";
-import { resetProvider, connectAndSaveProvider } from "@/features/bot/services";
+import { connectAndSaveProvider } from "@/features/bot/services";
+import { useProviderReset } from "./manager";
 
 export const useProviderConnection = (providerId: ProviderId) => {
   // 连接操作（调用后端 API + 批量更新前端状态）
@@ -53,23 +51,8 @@ export const useProviderConnection = (providerId: ProviderId) => {
     [providerId],
   );
 
-  // 重置操作（删除后端配置 + 重置前端状态）
-  const handleReset = useCallback(async () => {
-    const success = await resetProvider(providerId);
-    if (success) {
-      const store = useProviderCollectionStore.getState();
-      store.updateProviderBatch(providerId, {
-        form: PROVIDER_INITIAL_FORMS[providerId],
-        cardState: PROVIDER_CARD_STATES.UNSET,
-        models: { available: [], enabled: {} },
-        errorMessage: null,
-      });
-    } else {
-      // TODO: 前端错误处理与用户反馈 — reset 失败时需显示错误提示，
-      //   待 Phase 6.2 实现结构化错误响应与错误显示方案
-      console.error(`[React] reset_provider ${providerId} failed`);
-    }
-  }, [providerId]);
+  // 重置操作（组装调用 manager 层）
+  const handleReset = useProviderReset(providerId);
 
   // 重试操作（清空错误 + 重新连接）
   const handleRetry = useCallback(

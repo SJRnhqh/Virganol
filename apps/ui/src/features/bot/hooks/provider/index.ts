@@ -4,3 +4,4 @@
 export { useProviderModelList } from "./useProviderModelList";
 export { useProvider } from "./useProvider";
 export { useProviderStartup } from "./useProviderStartup";
+export { useProviderReset } from "./manager";

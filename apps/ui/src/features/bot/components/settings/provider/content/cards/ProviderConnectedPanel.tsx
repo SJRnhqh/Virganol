@@ -1,12 +1,13 @@
 // apps/ui/src/features/bot/components/settings/provider/content/cards/ProviderConnectedPanel.tsx
 // 外部依赖
-import { Link, Zap } from "lucide-react";
+import { Link, Zap, Key } from "lucide-react";
 
 // 内部引用
 import { cn } from "@/lib";
 import type { ProviderConnectedPanelProps } from "@/features/bot/types";
-import { useProviderModelList } from "@/features/bot/hooks";
+import { useProviderModelList, useProviderReset } from "@/features/bot/hooks";
 import { ProviderModelToggleButton } from "./ProviderModelToggleButton";
+import { ProviderResetButton } from "./ProviderResetButton";
 
 export const ProviderConnectedPanel = ({
   provider,
@@ -93,6 +94,29 @@ export const ProviderConnectedPanel = ({
               </div>
             );
           })}
+        </div>
+
+        {/* ── 配置管理区域 ────────────────────────── */}
+        <div
+          className={cn(
+            // 布局
+            "flex items-center justify-between gap-3",
+            // 间距
+            "px-3 py-2",
+            // 顶部分隔线（区分模型列表）
+            "border-t border-dashed border-settings-panel-fg/20",
+            // 背景色（与顶部连接信息区域呼应）
+            "bg-settings-panel-fg/5",
+          )}
+        >
+          {/* 左侧：配置信息占位（未来显示密钥来源等） */}
+          <div className="flex items-center gap-2 text-xs text-settings-panel-fg/50">
+            <Key className="w-3.5 h-3.5" />
+            <span>Key source</span>
+          </div>
+
+          {/* 右侧：Reset 操作 */}
+          <ProviderResetButton onClick={useProviderReset(provider.id)} />
         </div>
       </div>
     </div>

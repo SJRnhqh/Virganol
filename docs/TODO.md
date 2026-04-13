@@ -91,9 +91,12 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 
 #### 2.6 Components Layer
 
-- [ ] `ProviderResetButton` - icon and interaction review
-- [ ] `ProviderCardActions` - reset button integration
-- [ ] Confirmation dialog (if needed) and UX polish
+- [x] `ProviderResetButton` - extracted to standalone component with text + icon
+- [x] `useProviderReset` - extracted to `hooks/provider/manager/` for reusability
+- [x] `ProviderConnectedPanel` - integrated reset button in configuration management area
+- [x] `ProviderCardActions` - removed reset from CONNECTED state (moved to content area)
+- [ ] FAILED state reset button - UX review and potential confirmation dialog
+- [ ] Confirmation dialog for CONNECTED state reset (if needed)
 
 ---
 

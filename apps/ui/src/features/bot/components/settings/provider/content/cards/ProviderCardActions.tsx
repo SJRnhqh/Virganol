@@ -12,6 +12,9 @@ export const ProviderCardActions = ({
   switch (cardState) {
     case PROVIDER_CARD_STATES.UNSET:
     case PROVIDER_CARD_STATES.PENDING:
+    case PROVIDER_CARD_STATES.CONNECTED:
+      // UNSET/PENDING: Connect 按钮
+      // CONNECTED: Reconnect 按钮（Reset 已移至 content 区配置管理区域）
       return (
         <div className="px-5 pb-2 pt-0 flex justify-end">
           <ProviderConnectionButton
@@ -21,8 +24,8 @@ export const ProviderCardActions = ({
         </div>
       );
 
-    case PROVIDER_CARD_STATES.CONNECTED:
     case PROVIDER_CARD_STATES.FAILED:
+      // FAILED: Retry + Reset 按钮
       return (
         <div className="px-5 pb-2 pt-0 flex items-center justify-end gap-1">
           <ProviderConnectionButton
