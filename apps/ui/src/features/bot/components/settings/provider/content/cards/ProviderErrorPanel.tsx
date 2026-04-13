@@ -1,17 +1,21 @@
 // apps/ui/src/features/bot/components/forms/ProviderErrorPanel.tsx
 // 内部引用
+import { cn } from "@/lib";
 import type { ProviderErrorPanelProps } from "@/features/bot/types";
 import { PROVIDER_CARD_STATE_ICONS } from "@/features/bot/icons";
-import { cn } from "@/lib";
+import { useProviderReset } from "@/features/bot/hooks";
+import { ProviderResetButton } from "./ProviderResetButton";
 
 export const ProviderErrorPanel = ({
   cardState,
+  provider,
   errorMessage,
 }: ProviderErrorPanelProps) => {
-  if (!errorMessage) return null;
-
   const iconSlot = PROVIDER_CARD_STATE_ICONS[cardState];
   const ErrorIcon = iconSlot?.icon;
+  const handleReset = useProviderReset(provider.id);
+
+  if (!errorMessage) return null;
 
   return (
     <div
@@ -22,10 +26,14 @@ export const ProviderErrorPanel = ({
     >
       <div
         className={cn(
+          // 容器样式
+          "rounded-lg border border-dashed",
+          // 错误态边框颜色
+          "border-settings-panel-error/30",
+          // 统一背景
+          "bg-settings-panel-error/5",
           // 布局与间距
-          "flex items-start gap-3 px-4 py-3 rounded-lg",
-          // 错误态视觉
-          "bg-settings-panel-error/10 border border-settings-panel-error/30",
+          "flex items-start gap-3 px-3 py-2",
         )}
       >
         {ErrorIcon && (
@@ -59,6 +67,9 @@ export const ProviderErrorPanel = ({
           >
             {errorMessage}
           </p>
+          <div className="mt-3">
+            <ProviderResetButton onClick={handleReset} />
+          </div>
         </div>
       </div>
     </div>

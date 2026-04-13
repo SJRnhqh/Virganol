@@ -36,7 +36,7 @@ export const ProviderCardBody = ({
     },
     [PROVIDER_CARD_STATES.FAILED]: {
       cardState: PROVIDER_CARD_STATES.FAILED,
-      cardContent: { errorMessage },
+      cardContent: { provider, errorMessage },
     },
   } satisfies ProviderCardContentPropsByState;
 
