@@ -31,4 +31,6 @@ export interface ProviderModelToggleButtonProps {
 export interface ProviderResetButtonProps {
   /** 点击后触发的业务动作 */
   onClick?: ProviderButtonAction;
+  /** 按钮变体（用于适配不同背景） */
+  variant?: "default" | "error";
 }

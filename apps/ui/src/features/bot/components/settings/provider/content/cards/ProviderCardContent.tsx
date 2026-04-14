@@ -26,7 +26,7 @@ export const ProviderCardContent = ({
     case PROVIDER_CARD_STATES.FAILED:
       return (
         <ProviderErrorPanel
-          cardState={cardState}
+          provider={cardContent.provider}
           errorMessage={cardContent.errorMessage}
         />
       );

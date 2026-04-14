@@ -6,20 +6,44 @@ import { Eraser } from "lucide-react";
 import { cn } from "@/lib";
 import type { ProviderResetButtonProps } from "@/features/bot/types";
 
-export const ProviderResetButton = ({ onClick }: ProviderResetButtonProps) => {
+/**
+ * Provider 配置重置按钮
+ *
+ * 显示 "Reset" 文字 + Eraser 图标，用于配置管理区域
+ */
+export const ProviderResetButton = ({
+  onClick,
+  variant = "default",
+}: ProviderResetButtonProps) => {
   return (
     <button
       type="button"
-      aria-label="Reset provider"
+      aria-label="Reset provider configuration"
       onClick={() => {
         void onClick?.();
       }}
       className={cn(
-        "inline-flex items-center justify-center w-7 h-7 rounded-md",
-        "text-settings-panel-fg/40 hover:text-settings-panel-fg/70",
-        "hover:bg-settings-panel-fg/5",
+        // 布局
+        "flex items-center gap-1.5 px-2 py-1 rounded-md",
+        // 文本样式
+        "text-xs font-medium",
+        // 交互状态
+        "transition-all duration-200",
+        // 变体样式
+        variant === "error"
+          ? [
+              // 错误变体（红色系，用于 ErrorPanel）
+              "text-settings-panel-error/60",
+              "hover:text-settings-panel-error hover:bg-settings-panel-error/10",
+            ]
+          : [
+              // 默认变体（灰色系，用于 ConnectedPanel）
+              "text-settings-panel-fg/50",
+              "hover:text-settings-panel-fg/80 hover:bg-settings-panel-fg/5",
+            ],
       )}
     >
+      <span>Reset</span>
       <Eraser className="w-3.5 h-3.5" />
     </button>
   );

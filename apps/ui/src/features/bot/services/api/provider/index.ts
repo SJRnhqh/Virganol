@@ -6,4 +6,8 @@ export {
   triggerProviderManualRefresh,
 } from "./check";
 
-export { connectAndSaveProvider } from "./crud";
+export {
+  resetProvider,
+  updateEnabledModels,
+  connectAndSaveProvider,
+} from "./crud";

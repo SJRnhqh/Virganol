@@ -1,17 +1,16 @@
 // apps/ui/src/features/bot/components/forms/ProviderErrorPanel.tsx
 // 内部引用
-import type { ProviderErrorPanelProps } from "@/features/bot/types";
-import { PROVIDER_CARD_STATE_ICONS } from "@/features/bot/icons";
 import { cn } from "@/lib";
+import type { ProviderErrorPanelProps } from "@/features/bot/types";
+import { useProviderReset } from "@/features/bot/hooks";
+import { ProviderResetButton } from "./ProviderResetButton";
 
 export const ProviderErrorPanel = ({
-  cardState,
+  provider,
   errorMessage,
 }: ProviderErrorPanelProps) => {
-  if (!errorMessage) return null;
-
-  const iconSlot = PROVIDER_CARD_STATE_ICONS[cardState];
-  const ErrorIcon = iconSlot?.icon;
+  const handleReset = useProviderReset(provider.id);
+  const displayMessage = errorMessage || "An unknown error occurred";
 
   return (
     <div
@@ -22,43 +21,38 @@ export const ProviderErrorPanel = ({
     >
       <div
         className={cn(
+          // 容器样式
+          "rounded-lg border border-dashed",
+          // 错误态边框颜色
+          "border-settings-panel-error/30",
+          // 统一背景
+          "bg-settings-panel-error/5",
           // 布局与间距
-          "flex items-start gap-3 px-4 py-3 rounded-lg",
-          // 错误态视觉
-          "bg-settings-panel-error/10 border border-settings-panel-error/30",
+          "px-3 py-2",
         )}
       >
-        {ErrorIcon && (
-          <ErrorIcon
-            className={cn(
-              // 图标尺寸与定位
-              "w-5 h-5 shrink-0 mt-0.5",
-              // 错误态颜色
-              iconSlot.className,
-            )}
-          />
-        )}
-        <div className="flex-1">
-          <p
-            className={cn(
-              // 标题排版
-              "text-sm font-semibold mb-1",
-              // 错误态颜色
-              "text-settings-panel-error",
-            )}
-          >
-            Connection Failed
-          </p>
-          <p
-            className={cn(
-              // 正文排版
-              "text-xs leading-relaxed",
-              // 错误态颜色
-              "text-settings-panel-error/70",
-            )}
-          >
-            {errorMessage}
-          </p>
+        <p
+          className={cn(
+            // 标题排版
+            "text-sm font-semibold mb-1",
+            // 错误态颜色
+            "text-settings-panel-error",
+          )}
+        >
+          Connection Failed
+        </p>
+        <p
+          className={cn(
+            // 正文排版
+            "text-xs leading-relaxed",
+            // 错误态颜色
+            "text-settings-panel-error/70",
+          )}
+        >
+          {displayMessage}
+        </p>
+        <div className="mt-3 flex justify-end">
+          <ProviderResetButton onClick={handleReset} variant="error" />
         </div>
       </div>
     </div>

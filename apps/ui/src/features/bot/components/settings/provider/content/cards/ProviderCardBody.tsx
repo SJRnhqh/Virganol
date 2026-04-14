@@ -36,7 +36,7 @@ export const ProviderCardBody = ({
     },
     [PROVIDER_CARD_STATES.FAILED]: {
       cardState: PROVIDER_CARD_STATES.FAILED,
-      cardContent: { errorMessage },
+      cardContent: { provider, errorMessage },
     },
   } satisfies ProviderCardContentPropsByState;
 
@@ -57,14 +57,12 @@ export const ProviderCardBody = ({
       cardState: PROVIDER_CARD_STATES.CONNECTED,
       actions: {
         primaryAction: () => connection.onConnect?.(form.formData),
-        resetAction: () => connection.onReset?.(),
       },
     },
     [PROVIDER_CARD_STATES.FAILED]: {
       cardState: PROVIDER_CARD_STATES.FAILED,
       actions: {
         primaryAction: () => connection.onRetry?.(form.formData),
-        resetAction: () => connection.onReset?.(),
       },
     },
   } satisfies ProviderCardActionsPropsByState;

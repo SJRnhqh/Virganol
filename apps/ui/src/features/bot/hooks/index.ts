@@ -2,7 +2,9 @@
 // 导出内容
 
 export {
-  useProviderModelList,
+  useProviderModels,
   useProvider,
   useProviderStartup,
+  useProviderReset,
+  useToggleModels,
 } from "./provider";
