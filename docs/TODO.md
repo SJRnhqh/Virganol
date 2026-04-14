@@ -98,9 +98,12 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 - [x] `ProviderErrorPanel` - redesigned with dashed border style (aligned with ConnectedPanel)
 - [x] `ProviderErrorPanel` - integrated reset button in error panel (uses `useProviderReset` hook)
 - [x] `ProviderErrorPanel` - removed redundant icon (header already shows status icon)
+- [x] `ProviderErrorPanel` - button right-aligned for better visual hierarchy
+- [x] `ProviderErrorPanel` - added fallback error message ("An unknown error occurred")
 - [x] `ProviderErrorPanelProps` - interface tightened (removed `cardState`, aligned with `ProviderConnectedPanelProps`)
 - [x] `ProviderFailedContent` - removed (replaced by `ProviderErrorPanelProps` as content type constraint)
 - [ ] FAILED state: replace `reset` (backend call) with `clear` (frontend-only form cleanup)
+- [ ] FAILED state: create `useClearForm` hook for frontend-only state cleanup
 - [ ] FAILED state reset/clear button - UX review and potential confirmation dialog
 - [ ] Confirmation dialog for CONNECTED state reset (if needed)
 - [ ] `ProviderCardActions` FAILED branch - remove redundant reset button after ErrorPanel integration is stable

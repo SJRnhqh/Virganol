@@ -10,8 +10,7 @@ export const ProviderErrorPanel = ({
   errorMessage,
 }: ProviderErrorPanelProps) => {
   const handleReset = useProviderReset(provider.id);
-
-  if (!errorMessage) return null;
+  const displayMessage = errorMessage || "An unknown error occurred";
 
   return (
     <div
@@ -50,9 +49,9 @@ export const ProviderErrorPanel = ({
             "text-settings-panel-error/70",
           )}
         >
-          {errorMessage}
+          {displayMessage}
         </p>
-        <div className="mt-3">
+        <div className="mt-3 flex justify-end">
           <ProviderResetButton onClick={handleReset} />
         </div>
       </div>
