@@ -19,6 +19,7 @@ export const ProviderConnectedPanel = ({
 }: ProviderConnectedPanelProps) => {
   const { modelItems, allSelected } = useProviderModels(provider.id);
   const { toggleSingle, toggleAll } = useToggleModels(provider.id);
+  const reset = useProviderReset(provider.id);
 
   return (
     <div className="pb-2 pl-1 pt-0">
@@ -120,7 +121,7 @@ export const ProviderConnectedPanel = ({
           </div>
 
           {/* 右侧：Reset 操作 */}
-          <ProviderResetButton onClick={useProviderReset(provider.id)} />
+          <ProviderResetButton onClick={reset} />
         </div>
       </div>
     </div>

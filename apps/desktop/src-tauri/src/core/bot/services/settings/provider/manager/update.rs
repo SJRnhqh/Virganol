@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/update.rs
 // 外部依赖
-use log::{error, info};
+use log::{error, info, warn};
 use tauri::AppHandle;
 
 // 内部引用
@@ -19,7 +19,13 @@ pub(crate) fn update_provider_enabled_models(
             info!("[Tauri] ✅ {} enabled_models updated", provider_id);
             true
         }
-        Ok(false) => false,
+        Ok(false) => {
+            warn!(
+                "[Tauri] ⚠️ {} enabled_models update skipped (provider not found)",
+                provider_id
+            );
+            false
+        }
         Err(e) => {
             error!(
                 "[Tauri] ❌ {} enabled_models persist failed: {}",
