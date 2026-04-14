@@ -86,7 +86,7 @@ LLM Provider 接入分为两条主线：
 - [ ] 持久化层添加缓存（减少 I/O 读写放大）
 - [ ] 健康检查添加超时控制（防止无限等待）
 
-**契约升级**（待 Phase 6.2 错误精细化）：
+**契约升级**：
 
 - [ ] `connect_and_save` 返回专用 `ConnectResponse`（含 enabled_models），不复用 `HealthCheckResponse`
 - [ ] `resetProvider` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
