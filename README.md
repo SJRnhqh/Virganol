@@ -10,9 +10,11 @@
 
 ## Documentation
 
-- **[Architecture](docs/ARCHITECTURE.md)** - System architecture overview
-- **[Roadmap](docs/ROADMAP.md)** - Feature roadmap and milestones
-- **[TODO](docs/TODO.md)** - Current sprint tasks and progress tracking
+- **[ARCHITECTURE](docs/ARCHITECTURE.md)** - System architecture overview
+- **[CONTRIBUTING](docs/CONTRIBUTING.md)** - Contribution guidelines
+- **[CHANGELOG](docs/CHANGELOG.md)** - Version history and changes
+- **[ROADMAP](docs/ROADMAP.md)** - Feature roadmap and milestones
+- **[TODO](docs/TODO.md)** - Current branch tasks
 
 ## Project Structure
 
