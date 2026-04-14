@@ -171,6 +171,40 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 
 ---
 
+### 5. Connect & Reset Chain Refinement (Post-Audit Findings)
+
+#### 5.1 High Priority (Functional Correctness)
+
+- [ ] #10: `useProviderModelList` - add timeout mechanism to `pendingRef` lock (prevent infinite pending state)
+- [ ] #6: `useProviderConnection` - clear form completely after connect success (apiKey + apiURL)
+
+#### 5.2 Medium Priority (User Experience)
+
+- [ ] #7: `useProviderReset` - add error feedback to user (not just console.error)
+- [ ] #9: API layer - unify error handling pattern (resetProvider should return `{ success, error }` like connectAndSaveProvider)
+- [ ] #15: `ProviderForm` - add input validation (URL format, required fields, real-time feedback)
+- [ ] #12: `ProviderConnectionButton` - add loading animation for pending state
+
+#### 5.3 Low Priority (Code Quality & Performance)
+
+- [ ] #17: `useProvider` - add dependency array to `onUpdate` callback
+- [ ] #11: Store - add state transition validation in `updateProviderBatch`
+- [ ] #16: Check service - add runtime check to prevent multiple startup check calls
+
+#### 5.4 Phase 6 Deferred (Architecture & Performance)
+
+- [ ] #1: Backend - extend `HealthCheckResponse` with `error_code` field for error classification
+- [ ] #8: Frontend - split `HealthCheckResponse` into `ConnectResponse` (health + models)
+- [ ] #2: Backend - extract key rollback logic into separate function for testability
+- [ ] #3: Backend - add retry mechanism and detailed status for reset partial failures
+- [ ] #4: Backend - add caching layer for persistence (reduce read/write amplification)
+- [ ] #5: Backend - add timeout control to health check (prevent infinite waiting)
+- [ ] #18: Define unified error code system (backend + frontend)
+- [ ] #19: Define explicit state machine for state transitions
+- [ ] #20: Add operation logging and audit trail
+
+---
+
 ## Out of Scope
 
 - Error granularity enhancement (Phase 6.1)
