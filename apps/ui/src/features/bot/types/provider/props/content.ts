@@ -1,21 +1,21 @@
 // apps/ui/src/features/bot/types/provider/props/content.ts
 // 内部引用
 import type { ProviderCardState } from "../state";
-import type { ProviderFailedContent } from "./error";
+import type { ProviderErrorPanelProps } from "./error";
 import type { WithProviderForm } from "./form";
 import type { ProviderConnectedPanelProps } from "./connected";
 
 type ProviderCardContentMap = {
   unset: WithProviderForm;
   pending: WithProviderForm;
-  failed: ProviderFailedContent;
+  failed: ProviderErrorPanelProps;
   connected: ProviderConnectedPanelProps;
 };
 
 /**
  * ProviderCardContent 按状态划分的 Props 映射：
  * - unset/pending → WithProviderForm
- * - failed → ProviderFailedContent
+ * - failed → ProviderErrorPanelProps
  * - connected → ProviderConnectedPanelProps
  */
 export type ProviderCardContentPropsByState = {

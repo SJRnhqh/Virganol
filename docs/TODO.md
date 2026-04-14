@@ -97,7 +97,9 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 - [x] `ProviderCardActions` - removed reset from CONNECTED state (moved to content area)
 - [x] `ProviderErrorPanel` - redesigned with dashed border style (aligned with ConnectedPanel)
 - [x] `ProviderErrorPanel` - integrated reset button in error panel (uses `useProviderReset` hook)
-- [x] `ProviderFailedContent` - added `provider` field for reset functionality
+- [x] `ProviderErrorPanel` - removed redundant icon (header already shows status icon)
+- [x] `ProviderErrorPanelProps` - interface tightened (removed `cardState`, aligned with `ProviderConnectedPanelProps`)
+- [x] `ProviderFailedContent` - removed (replaced by `ProviderErrorPanelProps` as content type constraint)
 - [ ] FAILED state: replace `reset` (backend call) with `clear` (frontend-only form cleanup)
 - [ ] FAILED state reset/clear button - UX review and potential confirmation dialog
 - [ ] Confirmation dialog for CONNECTED state reset (if needed)
