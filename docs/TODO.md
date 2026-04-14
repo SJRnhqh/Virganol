@@ -116,9 +116,9 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 
 #### 3.1 API Layer
 
-- [ ] `services/api/provider/updateModels.ts` - invoke contract and error handling
-- [ ] Request payload construction (providerId/enabledModels)
-- [ ] Response handling
+- [x] `services/api/provider/crud.ts` - invoke contract and error handling
+- [x] Request payload construction (providerId/enabledModels)
+- [x] Response handling
 
 #### 3.2 Hooks Layer
 

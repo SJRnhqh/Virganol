@@ -53,6 +53,8 @@ LLM Provider 接入分为两条主线：
 #### 5.3 update_models 链路
 
 - [x] `update_provider_enabled_models` 审查（invoke 契约 / store 读写）
+- [x] API迁移：updateEnabledModels 迁至 crud.ts（目前保持boolean返回）
+- [ ] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约（待 Phase 6.2）
 - [ ] 前端调用链审查（并发互斥 / `pendingRef` 锁 / 结果反馈）
 - [ ] 组件 / 类型 / 常量配套
 
