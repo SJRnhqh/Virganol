@@ -114,13 +114,20 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 
 **Entry Point**: `ProviderCardBody` (model checkboxes) → `useProviderModelList`
 
-#### 3.1 API Layer
+#### 3.1 Backend Layer
+
+- [x] `update_provider_enabled_models` service layer - business logic and logging
+- [x] `update_models` store layer - persistence transaction with lock
+- [x] `store/` directory refactoring - migrated from persistence.rs (load/save/remove/update/lock)
+- [x] Logging optimization - persistence layer warn + service layer info/error
+
+#### 3.2 API Layer
 
 - [x] `services/api/provider/crud.ts` - invoke contract and error handling
 - [x] Request payload construction (providerId/enabledModels)
 - [x] Response handling
 
-#### 3.2 Hooks Layer
+#### 3.3 Hooks Layer
 
 - [ ] `useProviderModelList` - call chain and concurrency control
 - [ ] `pendingRef` mutex lock verification

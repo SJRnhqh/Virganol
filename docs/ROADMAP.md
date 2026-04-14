@@ -54,6 +54,8 @@ LLM Provider 接入分为两条主线：
 
 - [x] `update_provider_enabled_models` 审查（invoke 契约 / store 读写）
 - [x] API迁移：updateEnabledModels 迁至 crud.ts（目前保持boolean返回）
+- [x] 后端持久化层重构：persistence.rs 迁移至 store/ 目录（load/save/remove/update/lock 模块化管理）
+- [x] 后端日志优化：persistence 层 warn + service 层 info/error 分层记录
 - [ ] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约（待 Phase 6.2）
 - [ ] 前端调用链审查（并发互斥 / `pendingRef` 锁 / 结果反馈）
 - [ ] 组件 / 类型 / 常量配套
@@ -79,7 +81,7 @@ LLM Provider 接入分为两条主线：
 - [ ] 超时配置化（5s 硬编码改为可配置）
 - [ ] Provider 级别锁优化（per-provider 串行化 connect）
 - [ ] 持久化层缓存优化（`ProvidersStore` cache）
-- [ ] `persistence.rs` 键生成策略统一（`save_provider` 使用 `to_string()`，`remove_provider` / `update_models` 使用 `as_str()`，存在不一致风险）
+- [ ] 键生成策略统一（`save_provider` 使用 `to_string()`，`remove_provider` / `update_models` 使用 `as_str()`，存在不一致风险）
 
 #### 6.4 收尾与验证
 

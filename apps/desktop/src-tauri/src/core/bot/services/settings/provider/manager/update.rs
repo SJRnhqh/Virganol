@@ -14,22 +14,19 @@ pub(crate) fn update_provider_enabled_models(
     enabled_models: Vec<String>,
 ) -> bool {
     // 调用 store 层执行实际写入，并在这里统一记录业务结果与持久化错误
-    let ok = match update_models(app, provider_id, enabled_models) {
-        Ok(updated) => updated,
-        Err(error_msg) => {
+    match update_models(app, provider_id, enabled_models) {
+        Ok(true) => {
+            info!("[Tauri] ✅ {} enabled_models updated", provider_id);
+            true
+        }
+        Ok(false) => false,
+        Err(e) => {
             error!(
                 "[Tauri] ❌ {} enabled_models persist failed: {}",
-                provider_id, error_msg
+                provider_id,
+                e.message()
             );
-            return false;
+            false
         }
-    };
-
-    if ok {
-        info!("[Tauri] ✅ {} enabled_models updated", provider_id);
-    } else {
-        error!("[Tauri] ❌ {} not found, cannot update models", provider_id);
     }
-
-    ok
 }
