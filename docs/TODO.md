@@ -137,8 +137,9 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 - [x] `useToggleModels` - extracted to `hooks/provider/manager/` for consistency
 - [x] `toggleSingle` / `toggleAll` - toggle semantics with shared mutex lock
 - [x] Optimistic update + rollback pattern migrated from useProviderModelList
-- [x] `useProviderModelList` - refactored to data-only hook (modelItems / allSelected)
-- [x] Data and action separation - components call useProviderModelList + useToggleModels independently
+- [x] `useProviderModels` - refactored to data-only hook in `hooks/provider/data/`
+- [x] Data and action separation - data/ (reactive subscription) vs manager/ (snapshot on execution)
+- [x] Naming alignment - useProviderModels (data) + useToggleModels (action)
 
 #### 3.5 Store Layer
 

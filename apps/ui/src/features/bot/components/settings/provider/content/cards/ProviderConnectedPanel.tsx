@@ -6,7 +6,7 @@ import { Link, Zap, Key } from "lucide-react";
 import { cn } from "@/lib";
 import type { ProviderConnectedPanelProps } from "@/features/bot/types";
 import {
-  useProviderModelList,
+  useProviderModels,
   useProviderReset,
   useToggleModels,
 } from "@/features/bot/hooks";
@@ -17,7 +17,7 @@ export const ProviderConnectedPanel = ({
   provider,
   connectionInfo,
 }: ProviderConnectedPanelProps) => {
-  const { modelItems, allSelected } = useProviderModelList(provider.id);
+  const { modelItems, allSelected } = useProviderModels(provider.id);
   const { toggleSingle, toggleAll } = useToggleModels(provider.id);
 
   return (

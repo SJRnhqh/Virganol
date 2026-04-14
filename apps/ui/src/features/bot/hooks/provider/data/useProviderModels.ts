@@ -1,4 +1,4 @@
-// apps/ui/src/features/bot/hooks/provider/useProviderModelList.ts
+// apps/ui/src/features/bot/hooks/provider/data/useProviderModels.ts
 // 外部依赖
 import { useShallow } from "zustand/react/shallow";
 
@@ -6,7 +6,7 @@ import { useShallow } from "zustand/react/shallow";
 import type { ProviderId } from "@/features/bot/types";
 import { useProviderCollectionStore } from "@/features/bot/store";
 
-export const useProviderModelList = (providerId: ProviderId) => {
+export const useProviderModels = (providerId: ProviderId) => {
   // 订阅模型数据（useShallow 浅比较，available/enabled 同时变更只触发一次渲染）
   const { available, enabled } = useProviderCollectionStore(
     useShallow((s) => s.byId[providerId].models),
