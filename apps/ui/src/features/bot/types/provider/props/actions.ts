@@ -12,18 +12,16 @@ type ProviderCardActionsMap = {
   };
   connected: {
     primaryAction?: ProviderButtonAction;
-    resetAction: ProviderButtonAction;
   };
   failed: {
     primaryAction?: ProviderButtonAction;
-    resetAction: ProviderButtonAction;
   };
 };
 
 /**
  * ProviderCardActions 按状态划分的 Props 映射：
- * - unset/pending → 主按钮
- * - connected/failed → Reset + 主按钮
+ * - 所有状态：主按钮（Connect/Reconnect/Retry）
+ * - Reset 按钮已移至各自的 content 区域（ConnectedPanel/ErrorPanel）
  */
 export type ProviderCardActionsPropsByState = {
   [State in ProviderCardState]: {

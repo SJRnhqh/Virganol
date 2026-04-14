@@ -52,7 +52,7 @@ export const ProviderErrorPanel = ({
           {displayMessage}
         </p>
         <div className="mt-3 flex justify-end">
-          <ProviderResetButton onClick={handleReset} />
+          <ProviderResetButton onClick={handleReset} variant="error" />
         </div>
       </div>
     </div>

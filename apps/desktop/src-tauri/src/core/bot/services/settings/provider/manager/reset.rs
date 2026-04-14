@@ -35,8 +35,11 @@ pub(crate) fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) ->
     };
 
     if !config_removed {
-        error!("[Tauri] ❌ {} not found, cannot reset config", provider_id);
-        return false;
+        log::warn!(
+            "[Tauri] ⚠️ {} config not found, already clean",
+            provider_id
+        );
+        return true; // 幂等：目标状态已达成
     }
 
     // 3) 再删除系统密钥库中的 key（幂等：不存在也应算成功）

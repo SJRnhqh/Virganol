@@ -70,6 +70,7 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 - [x] `reset_provider_config` flow review (snapshot → config delete → key delete → rollback)
 - [x] Persistence layer validation (load/remove/save contracts, lock consistency)
 - [x] Error handling and logging (ProviderError propagation, message() method)
+- [x] Idempotent design (config not found returns true with warn log)
 
 #### 2.3 Hooks Layer
 
@@ -92,21 +93,20 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 #### 2.6 Components Layer
 
 - [x] `ProviderResetButton` - extracted to standalone component with text + icon
+- [x] `ProviderResetButton` - added variant prop for color adaptation (default/error)
 - [x] `useProviderReset` - extracted to `hooks/provider/manager/` for reusability
 - [x] `ProviderConnectedPanel` - integrated reset button in configuration management area
 - [x] `ProviderCardActions` - removed reset from CONNECTED state (moved to content area)
+- [x] `ProviderCardActions` - removed reset from FAILED state (moved to ErrorPanel)
+- [x] `ProviderCardActions` - simplified to unified rendering (removed switch statement)
+- [x] `ProviderCardActionsMap` - removed resetAction from type definition
 - [x] `ProviderErrorPanel` - redesigned with dashed border style (aligned with ConnectedPanel)
-- [x] `ProviderErrorPanel` - integrated reset button in error panel (uses `useProviderReset` hook)
+- [x] `ProviderErrorPanel` - integrated reset button with error variant (red color scheme)
 - [x] `ProviderErrorPanel` - removed redundant icon (header already shows status icon)
-- [x] `ProviderErrorPanel` - button right-aligned for better visual hierarchy
-- [x] `ProviderErrorPanel` - added fallback error message ("An unknown error occurred")
-- [x] `ProviderErrorPanelProps` - interface tightened (removed `cardState`, aligned with `ProviderConnectedPanelProps`)
-- [x] `ProviderFailedContent` - removed (replaced by `ProviderErrorPanelProps` as content type constraint)
-- [ ] FAILED state: replace `reset` (backend call) with `clear` (frontend-only form cleanup)
-- [ ] FAILED state: create `useClearForm` hook for frontend-only state cleanup
-- [ ] FAILED state reset/clear button - UX review and potential confirmation dialog
-- [ ] Confirmation dialog for CONNECTED state reset (if needed)
-- [ ] `ProviderCardActions` FAILED branch - remove redundant reset button after ErrorPanel integration is stable
+- [x] `ProviderErrorPanel` - right-aligned reset button for better visual hierarchy
+- [x] `ProviderErrorPanel` - added fallback error message for null/empty cases
+- [x] `ProviderErrorPanelProps` - interface tightened (removed cardState, aligned with ProviderConnectedPanelProps)
+- [x] `ProviderFailedContent` - removed (replaced by ProviderErrorPanelProps as content type constraint)
 
 ---
 

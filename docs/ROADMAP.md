@@ -49,7 +49,6 @@ LLM Provider 接入分为两条主线：
   - [x] ProviderResetButton 独立组件（文字 + Eraser 图标，类型约束）
   - [x] ProviderConnectedPanel 配置管理区域集成 Reset 按钮
   - [x] ProviderCardActions CONNECTED 状态移除 Reset（职责分离）
-  - [ ] FAILED 状态 Reset 按钮 UX 优化（确认对话框待定）
 
 #### 5.3 update_models 链路
 
