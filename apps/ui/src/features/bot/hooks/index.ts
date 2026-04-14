@@ -6,4 +6,5 @@ export {
   useProvider,
   useProviderStartup,
   useProviderReset,
+  useToggleModels,
 } from "./provider";

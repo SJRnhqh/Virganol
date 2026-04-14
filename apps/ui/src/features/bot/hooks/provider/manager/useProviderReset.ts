@@ -17,7 +17,7 @@ import { resetProvider } from "@/features/bot/services";
  * 调用后端 API 删除持久化配置，成功后重置前端状态
  */
 export const useProviderReset = (providerId: ProviderId) => {
-  const handleReset = useCallback(async () => {
+  return useCallback(async () => {
     const success = await resetProvider(providerId);
     if (success) {
       const store = useProviderCollectionStore.getState();
@@ -33,6 +33,4 @@ export const useProviderReset = (providerId: ProviderId) => {
       console.error(`[React] reset_provider ${providerId} failed`);
     }
   }, [providerId]);
-
-  return handleReset;
 };

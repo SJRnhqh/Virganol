@@ -3,3 +3,4 @@
 
 export { useProviderConnect } from "./useProviderConnect";
 export { useProviderReset } from "./useProviderReset";
+export { useToggleModels } from "./useToggleModels";

@@ -5,7 +5,11 @@ import { Link, Zap, Key } from "lucide-react";
 // 内部引用
 import { cn } from "@/lib";
 import type { ProviderConnectedPanelProps } from "@/features/bot/types";
-import { useProviderModelList, useProviderReset } from "@/features/bot/hooks";
+import {
+  useProviderModelList,
+  useProviderReset,
+  useToggleModels,
+} from "@/features/bot/hooks";
 import { ProviderModelToggleButton } from "./ProviderModelToggleButton";
 import { ProviderResetButton } from "./ProviderResetButton";
 
@@ -13,8 +17,8 @@ export const ProviderConnectedPanel = ({
   provider,
   connectionInfo,
 }: ProviderConnectedPanelProps) => {
-  const { modelItems, allSelected, onToggleModel, onToggleAllModels } =
-    useProviderModelList(provider.id);
+  const { modelItems, allSelected } = useProviderModelList(provider.id);
+  const { toggleSingle, toggleAll } = useToggleModels(provider.id);
 
   return (
     <div className="pb-2 pl-1 pt-0">
@@ -61,7 +65,7 @@ export const ProviderConnectedPanel = ({
           <ProviderModelToggleButton
             checked={allSelected}
             role="checkbox"
-            onClick={onToggleAllModels}
+            onClick={toggleAll}
           />
         </div>
 
@@ -84,7 +88,7 @@ export const ProviderConnectedPanel = ({
                 <ProviderModelToggleButton
                   checked={checked}
                   role="switch"
-                  onClick={() => onToggleModel(name)}
+                  onClick={() => toggleSingle(name)}
                 />
 
                 {/* 右侧：模型名称 */}

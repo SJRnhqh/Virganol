@@ -56,8 +56,11 @@ LLM Provider 接入分为两条主线：
 - [x] API迁移：updateEnabledModels 迁至 crud.ts（目前保持boolean返回）
 - [x] 后端持久化层重构：persistence.rs 迁移至 store/ 目录（load/save/remove/update/lock 模块化管理）
 - [x] 后端日志优化：persistence 层 warn + service 层 info/error 分层记录
+- [x] 前端 Hooks 层重构：useToggleModels 提取至 hooks/provider/manager/ 目录
+- [x] 前端数据与动作分离：useProviderModelList（数据）+ useToggleModels（动作）
+- [x] Toggle 语义统一：toggleSingle / toggleAll 命名与实现对齐
 - [ ] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约（待 Phase 6.2）
-- [ ] 前端调用链审查（并发互斥 / `pendingRef` 锁 / 结果反馈）
+- [ ] Store 层审查（enabled_models 状态同步 / 失败回滚）
 - [ ] 组件 / 类型 / 常量配套
 
 ### 🚧 Phase 6：全局优化与收尾

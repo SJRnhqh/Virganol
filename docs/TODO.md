@@ -134,21 +134,23 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 
 #### 3.4 Hooks Layer
 
-- [ ] `useProviderModelList` - call chain and concurrency control
-- [ ] `pendingRef` mutex lock verification
-- [ ] Optimistic update vs server confirmation
+- [x] `useToggleModels` - extracted to `hooks/provider/manager/` for consistency
+- [x] `toggleSingle` / `toggleAll` - toggle semantics with shared mutex lock
+- [x] Optimistic update + rollback pattern migrated from useProviderModelList
+- [x] `useProviderModelList` - refactored to data-only hook (modelItems / allSelected)
+- [x] Data and action separation - components call useProviderModelList + useToggleModels independently
 
-#### 3.3 Store Layer
+#### 3.5 Store Layer
 
 - [ ] `useProviderCollectionStore` - enabled_models state sync
 - [ ] Rollback on failure
 
-#### 3.4 Components Layer
+#### 3.6 Components Layer
 
 - [ ] Model checkbox list - loading state during update
 - [ ] Feedback on success/failure (toast/inline message)
 
-#### 3.5 Supporting Layers
+#### 3.7 Supporting Layers
 
 - [ ] Types: `UpdateModelsRequest` / `UpdateModelsResponse` completeness
 - [ ] Constants: model-related error codes
