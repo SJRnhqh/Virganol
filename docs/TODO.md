@@ -143,80 +143,41 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 
 #### 3.5 Store Layer
 
-- [ ] `useProviderCollectionStore` - enabled_models state sync
-- [ ] Rollback on failure
+- [x] `useProviderCollectionStore` - enabled_models state sync verified
+- [x] `setModelEnabled` / `setAllModelsEnabled` methods reviewed
+- [x] Rollback on failure - implemented in useToggleModels
+- [x] Store actions complete and well-structured
 
 #### 3.6 Components Layer
 
-- [ ] Model checkbox list - loading state during update
-- [ ] Feedback on success/failure (toast/inline message)
+- [x] Model checkbox list - toggle integration complete
+- [x] Component uses data/ and manager/ hooks separately
+- [ ] Loading state during update (deferred to Phase 6)
+- [ ] Feedback on success/failure (deferred to Phase 6)
 
 #### 3.7 Supporting Layers
 
-- [ ] Types: `UpdateModelsRequest` / `UpdateModelsResponse` completeness
-- [ ] Constants: model-related error codes
+- [x] Types: `ProviderModelState` complete and clear
+- [x] Store types: `ProviderCollectionState` actions documented
+- [ ] Constants: model-related error codes (deferred to Phase 6.2)
+- [ ] API response: structured response type (deferred to Phase 6.2)
 
----
+#### 3.8 Summary
 
-### 4. Cross-Cutting Concerns
+**✅ Completed**:
 
-#### 4.1 Error Handling Consistency
+- Backend: service + store + logging
+- API: crud.ts integration
+- Hooks: data/ (subscription) + manager/ (snapshot) separation
+- Store: state sync + rollback verified
+- Types: complete and documented
+- Naming: toggle (frontend) vs update (backend) semantics aligned
 
-- [ ] All three chains use consistent error display pattern
-- [ ] Error codes mapped to user-friendly messages
-- [ ] Network errors vs business errors distinction
+**⏸️ Deferred to Phase 6**:
 
-#### 4.2 Loading State Consistency
-
-- [ ] All operations show loading UI
-- [ ] Buttons disabled during operations
-- [ ] No race conditions on rapid clicks
-
-#### 4.3 Type Safety
-
-- [ ] No `any` types in CRUD chains
-- [ ] Request/response types match backend contracts
-- [ ] Error types properly typed (not just `string`)
-
-#### 4.4 Constants Coverage
-
-- [ ] All provider IDs in constants
-- [ ] All error codes in constants
-- [ ] No magic strings in components/hooks
-
----
-
-### 5. Connect & Reset Chain Refinement (Post-Audit Findings)
-
-#### 5.1 High Priority (Functional Correctness)
-
-- [ ] #10: `useProviderModelList` - add timeout mechanism to `pendingRef` lock (prevent infinite pending state)
-- [ ] #6: `useProviderConnection` - clear form completely after connect success (apiKey + apiURL)
-
-#### 5.2 Medium Priority (User Experience)
-
-- [ ] #7: `useProviderReset` - add error feedback to user (not just console.error)
-- [ ] #9: API layer - unify error handling pattern (resetProvider should return `{ success, error }` like connectAndSaveProvider)
-- [ ] #15: `ProviderForm` - add input validation (URL format, required fields, real-time feedback)
-- [ ] #12: `ProviderConnectionButton` - add loading animation for pending state
-
-#### 5.3 Low Priority (Code Quality & Performance)
-
-- [ ] #17: `useProvider` - add dependency array to `onUpdate` callback
-- [ ] #11: Store - add state transition validation in `updateProviderBatch`
-- [ ] #16: Check service - add runtime check to prevent multiple startup check calls
-
-#### 5.4 Phase 6 Deferred (Architecture & Performance)
-
-- [ ] #1: Backend - extend `HealthCheckResponse` with `error_code` field for error classification
-- [ ] #8: Frontend - split `HealthCheckResponse` into `ConnectResponse` (health + models)
-- [ ] #2: Backend - extract key rollback logic into separate function for testability
-- [ ] #3: Backend - add retry mechanism and detailed status for reset partial failures
-- [ ] #4: Backend - add caching layer for persistence (reduce read/write amplification)
-- [ ] #5: Backend - add timeout control to health check (prevent infinite waiting)
-- [ ] #18: Define unified error code system (backend + frontend)
-- [ ] #19: Define explicit state machine for state transitions
-- [ ] #20: Add operation logging and audit trail
+- Loading states and user feedback
+- Error codes constants
+- Structured API response types
 
 ---
 

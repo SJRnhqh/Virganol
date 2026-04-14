@@ -34,14 +34,11 @@ LLM Provider 接入分为两条主线：
 - [x] 常量驱动设计验证（CONNECTION_STATE_LABELS / CONNECTION_BUTTON_ICONS / CONNECTION_BUTTON_ANIMATIONS）
 - [x] 类型安全检查（ConnectAndSaveProviderPayload / HealthCheckResponse 契约）
 - [x] 图标语义完整（connect/connecting/retry/reset 各状态icon映射）
-- [ ] `connect_and_save` 返回专用 `ConnectResponse`（含 `enabled_models`），不复用 `HealthCheckResponse`
-- [ ] 前端form清空完整性：connect成功后清空apiKey与apiURL，确保form生命周期与store数据同步
 
 #### 5.2 reset 链路
 
 - [x] `reset_provider_config` 审查（config + key 原子性删除 / 回滚逻辑）
 - [x] API迁移：resetProvider 迁至 crud.ts（目前保持boolean返回）
-- [ ] `resetProvider` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约（待 Phase 6.2）
 - [x] 前端钩子层审查（success检查 + batch状态更新 + 错误日志占位）
 - [x] 前端钩子重构：useProviderReset 提取至 hooks/provider/manager/ 目录
 - [x] 前端store/types/constants完整性验证（无需优化）
@@ -60,9 +57,40 @@ LLM Provider 接入分为两条主线：
 - [x] 前端数据与动作分离：data/（响应式订阅）vs manager/（执行时快照）
 - [x] 目录结构优化：useProviderModels 迁移至 hooks/provider/data/ 目录
 - [x] Toggle 语义统一：toggleSingle / toggleAll 命名与实现对齐
-- [ ] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约（待 Phase 6.2）
-- [ ] Store 层审查（enabled_models 状态同步 / 失败回滚）
-- [ ] 组件 / 类型 / 常量配套
+- [x] Store 层审查：setModelEnabled / setAllModelsEnabled 方法验证完成
+- [x] Types 层审查：ProviderModelState 类型完整且清晰
+- [x] 命名语义对齐：toggle（前端交互）vs update（后端数据）职责分离
+
+#### 5.4 CRUD 链路查漏补缺
+
+**功能正确性**：
+
+- [ ] `useToggleModels` - 添加 pendingRef 锁超时机制（防止 API 卡住导致界面永久锁定）
+- [ ] `useProviderConnect` - connect 成功后清空 form（apiKey + apiURL，防止敏感数据残留）
+
+**用户体验优化**：
+
+- [ ] `ProviderForm` - 添加输入验证（URL 格式 / 必填字段 / 实时反馈）
+- [ ] `ProviderConnectionButton` - 添加加载动画（pending 状态视觉反馈）
+
+**代码质量优化**：
+
+- [ ] `useProvider` - 补全 onUpdate callback 依赖数组（避免闭包过期）
+- [ ] `useProviderCollectionStore` - 添加状态转换验证（updateProviderBatch 防御性编程）
+- [ ] Check service - 添加运行时检查防止多次启动调用（资源优化）
+
+**后端优化**：
+
+- [ ] 提取 key rollback 逻辑为独立函数（提高可测试性）
+- [ ] reset 链路添加重试机制和详细状态（提高可靠性）
+- [ ] 持久化层添加缓存（减少 I/O 读写放大）
+- [ ] 健康检查添加超时控制（防止无限等待）
+
+**契约升级**（待 Phase 6.2 错误精细化）：
+
+- [ ] `connect_and_save` 返回专用 `ConnectResponse`（含 enabled_models），不复用 `HealthCheckResponse`
+- [ ] `resetProvider` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
+- [ ] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
 
 ### 🚧 Phase 6：全局优化与收尾
 
