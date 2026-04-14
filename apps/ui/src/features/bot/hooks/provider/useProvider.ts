@@ -20,7 +20,7 @@ export const useProvider = (providerId: ProviderId) => {
   );
 
   // ── 连接逻辑 ──────────────────────────────
-  const { onConnect, onRetry, onReset } = useProviderConnection(providerId);
+  const { onConnect, onRetry } = useProviderConnection(providerId);
 
   // ── 组装返回 ──────────────────────────────
   return {
@@ -42,7 +42,6 @@ export const useProvider = (providerId: ProviderId) => {
     connection: {
       onConnect,
       onRetry,
-      onReset,
     },
   };
 };
