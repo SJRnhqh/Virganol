@@ -6,7 +6,7 @@ use tauri::AppHandle;
 use crate::core::bot::models::{
     ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderCheckTrigger, ProviderId,
 };
-use crate::core::bot::services::{
+use crate::core::bot::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,
     update_provider_enabled_models,
 };

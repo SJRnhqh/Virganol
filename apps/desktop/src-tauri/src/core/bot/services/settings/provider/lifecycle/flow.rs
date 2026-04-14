@@ -5,12 +5,12 @@ use std::time::Instant;
 use tauri::AppHandle;
 
 // 内部引用
+use super::super::load_supported_providers;
 use super::{
     emit_check_completed, emit_check_started, next_run_id, report_lifecycle_failure,
     run_provider_checks,
 };
 use crate::core::bot::models::{ProviderCheckTrigger, ProviderError};
-use crate::core::bot::services::load_supported_providers;
 
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
 pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTrigger) {
