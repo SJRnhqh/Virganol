@@ -127,7 +127,12 @@ Components → Hooks → Services/API → Store → Constants/Types/Icons
 - [x] Request payload construction (providerId/enabledModels)
 - [x] Response handling
 
-#### 3.3 Hooks Layer
+#### 3.3 Hooks Refactoring (Pre-Audit)
+
+- [x] `useProviderConnect` - extracted to `hooks/provider/manager/` for consistency
+- [x] `useProviderConnection` - simplified to orchestration layer (calls manager functions)
+
+#### 3.4 Hooks Layer
 
 - [ ] `useProviderModelList` - call chain and concurrency control
 - [ ] `pendingRef` mutex lock verification
