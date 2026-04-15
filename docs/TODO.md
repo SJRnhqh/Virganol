@@ -34,7 +34,6 @@ Branch: `feat/spirit-crud-closeout`
 - [ ] Add timeout control to health checks (prevent infinite wait)
 - [ ] Replace global `PROVIDERS_STORE_LOCK` with per-provider locks (improve concurrency)
 - [ ] Add HTTP client connection pooling (reuse connections across requests)
-- [ ] Fix key generation inconsistency (`to_string()` vs `as_str()` - critical data integrity issue)
 
 ## Contract Upgrade
 

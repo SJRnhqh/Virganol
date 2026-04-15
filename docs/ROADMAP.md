@@ -117,7 +117,6 @@ LLM Provider 接入分为两条主线：
 - [ ] 超时配置化（5s 硬编码改为可配置）
 - [ ] Provider 级别锁优化（per-provider 串行化 connect）
 - [ ] 持久化层缓存优化（`ProvidersStore` cache）
-- [ ] 键生成策略统一（`save_provider` 使用 `to_string()`，`remove_provider` / `update_models` 使用 `as_str()`，存在不一致风险）
 
 #### 6.4 收尾与验证
 
