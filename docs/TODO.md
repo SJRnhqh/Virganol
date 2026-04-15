@@ -6,8 +6,8 @@ Branch: `feat/spirit-crud-closeout`
 
 - [ ] `useToggleModels` - Add pendingRef lock timeout (prevent UI freeze on API hang)
 - [ ] `useToggleModels` - Add error handling for exceptions during optimistic updates (ensure rollback executes)
-- [x] `useProviderConnect` - Clear form on connect success (prevent sensitive data leak)
-- [ ] `useProviderConnect` - Add pending state guard (prevent concurrent connect operations)
+- [ ] `useProviderConnect` - Clear form completely on connect success (currently only clears apiKey, need to clear apiURL too)
+- [x] `useProviderConnect` - Add pending state guard (prevent concurrent connect operations)
 - [ ] `useProviderReset` - Add user feedback on reset failure (toast/notification, not just console.error)
 - [ ] Backend `reset_provider_config` - Handle config rollback failure (prevent inconsistent state)
 
@@ -47,7 +47,6 @@ Branch: `feat/spirit-crud-closeout`
 
 ## Security
 
-- [x] `useProviderConnect` - Clear apiKey immediately after API call (minimize memory exposure)
 - [ ] Remove console.log statements leaking sensitive operation details (provider IDs, timing)
 - [ ] Add rate limiting to connect operations (prevent brute force key testing)
 
