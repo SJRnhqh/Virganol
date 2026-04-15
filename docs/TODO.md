@@ -6,15 +6,9 @@ Branch: `feat/spirit-crud-closeout`
 
 - [ ] `useToggleModels` - Add pendingRef lock timeout (prevent UI freeze on API hang)
 - [ ] `useToggleModels` - Add error handling for exceptions during optimistic updates (ensure rollback executes)
-- [ ] `useProviderConnect` - Clear form completely on connect success (currently only clears apiKey, need to clear apiURL too)
 - [x] `useProviderConnect` - Add pending state guard (prevent concurrent connect operations)
 - [ ] `useProviderReset` - Add user feedback on reset failure (toast/notification, not just console.error)
 - [ ] Backend `reset_provider_config` - Handle config rollback failure (prevent inconsistent state)
-
-## UX Improvements
-
-- [ ] `ProviderForm` - Add input validation (URL format / required fields / live feedback)
-- [ ] `ProviderConnectionButton` - Add loading animation (pending state visual feedback)
 
 ## Code Quality
 
@@ -23,15 +17,13 @@ Branch: `feat/spirit-crud-closeout`
 - [ ] `useProviderModels` - Memoize modelItems calculation (performance optimization)
 - [ ] `useProviderCollectionStore` - Add state transition validation (defensive updateProviderBatch)
 - [ ] Check service - Prevent duplicate startup calls (resource optimization)
-- [ ] Cleanup scattered TODO comments across codebase (consolidate or resolve)
-- [ ] Add AbortController to cancel in-flight API requests on component unmount
 
 ## Backend Optimization
 
-- [ ] Extract key rollback logic to standalone function (improve testability)
+- [x] Extract key rollback logic to standalone function (improve testability)
 - [ ] Add retry mechanism and detailed status to reset flow (improve reliability)
 - [ ] Add caching to persistence layer (reduce I/O amplification)
-- [ ] Add timeout control to health checks (prevent infinite wait)
+- [ ] Make health check timeout configurable (currently hardcoded to 5s)
 - [ ] Replace global `PROVIDERS_STORE_LOCK` with per-provider locks (improve concurrency)
 - [ ] Add HTTP client connection pooling (reuse connections across requests)
 

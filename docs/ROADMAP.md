@@ -66,12 +66,7 @@ LLM Provider 接入分为两条主线：
 **功能正确性**：
 
 - [ ] `useToggleModels` - 添加 pendingRef 锁超时机制（防止 API 卡住导致界面永久锁定）
-- [ ] `useProviderConnect` - connect 成功后清空 form（apiKey，防止敏感数据残留）
-
-**用户体验优化**：
-
-- [ ] `ProviderForm` - 添加输入验证（URL 格式 / 必填字段 / 实时反馈）
-- [ ] `ProviderConnectionButton` - 添加加载动画（pending 状态视觉反馈）
+- [x] `useProviderConnect` - 添加 pending state guard（防止并发操作）
 
 **代码质量优化**：
 
@@ -81,10 +76,10 @@ LLM Provider 接入分为两条主线：
 
 **后端优化**：
 
-- [ ] 提取 key rollback 逻辑为独立函数（提高可测试性）
+- [x] 提取 key rollback 逻辑为独立函数（提高可测试性）
 - [ ] reset 链路添加重试机制和详细状态（提高可靠性）
 - [ ] 持久化层添加缓存（减少 I/O 读写放大）
-- [ ] 健康检查添加超时控制（防止无限等待）
+- [ ] 健康检查超时配置化（5s 硬编码改为可配置）
 
 **契约升级**：
 
@@ -114,20 +109,14 @@ LLM Provider 接入分为两条主线：
 #### 6.3 性能优化
 
 - [ ] HTTP 客户端连接池复用（`OnceLock<Client>`）
-- [ ] 超时配置化（5s 硬编码改为可配置）
 - [ ] Provider 级别锁优化（per-provider 串行化 connect）
 - [ ] 持久化层缓存优化（`ProvidersStore` cache）
 
 #### 6.4 收尾与验证
 
+- [ ] 表单输入验证（`ProviderForm` 添加实时验证：URL 格式检查 / 必填字段提示 / 错误状态视觉反馈，提升用户输入体验）
+- [ ] 请求取消机制（添加 AbortController 在组件卸载时取消飞行中的 API 请求，防止内存泄漏警告）
 - [ ] 安全审计（`secret_meta` 前端消费 / Provider 支持范围收敛 / invoke 暴露面审计）
 - [ ] 生命周期收口（orphan failed 认领 / 事件名契约自动化）
 - [ ] 集成测试补充
 - [ ] 功能开发完结
-
----
-
-## 备注
-
-- Phase 5-6 非严格串行，前端适配过程中可能回头调整后端细节
-- 错误精细化与日志统一化为全局性改造，需等 CRUD 三条链路审查完成后统一推进

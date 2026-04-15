@@ -13,6 +13,29 @@ use super::super::{
     save_provider, save_provider_key,
 };
 
+/// 回滚密钥：恢复旧密钥或删除新密钥
+///
+/// 当配置持久化失败时，需要回滚 keyring 中的密钥变更以保持状态一致性。
+/// 回滚失败不影响主错误返回，仅记录 error 日志供运维排查。
+fn rollback_provider_key(provider_id: ProviderId, previous_key: Option<&str>) {
+    let rollback_result = if let Some(key) = previous_key {
+        // 恢复旧密钥
+        save_provider_key(provider_id, key)
+    } else {
+        // 删除新添加的密钥
+        remove_provider_key(provider_id)
+    };
+
+    if let Err(e) = rollback_result {
+        error!(
+            "[Tauri] ❌ {} key rollback failed: {}",
+            provider_id, e
+        );
+    } else {
+        info!("[Tauri] ↩️ {} key rollback completed", provider_id);
+    }
+}
+
 /// 接入并持久化：health_check 成功后自动保存配置
 /// 返回 ConnectAndSaveProviderResponse（包含 available_models 和 enabled_models）
 pub(crate) async fn connect_and_save(
@@ -99,23 +122,10 @@ pub(crate) async fn connect_and_save(
     if let Err(e) = save_provider(app, provider_id, &record) {
         // 仅当本次显式输入了 key 时，才需要回滚 keyring 变更
         if !normalized_key.is_empty() {
-            let rollback_result = if let Some(previous_key) = previous_persisted_key.as_ref() {
-                // 回滚 keyring 旧密钥
-                save_provider_key(provider_id, previous_key.as_str())
-            } else {
-                // 删除新添加密钥
-                remove_provider_key(provider_id)
-            };
-
-            // 回滚失败不影响主错误返回，仅记录 error 日志供运维排查 keyring 状态不一致问题
-            if let Err(re) = rollback_result {
-                error!(
-                    "[Tauri] ❌ {} key rollback failed after config persist error: {}",
-                    provider_id, re
-                );
-            } else {
-                info!("[Tauri] ↩️ {} key rollback completed", provider_id);
-            }
+            rollback_provider_key(
+                provider_id,
+                previous_persisted_key.as_ref().map(|k| k.as_str()),
+            );
         }
 
         return ConnectAndSaveProviderResponse::fail(Some(e.message()));
