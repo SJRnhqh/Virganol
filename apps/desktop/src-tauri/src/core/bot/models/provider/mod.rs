@@ -2,6 +2,7 @@
 // 导出内容
 mod check;
 mod connection;
+mod contract;
 mod error;
 mod id;
 mod key;
@@ -13,7 +14,8 @@ pub use check::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
     ProviderCheckTrigger, ProviderStatusPayload,
 };
-pub use connection::{ConnectAndSaveProviderRequest, HealthCheckResponse};
+pub use connection::HealthCheckResponse;
+pub(crate) use contract::{ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse};
 pub use error::{ProviderError, ProviderErrorCode, ProviderIssue, SkippedProviderDetail};
 pub use id::ProviderId;
 pub use key::ProviderKey;

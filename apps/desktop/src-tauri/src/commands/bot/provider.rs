@@ -3,12 +3,10 @@
 use tauri::AppHandle;
 
 // 内部引用
-use crate::core::bot::models::{
-    ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderCheckTrigger, ProviderId,
-};
 use crate::core::bot::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,
-    update_provider_enabled_models,
+    update_provider_enabled_models, ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse,
+    ProviderCheckTrigger, ProviderId,
 };
 
 /// Triggers the provider lifecycle check on application startup.
@@ -32,7 +30,7 @@ pub(crate) async fn trigger_provider_manual_refresh(app: AppHandle) {
 pub(crate) async fn connect_and_save_provider(
     app: AppHandle,
     payload: ConnectAndSaveProviderRequest,
-) -> HealthCheckResponse {
+) -> ConnectAndSaveProviderResponse {
     let url = payload.url.as_deref().unwrap_or("");
     connect_and_save(&app, payload.provider_id, &payload.key, url).await
 }

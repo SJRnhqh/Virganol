@@ -1,10 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/models/mod.rs
 // 导出内容
-pub(crate) mod provider;
+pub mod provider;
 
-pub use provider::{
-    ConnectAndSaveProviderRequest, HealthCheckResponse, ProviderCheckCompletedPayload,
-    ProviderCheckFailedPayload, ProviderCheckStartedPayload, ProviderCheckTrigger, ProviderError,
-    ProviderId, ProviderIssue, ProviderKey, ProviderKeySource, ProviderRecord, ProviderSecretMeta,
-    ProviderStatusPayload, SkippedProviderDetail, SupportedProvidersSnapshot,
+pub(super) use provider::ProviderRecord;
+pub(crate) use provider::{
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, HealthCheckResponse,
+    ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
+    ProviderCheckTrigger, ProviderError, ProviderId, ProviderIssue, ProviderKey, ProviderKeySource,
+    ProviderSecretMeta, ProviderStatusPayload, SkippedProviderDetail, SupportedProvidersSnapshot,
 };

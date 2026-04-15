@@ -4,21 +4,23 @@ use log::{error, info};
 use tauri::AppHandle;
 
 // 内部引用
+use super::super::super::super::super::compute_enabled_models;
+use super::super::super::super::super::{
+    ConnectAndSaveProviderResponse, ProviderId, ProviderRecord,
+};
 use super::super::{
     health_check, load_provider_env, load_provider_key, load_provider_record, remove_provider_key,
     save_provider, save_provider_key,
 };
-use crate::core::bot::helpers::compute_enabled_models;
-use crate::core::bot::models::{HealthCheckResponse, ProviderId, ProviderRecord};
 
 /// 接入并持久化：health_check 成功后自动保存配置
-/// 返回 HealthCheckResponse（前端根据 success 判断是否接入成功）
+/// 返回 ConnectAndSaveProviderResponse（包含 available_models 和 enabled_models）
 pub(crate) async fn connect_and_save(
     app: &AppHandle,
     provider_id: ProviderId,
     key: &str,
     url: &str,
-) -> HealthCheckResponse {
+) -> ConnectAndSaveProviderResponse {
     // 1) 归一化前端传入的 key 和 url（去掉首尾空白）
     let normalized_key = key.trim();
     let normalized_url = url.trim();
@@ -49,14 +51,24 @@ pub(crate) async fn connect_and_save(
 
     // 健康检查失败，直接返回
     if !result.success {
-        return result;
+        return ConnectAndSaveProviderResponse {
+            success: false,
+            available_models: vec![],
+            enabled_models: vec![],
+            error: result.error,
+        };
     }
 
     // 4) 持久化密钥（仅用户显式输入时）
     if !normalized_key.is_empty() {
         // 用户显式输入的 key 已通过健康检查，持久化到 keyring
         if let Err(e) = save_provider_key(provider_id, normalized_key) {
-            return HealthCheckResponse::fail(e.message());
+            return ConnectAndSaveProviderResponse {
+                success: false,
+                available_models: vec![],
+                enabled_models: vec![],
+                error: Some(e.message()),
+            };
         }
     } else {
         // 用户未显式输入 key：来源可能是 env / keyring / 无需密钥，均无需持久化
@@ -70,9 +82,12 @@ pub(crate) async fn connect_and_save(
     let previous_record = match load_provider_record(app, provider_id) {
         Ok(record) => record,
         Err(e) => {
-            // TODO: 结构性错误应与健康检查失败区分，考虑扩展 HealthCheckResponse
-            // 添加 error_code 字段，让前端能识别 io_error/serde_error 等系统级错误
-            return HealthCheckResponse::fail(e.message());
+            return ConnectAndSaveProviderResponse {
+                success: false,
+                available_models: vec![],
+                enabled_models: vec![],
+                error: Some(e.message()),
+            };
         }
     };
     let next_enabled_models = match previous_record {
@@ -118,9 +133,19 @@ pub(crate) async fn connect_and_save(
             }
         }
 
-        // TODO: 结构性错误应与健康检查失败区分，考虑扩展 HealthCheckResponse
-        // 添加 error_code 字段，让前端能识别 io_error/serde_error 等系统级错误
-        return HealthCheckResponse::fail(e.message());
+        return ConnectAndSaveProviderResponse {
+            success: false,
+            available_models: vec![],
+            enabled_models: vec![],
+            error: Some(e.message()),
+        };
     }
-    result
+
+    // 成功：返回健康检查的 available_models 和持久化后的 enabled_models
+    ConnectAndSaveProviderResponse {
+        success: true,
+        available_models: result.available_models,
+        enabled_models: record.enabled_models,
+        error: None,
+    }
 }
