@@ -39,6 +39,7 @@ Branch: `feat/spirit-connect-react`
 ## Contract Upgrade
 
 - [ ] `connect_and_save` - Return dedicated `ConnectResponse` (with enabled_models), not reuse `HealthCheckResponse`
+- [ ] `HealthCheckResponse` - Narrow responsibility to health check results only (remove fields/usage outside health check context)
 - [ ] `resetProvider` - Return structured response ({ success, error? }), align with connectAndSaveProvider
 - [ ] `updateEnabledModels` - Return structured response ({ success, error? }), align with connectAndSaveProvider
 
