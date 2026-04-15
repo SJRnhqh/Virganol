@@ -38,24 +38,24 @@ pub(crate) struct ConnectAndSaveProviderResponse {
     pub error: Option<String>,
 }
 
-// impl ConnectAndSaveProviderResponse {
-//     /// 构造成功响应
-//     pub fn ok(available_models: Vec<String>, enabled_models: Vec<String>) -> Self {
-//         Self {
-//             success: true,
-//             available_models,
-//             enabled_models,
-//             error: None,
-//         }
-//     }
-//
-//     /// 构造失败响应
-//     pub fn fail(msg: impl Into<String>) -> Self {
-//         Self {
-//             success: false,
-//             available_models: vec![],
-//             enabled_models: vec![],
-//             error: Some(msg.into()),
-//         }
-//     }
-// }
+impl ConnectAndSaveProviderResponse {
+    /// 构造成功响应
+    pub fn ok(available_models: Vec<String>, enabled_models: Vec<String>) -> Self {
+        Self {
+            success: true,
+            available_models,
+            enabled_models,
+            error: None,
+        }
+    }
+
+    /// 构造失败响应
+    pub fn fail(error: Option<String>) -> Self {
+        Self {
+            success: false,
+            available_models: vec![],
+            enabled_models: vec![],
+            error,
+        }
+    }
+}

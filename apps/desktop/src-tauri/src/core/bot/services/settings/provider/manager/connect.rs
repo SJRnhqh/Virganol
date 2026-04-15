@@ -51,24 +51,14 @@ pub(crate) async fn connect_and_save(
 
     // 健康检查失败，直接返回
     if !result.success {
-        return ConnectAndSaveProviderResponse {
-            success: false,
-            available_models: vec![],
-            enabled_models: vec![],
-            error: result.error,
-        };
+        return ConnectAndSaveProviderResponse::fail(result.error);
     }
 
     // 4) 持久化密钥（仅用户显式输入时）
     if !normalized_key.is_empty() {
         // 用户显式输入的 key 已通过健康检查，持久化到 keyring
         if let Err(e) = save_provider_key(provider_id, normalized_key) {
-            return ConnectAndSaveProviderResponse {
-                success: false,
-                available_models: vec![],
-                enabled_models: vec![],
-                error: Some(e.message()),
-            };
+            return ConnectAndSaveProviderResponse::fail(Some(e.message()));
         }
     } else {
         // 用户未显式输入 key：来源可能是 env / keyring / 无需密钥，均无需持久化
@@ -82,12 +72,7 @@ pub(crate) async fn connect_and_save(
     let previous_record = match load_provider_record(app, provider_id) {
         Ok(record) => record,
         Err(e) => {
-            return ConnectAndSaveProviderResponse {
-                success: false,
-                available_models: vec![],
-                enabled_models: vec![],
-                error: Some(e.message()),
-            };
+            return ConnectAndSaveProviderResponse::fail(Some(e.message()));
         }
     };
     let next_enabled_models = match previous_record {
@@ -133,19 +118,9 @@ pub(crate) async fn connect_and_save(
             }
         }
 
-        return ConnectAndSaveProviderResponse {
-            success: false,
-            available_models: vec![],
-            enabled_models: vec![],
-            error: Some(e.message()),
-        };
+        return ConnectAndSaveProviderResponse::fail(Some(e.message()));
     }
 
     // 成功：返回健康检查的 available_models 和持久化后的 enabled_models
-    ConnectAndSaveProviderResponse {
-        success: true,
-        available_models: result.available_models,
-        enabled_models: record.enabled_models,
-        error: None,
-    }
+    ConnectAndSaveProviderResponse::ok(result.available_models, record.enabled_models)
 }
