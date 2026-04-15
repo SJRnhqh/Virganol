@@ -12,11 +12,11 @@ export type {
   ProviderCheckCompletedPayload,
 } from "./events";
 
-// ── Provider 命令与响应 ──
+// ── Provider Connect 契约 ──
 export type {
-  HealthCheckResponse,
   ConnectAndSaveProviderPayload,
-} from "./commands";
+  ConnectAndSaveProviderResponse,
+} from "./connect";
 
 // ── Provider 持久化记录 ──
 export type { ProviderRecord } from "./record";

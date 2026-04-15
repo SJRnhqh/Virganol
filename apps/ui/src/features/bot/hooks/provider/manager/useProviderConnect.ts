@@ -31,11 +31,12 @@ export const useProviderConnect = (providerId: ProviderId) => {
           form: { apiKey: "" },
           cardState: PROVIDER_CARD_STATES.CONNECTED,
           models: {
-            available: response.available_models,
-            // TODO: 契约语义边界 — HealthCheckResponse 同时承载健康检查结果与模型状态，
-            //   需明确纯健康检查结果与模型推送之间的职责边界，待 Phase 6.1 拆分 ConnectResponse。
+            available: response.availableModels,
             enabled: Object.fromEntries(
-              response.available_models.map((model) => [model, false]),
+              response.availableModels.map((model) => [
+                model,
+                response.enabledModels.includes(model),
+              ]),
             ),
           },
         });

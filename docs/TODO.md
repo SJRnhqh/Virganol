@@ -1,12 +1,12 @@
 # CRUD Refinement Tasks
 
-Branch: `feat/spirit-connect-react`
+Branch: `feat/spirit-crud-closeout`
 
 ## Functional Correctness
 
 - [ ] `useToggleModels` - Add pendingRef lock timeout (prevent UI freeze on API hang)
 - [ ] `useToggleModels` - Add error handling for exceptions during optimistic updates (ensure rollback executes)
-- [ ] `useProviderConnect` - Clear form on connect success (prevent sensitive data leak)
+- [x] `useProviderConnect` - Clear form on connect success (prevent sensitive data leak)
 - [ ] `useProviderConnect` - Add pending state guard (prevent concurrent connect operations)
 - [ ] `useProviderReset` - Add user feedback on reset failure (toast/notification, not just console.error)
 - [ ] Backend `reset_provider_config` - Handle config rollback failure (prevent inconsistent state)
@@ -38,14 +38,17 @@ Branch: `feat/spirit-connect-react`
 
 ## Contract Upgrade
 
-- [ ] `connect_and_save` - Return dedicated `ConnectResponse` (with enabled_models), not reuse `HealthCheckResponse`
-- [ ] `HealthCheckResponse` - Narrow responsibility to health check results only (remove fields/usage outside health check context)
+- [x] `connect_and_save` - Return dedicated `ConnectAndSaveProviderResponse` (with enabled_models)
+- [x] `HealthCheckResponse` - Narrow responsibility to health check results only
+- [x] Backend contract structure - Create `contract/connect.rs` for frontend-backend contracts
+- [x] Frontend contract structure - Create `contract/connect.ts` mirroring backend structure
+- [x] Frontend enabled models - Use backend `enabledModels` instead of hardcoded false
 - [ ] `resetProvider` - Return structured response ({ success, error? }), align with connectAndSaveProvider
 - [ ] `updateEnabledModels` - Return structured response ({ success, error? }), align with connectAndSaveProvider
 
 ## Security
 
-- [ ] `useProviderConnect` - Clear apiKey immediately after API call (minimize memory exposure)
+- [x] `useProviderConnect` - Clear apiKey immediately after API call (minimize memory exposure)
 - [ ] Remove console.log statements leaking sensitive operation details (provider IDs, timing)
 - [ ] Add rate limiting to connect operations (prevent brute force key testing)
 

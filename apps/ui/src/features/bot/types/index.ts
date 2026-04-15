@@ -11,12 +11,12 @@ export type {
   ProviderIssue,
   ProviderCheckEvent,
   ProviderCheckTrigger,
-  HealthCheckResponse,
   ProviderStatusPayload,
   ProviderCheckFailedPayload,
   ProviderCheckStartedPayload,
   ProviderCheckCompletedPayload,
   ConnectAndSaveProviderPayload,
+  ConnectAndSaveProviderResponse,
 
   // ── Provider 状态类型 ──
   ProviderState,

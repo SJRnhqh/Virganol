@@ -66,7 +66,7 @@ LLM Provider 接入分为两条主线：
 **功能正确性**：
 
 - [ ] `useToggleModels` - 添加 pendingRef 锁超时机制（防止 API 卡住导致界面永久锁定）
-- [ ] `useProviderConnect` - connect 成功后清空 form（apiKey + apiURL，防止敏感数据残留）
+- [ ] `useProviderConnect` - connect 成功后清空 form（apiKey，防止敏感数据残留）
 
 **用户体验优化**：
 
@@ -88,7 +88,11 @@ LLM Provider 接入分为两条主线：
 
 **契约升级**：
 
-- [ ] `connect_and_save` 返回专用 `ConnectResponse`（含 enabled_models），不复用 `HealthCheckResponse`
+- [x] `connect_and_save` 返回专用 `ConnectAndSaveProviderResponse`（含 enabled_models）
+- [x] `HealthCheckResponse` 职责收窄至健康检查结果（仅内部使用）
+- [x] 后端契约结构重构：创建 `contract/connect.rs` 管理前后端契约
+- [x] 前端契约结构重构：创建 `contract/connect.ts` 镜像后端结构
+- [x] 前端启用模型状态：使用后端 `enabledModels` 替代硬编码 false
 - [ ] `resetProvider` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
 - [ ] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
 

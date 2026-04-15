@@ -9,12 +9,12 @@ export type {
   ProviderIssue,
   ProviderCheckEvent,
   ProviderCheckTrigger,
-  HealthCheckResponse,
   ProviderStatusPayload,
   ProviderCheckFailedPayload,
   ProviderCheckStartedPayload,
   ProviderCheckCompletedPayload,
   ConnectAndSaveProviderPayload,
+  ConnectAndSaveProviderResponse,
 } from "./contract";
 
 // ── Provider 状态类型 ──

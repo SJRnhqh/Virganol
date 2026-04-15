@@ -5,7 +5,7 @@ import { invoke } from "@tauri-apps/api/core";
 // 内部引用
 import type {
   ConnectAndSaveProviderPayload,
-  HealthCheckResponse,
+  ConnectAndSaveProviderResponse,
   ProviderId,
 } from "@/features/bot/types";
 
@@ -14,10 +14,10 @@ export const connectAndSaveProvider = async ({
   providerId,
   key,
   url,
-}: ConnectAndSaveProviderPayload): Promise<HealthCheckResponse> => {
+}: ConnectAndSaveProviderPayload): Promise<ConnectAndSaveProviderResponse> => {
   const startTime = performance.now();
   try {
-    const response = await invoke<HealthCheckResponse>(
+    const response = await invoke<ConnectAndSaveProviderResponse>(
       "connect_and_save_provider",
       {
         payload: {
@@ -31,7 +31,7 @@ export const connectAndSaveProvider = async ({
     if (response.success) {
       console.log(
         `[React] connect_and_save ${providerId} ✅ (${ms}ms)`,
-        response.available_models,
+        response.availableModels,
       );
     } else {
       console.error(
@@ -46,7 +46,12 @@ export const connectAndSaveProvider = async ({
     const ms = (performance.now() - startTime).toFixed(2);
     const msg = error instanceof Error ? error.message : String(error);
     console.error(`[API] connect_and_save invoke error (${ms}ms):`, msg);
-    return { success: false, available_models: [], error: msg };
+    return {
+      success: false,
+      availableModels: [],
+      enabledModels: [],
+      error: msg,
+    };
   }
 };
 
