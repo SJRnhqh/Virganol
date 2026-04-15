@@ -4,9 +4,8 @@ use log::{error, info};
 use tauri::AppHandle;
 
 // 内部引用
-use super::super::super::super::super::compute_enabled_models;
 use super::super::super::super::super::{
-    ConnectAndSaveProviderResponse, ProviderId, ProviderRecord,
+    compute_enabled_models, ConnectAndSaveProviderResponse, ProviderId, ProviderRecord,
 };
 use super::super::{
     health_check, load_provider_env, load_provider_key, load_provider_record, remove_provider_key,
@@ -27,10 +26,7 @@ fn rollback_provider_key(provider_id: ProviderId, previous_key: Option<&str>) {
     };
 
     if let Err(e) = rollback_result {
-        error!(
-            "[Tauri] ❌ {} key rollback failed: {}",
-            provider_id, e
-        );
+        error!("[Tauri] ❌ {} key rollback failed: {}", provider_id, e);
     } else {
         info!("[Tauri] ↩️ {} key rollback completed", provider_id);
     }

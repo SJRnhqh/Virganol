@@ -2,10 +2,12 @@
 // 导出内容
 pub mod provider;
 
-pub(super) use provider::ProviderRecord;
 pub(crate) use provider::{
-    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, HealthCheckResponse,
-    ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
-    ProviderCheckTrigger, ProviderError, ProviderId, ProviderIssue, ProviderKey, ProviderKeySource,
-    ProviderSecretMeta, ProviderStatusPayload, SkippedProviderDetail, SupportedProvidersSnapshot,
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckCompletedPayload,
+    ProviderCheckFailedPayload, ProviderCheckStartedPayload, ProviderCheckTrigger, ProviderId,
+    ProviderIssue, ProviderKeySource, ProviderSecretMeta, ProviderStatusPayload,
+};
+pub(super) use provider::{
+    HealthCheckResponse, ProviderError, ProviderKey, ProviderRecord, SkippedProviderDetail,
+    SupportedProvidersSnapshot,
 };

@@ -4,10 +4,9 @@ use log::warn;
 use tauri::AppHandle;
 
 // 内部引用
+use super::super::super::super::super::{ProviderError, ProviderId, SPIRIT_PROVIDERS_KEY};
 use super::super::super::save_settings;
 use super::{load_all_providers, PROVIDERS_STORE_LOCK};
-use crate::core::bot::constants::SPIRIT_PROVIDERS_KEY;
-use crate::core::bot::models::{ProviderError, ProviderId};
 
 /// 更新某个 provider 的 enabled_models
 /// - Ok(true)：更新成功

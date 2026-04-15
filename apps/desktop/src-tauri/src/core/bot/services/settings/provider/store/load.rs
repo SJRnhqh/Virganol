@@ -4,11 +4,11 @@ use std::collections::HashMap;
 use tauri::AppHandle;
 
 // 内部引用
-use super::super::super::load_settings;
-use crate::core::bot::constants::SPIRIT_PROVIDERS_KEY;
-use crate::core::bot::models::{
+use super::super::super::super::super::{
     ProviderError, ProviderId, ProviderRecord, SkippedProviderDetail, SupportedProvidersSnapshot,
+    SPIRIT_PROVIDERS_KEY,
 };
+use super::super::super::load_settings;
 
 /// 读取所有已保存 providers：
 /// - Ok(HashMap)：读取并完成反序列化

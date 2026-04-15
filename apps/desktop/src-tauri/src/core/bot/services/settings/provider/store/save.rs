@@ -3,10 +3,11 @@
 use tauri::AppHandle;
 
 // 内部引用
+use super::super::super::super::super::{
+    ProviderError, ProviderId, ProviderRecord, SPIRIT_PROVIDERS_KEY,
+};
 use super::super::super::save_settings;
 use super::{load_all_providers, PROVIDERS_STORE_LOCK};
-use crate::core::bot::constants::SPIRIT_PROVIDERS_KEY;
-use crate::core::bot::models::{ProviderError, ProviderId, ProviderRecord};
 
 /// 保存单个 provider 的配置（upsert：有则覆盖，无则新增）
 /// 返回 Err 表示序列化或写盘失败。

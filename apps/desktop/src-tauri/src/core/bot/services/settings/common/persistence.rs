@@ -4,8 +4,7 @@ use tauri::AppHandle;
 use tauri_plugin_store::StoreExt;
 
 // 内部引用
-use crate::core::bot::constants::SETTINGS_FILE;
-use crate::core::bot::models::ProviderError;
+use super::super::super::super::{ProviderError, SETTINGS_FILE};
 
 /// 从 settings.json 按 key 读取一段 JSON 值；读取失败时返回 Err，不存在时返回 Ok(None)。
 pub(crate) fn load_settings(
