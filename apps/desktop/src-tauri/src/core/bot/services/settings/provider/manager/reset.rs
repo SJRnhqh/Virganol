@@ -50,6 +50,8 @@ pub(crate) fn reset_provider_config(
 
     // 4) key 删除失败时，回滚已删除的配置
     if config_removed && !key_removed {
+        let mut final_error = key_error;
+
         if let Some(record) = previous_record.as_ref() {
             if let Err(e) = save_provider(app, provider_id, record) {
                 error!(
@@ -57,13 +59,20 @@ pub(crate) fn reset_provider_config(
                     provider_id,
                     e.message()
                 );
+                // 回滚失败 → 严重错误
+                final_error = Some(format!(
+                    "Reset failed with inconsistent state: key removal failed and config rollback also failed ({})",
+                    e.message()
+                ));
             } else {
                 info!("[Tauri] ↩️ {} config rollback completed", provider_id);
+                // 回滚成功 → 保持原 key_error
             }
         }
+
         return ResetProviderResponse {
             success: false,
-            error: key_error,
+            error: final_error,
         };
     }
 

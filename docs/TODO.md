@@ -6,8 +6,7 @@ Branch: `feat/spirit-crud-closeout`
 
 ### Critical (影响数据一致性和用户体验)
 
-- [ ] **connect.rs** - Clean up saved key on health check failure (prevent persisting invalid keys)
-- [ ] **reset.rs** - Return critical error when rollback fails (inform user of inconsistent state)
+- [x] **reset.rs** - Return critical error when rollback fails (inform user of inconsistent state)
 - [ ] **store/save.rs & update.rs** - Fix TOCTOU race condition in concurrent writes (prevent data loss)
 - [ ] **useToggleModels** - Add pendingRef lock timeout mechanism (prevent permanent UI freeze)
 - [ ] **useToggleModels** - Fix default model state inconsistency (align frontend `?? true` with backend logic)
