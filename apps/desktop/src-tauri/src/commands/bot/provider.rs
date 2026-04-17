@@ -6,7 +6,8 @@ use tauri::AppHandle;
 use crate::core::bot::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,
     update_provider_enabled_models, ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse,
-    ProviderCheckTrigger, ProviderId, ResetProviderResponse,
+    ProviderCheckTrigger, ProviderId, ResetProviderResponse, UpdateEnabledModelsRequest,
+    UpdateEnabledModelsResponse,
 };
 
 /// Triggers the provider lifecycle check on application startup.
@@ -48,8 +49,7 @@ pub(crate) async fn reset_provider(
 #[tauri::command]
 pub(crate) async fn update_enabled_models(
     app: AppHandle,
-    provider_id: ProviderId,
-    enabled_models: Vec<String>,
-) -> bool {
-    update_provider_enabled_models(&app, provider_id, enabled_models)
+    payload: UpdateEnabledModelsRequest,
+) -> UpdateEnabledModelsResponse {
+    update_provider_enabled_models(&app, payload.provider_id, payload.enabled_models)
 }

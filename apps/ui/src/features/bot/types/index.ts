@@ -13,6 +13,8 @@ export type {
   ProviderCheckTrigger,
   ProviderStatusPayload,
   ResetProviderResponse,
+  UpdateEnabledModelsPayload,
+  UpdateEnabledModelsResponse,
   ProviderCheckFailedPayload,
   ProviderCheckStartedPayload,
   ProviderCheckCompletedPayload,

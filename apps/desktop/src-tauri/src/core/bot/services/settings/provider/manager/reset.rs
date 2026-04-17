@@ -4,8 +4,8 @@ use log::{error, info};
 use tauri::AppHandle;
 
 // 内部引用
+use super::super::super::super::super::{ProviderId, ResetProviderResponse};
 use super::super::{load_provider_record, remove_provider, remove_provider_key, save_provider};
-use crate::core::bot::models::{ProviderId, ResetProviderResponse};
 
 /// 重置 provider 的持久化配置
 pub(crate) fn reset_provider_config(
@@ -35,10 +35,7 @@ pub(crate) fn reset_provider_config(
     };
 
     if !config_removed {
-        log::warn!(
-            "[Tauri] ⚠️ {} config not found, already clean",
-            provider_id
-        );
+        log::warn!("[Tauri] ⚠️ {} config not found, already clean", provider_id);
         return ResetProviderResponse {
             success: true,
             error: None,

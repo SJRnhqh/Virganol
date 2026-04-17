@@ -44,18 +44,19 @@ export const useToggleModels = (providerId: ProviderId) => {
         store.setModelEnabled(providerId, model, !previous);
 
         // 调用后端 API
-        const ok = await updateEnabledModels(
+        const response = await updateEnabledModels({
           providerId,
-          toEnabledList(nextEnabled),
-        );
+          enabledModels: toEnabledList(nextEnabled),
+        });
 
         // 失败回滚
-        if (!ok) {
+        if (!response.success) {
           useProviderCollectionStore
             .getState()
             .setModelEnabled(providerId, model, previous);
           console.error(
             `[React] rollback single model: ${providerId}/${model}`,
+            response.error,
           );
         }
       } finally {
@@ -88,15 +89,21 @@ export const useToggleModels = (providerId: ProviderId) => {
 
       // 调用后端 API
       const enabledList = allEnabled ? [...current.available] : [];
-      const ok = await updateEnabledModels(providerId, enabledList);
+      const response = await updateEnabledModels({
+        providerId,
+        enabledModels: enabledList,
+      });
 
       // 失败回滚
-      if (!ok) {
+      if (!response.success) {
         useProviderCollectionStore.getState().setProviderModels(providerId, {
           available: current.available,
           enabled: previousMap,
         });
-        console.error(`[React] rollback all models: ${providerId}`);
+        console.error(
+          `[React] rollback all models: ${providerId}`,
+          response.error,
+        );
       }
     } finally {
       pendingRef.current = false;

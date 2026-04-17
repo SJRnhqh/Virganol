@@ -11,7 +11,7 @@ pub(self) use helpers::compute_enabled_models;
 pub(self) use interfaces::{DriverFuture, ProviderDriver};
 pub(crate) use models::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckTrigger,
-    ProviderId, ResetProviderResponse,
+    ProviderId, ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
 pub(self) use models::{
     HealthCheckResponse, ProviderError, ProviderKey, ProviderRecord, SkippedProviderDetail,

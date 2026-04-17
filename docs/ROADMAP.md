@@ -89,7 +89,7 @@ LLM Provider 接入分为两条主线：
 - [x] 前端契约结构重构：创建 `contract/connect.ts` 镜像后端结构
 - [x] 前端启用模型状态：使用后端 `enabledModels` 替代硬编码 false
 - [x] `resetProvider` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
-- [ ] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
+- [x] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
 
 ### 🚧 Phase 6：全局优化与收尾
 

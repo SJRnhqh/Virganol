@@ -21,5 +21,11 @@ export type {
 // ── Provider Reset 契约 ──
 export type { ResetProviderResponse } from "./reset";
 
+// ── Provider Update 契约 ──
+export type {
+  UpdateEnabledModelsPayload,
+  UpdateEnabledModelsResponse,
+} from "./update";
+
 // ── Provider 持久化记录 ──
 export type { ProviderRecord } from "./record";

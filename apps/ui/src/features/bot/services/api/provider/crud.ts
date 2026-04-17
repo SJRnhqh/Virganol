@@ -7,6 +7,8 @@ import type {
   ConnectAndSaveProviderResponse,
   ConnectAndSaveProviderPayload,
   ResetProviderResponse,
+  UpdateEnabledModelsPayload,
+  UpdateEnabledModelsResponse,
   ProviderId,
 } from "@/features/bot/types";
 
@@ -81,19 +83,35 @@ export const resetProvider = async (
 };
 
 /** 更新某个 Provider 的 enabled_models */
-export const updateEnabledModels = async (
-  providerId: ProviderId,
-  enabledModels: string[],
-): Promise<boolean> => {
+export const updateEnabledModels = async ({
+  providerId,
+  enabledModels,
+}: UpdateEnabledModelsPayload): Promise<UpdateEnabledModelsResponse> => {
   try {
-    const result = await invoke<boolean>("update_enabled_models", {
-      providerId,
-      enabledModels,
-    });
-    console.log(`[API] update_enabled_models ${providerId}:`, result);
-    return result;
+    const response = await invoke<UpdateEnabledModelsResponse>(
+      "update_enabled_models",
+      {
+        payload: {
+          providerId,
+          enabledModels,
+        },
+      },
+    );
+    if (response.success) {
+      console.log(`[API] update_enabled_models ${providerId} ✅`);
+    } else {
+      console.error(
+        `[API] update_enabled_models ${providerId} ❌:`,
+        response.error,
+      );
+    }
+    return response;
   } catch (error) {
-    console.error("[API] update_enabled_models error:", error);
-    return false;
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("[API] update_enabled_models invoke error:", msg);
+    return {
+      success: false,
+      error: msg,
+    };
   }
 };

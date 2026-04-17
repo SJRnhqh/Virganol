@@ -35,7 +35,7 @@ Branch: `feat/spirit-crud-closeout`
 - [x] Frontend contract structure - Create `contract/connect.ts` mirroring backend structure
 - [x] Frontend enabled models - Use backend `enabledModels` instead of hardcoded false
 - [x] `resetProvider` - Return structured response ({ success, error? }), align with connectAndSaveProvider
-- [ ] `updateEnabledModels` - Return structured response ({ success, error? }), align with connectAndSaveProvider
+- [x] `updateEnabledModels` - Return structured response ({ success, error? }), align with connectAndSaveProvider
 
 ## Security
 
