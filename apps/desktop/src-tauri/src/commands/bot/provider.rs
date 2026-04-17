@@ -6,7 +6,7 @@ use tauri::AppHandle;
 use crate::core::bot::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,
     update_provider_enabled_models, ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse,
-    ProviderCheckTrigger, ProviderId,
+    ProviderCheckTrigger, ProviderId, ResetProviderResponse,
 };
 
 /// Triggers the provider lifecycle check on application startup.
@@ -37,7 +37,10 @@ pub(crate) async fn connect_and_save_provider(
 
 /// 前端点击删除时调用：移除一个 Provider 配置
 #[tauri::command]
-pub(crate) async fn reset_provider(app: AppHandle, provider_id: ProviderId) -> bool {
+pub(crate) async fn reset_provider(
+    app: AppHandle,
+    provider_id: ProviderId,
+) -> ResetProviderResponse {
     reset_provider_config(&app, provider_id)
 }
 

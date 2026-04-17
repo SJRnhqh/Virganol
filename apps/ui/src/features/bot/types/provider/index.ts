@@ -10,6 +10,7 @@ export type {
   ProviderCheckEvent,
   ProviderCheckTrigger,
   ProviderStatusPayload,
+  ResetProviderResponse,
   ProviderCheckFailedPayload,
   ProviderCheckStartedPayload,
   ProviderCheckCompletedPayload,

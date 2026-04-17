@@ -9,7 +9,7 @@ export interface ConnectAndSaveProviderPayload {
   url?: string;
 }
 
-/** 对应 Rust ConnectAndSaveProviderResponse（connect 操作的前后端契约） */
+/** 对应 Rust ConnectAndSaveProviderResponse */
 export interface ConnectAndSaveProviderResponse {
   success: boolean;
   availableModels: string[];

@@ -18,8 +18,8 @@ import { resetProvider } from "@/features/bot/services";
  */
 export const useProviderReset = (providerId: ProviderId) => {
   return useCallback(async () => {
-    const success = await resetProvider(providerId);
-    if (success) {
+    const response = await resetProvider(providerId);
+    if (response.success) {
       const store = useProviderCollectionStore.getState();
       store.updateProviderBatch(providerId, {
         form: PROVIDER_INITIAL_FORMS[providerId],
@@ -28,9 +28,12 @@ export const useProviderReset = (providerId: ProviderId) => {
         errorMessage: null,
       });
     } else {
-      // TODO: 前端错误处理与用户反馈 — reset 失败时需显示错误提示，
-      //   待 Phase 6.2 实现结构化错误响应与错误显示方案
-      console.error(`[React] reset_provider ${providerId} failed`);
+      // TODO: 前端错误处理与用户反馈 — reset 失败时需显示错误提示（toast/notification），
+      //   待 Phase 6.2 实现统一错误显示方案
+      console.error(
+        `[React] reset_provider ${providerId} failed:`,
+        response.error,
+      );
     }
   }, [providerId]);
 };

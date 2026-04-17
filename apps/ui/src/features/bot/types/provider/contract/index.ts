@@ -18,5 +18,8 @@ export type {
   ConnectAndSaveProviderResponse,
 } from "./connect";
 
+// ── Provider Reset 契约 ──
+export type { ResetProviderResponse } from "./reset";
+
 // ── Provider 持久化记录 ──
 export type { ProviderRecord } from "./record";

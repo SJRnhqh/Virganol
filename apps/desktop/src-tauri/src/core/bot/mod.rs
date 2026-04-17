@@ -10,7 +10,8 @@ pub(self) use constants::{PROVIDER_KEYRING_SERVICE, SETTINGS_FILE, SPIRIT_PROVID
 pub(self) use helpers::compute_enabled_models;
 pub(self) use interfaces::{DriverFuture, ProviderDriver};
 pub(crate) use models::{
-    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckTrigger, ProviderId,
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckTrigger,
+    ProviderId, ResetProviderResponse,
 };
 pub(self) use models::{
     HealthCheckResponse, ProviderError, ProviderKey, ProviderRecord, SkippedProviderDetail,

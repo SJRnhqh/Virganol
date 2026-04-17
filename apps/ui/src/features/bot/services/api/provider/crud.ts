@@ -4,8 +4,9 @@ import { invoke } from "@tauri-apps/api/core";
 
 // 内部引用
 import type {
-  ConnectAndSaveProviderPayload,
   ConnectAndSaveProviderResponse,
+  ConnectAndSaveProviderPayload,
+  ResetProviderResponse,
   ProviderId,
 } from "@/features/bot/types";
 
@@ -58,14 +59,24 @@ export const connectAndSaveProvider = async ({
 /** 重置一个 Provider 的持久化配置 */
 export const resetProvider = async (
   providerId: ProviderId,
-): Promise<boolean> => {
+): Promise<ResetProviderResponse> => {
   try {
-    const result = await invoke<boolean>("reset_provider", { providerId });
-    console.log(`[API] reset_provider ${providerId}:`, result);
-    return result;
+    const response = await invoke<ResetProviderResponse>("reset_provider", {
+      providerId,
+    });
+    if (response.success) {
+      console.log(`[API] reset_provider ${providerId} ✅`);
+    } else {
+      console.error(`[API] reset_provider ${providerId} ❌:`, response.error);
+    }
+    return response;
   } catch (error) {
-    console.error("[API] reset_provider error:", error);
-    return false;
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("[API] reset_provider invoke error:", msg);
+    return {
+      success: false,
+      error: msg,
+    };
   }
 };
 

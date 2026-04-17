@@ -6,6 +6,7 @@ pub(crate) use provider::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckCompletedPayload,
     ProviderCheckFailedPayload, ProviderCheckStartedPayload, ProviderCheckTrigger, ProviderId,
     ProviderIssue, ProviderKeySource, ProviderSecretMeta, ProviderStatusPayload,
+    ResetProviderResponse,
 };
 pub(super) use provider::{
     HealthCheckResponse, ProviderError, ProviderKey, ProviderRecord, SkippedProviderDetail,

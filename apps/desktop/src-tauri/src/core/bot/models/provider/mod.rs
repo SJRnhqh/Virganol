@@ -15,7 +15,9 @@ pub use check::{
     ProviderCheckTrigger, ProviderStatusPayload,
 };
 pub use connection::HealthCheckResponse;
-pub(crate) use contract::{ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse};
+pub(crate) use contract::{
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderResponse,
+};
 pub use error::{ProviderError, ProviderErrorCode, ProviderIssue, SkippedProviderDetail};
 pub use id::ProviderId;
 pub use key::ProviderKey;
