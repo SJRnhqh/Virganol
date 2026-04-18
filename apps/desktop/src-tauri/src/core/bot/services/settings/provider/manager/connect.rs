@@ -5,7 +5,8 @@ use tauri::AppHandle;
 
 // 内部引用
 use super::super::super::super::super::{
-    compute_enabled_models, ConnectAndSaveProviderResponse, ProviderId, ProviderRecord,
+    compute_enabled_models, reorder_enabled_models, ConnectAndSaveProviderResponse, ProviderId,
+    ProviderKey, ProviderRecord,
 };
 use super::super::{
     health_check, load_provider_env, load_provider_key, load_provider_record, remove_provider_key,
@@ -32,6 +33,15 @@ fn rollback_provider_key(provider_id: ProviderId, previous_key: Option<&str>) {
     }
 }
 
+/// 当输入 key 为空时，尝试从环境变量或 keyring 加载已存储的 key
+fn try_load_stored_key(provider_id: ProviderId, input_key: &str) -> Option<ProviderKey> {
+    if input_key.is_empty() {
+        load_provider_env(provider_id).or_else(|| load_provider_key(provider_id))
+    } else {
+        None
+    }
+}
+
 /// 接入并持久化：health_check 成功后自动保存配置
 /// 返回 ConnectAndSaveProviderResponse（包含 available_models 和 enabled_models）
 pub(crate) async fn connect_and_save(
@@ -51,17 +61,13 @@ pub(crate) async fn connect_and_save(
     };
 
     // 2) 密钥解析：若未输入则尝试回退 (env -> keyring)，否则使用当前输入
-    let resolved_key_guard = if normalized_key.is_empty() {
-        load_provider_env(provider_id).or_else(|| load_provider_key(provider_id))
-    } else {
-        None
-    };
+    let fallback_key = try_load_stored_key(provider_id, normalized_key);
 
     // 3) 用解析后的密钥执行健康检查
     let result = health_check(
         provider_id,
         normalized_url,
-        resolved_key_guard
+        fallback_key
             .as_ref()
             .map(|k| k.as_str())
             .unwrap_or(normalized_key),
@@ -105,6 +111,10 @@ pub(crate) async fn connect_and_save(
         }
     };
 
+    // 按照 available_models 的顺序重新排列 enabled_models，保证前端渲染顺序稳定
+    let ordered_enabled_models =
+        reorder_enabled_models(&next_enabled_models, &result.available_models);
+
     // 6) 持久化写入配置
     let record = ProviderRecord {
         url: if normalized_url.is_empty() {
@@ -112,7 +122,7 @@ pub(crate) async fn connect_and_save(
         } else {
             Some(normalized_url.to_string())
         },
-        enabled_models: next_enabled_models,
+        enabled_models: ordered_enabled_models,
     };
 
     if let Err(e) = save_provider(app, provider_id, &record) {

@@ -68,11 +68,10 @@ LLM Provider 接入分为两条主线：
 - [x] `useProviderConnect` - 添加 pending state guard（防止并发操作）
 - [x] `useProviderConnect` - 将并发锁从 hook 层移至 store 层（防止跨实例竞态）
 - [x] `useToggleModels` - 修复默认模型状态不一致（前端 `?? false` 对齐后端逻辑）
-- [ ] `useToggleModels` - 添加 pendingRef 锁超时机制（防止 API 卡住导致界面永久锁定）
 
 **代码质量优化**：
 
-- [ ] `useProvider` - 补全 onUpdate callback 依赖数组（避免闭包过期）
+- [x] `useProvider` - 补全 onUpdate callback 依赖数组（避免闭包过期）
 - [ ] `useProviderCollectionStore` - 添加状态转换验证（updateProviderBatch 防御性编程）
 - [ ] Check service - 添加运行时检查防止多次启动调用（资源优化）
 

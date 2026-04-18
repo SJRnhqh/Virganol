@@ -11,7 +11,6 @@ Branch: `feat/spirit-crud-closeout`
 - [x] **useToggleModels** - Fix default model state inconsistency (align frontend `?? false` with backend logic)
 - [x] **useToggleModels** - Add error handling for exceptions during optimistic updates (ensure rollback)
 - [ ] **store/save.rs & update.rs** - Fix TOCTOU race condition in concurrent writes (prevent data loss)
-- [ ] **useToggleModels** - Add pendingRef lock timeout mechanism (prevent permanent UI freeze)
 - [ ] **ProviderResetButton** - Add confirmation dialog before reset (prevent accidental data loss)
 
 ### High (影响功能正确性)
@@ -30,11 +29,11 @@ Branch: `feat/spirit-crud-closeout`
 
 ### Medium (代码可维护性)
 
-- [ ] **connect.rs** - Rename `resolved_key_guard` to `fallback_key` (clarify logic flow)
-- [ ] **connect.rs** - Reorder enabled_models by available_models order (stable frontend rendering)
+- [x] **connect.rs** - Rename `resolved_key_guard` to `fallback_key` (clarify logic flow)
+- [x] **connect.rs** - Reorder enabled_models by available_models order (stable frontend rendering)
 - [ ] **Check service** - Prevent duplicate startup calls (resource optimization)
 - [ ] **useToggleModels** - Extract toEnabledList helper to shared utils (reusable across hooks)
-- [ ] **connect.rs** - Extract key resolution logic to separate function (lines 54-58, improve testability)
+- [x] **connect.rs** - Extract key resolution logic to separate function (lines 54-58, improve testability)
 
 ### Low (性能优化)
 
@@ -69,28 +68,12 @@ Branch: `feat/spirit-crud-closeout`
 - [x] `resetProvider` - Return structured response ({ success, error? }), align with connectAndSaveProvider
 - [x] `updateEnabledModels` - Return structured response ({ success, error? }), align with connectAndSaveProvider
 
-## Security
-
-### Medium
-
-- [ ] **connect** - Add rate limiting to connect operations (prevent brute force key testing)
-- [ ] **connect.rs** - Clear normalized_key from memory after use (line 44, 67, sensitive data cleanup)
-
 ## Accessibility
 
 ### High (键盘导航和屏幕阅读器)
 
 - [ ] **ProviderConnectedPanel** - Add keyboard navigation to model list (Tab key, Enter key)
-- [ ] **ProviderResetButton** - Add aria-describedby explaining reset consequences (not just aria-label)
 
 ### Medium（前端细节）
 
-- [ ] **ProviderForm** - Add aria-invalid and aria-describedby for validation errors
 - [ ] **All interactive components** - Add focus management after connect/reset operations
-
-## User Experience
-
-### Low
-
-- [ ] **ProviderConnectedPanel** - Implement virtual scrolling for large model lists (10000+ models)
-- [ ] **ProviderConnectionButton** - Add layout property to Framer Motion (prevent layout shift)
