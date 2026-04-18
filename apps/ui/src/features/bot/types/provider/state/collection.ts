@@ -29,6 +29,8 @@ export interface ProviderBatchUpdates {
    * 三值语义与 store 实现均无需改动，仅替换类型 `T` 即可。
    */
   errorMessage?: string | null;
+  /** connect 操作锁状态 */
+  isPending?: boolean;
 }
 
 // ── Provider Collection（薄聚合：仅路由映射）───
@@ -84,6 +86,13 @@ export interface ProviderCollectionState {
   clearProviderError: (
     /** 目标 Provider 标识。 */
     providerId: ProviderId,
+  ) => void;
+  /** 设置单个 Provider 的 pending 状态（connect 操作锁）。 */
+  setProviderPending: (
+    /** 目标 Provider 标识。 */
+    providerId: ProviderId,
+    /** 是否处于 pending 状态。 */
+    isPending: boolean,
   ) => void;
   /** 批量更新单个 Provider 的多个字段（减少重渲染）。 */
   updateProviderBatch: (

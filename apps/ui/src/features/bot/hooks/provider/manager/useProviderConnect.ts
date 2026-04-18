@@ -1,6 +1,6 @@
 // apps/ui/src/features/bot/hooks/provider/manager/useProviderConnect.ts
 // 外部依赖
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 
 // 内部引用
 import type { ProviderId, ProviderFormData } from "@/features/bot/types";
@@ -9,21 +9,18 @@ import { useProviderCollectionStore } from "@/features/bot/store";
 import { connectAndSaveProvider } from "@/features/bot/services";
 
 export const useProviderConnect = (providerId: ProviderId) => {
-  // 并发防护：防止快速重复点击导致多个 connect 请求同时执行
-  const pendingRef = useRef(false);
-
   return useCallback(
     async (formData: ProviderFormData) => {
-      // Guard：如果已有请求在执行中，直接返回
-      if (pendingRef.current) return;
-      pendingRef.current = true;
+      const store = useProviderCollectionStore.getState();
+
+      // Guard：如果已有请求在执行中，直接返回（store 层 provider 级别锁）
+      if (store.byId[providerId].isPending) return;
 
       try {
-        const store = useProviderCollectionStore.getState();
-
-        // 1. 设置为 pending 状态
+        // 1. 设置为 pending 状态并加锁
         store.updateProviderBatch(providerId, {
           cardState: PROVIDER_CARD_STATES.PENDING,
+          isPending: true,
         });
 
         // 2. 调用后端 API
@@ -47,16 +44,23 @@ export const useProviderConnect = (providerId: ProviderId) => {
                 ]),
               ),
             },
+            isPending: false,
           });
         } else {
           store.updateProviderBatch(providerId, {
             cardState: PROVIDER_CARD_STATES.FAILED,
             errorMessage: response.error ?? "Connection failed",
+            isPending: false,
           });
         }
-      } finally {
-        // 确保无论成功或失败都解锁
-        pendingRef.current = false;
+      } catch (error) {
+        // 4. 异常处理：确保解锁
+        store.updateProviderBatch(providerId, {
+          cardState: PROVIDER_CARD_STATES.FAILED,
+          errorMessage:
+            error instanceof Error ? error.message : "Unknown error",
+          isPending: false,
+        });
       }
     },
     [providerId],

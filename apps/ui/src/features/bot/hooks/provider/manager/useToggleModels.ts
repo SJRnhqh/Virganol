@@ -34,8 +34,8 @@ export const useToggleModels = (providerId: ProviderId) => {
         const store = useProviderCollectionStore.getState();
         const current = store.byId[providerId].models;
 
-        // 计算 toggle 后的状态
-        const previous = current.enabled[model] ?? true;
+        // 计算 toggle 后的状态（信任后端数据，undefined 视为 false）
+        const previous = current.enabled[model] ?? false;
 
         // 构造更新后的完整 enabled map，用于传给后端
         const nextEnabled = { ...current.enabled, [model]: !previous };
@@ -79,8 +79,9 @@ export const useToggleModels = (providerId: ProviderId) => {
       const previousMap = { ...current.enabled };
 
       // 计算 toggle 后的状态（全选 → 全不选，未全选 → 全选）
+      // 信任后端数据，undefined 视为 false
       const allSelected = current.available.every(
-        (model) => current.enabled[model],
+        (model) => current.enabled[model] ?? false,
       );
       const allEnabled = !allSelected;
 

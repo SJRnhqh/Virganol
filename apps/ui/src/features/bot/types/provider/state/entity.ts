@@ -29,4 +29,6 @@ export interface ProviderState {
   models: ProviderModelState;
   /** 单个 Provider 的错误信息（无错误时为 null）。 */
   errorMessage: string | null;
+  /** connect 操作锁（防止同一 provider 的并发 connect 操作）。 */
+  isPending: boolean;
 }

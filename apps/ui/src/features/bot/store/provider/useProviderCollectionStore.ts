@@ -15,6 +15,7 @@ import {
 const COMMON_INITIAL_STATE = {
   cardState: PROVIDER_CARD_STATES.UNSET,
   errorMessage: null,
+  isPending: false,
 };
 
 // 仅负责生成 Provider 集合初始快照（byId 路由映射）。
@@ -85,6 +86,12 @@ export const useProviderCollectionStore = create<ProviderCollectionState>()(
         state.byId[providerId].errorMessage = null;
       }),
 
+    // Pending 状态（connect 操作锁）
+    setProviderPending: (providerId, isPending) =>
+      set((state) => {
+        state.byId[providerId].isPending = isPending;
+      }),
+
     // 批量更新（减少重渲染）
     updateProviderBatch: (providerId, updates) =>
       set((state) => {
@@ -100,6 +107,9 @@ export const useProviderCollectionStore = create<ProviderCollectionState>()(
         }
         if (updates.errorMessage !== undefined) {
           provider.errorMessage = updates.errorMessage;
+        }
+        if (updates.isPending !== undefined) {
+          provider.isPending = updates.isPending;
         }
       }),
   })),

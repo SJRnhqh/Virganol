@@ -65,8 +65,10 @@ LLM Provider 接入分为两条主线：
 
 **功能正确性**：
 
-- [ ] `useToggleModels` - 添加 pendingRef 锁超时机制（防止 API 卡住导致界面永久锁定）
 - [x] `useProviderConnect` - 添加 pending state guard（防止并发操作）
+- [x] `useProviderConnect` - 将并发锁从 hook 层移至 store 层（防止跨实例竞态）
+- [x] `useToggleModels` - 修复默认模型状态不一致（前端 `?? false` 对齐后端逻辑）
+- [ ] `useToggleModels` - 添加 pendingRef 锁超时机制（防止 API 卡住导致界面永久锁定）
 
 **代码质量优化**：
 

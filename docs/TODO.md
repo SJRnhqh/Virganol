@@ -7,10 +7,10 @@ Branch: `feat/spirit-crud-closeout`
 ### Critical (影响数据一致性和用户体验)
 
 - [x] **reset.rs** - Return critical error when rollback fails (inform user of inconsistent state)
+- [x] **useProviderConnect** - Move concurrent guard to store layer (prevent cross-instance races)
+- [x] **useToggleModels** - Fix default model state inconsistency (align frontend `?? false` with backend logic)
 - [ ] **store/save.rs & update.rs** - Fix TOCTOU race condition in concurrent writes (prevent data loss)
 - [ ] **useToggleModels** - Add pendingRef lock timeout mechanism (prevent permanent UI freeze)
-- [ ] **useToggleModels** - Fix default model state inconsistency (align frontend `?? true` with backend logic)
-- [ ] **useProviderConnect** - Move concurrent guard to store layer (prevent cross-instance races)
 - [ ] **ProviderResetButton** - Add confirmation dialog before reset (prevent accidental data loss)
 
 ### High (影响功能正确性)
@@ -19,11 +19,6 @@ Branch: `feat/spirit-crud-closeout`
 - [ ] **reset.rs** - Check key deletability before removing config (ensure atomic reset)
 - [ ] **update.rs** - Return tri-state result (success/failure/not-found) to sync frontend state
 - [ ] **useToggleModels** - Add error handling for exceptions during optimistic updates (ensure rollback)
-- [ ] **useToggleModels** - Handle `?? true` default in allSelected calculation (line 38, 83 inconsistent with backend)
-- [ ] **useProviderReset** - Add user feedback on reset failure (toast/notification)
-- [ ] **crud.ts** - Distinguish IPC errors from business errors (enable targeted error handling)
-- [ ] **connect.rs** - Validate key before save_provider_key (prevent saving empty/invalid keys after health check)
-- [ ] **useProviderConnect** - Add error boundary for connect failures (catch exceptions in line 30-34)
 
 ### Medium (边界情况处理)
 
@@ -33,7 +28,6 @@ Branch: `feat/spirit-crud-closeout`
 
 ### High (影响代码正确性)
 
-- [ ] **useProviderCollectionStore** - Add state transition validation (defensive updateProviderBatch)
 - [x] **crud.ts** - Extract common error handling logic (reduce duplication across connect/reset/update)
 
 ### Medium (代码可维护性)
