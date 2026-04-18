@@ -18,7 +18,6 @@ export const ProviderResetButton = ({
   return (
     <button
       type="button"
-      aria-label="Reset provider configuration"
       onClick={() => {
         void onClick?.();
       }}

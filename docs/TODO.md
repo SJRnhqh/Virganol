@@ -9,6 +9,7 @@ Branch: `feat/spirit-crud-closeout`
 - [x] **reset.rs** - Return critical error when rollback fails (inform user of inconsistent state)
 - [x] **useProviderConnect** - Move concurrent guard to store layer (prevent cross-instance races)
 - [x] **useToggleModels** - Fix default model state inconsistency (align frontend `?? false` with backend logic)
+- [x] **useToggleModels** - Add error handling for exceptions during optimistic updates (ensure rollback)
 - [ ] **store/save.rs & update.rs** - Fix TOCTOU race condition in concurrent writes (prevent data loss)
 - [ ] **useToggleModels** - Add pendingRef lock timeout mechanism (prevent permanent UI freeze)
 - [ ] **ProviderResetButton** - Add confirmation dialog before reset (prevent accidental data loss)
@@ -16,9 +17,6 @@ Branch: `feat/spirit-crud-closeout`
 ### High (影响功能正确性)
 
 - [ ] **connect.rs** - Fix key rollback race condition in concurrent scenarios (use atomic operations)
-- [ ] **reset.rs** - Check key deletability before removing config (ensure atomic reset)
-- [ ] **update.rs** - Return tri-state result (success/failure/not-found) to sync frontend state
-- [ ] **useToggleModels** - Add error handling for exceptions during optimistic updates (ensure rollback)
 
 ### Medium (边界情况处理)
 
@@ -34,17 +32,13 @@ Branch: `feat/spirit-crud-closeout`
 
 - [ ] **connect.rs** - Rename `resolved_key_guard` to `fallback_key` (clarify logic flow)
 - [ ] **connect.rs** - Reorder enabled_models by available_models order (stable frontend rendering)
-- [ ] **key/load.rs** - Simplify normalize_and_wrap_key logic (remove premature optimization)
-- [ ] **ProviderCardBody** - Use stricter type checking for state mapping (ensure all states covered)
 - [ ] **Check service** - Prevent duplicate startup calls (resource optimization)
 - [ ] **useToggleModels** - Extract toEnabledList helper to shared utils (reusable across hooks)
 - [ ] **connect.rs** - Extract key resolution logic to separate function (lines 54-58, improve testability)
 
 ### Low (性能优化)
 
-- [ ] **useProviderModels** - Memoize modelItems calculation (performance optimization)
 - [ ] **useToggleModels** - Optimize rollback to only update enabled state (avoid full re-render)
-- [ ] **crud.ts** - Only log timing when operation exceeds threshold (reduce log noise)
 
 ## Backend Optimization
 
@@ -56,7 +50,6 @@ Branch: `feat/spirit-crud-closeout`
 ### Medium (可靠性和性能)
 
 - [x] Extract key rollback logic to standalone function (improve testability)
-- [ ] **reset.rs** - Add retry mechanism and detailed status (improve reliability)
 - [ ] **store/** - Add caching to persistence layer (reduce I/O amplification)
 - [ ] **connection/** - Make health check timeout configurable (currently hardcoded to 5s)
 - [ ] **connection/** - Add HTTP client connection pooling (reuse connections across requests)
@@ -64,7 +57,6 @@ Branch: `feat/spirit-crud-closeout`
 ### Low (边界情况)
 
 - [ ] **key/load.rs** - Add key length validation for env vars (prevent memory overflow, max 10KB)
-- [ ] **connect.rs** - Handle empty available_models from health check (line 100-106, prevent empty intersection)
 - [ ] **useToggleModels** - Handle race between toggleSingle and toggleAll (shared pendingRef may cause conflicts)
 
 ## Contract Upgrade
@@ -82,7 +74,6 @@ Branch: `feat/spirit-crud-closeout`
 ### Medium
 
 - [ ] **connect** - Add rate limiting to connect operations (prevent brute force key testing)
-- [ ] **ProviderErrorPanel** - Ensure error messages are properly escaped (prevent XSS, verify no dangerouslySetInnerHTML)
 - [ ] **connect.rs** - Clear normalized_key from memory after use (line 44, 67, sensitive data cleanup)
 
 ## Accessibility
@@ -91,13 +82,10 @@ Branch: `feat/spirit-crud-closeout`
 
 - [ ] **ProviderConnectedPanel** - Add keyboard navigation to model list (Tab key, Enter key)
 - [ ] **ProviderResetButton** - Add aria-describedby explaining reset consequences (not just aria-label)
-- [ ] **ProviderConnectedPanel** - Add aria-label to connection info area (screen reader support)
 
 ### Medium（前端细节）
 
 - [ ] **ProviderForm** - Add aria-invalid and aria-describedby for validation errors
-- [ ] **ProviderModelToggleButton** - Add aria-label with model name
-- [ ] **ProviderResetButton** - Include provider name in aria-label
 - [ ] **All interactive components** - Add focus management after connect/reset operations
 
 ## User Experience

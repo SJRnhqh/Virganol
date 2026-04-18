@@ -29,13 +29,16 @@ export const useToggleModels = (providerId: ProviderId) => {
       if (pendingRef.current) return;
       pendingRef.current = true;
 
+      // 记录回滚值（在 try 外部，确保 catch 可访问）
+      let previous: boolean | undefined;
+
       try {
         // getState() 绕过订阅拿最新快照，避免闭包过期
         const store = useProviderCollectionStore.getState();
         const current = store.byId[providerId].models;
 
         // 计算 toggle 后的状态（信任后端数据，undefined 视为 false）
-        const previous = current.enabled[model] ?? false;
+        previous = current.enabled[model] ?? false;
 
         // 构造更新后的完整 enabled map，用于传给后端
         const nextEnabled = { ...current.enabled, [model]: !previous };
@@ -59,6 +62,17 @@ export const useToggleModels = (providerId: ProviderId) => {
             response.error,
           );
         }
+      } catch (error) {
+        // 异常回滚（网络错误、超时等）
+        if (previous !== undefined) {
+          useProviderCollectionStore
+            .getState()
+            .setModelEnabled(providerId, model, previous);
+        }
+        console.error(
+          `[React] exception during toggle single model: ${providerId}/${model}`,
+          error,
+        );
       } finally {
         pendingRef.current = false;
       }
@@ -71,12 +85,17 @@ export const useToggleModels = (providerId: ProviderId) => {
     if (pendingRef.current) return;
     pendingRef.current = true;
 
+    // 记录回滚值（在 try 外部，确保 catch 可访问）
+    let previousMap: Record<string, boolean> | undefined;
+    let availableModels: string[] | undefined;
+
     try {
       const store = useProviderCollectionStore.getState();
       const current = store.byId[providerId].models;
 
       // 记录回滚值
-      const previousMap = { ...current.enabled };
+      previousMap = { ...current.enabled };
+      availableModels = current.available;
 
       // 计算 toggle 后的状态（全选 → 全不选，未全选 → 全选）
       // 信任后端数据，undefined 视为 false
@@ -106,6 +125,18 @@ export const useToggleModels = (providerId: ProviderId) => {
           response.error,
         );
       }
+    } catch (error) {
+      // 异常回滚（网络错误、超时等）
+      if (previousMap !== undefined && availableModels !== undefined) {
+        useProviderCollectionStore.getState().setProviderModels(providerId, {
+          available: availableModels,
+          enabled: previousMap,
+        });
+      }
+      console.error(
+        `[React] exception during toggle all models: ${providerId}`,
+        error,
+      );
     } finally {
       pendingRef.current = false;
     }
