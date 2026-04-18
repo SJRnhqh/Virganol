@@ -19,14 +19,15 @@ Branch: `feat/spirit-crud-closeout`
 - [ ] **reset.rs** - Check key deletability before removing config (ensure atomic reset)
 - [ ] **update.rs** - Return tri-state result (success/failure/not-found) to sync frontend state
 - [ ] **useToggleModels** - Add error handling for exceptions during optimistic updates (ensure rollback)
+- [ ] **useToggleModels** - Handle `?? true` default in allSelected calculation (line 38, 83 inconsistent with backend)
 - [ ] **useProviderReset** - Add user feedback on reset failure (toast/notification)
 - [ ] **crud.ts** - Distinguish IPC errors from business errors (enable targeted error handling)
+- [ ] **connect.rs** - Validate key before save_provider_key (prevent saving empty/invalid keys after health check)
+- [ ] **useProviderConnect** - Add error boundary for connect failures (catch exceptions in line 30-34)
 
 ### Medium (边界情况处理)
 
 - [x] `useProviderConnect` - Add pending state guard (prevent concurrent connect operations)
-- [ ] **useToggleModels** - Handle empty available array in allSelected calculation (prevent confusion)
-- [ ] **useProviderConnect** - Clarify form field clearing policy after success (key vs URL consistency)
 
 ## Code Quality
 
@@ -36,6 +37,8 @@ Branch: `feat/spirit-crud-closeout`
 - [ ] **useProviderReset** - Add missing constants to deps array (PROVIDER_INITIAL_FORMS, PROVIDER_CARD_STATES)
 - [ ] **useProviderCollectionStore** - Add state transition validation (defensive updateProviderBatch)
 - [ ] **crud.ts** - Extract common error handling logic (reduce duplication across connect/reset/update)
+- [ ] **useProviderConnection** - Fix handleConnect dependency in handleRetry (line 20, may cause stale closure)
+- [ ] **ProviderCardBody** - Add exhaustive state check (satisfies doesn't guarantee runtime coverage)
 
 ### Medium (代码可维护性)
 
@@ -44,6 +47,8 @@ Branch: `feat/spirit-crud-closeout`
 - [ ] **key/load.rs** - Simplify normalize_and_wrap_key logic (remove premature optimization)
 - [ ] **ProviderCardBody** - Use stricter type checking for state mapping (ensure all states covered)
 - [ ] **Check service** - Prevent duplicate startup calls (resource optimization)
+- [ ] **useToggleModels** - Extract toEnabledList helper to shared utils (reusable across hooks)
+- [ ] **connect.rs** - Extract key resolution logic to separate function (lines 54-58, improve testability)
 
 ### Low (性能优化)
 
@@ -70,7 +75,8 @@ Branch: `feat/spirit-crud-closeout`
 ### Low (边界情况)
 
 - [ ] **key/load.rs** - Add key length validation for env vars (prevent memory overflow, max 10KB)
-- [ ] **contract/connect.rs** - Add explicit serde rename annotations (improve code readability)
+- [ ] **connect.rs** - Handle empty available_models from health check (line 100-106, prevent empty intersection)
+- [ ] **useToggleModels** - Handle race between toggleSingle and toggleAll (shared pendingRef may cause conflicts)
 
 ## Contract Upgrade
 
@@ -89,6 +95,8 @@ Branch: `feat/spirit-crud-closeout`
 - [ ] **crud.ts** - Remove console.log statements leaking sensitive operation details (provider IDs, timing)
 - [ ] **connect** - Add rate limiting to connect operations (prevent brute force key testing)
 - [ ] **ProviderErrorPanel** - Ensure error messages are properly escaped (prevent XSS, verify no dangerouslySetInnerHTML)
+- [ ] **key/load.rs** - Zeroize key on error paths (lines 20, 27-32, prevent memory leak of sensitive data)
+- [ ] **connect.rs** - Clear normalized_key from memory after use (line 44, 67, sensitive data cleanup)
 
 ## Accessibility
 
@@ -106,16 +114,6 @@ Branch: `feat/spirit-crud-closeout`
 - [ ] **All interactive components** - Add focus management after connect/reset operations
 
 ## User Experience
-
-### High
-
-- [ ] **ProviderErrorPanel** - Add Retry button (allow users to retry without reset)
-- [ ] **ProviderConnectionButton** - Add loading indicator animation (show operation in progress)
-
-### Medium（用户体验）
-
-- [ ] **useProviderConnect** - Clarify form field clearing policy (document which fields are cleared on success)
-- [ ] **useProviderCollectionStore** - Document partial update semantics in updateProviderBatch (prevent misuse)
 
 ### Low
 
