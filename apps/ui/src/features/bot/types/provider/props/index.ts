@@ -10,7 +10,7 @@ export type {
 } from "./state";
 export type { WithProviderForm, ProviderFormProps } from "./form";
 export type { ProviderInfo } from "./info";
-export type { ProviderFailedContent, ProviderErrorPanelProps } from "./error";
+export type { ProviderErrorPanelProps } from "./error";
 export type { ProviderCardProps } from "./card";
 export type { ProviderCardBodyProps } from "./body";
 export type {

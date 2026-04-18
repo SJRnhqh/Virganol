@@ -12,106 +12,90 @@ import type {
   ProviderId,
 } from "@/features/bot/types";
 
-/** 接入新 Provider：健康检查 + 成功则持久化 */
-export const connectAndSaveProvider = async ({
-  providerId,
-  key,
-  url,
-}: ConnectAndSaveProviderPayload): Promise<ConnectAndSaveProviderResponse> => {
-  const startTime = performance.now();
-  try {
-    const response = await invoke<ConnectAndSaveProviderResponse>(
-      "connect_and_save_provider",
-      {
-        payload: {
-          providerId,
-          key,
-          ...(url && { url }),
-        },
-      },
-    );
-    const ms = (performance.now() - startTime).toFixed(2);
-    if (response.success) {
-      console.log(
-        `[React] connect_and_save ${providerId} ✅ (${ms}ms)`,
-        response.availableModels,
-      );
-    } else {
-      console.error(
-        `[React] connect_and_save ${providerId} ❌ (${ms}ms):`,
-        response.error,
-      );
+// ============ 装饰器工厂：统一错误处理和日志 ============
+// TODO: 类型组织 — SuccessResponse 应该提取到 types 目录统一管理，
+//   待确定合适的目录结构（api/response? contract/common?）
+type SuccessResponse = { success: boolean; error?: string };
+
+const withErrorHandling = <TPayload, TResponse extends SuccessResponse>(
+  command: string,
+  preparePayload: (input: TPayload) => Record<string, unknown>,
+  getOperationName: (input: TPayload) => string,
+  createErrorResponse: (error: string) => TResponse,
+) => {
+  return async (input: TPayload): Promise<TResponse> => {
+    const startTime = performance.now();
+
+    try {
+      const payload = preparePayload(input);
+      const response = await invoke<TResponse>(command, payload);
+      const ms = (performance.now() - startTime).toFixed(2);
+      const name = getOperationName(input);
+
+      if (response.success) {
+        console.log(`[API] ${name} ✅ (${ms}ms)`);
+      } else {
+        console.error(`[API] ${name} ❌ (${ms}ms):`, response.error);
+      }
+
+      return response;
+    } catch (error) {
+      const ms = (performance.now() - startTime).toFixed(2);
+      const msg = error instanceof Error ? error.message : String(error);
+      const name = getOperationName(input);
+      console.error(`[API] ${name} invoke error (${ms}ms):`, msg);
+      return createErrorResponse(msg);
     }
-    return response;
-    // TODO: 全链路错误精细化管理 — invoke 异常被吞并为 { success: false }，
-    //   前端无法区分业务失败与 IPC 系统级异常，待 Phase 6.1 统一处理。
-  } catch (error) {
-    const ms = (performance.now() - startTime).toFixed(2);
-    const msg = error instanceof Error ? error.message : String(error);
-    console.error(`[API] connect_and_save invoke error (${ms}ms):`, msg);
-    return {
-      success: false,
-      availableModels: [],
-      enabledModels: [],
-      error: msg,
-    };
-  }
+  };
 };
+
+// ============ Provider CRUD 操作 ============
+
+/** 接入新 Provider：健康检查 + 成功则持久化 */
+export const connectAndSaveProvider = withErrorHandling<
+  ConnectAndSaveProviderPayload,
+  ConnectAndSaveProviderResponse
+>(
+  "connect_and_save_provider",
+  (input) => ({
+    payload: {
+      providerId: input.providerId,
+      key: input.key,
+      ...(input.url && { url: input.url }),
+    },
+  }),
+  (input) => `connect_and_save ${input.providerId}`,
+  (error) => ({
+    success: false,
+    availableModels: [],
+    enabledModels: [],
+    error,
+  }),
+);
 
 /** 重置一个 Provider 的持久化配置 */
-export const resetProvider = async (
-  providerId: ProviderId,
-): Promise<ResetProviderResponse> => {
-  try {
-    const response = await invoke<ResetProviderResponse>("reset_provider", {
-      providerId,
-    });
-    if (response.success) {
-      console.log(`[API] reset_provider ${providerId} ✅`);
-    } else {
-      console.error(`[API] reset_provider ${providerId} ❌:`, response.error);
-    }
-    return response;
-  } catch (error) {
-    const msg = error instanceof Error ? error.message : String(error);
-    console.error("[API] reset_provider invoke error:", msg);
-    return {
-      success: false,
-      error: msg,
-    };
-  }
-};
+export const resetProvider = withErrorHandling<
+  ProviderId,
+  ResetProviderResponse
+>(
+  "reset_provider",
+  (providerId) => ({ providerId }),
+  (providerId) => `reset_provider ${providerId}`,
+  (error) => ({ success: false, error }),
+);
 
 /** 更新某个 Provider 的 enabled_models */
-export const updateEnabledModels = async ({
-  providerId,
-  enabledModels,
-}: UpdateEnabledModelsPayload): Promise<UpdateEnabledModelsResponse> => {
-  try {
-    const response = await invoke<UpdateEnabledModelsResponse>(
-      "update_enabled_models",
-      {
-        payload: {
-          providerId,
-          enabledModels,
-        },
-      },
-    );
-    if (response.success) {
-      console.log(`[API] update_enabled_models ${providerId} ✅`);
-    } else {
-      console.error(
-        `[API] update_enabled_models ${providerId} ❌:`,
-        response.error,
-      );
-    }
-    return response;
-  } catch (error) {
-    const msg = error instanceof Error ? error.message : String(error);
-    console.error("[API] update_enabled_models invoke error:", msg);
-    return {
-      success: false,
-      error: msg,
-    };
-  }
-};
+export const updateEnabledModels = withErrorHandling<
+  UpdateEnabledModelsPayload,
+  UpdateEnabledModelsResponse
+>(
+  "update_enabled_models",
+  (input) => ({
+    payload: {
+      providerId: input.providerId,
+      enabledModels: input.enabledModels,
+    },
+  }),
+  (input) => `update_enabled_models ${input.providerId}`,
+  (error) => ({ success: false, error }),
+);

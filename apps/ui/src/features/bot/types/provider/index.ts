@@ -42,7 +42,6 @@ export type {
   WithProviderForm,
   ProviderInfo,
   ProviderFormProps,
-  ProviderFailedContent,
   ProviderErrorPanelProps,
   ProviderCardProps,
   ProviderCardContentProps,

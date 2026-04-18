@@ -33,10 +33,8 @@ Branch: `feat/spirit-crud-closeout`
 
 ### High (影响代码正确性)
 
-- [ ] **useProvider** - Fix onUpdate callback deps array (avoid stale closure)
-- [ ] **useProviderReset** - Add missing constants to deps array (PROVIDER_INITIAL_FORMS, PROVIDER_CARD_STATES)
 - [ ] **useProviderCollectionStore** - Add state transition validation (defensive updateProviderBatch)
-- [ ] **crud.ts** - Extract common error handling logic (reduce duplication across connect/reset/update)
+- [x] **crud.ts** - Extract common error handling logic (reduce duplication across connect/reset/update)
 - [ ] **useProviderConnection** - Fix handleConnect dependency in handleRetry (line 20, may cause stale closure)
 - [ ] **ProviderCardBody** - Add exhaustive state check (satisfies doesn't guarantee runtime coverage)
 

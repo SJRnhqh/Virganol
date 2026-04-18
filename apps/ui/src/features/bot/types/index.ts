@@ -40,7 +40,6 @@ export type {
   WithProviderId,
   WithProviderForm,
   ProviderFormProps,
-  ProviderFailedContent,
   ProviderErrorPanelProps,
   ProviderCardProps,
   ProviderCardContentProps,
