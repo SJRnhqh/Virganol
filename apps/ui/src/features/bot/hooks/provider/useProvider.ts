@@ -1,5 +1,6 @@
 // apps/ui/src/features/bot/hooks/provider/useProvider.ts
 // 外部依赖
+import { useCallback } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 // 内部引用
@@ -22,6 +23,13 @@ export const useProvider = (providerId: ProviderId) => {
   // ── 连接逻辑 ──────────────────────────────
   const { onConnect, onRetry } = useProviderConnection(providerId);
 
+  // ── 表单更新回调 ──────────────────────────
+  const onUpdate = useCallback(
+    (patch: Partial<ProviderFormData>) =>
+      useProviderCollectionStore.getState().setProviderForm(providerId, patch),
+    [providerId],
+  );
+
   // ── 组装返回 ──────────────────────────────
   return {
     cardState,
@@ -33,10 +41,7 @@ export const useProvider = (providerId: ProviderId) => {
     form: {
       fields: PROVIDER_FORM_FIELDS[providerId],
       formData: storedForm,
-      onUpdate: (patch: Partial<ProviderFormData>) =>
-        useProviderCollectionStore
-          .getState()
-          .setProviderForm(providerId, patch),
+      onUpdate,
     },
     errorMessage,
     connection: {

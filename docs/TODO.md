@@ -35,8 +35,6 @@ Branch: `feat/spirit-crud-closeout`
 
 - [ ] **useProviderCollectionStore** - Add state transition validation (defensive updateProviderBatch)
 - [x] **crud.ts** - Extract common error handling logic (reduce duplication across connect/reset/update)
-- [ ] **useProviderConnection** - Fix handleConnect dependency in handleRetry (line 20, may cause stale closure)
-- [ ] **ProviderCardBody** - Add exhaustive state check (satisfies doesn't guarantee runtime coverage)
 
 ### Medium (代码可维护性)
 
@@ -50,7 +48,6 @@ Branch: `feat/spirit-crud-closeout`
 
 ### Low (性能优化)
 
-- [ ] **useProvider** - Memoize onUpdate callback (prevent unnecessary re-renders)
 - [ ] **useProviderModels** - Memoize modelItems calculation (performance optimization)
 - [ ] **useToggleModels** - Optimize rollback to only update enabled state (avoid full re-render)
 - [ ] **crud.ts** - Only log timing when operation exceeds threshold (reduce log noise)
@@ -90,10 +87,8 @@ Branch: `feat/spirit-crud-closeout`
 
 ### Medium
 
-- [ ] **crud.ts** - Remove console.log statements leaking sensitive operation details (provider IDs, timing)
 - [ ] **connect** - Add rate limiting to connect operations (prevent brute force key testing)
 - [ ] **ProviderErrorPanel** - Ensure error messages are properly escaped (prevent XSS, verify no dangerouslySetInnerHTML)
-- [ ] **key/load.rs** - Zeroize key on error paths (lines 20, 27-32, prevent memory leak of sensitive data)
 - [ ] **connect.rs** - Clear normalized_key from memory after use (line 44, 67, sensitive data cleanup)
 
 ## Accessibility
