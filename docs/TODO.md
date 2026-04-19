@@ -31,8 +31,6 @@ Branch: `feat/spirit-crud-closeout`
 
 - [x] **connect.rs** - Rename `resolved_key_guard` to `fallback_key` (clarify logic flow)
 - [x] **connect.rs** - Reorder enabled_models by available_models order (stable frontend rendering)
-- [ ] **Check service** - Prevent duplicate startup calls (resource optimization)
-- [ ] **useToggleModels** - Extract toEnabledList helper to shared utils (reusable across hooks)
 - [x] **connect.rs** - Extract key resolution logic to separate function (lines 54-58, improve testability)
 
 ### Low (性能优化)
@@ -49,7 +47,6 @@ Branch: `feat/spirit-crud-closeout`
 ### Medium (可靠性和性能)
 
 - [x] Extract key rollback logic to standalone function (improve testability)
-- [ ] **store/** - Add caching to persistence layer (reduce I/O amplification)
 - [x] **connection/** - Make health check timeout configurable (use constants per provider)
 - [ ] **connection/** - Add HTTP client connection pooling (reuse connections across requests)
 
