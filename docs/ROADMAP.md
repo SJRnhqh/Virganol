@@ -81,8 +81,8 @@ LLM Provider 接入分为两条主线：
 - [x] 提取 key rollback 逻辑为独立函数（提高可测试性）
 - [x] reset 链路区分回滚失败的严重错误（回滚成功返回普通错误，回滚失败返回 inconsistent state 严重错误）
 - [x] 持久化层实现原子写入（temp file + rename 模式，防止崩溃导致文件损坏）
+- [x] 健康检查超时配置化（使用 constants 层管理，per-provider 差异化配置）
 - [ ] 持久化层添加缓存（减少 I/O 读写放大）
-- [ ] 健康检查超时配置化（5s 硬编码改为可配置）
 
 **契约升级**：
 

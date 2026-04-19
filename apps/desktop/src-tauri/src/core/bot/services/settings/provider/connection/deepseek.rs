@@ -3,7 +3,7 @@
 use log::{debug, error, info};
 
 // 内部引用
-use crate::core::bot::models::HealthCheckResponse;
+use super::super::super::super::super::{HealthCheckResponse, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS};
 
 const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
 
@@ -20,7 +20,9 @@ pub(super) async fn deepseek_check(key: &str) -> HealthCheckResponse {
     let resp = match reqwest::Client::new()
         .get(&endpoint)
         .bearer_auth(key)
-        .timeout(std::time::Duration::from_secs(5))
+        .timeout(std::time::Duration::from_secs(
+            DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS,
+        ))
         .send()
         .await
     {
