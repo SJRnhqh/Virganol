@@ -10,7 +10,7 @@ Branch: `feat/spirit-crud-closeout`
 - [x] **useProviderConnect** - Move concurrent guard to store layer (prevent cross-instance races)
 - [x] **useToggleModels** - Fix default model state inconsistency (align frontend `?? false` with backend logic)
 - [x] **useToggleModels** - Add error handling for exceptions during optimistic updates (ensure rollback)
-- [ ] **store/save.rs & update.rs** - Fix TOCTOU race condition in concurrent writes (prevent data loss)
+- [x] **persistence.rs** - Implement atomic writes (temp file + rename) to prevent file corruption on crash
 - [ ] **ProviderResetButton** - Add confirmation dialog before reset (prevent accidental data loss)
 
 ### High (影响功能正确性)

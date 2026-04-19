@@ -68,6 +68,7 @@ LLM Provider 接入分为两条主线：
 - [x] `useProviderConnect` - 添加 pending state guard（防止并发操作）
 - [x] `useProviderConnect` - 将并发锁从 hook 层移至 store 层（防止跨实例竞态）
 - [x] `useToggleModels` - 修复默认模型状态不一致（前端 `?? false` 对齐后端逻辑）
+- [x] `persistence.rs` - 实现原子写入（temp file + rename）防止崩溃时文件损坏
 
 **代码质量优化**：
 
@@ -79,6 +80,7 @@ LLM Provider 接入分为两条主线：
 
 - [x] 提取 key rollback 逻辑为独立函数（提高可测试性）
 - [x] reset 链路区分回滚失败的严重错误（回滚成功返回普通错误，回滚失败返回 inconsistent state 严重错误）
+- [x] 持久化层实现原子写入（temp file + rename 模式，防止崩溃导致文件损坏）
 - [ ] 持久化层添加缓存（减少 I/O 读写放大）
 - [ ] 健康检查超时配置化（5s 硬编码改为可配置）
 
