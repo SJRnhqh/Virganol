@@ -35,7 +35,7 @@ Branch: `feat/spirit-crud-closeout`
 
 ### Low (性能优化)
 
-- [ ] **useToggleModels** - Optimize rollback to only update enabled state (avoid full re-render)
+- [x] **useToggleModels** - Optimize rollback to only update enabled state (avoid full re-render)
 
 ## Backend Optimization
 

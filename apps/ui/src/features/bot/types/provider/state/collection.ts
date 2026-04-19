@@ -75,6 +75,13 @@ export interface ProviderCollectionState {
     /** 是否启用。 */
     enabled: boolean,
   ) => void;
+  /** 精准更新单个 Provider 的 enabled map（不动 available）。 */
+  setEnabledMap: (
+    /** 目标 Provider 标识。 */
+    providerId: ProviderId,
+    /** 要写入的 enabled map。 */
+    enabledMap: Record<string, boolean>,
+  ) => void;
   /** 设置单个 Provider 的错误信息。 */
   setProviderError: (
     /** 目标 Provider 标识。 */

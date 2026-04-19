@@ -73,8 +73,8 @@ LLM Provider 接入分为两条主线：
 **代码质量优化**：
 
 - [x] `useProvider` - 补全 onUpdate callback 依赖数组（避免闭包过期）
+- [x] `useToggleModels` - 优化回滚逻辑，只更新 enabled 状态（添加 setEnabledMap 方法，避免全量更新）
 - [ ] `useProviderCollectionStore` - 添加状态转换验证（updateProviderBatch 防御性编程）
-- [ ] Check service - 添加运行时检查防止多次启动调用（资源优化）
 
 **后端优化**：
 

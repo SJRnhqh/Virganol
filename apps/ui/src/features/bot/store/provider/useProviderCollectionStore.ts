@@ -74,6 +74,12 @@ export const useProviderCollectionStore = create<ProviderCollectionState>()(
         );
       }),
 
+    // 模型状态（精准更新 enabled map，不动 available）
+    setEnabledMap: (providerId, enabledMap) =>
+      set((state) => {
+        state.byId[providerId].models.enabled = enabledMap;
+      }),
+
     // 错误信息（设置）
     setProviderError: (providerId, message) =>
       set((state) => {

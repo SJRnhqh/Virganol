@@ -87,7 +87,6 @@ export const useToggleModels = (providerId: ProviderId) => {
 
     // 记录回滚值（在 try 外部，确保 catch 可访问）
     let previousMap: Record<string, boolean> | undefined;
-    let availableModels: string[] | undefined;
 
     try {
       const store = useProviderCollectionStore.getState();
@@ -95,7 +94,6 @@ export const useToggleModels = (providerId: ProviderId) => {
 
       // 记录回滚值
       previousMap = { ...current.enabled };
-      availableModels = current.available;
 
       // 计算 toggle 后的状态（全选 → 全不选，未全选 → 全选）
       // 信任后端数据，undefined 视为 false
@@ -116,10 +114,9 @@ export const useToggleModels = (providerId: ProviderId) => {
 
       // 失败回滚
       if (!response.success) {
-        useProviderCollectionStore.getState().setProviderModels(providerId, {
-          available: current.available,
-          enabled: previousMap,
-        });
+        useProviderCollectionStore
+          .getState()
+          .setEnabledMap(providerId, previousMap);
         console.error(
           `[React] rollback all models: ${providerId}`,
           response.error,
@@ -127,11 +124,10 @@ export const useToggleModels = (providerId: ProviderId) => {
       }
     } catch (error) {
       // 异常回滚（网络错误、超时等）
-      if (previousMap !== undefined && availableModels !== undefined) {
-        useProviderCollectionStore.getState().setProviderModels(providerId, {
-          available: availableModels,
-          enabled: previousMap,
-        });
+      if (previousMap !== undefined) {
+        useProviderCollectionStore
+          .getState()
+          .setEnabledMap(providerId, previousMap);
       }
       console.error(
         `[React] exception during toggle all models: ${providerId}`,
