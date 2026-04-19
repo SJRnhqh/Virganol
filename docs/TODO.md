@@ -53,11 +53,6 @@ Branch: `feat/spirit-crud-closeout`
 - [ ] **connection/** - Make health check timeout configurable (currently hardcoded to 5s)
 - [ ] **connection/** - Add HTTP client connection pooling (reuse connections across requests)
 
-### Low (边界情况)
-
-- [ ] **key/load.rs** - Add key length validation for env vars (prevent memory overflow, max 10KB)
-- [ ] **useToggleModels** - Handle race between toggleSingle and toggleAll (shared pendingRef may cause conflicts)
-
 ## Contract Upgrade
 
 - [x] `connect_and_save` - Return dedicated `ConnectAndSaveProviderResponse` (with enabled_models)
