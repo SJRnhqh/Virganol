@@ -11,14 +11,17 @@ Branch: `feat/spirit-crud-closeout`
 - [x] **useToggleModels** - Fix default model state inconsistency (align frontend `?? false` with backend logic)
 - [x] **useToggleModels** - Add error handling for exceptions during optimistic updates (ensure rollback)
 - [x] **persistence.rs** - Implement atomic writes (temp file + rename) to prevent file corruption on crash
+- [x] **reset.rs** - Complete idempotent closure: also attempt `remove_provider_key` on `!config_removed` path (prevent orphan keyring entries)
 
 ### High (影响功能正确性)
 
-- [ ] **connect.rs** - Fix key rollback race condition in concurrent scenarios (use atomic operations)
+- [x] **connect.rs** - Defensive key rollback: snapshot adjacent to write + CAS guard before rollback (close race windows without introducing new locks)
+- [x] **useProviderReset** - Write FAILED state + errorMessage on failure path (keep frontend aligned with backend real state)
 
 ### Medium (边界情况处理)
 
 - [x] `useProviderConnect` - Add pending state guard (prevent concurrent connect operations)
+- [x] **validators/cardStateGuard** - New guard to skip lifecycle events when card is PENDING (prevent visual flicker during user-initiated reconnect)
 
 ## Code Quality
 
@@ -31,6 +34,7 @@ Branch: `feat/spirit-crud-closeout`
 - [x] **connect.rs** - Rename `resolved_key_guard` to `fallback_key` (clarify logic flow)
 - [x] **connect.rs** - Reorder enabled_models by available_models order (stable frontend rendering)
 - [x] **connect.rs** - Extract key resolution logic to separate function (lines 54-58, improve testability)
+- [x] **crud.ts** - Extract `SuccessResponse` to shared contract types as `MutationResponse` (new `response.ts`; connect/update/reset all reuse)
 
 ### Low (性能优化)
 
@@ -42,6 +46,7 @@ Branch: `feat/spirit-crud-closeout`
 
 - [ ] **store/lock.rs** - Migrate to Tauri State or parking_lot::Mutex (prevent poison, improve testability)
 - [ ] **Replace global PROVIDERS_STORE_LOCK** - Use per-provider locks (improve concurrency)
+- [x] **persistence.rs** - Add `File::sync_all()` + parent dir fsync before rename (ensure atomic write survives power loss)
 
 ### Medium (可靠性和性能)
 

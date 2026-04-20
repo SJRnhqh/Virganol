@@ -1,6 +1,9 @@
 // apps/ui/src/features/bot/types/provider/contract/index.ts
 // 导出内容
 
+// ── Provider 共享响应契约 ──
+export type { MutationResponse } from "./response";
+
 // ── Provider 生命周期事件 ──
 export type {
   ProviderIssue,

@@ -6,6 +6,7 @@ export type { ProviderId } from "./common";
 
 // ── Provider 契约类型 ──
 export type {
+  MutationResponse,
   ProviderIssue,
   ProviderCheckEvent,
   ProviderCheckTrigger,

@@ -8,6 +8,7 @@ export type {
   ProviderId,
 
   // ── Provider 契约类型 ──
+  MutationResponse,
   ProviderIssue,
   ProviderCheckEvent,
   ProviderCheckTrigger,

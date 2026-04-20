@@ -6,6 +6,7 @@ import { invoke } from "@tauri-apps/api/core";
 import type {
   ConnectAndSaveProviderResponse,
   ConnectAndSaveProviderPayload,
+  MutationResponse,
   ResetProviderResponse,
   UpdateEnabledModelsPayload,
   UpdateEnabledModelsResponse,
@@ -13,11 +14,7 @@ import type {
 } from "@/features/bot/types";
 
 // ============ 装饰器工厂：统一错误处理和日志 ============
-// TODO: 类型组织 — SuccessResponse 应该提取到 types 目录统一管理，
-//   待确定合适的目录结构（api/response? contract/common?）
-type SuccessResponse = { success: boolean; error?: string };
-
-const withErrorHandling = <TPayload, TResponse extends SuccessResponse>(
+const withErrorHandling = <TPayload, TResponse extends MutationResponse>(
   command: string,
   preparePayload: (input: TPayload) => Record<string, unknown>,
   getOperationName: (input: TPayload) => string,

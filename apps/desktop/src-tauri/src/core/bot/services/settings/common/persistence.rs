@@ -1,6 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/common/persistence.rs
 // 外部依赖
-use std::fs;
+use std::fs::{self, File};
+use std::io::Write;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_store::StoreExt;
 
@@ -53,16 +54,32 @@ pub(crate) fn save_settings(
     let json_bytes = serde_json::to_vec_pretty(&all_data)
         .map_err(|e| ProviderError::Io(format!("serialize store failed: {}", e)))?;
 
-    // 原子写入：先写临时文件，再 rename
-    fs::write(&tmp_path, json_bytes)
-        .map_err(|e| ProviderError::Io(format!("write temp file failed: {}", e)))?;
+    // 原子写入第一步：写 tmp + fsync，确保内容和元数据真正落盘而非停留在 OS page cache。
+    // 断电/崩溃后即便 rename 生效，没 fsync 的内容可能只是半截 JSON 或空文件。
+    {
+        let mut file = File::create(&tmp_path)
+            .map_err(|e| ProviderError::Io(format!("create temp file failed: {}", e)))?;
+        file.write_all(&json_bytes)
+            .map_err(|e| ProviderError::Io(format!("write temp file failed: {}", e)))?;
+        file.sync_all()
+            .map_err(|e| ProviderError::Io(format!("fsync temp file failed: {}", e)))?;
+    }
 
-    match fs::rename(&tmp_path, &store_path) {
-        Ok(_) => Ok(()),
-        Err(e) => {
-            // 清理临时文件（忽略清理失败）
-            let _ = fs::remove_file(&tmp_path);
-            Err(ProviderError::Io(format!("atomic rename failed: {}", e)))
+    // 原子写入第二步：rename 切换到正式文件名（同一文件系统内原子）
+    if let Err(e) = fs::rename(&tmp_path, &store_path) {
+        // 清理临时文件（忽略清理失败）
+        let _ = fs::remove_file(&tmp_path);
+        return Err(ProviderError::Io(format!("atomic rename failed: {}", e)));
+    }
+
+    // 原子写入第三步：fsync 父目录，确保 rename 的目录项变更也落盘。
+    // Windows 不支持目录 fsync，silent ignore 保持跨平台兼容，
+    // 类 Unix 系统上一旦目录打开失败或 sync_all 失败都不阻塞主流程（写入本身已成功）。
+    if let Some(parent) = store_path.parent() {
+        if let Ok(dir) = File::open(parent) {
+            let _ = dir.sync_all();
         }
     }
+
+    Ok(())
 }

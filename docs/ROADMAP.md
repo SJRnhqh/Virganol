@@ -103,6 +103,8 @@ LLM Provider 接入分为两条主线：
 - [ ] 扩展 `HealthCheckResponse` 添加 `error_code` 字段
 - [ ] 前端适配细粒度错误展示
 - [ ] 区分系统错误（io/serde）与业务错误
+- [ ] 契约序列化命名统一 camelCase（`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload` 补齐 serde rename，前端 types 同步）
+- [ ] `ProviderError` 错误链可追溯化（改用 `thiserror` 派生 `Display` / `Error` / `From`，修复 `source()` 空实现导致的 `serde_json::Error` 底层信息无法透出，为 Phase 6.2 日志链完整打印打基础）
 
 #### 6.2 日志与中间件统一化
 
@@ -117,5 +119,7 @@ LLM Provider 接入分为两条主线：
 - [ ] 请求取消机制（添加 AbortController 在组件卸载时取消飞行中的 API 请求，防止内存泄漏警告）
 - [ ] 安全审计（`secret_meta` 前端消费 / Provider 支持范围收敛 / invoke 暴露面审计）
 - [ ] 生命周期收口（orphan failed 认领 / 事件名契约自动化）
+- [ ] 前端并发锁架构对齐：`useToggleModels` 从 hook 实例级 `useRef` 迁至 store 层 `isPending`（对齐 `useProviderConnect` 模式，消除架构不对称）
+- [ ] 后端异步执行架构对齐：Tauri commands 中的同步持久化调用（`reset_provider` / `update_enabled_models` 等）用 `tokio::task::spawn_blocking` 包裹，避免阻塞 tokio worker 线程（当前低频场景不会触发，为后台任务 / WebSocket 等 async 入口引入后预防 runtime 饥饿）
 - [ ] 集成测试补充
 - [ ] 功能开发完结

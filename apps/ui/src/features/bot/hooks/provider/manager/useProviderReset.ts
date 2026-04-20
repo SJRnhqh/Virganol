@@ -34,8 +34,12 @@ export const useProviderReset = (providerId: ProviderId) => {
         errorMessage: null,
       });
     } else {
-      // TODO: 前端错误处理与用户反馈 — reset 失败时需显示错误提示（toast/notification），
-      //   待 Phase 6.2 实现统一错误显示方案
+      // 卡片内反馈：回写 FAILED + errorMessage，避免前端停留在 CONNECTED 导致与后端真实状态脱节。
+      // 跨卡片的全局 toast/notification 仍待 Phase 6.2 统一错误显示方案。
+      useProviderCollectionStore.getState().updateProviderBatch(providerId, {
+        cardState: PROVIDER_CARD_STATES.FAILED,
+        errorMessage: response.error ?? "Reset failed",
+      });
       console.error(
         `[React] reset_provider ${providerId} failed:`,
         response.error,

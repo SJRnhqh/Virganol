@@ -16,8 +16,24 @@ use super::super::{
 /// 回滚密钥：恢复旧密钥或删除新密钥
 ///
 /// 当配置持久化失败时，需要回滚 keyring 中的密钥变更以保持状态一致性。
+/// 回滚前做 CAS 校验：若当前 keyring 值不等于本次写入的 `expected_current`，
+/// 说明已被并发 reset/connect 覆盖，回滚只会误伤他人修改，直接跳过。
 /// 回滚失败不影响主错误返回，仅记录 error 日志供运维排查。
-fn rollback_provider_key(provider_id: ProviderId, previous_key: Option<&str>) {
+fn rollback_provider_key(
+    provider_id: ProviderId,
+    previous_key: Option<&str>,
+    expected_current: &str,
+) {
+    // CAS 校验：keyring 被他人覆盖时跳过回滚
+    let current = load_provider_key(provider_id);
+    if current.as_ref().map(|k| k.as_str()) != Some(expected_current) {
+        info!(
+            "[Tauri] ↩️ {} key rollback skipped: concurrent modification detected",
+            provider_id
+        );
+        return;
+    }
+
     let rollback_result = if let Some(key) = previous_key {
         // 恢复旧密钥
         save_provider_key(provider_id, key)
@@ -53,12 +69,6 @@ pub(crate) async fn connect_and_save(
     // 1) 归一化前端传入的 key 和 url（去掉首尾空白）
     let normalized_key = key.trim();
     let normalized_url = url.trim();
-    // 用户显式输入了 key 时，记录旧 key 快照用于后续异常回滚
-    let previous_persisted_key = if !normalized_key.is_empty() {
-        load_provider_key(provider_id)
-    } else {
-        None
-    };
 
     // 2) 密钥解析：若未输入则尝试回退 (env -> keyring)，否则使用当前输入
     let fallback_key = try_load_stored_key(provider_id, normalized_key);
@@ -80,18 +90,22 @@ pub(crate) async fn connect_and_save(
     }
 
     // 4) 持久化密钥（仅用户显式输入时）
-    if !normalized_key.is_empty() {
+    // 快照紧邻写入：避免 health_check 异步窗口期间被并发 reset/connect 污染
+    let previous_persisted_key = if !normalized_key.is_empty() {
+        let snapshot = load_provider_key(provider_id);
         // 用户显式输入的 key 已通过健康检查，持久化到 keyring
         if let Err(e) = save_provider_key(provider_id, normalized_key) {
             return ConnectAndSaveProviderResponse::fail(Some(e.message()));
         }
+        snapshot
     } else {
         // 用户未显式输入 key：来源可能是 env / keyring / 无需密钥，均无需持久化
         info!(
             "[Tauri] ⏭️ {} skip key persist: no user-supplied key",
             provider_id
         );
-    }
+        None
+    };
 
     // 5) 复用历史启用状态，并与本次可用模型做交集对齐
     let previous_record = match load_provider_record(app, provider_id) {
@@ -131,6 +145,7 @@ pub(crate) async fn connect_and_save(
             rollback_provider_key(
                 provider_id,
                 previous_persisted_key.as_ref().map(|k| k.as_str()),
+                normalized_key,
             );
         }
 

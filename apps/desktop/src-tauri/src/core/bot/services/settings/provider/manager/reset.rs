@@ -36,10 +36,18 @@ pub(crate) fn reset_provider_config(
 
     if !config_removed {
         log::warn!("[Tauri] ⚠️ {} config not found, already clean", provider_id);
+        // 幂等闭环：config 虽已不存在，仍尝试清理可能残留的 keyring 孤儿条目。
+        // remove_provider_key 对 NoEntry 已幂等，仅真实失败时才需上报。
+        if let Err(e) = remove_provider_key(provider_id) {
+            return ResetProviderResponse {
+                success: false,
+                error: Some(e.message()),
+            };
+        }
         return ResetProviderResponse {
             success: true,
             error: None,
-        }; // 幂等：目标状态已达成
+        };
     }
 
     // 3) 再删除系统密钥库中的 key（幂等：不存在也应算成功）
