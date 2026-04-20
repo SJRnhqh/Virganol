@@ -47,7 +47,7 @@ Branch: `feat/spirit-crud-closeout`
 
 - [x] Extract key rollback logic to standalone function (improve testability)
 - [x] **connection/** - Make health check timeout configurable (use constants per provider)
-- [ ] **connection/** - Add HTTP client connection pooling (reuse connections across requests)
+- [x] **connection/** - Add HTTP client connection pooling (reuse connections across requests)
 
 ## Contract Upgrade
 

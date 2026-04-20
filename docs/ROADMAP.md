@@ -82,6 +82,8 @@ LLM Provider 接入分为两条主线：
 - [x] reset 链路区分回滚失败的严重错误（回滚成功返回普通错误，回滚失败返回 inconsistent state 严重错误）
 - [x] 持久化层实现原子写入（temp file + rename 模式，防止崩溃导致文件损坏）
 - [x] 健康检查超时配置化（使用 constants 层管理，per-provider 差异化配置）
+- [x] HTTP 客户端连接池复用（使用 `OnceLock<Client>` 全局共享，减少连接建立开销）
+- [ ] Provider 级别锁优化（per-provider 串行化 connect，提高并发性能）
 
 **契约升级**：
 
@@ -109,13 +111,7 @@ LLM Provider 接入分为两条主线：
 - [ ] 日志采集与监控接入点规划
 - [ ] 前端 CRUD 操作日志优化（仅记录超过阈值的慢操作，减少日志噪音）
 
-#### 6.3 性能优化
-
-- [ ] HTTP 客户端连接池复用（`OnceLock<Client>`）
-- [ ] Provider 级别锁优化（per-provider 串行化 connect）
-- [ ] 持久化层缓存优化（`ProvidersStore` cache）
-
-#### 6.4 收尾与验证
+#### 6.3 收尾与验证
 
 - [ ] 表单输入验证（`ProviderForm` 添加实时验证：URL 格式检查 / 必填字段提示 / 错误状态视觉反馈，提升用户输入体验）
 - [ ] 请求取消机制（添加 AbortController 在组件卸载时取消飞行中的 API 请求，防止内存泄漏警告）
