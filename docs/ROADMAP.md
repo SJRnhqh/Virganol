@@ -22,78 +22,18 @@ LLM Provider 接入分为两条主线：
 - 生命周期 phase 建模（idle / checking / done / degraded / failed）
 - UI 组件层（per-provider 卡片 + 交互逻辑）
 
-### 🚧 Phase 5：CRUD 链路审查与重构
+### ✅ Phase 5：CRUD 链路审查与重构
 
-#### 5.1 connect 链路
+**已完成**：
 
-- [x] `connect_and_save` 主流程审查（密钥解析 / 健康检查 / 持久化事务 / enabled_models 计算）
-- [x] 健康检查子系统审查（registry / driver / deepseek / ollama 实现）
-- [x] 代码质量优化（删除冗余 trim / 简化错误提示）
-- [x] 前端调用链审查（hooks 层冗余清理 / payload 简化 / 状态回写对称性）
-- [x] 组件审查完整性（ProviderCardHeader / ProviderForm / ProviderCardContent / ProviderConnectionButton / ProviderCardActions）
-- [x] 常量驱动设计验证（CONNECTION_STATE_LABELS / CONNECTION_BUTTON_ICONS / CONNECTION_BUTTON_ANIMATIONS）
-- [x] 类型安全检查（ConnectAndSaveProviderPayload / HealthCheckResponse 契约）
-- [x] 图标语义完整（connect/connecting/retry/reset 各状态icon映射）
+- connect 链路：主流程审查、健康检查子系统、前端调用链优化、组件完整性验证
+- reset 链路：原子性删除、API 迁移、前端钩子重构、组件层美化
+- update_models 链路：持久化层重构、日志优化、Hooks 层重构、语义对齐
+- 查漏补缺：并发控制、原子写入、回滚逻辑、契约升级
 
-#### 5.2 reset 链路
+**遗留项**（已迁移至 Phase 6.3）：
 
-- [x] `reset_provider_config` 审查（config + key 原子性删除 / 回滚逻辑）
-- [x] API迁移：resetProvider 迁至 crud.ts（目前保持boolean返回）
-- [x] 前端钩子层审查（success检查 + batch状态更新 + 错误日志占位）
-- [x] 前端钩子重构：useProviderReset 提取至 hooks/provider/manager/ 目录
-- [x] 前端store/types/constants完整性验证（无需优化）
-- [x] 前端组件层重构与美化：
-  - [x] ProviderResetButton 独立组件（文字 + Eraser 图标，类型约束）
-  - [x] ProviderConnectedPanel 配置管理区域集成 Reset 按钮
-  - [x] ProviderCardActions CONNECTED 状态移除 Reset（职责分离）
-
-#### 5.3 update_models 链路
-
-- [x] `update_provider_enabled_models` 审查（invoke 契约 / store 读写）
-- [x] API迁移：updateEnabledModels 迁至 crud.ts（目前保持boolean返回）
-- [x] 后端持久化层重构：persistence.rs 迁移至 store/ 目录（load/save/remove/update/lock 模块化管理）
-- [x] 后端日志优化：persistence 层 warn + service 层 info/error 分层记录
-- [x] 前端 Hooks 层重构：useToggleModels 提取至 hooks/provider/manager/ 目录
-- [x] 前端数据与动作分离：data/（响应式订阅）vs manager/（执行时快照）
-- [x] 目录结构优化：useProviderModels 迁移至 hooks/provider/data/ 目录
-- [x] Toggle 语义统一：toggleSingle / toggleAll 命名与实现对齐
-- [x] Store 层审查：setModelEnabled / setAllModelsEnabled 方法验证完成
-- [x] Types 层审查：ProviderModelState 类型完整且清晰
-- [x] 命名语义对齐：toggle（前端交互）vs update（后端数据）职责分离
-
-#### 5.4 CRUD 链路查漏补缺
-
-**功能正确性**：
-
-- [x] `useProviderConnect` - 添加 pending state guard（防止并发操作）
-- [x] `useProviderConnect` - 将并发锁从 hook 层移至 store 层（防止跨实例竞态）
-- [x] `useToggleModels` - 修复默认模型状态不一致（前端 `?? false` 对齐后端逻辑）
-- [x] `persistence.rs` - 实现原子写入（temp file + rename）防止崩溃时文件损坏
-
-**代码质量优化**：
-
-- [x] `useProvider` - 补全 onUpdate callback 依赖数组（避免闭包过期）
-- [x] `useToggleModels` - 优化回滚逻辑，只更新 enabled 状态（添加 setEnabledMap 方法，避免全量更新）
-- [ ] `useProviderCollectionStore` - 添加状态转换验证（updateProviderBatch 防御性编程）
-
-**后端优化**：
-
-- [x] 提取 key rollback 逻辑为独立函数（提高可测试性）
-- [x] reset 链路区分回滚失败的严重错误（回滚成功返回普通错误，回滚失败返回 inconsistent state 严重错误）
-- [x] 持久化层实现原子写入（temp file + rename 模式，防止崩溃导致文件损坏）
-- [x] 健康检查超时配置化（使用 constants 层管理，per-provider 差异化配置）
-- [x] HTTP 客户端连接池复用（使用 `OnceLock<Client>` 全局共享，减少连接建立开销）
-- [ ] Provider 级别锁优化（per-provider 串行化 connect，提高并发性能）
-
-**契约升级**：
-
-- [x] `connect_and_save` 返回专用 `ConnectAndSaveProviderResponse`（含 enabled_models）
-- [x] `HealthCheckResponse` 职责收窄至健康检查结果（仅内部使用）
-- [x] 后端契约结构重构：创建 `contract/connect.rs` 管理前后端契约
-- [x] 前端契约结构重构：创建 `contract/connect.ts` 镜像后端结构
-- [x] 前端启用模型状态：使用后端 `enabledModels` 替代硬编码 false
-- [x] `resetProvider` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
-- [x] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
+- Provider 级别锁优化（per-provider 串行化 connect，提高并发性能）
 
 ### 🚧 Phase 6：全局优化与收尾
 
@@ -115,6 +55,7 @@ LLM Provider 接入分为两条主线：
 
 #### 6.3 收尾与验证
 
+- [ ] `useProviderCollectionStore` - 添加状态转换验证（updateProviderBatch 防御性编程）
 - [ ] 表单输入验证（`ProviderForm` 添加实时验证：URL 格式检查 / 必填字段提示 / 错误状态视觉反馈，提升用户输入体验）
 - [ ] 请求取消机制（添加 AbortController 在组件卸载时取消飞行中的 API 请求，防止内存泄漏警告）
 - [ ] 安全审计（`secret_meta` 前端消费 / Provider 支持范围收敛 / invoke 暴露面审计）
