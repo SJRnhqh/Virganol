@@ -8,6 +8,12 @@ import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import { useProviderCollectionStore } from "@/features/bot/store";
 import { connectAndSaveProvider } from "@/features/bot/services";
 
+// TODO(post-0.0.1): 添加焦点管理
+// - Connect 成功后，焦点移到第一个模型或 Reset 按钮
+// - Connect 失败后，焦点保持在 Connect 按钮（方便重试）
+// - 需要通过 ref 或回调函数通知组件层进行焦点管理
+// 当前 0.0.1 版本不处理焦点，后续版本完善可访问性支持
+
 export const useProviderConnect = (providerId: ProviderId) => {
   return useCallback(
     async (formData: ProviderFormData) => {

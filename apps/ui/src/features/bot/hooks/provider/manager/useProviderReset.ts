@@ -15,6 +15,12 @@ import { resetProvider } from "@/features/bot/services";
  * Provider 配置重置钩子
  *
  * 调用后端 API 删除持久化配置，成功后重置前端状态
+ *
+ * TODO(post-0.0.1): 添加焦点管理
+ * - Reset 成功后，焦点移到 Connect 按钮（引导用户重新连接）
+ * - Reset 失败后，焦点保持在 Reset 按钮（方便重试）
+ * - 需要通过 ref 或回调函数通知组件层进行焦点管理
+ * 当前 0.0.1 版本不处理焦点，后续版本完善可访问性支持
  */
 export const useProviderReset = (providerId: ProviderId) => {
   return useCallback(async () => {

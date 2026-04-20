@@ -11,7 +11,6 @@ Branch: `feat/spirit-crud-closeout`
 - [x] **useToggleModels** - Fix default model state inconsistency (align frontend `?? false` with backend logic)
 - [x] **useToggleModels** - Add error handling for exceptions during optimistic updates (ensure rollback)
 - [x] **persistence.rs** - Implement atomic writes (temp file + rename) to prevent file corruption on crash
-- [ ] **ProviderResetButton** - Add confirmation dialog before reset (prevent accidental data loss)
 
 ### High (影响功能正确性)
 
@@ -59,13 +58,3 @@ Branch: `feat/spirit-crud-closeout`
 - [x] Frontend enabled models - Use backend `enabledModels` instead of hardcoded false
 - [x] `resetProvider` - Return structured response ({ success, error? }), align with connectAndSaveProvider
 - [x] `updateEnabledModels` - Return structured response ({ success, error? }), align with connectAndSaveProvider
-
-## Accessibility
-
-### High (键盘导航和屏幕阅读器)
-
-- [ ] **ProviderConnectedPanel** - Add keyboard navigation to model list (Tab key, Enter key)
-
-### Medium（前端细节）
-
-- [ ] **All interactive components** - Add focus management after connect/reset operations
