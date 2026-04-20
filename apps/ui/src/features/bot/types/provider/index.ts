@@ -6,15 +6,19 @@ export type { ProviderId } from "./common";
 
 // ── Provider 契约类型 ──
 export type {
+  MutationResponse,
   ProviderIssue,
   ProviderCheckEvent,
   ProviderCheckTrigger,
-  HealthCheckResponse,
   ProviderStatusPayload,
+  ResetProviderResponse,
+  UpdateEnabledModelsPayload,
+  UpdateEnabledModelsResponse,
   ProviderCheckFailedPayload,
   ProviderCheckStartedPayload,
   ProviderCheckCompletedPayload,
   ConnectAndSaveProviderPayload,
+  ConnectAndSaveProviderResponse,
 } from "./contract";
 
 // ── Provider 状态类型 ──
@@ -39,7 +43,6 @@ export type {
   WithProviderForm,
   ProviderInfo,
   ProviderFormProps,
-  ProviderFailedContent,
   ProviderErrorPanelProps,
   ProviderCardProps,
   ProviderCardContentProps,

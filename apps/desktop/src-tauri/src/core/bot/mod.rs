@@ -2,10 +2,24 @@
 // 导出内容
 mod constants;
 mod helpers;
-pub(crate) mod interfaces;
-pub(crate) mod models;
+mod interfaces;
+mod models;
 mod services;
 
+pub(self) use constants::{
+    DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS, PROVIDER_KEYRING_SERVICE,
+    SETTINGS_FILE, SPIRIT_PROVIDERS_KEY,
+};
+pub(self) use helpers::{compute_enabled_models, reorder_enabled_models};
+pub(self) use interfaces::{DriverFuture, ProviderDriver};
+pub(crate) use models::{
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckTrigger,
+    ProviderId, ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
+};
+pub(self) use models::{
+    HealthCheckResponse, ProviderError, ProviderKey, ProviderRecord, SkippedProviderDetail,
+    SupportedProvidersSnapshot,
+};
 pub(crate) use services::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,
     update_provider_enabled_models,

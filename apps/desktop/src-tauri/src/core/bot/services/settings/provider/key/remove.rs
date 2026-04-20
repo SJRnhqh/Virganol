@@ -3,8 +3,7 @@
 use keyring::{Entry, Error as KeyringError};
 
 // 内部引用
-use crate::core::bot::constants::PROVIDER_KEYRING_SERVICE;
-use crate::core::bot::models::{ProviderError, ProviderId};
+use super::super::super::super::super::{ProviderError, ProviderId, PROVIDER_KEYRING_SERVICE};
 
 /// 从系统密钥库删除 provider 的 API Key。
 ///

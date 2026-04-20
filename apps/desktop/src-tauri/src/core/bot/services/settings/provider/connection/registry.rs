@@ -4,9 +4,8 @@ use std::collections::HashMap;
 use std::sync::OnceLock;
 
 // 内部引用
+use super::super::super::super::super::{DriverFuture, ProviderDriver, ProviderId};
 use super::{deepseek_check, ollama_check};
-use crate::core::bot::interfaces::{DriverFuture, ProviderDriver};
-use crate::core::bot::models::ProviderId;
 
 struct DeepseekDriver;
 struct OllamaDriver;

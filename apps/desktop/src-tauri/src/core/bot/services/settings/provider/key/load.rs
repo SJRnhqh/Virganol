@@ -4,8 +4,7 @@ use keyring::{Entry, Error as KeyringError};
 use zeroize::Zeroize;
 
 // 内部引用
-use crate::core::bot::constants::PROVIDER_KEYRING_SERVICE;
-use crate::core::bot::models::{ProviderId, ProviderKey};
+use super::super::super::super::super::{ProviderId, ProviderKey, PROVIDER_KEYRING_SERVICE};
 
 /// 从系统密钥库读取 provider 的 API Key。
 ///

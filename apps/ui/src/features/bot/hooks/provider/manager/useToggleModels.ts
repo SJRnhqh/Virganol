@@ -29,13 +29,16 @@ export const useToggleModels = (providerId: ProviderId) => {
       if (pendingRef.current) return;
       pendingRef.current = true;
 
+      // 记录回滚值（在 try 外部，确保 catch 可访问）
+      let previous: boolean | undefined;
+
       try {
         // getState() 绕过订阅拿最新快照，避免闭包过期
         const store = useProviderCollectionStore.getState();
         const current = store.byId[providerId].models;
 
-        // 计算 toggle 后的状态
-        const previous = current.enabled[model] ?? true;
+        // 计算 toggle 后的状态（信任后端数据，undefined 视为 false）
+        previous = current.enabled[model] ?? false;
 
         // 构造更新后的完整 enabled map，用于传给后端
         const nextEnabled = { ...current.enabled, [model]: !previous };
@@ -44,20 +47,32 @@ export const useToggleModels = (providerId: ProviderId) => {
         store.setModelEnabled(providerId, model, !previous);
 
         // 调用后端 API
-        const ok = await updateEnabledModels(
+        const response = await updateEnabledModels({
           providerId,
-          toEnabledList(nextEnabled),
-        );
+          enabledModels: toEnabledList(nextEnabled),
+        });
 
         // 失败回滚
-        if (!ok) {
+        if (!response.success) {
           useProviderCollectionStore
             .getState()
             .setModelEnabled(providerId, model, previous);
           console.error(
             `[React] rollback single model: ${providerId}/${model}`,
+            response.error,
           );
         }
+      } catch (error) {
+        // 异常回滚（网络错误、超时等）
+        if (previous !== undefined) {
+          useProviderCollectionStore
+            .getState()
+            .setModelEnabled(providerId, model, previous);
+        }
+        console.error(
+          `[React] exception during toggle single model: ${providerId}/${model}`,
+          error,
+        );
       } finally {
         pendingRef.current = false;
       }
@@ -70,16 +85,20 @@ export const useToggleModels = (providerId: ProviderId) => {
     if (pendingRef.current) return;
     pendingRef.current = true;
 
+    // 记录回滚值（在 try 外部，确保 catch 可访问）
+    let previousMap: Record<string, boolean> | undefined;
+
     try {
       const store = useProviderCollectionStore.getState();
       const current = store.byId[providerId].models;
 
       // 记录回滚值
-      const previousMap = { ...current.enabled };
+      previousMap = { ...current.enabled };
 
       // 计算 toggle 后的状态（全选 → 全不选，未全选 → 全选）
+      // 信任后端数据，undefined 视为 false
       const allSelected = current.available.every(
-        (model) => current.enabled[model],
+        (model) => current.enabled[model] ?? false,
       );
       const allEnabled = !allSelected;
 
@@ -88,16 +107,32 @@ export const useToggleModels = (providerId: ProviderId) => {
 
       // 调用后端 API
       const enabledList = allEnabled ? [...current.available] : [];
-      const ok = await updateEnabledModels(providerId, enabledList);
+      const response = await updateEnabledModels({
+        providerId,
+        enabledModels: enabledList,
+      });
 
       // 失败回滚
-      if (!ok) {
-        useProviderCollectionStore.getState().setProviderModels(providerId, {
-          available: current.available,
-          enabled: previousMap,
-        });
-        console.error(`[React] rollback all models: ${providerId}`);
+      if (!response.success) {
+        useProviderCollectionStore
+          .getState()
+          .setEnabledMap(providerId, previousMap);
+        console.error(
+          `[React] rollback all models: ${providerId}`,
+          response.error,
+        );
       }
+    } catch (error) {
+      // 异常回滚（网络错误、超时等）
+      if (previousMap !== undefined) {
+        useProviderCollectionStore
+          .getState()
+          .setEnabledMap(providerId, previousMap);
+      }
+      console.error(
+        `[React] exception during toggle all models: ${providerId}`,
+        error,
+      );
     } finally {
       pendingRef.current = false;
     }

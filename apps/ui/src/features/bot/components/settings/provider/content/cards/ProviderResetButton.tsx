@@ -10,6 +10,13 @@ import type { ProviderResetButtonProps } from "@/features/bot/types";
  * Provider 配置重置按钮
  *
  * 显示 "Reset" 文字 + Eraser 图标，用于配置管理区域
+ *
+ * TODO(post-0.0.1): 考虑添加确认对话框防止误触
+ * 当前 0.0.1 版本直接执行 reset，原因：
+ * - Reset 操作不常用，误触概率低
+ * - 数据可恢复（重新 connect 即可）
+ * - 简化交互，聚焦核心功能验证
+ * 后续若用户反馈误触问题，再添加确认对话框或原生 confirm()
  */
 export const ProviderResetButton = ({
   onClick,
@@ -18,7 +25,6 @@ export const ProviderResetButton = ({
   return (
     <button
       type="button"
-      aria-label="Reset provider configuration"
       onClick={() => {
         void onClick?.();
       }}

@@ -3,7 +3,8 @@
 use log::{debug, error, info};
 
 // 内部引用
-use crate::core::bot::models::HealthCheckResponse;
+use super::super::super::super::super::{HealthCheckResponse, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS};
+use super::get_http_client;
 
 const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
 
@@ -16,11 +17,12 @@ pub(super) async fn deepseek_check(key: &str) -> HealthCheckResponse {
     let endpoint = format!("{}/v1/models", DEEPSEEK_BASE_URL);
     info!("[Tauri][DeepSeek] → {}", endpoint);
 
-    // 每次调用新建 Client；provider 数量少时影响有限，规模扩展后可提升为 OnceLock<Client> 复用连接池。
-    let resp = match reqwest::Client::new()
+    let resp = match get_http_client()
         .get(&endpoint)
         .bearer_auth(key)
-        .timeout(std::time::Duration::from_secs(5))
+        .timeout(std::time::Duration::from_secs(
+            DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS,
+        ))
         .send()
         .await
     {

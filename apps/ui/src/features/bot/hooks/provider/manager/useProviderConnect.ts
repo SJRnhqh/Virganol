@@ -8,41 +8,64 @@ import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
 import { useProviderCollectionStore } from "@/features/bot/store";
 import { connectAndSaveProvider } from "@/features/bot/services";
 
+// TODO(post-0.0.1): 添加焦点管理
+// - Connect 成功后，焦点移到第一个模型或 Reset 按钮
+// - Connect 失败后，焦点保持在 Connect 按钮（方便重试）
+// - 需要通过 ref 或回调函数通知组件层进行焦点管理
+// 当前 0.0.1 版本不处理焦点，后续版本完善可访问性支持
+
 export const useProviderConnect = (providerId: ProviderId) => {
   return useCallback(
     async (formData: ProviderFormData) => {
       const store = useProviderCollectionStore.getState();
 
-      // 1. 设置为 pending 状态
-      store.updateProviderBatch(providerId, {
-        cardState: PROVIDER_CARD_STATES.PENDING,
-      });
+      // Guard：如果已有请求在执行中，直接返回（store 层 provider 级别锁）
+      if (store.byId[providerId].isPending) return;
 
-      // 2. 调用后端 API
-      const response = await connectAndSaveProvider({
-        providerId,
-        key: formData.apiKey ?? "",
-        url: formData.apiURL,
-      });
-
-      // 3. 根据结果批量更新状态
-      if (response.success) {
+      try {
+        // 1. 设置为 pending 状态并加锁
         store.updateProviderBatch(providerId, {
-          form: { apiKey: "" },
-          cardState: PROVIDER_CARD_STATES.CONNECTED,
-          models: {
-            available: response.available_models,
-            // TODO: 契约语义边界 — HealthCheckResponse 同时承载健康检查结果与模型状态，
-            //   需明确纯健康检查结果与模型推送之间的职责边界，待 Phase 6.1 拆分 ConnectResponse。
-            enabled: Object.fromEntries(
-              response.available_models.map((model) => [model, false]),
-            ),
-          },
+          cardState: PROVIDER_CARD_STATES.PENDING,
+          isPending: true,
         });
-      } else {
+
+        // 2. 调用后端 API
+        const response = await connectAndSaveProvider({
+          providerId,
+          key: formData.apiKey ?? "",
+          url: formData.apiURL,
+        });
+
+        // 3. 根据结果批量更新状态
+        if (response.success) {
+          store.updateProviderBatch(providerId, {
+            form: { apiKey: "" },
+            cardState: PROVIDER_CARD_STATES.CONNECTED,
+            models: {
+              available: response.availableModels,
+              enabled: Object.fromEntries(
+                response.availableModels.map((model) => [
+                  model,
+                  response.enabledModels.includes(model),
+                ]),
+              ),
+            },
+            isPending: false,
+          });
+        } else {
+          store.updateProviderBatch(providerId, {
+            cardState: PROVIDER_CARD_STATES.FAILED,
+            errorMessage: response.error ?? "Connection failed",
+            isPending: false,
+          });
+        }
+      } catch (error) {
+        // 4. 异常处理：确保解锁
         store.updateProviderBatch(providerId, {
           cardState: PROVIDER_CARD_STATES.FAILED,
-          errorMessage: response.error ?? "Connection failed",
+          errorMessage:
+            error instanceof Error ? error.message : "Unknown error",
+          isPending: false,
         });
       }
     },
