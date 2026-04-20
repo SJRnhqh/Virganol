@@ -121,5 +121,7 @@ LLM Provider 接入分为两条主线：
 - [ ] 生命周期收口（orphan failed 认领 / 事件名契约自动化）
 - [ ] 前端并发锁架构对齐：`useToggleModels` 从 hook 实例级 `useRef` 迁至 store 层 `isPending`（对齐 `useProviderConnect` 模式，消除架构不对称）
 - [ ] 后端异步执行架构对齐：Tauri commands 中的同步持久化调用（`reset_provider` / `update_enabled_models` 等）用 `tokio::task::spawn_blocking` 包裹，避免阻塞 tokio worker 线程（当前低频场景不会触发，为后台任务 / WebSocket 等 async 入口引入后预防 runtime 饥饿）
+- [ ] 后端锁实现升级：`store/lock.rs` 从 `std::sync::Mutex` 迁至 `parking_lot::Mutex` 或 Tauri `State<Mutex<T>>` 管理（消除 poisoning 风险 + 提速 + 提升可测试性）
+- [ ] 后端锁粒度细化：全局 `PROVIDERS_STORE_LOCK` 替换为 per-provider 锁（跨 provider 的 CRUD 可真并行，提高并发吞吐）
 - [ ] 集成测试补充
 - [ ] 功能开发完结

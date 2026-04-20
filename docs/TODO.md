@@ -44,8 +44,6 @@ Branch: `feat/spirit-crud-closeout`
 
 ### High (架构改进)
 
-- [ ] **store/lock.rs** - Migrate to Tauri State or parking_lot::Mutex (prevent poison, improve testability)
-- [ ] **Replace global PROVIDERS_STORE_LOCK** - Use per-provider locks (improve concurrency)
 - [x] **persistence.rs** - Add `File::sync_all()` + parent dir fsync before rename (ensure atomic write survives power loss)
 
 ### Medium (可靠性和性能)
