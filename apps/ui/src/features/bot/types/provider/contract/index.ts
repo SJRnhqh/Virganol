@@ -1,6 +1,9 @@
 // apps/ui/src/features/bot/types/provider/contract/index.ts
 // 导出内容
 
+// ── Provider 共享响应契约 ──
+export type { MutationResponse } from "./response";
+
 // ── Provider 生命周期事件 ──
 export type {
   ProviderIssue,
@@ -12,11 +15,20 @@ export type {
   ProviderCheckCompletedPayload,
 } from "./events";
 
-// ── Provider 命令与响应 ──
+// ── Provider Connect 契约 ──
 export type {
-  HealthCheckResponse,
   ConnectAndSaveProviderPayload,
-} from "./commands";
+  ConnectAndSaveProviderResponse,
+} from "./connect";
+
+// ── Provider Reset 契约 ──
+export type { ResetProviderResponse } from "./reset";
+
+// ── Provider Update 契约 ──
+export type {
+  UpdateEnabledModelsPayload,
+  UpdateEnabledModelsResponse,
+} from "./update";
 
 // ── Provider 持久化记录 ──
 export type { ProviderRecord } from "./record";

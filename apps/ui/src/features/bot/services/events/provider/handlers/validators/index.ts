@@ -3,3 +3,4 @@
 
 export { resolveRunDisposition } from "./runGuard";
 export { isActiveProviderId } from "./activeProviderGuard";
+export { isCardBusyForLifecycle } from "./cardStateGuard";

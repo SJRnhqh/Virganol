@@ -4,20 +4,22 @@ use log::{error, info};
 use tauri::AppHandle;
 
 // 内部引用
+use super::super::super::super::super::{ProviderId, ResetProviderResponse};
 use super::super::{load_provider_record, remove_provider, remove_provider_key, save_provider};
-use crate::core::bot::models::ProviderId;
 
 /// 重置 provider 的持久化配置
-pub(crate) fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) -> bool {
+pub(crate) fn reset_provider_config(
+    app: &AppHandle,
+    provider_id: ProviderId,
+) -> ResetProviderResponse {
     // 1) 先快照旧配置，供异常时回滚
     let previous_record = match load_provider_record(app, provider_id) {
         Ok(record) => record,
         Err(e) => {
-            error!(
-                "[Tauri] ❌ {} load previous config failed: {}",
-                provider_id, e
-            );
-            return false;
+            return ResetProviderResponse {
+                success: false,
+                error: Some(e.message()),
+            };
         }
     };
 
@@ -25,38 +27,39 @@ pub(crate) fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) ->
     let config_removed = match remove_provider(app, provider_id) {
         Ok(removed) => removed,
         Err(e) => {
-            error!(
-                "[Tauri] ❌ {} config remove persist failed: {}",
-                provider_id,
-                e.message()
-            );
-            return false;
+            return ResetProviderResponse {
+                success: false,
+                error: Some(e.message()),
+            };
         }
     };
 
     if !config_removed {
-        log::warn!(
-            "[Tauri] ⚠️ {} config not found, already clean",
-            provider_id
-        );
-        return true; // 幂等：目标状态已达成
+        log::warn!("[Tauri] ⚠️ {} config not found, already clean", provider_id);
+        // 幂等闭环：config 虽已不存在，仍尝试清理可能残留的 keyring 孤儿条目。
+        // remove_provider_key 对 NoEntry 已幂等，仅真实失败时才需上报。
+        if let Err(e) = remove_provider_key(provider_id) {
+            return ResetProviderResponse {
+                success: false,
+                error: Some(e.message()),
+            };
+        }
+        return ResetProviderResponse {
+            success: true,
+            error: None,
+        };
     }
 
     // 3) 再删除系统密钥库中的 key（幂等：不存在也应算成功）
-    let key_removed = match remove_provider_key(provider_id) {
-        Ok(()) => true,
-        Err(e) => {
-            error!(
-                "[Tauri] ❌ {} key remove failed: {}",
-                provider_id,
-                e.message()
-            );
-            false
-        }
+    let (key_removed, key_error) = match remove_provider_key(provider_id) {
+        Ok(()) => (true, None),
+        Err(e) => (false, Some(e.message())),
     };
 
     // 4) key 删除失败时，回滚已删除的配置
     if config_removed && !key_removed {
+        let mut final_error = key_error;
+
         if let Some(record) = previous_record.as_ref() {
             if let Err(e) = save_provider(app, provider_id, record) {
                 error!(
@@ -64,12 +67,26 @@ pub(crate) fn reset_provider_config(app: &AppHandle, provider_id: ProviderId) ->
                     provider_id,
                     e.message()
                 );
+                // 回滚失败 → 严重错误
+                final_error = Some(format!(
+                    "Reset failed with inconsistent state: key removal failed and config rollback also failed ({})",
+                    e.message()
+                ));
             } else {
                 info!("[Tauri] ↩️ {} config rollback completed", provider_id);
+                // 回滚成功 → 保持原 key_error
             }
         }
+
+        return ResetProviderResponse {
+            success: false,
+            error: final_error,
+        };
     }
 
-    // 5) 两者都成功才返回 true
-    config_removed && key_removed
+    // 5) 两者都成功
+    ResetProviderResponse {
+        success: true,
+        error: None,
+    }
 }

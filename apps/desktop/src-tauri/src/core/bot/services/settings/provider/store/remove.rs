@@ -3,10 +3,9 @@
 use tauri::AppHandle;
 
 // 内部引用
+use super::super::super::super::super::{ProviderError, ProviderId, SPIRIT_PROVIDERS_KEY};
 use super::super::super::save_settings;
 use super::{load_all_providers, PROVIDERS_STORE_LOCK};
-use crate::core::bot::constants::SPIRIT_PROVIDERS_KEY;
-use crate::core::bot::models::{ProviderError, ProviderId};
 
 /// 删除某个 provider 的配置
 /// - Ok(true)：删除成功

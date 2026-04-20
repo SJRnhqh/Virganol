@@ -71,6 +71,13 @@ export const ProviderConnectedPanel = ({
         </div>
 
         {/* 模型列表内容 */}
+        {/* TODO(post-0.0.1): 添加键盘导航支持
+         * - 给每个模型项添加 tabIndex={0} 使其可聚焦
+         * - 添加 onKeyDown 处理 Enter/Space 键切换模型
+         * - 添加 role="checkbox" 和 aria-checked 属性
+         * - 添加焦点样式（focus ring）
+         * 当前 0.0.1 版本仅支持鼠标操作，后续版本完善可访问性支持
+         */}
         <div className="divide-y divide-dashed divide-settings-panel-fg/15">
           {modelItems.map(({ name, checked }) => {
             return (

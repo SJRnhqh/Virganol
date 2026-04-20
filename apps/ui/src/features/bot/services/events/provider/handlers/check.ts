@@ -22,7 +22,11 @@ import {
   scheduleCheckCompleted,
   scheduleCheckFailed,
 } from "./schedulers";
-import { isActiveProviderId, resolveRunDisposition } from "./validators";
+import {
+  isActiveProviderId,
+  isCardBusyForLifecycle,
+  resolveRunDisposition,
+} from "./validators";
 
 /** 统一释放 handler 内部调度资源，供 listen 在会话 teardown 时调用。 */
 export function disposeProviderCheckHandlers() {
@@ -61,6 +65,12 @@ export function handleProviderStatus(payload: ProviderStatusPayload) {
 
   if (!isActiveProviderId(provider)) {
     console.warn(`[React] inactive runtime provider ignored: ${provider}`);
+    return;
+  }
+
+  // 卡片由用户主动 connect 占用（PENDING）时，不让 lifecycle 事件抢占其 cardState，
+  // 避免视觉闪烁；connect 流程自己会在结束时写回最终状态。
+  if (isCardBusyForLifecycle(provider)) {
     return;
   }
 

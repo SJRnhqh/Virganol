@@ -2,4 +2,4 @@
 // 导出内容
 mod provider;
 
-pub(crate) use provider::{DriverFuture, ProviderDriver};
+pub(super) use provider::{DriverFuture, ProviderDriver};

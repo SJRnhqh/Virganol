@@ -8,15 +8,19 @@ export type {
   ProviderId,
 
   // ── Provider 契约类型 ──
+  MutationResponse,
   ProviderIssue,
   ProviderCheckEvent,
   ProviderCheckTrigger,
-  HealthCheckResponse,
   ProviderStatusPayload,
+  ResetProviderResponse,
+  UpdateEnabledModelsPayload,
+  UpdateEnabledModelsResponse,
   ProviderCheckFailedPayload,
   ProviderCheckStartedPayload,
   ProviderCheckCompletedPayload,
   ConnectAndSaveProviderPayload,
+  ConnectAndSaveProviderResponse,
 
   // ── Provider 状态类型 ──
   ProviderState,
@@ -37,7 +41,6 @@ export type {
   WithProviderId,
   WithProviderForm,
   ProviderFormProps,
-  ProviderFailedContent,
   ProviderErrorPanelProps,
   ProviderCardProps,
   ProviderCardContentProps,

@@ -2,24 +2,6 @@
 // 外部依赖
 use serde::{Deserialize, Serialize};
 
-// 内部引用
-use super::ProviderId;
-
-/// Request payload for connecting and saving a provider.
-///
-/// 前端发起 `connect_and_save_provider` 的请求契约。
-///
-/// - `provider_id`: Required / 必填
-/// - `key`: Required (empty string allowed) / 必填（允许空字符串）
-/// - `url`: Optional (None/empty string treated as "not provided") / 可选（None/空字符串都按“未传”处理）
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ConnectAndSaveProviderRequest {
-    pub provider_id: ProviderId,
-    pub key: String,
-    pub url: Option<String>,
-}
-
 /// 健康检查的返回结果
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HealthCheckResponse {

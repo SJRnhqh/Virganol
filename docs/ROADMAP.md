@@ -65,32 +65,35 @@ LLM Provider 接入分为两条主线：
 
 **功能正确性**：
 
-- [ ] `useToggleModels` - 添加 pendingRef 锁超时机制（防止 API 卡住导致界面永久锁定）
-- [ ] `useProviderConnect` - connect 成功后清空 form（apiKey + apiURL，防止敏感数据残留）
-
-**用户体验优化**：
-
-- [ ] `ProviderForm` - 添加输入验证（URL 格式 / 必填字段 / 实时反馈）
-- [ ] `ProviderConnectionButton` - 添加加载动画（pending 状态视觉反馈）
+- [x] `useProviderConnect` - 添加 pending state guard（防止并发操作）
+- [x] `useProviderConnect` - 将并发锁从 hook 层移至 store 层（防止跨实例竞态）
+- [x] `useToggleModels` - 修复默认模型状态不一致（前端 `?? false` 对齐后端逻辑）
+- [x] `persistence.rs` - 实现原子写入（temp file + rename）防止崩溃时文件损坏
 
 **代码质量优化**：
 
-- [ ] `useProvider` - 补全 onUpdate callback 依赖数组（避免闭包过期）
+- [x] `useProvider` - 补全 onUpdate callback 依赖数组（避免闭包过期）
+- [x] `useToggleModels` - 优化回滚逻辑，只更新 enabled 状态（添加 setEnabledMap 方法，避免全量更新）
 - [ ] `useProviderCollectionStore` - 添加状态转换验证（updateProviderBatch 防御性编程）
-- [ ] Check service - 添加运行时检查防止多次启动调用（资源优化）
 
 **后端优化**：
 
-- [ ] 提取 key rollback 逻辑为独立函数（提高可测试性）
-- [ ] reset 链路添加重试机制和详细状态（提高可靠性）
-- [ ] 持久化层添加缓存（减少 I/O 读写放大）
-- [ ] 健康检查添加超时控制（防止无限等待）
+- [x] 提取 key rollback 逻辑为独立函数（提高可测试性）
+- [x] reset 链路区分回滚失败的严重错误（回滚成功返回普通错误，回滚失败返回 inconsistent state 严重错误）
+- [x] 持久化层实现原子写入（temp file + rename 模式，防止崩溃导致文件损坏）
+- [x] 健康检查超时配置化（使用 constants 层管理，per-provider 差异化配置）
+- [x] HTTP 客户端连接池复用（使用 `OnceLock<Client>` 全局共享，减少连接建立开销）
+- [ ] Provider 级别锁优化（per-provider 串行化 connect，提高并发性能）
 
 **契约升级**：
 
-- [ ] `connect_and_save` 返回专用 `ConnectResponse`（含 enabled_models），不复用 `HealthCheckResponse`
-- [ ] `resetProvider` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
-- [ ] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
+- [x] `connect_and_save` 返回专用 `ConnectAndSaveProviderResponse`（含 enabled_models）
+- [x] `HealthCheckResponse` 职责收窄至健康检查结果（仅内部使用）
+- [x] 后端契约结构重构：创建 `contract/connect.rs` 管理前后端契约
+- [x] 前端契约结构重构：创建 `contract/connect.ts` 镜像后端结构
+- [x] 前端启用模型状态：使用后端 `enabledModels` 替代硬编码 false
+- [x] `resetProvider` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
+- [x] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
 
 ### 🚧 Phase 6：全局优化与收尾
 
@@ -100,31 +103,25 @@ LLM Provider 接入分为两条主线：
 - [ ] 扩展 `HealthCheckResponse` 添加 `error_code` 字段
 - [ ] 前端适配细粒度错误展示
 - [ ] 区分系统错误（io/serde）与业务错误
+- [ ] 契约序列化命名统一 camelCase（`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload` 补齐 serde rename，前端 types 同步）
+- [ ] `ProviderError` 错误链可追溯化（改用 `thiserror` 派生 `Display` / `Error` / `From`，修复 `source()` 空实现导致的 `serde_json::Error` 底层信息无法透出，为 Phase 6.2 日志链完整打印打基础）
 
 #### 6.2 日志与中间件统一化
 
 - [ ] 后端日志格式标准化（级别 / 结构 / 上下文）
 - [ ] 前端错误边界与中间件设计
 - [ ] 日志采集与监控接入点规划
+- [ ] 前端 CRUD 操作日志优化（仅记录超过阈值的慢操作，减少日志噪音）
 
-#### 6.3 性能优化
+#### 6.3 收尾与验证
 
-- [ ] HTTP 客户端连接池复用（`OnceLock<Client>`）
-- [ ] 超时配置化（5s 硬编码改为可配置）
-- [ ] Provider 级别锁优化（per-provider 串行化 connect）
-- [ ] 持久化层缓存优化（`ProvidersStore` cache）
-- [ ] 键生成策略统一（`save_provider` 使用 `to_string()`，`remove_provider` / `update_models` 使用 `as_str()`，存在不一致风险）
-
-#### 6.4 收尾与验证
-
+- [ ] 表单输入验证（`ProviderForm` 添加实时验证：URL 格式检查 / 必填字段提示 / 错误状态视觉反馈，提升用户输入体验）
+- [ ] 请求取消机制（添加 AbortController 在组件卸载时取消飞行中的 API 请求，防止内存泄漏警告）
 - [ ] 安全审计（`secret_meta` 前端消费 / Provider 支持范围收敛 / invoke 暴露面审计）
 - [ ] 生命周期收口（orphan failed 认领 / 事件名契约自动化）
+- [ ] 前端并发锁架构对齐：`useToggleModels` 从 hook 实例级 `useRef` 迁至 store 层 `isPending`（对齐 `useProviderConnect` 模式，消除架构不对称）
+- [ ] 后端异步执行架构对齐：Tauri commands 中的同步持久化调用（`reset_provider` / `update_enabled_models` 等）用 `tokio::task::spawn_blocking` 包裹，避免阻塞 tokio worker 线程（当前低频场景不会触发，为后台任务 / WebSocket 等 async 入口引入后预防 runtime 饥饿）
+- [ ] 后端锁实现升级：`store/lock.rs` 从 `std::sync::Mutex` 迁至 `parking_lot::Mutex` 或 Tauri `State<Mutex<T>>` 管理（消除 poisoning 风险 + 提速 + 提升可测试性）
+- [ ] 后端锁粒度细化：全局 `PROVIDERS_STORE_LOCK` 替换为 per-provider 锁（跨 provider 的 CRUD 可真并行，提高并发吞吐）
 - [ ] 集成测试补充
 - [ ] 功能开发完结
-
----
-
-## 备注
-
-- Phase 5-6 非严格串行，前端适配过程中可能回头调整后端细节
-- 错误精细化与日志统一化为全局性改造，需等 CRUD 三条链路审查完成后统一推进
