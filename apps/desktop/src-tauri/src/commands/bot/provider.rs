@@ -1,8 +1,6 @@
 // apps/desktop/src-tauri/src/commands/bot/provider.rs
-// 外部依赖
 use tauri::AppHandle;
 
-// 内部引用
 use crate::core::bot::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,
     update_provider_enabled_models, ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse,
@@ -26,7 +24,9 @@ pub(crate) async fn trigger_provider_manual_refresh(app: AppHandle) {
     check_providers_lifecycle(app, ProviderCheckTrigger::ManualRefresh).await;
 }
 
-/// 前端点击"连接"时调用：健康检查 + 成功则持久化
+/// Connects to a provider and saves the configuration if health check succeeds.
+///
+/// 连接 Provider 并在健康检查成功后持久化配置。
 #[tauri::command]
 pub(crate) async fn connect_and_save_provider(
     app: AppHandle,
@@ -36,7 +36,9 @@ pub(crate) async fn connect_and_save_provider(
     connect_and_save(&app, payload.provider_id, &payload.key, url).await
 }
 
-/// 前端点击删除时调用：移除一个 Provider 配置
+/// Resets a provider by removing its configuration.
+///
+/// 重置 Provider，移除其配置。
 #[tauri::command]
 pub(crate) async fn reset_provider(
     app: AppHandle,
@@ -45,7 +47,9 @@ pub(crate) async fn reset_provider(
     reset_provider_config(&app, provider_id)
 }
 
-/// 前端勾选模型后调用：更新 enabled_models
+/// Updates the enabled models for a provider.
+///
+/// 更新 Provider 的已启用模型列表。
 #[tauri::command]
 pub(crate) async fn update_enabled_models(
     app: AppHandle,

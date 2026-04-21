@@ -7,6 +7,10 @@ mod tmp;
 use std::sync::Arc;
 use tauri::RunEvent;
 
+use commands::{
+    connect_and_save_provider, reset_provider, trigger_provider_manual_refresh,
+    trigger_provider_startup_check, update_enabled_models,
+};
 use core::manager::{SidecarManager, SidecarState};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -39,12 +43,13 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            // Bot Provider 相关的命令
-            commands::bot::provider::trigger_provider_startup_check,
-            commands::bot::provider::trigger_provider_manual_refresh,
-            commands::bot::provider::connect_and_save_provider,
-            commands::bot::provider::reset_provider,
-            commands::bot::provider::update_enabled_models,
+            // Bot 相关的命令
+            // LLM Provider 持久化配置
+            trigger_provider_startup_check,
+            trigger_provider_manual_refresh,
+            connect_and_save_provider,
+            reset_provider,
+            update_enabled_models,
             // SSH 命令
             tmp::ssh::test_ssh_params,
             // PTY 命令
