@@ -35,34 +35,59 @@ LLM Provider 接入分为两条主线：
 
 - Provider 级别锁优化（per-provider 串行化 connect，提高并发性能）
 
-### 🚧 Phase 6：全局优化与收尾
+### 🚧 Phase 6：错误精细化与全局收尾
 
-#### 6.1 契约语义与错误精细化
+#### 6.1 错误精细化（交互式 CRUD）
 
-- [ ] 健康检查错误细分（网络不可达 / 认证失败 / 超时 / 响应格式错误）
+按命令链路逐个审查：update_models → reset → connect
+
+- [ ] 扩展 `ProviderErrorCode`（健康检查错误：网络不可达 / 认证失败 / 超时 / 响应格式错误）
+- [ ] 迁移 `ProviderError` 至 `thiserror`（修复 `source()` 空实现，错误链可追溯）
 - [ ] 扩展 `HealthCheckResponse` 添加 `error_code` 字段
-- [ ] 前端适配细粒度错误展示
-- [ ] 区分系统错误（io/serde）与业务错误
-- [ ] 契约序列化命名统一 camelCase（`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload` 补齐 serde rename，前端 types 同步）
-- [ ] `ProviderError` 错误链可追溯化（改用 `thiserror` 派生 `Display` / `Error` / `From`，修复 `source()` 空实现导致的 `serde_json::Error` 底层信息无法透出，为 Phase 6.2 日志链完整打印打基础）
+- [ ] 区分系统错误（io/serde/keyring）与业务错误（network/auth/timeout/format）
+- [ ] 统一错误响应契约（code / message / details / trace_id）
+- [ ] 契约序列化命名统一 camelCase（`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload`）
+- [ ] 单元测试覆盖各命令链路错误场景
 
-#### 6.2 日志与中间件统一化
+#### 6.2 错误精细化（生命周期）
 
-- [ ] 后端日志格式标准化（级别 / 结构 / 上下文）
-- [ ] 前端错误边界与中间件设计
-- [ ] 日志采集与监控接入点规划
-- [ ] 前端 CRUD 操作日志优化（仅记录超过阈值的慢操作，减少日志噪音）
+审查 startup_check 和 manual_refresh 链路
 
-#### 6.3 收尾与验证
+- [ ] 复查现有错误处理完整性
+- [ ] 补充边界场景单元测试
 
-- [ ] `useProviderCollectionStore` - 添加状态转换验证（updateProviderBatch 防御性编程）
-- [ ] 表单输入验证（`ProviderForm` 添加实时验证：URL 格式检查 / 必填字段提示 / 错误状态视觉反馈，提升用户输入体验）
-- [ ] 请求取消机制（添加 AbortController 在组件卸载时取消飞行中的 API 请求，防止内存泄漏警告）
+#### 6.3 前端错误系统
+
+- [ ] 同步前端错误类型（镜像后端 `ProviderErrorCode`）
+- [ ] 适配细粒度错误展示（按错误码差异化 UI 反馈）
+- [ ] 设计错误展示组件（Toast / inline 错误消息）
+
+#### 6.4 日志系统（错误精细化完成后）
+
+- [ ] 设计日志持久化策略（文件轮转 / 结构化格式）
+- [ ] 定义日志埋点（CRUD 入口/出口、健康检查、持久化操作、错误路径）
+- [ ] 标准化日志格式（级别 / 时间戳 / 模块 / 消息 / 上下文）
+- [ ] 添加结构化上下文（trace_id / operation_id / provider_id / error_code）
+- [ ] 实现日志级别策略（info 成功 / warn 可重试 / error 致命）
+- [ ] 前端日志策略（dev 用 console / prod 用上报）
+- [ ] trace_id 生成与传播（后端 → 前端）
+
+#### 6.5 集成测试与验证
+
+- [ ] 5 条命令链路端到端集成测试
+- [ ] 错误传播链路验证
+- [ ] 错误响应契约验证
+- [ ] 日志输出验证（如 Phase 6.4 完成）
+
+#### 6.6 收尾优化
+
+- [ ] 前端状态转换验证（`useProviderCollectionStore` 防御性编程）
+- [ ] 表单输入验证（URL 格式检查 / 必填字段提示 / 错误状态视觉反馈）
+- [ ] 请求取消机制（AbortController 防止内存泄漏）
 - [ ] 安全审计（`secret_meta` 前端消费 / Provider 支持范围收敛 / invoke 暴露面审计）
 - [ ] 生命周期收口（orphan failed 认领 / 事件名契约自动化）
-- [ ] 前端并发锁架构对齐：`useToggleModels` 从 hook 实例级 `useRef` 迁至 store 层 `isPending`（对齐 `useProviderConnect` 模式，消除架构不对称）
-- [ ] 后端异步执行架构对齐：Tauri commands 中的同步持久化调用（`reset_provider` / `update_enabled_models` 等）用 `tokio::task::spawn_blocking` 包裹，避免阻塞 tokio worker 线程（当前低频场景不会触发，为后台任务 / WebSocket 等 async 入口引入后预防 runtime 饥饿）
-- [ ] 后端锁实现升级：`store/lock.rs` 从 `std::sync::Mutex` 迁至 `parking_lot::Mutex` 或 Tauri `State<Mutex<T>>` 管理（消除 poisoning 风险 + 提速 + 提升可测试性）
-- [ ] 后端锁粒度细化：全局 `PROVIDERS_STORE_LOCK` 替换为 per-provider 锁（跨 provider 的 CRUD 可真并行，提高并发吞吐）
-- [ ] 集成测试补充
+- [ ] 前端并发锁架构对齐（`useToggleModels` 迁至 store 层 `isPending`）
+- [ ] 后端异步执行架构对齐（同步持久化调用用 `tokio::task::spawn_blocking` 包裹）
+- [ ] 后端锁实现升级（`std::sync::Mutex` → `parking_lot::Mutex`）
+- [ ] 后端锁粒度细化（全局锁 → per-provider 锁）
 - [ ] 功能开发完结
