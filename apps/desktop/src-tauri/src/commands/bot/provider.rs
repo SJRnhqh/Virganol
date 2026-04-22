@@ -55,5 +55,5 @@ pub(crate) async fn update_enabled_models(
     app: AppHandle,
     payload: UpdateEnabledModelsRequest,
 ) -> UpdateEnabledModelsResponse {
-    update_provider_enabled_models(&app, payload.provider_id, payload.enabled_models)
+    update_provider_enabled_models(&app, payload.provider_id, payload.data.enabled_models)
 }
