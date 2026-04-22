@@ -1,7 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/contract/reset.rs
-// 外部依赖
 use serde::Serialize;
 
+/// Response for resetting a provider.
+///
+/// 重置 Provider 的响应。
 #[derive(Debug, Serialize)]
 pub(crate) struct ResetProviderResponse {
     pub success: bool,

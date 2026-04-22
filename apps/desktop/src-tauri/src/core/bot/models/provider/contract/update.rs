@@ -1,11 +1,12 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/contract/update.rs
-// 外部依赖
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
-// 内部引用
 use super::super::ProviderId;
+use super::ProviderCommandResponse;
 
-/** 对应前端 UpdateEnabledModelsPayload */
+/// Request payload for updating enabled models.
+///
+/// 更新已启用模型列表的请求载荷。
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct UpdateEnabledModelsRequest {
@@ -13,9 +14,7 @@ pub(crate) struct UpdateEnabledModelsRequest {
     pub enabled_models: Vec<String>,
 }
 
-/** 对应前端 UpdateEnabledModelsResponse */
-#[derive(Debug, Serialize)]
-pub(crate) struct UpdateEnabledModelsResponse {
-    pub success: bool,
-    pub error: Option<String>,
-}
+/// Response for updating enabled models.
+///
+/// 更新已启用模型列表的响应。
+pub(crate) type UpdateEnabledModelsResponse = ProviderCommandResponse;
