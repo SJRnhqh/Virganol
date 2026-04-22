@@ -39,6 +39,7 @@ ssh2 = { version = "0.9", features = ["vendored-openssl"] }
 portable-pty = "0.8"
 directories = "5.0"
 zeroize = "1"
+parking_lot = "0.12"
 
 # --- 平台差异化依赖 ---
 [target.'cfg(target_os = "macos")'.dependencies]

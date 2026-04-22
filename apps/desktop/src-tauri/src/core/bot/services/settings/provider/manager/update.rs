@@ -12,12 +12,12 @@ use super::super::update_models;
 /// 更新某个 provider 的 enabled_models。
 pub(crate) fn update_provider_enabled_models(
     app: &AppHandle,
-    _provider_state: &ProviderState,
+    provider_state: &ProviderState,
     request: UpdateEnabledModelsRequest,
 ) -> UpdateEnabledModelsResponse {
     let UpdateEnabledModelsRequest { provider_id, data } = request;
 
-    match update_models(app, provider_id, data.enabled_models) {
+    match update_models(app, provider_state, provider_id, data.enabled_models) {
         Ok(true) => {
             info!("[Tauri] ✅ {} enabled_models updated", provider_id);
             UpdateEnabledModelsResponse::success()
