@@ -5,7 +5,7 @@ pub mod provider;
 pub(crate) use provider::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckCompletedPayload,
     ProviderCheckFailedPayload, ProviderCheckStartedPayload, ProviderCheckTrigger, ProviderId,
-    ProviderIssue, ProviderKeySource, ProviderSecretMeta, ProviderStatusPayload,
+    ProviderIssue, ProviderKeySource, ProviderSecretMeta, ProviderState, ProviderStatusPayload,
     ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
 pub(super) use provider::{

@@ -12,6 +12,7 @@ pub(self) use constants::{
 };
 pub(self) use helpers::{compute_enabled_models, reorder_enabled_models};
 pub(self) use interfaces::{DriverFuture, ProviderDriver};
+pub(super) use models::ProviderState;
 pub(crate) use models::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckTrigger,
     ProviderId, ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,

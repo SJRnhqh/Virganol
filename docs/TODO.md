@@ -53,6 +53,8 @@ Error refinement and logging system optimization for LLM Provider configuration 
 
 #### 6.1.4: Error System Foundation
 
+- [x] Introduce AppState and ProviderState architecture for global state management
+- [ ] Migrate static lock to ProviderState.store_lock (replace PROVIDERS_STORE_LOCK)
 - [ ] Distinguish system errors (io/serde/keyring) from business errors (network/auth/timeout/format)
 - [ ] Define unified error response contract (code / message / details / trace_id)
 - [ ] Unify contract serialization to camelCase (`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload`)

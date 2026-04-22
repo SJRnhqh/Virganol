@@ -1,8 +1,18 @@
 // apps/desktop/src-tauri/src/core/mod.rs
 
-pub(crate) mod bot;
+mod bot;
 pub(crate) mod manager;
 pub(crate) mod rpc;
+mod shared;
+
+pub(self) use bot::ProviderState;
+pub(super) use bot::{
+    check_providers_lifecycle, connect_and_save, reset_provider_config,
+    update_provider_enabled_models, ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse,
+    ProviderCheckTrigger, ProviderId, ResetProviderResponse, UpdateEnabledModelsRequest,
+    UpdateEnabledModelsResponse,
+};
+pub(super) use shared::AppState;
 
 use tauri::AppHandle;
 use tauri::Manager;

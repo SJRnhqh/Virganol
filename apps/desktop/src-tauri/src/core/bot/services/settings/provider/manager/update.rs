@@ -2,7 +2,9 @@
 use log::{info, warn};
 use tauri::AppHandle;
 
-use super::super::super::super::super::{UpdateEnabledModelsRequest, UpdateEnabledModelsResponse};
+use super::super::super::super::super::{
+    ProviderState, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
+};
 use super::super::update_models;
 
 /// Updates enabled models for a provider.
@@ -10,6 +12,7 @@ use super::super::update_models;
 /// 更新某个 provider 的 enabled_models。
 pub(crate) fn update_provider_enabled_models(
     app: &AppHandle,
+    _provider_state: &ProviderState,
     request: UpdateEnabledModelsRequest,
 ) -> UpdateEnabledModelsResponse {
     let UpdateEnabledModelsRequest { provider_id, data } = request;
