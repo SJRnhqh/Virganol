@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/update.rs
-use log::{info, warn};
 use tauri::AppHandle;
 
 use super::super::super::super::super::{
@@ -18,17 +17,7 @@ pub(crate) fn update_provider_enabled_models(
     let UpdateEnabledModelsRequest { provider_id, data } = request;
 
     match update_models(app, provider_state, provider_id, data.enabled_models) {
-        Ok(true) => {
-            info!("[Tauri] ✅ {} enabled_models updated", provider_id);
-            UpdateEnabledModelsResponse::success()
-        }
-        Ok(false) => {
-            warn!(
-                "[Tauri] ⚠️ {} enabled_models update skipped (provider not found)",
-                provider_id
-            );
-            UpdateEnabledModelsResponse::success()
-        }
+        Ok(()) => UpdateEnabledModelsResponse::success(),
         Err(e) => UpdateEnabledModelsResponse::failure(e.message()),
     }
 }
