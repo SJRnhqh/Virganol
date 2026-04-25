@@ -3,4 +3,5 @@ mod load;
 mod save;
 
 pub(crate) use load::load_settings;
+pub(self) use load::open_store;
 pub(crate) use save::save_settings;

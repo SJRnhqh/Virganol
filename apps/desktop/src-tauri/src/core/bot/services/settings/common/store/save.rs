@@ -3,9 +3,9 @@ use std::fs::{self, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use tauri::{AppHandle, Manager};
-use tauri_plugin_store::StoreExt;
 
 use super::super::super::super::super::{ProviderError, SETTINGS_FILE};
+use super::open_store;
 
 /// Gets store file path and temporary file path.
 ///
@@ -71,9 +71,7 @@ pub(crate) fn save_settings(
     key: &str,
     value: serde_json::Value,
 ) -> Result<(), ProviderError> {
-    let store = app
-        .store(SETTINGS_FILE)
-        .map_err(|error| ProviderError::Io(format!("open settings store failed: {}", error)))?;
+    let store = open_store(app)?;
 
     store.set(key, value);
 
