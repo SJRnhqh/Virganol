@@ -1,0 +1,86 @@
+// apps/desktop/src-tauri/src/core/bot/services/settings/common/store/save.rs
+use std::fs::{self, File};
+use std::io::Write;
+use std::path::{Path, PathBuf};
+use tauri::{AppHandle, Manager};
+use tauri_plugin_store::StoreExt;
+
+use super::super::super::super::super::{ProviderError, SETTINGS_FILE};
+
+/// Gets store file path and temporary file path.
+///
+/// 获取 store 文件路径和临时文件路径。
+fn get_store_paths(app: &AppHandle) -> Result<(PathBuf, PathBuf), ProviderError> {
+    let store_path = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| ProviderError::Io(format!("get app data dir failed: {}", e)))?
+        .join(SETTINGS_FILE);
+
+    let tmp_path = store_path.with_file_name(format!("{}.tmp", SETTINGS_FILE));
+    Ok((store_path, tmp_path))
+}
+
+/// Serializes store entries to JSON bytes.
+///
+/// 将 store 条目序列化为 JSON 字节。
+fn serialize_store_to_bytes(
+    store: &tauri_plugin_store::Store<tauri::Wry>,
+) -> Result<Vec<u8>, ProviderError> {
+    let all_data: std::collections::HashMap<String, serde_json::Value> = store
+        .entries()
+        .iter()
+        .map(|(k, v)| (k.clone(), v.clone()))
+        .collect();
+
+    Ok(serde_json::to_vec_pretty(&all_data)?)
+}
+
+/// Performs atomic write using temp file + rename strategy.
+///
+/// 使用临时文件 + rename 策略执行原子写入。
+fn atomic_write(store_path: &Path, tmp_path: &Path, data: &[u8]) -> Result<(), ProviderError> {
+    {
+        let mut file = File::create(tmp_path)
+            .map_err(|e| ProviderError::Io(format!("create temp file failed: {}", e)))?;
+        file.write_all(data)
+            .map_err(|e| ProviderError::Io(format!("write temp file failed: {}", e)))?;
+        file.sync_all()
+            .map_err(|e| ProviderError::Io(format!("fsync temp file failed: {}", e)))?;
+    }
+
+    if let Err(e) = fs::rename(tmp_path, store_path) {
+        let _ = fs::remove_file(tmp_path);
+        return Err(ProviderError::Io(format!("atomic rename failed: {}", e)));
+    }
+
+    if let Some(parent) = store_path.parent() {
+        if let Ok(dir) = File::open(parent) {
+            let _ = dir.sync_all();
+        }
+    }
+
+    Ok(())
+}
+
+/// Saves a JSON value to settings.json by key (upsert semantics).
+///
+/// 将 JSON 值写入 settings.json 的指定 key（upsert 语义）。
+pub(crate) fn save_settings(
+    app: &AppHandle,
+    key: &str,
+    value: serde_json::Value,
+) -> Result<(), ProviderError> {
+    let store = app
+        .store(SETTINGS_FILE)
+        .map_err(|error| ProviderError::Io(format!("open settings store failed: {}", error)))?;
+
+    store.set(key, value);
+
+    let (store_path, tmp_path) = get_store_paths(app)?;
+    let json_bytes = serialize_store_to_bytes(&store)?;
+
+    atomic_write(&store_path, &tmp_path, &json_bytes)?;
+
+    Ok(())
+}
