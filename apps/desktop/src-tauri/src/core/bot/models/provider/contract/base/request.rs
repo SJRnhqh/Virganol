@@ -8,7 +8,7 @@ use super::super::super::ProviderId;
 /// Provider 命令的通用请求结构。
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct ProviderCommandRequest<T> {
+pub(crate) struct ProviderCommandRequest<T = ()> {
     /// Target provider ID.
     ///
     /// 目标 Provider ID。
@@ -17,5 +17,6 @@ pub(crate) struct ProviderCommandRequest<T> {
     /// Operation-specific payload.
     ///
     /// 特定操作的载荷数据。
-    pub(crate) data: T,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub(crate) data: Option<T>,
 }

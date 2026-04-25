@@ -7,4 +7,4 @@ mod reset;
 pub(self) use base::{ProviderCommandRequest, ProviderCommandResponse};
 pub(crate) use connect::{ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse};
 pub(crate) use manager::{UpdateEnabledModelsRequest, UpdateEnabledModelsResponse};
-pub(crate) use reset::ResetProviderResponse;
+pub(crate) use reset::{ResetProviderRequest, ResetProviderResponse};

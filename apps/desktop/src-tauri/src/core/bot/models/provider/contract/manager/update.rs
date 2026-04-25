@@ -6,9 +6,10 @@ use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 /// Data payload for updating enabled models.
 ///
 /// 更新已启用模型列表的数据载荷。
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct UpdateEnabledModelsData {
+    #[serde(default)]
     pub(crate) enabled_models: Vec<String>,
 }
 

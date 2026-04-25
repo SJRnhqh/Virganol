@@ -18,8 +18,8 @@ pub use check::{
 pub(crate) use common::ProviderState;
 pub use connection::HealthCheckResponse;
 pub(crate) use contract::{
-    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderResponse,
-    UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderRequest,
+    ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
 pub use error::{ProviderError, ProviderErrorCode, ProviderIssue, SkippedProviderDetail};
 pub use id::ProviderId;
