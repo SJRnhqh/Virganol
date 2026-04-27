@@ -2,13 +2,11 @@
 // 导出内容
 mod config;
 mod load;
-mod lock;
 mod save;
 
 pub(super) use config::{remove_provider, update_models};
 pub(self) use load::load_all_providers;
 pub(super) use load::{load_provider_record, load_supported_providers};
-pub(self) use lock::PROVIDERS_STORE_LOCK;
 pub(super) use save::save_provider;
 
 // TODO(post-0.0.1): 考虑添加内存缓存层减少 I/O 放大

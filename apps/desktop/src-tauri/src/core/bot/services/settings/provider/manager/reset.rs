@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/reset.rs
-use log::{error, info};
 use tauri::AppHandle;
 
 use super::super::super::super::super::{
@@ -31,18 +30,9 @@ pub(crate) fn reset_provider_config(
 
     if let Err(e) = remove_provider_key(provider_id) {
         let record = previous.unwrap();
-        if let Err(rollback_err) = save_provider(app, provider_id, &record) {
-            error!(
-                "[Tauri] ❌ {} config rollback failed after key remove error: {}",
-                provider_id,
-                rollback_err.message()
-            );
-            return ResetProviderResponse::failure(format!(
-                "key removal failed and config rollback also failed: {}",
-                rollback_err.message()
-            ));
+        if let Err(re) = save_provider(app, provider_state, provider_id, record) {
+            return ResetProviderResponse::failure(format!("{}, {}", e.message(), re.message()));
         }
-        info!("[Tauri] ↩️ {} config rollback completed", provider_id);
         return ResetProviderResponse::failure(e.message());
     }
 

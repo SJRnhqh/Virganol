@@ -29,6 +29,5 @@ pub(crate) fn update_models(
     record.enabled_models = enabled_models;
 
     let value = serde_json::to_value(&providers)?;
-    save_settings(app, SPIRIT_PROVIDERS_KEY, value)?;
-    Ok(())
+    save_settings(app, SPIRIT_PROVIDERS_KEY, value)
 }
