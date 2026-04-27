@@ -1,13 +1,11 @@
-// apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/save.rs
-// 外部依赖
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/config/save.rs
 use tauri::AppHandle;
 
-// 内部引用
-use super::super::super::super::super::{
+use super::super::super::super::super::super::{
     ProviderError, ProviderId, ProviderRecord, ProviderState, SPIRIT_PROVIDERS_KEY,
 };
-use super::super::super::save_settings;
-use super::load_all_providers;
+use super::super::super::super::save_settings;
+use super::super::load_all_providers;
 
 /// Saves a single provider configuration (upsert: overwrite if exists, insert if not).
 ///

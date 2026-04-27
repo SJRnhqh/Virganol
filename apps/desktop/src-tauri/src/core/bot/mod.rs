@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/mod.rs
-// 导出内容
 mod constants;
 mod helpers;
 mod interfaces;
