@@ -2,30 +2,27 @@
 use log::{error, info};
 use tauri::AppHandle;
 
-use super::super::super::super::super::{ResetProviderRequest, ResetProviderResponse};
-use super::super::{load_provider_record, remove_provider, remove_provider_key, save_provider};
+use super::super::super::super::super::{
+    ProviderState, ResetProviderRequest, ResetProviderResponse,
+};
+use super::super::{remove_provider, remove_provider_key, save_provider};
 
 /// Resets provider configuration.
 ///
 /// 重置 provider 的持久化配置。
 pub(crate) fn reset_provider_config(
     app: &AppHandle,
+    provider_state: &ProviderState,
     request: ResetProviderRequest,
 ) -> ResetProviderResponse {
     let ResetProviderRequest { provider_id, .. } = request;
 
-    let previous_record = match load_provider_record(app, provider_id) {
-        Ok(record) => record,
-        Err(e) => return ResetProviderResponse::failure(e.message()),
-    };
-
-    let config_removed = match remove_provider(app, provider_id) {
+    let previous = match remove_provider(app, provider_state, provider_id) {
         Ok(removed) => removed,
         Err(e) => return ResetProviderResponse::failure(e.message()),
     };
 
-    if !config_removed {
-        log::warn!("[Tauri] ⚠️ {} config not found, already clean", provider_id);
+    if previous.is_none() {
         if let Err(e) = remove_provider_key(provider_id) {
             return ResetProviderResponse::failure(e.message());
         }
@@ -37,10 +34,10 @@ pub(crate) fn reset_provider_config(
         Err(e) => (false, Some(e.message())),
     };
 
-    if config_removed && !key_removed {
+    if previous.is_some() && !key_removed {
         let mut final_error = key_error;
 
-        if let Some(record) = previous_record.as_ref() {
+        if let Some(record) = previous.as_ref() {
             if let Err(e) = save_provider(app, provider_id, record) {
                 error!(
                     "[Tauri] ❌ {} config rollback failed after key remove error: {}",

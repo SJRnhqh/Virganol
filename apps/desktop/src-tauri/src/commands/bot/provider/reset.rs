@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/commands/bot/provider/reset.rs
-use tauri::AppHandle;
+use tauri::{AppHandle, State};
 
-use crate::core::{reset_provider_config, ResetProviderRequest, ResetProviderResponse};
+use crate::core::{reset_provider_config, AppState, ResetProviderRequest, ResetProviderResponse};
 
 /// Resets a provider by removing its configuration.
 ///
@@ -9,7 +9,8 @@ use crate::core::{reset_provider_config, ResetProviderRequest, ResetProviderResp
 #[tauri::command]
 pub(crate) async fn reset_provider(
     app: AppHandle,
+    state: State<'_, AppState>,
     payload: ResetProviderRequest,
-) -> ResetProviderResponse {
-    reset_provider_config(&app, payload)
+) -> Result<ResetProviderResponse, ()> {
+    Ok(reset_provider_config(&app, &state.provider, payload))
 }

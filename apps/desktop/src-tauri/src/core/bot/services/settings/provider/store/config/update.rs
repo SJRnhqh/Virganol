@@ -1,11 +1,11 @@
-// apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/update.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/config/update.rs
 use tauri::AppHandle;
 
-use super::super::super::super::super::{
+use super::super::super::super::super::super::{
     ProviderError, ProviderId, ProviderState, SPIRIT_PROVIDERS_KEY,
 };
-use super::super::super::save_settings;
-use super::load_all_providers;
+use super::super::super::super::save_settings;
+use super::super::load_all_providers;
 
 /// Updates enabled models for a provider.
 ///
