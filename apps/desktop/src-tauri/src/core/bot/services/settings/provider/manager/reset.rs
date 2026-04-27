@@ -21,17 +21,15 @@ pub(crate) fn reset_provider_config(
         Err(e) => return ResetProviderResponse::failure(e.message()),
     };
 
-    if previous.is_none() {
-        if let Err(e) = remove_provider_key(provider_id) {
-            return ResetProviderResponse::failure(e.message());
-        }
-        return ResetProviderResponse::success();
-    }
-
     if let Err(e) = remove_provider_key(provider_id) {
-        let record = previous.unwrap();
-        if let Err(re) = save_provider(app, provider_state, provider_id, record) {
-            return ResetProviderResponse::failure(format!("{}, {}", e.message(), re.message()));
+        if let Some(record) = previous {
+            if let Err(re) = save_provider(app, provider_state, provider_id, record) {
+                return ResetProviderResponse::failure(format!(
+                    "{}, {}",
+                    e.message(),
+                    re.message()
+                ));
+            }
         }
         return ResetProviderResponse::failure(e.message());
     }
