@@ -5,8 +5,8 @@ use tauri::AppHandle;
 
 // 内部引用
 use super::super::super::super::super::{
-    compute_enabled_models, reorder_enabled_models, ConnectAndSaveProviderResponse, ProviderId,
-    ProviderKey, ProviderRecord, ProviderState,
+    compute_enabled_models, reorder_enabled_models, ConnectAndSaveProviderRequest,
+    ConnectAndSaveProviderResponse, ProviderId, ProviderKey, ProviderRecord, ProviderState,
 };
 use super::super::{
     health_check, load_provider_env, load_provider_key, load_provider_record, remove_provider_key,
@@ -63,13 +63,17 @@ fn try_load_stored_key(provider_id: ProviderId, input_key: &str) -> Option<Provi
 pub(crate) async fn connect_and_save(
     app: &AppHandle,
     provider_state: &ProviderState,
-    provider_id: ProviderId,
-    key: &str,
-    url: &str,
+    request: ConnectAndSaveProviderRequest,
 ) -> ConnectAndSaveProviderResponse {
+    let ConnectAndSaveProviderRequest { provider_id, data } = request;
+
+    let Some(data) = data else {
+        return ConnectAndSaveProviderResponse::failure("missing data field".to_string());
+    };
+
     // 1) 归一化前端传入的 key 和 url（去掉首尾空白）
-    let normalized_key = key.trim();
-    let normalized_url = url.trim();
+    let normalized_key = data.key.trim();
+    let normalized_url = data.url.as_deref().unwrap_or("").trim();
 
     // 2) 密钥解析：若未输入则尝试回退 (env -> keyring)，否则使用当前输入
     let fallback_key = try_load_stored_key(provider_id, normalized_key);
