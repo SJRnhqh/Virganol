@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/mod.rs
-// 导出内容
 mod constants;
 mod helpers;
 mod interfaces;
@@ -12,13 +11,15 @@ pub(self) use constants::{
 };
 pub(self) use helpers::{compute_enabled_models, reorder_enabled_models};
 pub(self) use interfaces::{DriverFuture, ProviderDriver};
+pub(super) use models::ProviderState;
 pub(crate) use models::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckTrigger,
-    ProviderId, ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
+    ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
+    UpdateEnabledModelsResponse,
 };
 pub(self) use models::{
-    HealthCheckResponse, ProviderError, ProviderKey, ProviderRecord, SkippedProviderDetail,
-    SupportedProvidersSnapshot,
+    HealthCheckResponse, ProviderError, ProviderId, ProviderKey, ProviderRecord,
+    SkippedProviderDetail, SupportedProvidersSnapshot,
 };
 pub(crate) use services::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,

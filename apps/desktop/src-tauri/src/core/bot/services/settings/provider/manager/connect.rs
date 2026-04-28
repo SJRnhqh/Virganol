@@ -6,7 +6,7 @@ use tauri::AppHandle;
 // 内部引用
 use super::super::super::super::super::{
     compute_enabled_models, reorder_enabled_models, ConnectAndSaveProviderResponse, ProviderId,
-    ProviderKey, ProviderRecord,
+    ProviderKey, ProviderRecord, ProviderState,
 };
 use super::super::{
     health_check, load_provider_env, load_provider_key, load_provider_record, remove_provider_key,
@@ -62,6 +62,7 @@ fn try_load_stored_key(provider_id: ProviderId, input_key: &str) -> Option<Provi
 /// 返回 ConnectAndSaveProviderResponse（包含 available_models 和 enabled_models）
 pub(crate) async fn connect_and_save(
     app: &AppHandle,
+    provider_state: &ProviderState,
     provider_id: ProviderId,
     key: &str,
     url: &str,
@@ -136,10 +137,10 @@ pub(crate) async fn connect_and_save(
         } else {
             Some(normalized_url.to_string())
         },
-        enabled_models: ordered_enabled_models,
+        enabled_models: ordered_enabled_models.clone(),
     };
 
-    if let Err(e) = save_provider(app, provider_id, &record) {
+    if let Err(e) = save_provider(app, provider_state, provider_id, record) {
         // 仅当本次显式输入了 key 时，才需要回滚 keyring 变更
         if !normalized_key.is_empty() {
             rollback_provider_key(
@@ -153,5 +154,5 @@ pub(crate) async fn connect_and_save(
     }
 
     // 成功：返回健康检查的 available_models 和持久化后的 enabled_models
-    ConnectAndSaveProviderResponse::ok(result.available_models, record.enabled_models)
+    ConnectAndSaveProviderResponse::ok(result.available_models, ordered_enabled_models)
 }

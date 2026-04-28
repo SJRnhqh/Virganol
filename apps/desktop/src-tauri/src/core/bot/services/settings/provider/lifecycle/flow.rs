@@ -10,10 +10,14 @@ use super::{
     emit_check_completed, emit_check_started, next_run_id, report_lifecycle_failure,
     run_provider_checks,
 };
-use crate::core::bot::models::{ProviderCheckTrigger, ProviderError};
+use crate::core::bot::models::{ProviderCheckTrigger, ProviderError, ProviderState};
 
 /// LLM供应商的持久化配置读取、健康检查、结果推送完整生命周期管理
-pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderCheckTrigger) {
+pub(crate) async fn check_providers_lifecycle(
+    app: AppHandle,
+    provider_state: &ProviderState,
+    trigger: ProviderCheckTrigger,
+) {
     // Step 1: 初始化本轮生命周期上下文（覆盖读取 + 检查 + 推送全链路）
     let run_id = next_run_id(trigger);
     let started_at = Instant::now();
@@ -72,7 +76,7 @@ pub(crate) async fn check_providers_lifecycle(app: AppHandle, trigger: ProviderC
 
     // Step 4: 并发执行健康检查并收敛失败计数/结构性错误
     let (failed_count, provider_issues, join_error) =
-        run_provider_checks(&app, run_id.as_str(), snapshot.supported).await;
+        run_provider_checks(&app, provider_state, run_id.as_str(), snapshot.supported).await;
 
     // Step 5: 处理并发检查阶段结构性错误（全局并发错误或 provider 级结构性问题）
     // 优先级：join_error（任务 panic）> provider_issues（个别 provider 结构性失败）。

@@ -10,21 +10,17 @@ use super::super::super::super::super::{
 };
 use super::super::super::load_settings;
 
-/// 读取所有已保存 providers：
-/// - Ok(HashMap)：读取并完成反序列化
-/// - Ok(empty)：配置不存在（尚未写入）
-/// - Err(ProviderError::Io)：settings store 打开/读取失败
-/// - Err(ProviderError::Serde)：providers JSON 反序列化失败
+/// Loads all saved providers from settings.
+///
+/// 从配置中读取所有已保存的 providers。
 pub(super) fn load_all_providers(
     app: &AppHandle,
 ) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
-    // 如果加载配置出错则上抛对应错误
     let maybe_value = load_settings(app, SPIRIT_PROVIDERS_KEY)?;
     let Some(value) = maybe_value else {
         return Ok(HashMap::new());
     };
 
-    // 如果反序列化出错则上抛对应错误
     let providers: HashMap<String, ProviderRecord> = serde_json::from_value(value)?;
     Ok(providers)
 }

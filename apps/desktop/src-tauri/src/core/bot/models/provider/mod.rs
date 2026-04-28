@@ -1,6 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/mod.rs
 // 导出内容
 mod check;
+mod common;
 mod connection;
 mod contract;
 mod error;
@@ -14,10 +15,11 @@ pub use check::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
     ProviderCheckTrigger, ProviderStatusPayload,
 };
+pub(crate) use common::ProviderState;
 pub use connection::HealthCheckResponse;
 pub(crate) use contract::{
-    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderResponse,
-    UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderRequest,
+    ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
 pub use error::{ProviderError, ProviderErrorCode, ProviderIssue, SkippedProviderDetail};
 pub use id::ProviderId;
