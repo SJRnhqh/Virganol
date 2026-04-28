@@ -3,12 +3,12 @@ use serde::Deserialize;
 
 use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 
-/// Data payload for updating enabled models.
+/// Request data for updating enabled models.
 ///
-/// 更新已启用模型列表的数据载荷。
+/// 更新已启用模型列表的请求数据。
 #[derive(Debug, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct UpdateEnabledModelsData {
+pub(crate) struct UpdateEnabledModelsRequestData {
     #[serde(default)]
     pub(crate) enabled_models: Vec<String>,
 }
@@ -16,7 +16,7 @@ pub(crate) struct UpdateEnabledModelsData {
 /// Request for updating enabled models.
 ///
 /// 更新已启用模型列表的请求。
-pub(crate) type UpdateEnabledModelsRequest = ProviderCommandRequest<UpdateEnabledModelsData>;
+pub(crate) type UpdateEnabledModelsRequest = ProviderCommandRequest<UpdateEnabledModelsRequestData>;
 
 /// Response for updating enabled models.
 ///
