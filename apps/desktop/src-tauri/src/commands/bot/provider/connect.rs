@@ -14,13 +14,9 @@ pub(crate) async fn connect_and_save_provider(
     state: State<'_, AppState>,
     payload: ConnectAndSaveProviderRequest,
 ) -> Result<ConnectAndSaveProviderResponse, ()> {
-    let url = payload.url.as_deref().unwrap_or("");
-    Ok(connect_and_save(
-        &app,
-        &state.provider,
-        payload.provider_id,
-        &payload.key,
-        url,
-    )
-    .await)
+    let data = payload.data.unwrap_or_else(|| {
+        panic!("connect_and_save_provider: missing data field");
+    });
+    let url = data.url.as_deref().unwrap_or("");
+    Ok(connect_and_save(&app, &state.provider, payload.provider_id, &data.key, url).await)
 }

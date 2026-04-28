@@ -87,7 +87,7 @@ pub(crate) async fn connect_and_save(
 
     // 健康检查失败，直接返回
     if !result.success {
-        return ConnectAndSaveProviderResponse::fail(result.error);
+        return ConnectAndSaveProviderResponse::failure(result.error.unwrap_or_default());
     }
 
     // 4) 持久化密钥（仅用户显式输入时）
@@ -96,7 +96,7 @@ pub(crate) async fn connect_and_save(
         let snapshot = load_provider_key(provider_id);
         // 用户显式输入的 key 已通过健康检查，持久化到 keyring
         if let Err(e) = save_provider_key(provider_id, normalized_key) {
-            return ConnectAndSaveProviderResponse::fail(Some(e.message()));
+            return ConnectAndSaveProviderResponse::failure(e.message());
         }
         snapshot
     } else {
@@ -112,7 +112,7 @@ pub(crate) async fn connect_and_save(
     let previous_record = match load_provider_record(app, provider_id) {
         Ok(record) => record,
         Err(e) => {
-            return ConnectAndSaveProviderResponse::fail(Some(e.message()));
+            return ConnectAndSaveProviderResponse::failure(e.message());
         }
     };
     let next_enabled_models = match previous_record {
@@ -150,7 +150,7 @@ pub(crate) async fn connect_and_save(
             );
         }
 
-        return ConnectAndSaveProviderResponse::fail(Some(e.message()));
+        return ConnectAndSaveProviderResponse::failure(e.message());
     }
 
     // 成功：返回健康检查的 available_models 和持久化后的 enabled_models
