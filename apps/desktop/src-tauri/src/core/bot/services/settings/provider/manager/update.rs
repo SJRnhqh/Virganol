@@ -17,7 +17,7 @@ pub(crate) fn update_provider_enabled_models(
     let UpdateEnabledModelsRequest { provider_id, data } = request;
 
     let Some(payload) = data else {
-        return UpdateEnabledModelsResponse::failure("missing data field".to_string());
+        return UpdateEnabledModelsResponse::failure("missing data field");
     };
 
     match update_models(app, provider_state, provider_id, payload.enabled_models) {

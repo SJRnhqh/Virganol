@@ -1,12 +1,10 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/connect.rs
-// 外部依赖
 use log::{error, info};
 use tauri::AppHandle;
 
-// 内部引用
 use super::super::super::super::super::{
     compute_enabled_models, reorder_enabled_models, ConnectAndSaveProviderRequest,
-    ConnectAndSaveProviderResponse, ProviderId, ProviderKey, ProviderRecord, ProviderState,
+    ConnectAndSaveProviderResponse, ProviderId, ProviderRecord, ProviderState,
 };
 use super::super::{
     health_check, load_provider_env, load_provider_key, load_provider_record, remove_provider_key,
@@ -49,17 +47,9 @@ fn rollback_provider_key(
     }
 }
 
-/// 当输入 key 为空时，尝试从环境变量或 keyring 加载已存储的 key
-fn try_load_stored_key(provider_id: ProviderId, input_key: &str) -> Option<ProviderKey> {
-    if input_key.is_empty() {
-        load_provider_env(provider_id).or_else(|| load_provider_key(provider_id))
-    } else {
-        None
-    }
-}
-
-/// 接入并持久化：health_check 成功后自动保存配置
-/// 返回 ConnectAndSaveProviderResponse（包含 available_models 和 enabled_models）
+/// Connects to a provider and saves the configuration if health check succeeds.
+///
+/// 连接 Provider 并在健康检查成功后持久化配置。
 pub(crate) async fn connect_and_save(
     app: &AppHandle,
     provider_state: &ProviderState,
@@ -68,17 +58,17 @@ pub(crate) async fn connect_and_save(
     let ConnectAndSaveProviderRequest { provider_id, data } = request;
 
     let Some(data) = data else {
-        return ConnectAndSaveProviderResponse::failure("missing data field".to_string());
+        return ConnectAndSaveProviderResponse::failure("missing data field");
     };
 
-    // 1) 归一化前端传入的 key 和 url（去掉首尾空白）
     let normalized_key = data.key.trim();
     let normalized_url = data.url.as_deref().unwrap_or("").trim();
 
-    // 2) 密钥解析：若未输入则尝试回退 (env -> keyring)，否则使用当前输入
-    let fallback_key = try_load_stored_key(provider_id, normalized_key);
+    let fallback_key = normalized_key
+        .is_empty()
+        .then_some(())
+        .and_then(|_| load_provider_env(provider_id).or_else(|| load_provider_key(provider_id)));
 
-    // 3) 用解析后的密钥执行健康检查
     let result = health_check(
         provider_id,
         normalized_url,
@@ -89,7 +79,6 @@ pub(crate) async fn connect_and_save(
     )
     .await;
 
-    // 健康检查失败，直接返回
     if !result.success {
         return ConnectAndSaveProviderResponse::failure(result.error.unwrap_or_default());
     }
