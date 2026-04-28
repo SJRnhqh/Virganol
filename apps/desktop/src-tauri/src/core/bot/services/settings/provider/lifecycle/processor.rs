@@ -6,6 +6,7 @@ use tauri::AppHandle;
 // 内部引用
 use super::super::super::super::super::{
     compute_enabled_models, HealthCheckResponse, ProviderError, ProviderId, ProviderRecord,
+    ProviderState,
 };
 use super::super::save_provider;
 
@@ -15,6 +16,7 @@ use super::super::save_provider;
 /// - 可选错误信息（用于上层统一收敛 warning/partial_failure）
 fn reconcile_enabled_models(
     app: &AppHandle,
+    provider_state: &ProviderState,
     provider_id: ProviderId,
     record: &ProviderRecord,
     available_models: &[String],
@@ -24,15 +26,16 @@ fn reconcile_enabled_models(
 
     if new_enabled.len() != record.enabled_models.len() {
         // 有模型被淘汰了，构造新 record 并写回配置
+        let old_len = record.enabled_models.len();
         let mut updated = record.clone();
         updated.enabled_models = new_enabled;
 
-        match save_provider(app, provider_id, &updated) {
+        match save_provider(app, provider_state, provider_id, updated.clone()) {
             Ok(()) => {
                 info!(
                     "[Tauri] 🔄 {} enabled_models reconciled: {} → {}",
                     provider_id,
-                    record.enabled_models.len(),
+                    old_len,
                     updated.enabled_models.len()
                 );
                 (updated, None)
@@ -59,6 +62,7 @@ fn reconcile_enabled_models(
 /// - reconcile_error: enabled_models 回写失败时的可选错误
 pub(super) fn process_provider_check_result(
     app: &AppHandle,
+    provider_state: &ProviderState,
     provider_id: ProviderId,
     record: ProviderRecord,
     health: &HealthCheckResponse,
@@ -66,8 +70,13 @@ pub(super) fn process_provider_check_result(
     let online = health.success;
 
     if online {
-        let (final_record, reconcile_error) =
-            reconcile_enabled_models(app, provider_id, &record, &health.available_models);
+        let (final_record, reconcile_error) = reconcile_enabled_models(
+            app,
+            provider_state,
+            provider_id,
+            &record,
+            &health.available_models,
+        );
         // TODO：reconcile_error 属于基础设施层结构性错误（写盘失败），归入 provider_issues 触发 lifecycle_failed
         // 在当前错误设计框架下是自洽的。后续统一错误处理精细化阶段可考虑引入 infra_warnings
         // 与 provider 业务性错误分层上报，届时前端再做细粒度消费。

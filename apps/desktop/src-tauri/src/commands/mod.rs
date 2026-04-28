@@ -1,3 +1,7 @@
 // apps/desktop/src-tauri/src/commands/mod.rs
-// 导出内容
-pub(crate) mod bot;
+mod bot;
+
+pub(super) use bot::{
+    connect_and_save_provider, reset_provider, trigger_provider_manual_refresh,
+    trigger_provider_startup_check, update_enabled_models,
+};

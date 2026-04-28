@@ -10,6 +10,7 @@ dependencies = [
  "env_logger",
  "keyring",
  "log",
+ "parking_lot",
  "portable-pty",
  "prost",
  "protoc-bin-vendored",

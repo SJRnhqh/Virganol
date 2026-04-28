@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/mod.rs
-// 导出内容
 mod connect;
 mod reset;
 mod update;

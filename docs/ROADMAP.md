@@ -22,106 +22,72 @@ LLM Provider 接入分为两条主线：
 - 生命周期 phase 建模（idle / checking / done / degraded / failed）
 - UI 组件层（per-provider 卡片 + 交互逻辑）
 
-### 🚧 Phase 5：CRUD 链路审查与重构
+### ✅ Phase 5：CRUD 链路审查与重构
 
-#### 5.1 connect 链路
+**已完成**：
 
-- [x] `connect_and_save` 主流程审查（密钥解析 / 健康检查 / 持久化事务 / enabled_models 计算）
-- [x] 健康检查子系统审查（registry / driver / deepseek / ollama 实现）
-- [x] 代码质量优化（删除冗余 trim / 简化错误提示）
-- [x] 前端调用链审查（hooks 层冗余清理 / payload 简化 / 状态回写对称性）
-- [x] 组件审查完整性（ProviderCardHeader / ProviderForm / ProviderCardContent / ProviderConnectionButton / ProviderCardActions）
-- [x] 常量驱动设计验证（CONNECTION_STATE_LABELS / CONNECTION_BUTTON_ICONS / CONNECTION_BUTTON_ANIMATIONS）
-- [x] 类型安全检查（ConnectAndSaveProviderPayload / HealthCheckResponse 契约）
-- [x] 图标语义完整（connect/connecting/retry/reset 各状态icon映射）
+- connect 链路：主流程审查、健康检查子系统、前端调用链优化、组件完整性验证
+- reset 链路：原子性删除、API 迁移、前端钩子重构、组件层美化
+- update_models 链路：持久化层重构、日志优化、Hooks 层重构、语义对齐
+- 查漏补缺：并发控制、原子写入、回滚逻辑、契约升级
 
-#### 5.2 reset 链路
+**遗留项**（已迁移至 Phase 6.3）：
 
-- [x] `reset_provider_config` 审查（config + key 原子性删除 / 回滚逻辑）
-- [x] API迁移：resetProvider 迁至 crud.ts（目前保持boolean返回）
-- [x] 前端钩子层审查（success检查 + batch状态更新 + 错误日志占位）
-- [x] 前端钩子重构：useProviderReset 提取至 hooks/provider/manager/ 目录
-- [x] 前端store/types/constants完整性验证（无需优化）
-- [x] 前端组件层重构与美化：
-  - [x] ProviderResetButton 独立组件（文字 + Eraser 图标，类型约束）
-  - [x] ProviderConnectedPanel 配置管理区域集成 Reset 按钮
-  - [x] ProviderCardActions CONNECTED 状态移除 Reset（职责分离）
+- Provider 级别锁优化（per-provider 串行化 connect，提高并发性能）
 
-#### 5.3 update_models 链路
+### 🚧 Phase 6：错误精细化与全局收尾
 
-- [x] `update_provider_enabled_models` 审查（invoke 契约 / store 读写）
-- [x] API迁移：updateEnabledModels 迁至 crud.ts（目前保持boolean返回）
-- [x] 后端持久化层重构：persistence.rs 迁移至 store/ 目录（load/save/remove/update/lock 模块化管理）
-- [x] 后端日志优化：persistence 层 warn + service 层 info/error 分层记录
-- [x] 前端 Hooks 层重构：useToggleModels 提取至 hooks/provider/manager/ 目录
-- [x] 前端数据与动作分离：data/（响应式订阅）vs manager/（执行时快照）
-- [x] 目录结构优化：useProviderModels 迁移至 hooks/provider/data/ 目录
-- [x] Toggle 语义统一：toggleSingle / toggleAll 命名与实现对齐
-- [x] Store 层审查：setModelEnabled / setAllModelsEnabled 方法验证完成
-- [x] Types 层审查：ProviderModelState 类型完整且清晰
-- [x] 命名语义对齐：toggle（前端交互）vs update（后端数据）职责分离
+#### 6.1 错误精细化（交互式 CRUD）
 
-#### 5.4 CRUD 链路查漏补缺
+按命令链路逐个审查：update_models → reset → connect
 
-**功能正确性**：
-
-- [x] `useProviderConnect` - 添加 pending state guard（防止并发操作）
-- [x] `useProviderConnect` - 将并发锁从 hook 层移至 store 层（防止跨实例竞态）
-- [x] `useToggleModels` - 修复默认模型状态不一致（前端 `?? false` 对齐后端逻辑）
-- [x] `persistence.rs` - 实现原子写入（temp file + rename）防止崩溃时文件损坏
-
-**代码质量优化**：
-
-- [x] `useProvider` - 补全 onUpdate callback 依赖数组（避免闭包过期）
-- [x] `useToggleModels` - 优化回滚逻辑，只更新 enabled 状态（添加 setEnabledMap 方法，避免全量更新）
-- [ ] `useProviderCollectionStore` - 添加状态转换验证（updateProviderBatch 防御性编程）
-
-**后端优化**：
-
-- [x] 提取 key rollback 逻辑为独立函数（提高可测试性）
-- [x] reset 链路区分回滚失败的严重错误（回滚成功返回普通错误，回滚失败返回 inconsistent state 严重错误）
-- [x] 持久化层实现原子写入（temp file + rename 模式，防止崩溃导致文件损坏）
-- [x] 健康检查超时配置化（使用 constants 层管理，per-provider 差异化配置）
-- [x] HTTP 客户端连接池复用（使用 `OnceLock<Client>` 全局共享，减少连接建立开销）
-- [ ] Provider 级别锁优化（per-provider 串行化 connect，提高并发性能）
-
-**契约升级**：
-
-- [x] `connect_and_save` 返回专用 `ConnectAndSaveProviderResponse`（含 enabled_models）
-- [x] `HealthCheckResponse` 职责收窄至健康检查结果（仅内部使用）
-- [x] 后端契约结构重构：创建 `contract/connect.rs` 管理前后端契约
-- [x] 前端契约结构重构：创建 `contract/connect.ts` 镜像后端结构
-- [x] 前端启用模型状态：使用后端 `enabledModels` 替代硬编码 false
-- [x] `resetProvider` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
-- [x] `updateEnabledModels` 返回结构化响应（{ success, error? }），对齐 connectAndSaveProvider 契约
-
-### 🚧 Phase 6：全局优化与收尾
-
-#### 6.1 契约语义与错误精细化
-
-- [ ] 健康检查错误细分（网络不可达 / 认证失败 / 超时 / 响应格式错误）
+- [ ] 扩展 `ProviderErrorCode`（健康检查错误：网络不可达 / 认证失败 / 超时 / 响应格式错误）
+- [ ] 迁移 `ProviderError` 至 `thiserror`（修复 `source()` 空实现，错误链可追溯）
 - [ ] 扩展 `HealthCheckResponse` 添加 `error_code` 字段
-- [ ] 前端适配细粒度错误展示
-- [ ] 区分系统错误（io/serde）与业务错误
-- [ ] 契约序列化命名统一 camelCase（`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload` 补齐 serde rename，前端 types 同步）
-- [ ] `ProviderError` 错误链可追溯化（改用 `thiserror` 派生 `Display` / `Error` / `From`，修复 `source()` 空实现导致的 `serde_json::Error` 底层信息无法透出，为 Phase 6.2 日志链完整打印打基础）
+- [ ] 区分系统错误（io/serde/keyring）与业务错误（network/auth/timeout/format）
+- [ ] 统一错误响应契约（code / message / details / trace_id）
+- [ ] 契约序列化命名统一 camelCase（`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload`）
+- [ ] 单元测试覆盖各命令链路错误场景
 
-#### 6.2 日志与中间件统一化
+#### 6.2 错误精细化（生命周期）
 
-- [ ] 后端日志格式标准化（级别 / 结构 / 上下文）
-- [ ] 前端错误边界与中间件设计
-- [ ] 日志采集与监控接入点规划
-- [ ] 前端 CRUD 操作日志优化（仅记录超过阈值的慢操作，减少日志噪音）
+审查 startup_check 和 manual_refresh 链路
 
-#### 6.3 收尾与验证
+- [ ] 复查现有错误处理完整性
+- [ ] 补充边界场景单元测试
 
-- [ ] 表单输入验证（`ProviderForm` 添加实时验证：URL 格式检查 / 必填字段提示 / 错误状态视觉反馈，提升用户输入体验）
-- [ ] 请求取消机制（添加 AbortController 在组件卸载时取消飞行中的 API 请求，防止内存泄漏警告）
+#### 6.3 前端错误系统
+
+- [ ] 同步前端错误类型（镜像后端 `ProviderErrorCode`）
+- [ ] 适配细粒度错误展示（按错误码差异化 UI 反馈）
+- [ ] 设计错误展示组件（Toast / inline 错误消息）
+
+#### 6.4 日志系统（错误精细化完成后）
+
+- [ ] 设计日志持久化策略（文件轮转 / 结构化格式）
+- [ ] 定义日志埋点（CRUD 入口/出口、健康检查、持久化操作、错误路径）
+- [ ] 标准化日志格式（级别 / 时间戳 / 模块 / 消息 / 上下文）
+- [ ] 添加结构化上下文（trace_id / operation_id / provider_id / error_code）
+- [ ] 实现日志级别策略（info 成功 / warn 可重试 / error 致命）
+- [ ] 前端日志策略（dev 用 console / prod 用上报）
+- [ ] trace_id 生成与传播（后端 → 前端）
+
+#### 6.5 集成测试与验证
+
+- [ ] 5 条命令链路端到端集成测试
+- [ ] 错误传播链路验证
+- [ ] 错误响应契约验证
+- [ ] 日志输出验证（如 Phase 6.4 完成）
+
+#### 6.6 收尾优化
+
+- [ ] 前端状态转换验证（`useProviderCollectionStore` 防御性编程）
+- [ ] 表单输入验证（URL 格式检查 / 必填字段提示 / 错误状态视觉反馈）
+- [ ] 请求取消机制（AbortController 防止内存泄漏）
 - [ ] 安全审计（`secret_meta` 前端消费 / Provider 支持范围收敛 / invoke 暴露面审计）
 - [ ] 生命周期收口（orphan failed 认领 / 事件名契约自动化）
-- [ ] 前端并发锁架构对齐：`useToggleModels` 从 hook 实例级 `useRef` 迁至 store 层 `isPending`（对齐 `useProviderConnect` 模式，消除架构不对称）
-- [ ] 后端异步执行架构对齐：Tauri commands 中的同步持久化调用（`reset_provider` / `update_enabled_models` 等）用 `tokio::task::spawn_blocking` 包裹，避免阻塞 tokio worker 线程（当前低频场景不会触发，为后台任务 / WebSocket 等 async 入口引入后预防 runtime 饥饿）
-- [ ] 后端锁实现升级：`store/lock.rs` 从 `std::sync::Mutex` 迁至 `parking_lot::Mutex` 或 Tauri `State<Mutex<T>>` 管理（消除 poisoning 风险 + 提速 + 提升可测试性）
-- [ ] 后端锁粒度细化：全局 `PROVIDERS_STORE_LOCK` 替换为 per-provider 锁（跨 provider 的 CRUD 可真并行，提高并发吞吐）
-- [ ] 集成测试补充
+- [ ] 前端并发锁架构对齐（`useToggleModels` 迁至 store 层 `isPending`）
+- [ ] 后端异步执行架构对齐（同步持久化调用用 `tokio::task::spawn_blocking` 包裹）
+- [ ] 后端锁实现升级（`std::sync::Mutex` → `parking_lot::Mutex`）
+- [ ] 后端锁粒度细化（全局锁 → per-provider 锁）
 - [ ] 功能开发完结

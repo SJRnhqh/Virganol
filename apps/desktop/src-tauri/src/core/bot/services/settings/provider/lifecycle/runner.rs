@@ -6,7 +6,9 @@ use tokio::task::JoinSet;
 
 // 内部引用
 use super::{emit_provider_status, health_check_with_secret_meta, process_provider_check_result};
-use crate::core::bot::models::{ProviderError, ProviderId, ProviderIssue, ProviderRecord};
+use crate::core::bot::models::{
+    ProviderError, ProviderId, ProviderIssue, ProviderRecord, ProviderState,
+};
 
 /// 并发健康检查最大并发度
 const CHECK_CONCURRENCY_LIMIT: usize = 4;
@@ -14,6 +16,7 @@ const CHECK_CONCURRENCY_LIMIT: usize = 4;
 /// 执行并发健康检查主循环，返回失败数量与生命周期错误明细
 pub(super) async fn run_provider_checks(
     app: &AppHandle,
+    provider_state: &ProviderState,
     run_id: &str,
     supported: Vec<(ProviderId, ProviderRecord)>,
 ) -> (usize, Vec<ProviderIssue>, Option<ProviderError>) {
@@ -48,8 +51,13 @@ pub(super) async fn run_provider_checks(
         // 2) 消费一个已完成任务（完成即处理，增量推送）
         match in_flight.join_next().await {
             Some(Ok((provider_id, record, result, secret_meta))) => {
-                let (final_record, online, reconcile_error) =
-                    process_provider_check_result(app, provider_id, record, &result);
+                let (final_record, online, reconcile_error) = process_provider_check_result(
+                    app,
+                    provider_state,
+                    provider_id,
+                    record,
+                    &result,
+                );
 
                 if let Some(err) = reconcile_error {
                     let message = err.message();

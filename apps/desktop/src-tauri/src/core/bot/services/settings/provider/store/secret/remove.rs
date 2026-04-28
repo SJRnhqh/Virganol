@@ -1,14 +1,13 @@
-// apps/desktop/src-tauri/src/core/bot/services/settings/provider/key/remove.rs
-// 外部依赖
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/secret/remove.rs
 use keyring::{Entry, Error as KeyringError};
 
-// 内部引用
-use super::super::super::super::super::{ProviderError, ProviderId, PROVIDER_KEYRING_SERVICE};
+use super::super::super::super::super::super::{
+    ProviderError, ProviderId, PROVIDER_KEYRING_SERVICE,
+};
 
-/// 从系统密钥库删除 provider 的 API Key。
+/// Removes provider API key from system keyring.
 ///
-/// - `provider_id` 使用 ProviderId 枚举，避免无效字符串传入
-/// - 条目不存在（`NoEntry`）视为成功（幂等）
+/// 从系统密钥库删除 provider 的 API Key。
 pub(crate) fn remove_provider_key(provider_id: ProviderId) -> Result<(), ProviderError> {
     let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str())
         .map_err(|e| ProviderError::Keyring(format!("init keyring entry failed: {}", e)))?;
