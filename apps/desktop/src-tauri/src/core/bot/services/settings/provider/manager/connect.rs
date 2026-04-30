@@ -83,21 +83,13 @@ pub(crate) async fn connect_and_save(
         return ConnectAndSaveProviderResponse::failure(result.error.unwrap_or_default());
     }
 
-    // 4) 持久化密钥（仅用户显式输入时）
-    // 快照紧邻写入：避免 health_check 异步窗口期间被并发 reset/connect 污染
     let previous_persisted_key = if !normalized_key.is_empty() {
         let snapshot = load_provider_key(provider_id);
-        // 用户显式输入的 key 已通过健康检查，持久化到 keyring
         if let Err(e) = save_provider_key(provider_id, normalized_key) {
             return ConnectAndSaveProviderResponse::failure(e.message());
         }
         snapshot
     } else {
-        // 用户未显式输入 key：来源可能是 env / keyring / 无需密钥，均无需持久化
-        info!(
-            "[Tauri] ⏭️ {} skip key persist: no user-supplied key",
-            provider_id
-        );
         None
     };
 
@@ -108,16 +100,10 @@ pub(crate) async fn connect_and_save(
             return ConnectAndSaveProviderResponse::failure(e.message());
         }
     };
-    let next_enabled_models = match previous_record {
-        Some(record) => {
-            // 重连：保留用户偏好，仅保留交集（已启用且仍可用的模型）
-            compute_enabled_models(&record.enabled_models, &result.available_models)
-        }
-        None => {
-            // 首次连接：不自动启用任何模型，等待用户显式选择
-            vec![]
-        }
-    };
+
+    let next_enabled_models = previous_record
+        .map(|record| compute_enabled_models(&record.enabled_models, &result.available_models))
+        .unwrap_or_default();
 
     // 按照 available_models 的顺序重新排列 enabled_models，保证前端渲染顺序稳定
     let ordered_enabled_models =
