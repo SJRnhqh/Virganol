@@ -24,6 +24,6 @@ pub(crate) use contract::{
 pub use error::{ProviderError, ProviderErrorCode, ProviderIssue, SkippedProviderDetail};
 pub use id::ProviderId;
 pub use key::ProviderKey;
-pub use record::ProviderRecord;
+pub(crate) use record::ProviderRecord;
 pub use security::{ProviderKeySource, ProviderSecretMeta};
 pub use snapshot::SupportedProvidersSnapshot;

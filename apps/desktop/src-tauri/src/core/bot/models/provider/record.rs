@@ -1,13 +1,24 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/record.rs
-// 外部依赖
 use serde::{Deserialize, Serialize};
 
-/// 单个 Provider 的持久化记录
-/// 对应 settings.json 中 spirit.providers.{id} 的值
-/// 注意：available_models 不存储，每次健康检查实时拉取
+/// Provider configuration record persisted in settings.json.
+///
+/// Provider 持久化配置记录（settings.json 中 spirit.providers.{id}）。
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ProviderRecord {
+pub(crate) struct ProviderRecord {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub url: Option<String>,
-    pub enabled_models: Vec<String>,
+    pub(crate) url: Option<String>,
+    pub(crate) enabled_models: Vec<String>,
+}
+
+impl ProviderRecord {
+    /// Creates a new provider record with normalized URL.
+    ///
+    /// 创建 Provider 配置记录，自动处理空 URL。
+    pub(crate) fn new(url: &str, enabled_models: Vec<String>) -> Self {
+        Self {
+            url: (!url.is_empty()).then(|| url.to_string()),
+            enabled_models,
+        }
+    }
 }

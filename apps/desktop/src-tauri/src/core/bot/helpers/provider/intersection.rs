@@ -8,11 +8,11 @@ pub(crate) fn compute_enabled_models(
     enabled_models: &[String],
     available_models: &[String],
 ) -> Vec<String> {
-    let available_set: HashSet<&str> = available_models.iter().map(String::as_str).collect();
+    let enabled_set: HashSet<&str> = enabled_models.iter().map(String::as_str).collect();
 
-    enabled_models
+    available_models
         .iter()
-        .filter(|model| available_set.contains(model.as_str()))
+        .filter(|model| enabled_set.contains(model.as_str()))
         .cloned()
         .collect()
 }

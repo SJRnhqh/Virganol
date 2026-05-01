@@ -3,13 +3,31 @@ use log::{error, info};
 use tauri::AppHandle;
 
 use super::super::super::super::super::{
-    compute_enabled_models, reorder_enabled_models, ConnectAndSaveProviderRequest,
-    ConnectAndSaveProviderResponse, ProviderId, ProviderRecord, ProviderState,
+    compute_enabled_models, ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse,
+    ProviderError, ProviderId, ProviderRecord, ProviderState,
 };
 use super::super::{
     health_check, load_provider_env, load_provider_key, load_provider_record, remove_provider_key,
     save_provider, save_provider_key,
 };
+
+/// Builds a provider record based on health check results.
+///
+/// 根据健康检查结果构造 Provider 配置记录，复用历史启用状态。
+fn build_provider_record(
+    app: &AppHandle,
+    provider_id: ProviderId,
+    normalized_url: &str,
+    available_models: &[String],
+) -> Result<ProviderRecord, ProviderError> {
+    let previous_record = load_provider_record(app, provider_id)?;
+
+    let enabled_models = previous_record
+        .map(|record| compute_enabled_models(&record.enabled_models, available_models))
+        .unwrap_or_default();
+
+    Ok(ProviderRecord::new(normalized_url, enabled_models))
+}
 
 /// 回滚密钥：恢复旧密钥或删除新密钥
 ///
@@ -93,31 +111,13 @@ pub(crate) async fn connect_and_save(
         None
     };
 
-    // 5) 复用历史启用状态，并与本次可用模型做交集对齐
-    let previous_record = match load_provider_record(app, provider_id) {
-        Ok(record) => record,
-        Err(e) => {
-            return ConnectAndSaveProviderResponse::failure(e.message());
-        }
-    };
+    let record =
+        match build_provider_record(app, provider_id, normalized_url, &result.available_models) {
+            Ok(record) => record,
+            Err(e) => return ConnectAndSaveProviderResponse::failure(e.message()),
+        };
 
-    let next_enabled_models = previous_record
-        .map(|record| compute_enabled_models(&record.enabled_models, &result.available_models))
-        .unwrap_or_default();
-
-    // 按照 available_models 的顺序重新排列 enabled_models，保证前端渲染顺序稳定
-    let ordered_enabled_models =
-        reorder_enabled_models(&next_enabled_models, &result.available_models);
-
-    // 6) 持久化写入配置
-    let record = ProviderRecord {
-        url: if normalized_url.is_empty() {
-            None
-        } else {
-            Some(normalized_url.to_string())
-        },
-        enabled_models: ordered_enabled_models.clone(),
-    };
+    let enabled_models_for_response = record.enabled_models.clone();
 
     if let Err(e) = save_provider(app, provider_state, provider_id, record) {
         // 仅当本次显式输入了 key 时，才需要回滚 keyring 变更
@@ -133,5 +133,5 @@ pub(crate) async fn connect_and_save(
     }
 
     // 成功：返回健康检查的 available_models 和持久化后的 enabled_models
-    ConnectAndSaveProviderResponse::ok(result.available_models, ordered_enabled_models)
+    ConnectAndSaveProviderResponse::ok(result.available_models, enabled_models_for_response)
 }
