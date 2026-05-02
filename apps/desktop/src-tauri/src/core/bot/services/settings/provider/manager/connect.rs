@@ -112,16 +112,6 @@ pub(crate) async fn connect_and_save(
         return ConnectAndSaveProviderResponse::failure(result.error.unwrap_or_default());
     }
 
-    let previous_persisted_key = if !normalized_key.is_empty() {
-        let snapshot = load_provider_key(provider_id);
-        if let Err(e) = save_provider_key(provider_id, normalized_key) {
-            return ConnectAndSaveProviderResponse::failure(e.message());
-        }
-        snapshot
-    } else {
-        None
-    };
-
     let record =
         match build_provider_record(app, provider_id, normalized_url, &result.available_models) {
             Ok(record) => record,
@@ -130,12 +120,22 @@ pub(crate) async fn connect_and_save(
 
     let enabled_models_for_response = record.enabled_models.clone();
 
+    let key_snapshot = if normalized_key.is_empty() {
+        None
+    } else {
+        let snapshot = load_provider_key(provider_id);
+        match save_provider_key(provider_id, normalized_key) {
+            Ok(()) => snapshot,
+            Err(e) => return ConnectAndSaveProviderResponse::failure(e.message()),
+        }
+    };
+
     if let Err(e) = save_provider(app, provider_state, provider_id, record) {
         // 仅当本次显式输入了 key 时，才需要回滚 keyring 变更
         if !normalized_key.is_empty() {
             rollback_provider_key(
                 provider_id,
-                previous_persisted_key.as_ref().map(|k| k.as_str()),
+                key_snapshot.as_ref().map(|k| k.as_str()),
                 normalized_key,
             );
         }
@@ -143,6 +143,5 @@ pub(crate) async fn connect_and_save(
         return ConnectAndSaveProviderResponse::failure(e.message());
     }
 
-    // 成功：返回健康检查的 available_models 和持久化后的 enabled_models
     ConnectAndSaveProviderResponse::ok(result.available_models, enabled_models_for_response)
 }

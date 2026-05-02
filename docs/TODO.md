@@ -38,6 +38,21 @@
 - [ ] Define unified error response contract (code / message / details / trace_id)
 - [ ] Unify contract serialization to camelCase (`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload`)
 
+### 6.1.5: Connect Keyring Side-Effect Type Refinement
+
+`connect_and_save` falls back to `!normalized_key.is_empty()` in the rollback branch because `Option<ProviderKey>` only encodes the snapshot value, not whether `save_provider_key` actually ran. The two `None` paths (key empty vs. key written but no prior value) cannot be disambiguated by the snapshot alone. Lift "whether keyring was modified" into the type system so rollback becomes type-driven.
+
+**Choose one approach (start after 6.1.4 to avoid entangling with error contract migration)**:
+
+- [ ] **Option B (conservative)**: introduce `KeyChange { snapshot: Option<String>, new_key: String }`, main flow holds `Option<KeyChange>`; rollback collapses to `if let Some(change) = key_change { ... }`; narrow `rollback_provider_key` to `(provider_id, &KeyChange)`
+- [ ] **Option C (RAII)**: introduce `ProviderKeyTransaction` with `begin` / `commit` / auto-rollback on `Drop`, located beside `ProviderKey` in `core/bot/models/provider/key_transaction.rs`; constraints: `Drop` cannot return errors or panic (already aligns with current "compensation failure → log only"); guard must be `Send + 'static` for cross-`.await` safety
+
+**Acceptance**:
+
+- [ ] Rollback branch independent of `!normalized_key.is_empty()`
+- [ ] Unit tests cover 3 paths: no write / write with no prior key / write with prior key
+- [ ] Evaluate whether `reset` chain can reuse the same transaction model
+
 ## Phase 6.2: Error Refinement (Lifecycle Commands)
 
 ### 6.2.1: `trigger_provider_startup_check` Chain
