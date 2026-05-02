@@ -4,12 +4,36 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::{
     compute_enabled_models, ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse,
-    ProviderError, ProviderId, ProviderRecord, ProviderState,
+    HealthCheckResponse, ProviderError, ProviderId, ProviderRecord, ProviderState,
 };
 use super::super::{
     health_check, load_provider_env, load_provider_key, load_provider_record, remove_provider_key,
     save_provider, save_provider_key,
 };
+
+/// Probes provider health with automatic credential fallback (env → keyring).
+///
+/// 探测 Provider 健康状态，自动回退凭据（环境变量 → keyring）。
+async fn probe_provider_health(
+    provider_id: ProviderId,
+    normalized_url: &str,
+    normalized_key: &str,
+) -> HealthCheckResponse {
+    let fallback_key = normalized_key
+        .is_empty()
+        .then_some(())
+        .and_then(|_| load_provider_env(provider_id).or_else(|| load_provider_key(provider_id)));
+
+    health_check(
+        provider_id,
+        normalized_url,
+        fallback_key
+            .as_ref()
+            .map(|k| k.as_str())
+            .unwrap_or(normalized_key),
+    )
+    .await
+}
 
 /// Builds a provider record based on health check results.
 ///
@@ -82,20 +106,7 @@ pub(crate) async fn connect_and_save(
     let normalized_key = data.key.trim();
     let normalized_url = data.url.as_deref().unwrap_or("").trim();
 
-    let fallback_key = normalized_key
-        .is_empty()
-        .then_some(())
-        .and_then(|_| load_provider_env(provider_id).or_else(|| load_provider_key(provider_id)));
-
-    let result = health_check(
-        provider_id,
-        normalized_url,
-        fallback_key
-            .as_ref()
-            .map(|k| k.as_str())
-            .unwrap_or(normalized_key),
-    )
-    .await;
+    let result = probe_provider_health(provider_id, normalized_url, normalized_key).await;
 
     if !result.success {
         return ConnectAndSaveProviderResponse::failure(result.error.unwrap_or_default());
