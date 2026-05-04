@@ -1,0 +1,39 @@
+# Dependencies
+node_modules
+**/node_modules
+
+# Build outputs
+dist
+dist-ssr
+build
+target
+**/gen/schemas
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+Cargo.lock
+
+# Logs
+*.log
+
+# Minified files
+*.min.js
+*.min.css
+
+# Generated files
+*.generated.*
+
+# AI/Editor
+.claude
+.arts
+.zed
+.vscode
+.idea
+
+# OS
+.DS_Store
+
+# Rust
+target/
