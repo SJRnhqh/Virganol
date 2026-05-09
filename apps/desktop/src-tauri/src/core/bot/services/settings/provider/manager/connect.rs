@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/connect.rs
-use log::{error, info};
 use tauri::AppHandle;
 
 use super::super::super::super::super::{
@@ -7,7 +6,7 @@ use super::super::super::super::super::{
     ProviderError, ProviderId, ProviderRecord, ProviderState,
 };
 use super::super::{
-    load_provider_key, load_provider_record, probe_provider_connection, remove_provider_key,
+    load_provider_key, load_provider_record, probe_provider_connection, rollback_provider_key,
     save_provider, save_provider_key,
 };
 
@@ -27,42 +26,6 @@ fn build_provider_record(
         .unwrap_or_default();
 
     Ok(ProviderRecord::new(normalized_url, enabled_models))
-}
-
-/// 回滚密钥：恢复旧密钥或删除新密钥
-///
-/// 当配置持久化失败时，需要回滚 keyring 中的密钥变更以保持状态一致性。
-/// 回滚前做 CAS 校验：若当前 keyring 值不等于本次写入的 `expected_current`，
-/// 说明已被并发 reset/connect 覆盖，回滚只会误伤他人修改，直接跳过。
-/// 回滚失败不影响主错误返回，仅记录 error 日志供运维排查。
-fn rollback_provider_key(
-    provider_id: ProviderId,
-    previous_key: Option<&str>,
-    expected_current: &str,
-) {
-    // CAS 校验：keyring 被他人覆盖时跳过回滚
-    let current = load_provider_key(provider_id);
-    if current.as_ref().map(|k| k.as_str()) != Some(expected_current) {
-        info!(
-            "[Tauri] ↩️ {} key rollback skipped: concurrent modification detected",
-            provider_id
-        );
-        return;
-    }
-
-    let rollback_result = if let Some(key) = previous_key {
-        // 恢复旧密钥
-        save_provider_key(provider_id, key)
-    } else {
-        // 删除新添加的密钥
-        remove_provider_key(provider_id)
-    };
-
-    if let Err(e) = rollback_result {
-        error!("[Tauri] ❌ {} key rollback failed: {}", provider_id, e);
-    } else {
-        info!("[Tauri] ↩️ {} key rollback completed", provider_id);
-    }
 }
 
 /// Connects to a provider and saves the configuration if health check succeeds.
@@ -94,7 +57,7 @@ pub(crate) async fn connect_and_save(
             Err(e) => return ConnectAndSaveProviderResponse::failure(e.message()),
         };
 
-    let enabled_models_for_response = record.enabled_models.clone();
+    let enabled_models = record.enabled_models.clone();
 
     let key_snapshot = if normalized_key.is_empty() {
         None
@@ -107,7 +70,6 @@ pub(crate) async fn connect_and_save(
     };
 
     if let Err(e) = save_provider(app, provider_state, provider_id, record) {
-        // 仅当本次显式输入了 key 时，才需要回滚 keyring 变更
         if !normalized_key.is_empty() {
             rollback_provider_key(
                 provider_id,
@@ -119,5 +81,5 @@ pub(crate) async fn connect_and_save(
         return ConnectAndSaveProviderResponse::failure(e.message());
     }
 
-    ConnectAndSaveProviderResponse::ok(result.available_models, enabled_models_for_response)
+    ConnectAndSaveProviderResponse::ok(result.available_models, enabled_models)
 }

@@ -11,5 +11,5 @@ pub(crate) use lifecycle::check_providers_lifecycle;
 pub(crate) use manager::{connect_and_save, reset_provider_config, update_provider_enabled_models};
 pub(self) use store::{
     load_provider_record, load_supported_providers, remove_provider, remove_provider_key,
-    save_provider, update_models,
+    rollback_provider_key, save_provider, update_models,
 };
