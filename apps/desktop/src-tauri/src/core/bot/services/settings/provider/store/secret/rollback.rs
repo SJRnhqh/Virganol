@@ -1,7 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/secret/rollback.rs
 use super::super::super::super::super::super::ProviderId;
-use super::super::super::{load_provider_key, save_provider_key};
-use super::remove_provider_key;
+use super::{load_provider_key, remove_provider_key, save_provider_key};
 
 /// Rolls back a keyring key change with CAS protection.
 ///
