@@ -20,6 +20,13 @@
 
 ### 6.1.3: `connect_and_save_provider` Command Chain
 
+**Pre-refinement structural cleanup** (do before error refinement):
+
+- [ ] Simplify `load_provider_record` / `build_provider_record` — single caller in `connect.rs`; collapse wrapper indirection into one load→compute pass
+- [ ] Upgrade `ProviderKey` type to eliminate `!normalized_key.is_empty()` rollback fallback (approach options tracked in 6.1.5)
+
+**Error refinement** (depends on 6.1.4):
+
 - [ ] Audit health check error handling
 - [ ] Extend `ProviderErrorCode` with health check errors:
   - `NetworkUnreachable` - network connectivity failure
@@ -33,7 +40,7 @@
 
 ### 6.1.4: Error System Foundation
 
-- [ ] Migrate static lock to ProviderState.store_lock (replace PROVIDERS_STORE_LOCK)
+- [x] Migrate static lock to ProviderState.store_lock (replace PROVIDERS_STORE_LOCK)
 - [ ] Distinguish system errors (io/serde/keyring) from business errors (network/auth/timeout/format)
 - [ ] Define unified error response contract (code / message / details / trace_id)
 - [ ] Unify contract serialization to camelCase (`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload`)
