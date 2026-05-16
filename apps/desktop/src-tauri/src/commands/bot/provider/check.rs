@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/commands/bot/providers.rs
+// apps/desktop/src-tauri/src/commands/bot/provider/check.rs
 use tauri::{AppHandle, State};
 
 use crate::core::{check_providers_lifecycle, AppState, ProviderCheckTrigger};

@@ -8,6 +8,7 @@
     "dev:ui": "pnpm -F @virganol/ui dev",
     "dev": "pnpm -F @virganol/desktop dev",
     "build": "pnpm -F @virganol/desktop build",
+    "lint:rust:source-headers": "node scripts/rust/lint-source-headers.mjs",
     "prepare": "husky"
   },
   "keywords": [],
