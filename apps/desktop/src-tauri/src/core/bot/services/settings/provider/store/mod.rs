@@ -7,8 +7,7 @@ pub(super) use config::{remove_provider, save_provider, update_models};
 pub(self) use load::load_all_providers;
 pub(super) use load::{load_provider_record, load_supported_providers};
 pub(super) use secret::{
-    load_provider_env, load_provider_key, remove_provider_key, rollback_provider_key,
-    save_provider_key,
+    load_provider_env, load_provider_key, remove_provider_key, ProviderKeyTransaction,
 };
 
 // TODO(post-0.0.1): 考虑添加内存缓存层减少 I/O 放大

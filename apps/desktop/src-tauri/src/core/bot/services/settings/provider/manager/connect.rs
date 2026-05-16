@@ -6,8 +6,7 @@ use super::super::super::super::super::{
     ProviderError, ProviderId, ProviderRecord, ProviderState,
 };
 use super::super::{
-    load_provider_key, load_provider_record, probe_provider_connection, rollback_provider_key,
-    save_provider, save_provider_key,
+    load_provider_record, probe_provider_connection, save_provider, ProviderKeyTransaction,
 };
 
 /// Builds a provider record based on health check results.
@@ -59,26 +58,17 @@ pub(crate) async fn connect_and_save(
 
     let enabled_models = record.enabled_models.clone();
 
-    let key_snapshot = if normalized_key.is_empty() {
-        None
-    } else {
-        let snapshot = load_provider_key(provider_id);
-        match save_provider_key(provider_id, normalized_key) {
-            Ok(()) => snapshot,
-            Err(e) => return ConnectAndSaveProviderResponse::failure(e.message()),
-        }
+    let key_transaction = match ProviderKeyTransaction::begin(provider_id, normalized_key) {
+        Ok(transaction) => transaction,
+        Err(e) => return ConnectAndSaveProviderResponse::failure(e.message()),
     };
 
     if let Err(e) = save_provider(app, provider_state, provider_id, record) {
-        if !normalized_key.is_empty() {
-            rollback_provider_key(
-                provider_id,
-                key_snapshot.as_ref().map(|k| k.as_str()),
-                normalized_key,
-            );
-        }
-
         return ConnectAndSaveProviderResponse::failure(e.message());
+    }
+
+    if let Some(transaction) = key_transaction {
+        transaction.commit();
     }
 
     ConnectAndSaveProviderResponse::ok(result.available_models, enabled_models)
