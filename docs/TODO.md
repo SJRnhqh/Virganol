@@ -20,5 +20,5 @@
 
 - [x] Replace keyring rollback fallback with `ProviderKeyTransaction`
 - [x] Confirm reset does not need the same transaction model
-- [ ] Simplify `load_provider_record` / `build_provider_record` read path in `connect.rs`
+- [x] Move connect record construction into `ProviderRecord::from_connection`
 - [x] Audit non-health-check error propagation points in `connect_and_save_provider`

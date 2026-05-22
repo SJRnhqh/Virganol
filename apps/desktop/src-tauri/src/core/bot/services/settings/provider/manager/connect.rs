@@ -2,30 +2,11 @@
 use tauri::AppHandle;
 
 use super::super::super::super::super::{
-    compute_enabled_models, ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse,
-    ProviderError, ProviderId, ProviderRecord, ProviderState,
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderRecord, ProviderState,
 };
 use super::super::{
     load_provider_record, probe_provider_connection, save_provider, ProviderKeyTransaction,
 };
-
-/// Builds a provider record based on health check results.
-///
-/// 根据健康检查结果构造 Provider 配置记录，复用历史启用状态。
-fn build_provider_record(
-    app: &AppHandle,
-    provider_id: ProviderId,
-    normalized_url: &str,
-    available_models: &[String],
-) -> Result<ProviderRecord, ProviderError> {
-    let previous_record = load_provider_record(app, provider_id)?;
-
-    let enabled_models = previous_record
-        .map(|record| compute_enabled_models(&record.enabled_models, available_models))
-        .unwrap_or_default();
-
-    Ok(ProviderRecord::new(normalized_url, enabled_models))
-}
 
 /// Connects to a provider and saves the configuration if health check succeeds.
 ///
@@ -50,11 +31,16 @@ pub(crate) async fn connect_and_save(
         return ConnectAndSaveProviderResponse::failure(result.error.unwrap_or_default());
     }
 
-    let record =
-        match build_provider_record(app, provider_id, normalized_url, &result.available_models) {
-            Ok(record) => record,
-            Err(e) => return ConnectAndSaveProviderResponse::failure(e.message()),
-        };
+    let previous_record = match load_provider_record(app, provider_id) {
+        Ok(record) => record,
+        Err(e) => return ConnectAndSaveProviderResponse::failure(e.message()),
+    };
+
+    let record = ProviderRecord::from_connection(
+        normalized_url,
+        &result.available_models,
+        previous_record.as_ref(),
+    );
 
     let enabled_models = record.enabled_models.clone();
 

@@ -1,6 +1,8 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/record.rs
 use serde::{Deserialize, Serialize};
 
+use super::super::super::compute_enabled_models;
+
 /// Provider configuration record persisted in settings.json.
 ///
 /// Provider 持久化配置记录（settings.json 中 spirit.providers.{id}）。
@@ -20,5 +22,20 @@ impl ProviderRecord {
             url: (!url.is_empty()).then(|| url.to_string()),
             enabled_models,
         }
+    }
+
+    /// Creates a provider record from a successful connection result.
+    ///
+    /// 根据连接成功结果创建 Provider 配置记录，并保留仍可用的历史启用模型。
+    pub(crate) fn from_connection(
+        url: &str,
+        available_models: &[String],
+        previous: Option<&Self>,
+    ) -> Self {
+        let enabled_models = previous
+            .map(|record| compute_enabled_models(&record.enabled_models, available_models))
+            .unwrap_or_default();
+
+        Self::new(url, enabled_models)
     }
 }
