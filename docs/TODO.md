@@ -4,6 +4,12 @@
 
 ---
 
+## Completed Warm-up Refactors
+
+- [x] Move `load_provider_record` into `store/config/load.rs`
+- [x] Move connect command contracts under `contract/manager`
+- [x] Move `ProviderRecord` under provider config models
+
 ## Health Check Error Review
 
 - [ ] Audit health check business failure points in provider drivers
