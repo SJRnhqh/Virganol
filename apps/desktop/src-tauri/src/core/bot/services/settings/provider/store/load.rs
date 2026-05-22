@@ -1,9 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/load.rs
-// 外部依赖
 use std::collections::HashMap;
 use tauri::AppHandle;
 
-// 内部引用
 use super::super::super::super::super::{
     ProviderError, ProviderId, ProviderRecord, SkippedProviderDetail, SupportedProvidersSnapshot,
     SPIRIT_PROVIDERS_KEY,
@@ -53,20 +51,14 @@ pub(crate) fn load_supported_providers(
     })
 }
 
-/// 读取单个 provider 的配置快照（只读，严格错误处理）
-/// - Ok(Some(record))：存在该 provider 配置
-/// - Ok(None)：不存在该 provider 配置
-/// - Err(ProviderError::Io)：settings store 打开/读取失败
-/// - Err(ProviderError::Serde)：providers JSON 反序列化失败
+/// Loads one provider configuration as an owned read-only snapshot.
 ///
-/// TODO: 当前使用 clone (~150 bytes)，如果未来 ProviderRecord 字段增多（如添加
-/// model_configs、usage_history 等）或调用频率变高（如自动重连），可考虑引入
-/// ProvidersCache 结构返回引用，避免重复反序列化和内存分配。
+/// 读取单个 provider 的配置，返回拥有所有权的只读快照。
 pub(crate) fn load_provider_record(
     app: &AppHandle,
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {
     let providers = load_all_providers(app)?;
-    // TODO: 性能优化点 - 当 ProviderRecord 变大或调用频率变高时，考虑返回引用
+    // TODO(post-0.0.1): avoid this clone if a provider cache or per-provider store is introduced.
     Ok(providers.get(provider_id.as_str()).cloned())
 }

@@ -1,6 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/mod.rs
-// 导出内容
-pub mod provider;
+mod provider;
 
 pub(crate) use provider::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckCompletedPayload,
@@ -10,6 +9,6 @@ pub(crate) use provider::{
     UpdateEnabledModelsResponse,
 };
 pub(super) use provider::{
-    HealthCheckResponse, ProviderError, ProviderId, ProviderKey, ProviderRecord,
+    HealthCheckResponse, ProviderError, ProviderId, ProviderKey, ProviderKeyChange, ProviderRecord,
     SkippedProviderDetail, SupportedProvidersSnapshot,
 };

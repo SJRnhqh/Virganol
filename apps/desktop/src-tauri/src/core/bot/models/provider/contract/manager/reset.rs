@@ -1,5 +1,5 @@
-// apps/desktop/src-tauri/src/core/bot/models/provider/contract/reset.rs
-use super::base::{ProviderCommandRequest, ProviderCommandResponse};
+// apps/desktop/src-tauri/src/core/bot/models/provider/contract/manager/reset.rs
+use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 
 /// Request for resetting a provider.
 ///
