@@ -1,107 +1,24 @@
-# feat/spirit Branch Tasks
+# feat/spirit-connect-and-error Branch Tasks
 
-> Current branch task breakdown for Phase 6 error refinement and system closeout
+> Current branch closeout scope: connect call-chain simplification
 
 ---
 
-## Phase 6.1: Error Refinement (Interactive CRUD Commands)
+## Completed Branch Work
 
-### 6.1.1: `update_enabled_models` Command Chain
+- [x] Split provider commands into `provider/check.rs` and `provider/connect.rs`
+- [x] Move reset contract under the manager contract module
+- [x] Migrate connect contract to the generic provider command response shape
+- [x] Align connect manager signature with reset/update command pattern
+- [x] Rename update enabled models request data for contract consistency
+- [x] Simplify connect flow and extract helper boundaries
+- [x] Move provider connection probe helper into the connection layer
+- [x] Relocate provider key model and keyring primitives under secret/store modules
+- [x] Add Rust source header lint and workspace formatting config
 
-- [ ] Identify missing error codes (persistence failure / validation error)
-- [ ] Add unit tests for error scenarios
-- [ ] Verify error response contract (code / message / details)
+## Connect Chain Closeout
 
-### 6.1.2: `reset_provider` Command Chain
-
-- [ ] Identify missing error codes (provider not found / persistence failure)
-- [ ] Add unit tests for error scenarios
-- [ ] Verify error response contract
-
-### 6.1.3: `connect_and_save_provider` Command Chain
-
-**Pre-refinement structural cleanup** (do before error refinement):
-
-- [ ] Simplify `load_provider_record` / `build_provider_record` — single caller in `connect.rs`; collapse wrapper indirection into one load→compute pass
-- [x] Upgrade `ProviderKey` type to eliminate `!normalized_key.is_empty()` rollback fallback
-
-  **Problem**: `connect_and_save` falls back to `!normalized_key.is_empty()` in the rollback branch because `Option<ProviderKey>` only encodes the snapshot value, not whether `save_provider_key` actually ran. The two `None` paths (key empty vs. key written but no prior value) cannot be disambiguated by the snapshot alone. Lift "whether keyring was modified" into the type system so rollback becomes type-driven.
-
-  **Approach options** (choose one):
-
-  - **Option B (conservative)**: introduce `KeyChange { snapshot: Option<String>, new_key: String }`, main flow holds `Option<KeyChange>`; rollback collapses to `if let Some(change) = key_change { ... }`; narrow `rollback_provider_key` to `(provider_id, &KeyChange)`
-  - **Option C (RAII, selected)**: introduce `ProviderKeyTransaction` with `begin` / `commit` / auto-rollback on `Drop`; constraints: `Drop` cannot return errors or panic (already aligns with current "compensation failure → log only")
-
-  **Acceptance**:
-
-  - [x] Rollback branch independent of `!normalized_key.is_empty()`
-  - Unit tests cover 3 paths: no write / write with no prior key / write with prior key
-  - [x] Evaluate whether `reset` chain can reuse the same transaction model
-
-**Error refinement** (depends on 6.1.4):
-
-- [ ] Audit health check error handling
-- [ ] Extend `ProviderErrorCode` with health check errors:
-  - `NetworkUnreachable` - network connectivity failure
-  - `AuthFailure` - authentication/authorization failure
-  - `Timeout` - request timeout
-  - `InvalidFormat` - response format error
-- [ ] Migrate `ProviderError` to `thiserror` (fix `source()` for error chain traceability)
-- [ ] Extend `HealthCheckResponse` with `error_code` field
-- [ ] Add unit tests for all health check error scenarios
-- [ ] Verify error response contract
-
-### 6.1.4: Error System Foundation
-
-- [x] Migrate static lock to ProviderState.store_lock (replace PROVIDERS_STORE_LOCK)
-- [ ] Distinguish system errors (io/serde/keyring) from business errors (network/auth/timeout/format)
-- [ ] Define unified error response contract (code / message / details / trace_id)
-- [ ] Unify contract serialization to camelCase (`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload`)
-
-## Phase 6.2: Error Refinement (Lifecycle Commands)
-
-### 6.2.1: `trigger_provider_startup_check` Chain
-
-- [ ] Review existing error handling completeness
-- [ ] Refine error codes if needed
-- [ ] Add unit tests for edge cases
-
-### 6.2.2: `trigger_provider_manual_refresh` Chain
-
-- [ ] Review existing error handling completeness
-- [ ] Refine error codes if needed
-- [ ] Add unit tests for edge cases
-
-## Phase 6.3: Frontend Error System
-
-- [ ] Sync frontend error types (mirror backend `ProviderErrorCode`)
-- [ ] Adapt frontend for fine-grained error display (per error code UI feedback)
-- [ ] Design error display components (Toast / inline error messages)
-
-## Phase 6.4: Logging System (After Error Refinement Complete)
-
-**Backend Logging**:
-
-- [ ] Design log persistence strategy (file rotation / structured format)
-- [ ] Define logging points (CRUD entry/exit, health check, persistence operations, error paths)
-- [ ] Standardize logging format (level / timestamp / module / message / context)
-- [ ] Add structured logging context (trace_id / operation_id / provider_id / error_code)
-- [ ] Implement log level strategy (info for success, warn for retryable, error for fatal)
-
-**Frontend Logging**:
-
-- [ ] Design frontend error boundary and middleware
-- [ ] Implement frontend logging strategy (console for dev, reporting for prod)
-- [ ] Optimize CRUD operation logging (only log slow operations exceeding threshold)
-
-**Observability**:
-
-- [ ] Design trace_id generation and propagation (backend → frontend)
-- [ ] Plan log collection and monitoring integration points
-
-## Phase 6.5: Integration Testing & Validation
-
-- [ ] Write integration tests for all 5 command chains
-- [ ] End-to-end error propagation validation
-- [ ] Error response contract validation
-- [ ] Log output validation (if Phase 6.4 complete)
+- [x] Replace keyring rollback fallback with `ProviderKeyTransaction`
+- [x] Confirm reset does not need the same transaction model
+- [ ] Simplify `load_provider_record` / `build_provider_record` read path in `connect.rs`
+- [x] Audit non-health-check error propagation points in `connect_and_save_provider`
