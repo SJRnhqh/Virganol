@@ -10,6 +10,11 @@
 - [x] Move connect command contracts under `contract/manager`
 - [x] Move `ProviderRecord` under provider config models
 
+## Completed Prompt Updates
+
+- [x] Add `prompts/design-session.md` for product, UI, brand, and architecture
+  discussion sessions
+
 ## Health Check Error Review
 
 - [ ] Audit health check business failure points in provider drivers
