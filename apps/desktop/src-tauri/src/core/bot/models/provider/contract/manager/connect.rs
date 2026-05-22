@@ -1,7 +1,7 @@
-// apps/desktop/src-tauri/src/core/bot/models/provider/contract/connect.rs
+// apps/desktop/src-tauri/src/core/bot/models/provider/contract/manager/connect.rs
 use serde::{Deserialize, Serialize};
 
-use super::base::{ProviderCommandRequest, ProviderCommandResponse};
+use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 
 /// Request data for connecting a provider.
 ///
