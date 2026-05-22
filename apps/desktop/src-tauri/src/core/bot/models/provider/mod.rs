@@ -1,13 +1,12 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/mod.rs
-// 导出内容
 mod check;
 mod common;
 mod connection;
 mod contract;
 mod error;
 mod id;
-mod key;
 mod record;
+mod secret;
 mod security;
 mod snapshot;
 
@@ -23,7 +22,7 @@ pub(crate) use contract::{
 };
 pub use error::{ProviderError, ProviderErrorCode, ProviderIssue, SkippedProviderDetail};
 pub use id::ProviderId;
-pub use key::ProviderKey;
-pub use record::ProviderRecord;
+pub(crate) use record::ProviderRecord;
+pub(crate) use secret::{ProviderKey, ProviderKeyChange};
 pub use security::{ProviderKeySource, ProviderSecretMeta};
 pub use snapshot::SupportedProvidersSnapshot;

@@ -1,0 +1,25 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Frontend (React/TypeScript)
+[*.{js,jsx,ts,tsx,json,css,html,vue}]
+indent_style = space
+indent_size = 2
+
+# Rust
+[*.rs]
+indent_style = space
+indent_size = 4
+
+# Go
+[*.go]
+indent_style = tab
+
+# Markdown
+[*.md]
+trim_trailing_whitespace = false

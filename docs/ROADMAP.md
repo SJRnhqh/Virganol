@@ -41,6 +41,8 @@ LLM Provider 接入分为两条主线：
 
 按命令链路逐个审查：update_models → reset → connect
 
+- [ ] 完成 CRUD 错误上抛点梳理后，统一推进错误响应泛型化升级
+- [ ] 审查 connect 健康检查业务错误上抛点
 - [ ] 扩展 `ProviderErrorCode`（健康检查错误：网络不可达 / 认证失败 / 超时 / 响应格式错误）
 - [ ] 迁移 `ProviderError` 至 `thiserror`（修复 `source()` 空实现，错误链可追溯）
 - [ ] 扩展 `HealthCheckResponse` 添加 `error_code` 字段
