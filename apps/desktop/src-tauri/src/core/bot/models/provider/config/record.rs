@@ -1,7 +1,7 @@
-// apps/desktop/src-tauri/src/core/bot/models/provider/record.rs
+// apps/desktop/src-tauri/src/core/bot/models/provider/config/record.rs
 use serde::{Deserialize, Serialize};
 
-use super::super::super::compute_enabled_models;
+use super::super::super::super::compute_enabled_models;
 
 /// Provider configuration record persisted in settings.json.
 ///
