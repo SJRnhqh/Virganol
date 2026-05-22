@@ -31,10 +31,6 @@ LLM Provider 接入分为两条主线：
 - update_models 链路：持久化层重构、日志优化、Hooks 层重构、语义对齐
 - 查漏补缺：并发控制、原子写入、回滚逻辑、契约升级
 
-**遗留项**（已迁移至 Phase 6.3）：
-
-- Provider 级别锁优化（per-provider 串行化 connect，提高并发性能）
-
 ### 🚧 Phase 6：错误精细化与全局收尾
 
 #### 6.1 错误精细化（交互式 CRUD）
@@ -63,6 +59,7 @@ LLM Provider 接入分为两条主线：
 - [ ] 同步前端错误类型（镜像后端 `ProviderErrorCode`）
 - [ ] 适配细粒度错误展示（按错误码差异化 UI 反馈）
 - [ ] 设计错误展示组件（Toast / inline 错误消息）
+- [ ] 评估 provider 级操作串行化需求（connect/reset/update 并发冲突）
 
 #### 6.4 日志系统（错误精细化完成后）
 
