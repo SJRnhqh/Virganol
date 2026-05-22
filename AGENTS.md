@@ -30,6 +30,16 @@ docs/
 └── TODO.md          # Branch-level task breakdown
 ```
 
+## Prompt Responsibilities
+
+Reusable AI collaboration prompts should live under `prompts/`. Stable project
+rules belong in `AGENTS.md`, while project state and planning documents belong
+under `docs/`.
+
+When the user asks for a "message" after discussing or making code or
+documentation changes, interpret it as a commit message request. Read
+`prompts/commit-message.md` and follow it.
+
 ## Development Workflow
 
 The workflow is defined from coarse to fine: version development, feature
