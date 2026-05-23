@@ -41,10 +41,10 @@ LLM Provider 接入分为两条主线：
 - [ ] 审查 connect 健康检查业务错误上抛点
 - [ ] 扩展 `ProviderErrorCode`（健康检查错误：网络不可达 / 认证失败 / 超时 / 响应格式错误）
 - [ ] 迁移 `ProviderError` 至 `thiserror`（修复 `source()` 空实现，错误链可追溯）
-- [ ] 扩展 `HealthCheckResponse` 添加 `error_code` 字段
+- [ ] 扩展 `HealthCheckResult` 添加 `error_code` 字段
 - [ ] 区分系统错误（io/serde/keyring）与业务错误（network/auth/timeout/format）
 - [ ] 统一错误响应契约（code / message / details / trace_id）
-- [ ] 契约序列化命名统一 camelCase（`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload`）
+- [ ] 契约序列化命名统一 camelCase（`HealthCheckResult` / `ProviderRecord` / `ProviderStatusPayload`）
 - [ ] 单元测试覆盖各命令链路错误场景
 
 #### 6.2 错误精细化（生命周期）

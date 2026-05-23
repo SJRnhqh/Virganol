@@ -16,7 +16,7 @@ pub use check::{
 };
 pub(crate) use common::ProviderState;
 pub(crate) use config::ProviderRecord;
-pub use connection::HealthCheckResponse;
+pub(crate) use connection::HealthCheckResult;
 pub(crate) use contract::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderRequest,
     ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,

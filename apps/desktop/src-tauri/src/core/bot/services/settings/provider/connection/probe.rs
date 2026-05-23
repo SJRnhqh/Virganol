@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/probe.rs
-use super::super::super::super::super::{HealthCheckResponse, ProviderId};
+use super::super::super::super::super::{HealthCheckResult, ProviderId};
 use super::super::{load_provider_env, load_provider_key};
-use super::health::health_check;
+use super::health_check;
 
 /// Probes a single provider's connection with automatic credential fallback (env → keyring).
 ///
@@ -10,7 +10,7 @@ pub(crate) async fn probe_provider_connection(
     provider_id: ProviderId,
     normalized_url: &str,
     normalized_key: &str,
-) -> HealthCheckResponse {
+) -> HealthCheckResult {
     let fallback_key = normalized_key
         .is_empty()
         .then_some(())

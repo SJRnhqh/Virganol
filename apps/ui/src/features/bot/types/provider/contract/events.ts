@@ -1,7 +1,7 @@
 // apps/ui/src/features/bot/types/provider/contract/events.ts
 // 内部引用
 import type { ProviderId } from "../common";
-import type { HealthCheckResponse } from "./commands";
+import type { HealthCheckResult } from "./commands";
 import type { ProviderSecretMeta } from "./secret";
 import type { ProviderRecord } from "./record";
 
@@ -38,7 +38,7 @@ export interface ProviderStatusPayload {
   /** 已持久化的配置快照 */
   config: ProviderRecord;
   /** 健康检查结果 */
-  health: HealthCheckResponse;
+  health: HealthCheckResult;
   /** 去敏密钥元信息 */
   secret_meta: ProviderSecretMeta;
 }
