@@ -1,12 +1,10 @@
 // apps/desktop/src-tauri/src/core/bot/interfaces/provider/driver.rs
-// 外部依赖
 use std::future::Future;
 use std::pin::Pin;
 
-// 内部引用
-use super::super::super::{HealthCheckResponse, ProviderId};
+use super::super::super::{HealthCheckResult, ProviderId};
 
-pub(crate) type DriverFuture<'a> = Pin<Box<dyn Future<Output = HealthCheckResponse> + Send + 'a>>;
+pub(crate) type DriverFuture<'a> = Pin<Box<dyn Future<Output = HealthCheckResult> + Send + 'a>>;
 
 pub(crate) trait ProviderDriver: Send + Sync {
     fn provider_id(&self) -> ProviderId;

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 // 内部引用
 use crate::core::bot::models::provider::{
-    HealthCheckResponse, ProviderErrorCode, ProviderId, ProviderIssue, ProviderRecord,
+    HealthCheckResult, ProviderErrorCode, ProviderId, ProviderIssue, ProviderRecord,
     ProviderSecretMeta,
 };
 
@@ -37,7 +37,7 @@ pub struct ProviderCheckStartedPayload {
     pub trigger: ProviderCheckTrigger,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Serialize)]
 /// 一轮 Provider 检查中，逐个推送给前端的状态事件载荷。
 pub struct ProviderStatusPayload {
     /// 本轮检查唯一标识，用于关联 started/status/completed 事件。
@@ -47,7 +47,7 @@ pub struct ProviderStatusPayload {
     /// 当前 Provider 的已持久化配置快照。
     pub config: ProviderRecord,
     /// 当前 Provider 的健康检查结果。
-    pub health: HealthCheckResponse,
+    pub health: HealthCheckResult,
     /// 当前 Provider 的去敏密钥元信息。
     pub secret_meta: ProviderSecretMeta,
 }

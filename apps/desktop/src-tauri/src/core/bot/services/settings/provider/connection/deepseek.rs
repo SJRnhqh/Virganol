@@ -1,17 +1,17 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/deepseek.rs
-// 外部依赖
 use log::{debug, error, info};
 
-// 内部引用
-use super::super::super::super::super::{HealthCheckResponse, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS};
+use super::super::super::super::super::{HealthCheckResult, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS};
 use super::get_http_client;
 
 const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
 
-/// DeepSeek 健康检查：GET {base_url}/v1/models + Bearer token → 解析模型列表
-pub(super) async fn deepseek_check(key: &str) -> HealthCheckResponse {
+/// Checks DeepSeek by requesting `{base_url}/v1/models` with bearer authentication.
+///
+/// 通过 bearer 认证请求 `{base_url}/v1/models` 检查 DeepSeek，并解析模型列表。
+pub(super) async fn deepseek_check(key: &str) -> HealthCheckResult {
     if key.is_empty() {
-        return HealthCheckResponse::fail("Missing API key");
+        return HealthCheckResult::fail("Missing API key");
     }
 
     let endpoint = format!("{}/v1/models", DEEPSEEK_BASE_URL);
@@ -29,21 +29,21 @@ pub(super) async fn deepseek_check(key: &str) -> HealthCheckResponse {
         Ok(r) => r,
         Err(e) => {
             error!("[Tauri][DeepSeek] request failed: {}", e);
-            return HealthCheckResponse::fail(format!("Connection failed: {}", e));
+            return HealthCheckResult::fail(format!("Connection failed: {}", e));
         }
     };
 
     if !resp.status().is_success() {
         let msg = format!("HTTP {}", resp.status());
         error!("[Tauri][DeepSeek] {}", msg);
-        return HealthCheckResponse::fail(msg);
+        return HealthCheckResult::fail(msg);
     }
 
     let json: serde_json::Value = match resp.json().await {
         Ok(v) => v,
         Err(e) => {
             error!("[Tauri][DeepSeek] JSON parse error: {}", e);
-            return HealthCheckResponse::fail(format!("Invalid response: {}", e));
+            return HealthCheckResult::fail(format!("Invalid response: {}", e));
         }
     };
 
@@ -62,9 +62,9 @@ pub(super) async fn deepseek_check(key: &str) -> HealthCheckResponse {
         .unwrap_or_default();
 
     if models.is_empty() {
-        return HealthCheckResponse::fail("No models available");
+        return HealthCheckResult::fail("No models available");
     }
 
     info!("[Tauri][DeepSeek] ✅ {} models found", models.len());
-    HealthCheckResponse::ok(models)
+    HealthCheckResult::ok(models)
 }

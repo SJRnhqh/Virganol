@@ -18,7 +18,7 @@ pub(crate) use models::{
     UpdateEnabledModelsResponse,
 };
 pub(self) use models::{
-    HealthCheckResponse, ProviderError, ProviderId, ProviderKey, ProviderKeyChange, ProviderRecord,
+    HealthCheckResult, ProviderError, ProviderId, ProviderKey, ProviderKeyChange, ProviderRecord,
     SkippedProviderDetail, SupportedProvidersSnapshot,
 };
 pub(crate) use services::{

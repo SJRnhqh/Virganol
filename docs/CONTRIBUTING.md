@@ -33,7 +33,7 @@ Virganol uses emoji-prefixed commit messages to indicate the type and scope of c
 
 #### `version` Branch
 
-- `🎉 epic` - Major feature integration (merged from feat/*)
+- `🎉 epic` - Major feature integration (merged from `feat/*`)
 - `⚗️ verify` - Version-level verification
 - `📜 closeout` - Version documentation closeout (CHANGELOG, ROADMAP)
 
@@ -66,6 +66,16 @@ Virganol uses emoji-prefixed commit messages to indicate the type and scope of c
 🚀 release: v0.1.0
 ```
 
-### Validation
+## Local Validation
 
 Commit messages are validated by commitlint via husky hooks. Note that some IDEs may bypass hooks, so manual validation may be needed.
+
+CI workflow is defined in `.github/workflows/ci.yml`.
+
+Run CI checks locally from the repository root:
+
+```bash
+bash .github/ci/ui-lint.sh
+bash .github/ci/go-test.sh
+bash .github/ci/rust-check.sh
+```
