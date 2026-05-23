@@ -17,7 +17,7 @@
 
 ## Health Check Error Review
 
-- [ ] Audit health check business failure points in provider drivers
-- [ ] Classify health check failures by user-facing cause
-- [ ] Prepare `HealthCheckResult` for structured error codes
-- [ ] Keep command response generic upgrade out of this branch
+- [x] Audit health check business failure points in provider drivers
+- [x] Classify health check failures by user-facing cause
+- [x] Prepare `HealthCheckResult` for structured error codes
+- [x] Keep command response generic upgrade out of this branch

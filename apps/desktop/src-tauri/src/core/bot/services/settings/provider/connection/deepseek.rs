@@ -1,14 +1,14 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/deepseek.rs
-// 外部依赖
 use log::{debug, error, info};
 
-// 内部引用
 use super::super::super::super::super::{HealthCheckResult, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS};
 use super::get_http_client;
 
 const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
 
-/// DeepSeek 健康检查：GET {base_url}/v1/models + Bearer token → 解析模型列表
+/// Checks DeepSeek by requesting `{base_url}/v1/models` with bearer authentication.
+///
+/// 通过 bearer 认证请求 `{base_url}/v1/models` 检查 DeepSeek，并解析模型列表。
 pub(super) async fn deepseek_check(key: &str) -> HealthCheckResult {
     if key.is_empty() {
         return HealthCheckResult::fail("Missing API key");

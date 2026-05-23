@@ -1,13 +1,12 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/ollama.rs
-// 外部依赖
 use log::{debug, error, info};
 
-// 内部引用
 use super::super::super::super::super::{HealthCheckResult, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS};
 use super::get_http_client;
 
-/// Ollama 健康检查：GET {url}/api/tags → 解析模型列表
-/// `key` 为可选，非空时附带 Bearer 认证头，空字符串时直接忽略
+/// Checks Ollama by requesting `{url}/api/tags` and adding bearer auth only when `key` is present.
+///
+/// 通过请求 `{url}/api/tags` 检查 Ollama，并仅在 `key` 非空时附带 bearer 认证。
 pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResult {
     if url.is_empty() {
         return HealthCheckResult::fail("Missing URL");
