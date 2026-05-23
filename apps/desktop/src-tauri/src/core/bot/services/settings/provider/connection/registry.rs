@@ -1,9 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/registry.rs
-// 外部依赖
 use std::collections::HashMap;
 use std::sync::OnceLock;
 
-// 内部引用
 use super::super::super::super::super::{DriverFuture, ProviderDriver, ProviderId};
 use super::{deepseek_check, ollama_check};
 

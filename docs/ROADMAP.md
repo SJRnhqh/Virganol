@@ -31,30 +31,39 @@ LLM Provider 接入分为两条主线：
 - update_models 链路：持久化层重构、日志优化、Hooks 层重构、语义对齐
 - 查漏补缺：并发控制、原子写入、回滚逻辑、契约升级
 
-**遗留项**（已迁移至 Phase 6.3）：
-
-- Provider 级别锁优化（per-provider 串行化 connect，提高并发性能）
-
 ### 🚧 Phase 6：错误精细化与全局收尾
 
 #### 6.1 错误精细化（交互式 CRUD）
 
 按命令链路逐个审查：update_models → reset → connect
 
-- [ ] 完成 CRUD 错误上抛点梳理后，统一推进错误响应泛型化升级
-- [ ] 审查 connect 健康检查业务错误上抛点
+**已完成**：
+
+- update_models 链路错误上抛点审查
+- reset 链路错误上抛点审查
+- connect 链路错误上抛点审查
+- connect 健康检查业务失败点审查（Ollama / DeepSeek）
+- `HealthCheckResult` 命名、可见性、trait、模块位置和注释规范化
+- 明确健康检查 `error: Option<String>` 暂保持扁平错误消息，后续随统一错误契约升级
+
+**待统一升级**：
+
+- [x] 完成 CRUD 链路错误上抛点梳理（update_models / reset / connect）
+- [x] 审查 connect 健康检查业务错误上抛点
+- [ ] 统一推进错误响应泛型化升级
 - [ ] 扩展 `ProviderErrorCode`（健康检查错误：网络不可达 / 认证失败 / 超时 / 响应格式错误）
 - [ ] 迁移 `ProviderError` 至 `thiserror`（修复 `source()` 空实现，错误链可追溯）
-- [ ] 扩展 `HealthCheckResponse` 添加 `error_code` 字段
+- [ ] 扩展 `HealthCheckResult` 添加 `error_code` 字段
 - [ ] 区分系统错误（io/serde/keyring）与业务错误（network/auth/timeout/format）
 - [ ] 统一错误响应契约（code / message / details / trace_id）
-- [ ] 契约序列化命名统一 camelCase（`HealthCheckResponse` / `ProviderRecord` / `ProviderStatusPayload`）
+- [ ] 契约序列化命名统一 camelCase（`HealthCheckResult` / `ProviderRecord` / `ProviderStatusPayload`）
 - [ ] 单元测试覆盖各命令链路错误场景
 
 #### 6.2 错误精细化（生命周期）
 
-审查 startup_check 和 manual_refresh 链路
+下一工作分支审查 startup_check 和 manual_refresh 链路
 
+- [ ] 审查生命周期链路错误上抛点
 - [ ] 复查现有错误处理完整性
 - [ ] 补充边界场景单元测试
 
@@ -63,6 +72,7 @@ LLM Provider 接入分为两条主线：
 - [ ] 同步前端错误类型（镜像后端 `ProviderErrorCode`）
 - [ ] 适配细粒度错误展示（按错误码差异化 UI 反馈）
 - [ ] 设计错误展示组件（Toast / inline 错误消息）
+- [ ] 评估 provider 级操作串行化需求（connect/reset/update 并发冲突）
 
 #### 6.4 日志系统（错误精细化完成后）
 

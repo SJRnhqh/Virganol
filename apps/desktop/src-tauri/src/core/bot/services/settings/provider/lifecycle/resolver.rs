@@ -2,7 +2,7 @@
 // 内部引用
 use super::super::{health_check, load_provider_env, load_provider_key};
 use crate::core::bot::models::{
-    HealthCheckResponse, ProviderId, ProviderKeySource, ProviderSecretMeta,
+    HealthCheckResult, ProviderId, ProviderKeySource, ProviderSecretMeta,
 };
 
 /// 一次性解析密钥并执行健康检查，同时返回密钥来源元信息（env 优先，其次 keyring）
@@ -10,7 +10,7 @@ use crate::core::bot::models::{
 pub(super) async fn health_check_with_secret_meta(
     provider_id: ProviderId,
     url: &str,
-) -> (HealthCheckResponse, ProviderSecretMeta) {
+) -> (HealthCheckResult, ProviderSecretMeta) {
     let (api_key, secret_meta) = if let Some(k) = load_provider_env(provider_id) {
         (
             Some(k),

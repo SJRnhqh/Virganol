@@ -5,7 +5,7 @@ use tauri::AppHandle;
 
 // 内部引用
 use super::super::super::super::super::{
-    compute_enabled_models, HealthCheckResponse, ProviderError, ProviderId, ProviderRecord,
+    compute_enabled_models, HealthCheckResult, ProviderError, ProviderId, ProviderRecord,
     ProviderState,
 };
 use super::super::save_provider;
@@ -65,7 +65,7 @@ pub(super) fn process_provider_check_result(
     provider_state: &ProviderState,
     provider_id: ProviderId,
     record: ProviderRecord,
-    health: &HealthCheckResponse,
+    health: &HealthCheckResult,
 ) -> (ProviderRecord, bool, Option<ProviderError>) {
     let online = health.success;
 

@@ -1,6 +1,9 @@
 # Virganol 🧪
 
-> A modern AI-native scientific IDE for scientists and engineers.
+> A local-first, AI-native scientific workbench for connected labs.
+
+Scientific workflows are implemented around an agent-native runtime that
+integrates instruments, data, scripts, compute, and models on the desktop.
 
 ## Tech Stack
 
@@ -24,7 +27,8 @@ Virganol/
 │   ├── ui/                    # React frontend
 │   ├── desktop/               # Tauri desktop wrapper (Rust)
 │   └── server/                # Go agent sidecar
-└── docs/                      # Documentation
+├── docs/                      # Documentation
+└── prompts/                   # Reusable AI collaboration prompts
 ```
 
 ## Development
@@ -35,18 +39,6 @@ pnpm install
 
 # Run development server
 pnpm dev
-```
-
-## CI
-
-CI workflow is defined in `.github/workflows/ci.yml`.
-
-Run CI checks locally from repository root:
-
-```bash
-bash .github/ci/ui-lint.sh
-bash .github/ci/go-test.sh
-bash .github/ci/rust-check.sh
 ```
 
 ## License

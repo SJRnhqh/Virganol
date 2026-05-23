@@ -4,7 +4,7 @@ use tauri::{AppHandle, Emitter};
 
 // 内部引用
 use crate::core::bot::models::{
-    HealthCheckResponse, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
+    HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckStartedPayload, ProviderCheckTrigger, ProviderError, ProviderId, ProviderIssue,
     ProviderRecord, ProviderSecretMeta, ProviderStatusPayload,
 };
@@ -37,7 +37,7 @@ pub(super) fn emit_provider_status(
     run_id: &str,
     provider_id: ProviderId,
     config: ProviderRecord,
-    health: HealthCheckResponse,
+    health: HealthCheckResult,
     secret_meta: ProviderSecretMeta,
 ) -> Result<(), ProviderError> {
     let payload = ProviderStatusPayload {

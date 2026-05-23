@@ -1,16 +1,15 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/ollama.rs
-// 外部依赖
 use log::{debug, error, info};
 
-// 内部引用
-use super::super::super::super::super::{HealthCheckResponse, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS};
+use super::super::super::super::super::{HealthCheckResult, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS};
 use super::get_http_client;
 
-/// Ollama 健康检查：GET {url}/api/tags → 解析模型列表
-/// `key` 为可选，非空时附带 Bearer 认证头，空字符串时直接忽略
-pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
+/// Checks Ollama by requesting `{url}/api/tags` and adding bearer auth only when `key` is present.
+///
+/// 通过请求 `{url}/api/tags` 检查 Ollama，并仅在 `key` 非空时附带 bearer 认证。
+pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResult {
     if url.is_empty() {
-        return HealthCheckResponse::fail("Missing URL");
+        return HealthCheckResult::fail("Missing URL");
     }
 
     let base = url.trim_end_matches('/');
@@ -30,21 +29,21 @@ pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
         Ok(r) => r,
         Err(e) => {
             error!("[Tauri][Ollama] request failed: {}", e);
-            return HealthCheckResponse::fail(format!("Connection failed: {}", e));
+            return HealthCheckResult::fail(format!("Connection failed: {}", e));
         }
     };
 
     if !resp.status().is_success() {
         let msg = format!("HTTP {}", resp.status());
         error!("[Tauri][Ollama] {}", msg);
-        return HealthCheckResponse::fail(msg);
+        return HealthCheckResult::fail(msg);
     }
 
     let json: serde_json::Value = match resp.json().await {
         Ok(v) => v,
         Err(e) => {
             error!("[Tauri][Ollama] JSON parse error: {}", e);
-            return HealthCheckResponse::fail(format!("Invalid response: {}", e));
+            return HealthCheckResult::fail(format!("Invalid response: {}", e));
         }
     };
 
@@ -62,9 +61,9 @@ pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResponse {
         .unwrap_or_default();
 
     if models.is_empty() {
-        return HealthCheckResponse::fail("No models available");
+        return HealthCheckResult::fail("No models available");
     }
 
     info!("[Tauri][Ollama] ✅ {} models found", models.len());
-    HealthCheckResponse::ok(models)
+    HealthCheckResult::ok(models)
 }

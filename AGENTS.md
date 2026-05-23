@@ -1,7 +1,7 @@
 # Virganol Development Guidelines
 
-Virganol is an AI-native desktop IDE for scientists and engineers, built with a
-React frontend, a Tauri/Rust desktop runtime, and a Go sidecar.
+Virganol is a local-first, AI-native scientific workbench for connected labs,
+built with a React frontend, a Tauri/Rust desktop runtime, and a Go sidecar.
 
 This document defines Virganol's stable project-level development guidance.
 Feature-specific architecture, roadmap details, and branch task execution
@@ -29,6 +29,16 @@ docs/
 ├── ROADMAP.md       # Version-level roadmap and progress
 └── TODO.md          # Branch-level task breakdown
 ```
+
+## Prompt Responsibilities
+
+Reusable AI collaboration prompts should live under `prompts/`. Stable project
+rules belong in `AGENTS.md`, while project state and planning documents belong
+under `docs/`.
+
+When the user asks for a "message" after discussing or making code or
+documentation changes, interpret it as a commit message request. Read
+`prompts/commit-message.md` and follow it.
 
 ## Development Workflow
 
@@ -96,13 +106,9 @@ development version
 
 ### Commit Message Convention
 
-Commit messages follow the format: `<emoji> <type>: <subject>` (max 100 characters).
-
-**Rules**:
-
-- Subject must be lowercase, no trailing period
-- Body and footer require blank line separation if present
-- Enforced by commitlint via husky hooks (note: some IDEs may bypass)
+When creating or suggesting commit messages, follow the branch-specific type map
+below. See `docs/CONTRIBUTING.md` for the complete commit message rules and
+local validation workflow.
 
 **Types by branch**:
 
