@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/lifecycle/payload.rs
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 use super::ProviderCheckTrigger;
 use crate::core::bot::models::provider::{
@@ -31,7 +31,7 @@ pub(crate) struct ProviderStatusPayload {
     pub(crate) secret_meta: ProviderSecretMeta,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Serialize)]
 /// 一轮 Provider 检查正常结束时推送给前端的事件载荷。
 pub(crate) struct ProviderCheckCompletedPayload {
     /// 本轮检查唯一标识，用于关联 started/status/completed 事件。

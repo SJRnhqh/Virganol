@@ -6,7 +6,7 @@ use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 /// Request data for connecting a provider.
 ///
 /// 连接 Provider 的请求数据。
-#[derive(Debug, Deserialize, Default)]
+#[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ConnectAndSaveProviderRequestData {
     /// Provider API key supplied by the user.
@@ -24,7 +24,7 @@ pub(crate) struct ConnectAndSaveProviderRequestData {
 /// Response data for connect operation.
 ///
 /// 连接操作的响应数据。
-#[derive(Debug, Serialize)]
+#[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ConnectAndSaveProviderResponseData {
     /// Models discovered by the provider health check.

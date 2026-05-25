@@ -6,7 +6,7 @@ use super::super::super::super::compute_enabled_models;
 /// Provider configuration record persisted in settings.json.
 ///
 /// Provider 持久化配置记录（settings.json 中 spirit.providers.{id}）。
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub(crate) struct ProviderRecord {
     /// Optional provider base URL.
     ///
