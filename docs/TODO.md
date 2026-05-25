@@ -17,4 +17,8 @@
 
 ### Active Review
 
-- [ ] Continue lifecycle backend inspection after commands layer review, focusing on lifecycle checks and error propagation points
+- [x] Enter services-layer lifecycle review from `flow.rs` after commands-layer review
+- [x] Review lifecycle run ID setup in `flow.rs` and keep run ID generation scoped to `lifecycle/rid.rs`
+- [x] Normalize comments and local import style for lifecycle flow/run ID review scaffolding
+- [x] Normalize comments for small core modules outside large `models` and `services` areas
+- [ ] Continue `flow.rs` review from lifecycle started event emission and failure reporting
