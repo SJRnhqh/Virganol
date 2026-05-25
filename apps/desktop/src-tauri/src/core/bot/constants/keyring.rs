@@ -1,4 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/constants/keyring.rs
 
-/// 应用在系统密钥库中的 service 名称（命名空间）
+/// Service namespace used for provider secrets in the system keyring.
+///
+/// 系统密钥库中用于存储 Provider 密钥的 service 命名空间。
 pub(crate) const PROVIDER_KEYRING_SERVICE: &str = "com.virganol.app.provider";
