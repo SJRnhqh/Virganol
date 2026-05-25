@@ -10,7 +10,7 @@ use crate::core::bot::models::{ProviderCheckTrigger, ProviderError, ProviderIssu
 pub(super) fn report_lifecycle_failure(
     app: &AppHandle,
     run_id: &str,
-    trigger: ProviderCheckTrigger,
+    trigger: &ProviderCheckTrigger,
     error: &ProviderError,
     issues: Option<Vec<ProviderIssue>>,
 ) {
@@ -21,14 +21,23 @@ pub(super) fn report_lifecycle_failure(
         match &issues {
             Some(issues) => {
                 error!(
-                    "[Tauri] ❌ emit providers-check-failed fallback: run_id={}, trigger={:?}, code={}, message={}, issues={:?}, emit_err={}",
-                    run_id, trigger, code, message, issues, emit_err
+                    "[Tauri] ❌ emit providers-check-failed fallback: run_id={}, trigger={}, code={}, message={}, issues={:?}, emit_err={}",
+                    run_id,
+                    trigger.as_tag(),
+                    code,
+                    message,
+                    issues,
+                    emit_err
                 );
             }
             None => {
                 error!(
-                    "[Tauri] ❌ emit providers-check-failed fallback: run_id={}, trigger={:?}, code={}, message={}, emit_err={}",
-                    run_id, trigger, code, message, emit_err
+                    "[Tauri] ❌ emit providers-check-failed fallback: run_id={}, trigger={}, code={}, message={}, emit_err={}",
+                    run_id,
+                    trigger.as_tag(),
+                    code,
+                    message,
+                    emit_err
                 );
             }
         }

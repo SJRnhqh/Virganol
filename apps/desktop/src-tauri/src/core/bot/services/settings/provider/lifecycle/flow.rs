@@ -19,12 +19,12 @@ pub(crate) async fn check_providers_lifecycle(
     trigger: ProviderCheckTrigger,
 ) {
     // Step 1: 初始化本轮生命周期上下文（覆盖读取 + 检查 + 推送全链路）
-    let run_id = next_run_id(trigger);
+    let run_id = next_run_id(&trigger);
     let started_at = Instant::now();
 
     // Step 2: 发出生命周期 started 事件
-    if let Err(err) = emit_check_started(&app, run_id.as_str(), trigger) {
-        report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
+    if let Err(err) = emit_check_started(&app, run_id.as_str(), &trigger) {
+        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
         return;
     }
 
@@ -32,7 +32,7 @@ pub(crate) async fn check_providers_lifecycle(
     let snapshot = match load_supported_providers(&app) {
         Ok(snapshot) => snapshot,
         Err(err) => {
-            report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
+            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
             return;
         }
     };
@@ -44,31 +44,40 @@ pub(crate) async fn check_providers_lifecycle(
 
     for detail in &snapshot.skipped {
         warn!(
-            "[Tauri] ⚠️ Skip unsupported provider in store: run_id={}, trigger={:?}, raw_id={}, code={}, message={}",
-            run_id, trigger, detail.raw_id, detail.code, detail.message
+            "[Tauri] ⚠️ Skip unsupported provider in store: run_id={}, trigger={}, raw_id={}, code={}, message={}",
+            run_id,
+            trigger.as_tag(),
+            detail.raw_id,
+            detail.code,
+            detail.message
         );
     }
 
     info!(
-        "[Tauri] 🔎 provider check lifecycle snapshot: trigger={:?}, loaded={}, supported={}, skipped={}",
-        trigger, loaded_total, supported_total, skipped_total
+        "[Tauri] 🔎 provider check lifecycle snapshot: trigger={}, loaded={}, supported={}, skipped={}",
+        trigger.as_tag(),
+        loaded_total,
+        supported_total,
+        skipped_total
     );
 
     // 无可检查项：started 之后仍发 completed 终态，保持生命周期事件闭环。
     if supported_total == 0 {
         if loaded_total == 0 {
             info!(
-                "[Tauri] 📭 No persisted providers found (trigger={:?})",
-                trigger
+                "[Tauri] 📭 No persisted providers found (trigger={})",
+                trigger.as_tag()
             );
         } else {
             info!(
-                "[Tauri] 📭 No supported providers found in persisted configs (loaded {}, skipped {}, trigger={:?})",
-                loaded_total, skipped_total, trigger
+                "[Tauri] 📭 No supported providers found in persisted configs (loaded {}, skipped {}, trigger={})",
+                loaded_total,
+                skipped_total,
+                trigger.as_tag()
             );
         }
         if let Err(err) = emit_check_completed(&app, run_id.as_str(), 0) {
-            report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
+            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
             return;
         }
         return;
@@ -92,7 +101,7 @@ pub(crate) async fn check_providers_lifecycle(
         report_lifecycle_failure(
             &app,
             run_id.as_str(),
-            trigger,
+            &trigger,
             &err,
             if provider_issues.is_empty() {
                 None
@@ -106,7 +115,7 @@ pub(crate) async fn check_providers_lifecycle(
     // Step 6: 推送生命周期completed事件
     let duration_ms = started_at.elapsed().as_millis() as u64;
     if let Err(err) = emit_check_completed(&app, run_id.as_str(), failed_count) {
-        report_lifecycle_failure(&app, run_id.as_str(), trigger, &err, None);
+        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
         return;
     }
 

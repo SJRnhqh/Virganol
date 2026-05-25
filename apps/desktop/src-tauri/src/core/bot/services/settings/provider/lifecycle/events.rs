@@ -19,7 +19,7 @@ const EVT_CHECK_FAILED: &str = "providers-check-lifecycle-failed";
 pub(super) fn emit_check_started(
     app: &AppHandle,
     run_id: &str,
-    trigger: ProviderCheckTrigger,
+    trigger: &ProviderCheckTrigger,
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckStartedPayload {
         run_id: run_id.to_string(),

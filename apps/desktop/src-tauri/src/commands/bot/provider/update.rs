@@ -1,9 +1,9 @@
 // apps/desktop/src-tauri/src/commands/bot/provider/update.rs
-use crate::core::AppState;
 use tauri::{AppHandle, State};
 
 use crate::core::{
-    update_provider_enabled_models, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
+    update_provider_enabled_models, AppState, UpdateEnabledModelsRequest,
+    UpdateEnabledModelsResponse,
 };
 
 /// Updates the enabled models for a provider.
