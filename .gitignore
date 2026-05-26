@@ -34,8 +34,14 @@ bin/
 # Zed
 .zed/
 
+# Cursor
+.cursor/
+
 # Rust
 /target
 
 # Tauri
 **/gen/schemas
+
+# CodeGraph
+.codegraph/
