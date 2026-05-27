@@ -1,9 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/events.rs
-// 外部依赖
 use tauri::{AppHandle, Emitter};
 
-// 内部引用
-use crate::core::bot::models::{
+use super::super::super::super::super::models::{
     HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckStartedPayload, ProviderCheckTrigger, ProviderError, ProviderId, ProviderIssue,
     ProviderRecord, ProviderSecretMeta, ProviderStatusPayload,
@@ -15,16 +13,15 @@ const EVT_PROVIDER_STATUS: &str = "provider-status";
 const EVT_CHECK_COMPLETED: &str = "providers-check-lifecycle-completed";
 const EVT_CHECK_FAILED: &str = "providers-check-lifecycle-failed";
 
-/// 推送生命周期 started 事件
+/// Emits the lifecycle started event.
+///
+/// 推送生命周期 started 事件。
 pub(super) fn emit_check_started(
     app: &AppHandle,
     run_id: &str,
     trigger: &ProviderCheckTrigger,
 ) -> Result<(), ProviderError> {
-    let payload = ProviderCheckStartedPayload {
-        run_id: run_id.to_string(),
-        trigger,
-    };
+    let payload = ProviderCheckStartedPayload { run_id, trigger };
 
     app.emit(EVT_CHECK_STARTED, &payload).map_err(|e| {
         ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_STARTED, e))
@@ -69,7 +66,9 @@ pub(super) fn emit_check_completed(
     })
 }
 
-/// 推送生命周期 failed 事件
+/// Emits the lifecycle failed event.
+///
+/// 推送生命周期 failed 事件。
 pub(super) fn emit_check_failed(
     app: &AppHandle,
     run_id: &str,
@@ -77,7 +76,7 @@ pub(super) fn emit_check_failed(
     issues: Option<&[ProviderIssue]>,
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckFailedPayload {
-        run_id: run_id.to_string(),
+        run_id,
         code: error.code(),
         message: error.message(),
         issues,

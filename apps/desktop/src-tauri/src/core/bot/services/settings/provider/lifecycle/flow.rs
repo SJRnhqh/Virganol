@@ -21,8 +21,6 @@ pub(crate) async fn check_providers_lifecycle(
     let run_id = next_run_id(&trigger);
     let started_at = Instant::now();
 
-    // Step 2: Emit the lifecycle started event.
-    // 发出生命周期 started 事件。
     if let Err(err) = emit_check_started(&app, run_id.as_str(), &trigger) {
         report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
         return;

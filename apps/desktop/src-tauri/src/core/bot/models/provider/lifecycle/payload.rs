@@ -1,18 +1,24 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/lifecycle/payload.rs
 use serde::Serialize;
 
-use super::ProviderCheckTrigger;
-use crate::core::bot::models::provider::{
+use super::super::{
     HealthCheckResult, ProviderErrorCode, ProviderId, ProviderIssue, ProviderRecord,
     ProviderSecretMeta,
 };
+use super::ProviderCheckTrigger;
 
-#[derive(Serialize)]
+/// Event payload emitted when one provider check lifecycle starts.
+///
 /// 一轮 Provider 检查开始时推送给前端的事件载荷。
+#[derive(Serialize)]
 pub(crate) struct ProviderCheckStartedPayload<'a> {
-    /// 本轮检查唯一标识，用于关联 started/status/completed 事件。
-    pub(crate) run_id: String,
-    /// 本轮检查的触发来源。
+    /// Borrowed run identifier used to correlate started/status/completed events.
+    ///
+    /// 借用的本轮检查唯一标识，用于关联 started/status/completed 事件。
+    pub(crate) run_id: &'a str,
+    /// Trigger source for this provider check lifecycle.
+    ///
+    /// 本轮 Provider 检查生命周期的触发来源。
     pub(crate) trigger: &'a ProviderCheckTrigger,
 }
 
@@ -40,15 +46,25 @@ pub(crate) struct ProviderCheckCompletedPayload {
     pub(crate) failed: usize,
 }
 
-#[derive(Serialize)]
+/// Event payload emitted when one provider check lifecycle fails.
+///
 /// 一轮 Provider 检查异常终止时推送给前端的事件载荷。
+#[derive(Serialize)]
 pub(crate) struct ProviderCheckFailedPayload<'a> {
-    /// 本轮检查唯一标识，用于关联 started/status/failed 事件。
-    pub(crate) run_id: String,
-    /// 结构化错误码。
+    /// Borrowed run identifier used to correlate started/status/failed events.
+    ///
+    /// 借用的本轮检查唯一标识，用于关联 started/status/failed 事件。
+    pub(crate) run_id: &'a str,
+    /// Structured error code for this lifecycle failure.
+    ///
+    /// 本轮生命周期失败的结构化错误码。
     pub(crate) code: ProviderErrorCode,
+    /// Error message used for frontend display or logging.
+    ///
     /// 面向前端展示或日志记录的错误信息。
     pub(crate) message: String,
+    /// Provider-level issues returned when failures can be attributed to providers.
+    ///
     /// Provider 级问题列表；仅在存在可定位到具体 Provider 的问题时返回。
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub(crate) issues: Option<&'a [ProviderIssue]>,
