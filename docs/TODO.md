@@ -23,5 +23,10 @@
 - [x] Normalize comments for small core modules outside large `models` and `services` areas
 - [x] Review `flow.rs` Step 1 run ID setup and keep lifecycle run ID ownership in the flow scope
 - [x] Review `flow.rs` Step 2 lifecycle started event emission and failure reporting
-- [x] Borrow lifecycle started/failed payload run IDs and remove redundant serialize-only serde default
-- [ ] Continue `flow.rs` Step 3 review from persisted provider snapshot loading and skipped provider handling
+- [x] Borrow lifecycle started/completed/failed payload run IDs and remove redundant serialize-only serde default
+- [x] Review `flow.rs` Step 3 persisted provider snapshot loading and skipped provider handling
+- [x] Review `ProviderId::try_from` parsing for persisted provider ids
+- [x] Rename provider check snapshot model and move it under provider config models
+- [x] Consolidate provider config snapshot loading under `provider/store/config`
+- [x] Avoid hard-coded failed count in the no-supported-provider completed event branch
+- [ ] Continue `flow.rs` Step 4 review from provider health check runner and status event emission
