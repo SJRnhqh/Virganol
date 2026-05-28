@@ -29,4 +29,10 @@
 - [x] Rename provider check snapshot model and move it under provider config models
 - [x] Consolidate provider config snapshot loading under `provider/store/config`
 - [x] Avoid hard-coded failed count in the no-supported-provider completed event branch
-- [ ] Continue `flow.rs` Step 4 review from provider health check runner and status event emission
+- [x] Enter `flow.rs` Step 4 review from provider health check runner and status event emission
+- [x] Replace runner tuple return with `ProviderCheckRunResult`
+- [x] Introduce provider key resolution model and consolidate env/keyring fallback behind `resolve_provider_key`
+- [x] Move lifecycle key-resolved health check support into the connection module
+- [x] Keep `health_check` as a connection-internal primitive behind probe/resolved connection entry points
+- [ ] Review provider security metadata models used by lifecycle status emission
+- [ ] Continue `runner.rs` review from health check result processing and provider status event emission

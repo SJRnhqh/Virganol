@@ -81,7 +81,7 @@ pub(crate) async fn check_providers_lifecycle(
 
     // Step 4: Run health checks and collect structural failures.
     // 并发执行健康检查，并收敛失败计数与结构性错误。
-    let (failed_count, provider_issues, join_error) =
+    let check_result =
         run_provider_checks(&app, provider_state, run_id.as_str(), snapshot.supported).await;
 
     // Step 5: Promote structural failures into the lifecycle failed event.
@@ -89,8 +89,8 @@ pub(crate) async fn check_providers_lifecycle(
     // 优先级：join_error（任务 panic）> provider_issues（个别 provider 结构性失败）。
     // join_error 存在时直接作为错误主体，provider_issues 若非空仍一并传入 payload；
     // 无 join_error 时若 issues 非空则手动构造等价错误；两者皆无则跳过进入 Step 6。
-    if let Some(err) = join_error.or_else(|| {
-        (!provider_issues.is_empty()).then(|| {
+    if let Some(err) = check_result.join_error.or_else(|| {
+        (!check_result.provider_issues.is_empty()).then(|| {
             ProviderError::LifecycleConcurrentCheck(
                 "concurrent check error: provider issues detected".to_string(),
             )
@@ -101,10 +101,10 @@ pub(crate) async fn check_providers_lifecycle(
             run_id.as_str(),
             &trigger,
             &err,
-            if provider_issues.is_empty() {
+            if check_result.provider_issues.is_empty() {
                 None
             } else {
-                Some(provider_issues)
+                Some(check_result.provider_issues)
             },
         );
         return;
@@ -113,13 +113,13 @@ pub(crate) async fn check_providers_lifecycle(
     // Step 6: Emit the lifecycle completed event.
     // 推送生命周期 completed 事件。
     let duration_ms = started_at.elapsed().as_millis() as u64;
-    if let Err(err) = emit_check_completed(&app, run_id.as_str(), failed_count) {
+    if let Err(err) = emit_check_completed(&app, run_id.as_str(), check_result.failed_count) {
         report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
         return;
     }
 
     info!(
         "[Tauri] 🏁 Provider check completed: run_id={}, checked={}, failed={}, duration_ms={}",
-        run_id, supported_total, failed_count, duration_ms
+        run_id, supported_total, check_result.failed_count, duration_ms
     );
 }
