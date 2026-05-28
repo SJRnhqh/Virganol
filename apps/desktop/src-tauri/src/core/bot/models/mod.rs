@@ -4,7 +4,7 @@ mod provider;
 pub(crate) use provider::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckCompletedPayload,
     ProviderCheckFailedPayload, ProviderCheckRunResult, ProviderCheckStartedPayload,
-    ProviderCheckTrigger, ProviderIssue, ProviderKeySource, ProviderSecretMeta, ProviderState,
+    ProviderCheckTrigger, ProviderIssue, ProviderKeyMeta, ProviderKeySource, ProviderState,
     ProviderStatusPayload, ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
     UpdateEnabledModelsResponse,
 };

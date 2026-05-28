@@ -1,6 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/secret/resolution.rs
-use super::super::{ProviderKeySource, ProviderSecretMeta};
-use super::ProviderKey;
+use super::{ProviderKey, ProviderKeyMeta, ProviderKeySource};
 
 /// Result of resolving a provider API key and its source metadata.
 ///
@@ -13,7 +12,7 @@ pub(crate) struct ProviderKeyResolution {
     /// Source metadata for the resolved key.
     ///
     /// 已解析 key 的来源元信息。
-    meta: ProviderSecretMeta,
+    meta: ProviderKeyMeta,
 }
 
 impl ProviderKeyResolution {
@@ -23,7 +22,7 @@ impl ProviderKeyResolution {
     pub(crate) fn found(key: ProviderKey, source: ProviderKeySource) -> Self {
         Self {
             key: Some(key),
-            meta: ProviderSecretMeta::with_source(source),
+            meta: ProviderKeyMeta::with_source(source),
         }
     }
 
@@ -33,7 +32,7 @@ impl ProviderKeyResolution {
     pub(crate) fn none() -> Self {
         Self {
             key: None,
-            meta: ProviderSecretMeta::none(),
+            meta: ProviderKeyMeta::none(),
         }
     }
 
@@ -47,7 +46,7 @@ impl ProviderKeyResolution {
     /// Consumes the resolution and returns the source metadata.
     ///
     /// 消费解析结果并返回来源元信息。
-    pub(crate) fn into_meta(self) -> ProviderSecretMeta {
+    pub(crate) fn into_meta(self) -> ProviderKeyMeta {
         self.meta
     }
 }

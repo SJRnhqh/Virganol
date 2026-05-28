@@ -36,13 +36,13 @@ pub(super) async fn run_provider_checks(
             };
             in_flight.spawn(async move {
                 let url = record.url.as_deref().unwrap_or("").to_string();
-                let (result, secret_meta) = health_check_with_resolved_key(provider_id, &url).await;
-                (provider_id, record, result, secret_meta)
+                let (result, key_meta) = health_check_with_resolved_key(provider_id, &url).await;
+                (provider_id, record, result, key_meta)
             });
         }
 
         match in_flight.join_next().await {
-            Some(Ok((provider_id, record, result, secret_meta))) => {
+            Some(Ok((provider_id, record, result, key_meta))) => {
                 let (final_record, online, reconcile_error) = process_provider_check_result(
                     app,
                     provider_state,
@@ -64,14 +64,9 @@ pub(super) async fn run_provider_checks(
                 let icon = if online { "✅" } else { "⚠️" };
                 info!("[Tauri] {} {} → online: {}", icon, provider_id, online);
 
-                if let Err(err) = emit_provider_status(
-                    app,
-                    run_id,
-                    provider_id,
-                    final_record,
-                    result,
-                    secret_meta,
-                ) {
+                if let Err(err) =
+                    emit_provider_status(app, run_id, provider_id, final_record, result, key_meta)
+                {
                     provider_issues.push(ProviderIssue::new(
                         provider_id,
                         err.code(),

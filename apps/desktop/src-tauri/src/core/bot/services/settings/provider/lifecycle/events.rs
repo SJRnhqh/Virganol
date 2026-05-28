@@ -4,7 +4,7 @@ use tauri::{AppHandle, Emitter};
 use super::super::super::super::super::models::{
     HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckStartedPayload, ProviderCheckTrigger, ProviderError, ProviderId, ProviderIssue,
-    ProviderRecord, ProviderSecretMeta, ProviderStatusPayload,
+    ProviderKeyMeta, ProviderRecord, ProviderStatusPayload,
 };
 
 // 事件名常量（与前端 PROVIDER_CHECK_EVENTS 保持一致）
@@ -35,14 +35,14 @@ pub(super) fn emit_provider_status(
     provider_id: ProviderId,
     config: ProviderRecord,
     health: HealthCheckResult,
-    secret_meta: ProviderSecretMeta,
+    key_meta: ProviderKeyMeta,
 ) -> Result<(), ProviderError> {
     let payload = ProviderStatusPayload {
         run_id: run_id.to_string(),
         provider: provider_id,
         config,
         health,
-        secret_meta,
+        key_meta,
     };
 
     app.emit(EVT_PROVIDER_STATUS, &payload).map_err(|e| {

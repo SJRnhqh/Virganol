@@ -2,8 +2,8 @@
 use serde::Serialize;
 
 use super::super::{
-    HealthCheckResult, ProviderErrorCode, ProviderId, ProviderIssue, ProviderRecord,
-    ProviderSecretMeta,
+    HealthCheckResult, ProviderErrorCode, ProviderId, ProviderIssue, ProviderKeyMeta,
+    ProviderRecord,
 };
 use super::ProviderCheckTrigger;
 
@@ -34,7 +34,7 @@ pub(crate) struct ProviderStatusPayload {
     /// 当前 Provider 的健康检查结果。
     pub(crate) health: HealthCheckResult,
     /// 当前 Provider 的去敏密钥元信息。
-    pub(crate) secret_meta: ProviderSecretMeta,
+    pub(crate) key_meta: ProviderKeyMeta,
 }
 
 /// Event payload emitted when one provider check lifecycle completes.
