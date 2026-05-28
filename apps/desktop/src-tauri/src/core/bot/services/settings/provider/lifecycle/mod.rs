@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/mod.rs
-// 导出内容
 mod events;
 mod failure;
 mod flow;

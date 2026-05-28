@@ -4,7 +4,7 @@ use std::time::Instant;
 use tauri::AppHandle;
 
 use super::super::super::super::super::{ProviderCheckTrigger, ProviderError, ProviderState};
-use super::super::load_supported_providers;
+use super::super::load_provider_check_snapshot;
 use super::{
     emit_check_completed, emit_check_started, next_run_id, report_lifecycle_failure,
     run_provider_checks,
@@ -26,9 +26,7 @@ pub(crate) async fn check_providers_lifecycle(
         return;
     }
 
-    // Step 3: Load the persisted provider snapshot.
-    // 读取持久化快照，拆分为支持项和跳过项。
-    let snapshot = match load_supported_providers(&app) {
+    let snapshot = match load_provider_check_snapshot(&app) {
         Ok(snapshot) => snapshot,
         Err(err) => {
             report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
@@ -41,8 +39,6 @@ pub(crate) async fn check_providers_lifecycle(
         snapshot.skipped.len(),
     );
 
-    // Unsupported persisted providers are skipped, not promoted to lifecycle failures.
-    // 已持久化但当前不支持的 Provider 只记录日志，不触发 lifecycle_failed。
     for detail in &snapshot.skipped {
         warn!(
             "[Tauri] ⚠️ Skip unsupported provider in store: run_id={}, trigger={}, raw_id={}, code={}, message={}",
@@ -62,8 +58,6 @@ pub(crate) async fn check_providers_lifecycle(
         skipped_total
     );
 
-    // No supported provider still completes the lifecycle event chain.
-    // 无可检查项时，started 之后仍发 completed 终态，保持事件闭环。
     if supported_total == 0 {
         if loaded_total == 0 {
             info!(
@@ -78,7 +72,7 @@ pub(crate) async fn check_providers_lifecycle(
                 trigger.as_tag()
             );
         }
-        if let Err(err) = emit_check_completed(&app, run_id.as_str(), 0) {
+        if let Err(err) = emit_check_completed(&app, run_id.as_str(), supported_total) {
             report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
             return;
         }

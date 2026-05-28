@@ -50,16 +50,15 @@ pub(super) fn emit_provider_status(
     })
 }
 
-/// 推送生命周期 completed 事件
+/// Emits the lifecycle completed event.
+///
+/// 推送生命周期 completed 事件。
 pub(super) fn emit_check_completed(
     app: &AppHandle,
     run_id: &str,
     failed: usize,
 ) -> Result<(), ProviderError> {
-    let payload = ProviderCheckCompletedPayload {
-        run_id: run_id.to_string(),
-        failed,
-    };
+    let payload = ProviderCheckCompletedPayload { run_id, failed };
 
     app.emit(EVT_CHECK_COMPLETED, &payload).map_err(|e| {
         ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_COMPLETED, e))

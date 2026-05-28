@@ -6,7 +6,7 @@ use super::super::super::super::super::super::{
     ProviderError, ProviderId, ProviderRecord, ProviderState, SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::save_settings;
-use super::super::load_all_providers;
+use super::load_all_providers;
 
 /// Removes a provider configuration and returns the deleted record for rollback.
 ///

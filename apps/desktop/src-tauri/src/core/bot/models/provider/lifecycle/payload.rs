@@ -37,12 +37,18 @@ pub(crate) struct ProviderStatusPayload {
     pub(crate) secret_meta: ProviderSecretMeta,
 }
 
-#[derive(Serialize)]
+/// Event payload emitted when one provider check lifecycle completes.
+///
 /// 一轮 Provider 检查正常结束时推送给前端的事件载荷。
-pub(crate) struct ProviderCheckCompletedPayload {
-    /// 本轮检查唯一标识，用于关联 started/status/completed 事件。
-    pub(crate) run_id: String,
-    /// 本轮健康检查失败数量。
+#[derive(Serialize)]
+pub(crate) struct ProviderCheckCompletedPayload<'a> {
+    /// Borrowed run identifier used to correlate started/status/completed events.
+    ///
+    /// 借用的本轮检查唯一标识，用于关联 started/status/completed 事件。
+    pub(crate) run_id: &'a str,
+    /// Number of provider health checks that failed in this lifecycle run.
+    ///
+    /// 本轮生命周期中健康检查失败的 Provider 数量。
     pub(crate) failed: usize,
 }
 

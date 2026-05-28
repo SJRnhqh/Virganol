@@ -8,10 +8,9 @@ mod id;
 mod lifecycle;
 mod secret;
 mod security;
-mod snapshot;
 
 pub(crate) use common::ProviderState;
-pub(crate) use config::ProviderRecord;
+pub(crate) use config::{ProviderCheckSnapshot, ProviderRecord};
 pub(crate) use connection::HealthCheckResult;
 pub(crate) use contract::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderRequest,
@@ -25,4 +24,3 @@ pub(crate) use lifecycle::{
 };
 pub(crate) use secret::{ProviderKey, ProviderKeyChange};
 pub(crate) use security::{ProviderKeySource, ProviderSecretMeta};
-pub(crate) use snapshot::SupportedProvidersSnapshot;
