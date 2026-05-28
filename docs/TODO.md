@@ -21,4 +21,7 @@
 - [x] Review lifecycle run ID setup in `flow.rs` and keep run ID generation scoped to `lifecycle/rid.rs`
 - [x] Normalize comments and local import style for lifecycle flow/run ID review scaffolding
 - [x] Normalize comments for small core modules outside large `models` and `services` areas
-- [ ] Continue `flow.rs` review from lifecycle started event emission and failure reporting
+- [x] Review `flow.rs` Step 1 run ID setup and keep lifecycle run ID ownership in the flow scope
+- [x] Review `flow.rs` Step 2 lifecycle started event emission and failure reporting
+- [x] Borrow lifecycle started/failed payload run IDs and remove redundant serialize-only serde default
+- [ ] Continue `flow.rs` Step 3 review from persisted provider snapshot loading and skipped provider handling

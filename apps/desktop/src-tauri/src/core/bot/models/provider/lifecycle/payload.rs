@@ -66,6 +66,6 @@ pub(crate) struct ProviderCheckFailedPayload<'a> {
     /// Provider-level issues returned when failures can be attributed to providers.
     ///
     /// Provider 级问题列表；仅在存在可定位到具体 Provider 的问题时返回。
-    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) issues: Option<&'a [ProviderIssue]>,
 }
