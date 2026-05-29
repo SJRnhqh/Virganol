@@ -23,8 +23,6 @@ pub(super) async fn run_provider_checks(
     let mut provider_issues: Vec<ProviderIssue> = Vec::new();
     let mut join_error: Option<ProviderError> = None;
 
-    let mut has_join_error = false;
-
     let mut pending = supported.into_iter();
     let mut in_flight = JoinSet::new();
 
@@ -74,17 +72,13 @@ pub(super) async fn run_provider_checks(
                 }
             }
             Some(Err(err)) => {
-                // 不提前退出循环：即使发生 panic，其余 in-flight 任务的结果仍需消费并推送给前端。
-                // 单次赋值：只在第一次发生时记录
-                if !has_join_error {
-                    has_join_error = true;
+                if join_error.is_none() {
                     join_error = Some(ProviderError::LifecycleConcurrentCheck(format!(
                         "concurrent check error: {}",
                         err
                     )));
                     error!("[Tauri] ❌ concurrent check error: {}", err);
                 } else {
-                    // 后续静默降级为日志打印
                     warn!("[Tauri] ⚠️ concurrent check error (suppressed): {}", err);
                 }
             }

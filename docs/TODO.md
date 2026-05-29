@@ -36,4 +36,5 @@
 - [x] Keep `health_check` as a connection-internal primitive behind probe/resolved connection entry points
 - [x] Review provider key metadata models used by lifecycle status emission
 - [x] Simplify runner pending provider scheduling from `VecDeque` to input iterator
+- [x] Collapse runner join error tracking into the `join_error` option state
 - [ ] Continue `runner.rs` review from health check result processing and provider status event emission
