@@ -1,6 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/runner.rs
 use log::{error, info, warn};
-use std::collections::VecDeque;
 use tauri::AppHandle;
 use tokio::task::JoinSet;
 
@@ -26,12 +25,12 @@ pub(super) async fn run_provider_checks(
 
     let mut has_join_error = false;
 
-    let mut pending: VecDeque<(ProviderId, ProviderRecord)> = supported.into();
+    let mut pending = supported.into_iter();
     let mut in_flight = JoinSet::new();
 
-    while !pending.is_empty() || !in_flight.is_empty() {
+    while pending.len() > 0 || !in_flight.is_empty() {
         while in_flight.len() < CHECK_CONCURRENCY_LIMIT {
-            let Some((provider_id, record)) = pending.pop_front() else {
+            let Some((provider_id, record)) = pending.next() else {
                 break;
             };
             in_flight.spawn(async move {
