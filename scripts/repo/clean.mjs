@@ -39,6 +39,10 @@ function toRepoRelative(filePath) {
   return path.relative(repoRoot, filePath).split(path.sep).join("/");
 }
 
+function toScanPath(filePath) {
+  return toRepoRelative(filePath) || ".";
+}
+
 function toTarget(relativePath) {
   const absolutePath = path.resolve(repoRoot, relativePath);
 
@@ -55,10 +59,27 @@ function toTarget(relativePath) {
 // Target discovery / 清理目标发现
 function collectTsBuildInfoFiles(dir) {
   const files = [];
+  let entries;
 
-  for (const entry of readdirSync(dir)) {
+  try {
+    entries = readdirSync(dir);
+  } catch (error) {
+    console.warn(`warn    skip scan ${toScanPath(dir)}`);
+    console.warn(`        ${error.message}`);
+    return files;
+  }
+
+  for (const entry of entries) {
     const fullPath = path.join(dir, entry);
-    const stats = lstatSync(fullPath);
+    let stats;
+
+    try {
+      stats = lstatSync(fullPath);
+    } catch (error) {
+      console.warn(`warn    skip scan ${toScanPath(fullPath)}`);
+      console.warn(`        ${error.message}`);
+      continue;
+    }
 
     if (stats.isSymbolicLink()) {
       continue;
