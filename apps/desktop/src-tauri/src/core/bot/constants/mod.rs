@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/constants/mod.rs
-// 导出内容
 mod connection;
 mod keyring;
 mod settings;

@@ -6,11 +6,17 @@ use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 /// Request data for connecting a provider.
 ///
 /// 连接 Provider 的请求数据。
-#[derive(Debug, Deserialize, Default)]
+#[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ConnectAndSaveProviderRequestData {
+    /// Provider API key supplied by the user.
+    ///
+    /// 用户提供的 Provider API key。
     #[serde(default)]
     pub(crate) key: String,
+    /// Optional provider base URL supplied by the user.
+    ///
+    /// 用户提供的可选 Provider 基础 URL。
     #[serde(default)]
     pub(crate) url: Option<String>,
 }
@@ -18,10 +24,16 @@ pub(crate) struct ConnectAndSaveProviderRequestData {
 /// Response data for connect operation.
 ///
 /// 连接操作的响应数据。
-#[derive(Debug, Serialize)]
+#[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ConnectAndSaveProviderResponseData {
+    /// Models discovered by the provider health check.
+    ///
+    /// Provider 健康检查发现的模型列表。
     pub(crate) available_models: Vec<String>,
+    /// Models enabled after preserving compatible previous selections.
+    ///
+    /// 保留兼容历史选择后处于启用状态的模型列表。
     pub(crate) enabled_models: Vec<String>,
 }
 

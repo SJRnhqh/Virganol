@@ -1,9 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/id.rs
-// 外部依赖
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
-// 内部引用
 use super::ProviderError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -33,6 +31,9 @@ impl ProviderId {
 impl TryFrom<&str> for ProviderId {
     type Error = ProviderError;
 
+    /// Parses a persisted provider id into a backend-supported provider id.
+    ///
+    /// 将持久化的 provider id 解析为后端当前支持的 provider id。
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value {
             "ollama" => Ok(Self::Ollama),

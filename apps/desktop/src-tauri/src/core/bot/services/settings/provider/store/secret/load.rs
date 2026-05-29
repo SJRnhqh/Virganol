@@ -7,7 +7,7 @@ use super::super::super::super::super::super::{ProviderId, ProviderKey, PROVIDER
 /// Loads provider API key from the system keyring (permissive: errors logged as warnings).
 ///
 /// 从系统密钥库读取 provider 的 API Key（宽容模式：异常仅记 warn）。
-pub(crate) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
+pub(super) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
     let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str())
         .inspect_err(|e| log::warn!("[Tauri] ⚠️ init keyring entry failed: {}", e))
         .ok()?;
@@ -31,7 +31,7 @@ pub(crate) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> 
 /// Loads provider API key from environment variables (dev/CI fallback).
 ///
 /// 从环境变量读取 provider 的 API Key（开发/CI 兜底）。
-pub(crate) fn load_provider_env(provider_id: ProviderId) -> Option<ProviderKey> {
+pub(super) fn load_provider_env(provider_id: ProviderId) -> Option<ProviderKey> {
     provider_id
         .env_key_names()
         .iter()

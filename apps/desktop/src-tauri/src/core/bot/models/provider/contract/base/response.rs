@@ -4,7 +4,7 @@ use serde::Serialize;
 /// Generic response structure for Provider commands.
 ///
 /// Provider 命令的通用响应结构。
-#[derive(Debug, Serialize)]
+#[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ProviderCommandResponse<T = ()> {
     /// Indicates whether the operation succeeded.

@@ -18,8 +18,8 @@ pub(crate) use models::{
     UpdateEnabledModelsResponse,
 };
 pub(self) use models::{
-    HealthCheckResult, ProviderError, ProviderId, ProviderKey, ProviderKeyChange, ProviderRecord,
-    SkippedProviderDetail, SupportedProvidersSnapshot,
+    HealthCheckResult, ProviderCheckSnapshot, ProviderError, ProviderId, ProviderKey,
+    ProviderKeyChange, ProviderRecord, SkippedProviderDetail,
 };
 pub(crate) use services::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,

@@ -6,17 +6,23 @@ use super::super::super::super::compute_enabled_models;
 /// Provider configuration record persisted in settings.json.
 ///
 /// Provider 持久化配置记录（settings.json 中 spirit.providers.{id}）。
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub(crate) struct ProviderRecord {
+    /// Optional provider base URL.
+    ///
+    /// 可选的 Provider 基础 URL。
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) url: Option<String>,
+    /// Enabled model identifiers persisted for this provider.
+    ///
+    /// 此 Provider 持久化的已启用模型标识列表。
     pub(crate) enabled_models: Vec<String>,
 }
 
 impl ProviderRecord {
-    /// Creates a new provider record with normalized URL.
+    /// Creates a provider record with a normalized optional URL.
     ///
-    /// 创建 Provider 配置记录，自动处理空 URL。
+    /// 创建 URL 已规范化为可选值的 Provider 配置记录。
     pub(crate) fn new(url: &str, enabled_models: Vec<String>) -> Self {
         Self {
             url: (!url.is_empty()).then(|| url.to_string()),

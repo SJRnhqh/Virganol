@@ -61,10 +61,25 @@ LLM Provider 接入分为两条主线：
 
 #### 6.2 错误精细化（生命周期）
 
-下一工作分支审查 startup_check 和 manual_refresh 链路
+startup_check 和 manual_refresh 共享生命周期核心，当前按命令入口 →
+`flow.rs` → `runner.rs` 的顺序做后端错误传播审查。
 
-- [ ] 审查生命周期链路错误上抛点
-- [ ] 复查现有错误处理完整性
+**已完成**：
+
+- commands 层 startup_check / manual_refresh 边界审查，保留独立命令入口并共享生命周期核心
+- 生命周期模型从旧 `check.rs` 拆入 `models/provider/lifecycle`
+- `flow.rs` Step 1-3 审查：run ID 归属、started/completed/failed 事件、持久化 provider snapshot 加载、skipped provider 处理
+- provider config snapshot 加载收敛到 `provider/store/config`
+- lifecycle key 解析收敛为 `ProviderKeyResolution` 与 `resolve_provider_key`
+- key-resolved health check 入口移动到 connection 模块
+- provider key metadata 移入 `models/provider/secret/meta.rs`，并收紧 trait、字段和构造方法可见性
+- `runner.rs` Step 4 已审查至并发结果处理前：pending 调度改为输入迭代器，join error 状态收敛到 `join_error`
+
+**后续继续**：
+
+- [ ] 审查 `runner.rs` 的 `match Ok` 分支：health check result processing 与 provider status event emission
+- [ ] 审查 `runner.rs` 调用函数（`process_provider_check_result` / `emit_provider_status`）的错误传播边界
+- [ ] 完成生命周期链路错误上抛点复查
 - [ ] 补充边界场景单元测试
 
 #### 6.3 前端错误系统

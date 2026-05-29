@@ -3,12 +3,12 @@ mod provider;
 
 pub(crate) use provider::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckCompletedPayload,
-    ProviderCheckFailedPayload, ProviderCheckStartedPayload, ProviderCheckTrigger, ProviderIssue,
-    ProviderKeySource, ProviderSecretMeta, ProviderState, ProviderStatusPayload,
-    ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
+    ProviderCheckFailedPayload, ProviderCheckRunResult, ProviderCheckStartedPayload,
+    ProviderCheckTrigger, ProviderIssue, ProviderKeyMeta, ProviderKeySource, ProviderState,
+    ProviderStatusPayload, ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
     UpdateEnabledModelsResponse,
 };
 pub(super) use provider::{
-    HealthCheckResult, ProviderError, ProviderId, ProviderKey, ProviderKeyChange, ProviderRecord,
-    SkippedProviderDetail, SupportedProvidersSnapshot,
+    HealthCheckResult, ProviderCheckSnapshot, ProviderError, ProviderId, ProviderKey,
+    ProviderKeyChange, ProviderKeyResolution, ProviderRecord, SkippedProviderDetail,
 };
