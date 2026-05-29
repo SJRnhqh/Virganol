@@ -6,6 +6,7 @@
   "scripts": {
     "clean": "node scripts/repo/clean.mjs clean",
     "purge": "node scripts/repo/clean.mjs purge",
+    "diff:budget": "node scripts/repo/diff-budget.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:ui": "pnpm -F @virganol/ui dev",
     "dev": "pnpm -F @virganol/desktop dev",
