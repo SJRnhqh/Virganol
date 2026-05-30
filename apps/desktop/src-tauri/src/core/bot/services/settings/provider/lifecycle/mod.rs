@@ -11,6 +11,6 @@ pub(self) use events::{
 };
 pub(self) use failure::report_lifecycle_failure;
 pub(crate) use flow::check_providers_lifecycle;
-pub(self) use processor::process_provider_check_result;
+pub(self) use processor::finalize_provider_check_result;
 pub(self) use rid::next_run_id;
 pub(self) use runner::run_provider_checks;

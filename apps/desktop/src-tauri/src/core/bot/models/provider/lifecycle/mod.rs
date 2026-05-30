@@ -1,8 +1,10 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/lifecycle/mod.rs
+mod finalization;
 mod payload;
 mod run;
 mod trigger;
 
+pub(crate) use finalization::ProviderCheckFinalization;
 pub(crate) use payload::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
     ProviderStatusPayload,

@@ -7,7 +7,7 @@ use super::super::super::super::super::models::{
     ProviderCheckRunResult, ProviderError, ProviderId, ProviderIssue, ProviderRecord, ProviderState,
 };
 use super::super::health_check_with_resolved_key;
-use super::{emit_provider_status, process_provider_check_result};
+use super::{emit_provider_status, finalize_provider_check_result};
 
 /// 并发健康检查最大并发度
 const CHECK_CONCURRENCY_LIMIT: usize = 4;
@@ -40,7 +40,7 @@ pub(super) async fn run_provider_checks(
 
         match in_flight.join_next().await {
             Some(Ok((provider_id, record, result, key_meta))) => {
-                let (final_record, online, reconcile_error) = process_provider_check_result(
+                let finalization = finalize_provider_check_result(
                     app,
                     provider_state,
                     provider_id,
@@ -48,38 +48,41 @@ pub(super) async fn run_provider_checks(
                     &result,
                 );
 
-                if let Some(err) = reconcile_error {
-                    let message = err.message();
-                    provider_issues.push(ProviderIssue::new(provider_id, err.code(), message));
+                if let Some(e) = finalization.reconcile_error {
+                    let message = e.message();
+                    provider_issues.push(ProviderIssue::new(provider_id, e.code(), message));
                 }
 
-                // 统计：健康检查失败计数
-                if !online {
+                if !finalization.online {
                     failed_count += 1;
                 }
 
-                let icon = if online { "✅" } else { "⚠️" };
-                info!("[Tauri] {} {} → online: {}", icon, provider_id, online);
+                let icon = if finalization.online { "✅" } else { "⚠️" };
+                info!(
+                    "[Tauri] {} {} → online: {}",
+                    icon, provider_id, finalization.online
+                );
 
-                if let Err(err) =
-                    emit_provider_status(app, run_id, provider_id, final_record, result, key_meta)
-                {
-                    provider_issues.push(ProviderIssue::new(
-                        provider_id,
-                        err.code(),
-                        err.message(),
-                    ));
+                if let Err(e) = emit_provider_status(
+                    app,
+                    run_id,
+                    provider_id,
+                    finalization.final_record,
+                    result,
+                    key_meta,
+                ) {
+                    provider_issues.push(ProviderIssue::new(provider_id, e.code(), e.message()));
                 }
             }
-            Some(Err(err)) => {
+            Some(Err(e)) => {
                 if join_error.is_none() {
                     join_error = Some(ProviderError::LifecycleConcurrentCheck(format!(
                         "concurrent check error: {}",
-                        err
+                        e
                     )));
-                    error!("[Tauri] ❌ concurrent check error: {}", err);
+                    error!("[Tauri] ❌ concurrent check error: {}", e);
                 } else {
-                    warn!("[Tauri] ⚠️ concurrent check error (suppressed): {}", err);
+                    warn!("[Tauri] ⚠️ concurrent check error (suppressed): {}", e);
                 }
             }
             None => break,

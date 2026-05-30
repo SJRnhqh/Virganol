@@ -1,12 +1,10 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/processor.rs
-// 外部依赖
 use log::{error, info};
 use tauri::AppHandle;
 
-// 内部引用
 use super::super::super::super::super::{
-    compute_enabled_models, HealthCheckResult, ProviderError, ProviderId, ProviderRecord,
-    ProviderState,
+    compute_enabled_models, HealthCheckResult, ProviderCheckFinalization, ProviderError,
+    ProviderId, ProviderRecord, ProviderState,
 };
 use super::super::save_provider;
 
@@ -55,21 +53,17 @@ fn reconcile_enabled_models(
     }
 }
 
-/// 处理单个 provider 检查结果：成功时先做 enabled_models 对齐
-/// 返回：
-/// - final_record: 最终用于状态推送的配置
-/// - online: 健康检查是否成功
-/// - reconcile_error: enabled_models 回写失败时的可选错误
-pub(super) fn process_provider_check_result(
+/// Finalizes one provider health check result for lifecycle status emission.
+///
+/// 单个 Provider 健康检查完成后，生成生命周期状态推送前的后处理结果。
+pub(super) fn finalize_provider_check_result(
     app: &AppHandle,
     provider_state: &ProviderState,
     provider_id: ProviderId,
     record: ProviderRecord,
     health: &HealthCheckResult,
-) -> (ProviderRecord, bool, Option<ProviderError>) {
-    let online = health.success;
-
-    if online {
+) -> ProviderCheckFinalization {
+    if health.success {
         let (final_record, reconcile_error) = reconcile_enabled_models(
             app,
             provider_state,
@@ -77,11 +71,8 @@ pub(super) fn process_provider_check_result(
             &record,
             &health.available_models,
         );
-        // TODO：reconcile_error 属于基础设施层结构性错误（写盘失败），归入 provider_issues 触发 lifecycle_failed
-        // 在当前错误设计框架下是自洽的。后续统一错误处理精细化阶段可考虑引入 infra_warnings
-        // 与 provider 业务性错误分层上报，届时前端再做细粒度消费。
-        (final_record, true, reconcile_error)
+        ProviderCheckFinalization::online(final_record, reconcile_error)
     } else {
-        (record, false, None)
+        ProviderCheckFinalization::offline(record)
     }
 }

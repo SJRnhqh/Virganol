@@ -9,6 +9,6 @@ pub(crate) use provider::{
     UpdateEnabledModelsResponse,
 };
 pub(super) use provider::{
-    HealthCheckResult, ProviderCheckSnapshot, ProviderError, ProviderId, ProviderKey,
-    ProviderKeyChange, ProviderKeyResolution, ProviderRecord, SkippedProviderDetail,
+    HealthCheckResult, ProviderCheckFinalization, ProviderCheckSnapshot, ProviderError, ProviderId,
+    ProviderKey, ProviderKeyChange, ProviderKeyResolution, ProviderRecord, SkippedProviderDetail,
 };

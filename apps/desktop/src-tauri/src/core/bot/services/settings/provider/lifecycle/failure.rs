@@ -17,7 +17,7 @@ pub(super) fn report_lifecycle_failure(
     error: &ProviderError,
     issues: Option<Vec<ProviderIssue>>,
 ) {
-    if let Err(emit_err) = emit_check_failed(app, run_id, error, issues.as_deref()) {
+    if let Err(e) = emit_check_failed(app, run_id, error, issues.as_deref()) {
         let code = error.code();
         let message = error.message();
         match &issues {
@@ -29,7 +29,7 @@ pub(super) fn report_lifecycle_failure(
                     code,
                     message,
                     issues,
-                    emit_err
+                    e
                 );
             }
             None => {
@@ -39,7 +39,7 @@ pub(super) fn report_lifecycle_failure(
                     trigger.as_tag(),
                     code,
                     message,
-                    emit_err
+                    e
                 );
             }
         }

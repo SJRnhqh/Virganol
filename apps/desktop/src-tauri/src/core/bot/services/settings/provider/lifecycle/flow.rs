@@ -21,15 +21,15 @@ pub(crate) async fn check_providers_lifecycle(
     let run_id = next_run_id(&trigger);
     let started_at = Instant::now();
 
-    if let Err(err) = emit_check_started(&app, run_id.as_str(), &trigger) {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
+    if let Err(e) = emit_check_started(&app, run_id.as_str(), &trigger) {
+        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
         return;
     }
 
     let snapshot = match load_provider_check_snapshot(&app) {
         Ok(snapshot) => snapshot,
-        Err(err) => {
-            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
+        Err(e) => {
+            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
             return;
         }
     };
@@ -72,8 +72,8 @@ pub(crate) async fn check_providers_lifecycle(
                 trigger.as_tag()
             );
         }
-        if let Err(err) = emit_check_completed(&app, run_id.as_str(), supported_total) {
-            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
+        if let Err(e) = emit_check_completed(&app, run_id.as_str(), supported_total) {
+            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
             return;
         }
         return;
@@ -89,7 +89,7 @@ pub(crate) async fn check_providers_lifecycle(
     // 优先级：join_error（任务 panic）> provider_issues（个别 provider 结构性失败）。
     // join_error 存在时直接作为错误主体，provider_issues 若非空仍一并传入 payload；
     // 无 join_error 时若 issues 非空则手动构造等价错误；两者皆无则跳过进入 Step 6。
-    if let Some(err) = check_result.join_error.or_else(|| {
+    if let Some(e) = check_result.join_error.or_else(|| {
         (!check_result.provider_issues.is_empty()).then(|| {
             ProviderError::LifecycleConcurrentCheck(
                 "concurrent check error: provider issues detected".to_string(),
@@ -100,7 +100,7 @@ pub(crate) async fn check_providers_lifecycle(
             &app,
             run_id.as_str(),
             &trigger,
-            &err,
+            &e,
             if check_result.provider_issues.is_empty() {
                 None
             } else {
@@ -113,8 +113,8 @@ pub(crate) async fn check_providers_lifecycle(
     // Step 6: Emit the lifecycle completed event.
     // 推送生命周期 completed 事件。
     let duration_ms = started_at.elapsed().as_millis() as u64;
-    if let Err(err) = emit_check_completed(&app, run_id.as_str(), check_result.failed_count) {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
+    if let Err(e) = emit_check_completed(&app, run_id.as_str(), check_result.failed_count) {
+        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
         return;
     }
 
