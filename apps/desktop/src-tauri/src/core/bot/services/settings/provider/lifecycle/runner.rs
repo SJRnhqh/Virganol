@@ -67,7 +67,7 @@ pub(super) async fn run_provider_checks(
                     app,
                     run_id,
                     provider_id,
-                    finalization.final_record,
+                    finalization.status_record,
                     result,
                     key_meta,
                 ) {

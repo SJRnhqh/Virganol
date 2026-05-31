@@ -30,6 +30,21 @@ impl ProviderRecord {
         }
     }
 
+    /// Creates a provider record if enabled models are pruned by available models.
+    ///
+    /// 当当前可用模型会修剪 enabled_models 时，创建新的 Provider 配置记录。
+    pub(crate) fn reconcile_enabled_models_if_pruned(
+        &self,
+        available_models: &[String],
+    ) -> Option<Self> {
+        let enabled_models = compute_enabled_models(&self.enabled_models, available_models);
+
+        (enabled_models.len() != self.enabled_models.len()).then(|| Self {
+            url: self.url.clone(),
+            enabled_models,
+        })
+    }
+
     /// Creates a provider record from a successful connection result.
     ///
     /// 根据连接成功结果创建 Provider 配置记录，并保留仍可用的历史启用模型。

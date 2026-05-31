@@ -5,10 +5,10 @@ use super::super::{ProviderError, ProviderRecord};
 ///
 /// 单个 Provider 健康检查后处理后的结果。
 pub(crate) struct ProviderCheckFinalization {
-    /// Final provider record used for status event emission.
+    /// Provider record used for status event emission.
     ///
-    /// 用于状态事件推送的最终 Provider 配置。
-    pub(crate) final_record: ProviderRecord,
+    /// 用于状态事件推送的 Provider 配置。
+    pub(crate) status_record: ProviderRecord,
     /// Whether the provider health check succeeded.
     ///
     /// 当前 Provider 健康检查是否成功。
@@ -24,11 +24,11 @@ impl ProviderCheckFinalization {
     ///
     /// 创建在线 Provider 的后处理结果。
     pub(crate) fn online(
-        final_record: ProviderRecord,
+        status_record: ProviderRecord,
         reconcile_error: Option<ProviderError>,
     ) -> Self {
         Self {
-            final_record,
+            status_record,
             online: true,
             reconcile_error,
         }
@@ -37,9 +37,9 @@ impl ProviderCheckFinalization {
     /// Creates a finalization result for an offline provider.
     ///
     /// 创建离线 Provider 的后处理结果。
-    pub(crate) fn offline(final_record: ProviderRecord) -> Self {
+    pub(crate) fn offline(status_record: ProviderRecord) -> Self {
         Self {
-            final_record,
+            status_record,
             online: false,
             reconcile_error: None,
         }
