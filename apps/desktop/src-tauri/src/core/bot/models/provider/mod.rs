@@ -19,8 +19,8 @@ pub(crate) use error::{ProviderError, ProviderErrorCode, ProviderIssue, SkippedP
 pub(crate) use id::ProviderId;
 pub(crate) use lifecycle::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckFinalization,
-    ProviderCheckRunResult, ProviderCheckStartedPayload, ProviderCheckTrigger,
-    ProviderStatusPayload,
+    ProviderCheckRunResult, ProviderCheckStartedPayload, ProviderCheckStatusPayload,
+    ProviderCheckTrigger,
 };
 pub(crate) use secret::{
     ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderKeyResolution, ProviderKeySource,

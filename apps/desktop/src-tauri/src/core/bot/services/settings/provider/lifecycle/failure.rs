@@ -2,9 +2,7 @@
 use log::error;
 use tauri::AppHandle;
 
-use super::super::super::super::super::models::{
-    ProviderCheckTrigger, ProviderError, ProviderIssue,
-};
+use super::super::super::super::super::{ProviderCheckTrigger, ProviderError, ProviderIssue};
 use super::emit_check_failed;
 
 /// Reports a lifecycle failure through the failed event with log fallback.

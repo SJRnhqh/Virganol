@@ -7,7 +7,7 @@ mod rid;
 mod runner;
 
 pub(self) use events::{
-    emit_check_completed, emit_check_failed, emit_check_started, emit_provider_status,
+    emit_check_completed, emit_check_failed, emit_check_started, emit_check_status,
 };
 pub(self) use failure::report_lifecycle_failure;
 pub(self) use finalize::finalize_provider_check_result;

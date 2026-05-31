@@ -1,13 +1,14 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/events.rs
 use tauri::{AppHandle, Emitter};
 
-use super::super::super::super::super::models::{
+use super::super::super::super::super::{
     HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
-    ProviderCheckStartedPayload, ProviderCheckTrigger, ProviderError, ProviderId, ProviderIssue,
-    ProviderKeyMeta, ProviderRecord, ProviderStatusPayload,
+    ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderCheckTrigger, ProviderError,
+    ProviderId, ProviderIssue, ProviderKeyMeta, ProviderRecord,
 };
 
-// 事件名常量（与前端 PROVIDER_CHECK_EVENTS 保持一致）
+// Lifecycle event names kept aligned with frontend PROVIDER_CHECK_EVENTS.
+// 生命周期事件名常量，与前端 PROVIDER_CHECK_EVENTS 保持一致。
 const EVT_CHECK_STARTED: &str = "providers-check-lifecycle-started";
 const EVT_PROVIDER_STATUS: &str = "provider-status";
 const EVT_CHECK_COMPLETED: &str = "providers-check-lifecycle-completed";
@@ -28,8 +29,10 @@ pub(super) fn emit_check_started(
     })
 }
 
-/// 推送单个 Provider 的状态事件
-pub(super) fn emit_provider_status(
+/// Emits one provider check status event.
+///
+/// 推送单个 Provider 的 check status 事件。
+pub(super) fn emit_check_status(
     app: &AppHandle,
     run_id: &str,
     provider_id: ProviderId,
@@ -37,8 +40,8 @@ pub(super) fn emit_provider_status(
     health: HealthCheckResult,
     key_meta: ProviderKeyMeta,
 ) -> Result<(), ProviderError> {
-    let payload = ProviderStatusPayload {
-        run_id: run_id.to_string(),
+    let payload = ProviderCheckStatusPayload {
+        run_id,
         provider: provider_id,
         config,
         health,

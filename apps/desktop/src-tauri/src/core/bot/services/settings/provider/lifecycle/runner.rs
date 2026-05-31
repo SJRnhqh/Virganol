@@ -3,16 +3,20 @@ use log::{error, info, warn};
 use tauri::AppHandle;
 use tokio::task::JoinSet;
 
-use super::super::super::super::super::models::{
+use super::super::super::super::super::{
     ProviderCheckRunResult, ProviderError, ProviderId, ProviderIssue, ProviderRecord, ProviderState,
 };
 use super::super::health_check_with_resolved_key;
-use super::{emit_provider_status, finalize_provider_check_result};
+use super::{emit_check_status, finalize_provider_check_result};
 
-/// 并发健康检查最大并发度
+/// Maximum number of provider health checks allowed to run concurrently.
+///
+/// Provider 健康检查允许同时运行的最大任务数量。
 const CHECK_CONCURRENCY_LIMIT: usize = 4;
 
-/// 执行并发健康检查主循环，返回失败数量与生命周期错误明细
+/// Runs provider health checks with bounded concurrency.
+///
+/// 使用有限并发执行 Provider 健康检查，并收集失败数量、Provider 级结构性问题与首个 join 错误。
 pub(super) async fn run_provider_checks(
     app: &AppHandle,
     provider_state: &ProviderState,
@@ -49,21 +53,21 @@ pub(super) async fn run_provider_checks(
                 );
 
                 if let Some(e) = finalization.reconciliation_error {
-                    let message = e.message();
-                    provider_issues.push(ProviderIssue::new(provider_id, e.code(), message));
+                    provider_issues.push(ProviderIssue::new(provider_id, e.code(), e.message()));
                 }
 
                 if !finalization.online {
                     failed_count += 1;
                 }
 
-                let icon = if finalization.online { "✅" } else { "⚠️" };
                 info!(
                     "[Tauri] {} {} → online: {}",
-                    icon, provider_id, finalization.online
+                    if finalization.online { "✅" } else { "⚠️" },
+                    provider_id,
+                    finalization.online
                 );
 
-                if let Err(e) = emit_provider_status(
+                if let Err(e) = emit_check_status(
                     app,
                     run_id,
                     provider_id,

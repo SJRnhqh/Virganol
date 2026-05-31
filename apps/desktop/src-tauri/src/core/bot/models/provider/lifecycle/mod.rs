@@ -7,7 +7,7 @@ mod trigger;
 pub(crate) use finalization::ProviderCheckFinalization;
 pub(crate) use payload::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
-    ProviderStatusPayload,
+    ProviderCheckStatusPayload,
 };
 pub(crate) use run::ProviderCheckRunResult;
 pub(crate) use trigger::ProviderCheckTrigger;

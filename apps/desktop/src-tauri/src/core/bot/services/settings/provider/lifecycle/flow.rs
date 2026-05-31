@@ -79,8 +79,6 @@ pub(crate) async fn check_providers_lifecycle(
         return;
     }
 
-    // Step 4: Run health checks and collect structural failures.
-    // 并发执行健康检查，并收敛失败计数与结构性错误。
     let check_result =
         run_provider_checks(&app, provider_state, run_id.as_str(), snapshot.supported).await;
 

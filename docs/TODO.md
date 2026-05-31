@@ -8,11 +8,10 @@
 
 ## Current
 
-- [ ] Audit `emit_provider_status` event emission failure handling.
+- [ ] Review Step 5 structural failure promotion into lifecycle failed events.
 
 ## Next
 
-- [ ] Review Step 5 structural failure promotion into lifecycle failed events.
 - [ ] Review Step 6 lifecycle completed event emission and fallback failure path.
 - [ ] Close out lifecycle backend error propagation review notes.
 
@@ -34,3 +33,9 @@
 - [x] Model single-provider check post-processing with `ProviderCheckFinalization`.
 - [x] Rename `process_provider_check_result` to `finalize_provider_check_result`.
 - [x] Keep Step 4 `runner.rs` `Some(Ok(...))` branch wired through finalization.
+- [x] Audit `emit_provider_status` event emission failure handling.
+- [x] Align `ProviderStatusPayload` run ID borrowing with other lifecycle payloads.
+- [x] Rename status payload to `ProviderCheckStatusPayload`.
+- [x] Rename status event emitter to `emit_check_status`.
+- [x] Normalize lifecycle payload, event, and runner concurrency comments.
+- [x] Close out Step 4 `runner.rs` result handling review.
