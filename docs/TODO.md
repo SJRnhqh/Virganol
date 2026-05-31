@@ -8,11 +8,11 @@
 
 ## Current
 
-- [ ] Review Step 6 lifecycle completed event emission and fallback failure path.
+- [ ] Close out lifecycle backend error propagation review notes.
 
 ## Next
 
-- [ ] Close out lifecycle backend error propagation review notes.
+- [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Validation
 
@@ -40,3 +40,5 @@
 - [x] Close out Step 4 `runner.rs` result handling review.
 - [x] Review Step 5 structural failure promotion into lifecycle failed events.
 - [x] Remove over-explaining Step 5 flow comments after review.
+- [x] Review Step 6 lifecycle completed event emission and fallback failure path.
+- [x] Remove over-explaining Step 6 flow comments after review.

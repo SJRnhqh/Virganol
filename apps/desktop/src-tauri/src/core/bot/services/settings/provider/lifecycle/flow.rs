@@ -103,8 +103,6 @@ pub(crate) async fn check_providers_lifecycle(
         return;
     }
 
-    // Step 6: Emit the lifecycle completed event.
-    // 推送生命周期 completed 事件。
     let duration_ms = started_at.elapsed().as_millis() as u64;
     if let Err(e) = emit_check_completed(&app, run_id.as_str(), check_result.failed_count) {
         report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
