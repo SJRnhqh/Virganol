@@ -23,6 +23,7 @@
 
 ## Completed
 
+- [x] Pass `ProviderRecord` ownership through lifecycle reconciliation persistence.
 - [x] Audit `reconcile_enabled_models` behavior and naming.
 - [x] Extract pruned enabled-model reconciliation into `ProviderRecord`.
 - [x] Rename lifecycle reconciliation persistence and status record fields.

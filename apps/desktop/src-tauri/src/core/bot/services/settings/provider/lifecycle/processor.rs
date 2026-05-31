@@ -15,11 +15,11 @@ fn persist_reconciled_enabled_models(
     app: &AppHandle,
     provider_state: &ProviderState,
     provider_id: ProviderId,
-    record: &ProviderRecord,
+    record: ProviderRecord,
     available_models: &[String],
 ) -> (ProviderRecord, Option<ProviderError>) {
     let Some(updated) = record.reconcile_enabled_models_if_pruned(available_models) else {
-        return (record.clone(), None);
+        return (record, None);
     };
 
     let previous_enabled_model_count = record.enabled_models.len();
@@ -40,7 +40,7 @@ fn persist_reconciled_enabled_models(
                 provider_id,
                 e.message()
             );
-            (record.clone(), Some(e))
+            (record, Some(e))
         }
     }
 }
@@ -60,7 +60,7 @@ pub(super) fn finalize_provider_check_result(
             app,
             provider_state,
             provider_id,
-            &record,
+            record,
             &health.available_models,
         );
         ProviderCheckFinalization::online(status_record, reconcile_error)
