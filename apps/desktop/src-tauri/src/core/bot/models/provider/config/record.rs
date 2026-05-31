@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/config/record.rs
-use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
-use super::super::super::super::compute_enabled_models;
+use serde::{Deserialize, Serialize};
 
 /// Provider configuration record persisted in settings.json.
 ///
@@ -30,6 +30,19 @@ impl ProviderRecord {
         }
     }
 
+    /// Computes enabled models that are still available.
+    ///
+    /// 计算当前仍然可用的已启用模型。
+    fn reconciled_enabled_models(&self, available_models: &[String]) -> Vec<String> {
+        let enabled_set: HashSet<&str> = self.enabled_models.iter().map(String::as_str).collect();
+
+        available_models
+            .iter()
+            .filter(|model| enabled_set.contains(model.as_str()))
+            .cloned()
+            .collect()
+    }
+
     /// Creates a provider record if enabled models are pruned by available models.
     ///
     /// 当当前可用模型会修剪 enabled_models 时，创建新的 Provider 配置记录。
@@ -37,7 +50,7 @@ impl ProviderRecord {
         &self,
         available_models: &[String],
     ) -> Option<Self> {
-        let enabled_models = compute_enabled_models(&self.enabled_models, available_models);
+        let enabled_models = self.reconciled_enabled_models(available_models);
 
         (enabled_models.len() != self.enabled_models.len()).then(|| Self {
             url: self.url.clone(),
@@ -54,7 +67,7 @@ impl ProviderRecord {
         previous: Option<&Self>,
     ) -> Self {
         let enabled_models = previous
-            .map(|record| compute_enabled_models(&record.enabled_models, available_models))
+            .map(|record| record.reconciled_enabled_models(available_models))
             .unwrap_or_default();
 
         Self::new(url, enabled_models)

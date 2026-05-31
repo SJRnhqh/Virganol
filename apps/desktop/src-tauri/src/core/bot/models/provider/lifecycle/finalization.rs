@@ -16,7 +16,7 @@ pub(crate) struct ProviderCheckFinalization {
     /// Structural error raised while reconciling local provider state.
     ///
     /// 协调本地 Provider 状态时产生的结构性错误。
-    pub(crate) reconcile_error: Option<ProviderError>,
+    pub(crate) reconciliation_error: Option<ProviderError>,
 }
 
 impl ProviderCheckFinalization {
@@ -25,12 +25,12 @@ impl ProviderCheckFinalization {
     /// 创建在线 Provider 的后处理结果。
     pub(crate) fn online(
         status_record: ProviderRecord,
-        reconcile_error: Option<ProviderError>,
+        reconciliation_error: Option<ProviderError>,
     ) -> Self {
         Self {
             status_record,
             online: true,
-            reconcile_error,
+            reconciliation_error,
         }
     }
 
@@ -41,7 +41,7 @@ impl ProviderCheckFinalization {
         Self {
             status_record,
             online: false,
-            reconcile_error: None,
+            reconciliation_error: None,
         }
     }
 }

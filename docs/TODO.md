@@ -23,6 +23,10 @@
 
 ## Completed
 
+- [x] Reuse `ProviderRecord` enabled-model reconciliation in connect and lifecycle paths.
+- [x] Remove the provider enabled-model helper after moving reconciliation into `ProviderRecord`.
+- [x] Rename lifecycle result processing from `processor.rs` to `finalize.rs`.
+- [x] Rename lifecycle finalization error state to `reconciliation_error`.
 - [x] Pass `ProviderRecord` ownership through lifecycle reconciliation persistence.
 - [x] Audit `reconcile_enabled_models` behavior and naming.
 - [x] Extract pruned enabled-model reconciliation into `ProviderRecord`.

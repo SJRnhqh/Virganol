@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/processor.rs
+// apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/finalize.rs
 use log::{error, info};
 use tauri::AppHandle;
 
@@ -56,14 +56,14 @@ pub(super) fn finalize_provider_check_result(
     health: &HealthCheckResult,
 ) -> ProviderCheckFinalization {
     if health.success {
-        let (status_record, reconcile_error) = persist_reconciled_enabled_models(
+        let (status_record, reconciliation_error) = persist_reconciled_enabled_models(
             app,
             provider_state,
             provider_id,
             record,
             &health.available_models,
         );
-        ProviderCheckFinalization::online(status_record, reconcile_error)
+        ProviderCheckFinalization::online(status_record, reconciliation_error)
     } else {
         ProviderCheckFinalization::offline(record)
     }

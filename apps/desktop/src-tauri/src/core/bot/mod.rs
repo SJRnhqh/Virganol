@@ -1,6 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/mod.rs
 mod constants;
-mod helpers;
 mod interfaces;
 mod models;
 mod services;
@@ -9,7 +8,6 @@ pub(self) use constants::{
     DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS, PROVIDER_KEYRING_SERVICE,
     SETTINGS_FILE, SPIRIT_PROVIDERS_KEY,
 };
-pub(self) use helpers::compute_enabled_models;
 pub(self) use interfaces::{DriverFuture, ProviderDriver};
 pub(super) use models::ProviderState;
 pub(crate) use models::{

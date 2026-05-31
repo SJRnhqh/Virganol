@@ -48,7 +48,7 @@ pub(super) async fn run_provider_checks(
                     &result,
                 );
 
-                if let Some(e) = finalization.reconcile_error {
+                if let Some(e) = finalization.reconciliation_error {
                     let message = e.message();
                     provider_issues.push(ProviderIssue::new(provider_id, e.code(), message));
                 }
