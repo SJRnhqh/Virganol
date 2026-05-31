@@ -7,10 +7,11 @@ use super::super::super::super::super::{
     ProviderId, ProviderIssue, ProviderKeyMeta, ProviderRecord,
 };
 
-// Lifecycle event names kept aligned with frontend PROVIDER_CHECK_EVENTS.
-// 生命周期事件名常量，与前端 PROVIDER_CHECK_EVENTS 保持一致。
+// Provider check lifecycle event names kept aligned with frontend PROVIDER_CHECK_EVENTS.
+//
+// Provider 检查生命周期事件名常量，与前端 PROVIDER_CHECK_EVENTS 保持一致。
 const EVT_CHECK_STARTED: &str = "providers-check-lifecycle-started";
-const EVT_PROVIDER_STATUS: &str = "provider-status";
+const EVT_CHECK_STATUS: &str = "provider-status";
 const EVT_CHECK_COMPLETED: &str = "providers-check-lifecycle-completed";
 const EVT_CHECK_FAILED: &str = "providers-check-lifecycle-failed";
 
@@ -48,8 +49,8 @@ pub(super) fn emit_check_status(
         key_meta,
     };
 
-    app.emit(EVT_PROVIDER_STATUS, &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_PROVIDER_STATUS, e))
+    app.emit(EVT_CHECK_STATUS, &payload).map_err(|e| {
+        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_STATUS, e))
     })
 }
 

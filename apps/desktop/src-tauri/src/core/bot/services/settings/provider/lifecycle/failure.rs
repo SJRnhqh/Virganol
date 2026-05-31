@@ -21,7 +21,7 @@ pub(super) fn report_lifecycle_failure(
         match &issues {
             Some(issues) => {
                 error!(
-                    "[Tauri] ❌ emit providers-check-failed fallback: run_id={}, trigger={}, code={}, message={}, issues={:?}, emit_err={}",
+                    "[Tauri] ❌ emit providers-check-lifecycle-failed fallback: run_id={}, trigger={}, code={}, message={}, issues={:?}, emit_err={}",
                     run_id,
                     trigger.as_tag(),
                     code,
@@ -32,7 +32,7 @@ pub(super) fn report_lifecycle_failure(
             }
             None => {
                 error!(
-                    "[Tauri] ❌ emit providers-check-failed fallback: run_id={}, trigger={}, code={}, message={}, emit_err={}",
+                    "[Tauri] ❌ emit providers-check-lifecycle-failed fallback: run_id={}, trigger={}, code={}, message={}, emit_err={}",
                     run_id,
                     trigger.as_tag(),
                     code,

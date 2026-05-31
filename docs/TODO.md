@@ -8,7 +8,7 @@
 
 ## Current
 
-- [ ] Close out lifecycle backend error propagation review notes.
+- [ ] Discuss remaining lifecycle error up-propagation boundaries.
 
 ## Next
 
@@ -42,3 +42,5 @@
 - [x] Remove over-explaining Step 5 flow comments after review.
 - [x] Review Step 6 lifecycle completed event emission and fallback failure path.
 - [x] Remove over-explaining Step 6 flow comments after review.
+- [x] Align lifecycle failed fallback log text with the failed event name.
+- [x] Close out lifecycle backend flow review.
