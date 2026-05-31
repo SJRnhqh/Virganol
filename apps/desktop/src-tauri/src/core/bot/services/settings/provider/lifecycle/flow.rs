@@ -82,11 +82,6 @@ pub(crate) async fn check_providers_lifecycle(
     let check_result =
         run_provider_checks(&app, provider_state, run_id.as_str(), snapshot.supported).await;
 
-    // Step 5: Promote structural failures into the lifecycle failed event.
-    // 处理并发检查阶段的全局并发错误或 Provider 级结构性问题。
-    // 优先级：join_error（任务 panic）> provider_issues（个别 provider 结构性失败）。
-    // join_error 存在时直接作为错误主体，provider_issues 若非空仍一并传入 payload；
-    // 无 join_error 时若 issues 非空则手动构造等价错误；两者皆无则跳过进入 Step 6。
     if let Some(e) = check_result.join_error.or_else(|| {
         (!check_result.provider_issues.is_empty()).then(|| {
             ProviderError::LifecycleConcurrentCheck(

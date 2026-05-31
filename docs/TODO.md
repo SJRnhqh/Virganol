@@ -8,11 +8,10 @@
 
 ## Current
 
-- [ ] Review Step 5 structural failure promotion into lifecycle failed events.
+- [ ] Review Step 6 lifecycle completed event emission and fallback failure path.
 
 ## Next
 
-- [ ] Review Step 6 lifecycle completed event emission and fallback failure path.
 - [ ] Close out lifecycle backend error propagation review notes.
 
 ## Validation
@@ -39,3 +38,5 @@
 - [x] Rename status event emitter to `emit_check_status`.
 - [x] Normalize lifecycle payload, event, and runner concurrency comments.
 - [x] Close out Step 4 `runner.rs` result handling review.
+- [x] Review Step 5 structural failure promotion into lifecycle failed events.
+- [x] Remove over-explaining Step 5 flow comments after review.
