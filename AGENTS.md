@@ -27,8 +27,12 @@ docs/
 ├── CONTRIBUTING.md  # Project-level contribution guide
 ├── CHANGELOG.md     # Version-level change history
 ├── ROADMAP.md       # Version-level roadmap and progress
+├── templates/        # Reference templates for recurring docs
 └── TODO.md          # Branch-level task breakdown
 ```
+
+Use `docs/templates/branch-todo.md` as the reference structure when creating
+or refreshing branch-level `docs/TODO.md` files.
 
 ## Prompt Responsibilities
 
