@@ -13,7 +13,16 @@ pub(crate) struct UpdateEnabledModelsRequestData {
     ///
     /// 要为目标 Provider 持久化为启用状态的模型标识列表。
     #[serde(default)]
-    pub(crate) enabled_models: Vec<String>,
+    enabled_models: Vec<String>,
+}
+
+impl UpdateEnabledModelsRequestData {
+    /// Consumes the request data and returns enabled model identifiers.
+    ///
+    /// 消费请求数据并返回已启用模型标识列表。
+    pub(in crate::core::bot) fn into_enabled_models(self) -> Vec<String> {
+        self.enabled_models
+    }
 }
 
 /// Request for updating enabled models.

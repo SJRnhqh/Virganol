@@ -8,13 +8,15 @@
 
 ## Current
 
-- [ ] Continue provider visibility boundary alignment before lifecycle error notes.
+- [ ] Finish provider model visibility boundary alignment before services review.
 
 ## Next
 
-- [ ] Prioritize visibility narrowing for provider models/services touched by lifecycle review.
-- [ ] Review remaining provider models case by case instead of applying blanket `pub(crate)`.
-- [ ] Record lifecycle error up-propagation points in documentation after code boundaries are clear.
+- [ ] Review remaining provider contract models for visibility narrowing and field encapsulation.
+- [ ] Review provider common `ProviderId`, config `ProviderRecord`, connection, secret, and lifecycle models case by case.
+- [ ] Leave provider error models for the later generic error contract upgrade.
+- [ ] Tighten provider services visibility after model boundaries are closed.
+- [ ] Record lifecycle error up-propagation points while reviewing provider services.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Validation
@@ -26,12 +28,14 @@
 - [x] Run `cargo check` after tightening provider config snapshot visibility.
 - [x] Run `cargo check` after moving provider state unwrapping into core.
 - [x] Run `cargo check` after tightening provider constants and interfaces visibility.
+- [x] Run `cargo check` after encapsulating update-enabled-models request data.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
 
 - [x] Restrict provider constants visibility to the `core::bot` domain.
 - [x] Restrict provider driver interfaces visibility to the `core::bot` domain.
+- [x] Encapsulate update-enabled-models request data behind a bot-only accessor.
 - [x] Make `AppState` provider state private behind a core-only accessor.
 - [x] Move provider state unwrapping from commands into core provider services.
 - [x] Restrict `ProviderState` and store-lock access to their actual core/bot domains.

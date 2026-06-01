@@ -20,7 +20,12 @@ pub(crate) fn update_provider_enabled_models(
         return UpdateEnabledModelsResponse::failure("missing data field");
     };
 
-    match update_models(app, provider_state, provider_id, payload.enabled_models) {
+    match update_models(
+        app,
+        provider_state,
+        provider_id,
+        payload.into_enabled_models(),
+    ) {
         Ok(()) => UpdateEnabledModelsResponse::success(),
         Err(e) => UpdateEnabledModelsResponse::failure(e.message()),
     }
