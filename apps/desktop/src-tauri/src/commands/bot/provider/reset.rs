@@ -12,5 +12,5 @@ pub(crate) async fn reset_provider(
     state: State<'_, AppState>,
     payload: ResetProviderRequest,
 ) -> Result<ResetProviderResponse, ()> {
-    Ok(reset_provider_config(&app, &state.provider, payload))
+    Ok(reset_provider_config(&app, state.inner(), payload))
 }

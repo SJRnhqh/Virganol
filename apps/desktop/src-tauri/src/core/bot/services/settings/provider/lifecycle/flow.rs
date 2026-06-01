@@ -3,7 +3,8 @@ use log::{info, warn};
 use std::time::Instant;
 use tauri::AppHandle;
 
-use super::super::super::super::super::{ProviderCheckTrigger, ProviderError, ProviderState};
+use super::super::super::super::super::super::AppState;
+use super::super::super::super::super::{ProviderCheckTrigger, ProviderError};
 use super::super::load_provider_check_snapshot;
 use super::{
     emit_check_completed, emit_check_started, next_run_id, report_lifecycle_failure,
@@ -15,7 +16,7 @@ use super::{
 /// 管理一轮 Provider 生命周期检查，覆盖持久化快照读取、健康检查和事件推送。
 pub(crate) async fn check_providers_lifecycle(
     app: AppHandle,
-    provider_state: &ProviderState,
+    state: &AppState,
     trigger: ProviderCheckTrigger,
 ) {
     let run_id = next_run_id(&trigger);
@@ -81,7 +82,7 @@ pub(crate) async fn check_providers_lifecycle(
 
     let check_result = run_provider_checks(
         &app,
-        provider_state,
+        state.provider(),
         run_id.as_str(),
         snapshot.into_supported(),
     )

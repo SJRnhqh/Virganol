@@ -1,8 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/connect.rs
 use tauri::AppHandle;
 
+use super::super::super::super::super::super::AppState;
 use super::super::super::super::super::{
-    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderRecord, ProviderState,
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderRecord,
 };
 use super::super::{
     load_provider_record, probe_provider_connection, save_provider, ProviderKeyTransaction,
@@ -13,10 +14,11 @@ use super::super::{
 /// 连接 Provider 并在健康检查成功后持久化配置。
 pub(crate) async fn connect_and_save(
     app: &AppHandle,
-    provider_state: &ProviderState,
+    state: &AppState,
     request: ConnectAndSaveProviderRequest,
 ) -> ConnectAndSaveProviderResponse {
     let ConnectAndSaveProviderRequest { provider_id, data } = request;
+    let provider_state = state.provider();
 
     let Some(data) = data else {
         return ConnectAndSaveProviderResponse::failure("missing data field");

@@ -1,9 +1,10 @@
 // apps/desktop/src-tauri/src/core/bot/models/mod.rs
 mod provider;
 
+pub(in crate::core) use provider::ProviderState;
 pub(crate) use provider::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckTrigger,
-    ProviderState, ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
+    ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
     UpdateEnabledModelsResponse,
 };
 pub(super) use provider::{

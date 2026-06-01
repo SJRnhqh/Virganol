@@ -3,4 +3,4 @@ mod id;
 mod state;
 
 pub(crate) use id::ProviderId;
-pub(crate) use state::ProviderState;
+pub(in crate::core) use state::ProviderState;

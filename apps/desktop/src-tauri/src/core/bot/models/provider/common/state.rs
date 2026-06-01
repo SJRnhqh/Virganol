@@ -4,7 +4,7 @@ use parking_lot::{Mutex, MutexGuard};
 /// State management for provider-related functionality.
 ///
 /// Provider 功能的状态管理。
-pub(crate) struct ProviderState {
+pub(in crate::core) struct ProviderState {
     /// Global store lock for protecting provider config read-write transactions.
     ///
     /// 全局 store 锁，保护 providers 配置的读写事务。
@@ -15,7 +15,7 @@ impl ProviderState {
     /// Locks provider store read-write transactions.
     ///
     /// 锁定 provider store 的读写事务，避免并发读改写覆盖。
-    pub(crate) fn lock_store(&self) -> MutexGuard<'_, ()> {
+    pub(in crate::core::bot) fn lock_store(&self) -> MutexGuard<'_, ()> {
         self.store_lock.lock()
     }
 }
