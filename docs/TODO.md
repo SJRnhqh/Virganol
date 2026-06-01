@@ -8,11 +8,10 @@
 
 ## Current
 
-- [ ] Finish provider model visibility boundary alignment before services review.
+- [ ] Review remaining non-error provider models for visibility boundary alignment.
 
 ## Next
 
-- [ ] Review remaining provider contract models for visibility narrowing and field encapsulation.
 - [ ] Review provider common `ProviderId`, config `ProviderRecord`, connection, secret, and lifecycle models case by case.
 - [ ] Leave provider error models for the later generic error contract upgrade.
 - [ ] Tighten provider services visibility after model boundaries are closed.
@@ -31,6 +30,7 @@
 - [x] Run `cargo check` after encapsulating update-enabled-models request data.
 - [x] Run `cargo check` after tightening connect request/response contract visibility.
 - [x] Run `cargo check` after wrapping manager requests in concrete newtypes.
+- [x] Run `cargo check` after wrapping manager responses in concrete newtypes.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
@@ -41,7 +41,9 @@
 - [x] Encapsulate connect request data behind bot-only normalized accessors.
 - [x] Restrict connect response data fields and success constructor visibility.
 - [x] Hide the provider command request envelope behind concrete manager request newtypes.
+- [x] Hide the provider command response envelope behind concrete manager response newtypes.
 - [x] Restrict connect and update request data visibility to the bot domain.
+- [x] Close out provider contract base and manager visibility review.
 - [x] Make `AppState` provider state private behind a core-only accessor.
 - [x] Move provider state unwrapping from commands into core provider services.
 - [x] Restrict `ProviderState` and store-lock access to their actual core/bot domains.

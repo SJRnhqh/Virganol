@@ -38,22 +38,6 @@ impl ConnectAndSaveProviderRequestData {
     }
 }
 
-/// Response data for connect operation.
-///
-/// 连接操作的响应数据。
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct ConnectAndSaveProviderResponseData {
-    /// Models discovered by the provider health check.
-    ///
-    /// Provider 健康检查发现的模型列表。
-    available_models: Vec<String>,
-    /// Models enabled after preserving compatible previous selections.
-    ///
-    /// 保留兼容历史选择后处于启用状态的模型列表。
-    enabled_models: Vec<String>,
-}
-
 /// Request for connecting and saving a provider.
 ///
 /// 连接并保存 Provider 的请求。
@@ -74,11 +58,30 @@ impl ConnectAndSaveProviderRequest {
     }
 }
 
+/// Response data for connect operation.
+///
+/// 连接操作的响应数据。
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct ConnectAndSaveProviderResponseData {
+    /// Models discovered by the provider health check.
+    ///
+    /// Provider 健康检查发现的模型列表。
+    available_models: Vec<String>,
+    /// Models enabled after preserving compatible previous selections.
+    ///
+    /// 保留兼容历史选择后处于启用状态的模型列表。
+    enabled_models: Vec<String>,
+}
+
 /// Response for connecting and saving a provider.
 ///
 /// 连接并保存 Provider 的响应。
-pub(crate) type ConnectAndSaveProviderResponse =
-    ProviderCommandResponse<ConnectAndSaveProviderResponseData>;
+#[derive(Serialize)]
+#[serde(transparent)]
+pub(crate) struct ConnectAndSaveProviderResponse(
+    ProviderCommandResponse<ConnectAndSaveProviderResponseData>,
+);
 
 impl ConnectAndSaveProviderResponse {
     /// Creates a successful response with model data.
@@ -88,9 +91,18 @@ impl ConnectAndSaveProviderResponse {
         available_models: Vec<String>,
         enabled_models: Vec<String>,
     ) -> Self {
-        Self::success_with(ConnectAndSaveProviderResponseData {
-            available_models,
-            enabled_models,
-        })
+        Self(ProviderCommandResponse::success_with(
+            ConnectAndSaveProviderResponseData {
+                available_models,
+                enabled_models,
+            },
+        ))
+    }
+
+    /// Creates a failed response with error message.
+    ///
+    /// 创建带错误消息的失败响应。
+    pub(in crate::core::bot) fn failure(error: impl Into<String>) -> Self {
+        Self(ProviderCommandResponse::failure(error))
     }
 }

@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/contract/manager/update.rs
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use super::super::super::ProviderId;
 use super::super::{ProviderCommandRequest, ProviderCommandResponse};
@@ -49,4 +49,22 @@ impl UpdateEnabledModelsRequest {
 /// Response for updating enabled models.
 ///
 /// 更新已启用模型列表的响应。
-pub(crate) type UpdateEnabledModelsResponse = ProviderCommandResponse;
+#[derive(Serialize)]
+#[serde(transparent)]
+pub(crate) struct UpdateEnabledModelsResponse(ProviderCommandResponse);
+
+impl UpdateEnabledModelsResponse {
+    /// Creates a successful response.
+    ///
+    /// 创建成功响应。
+    pub(in crate::core::bot) fn success() -> Self {
+        Self(ProviderCommandResponse::success())
+    }
+
+    /// Creates a failed response with error message.
+    ///
+    /// 创建带错误消息的失败响应。
+    pub(in crate::core::bot) fn failure(error: impl Into<String>) -> Self {
+        Self(ProviderCommandResponse::failure(error))
+    }
+}

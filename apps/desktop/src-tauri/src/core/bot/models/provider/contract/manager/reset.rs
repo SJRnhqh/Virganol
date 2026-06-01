@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/contract/manager/reset.rs
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use super::super::super::ProviderId;
 use super::super::{ProviderCommandRequest, ProviderCommandResponse};
@@ -24,4 +24,22 @@ impl ResetProviderRequest {
 /// Response for resetting a provider.
 ///
 /// 重置 Provider 的响应。
-pub(crate) type ResetProviderResponse = ProviderCommandResponse;
+#[derive(Serialize)]
+#[serde(transparent)]
+pub(crate) struct ResetProviderResponse(ProviderCommandResponse);
+
+impl ResetProviderResponse {
+    /// Creates a successful response.
+    ///
+    /// 创建成功响应。
+    pub(in crate::core::bot) fn success() -> Self {
+        Self(ProviderCommandResponse::success())
+    }
+
+    /// Creates a failed response with error message.
+    ///
+    /// 创建带错误消息的失败响应。
+    pub(in crate::core::bot) fn failure(error: impl Into<String>) -> Self {
+        Self(ProviderCommandResponse::failure(error))
+    }
+}
