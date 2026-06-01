@@ -8,19 +8,24 @@
 
 ## Current
 
-- [ ] Discuss remaining lifecycle error up-propagation boundaries.
+- [ ] Review `core::bot` lifecycle service error up-propagation boundaries.
 
 ## Next
 
+- [ ] Start from `check_providers_lifecycle` and trace lifecycle service error handling points.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Validation
 
 - [x] Run `cargo check` from the repository root after lifecycle Rust changes.
+- [x] Run `cargo check` after core module facade cleanup.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
 
+- [x] Move `core::init` implementation from `core/mod.rs` into `core/init.rs`.
+- [x] Keep `core/mod.rs` focused on module declarations and facade re-exports.
+- [x] Hide `manager` and `rpc` behind the `core` facade while preserving `lib.rs` usage.
 - [x] Reuse `ProviderRecord` enabled-model reconciliation in connect and lifecycle paths.
 - [x] Remove the provider enabled-model helper after moving reconciliation into `ProviderRecord`.
 - [x] Rename lifecycle result processing from `processor.rs` to `finalize.rs`.
