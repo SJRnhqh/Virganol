@@ -8,11 +8,11 @@
 
 ## Current
 
-- [ ] Refine remaining provider models before lifecycle error boundary review.
+- [ ] Refine provider models incrementally before lifecycle error boundary review.
 
 ## Next
 
-- [ ] Review remaining provider model module visibility, constructors, and helper methods.
+- [ ] Review remaining provider models case by case instead of applying blanket `pub(crate)`.
 - [ ] Start from `check_providers_lifecycle` and trace lifecycle service error handling points.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
@@ -22,10 +22,13 @@
 - [x] Run `cargo check` after core module facade cleanup.
 - [x] Run `cargo check` after encapsulating provider store lock access.
 - [x] Run `cargo check` after refining provider common models.
+- [x] Run `cargo check` after tightening provider config snapshot visibility.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
 
+- [x] Encapsulate `ProviderCheckSnapshot` fields behind semantic methods.
+- [x] Restrict `ProviderCheckSnapshot` visibility to the `core::bot` domain.
 - [x] Move `ProviderId` into provider common models.
 - [x] Make `ProviderId` serde names explicit and rename DeepSeek internals.
 - [x] Normalize `ProviderId` documentation comments.

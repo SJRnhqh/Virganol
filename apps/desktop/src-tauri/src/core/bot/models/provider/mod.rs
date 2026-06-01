@@ -8,7 +8,8 @@ mod lifecycle;
 mod secret;
 
 pub(crate) use common::{ProviderId, ProviderState};
-pub(crate) use config::{ProviderCheckSnapshot, ProviderRecord};
+pub(in crate::core::bot) use config::ProviderCheckSnapshot;
+pub(crate) use config::ProviderRecord;
 pub(crate) use connection::HealthCheckResult;
 pub(crate) use contract::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderRequest,

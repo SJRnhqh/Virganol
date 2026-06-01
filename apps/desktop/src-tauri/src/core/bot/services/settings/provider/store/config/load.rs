@@ -45,11 +45,7 @@ pub(crate) fn load_provider_check_snapshot(
         }
     }
 
-    Ok(ProviderCheckSnapshot {
-        total,
-        supported,
-        skipped,
-    })
+    Ok(ProviderCheckSnapshot::new(total, supported, skipped))
 }
 
 /// Loads one provider configuration as an owned read-only snapshot.

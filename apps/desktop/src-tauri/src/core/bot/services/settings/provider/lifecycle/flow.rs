@@ -34,12 +34,12 @@ pub(crate) async fn check_providers_lifecycle(
         }
     };
     let (loaded_total, supported_total, skipped_total) = (
-        snapshot.total,
-        snapshot.supported.len(),
-        snapshot.skipped.len(),
+        snapshot.total(),
+        snapshot.supported_count(),
+        snapshot.skipped_count(),
     );
 
-    for detail in &snapshot.skipped {
+    for detail in snapshot.skipped() {
         warn!(
             "[Tauri] ⚠️ Skip unsupported provider in store: run_id={}, trigger={}, raw_id={}, code={}, message={}",
             run_id,
@@ -79,8 +79,13 @@ pub(crate) async fn check_providers_lifecycle(
         return;
     }
 
-    let check_result =
-        run_provider_checks(&app, provider_state, run_id.as_str(), snapshot.supported).await;
+    let check_result = run_provider_checks(
+        &app,
+        provider_state,
+        run_id.as_str(),
+        snapshot.into_supported(),
+    )
+    .await;
 
     if let Some(e) = check_result.join_error.or_else(|| {
         (!check_result.provider_issues.is_empty()).then(|| {

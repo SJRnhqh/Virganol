@@ -2,4 +2,5 @@
 mod record;
 mod snapshot;
 
-pub(crate) use {record::ProviderRecord, snapshot::ProviderCheckSnapshot};
+pub(crate) use record::ProviderRecord;
+pub(in crate::core::bot) use snapshot::ProviderCheckSnapshot;
