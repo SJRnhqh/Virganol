@@ -29,8 +29,8 @@ pub(crate) async fn connect_and_save(
 
     let result = probe_provider_connection(provider_id, normalized_url, normalized_key).await;
 
-    if !result.success {
-        return ConnectAndSaveProviderResponse::failure(result.error.unwrap_or_default());
+    if !result.is_success() {
+        return ConnectAndSaveProviderResponse::failure(result.error_message().unwrap_or_default());
     }
 
     let previous_record = match load_provider_record(app, provider_id) {
@@ -40,7 +40,7 @@ pub(crate) async fn connect_and_save(
 
     let record = ProviderRecord::from_connection(
         normalized_url,
-        &result.available_models,
+        result.available_models(),
         previous_record.as_ref(),
     );
 
@@ -59,5 +59,5 @@ pub(crate) async fn connect_and_save(
         transaction.commit();
     }
 
-    ConnectAndSaveProviderResponse::ok(result.available_models, enabled_models)
+    ConnectAndSaveProviderResponse::ok(result.into_available_models(), enabled_models)
 }

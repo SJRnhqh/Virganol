@@ -55,13 +55,13 @@ pub(super) fn finalize_provider_check_result(
     record: ProviderRecord,
     health: &HealthCheckResult,
 ) -> ProviderCheckFinalization {
-    if health.success {
+    if health.is_success() {
         let (status_record, reconciliation_error) = persist_reconciled_enabled_models(
             app,
             provider_state,
             provider_id,
             record,
-            &health.available_models,
+            health.available_models(),
         );
         ProviderCheckFinalization::online(status_record, reconciliation_error)
     } else {
