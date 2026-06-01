@@ -1,4 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/interfaces/provider/mod.rs
 mod driver;
 
-pub(crate) use driver::{DriverFuture, ProviderDriver};
+pub(in crate::core::bot) use driver::{DriverFuture, ProviderDriver};

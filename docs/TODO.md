@@ -8,13 +8,13 @@
 
 ## Current
 
-- [ ] Tighten provider module visibility while reviewing lifecycle error boundaries.
+- [ ] Continue provider visibility boundary alignment before lifecycle error notes.
 
 ## Next
 
+- [ ] Prioritize visibility narrowing for provider models/services touched by lifecycle review.
 - [ ] Review remaining provider models case by case instead of applying blanket `pub(crate)`.
-- [ ] Record lifecycle error up-propagation points as each touched module is reviewed.
-- [ ] Start from `check_providers_lifecycle` and trace lifecycle service error handling points.
+- [ ] Record lifecycle error up-propagation points in documentation after code boundaries are clear.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Validation
@@ -25,10 +25,13 @@
 - [x] Run `cargo check` after refining provider common models.
 - [x] Run `cargo check` after tightening provider config snapshot visibility.
 - [x] Run `cargo check` after moving provider state unwrapping into core.
+- [x] Run `cargo check` after tightening provider constants and interfaces visibility.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
 
+- [x] Restrict provider constants visibility to the `core::bot` domain.
+- [x] Restrict provider driver interfaces visibility to the `core::bot` domain.
 - [x] Make `AppState` provider state private behind a core-only accessor.
 - [x] Move provider state unwrapping from commands into core provider services.
 - [x] Restrict `ProviderState` and store-lock access to their actual core/bot domains.
