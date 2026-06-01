@@ -21,7 +21,7 @@ impl ProviderCheckTrigger {
     /// Returns the stable trigger tag used in lifecycle logs and run ids.
     ///
     /// 返回生命周期日志与 run_id 中使用的稳定触发来源标签。
-    pub(crate) fn as_tag(&self) -> &'static str {
+    pub(in crate::core::bot) fn as_tag(&self) -> &'static str {
         match self {
             Self::Startup => "startup",
             Self::ManualRefresh => "manual_refresh",
