@@ -30,6 +30,7 @@
 - [x] Run `cargo check` after tightening provider constants and interfaces visibility.
 - [x] Run `cargo check` after encapsulating update-enabled-models request data.
 - [x] Run `cargo check` after tightening connect request/response contract visibility.
+- [x] Run `cargo check` after wrapping manager requests in concrete newtypes.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
@@ -39,6 +40,8 @@
 - [x] Encapsulate update-enabled-models request data behind a bot-only accessor.
 - [x] Encapsulate connect request data behind bot-only normalized accessors.
 - [x] Restrict connect response data fields and success constructor visibility.
+- [x] Hide the provider command request envelope behind concrete manager request newtypes.
+- [x] Restrict connect and update request data visibility to the bot domain.
 - [x] Make `AppState` provider state private behind a core-only accessor.
 - [x] Move provider state unwrapping from commands into core provider services.
 - [x] Restrict `ProviderState` and store-lock access to their actual core/bot domains.

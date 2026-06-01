@@ -13,7 +13,7 @@ pub(crate) fn reset_provider_config(
     state: &AppState,
     request: ResetProviderRequest,
 ) -> ResetProviderResponse {
-    let ResetProviderRequest { provider_id, .. } = request;
+    let provider_id = request.into_provider_id();
     let provider_state = state.provider();
 
     let previous = match remove_provider(app, provider_state, provider_id) {

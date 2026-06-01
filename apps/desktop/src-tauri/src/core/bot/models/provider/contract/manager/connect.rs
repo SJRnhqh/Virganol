@@ -1,6 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/contract/manager/connect.rs
 use serde::{Deserialize, Serialize};
 
+use super::super::super::ProviderId;
 use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 
 /// Request data for connecting a provider.
@@ -8,7 +9,7 @@ use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 /// 连接 Provider 的请求数据。
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct ConnectAndSaveProviderRequestData {
+pub(in crate::core::bot) struct ConnectAndSaveProviderRequestData {
     /// Raw Provider API key from the command payload.
     ///
     /// 命令载荷中的原始 Provider API key。
@@ -56,8 +57,22 @@ pub(crate) struct ConnectAndSaveProviderResponseData {
 /// Request for connecting and saving a provider.
 ///
 /// 连接并保存 Provider 的请求。
-pub(crate) type ConnectAndSaveProviderRequest =
-    ProviderCommandRequest<ConnectAndSaveProviderRequestData>;
+#[derive(Deserialize)]
+#[serde(transparent)]
+pub(crate) struct ConnectAndSaveProviderRequest(
+    ProviderCommandRequest<ConnectAndSaveProviderRequestData>,
+);
+
+impl ConnectAndSaveProviderRequest {
+    /// Consumes the request into its target provider and connection data.
+    ///
+    /// 消费请求并返回目标 provider 与连接数据。
+    pub(in crate::core::bot) fn into_parts(
+        self,
+    ) -> (ProviderId, Option<ConnectAndSaveProviderRequestData>) {
+        self.0.into_parts()
+    }
+}
 
 /// Response for connecting and saving a provider.
 ///

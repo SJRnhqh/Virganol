@@ -17,7 +17,7 @@ pub(crate) async fn connect_and_save(
     state: &AppState,
     request: ConnectAndSaveProviderRequest,
 ) -> ConnectAndSaveProviderResponse {
-    let ConnectAndSaveProviderRequest { provider_id, data } = request;
+    let (provider_id, data) = request.into_parts();
     let provider_state = state.provider();
 
     let Some(data) = data else {

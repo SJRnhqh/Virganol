@@ -13,7 +13,7 @@ pub(crate) fn update_provider_enabled_models(
     state: &AppState,
     request: UpdateEnabledModelsRequest,
 ) -> UpdateEnabledModelsResponse {
-    let UpdateEnabledModelsRequest { provider_id, data } = request;
+    let (provider_id, data) = request.into_parts();
     let provider_state = state.provider();
 
     let Some(payload) = data else {

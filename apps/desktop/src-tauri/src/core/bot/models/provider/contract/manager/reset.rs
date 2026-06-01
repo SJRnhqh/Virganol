@@ -1,10 +1,25 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/contract/manager/reset.rs
+use serde::Deserialize;
+
+use super::super::super::ProviderId;
 use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 
 /// Request for resetting a provider.
 ///
 /// 重置 Provider 的请求。
-pub(crate) type ResetProviderRequest = ProviderCommandRequest;
+#[derive(Deserialize)]
+#[serde(transparent)]
+pub(crate) struct ResetProviderRequest(ProviderCommandRequest);
+
+impl ResetProviderRequest {
+    /// Consumes the request into its target provider.
+    ///
+    /// 消费请求并返回目标 provider。
+    pub(in crate::core::bot) fn into_provider_id(self) -> ProviderId {
+        let (provider_id, _) = self.0.into_parts();
+        provider_id
+    }
+}
 
 /// Response for resetting a provider.
 ///
