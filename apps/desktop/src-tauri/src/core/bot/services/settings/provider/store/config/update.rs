@@ -16,7 +16,7 @@ pub(crate) fn update_models(
     provider_id: ProviderId,
     enabled_models: Vec<String>,
 ) -> Result<(), ProviderError> {
-    let _guard = provider_state.store_lock.lock();
+    let _guard = provider_state.lock_store();
     let mut providers = load_all_providers(app)?;
 
     let Some(record) = providers.get_mut(provider_id.as_str()) else {

@@ -16,7 +16,7 @@ pub(crate) fn save_provider(
     provider_id: ProviderId,
     record: ProviderRecord,
 ) -> Result<(), ProviderError> {
-    let _guard = provider_state.store_lock.lock();
+    let _guard = provider_state.lock_store();
     let mut providers = load_all_providers(app)?;
     providers.insert(provider_id.to_string(), record);
 

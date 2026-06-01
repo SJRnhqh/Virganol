@@ -8,10 +8,11 @@
 
 ## Current
 
-- [ ] Review `core::bot` lifecycle service error up-propagation boundaries.
+- [ ] Refine remaining provider models before lifecycle error boundary review.
 
 ## Next
 
+- [ ] Review provider model module visibility, constructors, and helper methods.
 - [ ] Start from `check_providers_lifecycle` and trace lifecycle service error handling points.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
@@ -19,10 +20,12 @@
 
 - [x] Run `cargo check` from the repository root after lifecycle Rust changes.
 - [x] Run `cargo check` after core module facade cleanup.
+- [x] Run `cargo check` after encapsulating provider store lock access.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
 
+- [x] Encapsulate `ProviderState` store lock behind `lock_store`.
 - [x] Move `core::init` implementation from `core/mod.rs` into `core/init.rs`.
 - [x] Keep `core/mod.rs` focused on module declarations and facade re-exports.
 - [x] Hide `manager` and `rpc` behind the `core` facade while preserving `lib.rs` usage.

@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/common/state.rs
-use parking_lot::Mutex;
+use parking_lot::{Mutex, MutexGuard};
 
 /// State management for provider-related functionality.
 ///
@@ -8,7 +8,16 @@ pub(crate) struct ProviderState {
     /// Global store lock for protecting provider config read-write transactions.
     ///
     /// 全局 store 锁，保护 providers 配置的读写事务。
-    pub(crate) store_lock: Mutex<()>,
+    store_lock: Mutex<()>,
+}
+
+impl ProviderState {
+    /// Locks provider store read-write transactions.
+    ///
+    /// 锁定 provider store 的读写事务，避免并发读改写覆盖。
+    pub(crate) fn lock_store(&self) -> MutexGuard<'_, ()> {
+        self.store_lock.lock()
+    }
 }
 
 impl Default for ProviderState {

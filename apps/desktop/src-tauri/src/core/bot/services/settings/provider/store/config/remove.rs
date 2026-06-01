@@ -16,7 +16,7 @@ pub(crate) fn remove_provider(
     provider_state: &ProviderState,
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {
-    let _guard = provider_state.store_lock.lock();
+    let _guard = provider_state.lock_store();
     let mut providers = load_all_providers(app)?;
     let previous = providers.remove(provider_id.as_str());
 
