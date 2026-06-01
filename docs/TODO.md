@@ -29,6 +29,7 @@
 - [x] Run `cargo check` after moving provider state unwrapping into core.
 - [x] Run `cargo check` after tightening provider constants and interfaces visibility.
 - [x] Run `cargo check` after encapsulating update-enabled-models request data.
+- [x] Run `cargo check` after tightening connect request/response contract visibility.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
@@ -36,6 +37,8 @@
 - [x] Restrict provider constants visibility to the `core::bot` domain.
 - [x] Restrict provider driver interfaces visibility to the `core::bot` domain.
 - [x] Encapsulate update-enabled-models request data behind a bot-only accessor.
+- [x] Encapsulate connect request data behind bot-only normalized accessors.
+- [x] Restrict connect response data fields and success constructor visibility.
 - [x] Make `AppState` provider state private behind a core-only accessor.
 - [x] Move provider state unwrapping from commands into core provider services.
 - [x] Restrict `ProviderState` and store-lock access to their actual core/bot domains.

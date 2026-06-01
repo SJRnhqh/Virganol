@@ -24,8 +24,8 @@ pub(crate) async fn connect_and_save(
         return ConnectAndSaveProviderResponse::failure("missing data field");
     };
 
-    let normalized_key = data.key.trim();
-    let normalized_url = data.url.as_deref().unwrap_or("").trim();
+    let normalized_key = data.normalized_api_key();
+    let normalized_url = data.normalized_base_url();
 
     let result = probe_provider_connection(provider_id, normalized_url, normalized_key).await;
 
