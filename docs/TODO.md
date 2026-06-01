@@ -12,7 +12,7 @@
 
 ## Next
 
-- [ ] Review provider model module visibility, constructors, and helper methods.
+- [ ] Review remaining provider model module visibility, constructors, and helper methods.
 - [ ] Start from `check_providers_lifecycle` and trace lifecycle service error handling points.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
@@ -21,10 +21,14 @@
 - [x] Run `cargo check` from the repository root after lifecycle Rust changes.
 - [x] Run `cargo check` after core module facade cleanup.
 - [x] Run `cargo check` after encapsulating provider store lock access.
+- [x] Run `cargo check` after refining provider common models.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
 
+- [x] Move `ProviderId` into provider common models.
+- [x] Make `ProviderId` serde names explicit and rename DeepSeek internals.
+- [x] Normalize `ProviderId` documentation comments.
 - [x] Encapsulate `ProviderState` store lock behind `lock_store`.
 - [x] Move `core::init` implementation from `core/mod.rs` into `core/init.rs`.
 - [x] Keep `core/mod.rs` focused on module declarations and facade re-exports.

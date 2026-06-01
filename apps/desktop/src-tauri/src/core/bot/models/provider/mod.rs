@@ -4,11 +4,10 @@ mod config;
 mod connection;
 mod contract;
 mod error;
-mod id;
 mod lifecycle;
 mod secret;
 
-pub(crate) use common::ProviderState;
+pub(crate) use common::{ProviderId, ProviderState};
 pub(crate) use config::{ProviderCheckSnapshot, ProviderRecord};
 pub(crate) use connection::HealthCheckResult;
 pub(crate) use contract::{
@@ -16,7 +15,6 @@ pub(crate) use contract::{
     ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
 pub(crate) use error::{ProviderError, ProviderErrorCode, ProviderIssue, SkippedProviderDetail};
-pub(crate) use id::ProviderId;
 pub(crate) use lifecycle::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckFinalization,
     ProviderCheckRunResult, ProviderCheckStartedPayload, ProviderCheckStatusPayload,
