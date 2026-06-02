@@ -2,6 +2,6 @@
 mod load;
 mod save;
 
-pub(crate) use load::load_settings;
+pub(in crate::core::bot::services::settings) use load::load_settings;
 pub(self) use load::open_store;
-pub(crate) use save::save_settings;
+pub(in crate::core::bot::services::settings) use save::save_settings;
