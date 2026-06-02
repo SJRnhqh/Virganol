@@ -4,10 +4,10 @@ mod payload;
 mod run;
 mod trigger;
 
-pub(crate) use finalization::ProviderCheckFinalization;
-pub(crate) use payload::{
+pub(in crate::core::bot) use finalization::ProviderCheckFinalization;
+pub(in crate::core::bot) use payload::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
     ProviderCheckStatusPayload,
 };
-pub(crate) use run::ProviderCheckRunResult;
+pub(in crate::core::bot) use run::ProviderCheckRunResult;
 pub(crate) use trigger::ProviderCheckTrigger;

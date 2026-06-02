@@ -17,10 +17,10 @@ pub(crate) use contract::{
     ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
 pub(crate) use error::{ProviderError, ProviderErrorCode, ProviderIssue, SkippedProviderDetail};
-pub(crate) use lifecycle::{
+pub(crate) use lifecycle::ProviderCheckTrigger;
+pub(in crate::core::bot) use lifecycle::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckFinalization,
     ProviderCheckRunResult, ProviderCheckStartedPayload, ProviderCheckStatusPayload,
-    ProviderCheckTrigger,
 };
 pub(in crate::core::bot) use secret::{
     ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderKeyResolution, ProviderKeySource,

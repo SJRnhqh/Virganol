@@ -44,37 +44,33 @@ pub(super) async fn run_provider_checks(
 
         match in_flight.join_next().await {
             Some(Ok((provider_id, record, result, key_meta))) => {
-                let finalization = finalize_provider_check_result(
+                let (status_record, online, reconciliation_error) = finalize_provider_check_result(
                     app,
                     provider_state,
                     provider_id,
                     record,
                     &result,
-                );
+                )
+                .into_parts();
 
-                if let Some(e) = finalization.reconciliation_error {
+                if let Some(e) = reconciliation_error {
                     provider_issues.push(ProviderIssue::new(provider_id, e.code(), e.message()));
                 }
 
-                if !finalization.online {
+                if !online {
                     failed_count += 1;
                 }
 
                 info!(
                     "[Tauri] {} {} → online: {}",
-                    if finalization.online { "✅" } else { "⚠️" },
+                    if online { "✅" } else { "⚠️" },
                     provider_id,
-                    finalization.online
+                    online
                 );
 
-                if let Err(e) = emit_check_status(
-                    app,
-                    run_id,
-                    provider_id,
-                    finalization.status_record,
-                    result,
-                    key_meta,
-                ) {
+                if let Err(e) =
+                    emit_check_status(app, run_id, provider_id, status_record, result, key_meta)
+                {
                     provider_issues.push(ProviderIssue::new(provider_id, e.code(), e.message()));
                 }
             }
@@ -93,9 +89,5 @@ pub(super) async fn run_provider_checks(
         }
     }
 
-    ProviderCheckRunResult {
-        failed_count,
-        provider_issues,
-        join_error,
-    }
+    ProviderCheckRunResult::new(failed_count, provider_issues, join_error)
 }

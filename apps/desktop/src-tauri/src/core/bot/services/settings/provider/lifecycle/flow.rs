@@ -88,8 +88,10 @@ pub(crate) async fn check_providers_lifecycle(
     )
     .await;
 
-    if let Some(e) = check_result.join_error.or_else(|| {
-        (!check_result.provider_issues.is_empty()).then(|| {
+    let (failed_count, provider_issues, join_error) = check_result.into_parts();
+
+    if let Some(e) = join_error.or_else(|| {
+        (!provider_issues.is_empty()).then(|| {
             ProviderError::LifecycleConcurrentCheck(
                 "concurrent check error: provider issues detected".to_string(),
             )
@@ -100,23 +102,23 @@ pub(crate) async fn check_providers_lifecycle(
             run_id.as_str(),
             &trigger,
             &e,
-            if check_result.provider_issues.is_empty() {
+            if provider_issues.is_empty() {
                 None
             } else {
-                Some(check_result.provider_issues)
+                Some(provider_issues)
             },
         );
         return;
     }
 
     let duration_ms = started_at.elapsed().as_millis() as u64;
-    if let Err(e) = emit_check_completed(&app, run_id.as_str(), check_result.failed_count) {
+    if let Err(e) = emit_check_completed(&app, run_id.as_str(), failed_count) {
         report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
         return;
     }
 
     info!(
         "[Tauri] 🏁 Provider check completed: run_id={}, checked={}, failed={}, duration_ms={}",
-        run_id, supported_total, check_result.failed_count, duration_ms
+        run_id, supported_total, failed_count, duration_ms
     );
 }
