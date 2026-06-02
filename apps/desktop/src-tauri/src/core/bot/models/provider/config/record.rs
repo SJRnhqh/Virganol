@@ -7,27 +7,48 @@ use serde::{Deserialize, Serialize};
 ///
 /// Provider 持久化配置记录（settings.json 中 spirit.providers.{id}）。
 #[derive(Clone, Serialize, Deserialize)]
-pub(crate) struct ProviderRecord {
+pub(in crate::core::bot) struct ProviderRecord {
     /// Optional provider base URL.
     ///
     /// 可选的 Provider 基础 URL。
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub(crate) url: Option<String>,
+    url: Option<String>,
     /// Enabled model identifiers persisted for this provider.
     ///
     /// 此 Provider 持久化的已启用模型标识列表。
-    pub(crate) enabled_models: Vec<String>,
+    enabled_models: Vec<String>,
 }
 
 impl ProviderRecord {
     /// Creates a provider record with a normalized optional URL.
     ///
     /// 创建 URL 已规范化为可选值的 Provider 配置记录。
-    pub(crate) fn new(url: &str, enabled_models: Vec<String>) -> Self {
+    fn new(url: &str, enabled_models: Vec<String>) -> Self {
         Self {
             url: (!url.is_empty()).then(|| url.to_string()),
             enabled_models,
         }
+    }
+
+    /// Returns the optional provider base URL.
+    ///
+    /// 返回可选的 Provider 基础 URL。
+    pub(in crate::core::bot) fn url(&self) -> Option<&str> {
+        self.url.as_deref()
+    }
+
+    /// Returns enabled model identifiers.
+    ///
+    /// 返回已启用模型标识列表。
+    pub(in crate::core::bot) fn enabled_models(&self) -> &[String] {
+        &self.enabled_models
+    }
+
+    /// Replaces enabled model identifiers.
+    ///
+    /// 替换已启用模型标识列表。
+    pub(in crate::core::bot) fn replace_enabled_models(&mut self, enabled_models: Vec<String>) {
+        self.enabled_models = enabled_models;
     }
 
     /// Computes enabled models that are still available.
@@ -46,7 +67,7 @@ impl ProviderRecord {
     /// Creates a provider record if enabled models are pruned by available models.
     ///
     /// 当当前可用模型会修剪 enabled_models 时，创建新的 Provider 配置记录。
-    pub(crate) fn reconcile_enabled_models_if_pruned(
+    pub(in crate::core::bot) fn reconcile_enabled_models_if_pruned(
         &self,
         available_models: &[String],
     ) -> Option<Self> {
@@ -61,7 +82,7 @@ impl ProviderRecord {
     /// Creates a provider record from a successful connection result.
     ///
     /// 根据连接成功结果创建 Provider 配置记录，并保留仍可用的历史启用模型。
-    pub(crate) fn from_connection(
+    pub(in crate::core::bot) fn from_connection(
         url: &str,
         available_models: &[String],
         previous: Option<&Self>,

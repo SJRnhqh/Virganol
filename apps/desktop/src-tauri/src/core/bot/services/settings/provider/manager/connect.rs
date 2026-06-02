@@ -44,7 +44,7 @@ pub(crate) async fn connect_and_save(
         previous_record.as_ref(),
     );
 
-    let enabled_models = record.enabled_models.clone();
+    let enabled_models = record.enabled_models().to_vec();
 
     let key_transaction = match ProviderKeyTransaction::begin(provider_id, normalized_key) {
         Ok(transaction) => transaction,

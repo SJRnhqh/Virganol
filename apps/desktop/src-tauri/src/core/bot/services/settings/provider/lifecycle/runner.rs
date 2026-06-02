@@ -36,7 +36,7 @@ pub(super) async fn run_provider_checks(
                 break;
             };
             in_flight.spawn(async move {
-                let url = record.url.as_deref().unwrap_or("").to_string();
+                let url = record.url().unwrap_or("").to_string();
                 let (result, key_meta) = health_check_with_resolved_key(provider_id, &url).await;
                 (provider_id, record, result, key_meta)
             });

@@ -22,7 +22,7 @@ fn persist_reconciled_enabled_models(
         return (record, None);
     };
 
-    let previous_enabled_model_count = record.enabled_models.len();
+    let previous_enabled_model_count = record.enabled_models().len();
 
     match save_provider(app, provider_state, provider_id, updated.clone()) {
         Ok(()) => {
@@ -30,7 +30,7 @@ fn persist_reconciled_enabled_models(
                 "[Tauri] 🔄 {} enabled_models reconciled: {} → {}",
                 provider_id,
                 previous_enabled_model_count,
-                updated.enabled_models.len()
+                updated.enabled_models().len()
             );
             (updated, None)
         }

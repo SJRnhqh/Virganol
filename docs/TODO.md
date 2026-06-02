@@ -8,11 +8,11 @@
 
 ## Current
 
-- [ ] Review provider config `ProviderRecord` visibility boundary alignment.
+- [ ] Review provider connection model visibility boundary alignment.
 
 ## Next
 
-- [ ] Review connection and lifecycle models case by case.
+- [ ] Review lifecycle models case by case.
 - [ ] Leave provider error models for the later generic error contract upgrade.
 - [ ] Tighten provider services visibility after model boundaries are closed.
 - [ ] Record lifecycle error up-propagation points while reviewing provider services.
@@ -36,6 +36,7 @@
 - [x] Review prompt and pipeline documentation diff after checkpoint workflow setup.
 - [x] Run `cargo check` after tightening `ProviderId` visibility.
 - [x] Run `cargo check` after tightening provider secret model visibility.
+- [x] Run `cargo check` after tightening `ProviderRecord` visibility.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
@@ -63,6 +64,7 @@
 - [x] Normalize `ProviderId` documentation comments.
 - [x] Restrict `ProviderId` and its accessors to the `core::bot` domain.
 - [x] Restrict provider secret models and accessors to the `core::bot` domain.
+- [x] Restrict `ProviderRecord` fields and accessors to the `core::bot` domain.
 - [x] Encapsulate `ProviderState` store lock behind `lock_store`.
 - [x] Move `core::init` implementation from `core/mod.rs` into `core/init.rs`.
 - [x] Keep `core/mod.rs` focused on module declarations and facade re-exports.

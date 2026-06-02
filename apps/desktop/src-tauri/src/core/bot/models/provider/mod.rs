@@ -10,7 +10,7 @@ mod secret;
 pub(in crate::core::bot) use common::ProviderId;
 pub(in crate::core) use common::ProviderState;
 pub(in crate::core::bot) use config::ProviderCheckSnapshot;
-pub(crate) use config::ProviderRecord;
+pub(in crate::core::bot) use config::ProviderRecord;
 pub(in crate::core::bot) use connection::HealthCheckResult;
 pub(crate) use contract::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderRequest,
