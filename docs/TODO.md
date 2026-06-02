@@ -33,6 +33,7 @@
 - [x] Run `cargo check` after wrapping manager responses in concrete newtypes.
 - [x] Run `cargo check` after tightening provider check trigger tag visibility.
 - [x] Run `cargo check` after encapsulating health check result fields.
+- [x] Review prompt and pipeline documentation diff after checkpoint workflow setup.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
@@ -48,6 +49,8 @@
 - [x] Close out provider contract base and manager visibility review.
 - [x] Restrict provider check trigger tag helper visibility to the bot domain.
 - [x] Restrict health check result visibility and encapsulate result fields.
+- [x] Add reusable TODO update, PR info, and working branch closeout prompts.
+- [x] Add commit checkpoint and working branch closeout pipelines.
 - [x] Make `AppState` provider state private behind a core-only accessor.
 - [x] Move provider state unwrapping from commands into core provider services.
 - [x] Restrict `ProviderState` and store-lock access to their actual core/bot domains.

@@ -4,38 +4,32 @@ AGENTS.md is my stable project-level development guide. First read AGENTS.md,
 then read docs/TODO.md if it exists, and inspect the current git branch,
 status, and diff.
 
-This prompt is only for closing out a working branch.
+Use this prompt when I ask to close out, finish, or end the current working
+branch.
 
-Perform the closeout steps directly:
+Perform the working branch closeout directly:
 
-- Use docs/TODO.md and the current diff to identify the completed branch scope.
+- Use docs/TODO.md and the current diff to confirm the working branch scope is
+  complete.
 - Delete docs/TODO.md after extracting the branch task context.
-- Generate one commit message for the closeout changes using the Virganol
-  commit convention from AGENTS.md.
-- Generate one PR title using the same convention as a commit message header.
-- Generate one concise PR summary from docs/TODO.md and the current diff.
-- Do not create commits, push, or open a PR unless I explicitly ask.
+- Generate one closeout commit message using the Virganol commit convention
+  from AGENTS.md.
+- Do not generate PR info unless I explicitly ask.
+- If PR info and working branch closeout are both requested, generate PR info
+  before deleting docs/TODO.md.
+- Do not stage, commit, push, or open a PR unless I explicitly ask.
 
-Output exactly these three sections:
+Output exactly:
+
+## Closeout
+
+Briefly summarize whether docs/TODO.md was deleted and what branch scope it
+closed out.
 
 ## Commit Message
 
 Return one commit message in a fenced code block. Follow the Virganol commit
 message convention from AGENTS.md exactly.
-
-## PR Title
-
-Return one PR title in a fenced code block. Use the same title convention as a
-commit message header for the current working branch type.
-
-## PR Summary
-
-Return one PR body in a fenced markdown code block using this format:
-
-```markdown
-## Summary
-- ...
-```
 
 Default behavior:
 

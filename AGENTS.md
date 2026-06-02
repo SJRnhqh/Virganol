@@ -38,11 +38,28 @@ or refreshing branch-level `docs/TODO.md` files.
 
 Reusable AI collaboration prompts should live under `prompts/`. Stable project
 rules belong in `AGENTS.md`, while project state and planning documents belong
-under `docs/`.
+under `docs/`. Prompt pipelines should live under `pipelines/` and define the
+order for combining reusable prompts.
 
 When the user asks for a "message" after discussing or making code or
 documentation changes, interpret it as a commit message request. Read
 `prompts/commit-message.md` and follow it.
+
+When the user asks to update TODO, checkpoint branch tasks, or prepare
+completed work before a commit message, read `prompts/todo-update.md` and
+follow it.
+
+When the user asks to checkpoint a completed change, update TODO and provide a
+message, or prepare a small commit, read `pipelines/commit-checkpoint.md` and
+follow it.
+
+When the user asks for PR info, a PR title/body, a PR summary, or PR text for
+the current branch, read `prompts/pr-info.md` and follow it.
+
+When the user asks to close out, finish, or end the current working branch,
+read `prompts/working-branch-closeout.md` and follow it. If PR info and
+working branch closeout are both requested, read
+`pipelines/working-branch-closeout.md` and follow it.
 
 ## Development Workflow
 
