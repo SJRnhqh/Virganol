@@ -22,6 +22,6 @@ pub(crate) use lifecycle::{
     ProviderCheckRunResult, ProviderCheckStartedPayload, ProviderCheckStatusPayload,
     ProviderCheckTrigger,
 };
-pub(crate) use secret::{
+pub(in crate::core::bot) use secret::{
     ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderKeyResolution, ProviderKeySource,
 };
