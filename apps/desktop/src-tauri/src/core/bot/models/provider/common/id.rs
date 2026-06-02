@@ -8,7 +8,7 @@ use super::super::ProviderError;
 ///
 /// commands、持久化和事件共用的受支持 provider 标识。
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
-pub(crate) enum ProviderId {
+pub(in crate::core::bot) enum ProviderId {
     #[serde(rename = "ollama")]
     Ollama,
     #[serde(rename = "deepseek")]
@@ -19,7 +19,7 @@ impl ProviderId {
     /// Returns the stable provider id string.
     ///
     /// 返回稳定的 provider id 字符串。
-    pub(crate) fn as_str(self) -> &'static str {
+    pub(in crate::core::bot) fn as_str(self) -> &'static str {
         match self {
             Self::Ollama => "ollama",
             Self::DeepSeek => "deepseek",
@@ -29,7 +29,7 @@ impl ProviderId {
     /// Returns candidate environment variable names for this provider, in priority order.
     ///
     /// 返回当前 provider 的环境变量候选键，按优先级排序。
-    pub(crate) fn env_key_names(self) -> &'static [&'static str] {
+    pub(in crate::core::bot) fn env_key_names(self) -> &'static [&'static str] {
         match self {
             Self::DeepSeek => &["DEEPSEEK_API_KEY"],
             _ => &[],

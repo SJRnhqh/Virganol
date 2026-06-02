@@ -2,5 +2,5 @@
 mod id;
 mod state;
 
-pub(crate) use id::ProviderId;
+pub(in crate::core::bot) use id::ProviderId;
 pub(in crate::core) use state::ProviderState;

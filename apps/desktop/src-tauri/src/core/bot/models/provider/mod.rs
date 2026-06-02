@@ -7,7 +7,7 @@ mod error;
 mod lifecycle;
 mod secret;
 
-pub(crate) use common::ProviderId;
+pub(in crate::core::bot) use common::ProviderId;
 pub(in crate::core) use common::ProviderState;
 pub(in crate::core::bot) use config::ProviderCheckSnapshot;
 pub(crate) use config::ProviderRecord;
