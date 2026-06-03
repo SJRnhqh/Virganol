@@ -10,7 +10,7 @@ use super::load_all_providers;
 /// Saves a single provider configuration (upsert: overwrite if exists, insert if not).
 ///
 /// 保存单个 provider 的配置（upsert：有则覆盖，无则新增）。
-pub(crate) fn save_provider(
+pub(in crate::core::bot::services::settings::provider) fn save_provider(
     app: &AppHandle,
     provider_state: &ProviderState,
     provider_id: ProviderId,

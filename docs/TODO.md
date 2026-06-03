@@ -8,11 +8,10 @@
 
 ## Current
 
-- [ ] Tighten provider config store visibility after secret boundaries are closed.
+- [ ] Close out provider store facade visibility after config boundaries are closed.
 
 ## Next
 
-- [ ] Close out provider store facade visibility after config boundaries are closed.
 - [ ] Tighten provider manager visibility after store boundaries are closed.
 - [ ] Tighten provider lifecycle visibility after manager boundaries are closed.
 - [ ] Leave provider error models for the later generic error contract upgrade.
@@ -41,6 +40,7 @@
 - [x] Run `cargo check` after tightening provider lifecycle model visibility.
 - [x] Run `cargo check` after tightening provider connection visibility.
 - [x] Run `cargo check` after tightening provider secret store visibility.
+- [x] Run `cargo check` after tightening provider config store visibility.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
 ## Completed
@@ -74,6 +74,7 @@
 - [x] Scope provider connection health-check entrypoints to the provider domain.
 - [x] Scope provider secret store helpers to the provider domain.
 - [x] Remove speculative provider store cache TODO.
+- [x] Scope provider config store helpers to the provider domain.
 - [x] Encapsulate `ProviderState` store lock behind `lock_store`.
 - [x] Move `core::init` implementation from `core/mod.rs` into `core/init.rs`.
 - [x] Keep `core/mod.rs` focused on module declarations and facade re-exports.

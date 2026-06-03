@@ -10,7 +10,7 @@ use super::load_all_providers;
 /// Updates enabled models for a provider.
 ///
 /// 更新某个 provider 的 enabled_models。
-pub(crate) fn update_models(
+pub(in crate::core::bot::services::settings::provider) fn update_models(
     app: &AppHandle,
     provider_state: &ProviderState,
     provider_id: ProviderId,

@@ -11,7 +11,7 @@ use super::load_all_providers;
 /// Removes a provider configuration and returns the deleted record for rollback.
 ///
 /// 删除 provider 配置，返回被删除的记录用于回滚。
-pub(crate) fn remove_provider(
+pub(in crate::core::bot::services::settings::provider) fn remove_provider(
     app: &AppHandle,
     provider_state: &ProviderState,
     provider_id: ProviderId,
