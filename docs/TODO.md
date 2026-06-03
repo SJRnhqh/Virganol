@@ -8,12 +8,11 @@
 
 ## Current
 
-- [ ] Review provider connection model visibility boundary alignment.
+- [ ] Tighten provider services visibility after model boundaries are closed.
 
 ## Next
 
 - [ ] Leave provider error models for the later generic error contract upgrade.
-- [ ] Tighten provider services visibility after model boundaries are closed.
 - [ ] Record lifecycle error up-propagation points while reviewing provider services.
 - [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
 
@@ -66,6 +65,7 @@
 - [x] Restrict provider secret models and accessors to the `core::bot` domain.
 - [x] Restrict `ProviderRecord` fields and accessors to the `core::bot` domain.
 - [x] Restrict provider lifecycle payload, finalization, and run result models to the `core::bot` domain.
+- [x] Scope settings store helpers to the settings domain.
 - [x] Encapsulate `ProviderState` store lock behind `lock_store`.
 - [x] Move `core::init` implementation from `core/mod.rs` into `core/init.rs`.
 - [x] Keep `core/mod.rs` focused on module declarations and facade re-exports.
