@@ -6,7 +6,9 @@ use super::{load_provider_env, load_provider_key};
 /// Resolves the provider API key using environment variables before keyring.
 ///
 /// 按环境变量优先、keyring 兜底的顺序解析 Provider API key。
-pub(crate) fn resolve_provider_key(provider_id: ProviderId) -> ProviderKeyResolution {
+pub(in crate::core::bot::services::settings::provider) fn resolve_provider_key(
+    provider_id: ProviderId,
+) -> ProviderKeyResolution {
     if let Some(key) = load_provider_env(provider_id) {
         return ProviderKeyResolution::found(key, ProviderKeySource::Env);
     }

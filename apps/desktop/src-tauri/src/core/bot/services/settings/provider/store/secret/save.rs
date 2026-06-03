@@ -8,7 +8,7 @@ use super::super::super::super::super::super::{
 /// Saves provider API key to the system keyring.
 ///
 /// 将 provider 的 API Key 写入系统密钥库。
-pub(crate) fn save_provider_key(provider_id: ProviderId, key: &str) -> Result<(), ProviderError> {
+pub(super) fn save_provider_key(provider_id: ProviderId, key: &str) -> Result<(), ProviderError> {
     let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str())
         .map_err(|e| ProviderError::Keyring(format!("init keyring entry failed: {}", e)))?;
     entry.set_password(key).map_err(|e| {

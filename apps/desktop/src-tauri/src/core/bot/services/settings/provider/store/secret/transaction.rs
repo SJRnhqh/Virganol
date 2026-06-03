@@ -7,7 +7,7 @@ use super::{load_provider_key, remove_provider_key, save_provider_key};
 /// Best-effort transaction guard for provider keyring writes.
 ///
 /// Provider keyring 写入的补偿事务守卫：未 commit 时自动回滚。
-pub(crate) struct ProviderKeyTransaction {
+pub(in crate::core::bot::services::settings::provider) struct ProviderKeyTransaction {
     change: Option<ProviderKeyChange>,
 }
 
@@ -15,7 +15,7 @@ impl ProviderKeyTransaction {
     /// Starts a provider key transaction by writing the new key and capturing the previous key.
     ///
     /// 通过写入新 Key 并捕获旧 Key，启动一次 provider key 事务。
-    pub(crate) fn begin(
+    pub(in crate::core::bot::services::settings::provider) fn begin(
         provider_id: ProviderId,
         normalized_key: &str,
     ) -> Result<Option<Self>, ProviderError> {
@@ -35,7 +35,7 @@ impl ProviderKeyTransaction {
     /// Commits the key transaction and prevents automatic rollback on drop.
     ///
     /// 提交 Key 事务，并阻止释放时自动回滚。
-    pub(crate) fn commit(mut self) {
+    pub(in crate::core::bot::services::settings::provider) fn commit(mut self) {
         self.change.take();
     }
 }
