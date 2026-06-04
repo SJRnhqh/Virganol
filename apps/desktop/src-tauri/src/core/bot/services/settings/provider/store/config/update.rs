@@ -10,13 +10,13 @@ use super::load_all_providers;
 /// Updates enabled models for a provider.
 ///
 /// 更新某个 provider 的 enabled_models。
-pub(crate) fn update_models(
+pub(in crate::core::bot::services::settings::provider) fn update_models(
     app: &AppHandle,
     provider_state: &ProviderState,
     provider_id: ProviderId,
     enabled_models: Vec<String>,
 ) -> Result<(), ProviderError> {
-    let _guard = provider_state.store_lock.lock();
+    let _guard = provider_state.lock_store();
     let mut providers = load_all_providers(app)?;
 
     let Some(record) = providers.get_mut(provider_id.as_str()) else {
@@ -26,7 +26,7 @@ pub(crate) fn update_models(
         )));
     };
 
-    record.enabled_models = enabled_models;
+    record.replace_enabled_models(enabled_models);
 
     let value = serde_json::to_value(&providers)?;
     save_settings(app, SPIRIT_PROVIDERS_KEY, value)

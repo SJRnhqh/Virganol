@@ -3,7 +3,8 @@ use log::{info, warn};
 use std::time::Instant;
 use tauri::AppHandle;
 
-use super::super::super::super::super::{ProviderCheckTrigger, ProviderError, ProviderState};
+use super::super::super::super::super::super::AppState;
+use super::super::super::super::super::{ProviderCheckTrigger, ProviderError};
 use super::super::load_provider_check_snapshot;
 use super::{
     emit_check_completed, emit_check_started, next_run_id, report_lifecycle_failure,
@@ -15,31 +16,31 @@ use super::{
 /// 管理一轮 Provider 生命周期检查，覆盖持久化快照读取、健康检查和事件推送。
 pub(crate) async fn check_providers_lifecycle(
     app: AppHandle,
-    provider_state: &ProviderState,
+    state: &AppState,
     trigger: ProviderCheckTrigger,
 ) {
     let run_id = next_run_id(&trigger);
     let started_at = Instant::now();
 
-    if let Err(err) = emit_check_started(&app, run_id.as_str(), &trigger) {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
+    if let Err(e) = emit_check_started(&app, run_id.as_str(), &trigger) {
+        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
         return;
     }
 
     let snapshot = match load_provider_check_snapshot(&app) {
         Ok(snapshot) => snapshot,
-        Err(err) => {
-            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
+        Err(e) => {
+            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
             return;
         }
     };
     let (loaded_total, supported_total, skipped_total) = (
-        snapshot.total,
-        snapshot.supported.len(),
-        snapshot.skipped.len(),
+        snapshot.total(),
+        snapshot.supported_count(),
+        snapshot.skipped_count(),
     );
 
-    for detail in &snapshot.skipped {
+    for detail in snapshot.skipped() {
         warn!(
             "[Tauri] ⚠️ Skip unsupported provider in store: run_id={}, trigger={}, raw_id={}, code={}, message={}",
             run_id,
@@ -72,25 +73,25 @@ pub(crate) async fn check_providers_lifecycle(
                 trigger.as_tag()
             );
         }
-        if let Err(err) = emit_check_completed(&app, run_id.as_str(), supported_total) {
-            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
+        if let Err(e) = emit_check_completed(&app, run_id.as_str(), supported_total) {
+            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
             return;
         }
         return;
     }
 
-    // Step 4: Run health checks and collect structural failures.
-    // 并发执行健康检查，并收敛失败计数与结构性错误。
-    let check_result =
-        run_provider_checks(&app, provider_state, run_id.as_str(), snapshot.supported).await;
+    let check_result = run_provider_checks(
+        &app,
+        state.provider(),
+        run_id.as_str(),
+        snapshot.into_supported(),
+    )
+    .await;
 
-    // Step 5: Promote structural failures into the lifecycle failed event.
-    // 处理并发检查阶段的全局并发错误或 Provider 级结构性问题。
-    // 优先级：join_error（任务 panic）> provider_issues（个别 provider 结构性失败）。
-    // join_error 存在时直接作为错误主体，provider_issues 若非空仍一并传入 payload；
-    // 无 join_error 时若 issues 非空则手动构造等价错误；两者皆无则跳过进入 Step 6。
-    if let Some(err) = check_result.join_error.or_else(|| {
-        (!check_result.provider_issues.is_empty()).then(|| {
+    let (failed_count, provider_issues, join_error) = check_result.into_parts();
+
+    if let Some(e) = join_error.or_else(|| {
+        (!provider_issues.is_empty()).then(|| {
             ProviderError::LifecycleConcurrentCheck(
                 "concurrent check error: provider issues detected".to_string(),
             )
@@ -100,26 +101,24 @@ pub(crate) async fn check_providers_lifecycle(
             &app,
             run_id.as_str(),
             &trigger,
-            &err,
-            if check_result.provider_issues.is_empty() {
+            &e,
+            if provider_issues.is_empty() {
                 None
             } else {
-                Some(check_result.provider_issues)
+                Some(provider_issues)
             },
         );
         return;
     }
 
-    // Step 6: Emit the lifecycle completed event.
-    // 推送生命周期 completed 事件。
     let duration_ms = started_at.elapsed().as_millis() as u64;
-    if let Err(err) = emit_check_completed(&app, run_id.as_str(), check_result.failed_count) {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &err, None);
+    if let Err(e) = emit_check_completed(&app, run_id.as_str(), failed_count) {
+        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
         return;
     }
 
     info!(
         "[Tauri] 🏁 Provider check completed: run_id={}, checked={}, failed={}, duration_ms={}",
-        run_id, supported_total, check_result.failed_count, duration_ms
+        run_id, supported_total, failed_count, duration_ms
     );
 }

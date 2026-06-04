@@ -6,7 +6,7 @@ use super::health_check;
 /// Runs a health check with the resolved provider key and source metadata.
 ///
 /// 使用已解析的 Provider key 执行健康检查，并返回 key 来源元信息。
-pub(crate) async fn health_check_with_resolved_key(
+pub(in crate::core::bot::services::settings::provider) async fn health_check_with_resolved_key(
     provider_id: ProviderId,
     url: &str,
 ) -> (HealthCheckResult, ProviderKeyMeta) {

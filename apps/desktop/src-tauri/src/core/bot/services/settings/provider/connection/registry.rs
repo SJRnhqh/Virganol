@@ -5,12 +5,12 @@ use std::sync::OnceLock;
 use super::super::super::super::super::{DriverFuture, ProviderDriver, ProviderId};
 use super::{deepseek_check, ollama_check};
 
-struct DeepseekDriver;
+struct DeepSeekDriver;
 struct OllamaDriver;
 
-impl ProviderDriver for DeepseekDriver {
+impl ProviderDriver for DeepSeekDriver {
     fn provider_id(&self) -> ProviderId {
-        ProviderId::Deepseek
+        ProviderId::DeepSeek
     }
     fn health_check<'a>(&'a self, _url: &'a str, key: &'a str) -> DriverFuture<'a> {
         Box::pin(async move { deepseek_check(key).await })
@@ -26,7 +26,7 @@ impl ProviderDriver for OllamaDriver {
     }
 }
 
-static DEEPSEEK_DRIVER: DeepseekDriver = DeepseekDriver;
+static DEEPSEEK_DRIVER: DeepSeekDriver = DeepSeekDriver;
 static OLLAMA_DRIVER: OllamaDriver = OllamaDriver;
 static REGISTRY: OnceLock<HashMap<ProviderId, &'static dyn ProviderDriver>> = OnceLock::new();
 

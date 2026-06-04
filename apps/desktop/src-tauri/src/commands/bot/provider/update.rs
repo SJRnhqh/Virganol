@@ -15,9 +15,5 @@ pub(crate) async fn update_enabled_models(
     state: State<'_, AppState>,
     payload: UpdateEnabledModelsRequest,
 ) -> Result<UpdateEnabledModelsResponse, ()> {
-    Ok(update_provider_enabled_models(
-        &app,
-        &state.provider,
-        payload,
-    ))
+    Ok(update_provider_enabled_models(&app, state.inner(), payload))
 }

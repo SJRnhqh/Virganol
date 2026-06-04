@@ -26,7 +26,7 @@ pub(super) fn load_all_providers(
 /// Loads the provider check snapshot from persisted settings.
 ///
 /// 从持久化配置中加载 Provider 检查快照。
-pub(crate) fn load_provider_check_snapshot(
+pub(in crate::core::bot::services::settings::provider) fn load_provider_check_snapshot(
     app: &AppHandle,
 ) -> Result<ProviderCheckSnapshot, ProviderError> {
     let providers = load_all_providers(app)?;
@@ -45,17 +45,13 @@ pub(crate) fn load_provider_check_snapshot(
         }
     }
 
-    Ok(ProviderCheckSnapshot {
-        total,
-        supported,
-        skipped,
-    })
+    Ok(ProviderCheckSnapshot::new(total, supported, skipped))
 }
 
 /// Loads one provider configuration as an owned read-only snapshot.
 ///
 /// 读取单个 provider 的配置，返回拥有所有权的只读快照。
-pub(crate) fn load_provider_record(
+pub(in crate::core::bot::services::settings::provider) fn load_provider_record(
     app: &AppHandle,
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {

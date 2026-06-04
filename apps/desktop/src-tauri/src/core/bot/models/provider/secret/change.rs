@@ -5,7 +5,7 @@ use super::ProviderKey;
 /// Describes a keyring key change made by a provider operation.
 ///
 /// 描述一次 Provider 操作已写入 keyring 的前后状态。
-pub(crate) struct ProviderKeyChange {
+pub(in crate::core::bot) struct ProviderKeyChange {
     /// Provider whose keyring entry was changed.
     ///
     /// 本次 keyring 条目变更所属的 Provider。
@@ -24,7 +24,7 @@ impl ProviderKeyChange {
     /// Creates a key change snapshot for a provider keyring write.
     ///
     /// 为一次 Provider keyring 写入创建 key 变更快照。
-    pub(crate) fn new(
+    pub(in crate::core::bot) fn new(
         provider_id: ProviderId,
         previous_key: Option<ProviderKey>,
         new_key: ProviderKey,
@@ -39,21 +39,21 @@ impl ProviderKeyChange {
     /// Returns the provider whose keyring entry was changed.
     ///
     /// 返回本次 keyring 条目变更所属的 Provider。
-    pub(crate) fn provider_id(&self) -> ProviderId {
+    pub(in crate::core::bot) fn provider_id(&self) -> ProviderId {
         self.provider_id
     }
 
     /// Returns the previous key snapshot, if one existed before the write.
     ///
     /// 返回写入前的旧 key 快照；如果此前不存在则返回 None。
-    pub(crate) fn previous_key(&self) -> Option<&ProviderKey> {
+    pub(in crate::core::bot) fn previous_key(&self) -> Option<&ProviderKey> {
         self.previous_key.as_ref()
     }
 
     /// Returns the key written by the current operation.
     ///
     /// 返回本次操作写入的新 key。
-    pub(crate) fn new_key(&self) -> &ProviderKey {
+    pub(in crate::core::bot) fn new_key(&self) -> &ProviderKey {
         &self.new_key
     }
 }

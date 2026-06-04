@@ -6,7 +6,7 @@ use serde::Serialize;
 /// Provider API key 的解析来源。
 #[derive(Clone, Copy, Serialize)]
 #[serde(rename_all = "snake_case")]
-pub(crate) enum ProviderKeySource {
+pub(in crate::core::bot) enum ProviderKeySource {
     /// No usable provider API key was resolved.
     ///
     /// 未解析到可用的 Provider API key。
@@ -25,7 +25,7 @@ pub(crate) enum ProviderKeySource {
 ///
 /// Provider API key 是否可用及其解析来源的脱敏元信息。
 #[derive(Serialize)]
-pub(crate) struct ProviderKeyMeta {
+pub(in crate::core::bot) struct ProviderKeyMeta {
     /// Whether a usable provider API key is available.
     ///
     /// 是否存在可用的 Provider API key。

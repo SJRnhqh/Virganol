@@ -8,7 +8,9 @@ use super::super::super::super::super::super::{
 /// Removes provider API key from system keyring.
 ///
 /// 从系统密钥库删除 provider 的 API Key。
-pub(crate) fn remove_provider_key(provider_id: ProviderId) -> Result<(), ProviderError> {
+pub(in crate::core::bot::services::settings::provider) fn remove_provider_key(
+    provider_id: ProviderId,
+) -> Result<(), ProviderError> {
     let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str())
         .map_err(|e| ProviderError::Keyring(format!("init keyring entry failed: {}", e)))?;
 

@@ -8,7 +8,16 @@ pub(crate) struct AppState {
     /// Provider settings and lifecycle state.
     ///
     /// Provider 设置与生命周期状态。
-    pub(crate) provider: ProviderState,
+    provider: ProviderState,
+}
+
+impl AppState {
+    /// Returns provider settings and lifecycle state.
+    ///
+    /// 返回 Provider 设置与生命周期状态。
+    pub(in crate::core) fn provider(&self) -> &ProviderState {
+        &self.provider
+    }
 }
 
 impl Default for AppState {

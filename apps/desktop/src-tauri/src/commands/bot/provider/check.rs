@@ -11,7 +11,7 @@ pub(crate) async fn trigger_provider_startup_check(
     app: AppHandle,
     state: State<'_, AppState>,
 ) -> Result<(), ()> {
-    check_providers_lifecycle(app, &state.provider, ProviderCheckTrigger::Startup).await;
+    check_providers_lifecycle(app, state.inner(), ProviderCheckTrigger::Startup).await;
     Ok(())
 }
 
@@ -23,6 +23,6 @@ pub(crate) async fn trigger_provider_manual_refresh(
     app: AppHandle,
     state: State<'_, AppState>,
 ) -> Result<(), ()> {
-    check_providers_lifecycle(app, &state.provider, ProviderCheckTrigger::ManualRefresh).await;
+    check_providers_lifecycle(app, state.inner(), ProviderCheckTrigger::ManualRefresh).await;
     Ok(())
 }

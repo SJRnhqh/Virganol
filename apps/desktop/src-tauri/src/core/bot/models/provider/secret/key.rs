@@ -4,7 +4,7 @@ use zeroize::Zeroize;
 /// Provider API key value object that zeroizes its inner buffer on drop.
 ///
 /// Provider API key 值对象，在释放时清零内部缓冲区。
-pub(crate) struct ProviderKey(
+pub(in crate::core::bot) struct ProviderKey(
     /// Secret key string buffer owned by the value object.
     ///
     /// 值对象持有的密钥字符串缓冲区。
@@ -15,14 +15,14 @@ impl ProviderKey {
     /// Creates a provider key from an owned string.
     ///
     /// 使用已取得所有权的字符串创建 Provider key。
-    pub(crate) fn new(value: String) -> Self {
+    pub(in crate::core::bot) fn new(value: String) -> Self {
         Self(value)
     }
 
     /// Returns the key as a string slice for read-only use.
     ///
     /// 以只读字符串切片形式返回 key。
-    pub(crate) fn as_str(&self) -> &str {
+    pub(in crate::core::bot) fn as_str(&self) -> &str {
         self.0.as_str()
     }
 }
