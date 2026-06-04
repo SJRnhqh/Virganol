@@ -4,23 +4,16 @@ Use this template when starting or refreshing `docs/TODO.md` for a working
 branch. Keep the file focused on the branch's current execution state, not on
 version-level roadmap history.
 
-## Scope
-
 - Branch:
 - Goal:
-- Non-goals:
 
 ## Current
 
 - [ ] Describe the task currently in progress.
 
-## Next
+## Planned
 
-- [ ] List the next concrete task.
-
-## Validation
-
-- [ ] List the validation command or manual check.
+- [ ] List planned tasks that are agreed but not yet in progress.
 
 ## Completed
 
