@@ -75,11 +75,16 @@ startup_check 和 manual_refresh 共享生命周期核心，当前按命令入�
 - provider key metadata 移入 `models/provider/secret/meta.rs`，并收紧 trait、字段和构造方法可见性
 - `runner.rs` Step 4-6 审查收口：并发调度、`match Ok` 结果处理（`finalize_provider_check_result`）、状态事件发射（`emit_check_status`）、Step 5/6 结构性失败与完成事件
 - 后端 `core::bot` 域可见性封装收紧：provider id / secret / record / lifecycle / 健康检查结果 / manager 请求响应等 model 模块字段与访问器收敛到 bot 域
+- provider services 可见性收口：保留 command-facing facade 所需入口，内部 store / connection / lifecycle helpers 收敛到实际使用域
+- 生命周期链路错误上抛点记录完成：started/completed 事件推送失败、snapshot store/serde 失败、runner join error、provider-level issues、reconciliation 持久化失败均已按链路顺序梳理
+- 明确 `run_provider_checks` 不即时上抛错误，而是返回 `ProviderCheckRunResult`，由 flow 层统一处理全局结构性错误与 provider 级结构性问题
+- 明确 unsupported provider、keyring 宽容读取、health check 业务失败、failed event fallback 等仍保持降级/状态表达，不在本分支升级为统一错误契约
 
-**本分支剩余范围**（完成后即可提交 PR）：
+**本分支收尾状态**：
 
-- [ ] 生命周期链路错误上抛点的思路整理与记录（仅梳理与记录，不实现精细化处理）
-- [ ] 收紧 provider services 模块可见性
+- [x] 生命周期链路错误上抛点的思路整理与记录（仅梳理与记录，不实现精细化处理）
+- [x] 收紧 provider services 模块可见性
+- [ ] 准备 PR 信息并提交 review
 
 **推迟到错误处理专项讨论**（统一错误契约升级，见 6.1「待统一升级」）：
 

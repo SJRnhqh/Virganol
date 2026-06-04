@@ -8,15 +8,12 @@
 
 ## Current
 
-- [ ] Close out provider store facade visibility after config boundaries are closed.
+- [ ] Generate PR info when requested.
 
 ## Next
 
-- [ ] Tighten provider manager visibility after store boundaries are closed.
-- [ ] Tighten provider lifecycle visibility after manager boundaries are closed.
-- [ ] Leave provider error models for the later generic error contract upgrade.
-- [ ] Record lifecycle error up-propagation points while reviewing provider services.
-- [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
+- [ ] Leave provider error models for the later generic error contract upgrade branch.
+- [ ] Leave frontend error display, structured logging, and cross-boundary error strategy for follow-up branches.
 
 ## Validation
 
@@ -41,7 +38,8 @@
 - [x] Run `cargo check` after tightening provider connection visibility.
 - [x] Run `cargo check` after tightening provider secret store visibility.
 - [x] Run `cargo check` after tightening provider config store visibility.
-- [ ] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
+- [x] Confirm lifecycle error propagation notes stay aligned with `docs/ROADMAP.md`.
+- [x] Review final tracked documentation diff before PR info.
 
 ## Completed
 
@@ -75,6 +73,9 @@
 - [x] Scope provider secret store helpers to the provider domain.
 - [x] Remove speculative provider store cache TODO.
 - [x] Scope provider config store helpers to the provider domain.
+- [x] Confirm provider manager and lifecycle service facades stay at command-facing visibility while inner helpers remain scoped.
+- [x] Record lifecycle error up-propagation points through started event, snapshot load, early completion, runner result handling, provider issues, reconciliation persistence, and final completion.
+- [x] Align lifecycle error propagation scope with `docs/ROADMAP.md`.
 - [x] Encapsulate `ProviderState` store lock behind `lock_store`.
 - [x] Move `core::init` implementation from `core/mod.rs` into `core/init.rs`.
 - [x] Keep `core/mod.rs` focused on module declarations and facade re-exports.
