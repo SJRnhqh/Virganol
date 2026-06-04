@@ -11,8 +11,7 @@ use commands::{
     connect_and_save_provider, reset_provider, trigger_provider_manual_refresh,
     trigger_provider_startup_check, update_enabled_models,
 };
-use core::manager::{SidecarManager, SidecarState};
-use core::AppState;
+use core::{AppState, SidecarManager, SidecarState};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {

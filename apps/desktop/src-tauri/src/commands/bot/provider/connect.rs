@@ -14,5 +14,5 @@ pub(crate) async fn connect_and_save_provider(
     state: State<'_, AppState>,
     payload: ConnectAndSaveProviderRequest,
 ) -> Result<ConnectAndSaveProviderResponse, ()> {
-    Ok(connect_and_save(&app, &state.provider, payload).await)
+    Ok(connect_and_save(&app, state.inner(), payload).await)
 }

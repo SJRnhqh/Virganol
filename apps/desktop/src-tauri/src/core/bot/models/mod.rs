@@ -1,14 +1,16 @@
 // apps/desktop/src-tauri/src/core/bot/models/mod.rs
 mod provider;
 
+pub(in crate::core) use provider::ProviderState;
 pub(crate) use provider::{
-    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckCompletedPayload,
-    ProviderCheckFailedPayload, ProviderCheckRunResult, ProviderCheckStartedPayload,
-    ProviderCheckTrigger, ProviderIssue, ProviderKeyMeta, ProviderKeySource, ProviderState,
-    ProviderStatusPayload, ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckTrigger,
+    ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
     UpdateEnabledModelsResponse,
 };
 pub(super) use provider::{
-    HealthCheckResult, ProviderCheckSnapshot, ProviderError, ProviderId, ProviderKey,
-    ProviderKeyChange, ProviderKeyResolution, ProviderRecord, SkippedProviderDetail,
+    HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
+    ProviderCheckFinalization, ProviderCheckRunResult, ProviderCheckSnapshot,
+    ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError, ProviderId,
+    ProviderIssue, ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderKeyResolution,
+    ProviderKeySource, ProviderRecord, SkippedProviderDetail,
 };

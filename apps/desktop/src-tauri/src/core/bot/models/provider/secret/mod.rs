@@ -4,7 +4,7 @@ mod key;
 mod meta;
 mod resolution;
 
-pub(crate) use change::ProviderKeyChange;
-pub(crate) use key::ProviderKey;
-pub(crate) use meta::{ProviderKeyMeta, ProviderKeySource};
-pub(crate) use resolution::ProviderKeyResolution;
+pub(in crate::core::bot) use change::ProviderKeyChange;
+pub(in crate::core::bot) use key::ProviderKey;
+pub(in crate::core::bot) use meta::{ProviderKeyMeta, ProviderKeySource};
+pub(in crate::core::bot) use resolution::ProviderKeyResolution;

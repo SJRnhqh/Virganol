@@ -18,7 +18,7 @@ pub(super) fn open_store(
 /// Loads a JSON value by key from settings.json.
 ///
 /// 从 settings.json 按 key 读取一段 JSON 值。
-pub(crate) fn load_settings(
+pub(in crate::core::bot::services::settings) fn load_settings(
     app: &AppHandle,
     key: &str,
 ) -> Result<Option<serde_json::Value>, ProviderError> {

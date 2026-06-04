@@ -1,6 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/contract/manager/connect.rs
 use serde::{Deserialize, Serialize};
 
+use super::super::super::ProviderId;
 use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 
 /// Request data for connecting a provider.
@@ -8,17 +9,53 @@ use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 /// 连接 Provider 的请求数据。
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct ConnectAndSaveProviderRequestData {
-    /// Provider API key supplied by the user.
+pub(in crate::core::bot) struct ConnectAndSaveProviderRequestData {
+    /// Raw Provider API key from the command payload.
     ///
-    /// 用户提供的 Provider API key。
+    /// 命令载荷中的原始 Provider API key。
     #[serde(default)]
-    pub(crate) key: String,
-    /// Optional provider base URL supplied by the user.
+    key: String,
+    /// Raw optional Provider base URL from the command payload.
     ///
-    /// 用户提供的可选 Provider 基础 URL。
+    /// 命令载荷中的原始可选 Provider 基础 URL。
     #[serde(default)]
-    pub(crate) url: Option<String>,
+    url: Option<String>,
+}
+
+impl ConnectAndSaveProviderRequestData {
+    /// Returns the API key normalized for connection probing and saving.
+    ///
+    /// 返回用于连接探测与保存的归一化 API key。
+    pub(in crate::core::bot) fn normalized_api_key(&self) -> &str {
+        self.key.trim()
+    }
+
+    /// Returns the base URL normalized for connection probing and saving.
+    ///
+    /// 返回用于连接探测与保存的归一化基础 URL。
+    pub(in crate::core::bot) fn normalized_base_url(&self) -> &str {
+        self.url.as_deref().unwrap_or("").trim()
+    }
+}
+
+/// Request for connecting and saving a provider.
+///
+/// 连接并保存 Provider 的请求。
+#[derive(Deserialize)]
+#[serde(transparent)]
+pub(crate) struct ConnectAndSaveProviderRequest(
+    ProviderCommandRequest<ConnectAndSaveProviderRequestData>,
+);
+
+impl ConnectAndSaveProviderRequest {
+    /// Consumes the request into its target provider and connection data.
+    ///
+    /// 消费请求并返回目标 provider 与连接数据。
+    pub(in crate::core::bot) fn into_parts(
+        self,
+    ) -> (ProviderId, Option<ConnectAndSaveProviderRequestData>) {
+        self.0.into_parts()
+    }
 }
 
 /// Response data for connect operation.
@@ -26,37 +63,46 @@ pub(crate) struct ConnectAndSaveProviderRequestData {
 /// 连接操作的响应数据。
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct ConnectAndSaveProviderResponseData {
+struct ConnectAndSaveProviderResponseData {
     /// Models discovered by the provider health check.
     ///
     /// Provider 健康检查发现的模型列表。
-    pub(crate) available_models: Vec<String>,
+    available_models: Vec<String>,
     /// Models enabled after preserving compatible previous selections.
     ///
     /// 保留兼容历史选择后处于启用状态的模型列表。
-    pub(crate) enabled_models: Vec<String>,
+    enabled_models: Vec<String>,
 }
-
-/// Request for connecting and saving a provider.
-///
-/// 连接并保存 Provider 的请求。
-pub(crate) type ConnectAndSaveProviderRequest =
-    ProviderCommandRequest<ConnectAndSaveProviderRequestData>;
 
 /// Response for connecting and saving a provider.
 ///
 /// 连接并保存 Provider 的响应。
-pub(crate) type ConnectAndSaveProviderResponse =
-    ProviderCommandResponse<ConnectAndSaveProviderResponseData>;
+#[derive(Serialize)]
+#[serde(transparent)]
+pub(crate) struct ConnectAndSaveProviderResponse(
+    ProviderCommandResponse<ConnectAndSaveProviderResponseData>,
+);
 
 impl ConnectAndSaveProviderResponse {
     /// Creates a successful response with model data.
     ///
     /// 创建带模型数据的成功响应。
-    pub(crate) fn ok(available_models: Vec<String>, enabled_models: Vec<String>) -> Self {
-        Self::success_with(ConnectAndSaveProviderResponseData {
-            available_models,
-            enabled_models,
-        })
+    pub(in crate::core::bot) fn ok(
+        available_models: Vec<String>,
+        enabled_models: Vec<String>,
+    ) -> Self {
+        Self(ProviderCommandResponse::success_with(
+            ConnectAndSaveProviderResponseData {
+                available_models,
+                enabled_models,
+            },
+        ))
+    }
+
+    /// Creates a failed response with error message.
+    ///
+    /// 创建带错误消息的失败响应。
+    pub(in crate::core::bot) fn failure(error: impl Into<String>) -> Self {
+        Self(ProviderCommandResponse::failure(error))
     }
 }

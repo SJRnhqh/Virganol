@@ -66,7 +66,7 @@ fn atomic_write(store_path: &Path, tmp_path: &Path, data: &[u8]) -> Result<(), P
 /// Saves a JSON value to settings.json by key (upsert semantics).
 ///
 /// 将 JSON 值写入 settings.json 的指定 key（upsert 语义）。
-pub(crate) fn save_settings(
+pub(in crate::core::bot::services::settings) fn save_settings(
     app: &AppHandle,
     key: &str,
     value: serde_json::Value,

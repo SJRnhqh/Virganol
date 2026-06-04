@@ -1,6 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/mod.rs
 mod constants;
-mod helpers;
 mod interfaces;
 mod models;
 mod services;
@@ -9,7 +8,6 @@ pub(self) use constants::{
     DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS, PROVIDER_KEYRING_SERVICE,
     SETTINGS_FILE, SPIRIT_PROVIDERS_KEY,
 };
-pub(self) use helpers::compute_enabled_models;
 pub(self) use interfaces::{DriverFuture, ProviderDriver};
 pub(super) use models::ProviderState;
 pub(crate) use models::{
@@ -18,8 +16,11 @@ pub(crate) use models::{
     UpdateEnabledModelsResponse,
 };
 pub(self) use models::{
-    HealthCheckResult, ProviderCheckSnapshot, ProviderError, ProviderId, ProviderKey,
-    ProviderKeyChange, ProviderRecord, SkippedProviderDetail,
+    HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
+    ProviderCheckFinalization, ProviderCheckRunResult, ProviderCheckSnapshot,
+    ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError, ProviderId,
+    ProviderIssue, ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderRecord,
+    SkippedProviderDetail,
 };
 pub(crate) use services::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,

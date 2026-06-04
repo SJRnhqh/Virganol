@@ -1,9 +1,8 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/reset.rs
 use tauri::AppHandle;
 
-use super::super::super::super::super::{
-    ProviderState, ResetProviderRequest, ResetProviderResponse,
-};
+use super::super::super::super::super::super::AppState;
+use super::super::super::super::super::{ResetProviderRequest, ResetProviderResponse};
 use super::super::{remove_provider, remove_provider_key, save_provider};
 
 /// Resets provider configuration.
@@ -11,10 +10,11 @@ use super::super::{remove_provider, remove_provider_key, save_provider};
 /// 重置 provider 的持久化配置。
 pub(crate) fn reset_provider_config(
     app: &AppHandle,
-    provider_state: &ProviderState,
+    state: &AppState,
     request: ResetProviderRequest,
 ) -> ResetProviderResponse {
-    let ResetProviderRequest { provider_id, .. } = request;
+    let provider_id = request.into_provider_id();
+    let provider_state = state.provider();
 
     let previous = match remove_provider(app, provider_state, provider_id) {
         Ok(removed) => removed,
