@@ -1,4 +1,4 @@
-# Virganol 🧪
+# 🌿 Virganol
 
 > A local-first, AI-native scientific workbench for connected labs.
 
