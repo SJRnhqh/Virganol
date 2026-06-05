@@ -36,10 +36,12 @@ or refreshing branch-level `docs/TODO.md` files.
 
 ## Prompt Responsibilities
 
-Reusable AI collaboration prompts should live under `prompts/`. Stable project
-rules belong in `AGENTS.md`, while project state and planning documents belong
-under `docs/`. Prompt pipelines should live under `pipelines/` and define the
-order for combining reusable prompts.
+Reusable AI collaboration playbook steps should live under `prompts/`. Each
+prompt should stay focused on one project workflow action and follow the
+template under `prompts/templates/`. Stable project rules belong in
+`AGENTS.md`, while project state and planning documents belong under `docs/`.
+Prompt pipelines should live under `pipelines/` and define the execution order
+for combining reusable prompts.
 
 When the user asks for a "message" after discussing or making code or
 documentation changes, interpret it as a commit message request. Read

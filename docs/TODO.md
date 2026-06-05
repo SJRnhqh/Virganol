@@ -34,3 +34,6 @@
   error management, logging management, and GitHub/prompt workflow scripting.
 - [x] Simplified the branch TODO shape to branch, goal, current, planned, and
   completed sections.
+- [x] Started prompt workflow cleanup by removing the unused design session
+  prompt, renaming the session initializer, adding a prompt template, and
+  aligning `AGENTS.md` wording with the prompt playbook model.
