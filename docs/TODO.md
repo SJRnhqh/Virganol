@@ -41,3 +41,5 @@
   templates managed by `dev/templates/`.
 - [x] Moved root development scripts under `dev/scripts/` and updated package
   commands to use the new paths.
+- [x] Refreshed README structure and development overview to reflect `dev/`
+  workflow assets and current toolchain badges.
