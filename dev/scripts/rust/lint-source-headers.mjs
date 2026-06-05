@@ -1,4 +1,4 @@
-// scripts/rust/lint-source-headers.mjs
+// dev/scripts/rust/lint-source-headers.mjs
 // Imports / 依赖导入
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 // Path setup / 路径设置
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(scriptDir, "../..");
+const repoRoot = path.resolve(scriptDir, "../../..");
 const rustSourceRoot = path.join(repoRoot, "apps/desktop/src-tauri/src");
 
 // Repository path normalization / 仓库路径规范化

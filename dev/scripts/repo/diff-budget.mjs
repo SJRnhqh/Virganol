@@ -1,4 +1,4 @@
-// scripts/repo/diff-budget.mjs
+// dev/scripts/repo/diff-budget.mjs
 // Imports / 依赖导入
 import { execFileSync } from "node:child_process";
 import path from "node:path";
@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 // Path setup / 路径设置
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(scriptDir, "../..");
+const repoRoot = path.resolve(scriptDir, "../../..");
 
 // Review budget setup / 审查预算设置
 const WARN_LIMIT = 100_000;

@@ -39,3 +39,5 @@
   aligning `AGENTS.md` wording with the prompt playbook model.
 - [x] Moved prompt and pipeline assets under `dev/`, with shared workflow
   templates managed by `dev/templates/`.
+- [x] Moved root development scripts under `dev/scripts/` and updated package
+  commands to use the new paths.
