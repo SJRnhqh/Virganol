@@ -37,7 +37,7 @@ Virganol/
 **Frameworks:** React · Tauri · Eino
 
 [![Node.js](https://img.shields.io/badge/node-22.22.2-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/en/download)
-[![pnpm](https://img.shields.io/badge/pnpm-10.33.0-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/installation)
+[![pnpm](https://img.shields.io/badge/pnpm-11.4.0-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/installation)
 [![Go](https://img.shields.io/badge/go-1.25.6-00ADD8?logo=go&logoColor=white)](https://go.dev/doc/install/)
 [![Rust](https://img.shields.io/badge/rust-1.96.0-000000?logo=rust&logoColor=white)](https://www.rust-lang.org/tools/install)
 

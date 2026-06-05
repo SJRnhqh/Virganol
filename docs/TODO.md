@@ -45,3 +45,5 @@
   workflow assets and current toolchain badges.
 - [x] Locked the Rust toolchain to `1.96.0` and verified it with `cargo check`
   and `pnpm lint:rust:source-headers`.
+- [x] Upgraded the pinned pnpm toolchain version to `11.4.0` and verified the
+  package workflow after lockfile migration.
