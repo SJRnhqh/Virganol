@@ -8,12 +8,13 @@ The development scenario this pipeline is meant for.
 
 ## Flow
 
-List the `dev/prompts/` steps to run in order.
+List the `dev/prompts/` steps to run in order. Each listed prompt should be
+read and followed.
 
 ## Rules
 
 State pipeline-level boundaries and required behavior.
 
-## Output
+## Deliverable
 
 What the complete pipeline should return or update.

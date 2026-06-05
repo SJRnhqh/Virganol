@@ -49,3 +49,5 @@
   package workflow after lockfile migration.
 - [x] Added the pipeline template for scenario-based workflow orchestration
   under `dev/templates/`.
+- [x] Added the session bootstrap pipeline to invoke `dev/prompts/init.md` for
+  session startup or context realignment.

@@ -21,14 +21,11 @@ and reason about development order.
 
 ## Rules
 
-- You may run read-only commands to inspect directories, documentation, git branch, and git status.
-- Do not write code, modify files, commit changes, or do anything I have not explicitly requested before I ask for implementation.
+- Use read-only inspection only.
 - If documentation and code state disagree, point out the mismatch and discuss it with me before changing anything.
-- Keep answers simple and concise unless I ask for deeper expansion.
-- Communicate with me in Chinese.
 
-## Output
+## Deliverable
 
-Return a concise Chinese summary of the current branch, development focus,
-relevant documentation state, and any mismatch or risk found during
+Return a session context summary covering the current branch, development
+focus, documentation state, and any mismatch or risk found during
 initialization.
