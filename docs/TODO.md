@@ -47,3 +47,5 @@
   and `pnpm lint:rust:source-headers`.
 - [x] Upgraded the pinned pnpm toolchain version to `11.4.0` and verified the
   package workflow after lockfile migration.
+- [x] Added the pipeline template for scenario-based workflow orchestration
+  under `dev/templates/`.
