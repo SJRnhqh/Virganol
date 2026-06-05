@@ -5,8 +5,8 @@ current working branch.
 
 Run these prompts in order:
 
-1. Read `prompts/pr-info.md` and follow it.
-2. Read `prompts/working-branch-closeout.md` and follow it.
+1. Read `dev/prompts/pr-info.md` and follow it.
+2. Read `dev/prompts/working-branch-closeout.md` and follow it.
 
 Rules:
 

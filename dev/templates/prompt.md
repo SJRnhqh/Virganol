@@ -1,6 +1,6 @@
 # Prompt Name
 
-Use this template for reusable prompts under `prompts/`.
+Use this template for reusable prompts under `dev/prompts/`.
 
 ## Mission
 

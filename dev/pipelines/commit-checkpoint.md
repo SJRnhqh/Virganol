@@ -5,8 +5,8 @@ TODO before a commit, or update TODO and provide a commit message.
 
 Run these prompts in order:
 
-1. Read `prompts/todo-update.md` and follow it.
-2. Read `prompts/commit-message.md` and follow it.
+1. Read `dev/prompts/todo-update.md` and follow it.
+2. Read `dev/prompts/commit-message.md` and follow it.
 
 Rules:
 

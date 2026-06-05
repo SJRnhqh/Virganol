@@ -37,3 +37,5 @@
 - [x] Started prompt workflow cleanup by removing the unused design session
   prompt, renaming the session initializer, adding a prompt template, and
   aligning `AGENTS.md` wording with the prompt playbook model.
+- [x] Moved prompt and pipeline assets under `dev/`, with shared workflow
+  templates managed by `dev/templates/`.

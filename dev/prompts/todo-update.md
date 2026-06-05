@@ -17,7 +17,7 @@ Perform the TODO update directly:
   unless the diff clearly completes that scope.
 - Do not modify ROADMAP.md, CHANGELOG.md, or other docs unless I explicitly ask.
 - Do not generate a commit message unless I explicitly ask, or unless this
-  prompt is being used together with prompts/commit-message.md.
+  prompt is being used together with `dev/prompts/commit-message.md`.
 - Do not stage, commit, push, or open a PR.
 
 Default behavior:
