@@ -43,3 +43,5 @@
   commands to use the new paths.
 - [x] Refreshed README structure and development overview to reflect `dev/`
   workflow assets and current toolchain badges.
+- [x] Locked the Rust toolchain to `1.96.0` and verified it with `cargo check`
+  and `pnpm lint:rust:source-headers`.
