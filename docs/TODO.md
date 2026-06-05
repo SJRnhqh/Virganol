@@ -51,3 +51,5 @@
   under `dev/templates/`.
 - [x] Added the session bootstrap pipeline to invoke `dev/prompts/init.md` for
   session startup or context realignment.
+- [x] Normalized commit preparation by templating the TODO update and commit
+  message prompts and renaming the checkpoint pipeline to `commit-prep`.
