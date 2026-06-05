@@ -53,3 +53,5 @@
   session startup or context realignment.
 - [x] Normalized commit preparation by templating the TODO update and commit
   message prompts and renaming the checkpoint pipeline to `commit-prep`.
+- [x] Added the commit pipeline and git commit prompt for explicit commit
+  workflows after a commit message has been prepared.
