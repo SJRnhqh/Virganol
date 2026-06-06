@@ -59,3 +59,5 @@
   toolchain after the dependency install check failed in GitHub Actions.
 - [x] Migrated the pnpm build-script approval config to the pnpm 11
   `allowBuilds` format so CI can approve `esbuild` during dependency install.
+- [x] Added the closeout preparation pipeline by composing `todo-closeout` with
+  the shared commit message prompt.

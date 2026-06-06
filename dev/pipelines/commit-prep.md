@@ -13,7 +13,7 @@ creating the commit.
 
 ## Rules
 
-- Do not stage, commit, push, or open a PR.
+- Treat this as preparation only: do not stage, commit, push, or open a PR.
 - Keep the response concise and in Chinese.
 
 ## Deliverable
