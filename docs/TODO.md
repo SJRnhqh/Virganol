@@ -57,3 +57,5 @@
   workflows after a commit message has been prepared.
 - [x] Aligned the CI pnpm setup action with the pinned `pnpm@11.4.0`
   toolchain after the dependency install check failed in GitHub Actions.
+- [x] Migrated the pnpm build-script approval config to the pnpm 11
+  `allowBuilds` format so CI can approve `esbuild` during dependency install.
