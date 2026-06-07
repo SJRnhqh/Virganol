@@ -63,3 +63,5 @@
   the shared commit message prompt.
 - [x] Normalized PR preparation by templating the PR information prompt and
   adding the `pr-prep` pipeline.
+- [x] Added the push pipeline and git push prompt for publishing current branch
+  commits without opening a PR.
