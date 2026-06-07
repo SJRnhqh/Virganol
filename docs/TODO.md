@@ -65,3 +65,7 @@
   adding the `pr-prep` pipeline.
 - [x] Added the push pipeline and git push prompt for publishing current branch
   commits without opening a PR.
+- [x] Added the PR pipeline by composing current-branch push with the GitHub PR
+  creation prompt.
+- [x] Removed the obsolete working branch closeout prompt and pipeline after
+  replacing them with granular closeout, push, PR preparation, and PR flows.
