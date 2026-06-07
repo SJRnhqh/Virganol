@@ -1,20 +1,19 @@
 # Branch TODO
 
 - Branch: `feat/spirit-error-and-log`
-- Goal: Settle and implement the branch-level direction for backend error
-  management, project logging management, and GitHub/prompt workflow scripting.
+- Goal: Finish the remaining backend development work for error refinement and
+  project logging management after the GitHub/prompt workflow automation work
+  has been completed.
 
 ## Current
 
-- [ ] Define the project-level error management model: clarify global error
-  boundaries, backend error architecture, and the upgrade path from the coarse
-  `ProviderError` model to a finer structured error system.
+- [ ] Define and implement the backend error refinement model: clarify global
+  error boundaries, provider error architecture, error codes, error chaining,
+  and the upgrade path from the coarse `ProviderError` model to a finer
+  structured error system.
 
 ## Planned
 
-- [ ] Design the backend error management architecture before implementation:
-  classify system errors vs business errors, define error codes, decide error
-  chaining, and align command response contracts.
 - [ ] Upgrade `ProviderError` after the architecture is agreed: move from the
   current coarse unified model toward a typed, traceable, serializable provider
   error model.
@@ -22,11 +21,6 @@
   levels, structure, persistence, rotation, context fields, and frontend/backend
   responsibilities before implementation.
 - [ ] Implement logging changes only after the logging model is settled.
-- [ ] Establish the GitHub scripted workflow and prompt library: standardize
-  reusable prompts, branch/PR/CI helper flows, and the order in which prompts
-  compose into working pipelines.
-- [ ] Refine the overall prompt workflow so branch setup, TODO update, commit
-  message generation, PR info, and branch closeout have clear reusable paths.
 
 ## Completed
 
@@ -69,3 +63,6 @@
   creation prompt.
 - [x] Removed the obsolete working branch closeout prompt and pipeline after
   replacing them with granular closeout, push, PR preparation, and PR flows.
+- [x] Completed the GitHub/prompt workflow automation track by moving workflow
+  assets under `dev/`, adding reusable pipeline and prompt templates, and
+  documenting the orchestration model in `AGENTS.md`.
