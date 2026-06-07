@@ -11,8 +11,8 @@ integrates instruments, data, scripts, compute, and models on the desktop.
 Virganol/
 ├── apps/
 │   ├── ui/                    # React frontend
-│   ├── desktop/               # Tauri desktop wrapper (Rust)
-│   └── server/                # Go agent sidecar
+│   ├── desktop/               # Tauri desktop wrapper
+│   └── server/                # Go sidecar service
 ├── dev/                       # Developer workflow assets
 │   ├── pipelines/             # AI collaboration workflow pipelines
 │   ├── prompts/               # Reusable AI collaboration prompts

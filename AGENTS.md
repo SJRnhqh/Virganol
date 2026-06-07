@@ -1,21 +1,32 @@
-# Virganol Development Guidelines
+# Virganol Agent Development Guide
 
 Virganol is a local-first, AI-native scientific workbench for connected labs,
 built with a React frontend, a Tauri/Rust desktop runtime, and a Go sidecar.
 
-This document defines Virganol's stable project-level development guidance.
-Feature-specific architecture, roadmap details, and branch task execution
-details should be maintained under `docs/`, not in this file.
+This document is the agent-facing development guide for Virganol. It defines
+stable project-level development rules and routes recurring AI-assisted
+development workflows to the assets under `dev/`.
+
+Project documentation and branch state, including architecture notes, roadmap,
+changelog, contribution guidance, branch TODO state, and recurring document
+templates, belong under `docs/`. Reusable development workflow assets,
+including AI prompts, workflow pipelines, workflow templates, and local helper
+scripts, belong under `dev/`.
 
 ## Project Structure
 
 ```txt
 Virganol/
 ├── apps/
-│   ├── ui/        # Frontend application
-│   ├── desktop/   # Desktop runtime
-│   └── server/    # Sidecar service
-├── docs/          # Project documentation
+│   ├── ui/                    # React frontend
+│   ├── desktop/               # Tauri desktop wrapper
+│   └── server/                # Go sidecar service
+├── dev/                       # Developer workflow assets
+│   ├── pipelines/             # AI collaboration workflow pipelines
+│   ├── prompts/               # Reusable AI collaboration prompts
+│   ├── scripts/               # Development maintenance scripts
+│   └── templates/             # Developer workflow templates
+├── docs/                      # Project documentation and branch state
 └── README.md
 ```
 
@@ -23,45 +34,16 @@ Virganol/
 
 ```txt
 docs/
-├── ARCHITECTURE.md  # System-level architecture overview
-├── CONTRIBUTING.md  # Project-level contribution guide
+├── ARCHITECTURE.md  # Project-level system architecture overview
+├── CONTRIBUTING.md  # Project-level contribution guidance
 ├── CHANGELOG.md     # Version-level change history
 ├── ROADMAP.md       # Version-level roadmap and progress
-├── templates/        # Reference templates for recurring docs
-└── TODO.md          # Branch-level task breakdown
+├── TODO.md          # Branch-level TODO state
+└── templates/       # Recurring document templates
 ```
 
-Use `docs/templates/branch-todo.md` as the reference structure when creating
-or refreshing branch-level `docs/TODO.md` files.
-
-## Prompt Responsibilities
-
-Reusable AI collaboration playbook steps should live under `prompts/`. Each
-prompt should stay focused on one project workflow action and follow the
-template under `prompts/templates/`. Stable project rules belong in
-`AGENTS.md`, while project state and planning documents belong under `docs/`.
-Prompt pipelines should live under `pipelines/` and define the execution order
-for combining reusable prompts.
-
-When the user asks for a "message" after discussing or making code or
-documentation changes, interpret it as a commit message request. Read
-`prompts/commit-message.md` and follow it.
-
-When the user asks to update TODO, checkpoint branch tasks, or prepare
-completed work before a commit message, read `prompts/todo-update.md` and
-follow it.
-
-When the user asks to checkpoint a completed change, update TODO and provide a
-message, or prepare a small commit, read `pipelines/commit-checkpoint.md` and
-follow it.
-
-When the user asks for PR info, a PR title/body, a PR summary, or PR text for
-the current branch, read `prompts/pr-info.md` and follow it.
-
-When the user asks to close out, finish, or end the current working branch,
-read `prompts/working-branch-closeout.md` and follow it. If PR info and
-working branch closeout are both requested, read
-`pipelines/working-branch-closeout.md` and follow it.
+Use `docs/templates/branch-todo.md` when creating or refreshing branch-level
+`docs/TODO.md` files.
 
 ## Development Workflow
 
@@ -151,3 +133,31 @@ local validation workflow.
   into `main`.
 - `main` should reflect release history only, while `dev` remains the rolling
   development line after release.
+
+### Agent Workflow Pipelines
+
+Use `dev/pipelines/` as the routing layer for recurring AI-assisted development
+scenarios. Read the matching pipeline first; pipelines define prompt order and
+execution rules.
+
+```txt
+dev/pipelines/
+├── bootstrap.md      # Start or realign a development session
+├── commit-prep.md    # Update branch TODO and prepare a commit message
+├── commit.md         # Stage and commit confirmed local changes
+├── push.md           # Push existing local commits
+├── closeout-prep.md  # Remove branch TODO and prepare a closeout commit message
+├── pr-prep.md        # Generate PR title and summary
+└── pr.md             # Push branch and create a GitHub PR
+```
+
+Use development routines as orchestration shortcuts when a user request maps to
+one or more stable pipeline steps.
+
+```txt
+development routines
+├── session start: bootstrap.md
+├── commit cycle: commit-prep.md → commit.md
+├── publish cycle: commit-prep.md → commit.md → push.md
+└── branch PR: closeout-prep.md → commit.md → pr-prep.md → pr.md
+```

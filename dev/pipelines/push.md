@@ -2,8 +2,8 @@
 
 ## Scenario
 
-Use this pipeline when the user explicitly asks to push the current branch
-after local commits are ready.
+Use this pipeline when the user explicitly asks to push existing local commits
+from the current branch.
 
 ## Flow
 
