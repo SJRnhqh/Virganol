@@ -1,39 +1,37 @@
-# PR Info Prompt
+# PR Information
 
-AGENTS.md is my stable project-level development guide. First read AGENTS.md,
-then read docs/TODO.md if it exists, and inspect the current git branch,
-status, and diff.
+## Mission
 
-Use this prompt when I ask for PR info, a PR title/body, a PR summary, or PR
-text for the current branch.
+Generate PR title and summary for the current working branch. Use this prompt
+when PR text needs to be prepared before the branch is pushed or a PR is
+opened.
 
-Generate PR information directly:
+## Procedure
 
-- Use docs/TODO.md and the current diff to identify the completed branch scope.
-- Generate one PR title using the Virganol commit convention from AGENTS.md.
-- Generate one concise PR summary from docs/TODO.md and the current diff.
-- Do not update TODO, generate a commit message, stage, commit, push, or open a
-  PR unless I explicitly ask.
-- Do not delete docs/TODO.md.
+- Read `AGENTS.md` for project-level development guidance and title
+  conventions.
+- Inspect the current git branch and worktree status.
+- Identify the target branch from explicit user context or the current branch
+  relationship.
+- Inspect the current branch commits and diff against the target branch.
+- Read `docs/TODO.md` if it exists; if it was already removed during closeout,
+  recover the latest branch TODO context from git history or branch diff when
+  available.
+- Generate one PR title and one concise PR summary from the completed branch
+  scope.
 
-Output exactly these two sections:
+## Rules
 
-## PR Title
+- Do not modify files.
+- Summarize branch changes at PR level, not as file-by-file patches.
+- Use the Virganol title convention for the PR title.
 
-Return one PR title in a fenced code block. Use the same title convention as a
-commit message header for the current working branch type.
+## Deliverable
 
-## PR Summary
-
-Return one PR body in a fenced markdown code block using this format:
+Return one PR title in a fenced code block and one PR summary in a fenced
+markdown code block using this format:
 
 ```markdown
 ## Summary
 - ...
 ```
-
-Default behavior:
-
-- Communicate with me in Chinese.
-- Keep the answer concise.
-- Do not include raw git diffs.

@@ -61,3 +61,5 @@
   `allowBuilds` format so CI can approve `esbuild` during dependency install.
 - [x] Added the closeout preparation pipeline by composing `todo-closeout` with
   the shared commit message prompt.
+- [x] Normalized PR preparation by templating the PR information prompt and
+  adding the `pr-prep` pipeline.
