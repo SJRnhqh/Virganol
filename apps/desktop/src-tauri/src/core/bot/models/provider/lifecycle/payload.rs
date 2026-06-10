@@ -2,7 +2,7 @@
 use serde::Serialize;
 
 use super::super::{
-    HealthCheckResult, ProviderErrorCode, ProviderId, ProviderIssue, ProviderKeyMeta,
+    HealthCheckResult, ProviderErrorKind, ProviderId, ProviderIssue, ProviderKeyMeta,
     ProviderRecord,
 };
 use super::ProviderCheckTrigger;
@@ -115,7 +115,7 @@ pub(in crate::core::bot) struct ProviderCheckFailedPayload<'a> {
     /// Structured error code for this lifecycle failure.
     ///
     /// 本轮生命周期失败的结构化错误码。
-    code: ProviderErrorCode,
+    code: ProviderErrorKind,
     /// Error message used for frontend display or logging.
     ///
     /// 面向前端展示或日志记录的错误信息。
@@ -133,7 +133,7 @@ impl<'a> ProviderCheckFailedPayload<'a> {
     /// 创建生命周期 failed 事件载荷。
     pub(in crate::core::bot) fn new(
         run_id: &'a str,
-        code: ProviderErrorCode,
+        code: ProviderErrorKind,
         message: String,
         issues: Option<&'a [ProviderIssue]>,
     ) -> Self {

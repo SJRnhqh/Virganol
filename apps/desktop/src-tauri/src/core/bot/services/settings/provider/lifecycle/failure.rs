@@ -16,7 +16,7 @@ pub(super) fn report_lifecycle_failure(
     issues: Option<Vec<ProviderIssue>>,
 ) {
     if let Err(e) = emit_check_failed(app, run_id, error, issues.as_deref()) {
-        let code = error.code();
+        let code = error.kind();
         let message = error.message();
         match &issues {
             Some(issues) => {

@@ -4,7 +4,7 @@ use serde::{Serialize, Serializer};
 use std::fmt;
 
 // 内部引用
-use super::ProviderErrorCode;
+use super::ProviderErrorKind;
 
 #[derive(Debug)]
 pub enum ProviderError {
@@ -40,14 +40,14 @@ impl From<serde_json::Error> for ProviderError {
 }
 
 impl ProviderError {
-    pub fn code(&self) -> ProviderErrorCode {
+    pub fn kind(&self) -> ProviderErrorKind {
         match self {
-            Self::Io(_) => ProviderErrorCode::Io,
-            Self::Serde(_) => ProviderErrorCode::Serde,
-            Self::UnsupportedProvider(_) => ProviderErrorCode::UnsupportedProvider,
-            Self::LifecycleEventEmit(_) => ProviderErrorCode::LifecycleEventEmit,
-            Self::LifecycleConcurrentCheck(_) => ProviderErrorCode::LifecycleConcurrentCheck,
-            Self::Keyring(_) => ProviderErrorCode::Keyring,
+            Self::Io(_) => ProviderErrorKind::Io,
+            Self::Serde(_) => ProviderErrorKind::Serde,
+            Self::UnsupportedProvider(_) => ProviderErrorKind::UnsupportedProvider,
+            Self::LifecycleEventEmit(_) => ProviderErrorKind::LifecycleEventEmit,
+            Self::LifecycleConcurrentCheck(_) => ProviderErrorKind::LifecycleConcurrentCheck,
+            Self::Keyring(_) => ProviderErrorKind::Keyring,
         }
     }
 

@@ -72,7 +72,7 @@ pub(super) fn emit_check_failed(
     error: &ProviderError,
     issues: Option<&[ProviderIssue]>,
 ) -> Result<(), ProviderError> {
-    let payload = ProviderCheckFailedPayload::new(run_id, error.code(), error.message(), issues);
+    let payload = ProviderCheckFailedPayload::new(run_id, error.kind(), error.message(), issues);
 
     app.emit(EVT_CHECK_FAILED, &payload).map_err(|e| {
         ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_FAILED, e))

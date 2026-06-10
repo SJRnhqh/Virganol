@@ -7,13 +7,13 @@
 
 ## Current
 
-- [ ] Define and implement the backend error refinement model: clarify global
-  error boundaries, provider error architecture, error codes, error chaining,
-  and the upgrade path from the coarse `ProviderError` model to a finer
-  structured error system.
+- [ ] Design the provider boundary error code taxonomy and mapping rules from
+  internal `ProviderError` / `ProviderErrorKind` into `ProviderAppError`.
 
 ## Planned
 
+- [ ] Implement the `ProviderError` to `ProviderAppError` conversion after the
+  provider boundary error codes are agreed.
 - [ ] Upgrade `ProviderError` after the architecture is agreed: move from the
   current coarse unified model toward a typed, traceable, serializable provider
   error model.
@@ -66,3 +66,7 @@
 - [x] Completed the GitHub/prompt workflow automation track by moving workflow
   assets under `dev/`, adding reusable pipeline and prompt templates, and
   documenting the orchestration model in `AGENTS.md`.
+- [x] Established the initial provider boundary error skeleton by adding the
+  shared `AppError<C, D>` envelope, provider-specific `ProviderAppError`,
+  `ProviderErrorCode`, and `ProviderErrorDetails` placeholders, and renaming the
+  old variant-aligned `ProviderErrorCode` to `ProviderErrorKind`.
