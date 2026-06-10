@@ -7,9 +7,10 @@
 
 ## Current
 
-- [ ] Continue the interactive provider CRUD error contract migration by adding
-  the next focused `ProviderErrorCode` / `ProviderAppError` constructor and
-  replacing the matching string-based failure call sites one group at a time.
+- [ ] Implement the concrete `ProviderError` to `ProviderAppError` mapping
+  behind the current `ProviderError::into_app_error` conversion hook.
+- [ ] Design the remaining non-`ProviderError` interactive failures: connect
+  health-check result errors and reset rollback double-failure errors.
 
 ## Planned
 
@@ -17,11 +18,11 @@
   structured details from the current provider error design pass.
 - [ ] Treat `ProviderErrorKind` as legacy internal classification during this
   pass and avoid using it as the center of the new boundary error model.
-- [ ] Migrate the remaining interactive manager failure call sites in
-  `connect`, `reset`, and `update_models` from raw strings to
-  `ProviderAppError`.
-- [ ] Implement the `ProviderError` to `ProviderAppError` conversion after the
-  interactive CRUD code/message taxonomy has stabilized.
+- [ ] Replace the remaining connect health-check string failure with a
+  `ProviderAppError` once the connection failure code/message contract is
+  agreed.
+- [ ] Replace the reset rollback double-failure string with a dedicated
+  `ProviderAppError` once the rollback failure code/message contract is agreed.
 - [ ] Upgrade `ProviderError` after the architecture is agreed: move from the
   current coarse unified model toward a typed, traceable, serializable provider
   error model.
@@ -88,3 +89,11 @@
   code and exposed through `ProviderAppError::missing_request_data`.
 - [x] Replaced the interactive manager missing-data failure sites in `connect`
   and `update_models` with `ProviderAppError::missing_request_data`.
+- [x] Renamed the internal provider error file from `base.rs` to `internal.rs`
+  and tightened `ProviderError` visibility to the `core::bot` boundary.
+- [x] Added the `ProviderError::into_app_error` conversion hook as the explicit
+  internal-error to app-boundary error transition point, with concrete mapping
+  left for the next implementation pass.
+- [x] Migrated single-`ProviderError` interactive manager failure sites in
+  `update_models`, `connect`, and `reset` to call `into_app_error` instead of
+  passing raw error messages into responses.

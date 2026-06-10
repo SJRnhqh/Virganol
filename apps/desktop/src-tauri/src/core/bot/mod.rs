@@ -16,10 +16,10 @@ pub(crate) use models::{
     UpdateEnabledModelsResponse,
 };
 pub(self) use models::{
-    HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
+    HealthCheckResult, ProviderAppError, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckFinalization, ProviderCheckRunResult, ProviderCheckSnapshot,
-    ProviderAppError, ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError,
-    ProviderId, ProviderIssue, ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderRecord,
+    ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError, ProviderId,
+    ProviderIssue, ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderRecord,
     SkippedProviderDetail,
 };
 pub(crate) use services::{

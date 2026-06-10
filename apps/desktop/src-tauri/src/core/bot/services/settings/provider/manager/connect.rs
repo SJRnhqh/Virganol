@@ -35,7 +35,7 @@ pub(crate) async fn connect_and_save(
 
     let previous_record = match load_provider_record(app, provider_id) {
         Ok(record) => record,
-        Err(e) => return ConnectAndSaveProviderResponse::failure(e.message()),
+        Err(e) => return ConnectAndSaveProviderResponse::failure(e.into_app_error()),
     };
 
     let record = ProviderRecord::from_connection(
@@ -48,11 +48,11 @@ pub(crate) async fn connect_and_save(
 
     let key_transaction = match ProviderKeyTransaction::begin(provider_id, normalized_key) {
         Ok(transaction) => transaction,
-        Err(e) => return ConnectAndSaveProviderResponse::failure(e.message()),
+        Err(e) => return ConnectAndSaveProviderResponse::failure(e.into_app_error()),
     };
 
     if let Err(e) = save_provider(app, provider_state, provider_id, record) {
-        return ConnectAndSaveProviderResponse::failure(e.message());
+        return ConnectAndSaveProviderResponse::failure(e.into_app_error());
     }
 
     if let Some(transaction) = key_transaction {

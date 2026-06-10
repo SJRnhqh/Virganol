@@ -1,13 +1,11 @@
-// apps/desktop/src-tauri/src/core/bot/models/provider/error/base.rs
-// 外部依赖
+// apps/desktop/src-tauri/src/core/bot/models/provider/error/internal.rs
 use serde::{Serialize, Serializer};
 use std::fmt;
 
-// 内部引用
-use super::ProviderErrorKind;
+use super::{ProviderAppError, ProviderErrorKind};
 
 #[derive(Debug)]
-pub enum ProviderError {
+pub(in crate::core::bot) enum ProviderError {
     Io(String),
     Serde(serde_json::Error),
     UnsupportedProvider(String),
@@ -53,6 +51,14 @@ impl ProviderError {
 
     pub fn message(&self) -> String {
         self.to_string()
+    }
+
+    /// Converts the internal provider error into a provider app boundary error.
+    ///
+    /// 将内部 Provider 错误转换为 Provider 应用边界错误。
+    pub(in crate::core::bot) fn into_app_error(self) -> ProviderAppError {
+        // TODO: Map ProviderError variants into stable ProviderErrorCode values.
+        todo!("map ProviderError into ProviderAppError")
     }
 }
 

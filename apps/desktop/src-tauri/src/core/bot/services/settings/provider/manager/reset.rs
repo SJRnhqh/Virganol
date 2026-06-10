@@ -18,7 +18,7 @@ pub(crate) fn reset_provider_config(
 
     let previous = match remove_provider(app, provider_state, provider_id) {
         Ok(removed) => removed,
-        Err(e) => return ResetProviderResponse::failure(e.message()),
+        Err(e) => return ResetProviderResponse::failure(e.into_app_error()),
     };
 
     if let Err(e) = remove_provider_key(provider_id) {
@@ -31,7 +31,7 @@ pub(crate) fn reset_provider_config(
                 ));
             }
         }
-        return ResetProviderResponse::failure(e.message());
+        return ResetProviderResponse::failure(e.into_app_error());
     }
 
     ResetProviderResponse::success()

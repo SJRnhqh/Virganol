@@ -9,15 +9,14 @@ mod secret;
 
 pub(in crate::core::bot) use common::ProviderId;
 pub(in crate::core) use common::ProviderState;
-pub(in crate::core::bot) use config::ProviderCheckSnapshot;
-pub(in crate::core::bot) use config::ProviderRecord;
+pub(in crate::core::bot) use config::{ProviderCheckSnapshot, ProviderRecord};
 pub(in crate::core::bot) use connection::HealthCheckResult;
 pub(crate) use contract::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderRequest,
     ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
-pub(in crate::core::bot) use error::ProviderAppError;
-pub(crate) use error::{ProviderError, ProviderErrorKind, ProviderIssue, SkippedProviderDetail};
+pub(in crate::core::bot) use error::{ProviderAppError, ProviderError};
+pub(crate) use error::{ProviderErrorKind, ProviderIssue, SkippedProviderDetail};
 pub(crate) use lifecycle::ProviderCheckTrigger;
 pub(in crate::core::bot) use lifecycle::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckFinalization,
