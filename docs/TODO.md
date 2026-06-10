@@ -7,13 +7,22 @@
 
 ## Current
 
-- [ ] Design the provider boundary error code taxonomy and mapping rules from
-  internal `ProviderError` / `ProviderErrorKind` into `ProviderAppError`.
+- [ ] Define the provider boundary error model for the code/message layer:
+  clarify the responsibility boundary of `ProviderAppError`, design the stable
+  `ProviderErrorCode` taxonomy, and define safe message rules before mapping
+  internal `ProviderError` values into boundary errors.
 
 ## Planned
 
-- [ ] Implement the `ProviderError` to `ProviderAppError` conversion after the
-  provider boundary error codes are agreed.
+- [ ] Keep `ProviderErrorDetails` as a placeholder for now and exclude
+  structured details from the current provider error design pass.
+- [ ] Treat `ProviderErrorKind` as legacy internal classification during this
+  pass and avoid using it as the center of the new boundary error model.
+- [ ] Implement the `ProviderAppError` code/message layer after its boundary
+  responsibility and `ProviderErrorCode` taxonomy are agreed.
+- [ ] Implement the `ProviderError` to `ProviderAppError` conversion only after
+  `ProviderAppError` and `ProviderErrorCode` have concrete code/message
+  semantics.
 - [ ] Upgrade `ProviderError` after the architecture is agreed: move from the
   current coarse unified model toward a typed, traceable, serializable provider
   error model.
