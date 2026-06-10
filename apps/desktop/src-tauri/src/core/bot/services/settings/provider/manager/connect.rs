@@ -3,7 +3,7 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::AppState;
 use super::super::super::super::super::{
-    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderRecord,
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderAppError, ProviderRecord,
 };
 use super::super::{
     load_provider_record, probe_provider_connection, save_provider, ProviderKeyTransaction,
@@ -21,7 +21,7 @@ pub(crate) async fn connect_and_save(
     let provider_state = state.provider();
 
     let Some(data) = data else {
-        return ConnectAndSaveProviderResponse::failure("missing data field");
+        return ConnectAndSaveProviderResponse::failure(ProviderAppError::missing_request_data());
     };
 
     let normalized_key = data.normalized_api_key();

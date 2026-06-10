@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/contract/manager/reset.rs
 use serde::{Deserialize, Serialize};
 
-use super::super::super::ProviderId;
+use super::super::super::{ProviderAppError, ProviderId};
 use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 
 /// Request for resetting a provider.
@@ -36,10 +36,10 @@ impl ResetProviderResponse {
         Self(ProviderCommandResponse::success())
     }
 
-    /// Creates a failed response with error message.
+    /// Creates a failed response with a boundary error.
     ///
-    /// 创建带错误消息的失败响应。
-    pub(in crate::core::bot) fn failure(error: impl Into<String>) -> Self {
+    /// 创建带边界错误的失败响应。
+    pub(in crate::core::bot) fn failure(error: ProviderAppError) -> Self {
         Self(ProviderCommandResponse::failure(error))
     }
 }

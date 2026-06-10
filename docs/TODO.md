@@ -7,10 +7,9 @@
 
 ## Current
 
-- [ ] Define the provider boundary error model for the code/message layer:
-  clarify the responsibility boundary of `ProviderAppError`, design the stable
-  `ProviderErrorCode` taxonomy, and define safe message rules before mapping
-  internal `ProviderError` values into boundary errors.
+- [ ] Continue the interactive provider CRUD error contract migration by adding
+  the next focused `ProviderErrorCode` / `ProviderAppError` constructor and
+  replacing the matching string-based failure call sites one group at a time.
 
 ## Planned
 
@@ -18,11 +17,11 @@
   structured details from the current provider error design pass.
 - [ ] Treat `ProviderErrorKind` as legacy internal classification during this
   pass and avoid using it as the center of the new boundary error model.
-- [ ] Implement the `ProviderAppError` code/message layer after its boundary
-  responsibility and `ProviderErrorCode` taxonomy are agreed.
-- [ ] Implement the `ProviderError` to `ProviderAppError` conversion only after
-  `ProviderAppError` and `ProviderErrorCode` have concrete code/message
-  semantics.
+- [ ] Migrate the remaining interactive manager failure call sites in
+  `connect`, `reset`, and `update_models` from raw strings to
+  `ProviderAppError`.
+- [ ] Implement the `ProviderError` to `ProviderAppError` conversion after the
+  interactive CRUD code/message taxonomy has stabilized.
 - [ ] Upgrade `ProviderError` after the architecture is agreed: move from the
   current coarse unified model toward a typed, traceable, serializable provider
   error model.
@@ -79,3 +78,13 @@
   shared `AppError<C, D>` envelope, provider-specific `ProviderAppError`,
   `ProviderErrorCode`, and `ProviderErrorDetails` placeholders, and renaming the
   old variant-aligned `ProviderErrorCode` to `ProviderErrorKind`.
+- [x] Promoted the interactive provider command response error slot from
+  `Option<String>` to `Option<ProviderAppError>` and aligned the connect, reset,
+  and update response failure constructors with the typed boundary error.
+- [x] Converted `ProviderAppError` from a type alias into a transparent
+  provider-domain newtype over `AppError<ProviderErrorCode, ProviderErrorDetails>`.
+- [x] Added the first provider boundary error code,
+  `missing_request_data`, with its safe fallback message managed alongside the
+  code and exposed through `ProviderAppError::missing_request_data`.
+- [x] Replaced the interactive manager missing-data failure sites in `connect`
+  and `update_models` with `ProviderAppError::missing_request_data`.

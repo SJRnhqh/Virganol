@@ -8,7 +8,7 @@ pub(crate) use provider::{
     UpdateEnabledModelsResponse,
 };
 pub(super) use provider::{
-    HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
+    HealthCheckResult, ProviderAppError, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckFinalization, ProviderCheckRunResult, ProviderCheckSnapshot,
     ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError, ProviderId,
     ProviderIssue, ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderKeyResolution,

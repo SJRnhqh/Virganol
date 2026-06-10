@@ -18,8 +18,8 @@ pub(crate) use models::{
 pub(self) use models::{
     HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckFinalization, ProviderCheckRunResult, ProviderCheckSnapshot,
-    ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError, ProviderId,
-    ProviderIssue, ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderRecord,
+    ProviderAppError, ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError,
+    ProviderId, ProviderIssue, ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderRecord,
     SkippedProviderDetail,
 };
 pub(crate) use services::{

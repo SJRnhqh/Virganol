@@ -1,6 +1,8 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/contract/base/response.rs
 use serde::Serialize;
 
+use super::super::super::ProviderAppError;
+
 /// Internal generic response envelope for Provider commands.
 ///
 /// Provider 命令的内部通用响应包裹。
@@ -12,11 +14,11 @@ pub(in crate::core::bot::models::provider::contract) struct ProviderCommandRespo
     /// 指示操作是否成功。
     success: bool,
 
-    /// Error message if the operation failed.
+    /// Boundary error if the operation failed.
     ///
-    /// 操作失败时的错误消息。
+    /// 操作失败时的边界错误。
     #[serde(skip_serializing_if = "Option::is_none")]
-    error: Option<String>,
+    error: Option<ProviderAppError>,
 
     /// Optional operation-specific data.
     ///
@@ -48,15 +50,15 @@ impl<T> ProviderCommandResponse<T> {
         }
     }
 
-    /// Creates a failed response with error message.
+    /// Creates a failed response with a boundary error.
     ///
-    /// 创建带错误消息的失败响应。
+    /// 创建带边界错误的失败响应。
     pub(in crate::core::bot::models::provider::contract) fn failure(
-        error: impl Into<String>,
+        error: ProviderAppError,
     ) -> Self {
         Self {
             success: false,
-            error: Some(error.into()),
+            error: Some(error),
             data: None,
         }
     }

@@ -1,9 +1,11 @@
 // apps/desktop/src-tauri/src/core/shared/models/error/app.rs
+use serde::Serialize;
 use std::marker::PhantomData;
 
 /// Generic application boundary error.
 ///
 /// 应用边界错误。
+#[derive(Serialize)]
 pub(in crate::core) struct AppError<C, D = ()> {
     /// Machine-readable domain error code.
     ///
@@ -29,19 +31,5 @@ impl<C, D> AppError<C, D> {
             message: message.into(),
             _details: PhantomData,
         }
-    }
-
-    /// Returns the machine-readable domain error code.
-    ///
-    /// 返回机器可读的领域错误码。
-    pub(in crate::core) fn code(&self) -> &C {
-        &self.code
-    }
-
-    /// Returns the safe fallback message.
-    ///
-    /// 返回安全兜底消息。
-    pub(in crate::core) fn message(&self) -> &str {
-        &self.message
     }
 }
