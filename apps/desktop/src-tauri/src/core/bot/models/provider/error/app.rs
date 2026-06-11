@@ -2,7 +2,7 @@
 use serde::Serialize;
 
 use super::super::super::super::super::AppError;
-use super::{ProviderErrorCode, ProviderErrorDetails};
+use super::{ProviderError, ProviderErrorCode, ProviderErrorDetails};
 
 /// Provider-specific application boundary error type.
 ///
@@ -26,5 +26,14 @@ impl ProviderAppError {
     /// 创建命令载荷缺少必需请求数据时的错误。
     pub(in crate::core::bot) fn missing_request_data() -> Self {
         Self::new(ProviderErrorCode::MissingRequestData)
+    }
+}
+
+/// Translates an internal provider error into a provider app boundary error.
+///
+/// 将内部 Provider 错误翻译为 Provider 应用边界错误。
+impl From<ProviderError> for ProviderAppError {
+    fn from(error: ProviderError) -> Self {
+        Self::new(ProviderErrorCode::from(&error))
     }
 }

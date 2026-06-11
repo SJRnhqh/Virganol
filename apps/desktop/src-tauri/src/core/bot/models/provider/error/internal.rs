@@ -2,7 +2,7 @@
 use serde::{Serialize, Serializer};
 use std::fmt;
 
-use super::{ProviderAppError, ProviderErrorKind};
+use super::ProviderErrorKind;
 
 #[derive(Debug)]
 pub(in crate::core::bot) enum ProviderError {
@@ -51,14 +51,6 @@ impl ProviderError {
 
     pub fn message(&self) -> String {
         self.to_string()
-    }
-
-    /// Converts the internal provider error into a provider app boundary error.
-    ///
-    /// 将内部 Provider 错误转换为 Provider 应用边界错误。
-    pub(in crate::core::bot) fn into_app_error(self) -> ProviderAppError {
-        // TODO: Map ProviderError variants into stable ProviderErrorCode values.
-        todo!("map ProviderError into ProviderAppError")
     }
 }
 

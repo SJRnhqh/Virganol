@@ -7,8 +7,10 @@
 
 ## Current
 
-- [ ] Implement the concrete `ProviderError` to `ProviderAppError` mapping
-  behind the current `ProviderError::into_app_error` conversion hook.
+- [ ] Implement the concrete `ProviderError` coarsening in
+  `From<&ProviderError> for ProviderErrorCode`, starting with the update-chain
+  mapping (`provider_not_found`, `storage_failed`) and extending to reset/connect
+  codes as those chains are reviewed.
 - [ ] Design the remaining non-`ProviderError` interactive failures: connect
   health-check result errors and reset rollback double-failure errors.
 
@@ -16,8 +18,10 @@
 
 - [ ] Keep `ProviderErrorDetails` as a placeholder for now and exclude
   structured details from the current provider error design pass.
-- [ ] Treat `ProviderErrorKind` as legacy internal classification during this
-  pass and avoid using it as the center of the new boundary error model.
+- [ ] Treat `ProviderErrorKind` as legacy lifecycle/event-channel classification
+  during this pass and avoid using it as the center of the new boundary error
+  model; optionally detach `ProviderError::kind()` in favor of
+  `ProviderErrorKind::from(&error)` before the 6.1 unified contract upgrade.
 - [ ] Replace the remaining connect health-check string failure with a
   `ProviderAppError` once the connection failure code/message contract is
   agreed.
@@ -97,3 +101,14 @@
 - [x] Migrated single-`ProviderError` interactive manager failure sites in
   `update_models`, `connect`, and `reset` to call `into_app_error` instead of
   passing raw error messages into responses.
+- [x] Relocated internal-to-app boundary translation to the contract side by
+  adding `From<ProviderError> for ProviderAppError` in `app.rs` and removing
+  `ProviderError::into_app_error`, so domain errors no longer depend on boundary
+  types.
+- [x] Updated interactive manager failure sites to translate domain errors with
+  `ProviderAppError::from(e)` at the boundary layer.
+- [x] Added update-chain boundary codes `provider_not_found` and `storage_failed`
+  with safe fallback messages managed alongside `ProviderErrorCode`.
+- [x] Added `From<&ProviderError> for ProviderErrorCode` as the contract-side
+  coarsening hook and wired `app.rs` translation to delegate classification to
+  the code layer.

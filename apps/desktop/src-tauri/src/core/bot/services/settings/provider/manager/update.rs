@@ -29,6 +29,6 @@ pub(crate) fn update_provider_enabled_models(
         payload.into_enabled_models(),
     ) {
         Ok(()) => UpdateEnabledModelsResponse::success(),
-        Err(e) => UpdateEnabledModelsResponse::failure(e.into_app_error()),
+        Err(e) => UpdateEnabledModelsResponse::failure(ProviderAppError::from(e)),
     }
 }

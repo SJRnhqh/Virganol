@@ -2,7 +2,9 @@
 use tauri::AppHandle;
 
 use super::super::super::super::super::super::AppState;
-use super::super::super::super::super::{ResetProviderRequest, ResetProviderResponse};
+use super::super::super::super::super::{
+    ProviderAppError, ResetProviderRequest, ResetProviderResponse,
+};
 use super::super::{remove_provider, remove_provider_key, save_provider};
 
 /// Resets provider configuration.
@@ -18,7 +20,7 @@ pub(crate) fn reset_provider_config(
 
     let previous = match remove_provider(app, provider_state, provider_id) {
         Ok(removed) => removed,
-        Err(e) => return ResetProviderResponse::failure(e.into_app_error()),
+        Err(e) => return ResetProviderResponse::failure(ProviderAppError::from(e)),
     };
 
     if let Err(e) = remove_provider_key(provider_id) {
@@ -31,7 +33,7 @@ pub(crate) fn reset_provider_config(
                 ));
             }
         }
-        return ResetProviderResponse::failure(e.into_app_error());
+        return ResetProviderResponse::failure(ProviderAppError::from(e));
     }
 
     ResetProviderResponse::success()
