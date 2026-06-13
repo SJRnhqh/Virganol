@@ -19,7 +19,8 @@ pub(super) fn load_all_providers(
         return Ok(HashMap::new());
     };
 
-    let providers: HashMap<String, ProviderRecord> = serde_json::from_value(value)?;
+    let providers: HashMap<String, ProviderRecord> =
+        serde_json::from_value(value).map_err(ProviderError::JsonDeserialize)?;
     Ok(providers)
 }
 

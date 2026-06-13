@@ -6,8 +6,20 @@ use super::ProviderErrorKind;
 
 #[derive(Debug)]
 pub(in crate::core::bot) enum ProviderError {
-    Io(String),
+    /// Requested provider has no persisted configuration record.
+    ///
+    /// 请求的 provider 没有对应的持久化配置记录。
+    ConfigNotFound(String),
+    /// Provider configuration failed to serialize into JSON.
+    ///
+    /// Provider 配置序列化为 JSON 失败。
+    JsonSerialize(serde_json::Error),
+    /// Provider configuration failed to deserialize from JSON.
+    ///
+    /// Provider 配置从 JSON 反序列化失败。
+    JsonDeserialize(serde_json::Error),
     Serde(serde_json::Error),
+    Io(String),
     UnsupportedProvider(String),
     LifecycleEventEmit(String),
     LifecycleConcurrentCheck(String),
@@ -17,12 +29,14 @@ pub(in crate::core::bot) enum ProviderError {
 impl fmt::Display for ProviderError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Serde(err) => write!(f, "{err}"),
-            Self::Io(msg)
+            Self::ConfigNotFound(msg)
+            | Self::Io(msg)
             | Self::UnsupportedProvider(msg)
             | Self::LifecycleEventEmit(msg)
             | Self::LifecycleConcurrentCheck(msg)
             | Self::Keyring(msg) => f.write_str(msg),
+            Self::JsonSerialize(err) | Self::JsonDeserialize(err) => write!(f, "{err}"),
+            Self::Serde(err) => write!(f, "{err}"),
         }
     }
 }
@@ -40,8 +54,13 @@ impl From<serde_json::Error> for ProviderError {
 impl ProviderError {
     pub fn kind(&self) -> ProviderErrorKind {
         match self {
-            Self::Io(_) => ProviderErrorKind::Io,
+            Self::ConfigNotFound(_) => {
+                unreachable!("ConfigNotFound is not part of legacy ProviderErrorKind")
+            }
+            Self::JsonSerialize(_) => ProviderErrorKind::Serde,
+            Self::JsonDeserialize(_) => ProviderErrorKind::Serde,
             Self::Serde(_) => ProviderErrorKind::Serde,
+            Self::Io(_) => ProviderErrorKind::Io,
             Self::UnsupportedProvider(_) => ProviderErrorKind::UnsupportedProvider,
             Self::LifecycleEventEmit(_) => ProviderErrorKind::LifecycleEventEmit,
             Self::LifecycleConcurrentCheck(_) => ProviderErrorKind::LifecycleConcurrentCheck,

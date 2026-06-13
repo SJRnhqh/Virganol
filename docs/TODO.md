@@ -7,10 +7,9 @@
 
 ## Current
 
-- [ ] Implement the concrete `ProviderError` coarsening in
-  `From<&ProviderError> for ProviderErrorCode`, starting with the update-chain
-  mapping (`provider_not_found`, `storage_failed`) and extending to reset/connect
-  codes as those chains are reviewed.
+- [ ] Continue update-chain `ProviderError` coarsening by drilling into the
+  common store `load_settings` / `save_settings` I/O paths after the
+  provider config load/update errors have been classified.
 - [ ] Design the remaining non-`ProviderError` interactive failures: connect
   health-check result errors and reset rollback double-failure errors.
 
@@ -112,3 +111,9 @@
 - [x] Added `From<&ProviderError> for ProviderErrorCode` as the contract-side
   coarsening hook and wired `app.rs` translation to delegate classification to
   the code layer.
+- [x] Classified the update-chain provider config missing case with
+  `ProviderError::ConfigNotFound` and mapped it to the `provider_not_found`
+  boundary code.
+- [x] Split reviewed provider config JSON encode/decode failures into
+  `JsonSerialize` and `JsonDeserialize`, mapped both to `storage_failed`, and
+  wired update-chain `to_value` / `from_value` call sites to those variants.

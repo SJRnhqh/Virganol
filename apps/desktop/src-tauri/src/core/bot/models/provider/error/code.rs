@@ -42,8 +42,13 @@ impl ProviderErrorCode {
 ///
 /// 将内部 Provider 错误粗粒化为 Provider 边界错误码。
 impl From<&ProviderError> for ProviderErrorCode {
-    fn from(_error: &ProviderError) -> Self {
-        // TODO: Coarsen ProviderError variants into stable boundary codes.
-        todo!("coarsen ProviderError into ProviderErrorCode")
+    fn from(error: &ProviderError) -> Self {
+        match error {
+            ProviderError::ConfigNotFound(_) => Self::ProviderNotFound,
+            ProviderError::JsonSerialize(_) | ProviderError::JsonDeserialize(_) => {
+                Self::StorageFailed
+            }
+            _ => Self::StorageFailed,
+        }
     }
 }
