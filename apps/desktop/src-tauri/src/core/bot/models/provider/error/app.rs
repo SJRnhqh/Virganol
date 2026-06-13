@@ -29,10 +29,10 @@ impl ProviderAppError {
     }
 }
 
-/// Translates an internal provider error into a provider app boundary error.
-///
-/// 将内部 Provider 错误翻译为 Provider 应用边界错误。
 impl From<ProviderError> for ProviderAppError {
+    /// Translates an internal provider error into a provider app boundary error.
+    ///
+    /// 将内部 Provider 错误翻译为 Provider 应用边界错误。
     fn from(error: ProviderError) -> Self {
         Self::new(ProviderErrorCode::from(&error))
     }

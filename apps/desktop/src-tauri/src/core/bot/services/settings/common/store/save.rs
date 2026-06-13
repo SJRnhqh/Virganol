@@ -14,7 +14,7 @@ fn get_store_paths(app: &AppHandle) -> Result<(PathBuf, PathBuf), ProviderError>
     let store_path = app
         .path()
         .app_data_dir()
-        .map_err(|e| ProviderError::Io(format!("get app data dir failed: {}", e)))?
+        .map_err(|e| ProviderError::ConfigStorePath(format!("get app data dir failed: {}", e)))?
         .join(SETTINGS_FILE);
 
     let tmp_path = store_path.with_file_name(format!("{}.tmp", SETTINGS_FILE));
@@ -33,7 +33,7 @@ fn serialize_store_to_bytes(
         .map(|(k, v)| (k.clone(), v.clone()))
         .collect();
 
-    Ok(serde_json::to_vec_pretty(&all_data)?)
+    serde_json::to_vec_pretty(&all_data).map_err(ProviderError::ConfigStoreSerialize)
 }
 
 /// Performs atomic write using temp file + rename strategy.
@@ -41,17 +41,23 @@ fn serialize_store_to_bytes(
 /// 使用临时文件 + rename 策略执行原子写入。
 fn atomic_write(store_path: &Path, tmp_path: &Path, data: &[u8]) -> Result<(), ProviderError> {
     {
-        let mut file = File::create(tmp_path)
-            .map_err(|e| ProviderError::Io(format!("create temp file failed: {}", e)))?;
-        file.write_all(data)
-            .map_err(|e| ProviderError::Io(format!("write temp file failed: {}", e)))?;
-        file.sync_all()
-            .map_err(|e| ProviderError::Io(format!("fsync temp file failed: {}", e)))?;
+        let mut file = File::create(tmp_path).map_err(|e| {
+            ProviderError::ConfigStoreTempCreate(format!("create temp file failed: {}", e))
+        })?;
+        file.write_all(data).map_err(|e| {
+            ProviderError::ConfigStoreWrite(format!("write temp file failed: {}", e))
+        })?;
+        file.sync_all().map_err(|e| {
+            ProviderError::ConfigStoreSync(format!("fsync temp file failed: {}", e))
+        })?;
     }
 
     if let Err(e) = fs::rename(tmp_path, store_path) {
         let _ = fs::remove_file(tmp_path);
-        return Err(ProviderError::Io(format!("atomic rename failed: {}", e)));
+        return Err(ProviderError::ConfigStoreReplace(format!(
+            "atomic replace failed: {}",
+            e
+        )));
     }
 
     if let Some(parent) = store_path.parent() {

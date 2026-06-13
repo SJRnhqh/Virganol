@@ -22,6 +22,30 @@ pub(in crate::core::bot) enum ProviderError {
     ///
     /// Provider 配置存储无法打开。
     ConfigStoreOpen(String),
+    /// Provider configuration store path could not be resolved.
+    ///
+    /// Provider 配置存储路径无法解析。
+    ConfigStorePath(String),
+    /// Provider configuration store failed to serialize into JSON bytes.
+    ///
+    /// Provider 配置存储序列化为 JSON 字节失败。
+    ConfigStoreSerialize(serde_json::Error),
+    /// Provider configuration store temporary file could not be created.
+    ///
+    /// Provider 配置存储临时文件无法创建。
+    ConfigStoreTempCreate(String),
+    /// Provider configuration store could not be written.
+    ///
+    /// Provider 配置存储无法写入。
+    ConfigStoreWrite(String),
+    /// Provider configuration store could not be synced to disk.
+    ///
+    /// Provider 配置存储无法同步到磁盘。
+    ConfigStoreSync(String),
+    /// Provider configuration store could not be replaced atomically.
+    ///
+    /// Provider 配置存储无法原子替换。
+    ConfigStoreReplace(String),
     Serde(serde_json::Error),
     Io(String),
     UnsupportedProvider(String),
@@ -35,12 +59,19 @@ impl fmt::Display for ProviderError {
         match self {
             Self::ConfigNotFound(msg)
             | Self::ConfigStoreOpen(msg)
+            | Self::ConfigStorePath(msg)
+            | Self::ConfigStoreTempCreate(msg)
+            | Self::ConfigStoreWrite(msg)
+            | Self::ConfigStoreSync(msg)
+            | Self::ConfigStoreReplace(msg)
             | Self::Io(msg)
             | Self::UnsupportedProvider(msg)
             | Self::LifecycleEventEmit(msg)
             | Self::LifecycleConcurrentCheck(msg)
             | Self::Keyring(msg) => f.write_str(msg),
-            Self::JsonSerialize(err) | Self::JsonDeserialize(err) => write!(f, "{err}"),
+            Self::JsonSerialize(err)
+            | Self::JsonDeserialize(err)
+            | Self::ConfigStoreSerialize(err) => write!(f, "{err}"),
             Self::Serde(err) => write!(f, "{err}"),
         }
     }
@@ -65,6 +96,12 @@ impl ProviderError {
             Self::JsonSerialize(_) => ProviderErrorKind::Serde,
             Self::JsonDeserialize(_) => ProviderErrorKind::Serde,
             Self::ConfigStoreOpen(_) => ProviderErrorKind::Io,
+            Self::ConfigStorePath(_) => ProviderErrorKind::Io,
+            Self::ConfigStoreSerialize(_) => ProviderErrorKind::Serde,
+            Self::ConfigStoreTempCreate(_) => ProviderErrorKind::Io,
+            Self::ConfigStoreWrite(_) => ProviderErrorKind::Io,
+            Self::ConfigStoreSync(_) => ProviderErrorKind::Io,
+            Self::ConfigStoreReplace(_) => ProviderErrorKind::Io,
             Self::Serde(_) => ProviderErrorKind::Serde,
             Self::Io(_) => ProviderErrorKind::Io,
             Self::UnsupportedProvider(_) => ProviderErrorKind::UnsupportedProvider,

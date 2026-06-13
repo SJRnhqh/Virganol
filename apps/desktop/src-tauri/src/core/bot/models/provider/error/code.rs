@@ -38,16 +38,22 @@ impl ProviderErrorCode {
     }
 }
 
-/// Coarsens an internal provider error into a provider boundary error code.
-///
-/// 将内部 Provider 错误粗粒化为 Provider 边界错误码。
 impl From<&ProviderError> for ProviderErrorCode {
+    /// Coarsens an internal provider error into a provider boundary error code.
+    ///
+    /// 将内部 Provider 错误粗粒化为 Provider 边界错误码。
     fn from(error: &ProviderError) -> Self {
         match error {
             ProviderError::ConfigNotFound(_) => Self::ProviderNotFound,
             ProviderError::JsonSerialize(_)
             | ProviderError::JsonDeserialize(_)
-            | ProviderError::ConfigStoreOpen(_) => Self::StorageFailed,
+            | ProviderError::ConfigStoreOpen(_)
+            | ProviderError::ConfigStorePath(_)
+            | ProviderError::ConfigStoreSerialize(_)
+            | ProviderError::ConfigStoreTempCreate(_)
+            | ProviderError::ConfigStoreWrite(_)
+            | ProviderError::ConfigStoreSync(_)
+            | ProviderError::ConfigStoreReplace(_) => Self::StorageFailed,
             _ => Self::StorageFailed,
         }
     }

@@ -7,10 +7,6 @@
 
 ## Current
 
-- [ ] Continue update-chain `ProviderError` coarsening by drilling into the
-  common store `save_settings` paths after the provider config load/update and
-  store open errors have been classified, including app data dir resolution,
-  store JSON byte serialization, and atomic write failures.
 - [ ] Design the remaining non-`ProviderError` interactive failures: connect
   health-check result errors and reset rollback double-failure errors.
 
@@ -121,3 +117,9 @@
 - [x] Classified provider config store open failures with
   `ProviderError::ConfigStoreOpen` and mapped them to the `storage_failed`
   boundary code.
+- [x] Completed update-chain common store save path classification by adding
+  provider error variants for app data dir resolution, JSON byte serialization,
+  temporary file creation, file write, file sync, and atomic replacement, all
+  coarsened to the `storage_failed` boundary code.
+- [x] Normalized provider error conversion comments by moving implementation
+  comments onto the concrete conversion functions in `app.rs` and `code.rs`.
