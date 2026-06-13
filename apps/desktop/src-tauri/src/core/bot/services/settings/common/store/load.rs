@@ -11,8 +11,9 @@ use super::super::super::super::super::{ProviderError, SETTINGS_FILE};
 pub(super) fn open_store(
     app: &AppHandle,
 ) -> Result<Arc<tauri_plugin_store::Store<tauri::Wry>>, ProviderError> {
-    app.store(SETTINGS_FILE)
-        .map_err(|error| ProviderError::Io(format!("open settings store failed: {}", error)))
+    app.store(SETTINGS_FILE).map_err(|error| {
+        ProviderError::ConfigStoreOpen(format!("open settings store failed: {}", error))
+    })
 }
 
 /// Loads a JSON value by key from settings.json.

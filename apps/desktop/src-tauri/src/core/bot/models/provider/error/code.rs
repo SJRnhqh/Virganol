@@ -45,9 +45,9 @@ impl From<&ProviderError> for ProviderErrorCode {
     fn from(error: &ProviderError) -> Self {
         match error {
             ProviderError::ConfigNotFound(_) => Self::ProviderNotFound,
-            ProviderError::JsonSerialize(_) | ProviderError::JsonDeserialize(_) => {
-                Self::StorageFailed
-            }
+            ProviderError::JsonSerialize(_)
+            | ProviderError::JsonDeserialize(_)
+            | ProviderError::ConfigStoreOpen(_) => Self::StorageFailed,
             _ => Self::StorageFailed,
         }
     }

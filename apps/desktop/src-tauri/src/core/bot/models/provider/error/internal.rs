@@ -18,6 +18,10 @@ pub(in crate::core::bot) enum ProviderError {
     ///
     /// Provider 配置从 JSON 反序列化失败。
     JsonDeserialize(serde_json::Error),
+    /// Provider configuration store could not be opened.
+    ///
+    /// Provider 配置存储无法打开。
+    ConfigStoreOpen(String),
     Serde(serde_json::Error),
     Io(String),
     UnsupportedProvider(String),
@@ -30,6 +34,7 @@ impl fmt::Display for ProviderError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::ConfigNotFound(msg)
+            | Self::ConfigStoreOpen(msg)
             | Self::Io(msg)
             | Self::UnsupportedProvider(msg)
             | Self::LifecycleEventEmit(msg)
@@ -59,6 +64,7 @@ impl ProviderError {
             }
             Self::JsonSerialize(_) => ProviderErrorKind::Serde,
             Self::JsonDeserialize(_) => ProviderErrorKind::Serde,
+            Self::ConfigStoreOpen(_) => ProviderErrorKind::Io,
             Self::Serde(_) => ProviderErrorKind::Serde,
             Self::Io(_) => ProviderErrorKind::Io,
             Self::UnsupportedProvider(_) => ProviderErrorKind::UnsupportedProvider,

@@ -8,8 +8,9 @@
 ## Current
 
 - [ ] Continue update-chain `ProviderError` coarsening by drilling into the
-  common store `load_settings` / `save_settings` I/O paths after the
-  provider config load/update errors have been classified.
+  common store `save_settings` paths after the provider config load/update and
+  store open errors have been classified, including app data dir resolution,
+  store JSON byte serialization, and atomic write failures.
 - [ ] Design the remaining non-`ProviderError` interactive failures: connect
   health-check result errors and reset rollback double-failure errors.
 
@@ -117,3 +118,6 @@
 - [x] Split reviewed provider config JSON encode/decode failures into
   `JsonSerialize` and `JsonDeserialize`, mapped both to `storage_failed`, and
   wired update-chain `to_value` / `from_value` call sites to those variants.
+- [x] Classified provider config store open failures with
+  `ProviderError::ConfigStoreOpen` and mapped them to the `storage_failed`
+  boundary code.
