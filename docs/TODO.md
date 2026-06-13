@@ -7,8 +7,9 @@
 
 ## Current
 
-- [ ] Design the remaining non-`ProviderError` interactive failures: connect
-  health-check result errors and reset rollback double-failure errors.
+- [ ] First finish the connect health-check failure boundary error, then handle
+  the reset rollback double-failure boundary error. These are the two remaining
+  compile blockers after the update-chain provider error pass.
 
 ## Planned
 
@@ -23,6 +24,8 @@
   agreed.
 - [ ] Replace the reset rollback double-failure string with a dedicated
   `ProviderAppError` once the rollback failure code/message contract is agreed.
+- [ ] Keep lifecycle/event-channel error upgrades for the next working branch
+  after the current interactive command errors are resolved.
 - [ ] Upgrade `ProviderError` after the architecture is agreed: move from the
   current coarse unified model toward a typed, traceable, serializable provider
   error model.
