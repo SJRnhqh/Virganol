@@ -21,6 +21,16 @@ impl ProviderAppError {
         Self(AppError::new(code, message))
     }
 
+    /// Creates a provider boundary error with a custom message.
+    ///
+    /// 使用自定义消息创建 Provider 边界错误。
+    pub(in crate::core::bot) fn with_message(
+        code: ProviderErrorCode,
+        message: impl Into<String>,
+    ) -> Self {
+        Self(AppError::new(code, message))
+    }
+
     /// Creates an error for command payloads missing required request data.
     ///
     /// 创建命令载荷缺少必需请求数据时的错误。

@@ -9,7 +9,7 @@ mod kind;
 mod skip;
 
 pub(in crate::core::bot) use app::ProviderAppError;
-pub(self) use code::ProviderErrorCode;
+pub(in crate::core::bot) use code::ProviderErrorCode;
 pub(self) use details::ProviderErrorDetails;
 pub(in crate::core::bot) use internal::ProviderError;
 pub use issue::ProviderIssue;

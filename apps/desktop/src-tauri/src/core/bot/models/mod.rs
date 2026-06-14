@@ -10,7 +10,8 @@ pub(crate) use provider::{
 pub(super) use provider::{
     HealthCheckResult, ProviderAppError, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckFinalization, ProviderCheckRunResult, ProviderCheckSnapshot,
-    ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError, ProviderId,
+    ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError, ProviderErrorCode,
+    ProviderId,
     ProviderIssue, ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderKeyResolution,
     ProviderKeySource, ProviderRecord, SkippedProviderDetail,
 };

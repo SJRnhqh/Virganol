@@ -23,8 +23,9 @@
 - [ ] Replace the remaining connect health-check string failure with a
   `ProviderAppError` once the connection failure code/message contract is
   agreed.
-- [ ] Replace the reset rollback double-failure string with a dedicated
-  `ProviderAppError` once the rollback failure code/message contract is agreed.
+- [ ] Revisit `reset_provider_config` double-failure `ProviderAppError::with_message`
+  when `ProviderErrorDetails` is implemented: consider embedding multiple
+  `ProviderError` sources instead of flattening to a single message string.
 - [ ] Keep lifecycle/event-channel error upgrades for the next working branch
   after the current interactive command errors are resolved.
 - [ ] Upgrade `ProviderError` after the architecture is agreed: move from the
@@ -153,3 +154,6 @@
   matching the update-chain pattern.
 - [x] Replaced `remove_provider` "config not found" `log::warn!` with
   `ProviderError::ConfigNotFound.downgrade()`.
+- [x] Fixed reset manager double-failure compile error: replaced `format!` with
+  `ProviderAppError::with_message(ProviderErrorCode::from(&e), ...)`.
+- [x] Added `ProviderAppError::with_message` for custom boundary error messages.
