@@ -14,5 +14,5 @@ pub(super) use bot::{
 };
 pub(super) use init::init;
 pub(super) use manager::{SidecarManager, SidecarState};
-pub(self) use shared::AppError;
 pub(super) use shared::AppState;
+pub(self) use shared::{AppError, Downgrade};

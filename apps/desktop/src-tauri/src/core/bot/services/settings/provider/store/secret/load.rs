@@ -2,28 +2,36 @@
 use keyring::{Entry, Error as KeyringError};
 use zeroize::Zeroize;
 
-use super::super::super::super::super::super::{ProviderId, ProviderKey, PROVIDER_KEYRING_SERVICE};
+use super::super::super::super::super::super::super::Downgrade;
+use super::super::super::super::super::super::{
+    ProviderError, ProviderId, ProviderKey, PROVIDER_KEYRING_SERVICE,
+};
 
-/// Loads provider API key from the system keyring (permissive: errors logged as warnings).
+/// Loads provider API key from the system keyring (permissive: errors downgraded to warn).
 ///
-/// 从系统密钥库读取 provider 的 API Key（宽容模式：异常仅记 warn）。
+/// 从系统密钥库读取 provider 的 API Key（宽容模式：错误降级为 warn）。
 pub(super) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
-    let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str())
-        .inspect_err(|e| log::warn!("[Tauri] ⚠️ init keyring entry failed: {}", e))
-        .ok()?;
+    let entry = match Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str()) {
+        Ok(e) => e,
+        Err(e) => {
+            ProviderError::SecretStoreInit(format!("init keyring entry failed: {}", e)).downgrade();
+            return None;
+        }
+    };
 
-    let value = entry
-        .get_password()
-        .inspect_err(|e| {
-            if !matches!(e, KeyringError::NoEntry) {
-                log::warn!(
-                    "[Tauri] ⚠️ load key failed for {}: {}",
-                    provider_id.as_str(),
-                    e
-                );
-            }
-        })
-        .ok()?;
+    let value = match entry.get_password() {
+        Ok(v) => v,
+        Err(KeyringError::NoEntry) => return None,
+        Err(e) => {
+            ProviderError::SecretStoreRead(format!(
+                "load key failed for {}: {}",
+                provider_id.as_str(),
+                e
+            ))
+            .downgrade();
+            return None;
+        }
+    };
 
     normalize_and_wrap_key(value)
 }

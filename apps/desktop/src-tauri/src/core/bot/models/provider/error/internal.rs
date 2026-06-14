@@ -54,6 +54,10 @@ pub(in crate::core::bot) enum ProviderError {
     ///
     /// 系统密钥存储无法写入。
     SecretStoreWrite(String),
+    /// System secret store could not be read.
+    ///
+    /// 系统密钥存储无法读取。
+    SecretStoreRead(String),
     Serde(serde_json::Error),
     Io(String),
     UnsupportedProvider(String),
@@ -61,6 +65,11 @@ pub(in crate::core::bot) enum ProviderError {
     LifecycleConcurrentCheck(String),
     Keyring(String),
 }
+
+// Downgrades a ProviderError into a warning log rather than propagating to the boundary.
+//
+// 将 ProviderError 降级为警告日志，不上抛到边界。
+crate::impl_downgrade!(ProviderError);
 
 impl fmt::Display for ProviderError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -78,7 +87,8 @@ impl fmt::Display for ProviderError {
             | Self::LifecycleConcurrentCheck(msg)
             | Self::Keyring(msg)
             | Self::SecretStoreInit(msg)
-            | Self::SecretStoreWrite(msg) => f.write_str(msg),
+            | Self::SecretStoreWrite(msg)
+            | Self::SecretStoreRead(msg) => f.write_str(msg),
             Self::JsonSerialize(err)
             | Self::JsonDeserialize(err)
             | Self::ConfigStoreSerialize(err) => write!(f, "{err}"),
@@ -120,6 +130,7 @@ impl ProviderError {
             Self::Keyring(_) => ProviderErrorKind::Keyring,
             Self::SecretStoreInit(_) => ProviderErrorKind::Keyring,
             Self::SecretStoreWrite(_) => ProviderErrorKind::Keyring,
+            Self::SecretStoreRead(_) => ProviderErrorKind::Keyring,
         }
     }
 

@@ -60,9 +60,9 @@ impl From<&ProviderError> for ProviderErrorCode {
             | ProviderError::ConfigStoreWrite(_)
             | ProviderError::ConfigStoreSync(_)
             | ProviderError::ConfigStoreReplace(_) => Self::ConfigStoreFailed,
-            ProviderError::SecretStoreInit(_) | ProviderError::SecretStoreWrite(_) => {
-                Self::SecretStoreFailed
-            }
+            ProviderError::SecretStoreInit(_)
+            | ProviderError::SecretStoreWrite(_)
+            | ProviderError::SecretStoreRead(_) => Self::SecretStoreFailed,
             _ => Self::ConfigStoreFailed,
         }
     }
