@@ -7,10 +7,6 @@
 
 ## Current
 
-- [ ] Connect manager: review `ProviderKeyTransaction::Drop` rollback I/O —
-  consider extracting from `Drop` trait for fallible keyring operations.
-- [ ] Connect manager: review tolerant/fallback `ProviderError` sites in secret
-  store (load/remove) for compatibility with the new boundary error model.
 - [ ] Connect manager: review and upgrade health-check failure boundary error
   (deferred pending unified error contract for health check results).
 - [ ] Reset manager: review and upgrade reset rollback double-failure boundary
@@ -146,3 +142,10 @@
   macro; implemented for `ProviderError` and applied to `load_provider_key` warning sites.
 - [x] Added `Unknown` boundary error code as catch-all for unclassified `ProviderError`
   variants, replacing the legacy `_ => ConfigStoreFailed` fallback.
+- [x] Added `SecretStoreRemove` `ProviderError` variant; upgraded all
+  `remove_provider_key` error sites from `Keyring` to `SecretStoreInit` /
+  `SecretStoreRemove`.
+- [x] Removed legacy `ProviderError::Keyring` and `ProviderErrorKind::Keyring`;
+  secret store kind() mappings redirected to `ProviderErrorKind::Io`.
+- [x] Unified `ProviderKeyTransaction::Drop` rollback warning with `downgrade()`;
+  connect manager secret store error classification complete.

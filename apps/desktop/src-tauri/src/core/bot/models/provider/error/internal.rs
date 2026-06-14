@@ -58,12 +58,15 @@ pub(in crate::core::bot) enum ProviderError {
     ///
     /// 系统密钥存储无法读取。
     SecretStoreRead(String),
+    /// System secret store could not be removed (delete).
+    ///
+    /// 系统密钥存储无法删除。
+    SecretStoreRemove(String),
     Serde(serde_json::Error),
     Io(String),
     UnsupportedProvider(String),
     LifecycleEventEmit(String),
     LifecycleConcurrentCheck(String),
-    Keyring(String),
 }
 
 // Downgrades a ProviderError into a warning log rather than propagating to the boundary.
@@ -85,10 +88,10 @@ impl fmt::Display for ProviderError {
             | Self::UnsupportedProvider(msg)
             | Self::LifecycleEventEmit(msg)
             | Self::LifecycleConcurrentCheck(msg)
-            | Self::Keyring(msg)
             | Self::SecretStoreInit(msg)
             | Self::SecretStoreWrite(msg)
-            | Self::SecretStoreRead(msg) => f.write_str(msg),
+            | Self::SecretStoreRead(msg)
+            | Self::SecretStoreRemove(msg) => f.write_str(msg),
             Self::JsonSerialize(err)
             | Self::JsonDeserialize(err)
             | Self::ConfigStoreSerialize(err) => write!(f, "{err}"),
@@ -127,10 +130,10 @@ impl ProviderError {
             Self::UnsupportedProvider(_) => ProviderErrorKind::UnsupportedProvider,
             Self::LifecycleEventEmit(_) => ProviderErrorKind::LifecycleEventEmit,
             Self::LifecycleConcurrentCheck(_) => ProviderErrorKind::LifecycleConcurrentCheck,
-            Self::Keyring(_) => ProviderErrorKind::Keyring,
-            Self::SecretStoreInit(_) => ProviderErrorKind::Keyring,
-            Self::SecretStoreWrite(_) => ProviderErrorKind::Keyring,
-            Self::SecretStoreRead(_) => ProviderErrorKind::Keyring,
+            Self::SecretStoreInit(_) => ProviderErrorKind::Io,
+            Self::SecretStoreWrite(_) => ProviderErrorKind::Io,
+            Self::SecretStoreRead(_) => ProviderErrorKind::Io,
+            Self::SecretStoreRemove(_) => ProviderErrorKind::Io,
         }
     }
 

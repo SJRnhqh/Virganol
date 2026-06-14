@@ -17,8 +17,6 @@ pub enum ProviderErrorKind {
     LifecycleEventEmit,
     #[serde(rename = "lifecycle_concurrent_check_failed")]
     LifecycleConcurrentCheck,
-    #[serde(rename = "keyring_error")]
-    Keyring,
 }
 
 impl ProviderErrorKind {
@@ -29,7 +27,6 @@ impl ProviderErrorKind {
             Self::UnsupportedProvider => "unsupported_provider",
             Self::LifecycleEventEmit => "lifecycle_event_emit_failed",
             Self::LifecycleConcurrentCheck => "lifecycle_concurrent_check_failed",
-            Self::Keyring => "keyring_error",
         }
     }
 }

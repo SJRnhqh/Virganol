@@ -68,7 +68,8 @@ impl From<&ProviderError> for ProviderErrorCode {
             | ProviderError::ConfigStoreReplace(_) => Self::ConfigStoreFailed,
             ProviderError::SecretStoreInit(_)
             | ProviderError::SecretStoreWrite(_)
-            | ProviderError::SecretStoreRead(_) => Self::SecretStoreFailed,
+            | ProviderError::SecretStoreRead(_)
+            | ProviderError::SecretStoreRemove(_) => Self::SecretStoreFailed,
             _ => Self::Unknown,
         }
     }
