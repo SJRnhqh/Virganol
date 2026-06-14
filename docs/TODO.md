@@ -7,9 +7,10 @@
 
 ## Current
 
-- [ ] First finish the connect health-check failure boundary error, then handle
-  the reset rollback double-failure boundary error. These are the two remaining
-  compile blockers after the update-chain provider error pass.
+- [ ] Connect manager: review and upgrade health-check failure boundary error
+  (deferred pending unified error contract for health check results).
+- [ ] Connect manager: review and upgrade reset rollback double-failure boundary
+  error at `reset.rs:29-33`.
 
 ## Planned
 
@@ -33,6 +34,11 @@
   levels, structure, persistence, rotation, context fields, and frontend/backend
   responsibilities before implementation.
 - [ ] Implement logging changes only after the logging model is settled.
+- [ ] Review `ProviderKeyTransaction::Drop` rollback I/O: consider extracting
+  from `Drop` trait and using explicit `rollback(self)` for fallible keyring
+  operations.
+- [ ] Classify `load_provider_key` and `remove_provider_key` error variants
+  consistent with `SecretStoreInit` / `SecretStoreWrite`.
 
 ## Completed
 
@@ -126,3 +132,10 @@
   coarsened to the `storage_failed` boundary code.
 - [x] Normalized provider error conversion comments by moving implementation
   comments onto the concrete conversion functions in `app.rs` and `code.rs`.
+- [x] Renamed `StorageFailed` → `ConfigStoreFailed` and added `SecretStoreFailed`
+  boundary code, aligned with `store/config` and `store/secret` module boundaries.
+- [x] Added `SecretStoreInit` and `SecretStoreWrite` `ProviderError` variants for
+  secret store operations, with code.rs coarse mapping to `SecretStoreFailed`.
+- [x] Reviewed connect manager `ProviderKeyTransaction::begin` error path:
+  `save_provider_key` sites are classified and mapped; load/remove secret
+  functions deferred.

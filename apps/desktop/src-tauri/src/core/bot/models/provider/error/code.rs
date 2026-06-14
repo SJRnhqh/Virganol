@@ -8,21 +8,26 @@ use super::ProviderError;
 /// Provider 领域的应用边界错误码。
 #[derive(Serialize)]
 pub(super) enum ProviderErrorCode {
-    /// Manager/request layer received a command payload without required data.
+    /// Manager/request layer: received a command payload without required data.
     ///
-    /// manager/request 层收到缺少必需 data 字段的命令载荷。
+    /// manager/request 层：收到缺少必需 data 字段的命令载荷。
     #[serde(rename = "missing_request_data")]
     MissingRequestData,
-    /// Requested provider has no persisted configuration in the store.
+    /// Store/config layer: requested provider has no persisted configuration.
     ///
-    /// 请求的 provider 在 store 中没有持久化配置。
+    /// store/config 层：请求的 provider 在 store 中没有持久化配置。
     #[serde(rename = "provider_not_found")]
     ProviderNotFound,
-    /// Local provider storage could not be read or written.
+    /// Store/config layer: provider config store could not be read or written.
     ///
-    /// 本地 provider 存储读取或写入失败。
-    #[serde(rename = "storage_failed")]
-    StorageFailed,
+    /// store/config 层：Provider 配置存储读取或写入失败。
+    #[serde(rename = "config_store_failed")]
+    ConfigStoreFailed,
+    /// Store/secret layer: system secret store could not be read or written.
+    ///
+    /// store/secret 层：系统密钥存储读取或写入失败。
+    #[serde(rename = "secret_store_failed")]
+    SecretStoreFailed,
 }
 
 impl ProviderErrorCode {
@@ -33,7 +38,8 @@ impl ProviderErrorCode {
         match self {
             Self::MissingRequestData => "Missing request data.",
             Self::ProviderNotFound => "Provider configuration not found.",
-            Self::StorageFailed => "Failed to access local provider storage.",
+            Self::ConfigStoreFailed => "Provider configuration store operation failed.",
+            Self::SecretStoreFailed => "Provider secret store operation failed.",
         }
     }
 }
@@ -53,8 +59,11 @@ impl From<&ProviderError> for ProviderErrorCode {
             | ProviderError::ConfigStoreTempCreate(_)
             | ProviderError::ConfigStoreWrite(_)
             | ProviderError::ConfigStoreSync(_)
-            | ProviderError::ConfigStoreReplace(_) => Self::StorageFailed,
-            _ => Self::StorageFailed,
+            | ProviderError::ConfigStoreReplace(_) => Self::ConfigStoreFailed,
+            ProviderError::SecretStoreInit(_) | ProviderError::SecretStoreWrite(_) => {
+                Self::SecretStoreFailed
+            }
+            _ => Self::ConfigStoreFailed,
         }
     }
 }

@@ -46,6 +46,14 @@ pub(in crate::core::bot) enum ProviderError {
     ///
     /// Provider 配置存储无法原子替换。
     ConfigStoreReplace(String),
+    /// System secret store failed to initialize.
+    ///
+    /// 系统密钥存储初始化失败。
+    SecretStoreInit(String),
+    /// System secret store could not be written.
+    ///
+    /// 系统密钥存储无法写入。
+    SecretStoreWrite(String),
     Serde(serde_json::Error),
     Io(String),
     UnsupportedProvider(String),
@@ -68,7 +76,9 @@ impl fmt::Display for ProviderError {
             | Self::UnsupportedProvider(msg)
             | Self::LifecycleEventEmit(msg)
             | Self::LifecycleConcurrentCheck(msg)
-            | Self::Keyring(msg) => f.write_str(msg),
+            | Self::Keyring(msg)
+            | Self::SecretStoreInit(msg)
+            | Self::SecretStoreWrite(msg) => f.write_str(msg),
             Self::JsonSerialize(err)
             | Self::JsonDeserialize(err)
             | Self::ConfigStoreSerialize(err) => write!(f, "{err}"),
@@ -108,6 +118,8 @@ impl ProviderError {
             Self::LifecycleEventEmit(_) => ProviderErrorKind::LifecycleEventEmit,
             Self::LifecycleConcurrentCheck(_) => ProviderErrorKind::LifecycleConcurrentCheck,
             Self::Keyring(_) => ProviderErrorKind::Keyring,
+            Self::SecretStoreInit(_) => ProviderErrorKind::Keyring,
+            Self::SecretStoreWrite(_) => ProviderErrorKind::Keyring,
         }
     }
 
