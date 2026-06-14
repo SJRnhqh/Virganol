@@ -38,11 +38,7 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_check_sn
     for (raw_id, record) in providers {
         match ProviderId::try_from(raw_id.as_str()) {
             Ok(provider_id) => supported.push((provider_id, record)),
-            Err(e) => skipped.push(SkippedProviderDetail::new(
-                raw_id,
-                e.kind(),
-                e.message(),
-            )),
+            Err(e) => skipped.push(SkippedProviderDetail::new(raw_id, e.kind(), e.message())),
         }
     }
 

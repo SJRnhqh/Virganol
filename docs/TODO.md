@@ -149,3 +149,7 @@
   secret store kind() mappings redirected to `ProviderErrorKind::Io`.
 - [x] Unified `ProviderKeyTransaction::Drop` rollback warning with `downgrade()`;
   connect manager secret store error classification complete.
+- [x] Aligned `remove_provider` `serde_json::to_value` with `ProviderError::JsonSerialize`,
+  matching the update-chain pattern.
+- [x] Replaced `remove_provider` "config not found" `log::warn!` with
+  `ProviderError::ConfigNotFound.downgrade()`.
