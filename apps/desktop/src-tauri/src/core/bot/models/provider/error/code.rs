@@ -28,6 +28,11 @@ pub(super) enum ProviderErrorCode {
     /// store/secret 层：系统密钥存储读取或写入失败。
     #[serde(rename = "secret_store_failed")]
     SecretStoreFailed,
+    /// Unknown internal error (catch-all for unclassified provider errors).
+    ///
+    /// 未知内部错误（未分类的 provider 错误兜底）。
+    #[serde(rename = "unknown")]
+    Unknown,
 }
 
 impl ProviderErrorCode {
@@ -40,6 +45,7 @@ impl ProviderErrorCode {
             Self::ProviderNotFound => "Provider configuration not found.",
             Self::ConfigStoreFailed => "Provider configuration store operation failed.",
             Self::SecretStoreFailed => "Provider secret store operation failed.",
+            Self::Unknown => "An unexpected error occurred.",
         }
     }
 }
@@ -63,7 +69,7 @@ impl From<&ProviderError> for ProviderErrorCode {
             ProviderError::SecretStoreInit(_)
             | ProviderError::SecretStoreWrite(_)
             | ProviderError::SecretStoreRead(_) => Self::SecretStoreFailed,
-            _ => Self::ConfigStoreFailed,
+            _ => Self::Unknown,
         }
     }
 }

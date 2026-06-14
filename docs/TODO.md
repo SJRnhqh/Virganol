@@ -140,3 +140,9 @@
   functions deferred.
 - [x] Aligned connect manager `save_provider` JSON serialization error site
   with `ProviderError::JsonSerialize`, matching the update-chain pattern.
+- [x] Added `SecretStoreRead` `ProviderError` variant, wired into Display/kind/code.rs
+  mapping to `SecretStoreFailed`.
+- [x] Introduced `Downgrade` trait under `shared/interfaces/error` with `impl_downgrade!`
+  macro; implemented for `ProviderError` and applied to `load_provider_key` warning sites.
+- [x] Added `Unknown` boundary error code as catch-all for unclassified `ProviderError`
+  variants, replacing the legacy `_ => ConfigStoreFailed` fallback.
