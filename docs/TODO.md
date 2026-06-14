@@ -7,9 +7,13 @@
 
 ## Current
 
+- [ ] Connect manager: review `ProviderKeyTransaction::Drop` rollback I/O —
+  consider extracting from `Drop` trait for fallible keyring operations.
+- [ ] Connect manager: review tolerant/fallback `ProviderError` sites in secret
+  store (load/remove) for compatibility with the new boundary error model.
 - [ ] Connect manager: review and upgrade health-check failure boundary error
   (deferred pending unified error contract for health check results).
-- [ ] Connect manager: review and upgrade reset rollback double-failure boundary
+- [ ] Reset manager: review and upgrade reset rollback double-failure boundary
   error at `reset.rs:29-33`.
 
 ## Planned
@@ -34,11 +38,6 @@
   levels, structure, persistence, rotation, context fields, and frontend/backend
   responsibilities before implementation.
 - [ ] Implement logging changes only after the logging model is settled.
-- [ ] Review `ProviderKeyTransaction::Drop` rollback I/O: consider extracting
-  from `Drop` trait and using explicit `rollback(self)` for fallible keyring
-  operations.
-- [ ] Classify `load_provider_key` and `remove_provider_key` error variants
-  consistent with `SecretStoreInit` / `SecretStoreWrite`.
 
 ## Completed
 
@@ -139,3 +138,5 @@
 - [x] Reviewed connect manager `ProviderKeyTransaction::begin` error path:
   `save_provider_key` sites are classified and mapped; load/remove secret
   functions deferred.
+- [x] Aligned connect manager `save_provider` JSON serialization error site
+  with `ProviderError::JsonSerialize`, matching the update-chain pattern.
