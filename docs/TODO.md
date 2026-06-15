@@ -9,12 +9,12 @@
 
 ## Planned
 
-- [ ] `thiserror` evaluation & migration — auto-derived `source()`, reduce boilerplate
 - [ ] `trace_id` / `operation_id` — traceable error chains, log correlation
 - [ ] `ProviderIssue` merge into `ProviderAppError` — multiple issues carried via details
 - [ ] `message()` retirement — `reset.rs` dual-failure pattern reworked to embed via details
 - [ ] Front-end error type sync — mirror `ProviderErrorCode` on the TS side
 - [ ] Integration tests — 5 command chains + lifecycle endpoint verification
+- [ ] `ProviderCheckStatusPayload` boundary fix — replace raw `HealthCheckResult` with a lifecycle-specific type that converts `ProviderError` → `ProviderAppError` before serialization (currently bypasses boundary contract)
 
 ## Completed
 
@@ -23,3 +23,4 @@
 - [x] Go test script added — all three stacks covered by `pnpm test`
 - [x] Rust `cargo check` + Go `go vet` added; router reordered Go→Rust→TS
 - [x] CI simplified: removed `.github/ci/` shell scripts, `ci.yml` reduced to `pnpm test`
+- [x] `ProviderError` migrated to `thiserror` — `#[source]` on 3 serde_json variants, removed 42 lines of manual Display
