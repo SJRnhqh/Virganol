@@ -183,3 +183,5 @@
   removed `From<ProviderError>` impl.
 - [x] Removed `ProviderErrorKind` enum, `kind()` method, and `kind.rs` (72
   lines) — fully replaced by `ProviderErrorCode`.
+- [x] Moved lifecycle event payloads to `contract/lifecycle/` for consistent
+  boundary module organization; re-exported at provider level.

@@ -15,13 +15,14 @@ pub(crate) use contract::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderRequest,
     ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
+pub(in crate::core::bot) use contract::{
+    ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckStartedPayload,
+    ProviderCheckStatusPayload,
+};
 pub(crate) use error::ProviderIssue;
 pub(in crate::core::bot) use error::{ProviderAppError, ProviderError, ProviderErrorCode};
 pub(crate) use lifecycle::ProviderCheckTrigger;
-pub(in crate::core::bot) use lifecycle::{
-    ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckFinalization,
-    ProviderCheckRunResult, ProviderCheckStartedPayload, ProviderCheckStatusPayload,
-};
+pub(in crate::core::bot) use lifecycle::{ProviderCheckFinalization, ProviderCheckRunResult};
 pub(in crate::core::bot) use secret::{
     ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderKeyResolution, ProviderKeySource,
 };

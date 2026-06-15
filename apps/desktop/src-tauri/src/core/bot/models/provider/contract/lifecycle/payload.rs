@@ -1,10 +1,10 @@
-// apps/desktop/src-tauri/src/core/bot/models/provider/lifecycle/payload.rs
+// apps/desktop/src-tauri/src/core/bot/models/provider/contract/lifecycle/payload.rs
 use serde::Serialize;
 
-use super::super::{
+use super::super::super::lifecycle::ProviderCheckTrigger;
+use super::super::super::{
     HealthCheckResult, ProviderAppError, ProviderId, ProviderIssue, ProviderKeyMeta, ProviderRecord,
 };
-use super::ProviderCheckTrigger;
 
 /// Event payload emitted when one provider check lifecycle starts.
 ///
