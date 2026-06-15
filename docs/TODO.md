@@ -1,9 +1,8 @@
 # Branch TODO
 
 - Branch: `feat/spirit-error-and-log`
-- Goal: Finish the remaining backend development work for error refinement and
-  project logging management after the GitHub/prompt workflow automation work
-  has been completed.
+- Goal: Code/message layer error system complete. Remaining: ProviderErrorDetails,
+  thiserror, trace_id, logging management.
 
 ## Current
 
