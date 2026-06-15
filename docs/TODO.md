@@ -19,3 +19,4 @@
 ## Completed
 
 - [x] Dev tooling: `pnpm test` orchestrator with per-stack scripts (Rust: lint + cargo test, TS: eslint)
+- [x] Husky pre-commit simplified to `pnpm test` (lint + test in one gate)
