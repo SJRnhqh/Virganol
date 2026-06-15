@@ -17,3 +17,5 @@
 - [ ] Integration tests — 5 command chains + lifecycle endpoint verification
 
 ## Completed
+
+- [x] Dev tooling: `pnpm test` orchestrator with per-stack scripts (Rust: lint + cargo test, TS: eslint)

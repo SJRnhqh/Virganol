@@ -1,1 +1,1 @@
-pnpm lint:rust:source-headers
+node dev/scripts/rust/lint-source-headers.mjs
