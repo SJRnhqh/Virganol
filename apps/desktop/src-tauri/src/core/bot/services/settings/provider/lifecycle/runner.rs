@@ -56,7 +56,7 @@ pub(super) async fn run_provider_checks(
 
                 if let Some(e) = reconciliation_error {
                     provider_issues
-                        .push(ProviderIssue::new(provider_id, ProviderAppError::from(e)));
+                        .push(ProviderIssue::new(provider_id, ProviderAppError::from(&e)));
                 }
 
                 if !online {
@@ -74,7 +74,7 @@ pub(super) async fn run_provider_checks(
                     emit_check_status(app, run_id, provider_id, status_record, result, key_meta)
                 {
                     provider_issues
-                        .push(ProviderIssue::new(provider_id, ProviderAppError::from(e)));
+                        .push(ProviderIssue::new(provider_id, ProviderAppError::from(&e)));
                 }
             }
             Some(Err(e)) => {

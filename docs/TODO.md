@@ -9,8 +9,6 @@
 
 - [ ] Connect manager: review and upgrade health-check failure boundary error
   (deferred pending unified error contract for health check results).
-- [ ] Lifecycle: upgrade `ProviderCheckFailedPayload` fields
-  (`ProviderErrorKind` → `ProviderErrorCode`, `issues` → `Vec<ProviderIssue>`).
 
 ## Planned
 
@@ -186,3 +184,9 @@
   original error, `issues_count` in context log.
 - [x] Removed stale `error!` from `finalize.rs` reconcile persist path
   (error propagated via return value).
+- [x] Upgraded `ProviderCheckFailedPayload`: `code` + `message` → `error:
+  ProviderAppError`.
+- [x] Unified all `ProviderAppError::from(e)` call sites to `from(&e)`;
+  removed `From<ProviderError>` impl.
+- [x] Removed `ProviderErrorKind` enum, `kind()` method, and `kind.rs` (72
+  lines) — fully replaced by `ProviderErrorCode`.

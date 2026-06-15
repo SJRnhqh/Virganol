@@ -2,7 +2,7 @@
 use tauri::{AppHandle, Emitter};
 
 use super::super::super::super::super::{
-    HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
+    HealthCheckResult, ProviderAppError, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderCheckTrigger, ProviderError,
     ProviderId, ProviderIssue, ProviderKeyMeta, ProviderRecord,
 };
@@ -69,7 +69,7 @@ pub(super) fn emit_check_failed(
     error: &ProviderError,
     issues: Option<&[ProviderIssue]>,
 ) -> Result<(), ProviderError> {
-    let payload = ProviderCheckFailedPayload::new(run_id, error.kind(), error.message(), issues);
+    let payload = ProviderCheckFailedPayload::new(run_id, ProviderAppError::from(error), issues);
 
     app.emit(EVT_CHECK_FAILED, &payload)
         .map_err(|e| ProviderError::CheckFailedEmit(e.to_string()))

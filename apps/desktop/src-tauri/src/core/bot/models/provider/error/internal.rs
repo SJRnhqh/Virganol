@@ -2,8 +2,9 @@
 use serde::{Serialize, Serializer};
 use std::fmt;
 
-use super::ProviderErrorKind;
-
+/// Internal domain error for the provider subsystem.
+///
+/// Provider 子系统的内部领域错误。
 #[derive(Debug)]
 pub(in crate::core::bot) enum ProviderError {
     /// Provider check lifecycle started event emission failed.
@@ -125,33 +126,6 @@ impl fmt::Display for ProviderError {
 impl std::error::Error for ProviderError {}
 
 impl ProviderError {
-    pub fn kind(&self) -> ProviderErrorKind {
-        match self {
-            Self::CheckStartedEmit(_)
-            | Self::CheckStatusEmit(_)
-            | Self::CheckCompletedEmit(_)
-            | Self::CheckFailedEmit(_) => ProviderErrorKind::LifecycleEventEmit,
-            Self::CheckConcurrentFailed(_) => ProviderErrorKind::LifecycleConcurrentCheck,
-            Self::ConfigNotFound(_) => {
-                unreachable!("ConfigNotFound is not part of legacy ProviderErrorKind")
-            }
-            Self::JsonSerialize(_) => ProviderErrorKind::Serde,
-            Self::JsonDeserialize(_) => ProviderErrorKind::Serde,
-            Self::ConfigStoreOpen(_) => ProviderErrorKind::Io,
-            Self::ConfigStorePath(_) => ProviderErrorKind::Io,
-            Self::ConfigStoreSerialize(_) => ProviderErrorKind::Serde,
-            Self::ConfigStoreTempCreate(_) => ProviderErrorKind::Io,
-            Self::ConfigStoreWrite(_) => ProviderErrorKind::Io,
-            Self::ConfigStoreSync(_) => ProviderErrorKind::Io,
-            Self::ConfigStoreReplace(_) => ProviderErrorKind::Io,
-            Self::UnsupportedProvider(_) => ProviderErrorKind::UnsupportedProvider,
-            Self::SecretStoreInit(_) => ProviderErrorKind::Io,
-            Self::SecretStoreWrite(_) => ProviderErrorKind::Io,
-            Self::SecretStoreRead(_) => ProviderErrorKind::Io,
-            Self::SecretStoreRemove(_) => ProviderErrorKind::Io,
-        }
-    }
-
     pub fn message(&self) -> String {
         self.to_string()
     }

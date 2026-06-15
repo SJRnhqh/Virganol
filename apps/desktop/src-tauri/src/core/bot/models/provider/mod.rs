@@ -15,8 +15,8 @@ pub(crate) use contract::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderRequest,
     ResetProviderResponse, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
+pub(crate) use error::ProviderIssue;
 pub(in crate::core::bot) use error::{ProviderAppError, ProviderError, ProviderErrorCode};
-pub(crate) use error::{ProviderErrorKind, ProviderIssue};
 pub(crate) use lifecycle::ProviderCheckTrigger;
 pub(in crate::core::bot) use lifecycle::{
     ProviderCheckCompletedPayload, ProviderCheckFailedPayload, ProviderCheckFinalization,
