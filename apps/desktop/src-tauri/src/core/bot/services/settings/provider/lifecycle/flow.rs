@@ -90,7 +90,7 @@ pub(crate) async fn check_providers_lifecycle(
 
     if let Some(e) = join_error.or_else(|| {
         (!provider_issues.is_empty()).then(|| {
-            ProviderError::LifecycleConcurrentCheck(
+            ProviderError::CheckConcurrentFailed(
                 "concurrent check error: provider issues detected".to_string(),
             )
         })

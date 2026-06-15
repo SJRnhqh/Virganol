@@ -4,7 +4,8 @@ use tauri::AppHandle;
 use tokio::task::JoinSet;
 
 use super::super::super::super::super::{
-    ProviderCheckRunResult, ProviderError, ProviderId, ProviderIssue, ProviderRecord, ProviderState,
+    ProviderAppError, ProviderCheckRunResult, ProviderError, ProviderId, ProviderIssue,
+    ProviderRecord, ProviderState,
 };
 use super::super::health_check_with_resolved_key;
 use super::{emit_check_status, finalize_provider_check_result};
@@ -54,7 +55,8 @@ pub(super) async fn run_provider_checks(
                 .into_parts();
 
                 if let Some(e) = reconciliation_error {
-                    provider_issues.push(ProviderIssue::new(provider_id, e.kind(), e.message()));
+                    provider_issues
+                        .push(ProviderIssue::new(provider_id, ProviderAppError::from(e)));
                 }
 
                 if !online {
@@ -71,12 +73,13 @@ pub(super) async fn run_provider_checks(
                 if let Err(e) =
                     emit_check_status(app, run_id, provider_id, status_record, result, key_meta)
                 {
-                    provider_issues.push(ProviderIssue::new(provider_id, e.kind(), e.message()));
+                    provider_issues
+                        .push(ProviderIssue::new(provider_id, ProviderAppError::from(e)));
                 }
             }
             Some(Err(e)) => {
                 if join_error.is_none() {
-                    join_error = Some(ProviderError::LifecycleConcurrentCheck(format!(
+                    join_error = Some(ProviderError::CheckConcurrentFailed(format!(
                         "concurrent check error: {}",
                         e
                     )));

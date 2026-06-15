@@ -9,11 +9,8 @@
 
 - [ ] Connect manager: review and upgrade health-check failure boundary error
   (deferred pending unified error contract for health check results).
-- [ ] Lifecycle: upgrade `emit_check_status` event error variant + code mapping.
-- [ ] Lifecycle: upgrade `emit_check_failed` event error variant, payload field,
-  and code mapping.
-- [ ] Lifecycle: review and classify `run_provider_checks` concurrent/join error
-  (`flow.rs` line ~93).
+- [ ] Lifecycle: upgrade `ProviderCheckFailedPayload` fields
+  (`ProviderErrorKind` → `ProviderErrorCode`, `issues` → `Vec<ProviderIssue>`).
 
 ## Planned
 
@@ -174,3 +171,18 @@
   `load_provider_check_snapshot`; kept context-rich `warn!` in flow.
 - [x] Simplified `ProviderCheckSnapshot`: dropped `skipped()` iteration in
   favor of count-based info log.
+- [x] Added `CheckStatusEmit` and `CheckFailedEmit` `ProviderError` variants
+  (lifecycle group: started → status → completed → failed), mapped to
+  `CheckLifecycleFailed`.
+- [x] Replaced `LifecycleConcurrentCheck` with `CheckConcurrentFailed`
+  `ProviderError` variant, mapped to `CheckLifecycleFailed`.
+- [x] Tightened `ProviderIssue` fields: `code` + `message` → `error:
+  ProviderAppError`.
+- [x] Removed dead `ProviderError` variants: `Serde`, `Io`, `LifecycleEventEmit`,
+  `LifecycleConcurrentCheck` (and stale `From<serde_json::Error>` impl).
+- [x] Simplified `Downgrade` trait to reference-only impl; auto-ref covers
+  owned values.
+- [x] Simplified `failure.rs` fallback: `downgrade()` for emit failure +
+  original error, `issues_count` in context log.
+- [x] Removed stale `error!` from `finalize.rs` reconcile persist path
+  (error propagated via return value).

@@ -62,9 +62,11 @@ impl From<&ProviderError> for ProviderErrorCode {
     /// 将内部 Provider 错误粗粒化为 Provider 边界错误码。
     fn from(error: &ProviderError) -> Self {
         match error {
-            ProviderError::CheckStartedEmit(_) | ProviderError::CheckCompletedEmit(_) => {
-                Self::CheckLifecycleFailed
-            }
+            ProviderError::CheckStartedEmit(_)
+            | ProviderError::CheckCompletedEmit(_)
+            | ProviderError::CheckFailedEmit(_)
+            | ProviderError::CheckStatusEmit(_)
+            | ProviderError::CheckConcurrentFailed(_) => Self::CheckLifecycleFailed,
             ProviderError::ConfigNotFound(_) => Self::ProviderNotFound,
             ProviderError::JsonSerialize(_)
             | ProviderError::JsonDeserialize(_)

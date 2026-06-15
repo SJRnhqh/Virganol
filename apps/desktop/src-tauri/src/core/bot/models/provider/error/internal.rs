@@ -10,10 +10,22 @@ pub(in crate::core::bot) enum ProviderError {
     ///
     /// Provider 检查生命周期开始事件推送失败。
     CheckStartedEmit(String),
+    /// Provider check lifecycle status event emission failed.
+    ///
+    /// Provider 检查生命周期状态事件推送失败。
+    CheckStatusEmit(String),
     /// Provider check lifecycle completed event emission failed.
     ///
     /// Provider 检查生命周期完成事件推送失败。
     CheckCompletedEmit(String),
+    /// Provider check lifecycle failed event emission failed.
+    ///
+    /// Provider 检查生命周期失败事件推送失败。
+    CheckFailedEmit(String),
+    /// Provider check concurrent execution failed (join error or structural issue).
+    ///
+    /// Provider 并发检查执行失败（join 错误或结构性问题）。
+    CheckConcurrentFailed(String),
     /// Provider id from storage is not supported by the current backend.
     ///
     /// 存储中的 provider id 不被当前后端支持。
@@ -74,10 +86,6 @@ pub(in crate::core::bot) enum ProviderError {
     ///
     /// 系统密钥存储无法删除。
     SecretStoreRemove(String),
-    Serde(serde_json::Error),
-    Io(String),
-    LifecycleEventEmit(String),
-    LifecycleConcurrentCheck(String),
 }
 
 // Downgrades a ProviderError into a warning log rather than propagating to the boundary.
@@ -89,7 +97,10 @@ impl fmt::Display for ProviderError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::CheckStartedEmit(msg)
+            | Self::CheckStatusEmit(msg)
             | Self::CheckCompletedEmit(msg)
+            | Self::CheckFailedEmit(msg)
+            | Self::CheckConcurrentFailed(msg)
             | Self::ConfigNotFound(msg)
             | Self::ConfigStoreOpen(msg)
             | Self::ConfigStorePath(msg)
@@ -97,10 +108,7 @@ impl fmt::Display for ProviderError {
             | Self::ConfigStoreWrite(msg)
             | Self::ConfigStoreSync(msg)
             | Self::ConfigStoreReplace(msg)
-            | Self::Io(msg)
             | Self::UnsupportedProvider(msg)
-            | Self::LifecycleEventEmit(msg)
-            | Self::LifecycleConcurrentCheck(msg)
             | Self::SecretStoreInit(msg)
             | Self::SecretStoreWrite(msg)
             | Self::SecretStoreRead(msg)
@@ -108,7 +116,6 @@ impl fmt::Display for ProviderError {
             Self::JsonSerialize(err)
             | Self::JsonDeserialize(err)
             | Self::ConfigStoreSerialize(err) => write!(f, "{err}"),
-            Self::Serde(err) => write!(f, "{err}"),
         }
     }
 }
@@ -117,18 +124,14 @@ impl fmt::Display for ProviderError {
 // 或引入 `thiserror` 统一派生，提升错误溯源能力。
 impl std::error::Error for ProviderError {}
 
-impl From<serde_json::Error> for ProviderError {
-    fn from(err: serde_json::Error) -> Self {
-        Self::Serde(err)
-    }
-}
-
 impl ProviderError {
     pub fn kind(&self) -> ProviderErrorKind {
         match self {
-            Self::CheckStartedEmit(_) | Self::CheckCompletedEmit(_) => {
-                ProviderErrorKind::LifecycleEventEmit
-            }
+            Self::CheckStartedEmit(_)
+            | Self::CheckStatusEmit(_)
+            | Self::CheckCompletedEmit(_)
+            | Self::CheckFailedEmit(_) => ProviderErrorKind::LifecycleEventEmit,
+            Self::CheckConcurrentFailed(_) => ProviderErrorKind::LifecycleConcurrentCheck,
             Self::ConfigNotFound(_) => {
                 unreachable!("ConfigNotFound is not part of legacy ProviderErrorKind")
             }
@@ -141,11 +144,7 @@ impl ProviderError {
             Self::ConfigStoreWrite(_) => ProviderErrorKind::Io,
             Self::ConfigStoreSync(_) => ProviderErrorKind::Io,
             Self::ConfigStoreReplace(_) => ProviderErrorKind::Io,
-            Self::Serde(_) => ProviderErrorKind::Serde,
-            Self::Io(_) => ProviderErrorKind::Io,
             Self::UnsupportedProvider(_) => ProviderErrorKind::UnsupportedProvider,
-            Self::LifecycleEventEmit(_) => ProviderErrorKind::LifecycleEventEmit,
-            Self::LifecycleConcurrentCheck(_) => ProviderErrorKind::LifecycleConcurrentCheck,
             Self::SecretStoreInit(_) => ProviderErrorKind::Io,
             Self::SecretStoreWrite(_) => ProviderErrorKind::Io,
             Self::SecretStoreRead(_) => ProviderErrorKind::Io,

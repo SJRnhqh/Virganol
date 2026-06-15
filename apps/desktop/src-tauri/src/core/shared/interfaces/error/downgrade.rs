@@ -16,7 +16,7 @@ pub(in crate::core) trait Downgrade {
 #[macro_export]
 macro_rules! impl_downgrade {
     ($type:ty) => {
-        impl $crate::core::shared::Downgrade for $type {
+        impl $crate::core::shared::Downgrade for &$type {
             fn downgrade(self) {
                 log::warn!("[Tauri] ⚠️ {}", self);
             }

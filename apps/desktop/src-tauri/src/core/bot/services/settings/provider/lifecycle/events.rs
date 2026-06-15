@@ -42,9 +42,8 @@ pub(super) fn emit_check_status(
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckStatusPayload::new(run_id, provider_id, config, health, key_meta);
 
-    app.emit(EVT_CHECK_STATUS, &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_STATUS, e))
-    })
+    app.emit(EVT_CHECK_STATUS, &payload)
+        .map_err(|e| ProviderError::CheckStatusEmit(e.to_string()))
 }
 
 /// Emits the lifecycle completed event.
@@ -72,7 +71,6 @@ pub(super) fn emit_check_failed(
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckFailedPayload::new(run_id, error.kind(), error.message(), issues);
 
-    app.emit(EVT_CHECK_FAILED, &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_FAILED, e))
-    })
+    app.emit(EVT_CHECK_FAILED, &payload)
+        .map_err(|e| ProviderError::CheckFailedEmit(e.to_string()))
 }
