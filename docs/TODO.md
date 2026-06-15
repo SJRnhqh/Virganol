@@ -14,21 +14,13 @@
 
 - [ ] Keep `ProviderErrorDetails` as a placeholder for now and exclude
   structured details from the current provider error design pass.
-- [ ] Treat `ProviderErrorKind` as legacy lifecycle/event-channel classification
-  during this pass and avoid using it as the center of the new boundary error
-  model; optionally detach `ProviderError::kind()` in favor of
-  `ProviderErrorKind::from(&error)` before the 6.1 unified contract upgrade.
-- [ ] Replace the remaining connect health-check string failure with a
-  `ProviderAppError` once the connection failure code/message contract is
-  agreed.
+- [ ] Consider merging `ProviderIssue` into `ProviderAppError` (via
+  `ProviderErrorDetails`) once the details placeholder is implemented.
 - [ ] Revisit `reset_provider_config` double-failure `ProviderAppError::with_message`
   when `ProviderErrorDetails` is implemented: consider embedding multiple
   `ProviderError` sources instead of flattening to a single message string.
-- [ ] Keep lifecycle/event-channel error upgrades for the next working branch
-  after the current interactive command errors are resolved.
-- [ ] Upgrade `ProviderError` after the architecture is agreed: move from the
-  current coarse unified model toward a typed, traceable, serializable provider
-  error model.
+- [ ] Remove `ProviderError::message()` once all call sites use structured
+  error conversion.
 - [ ] Define the project-level logging management model: clarify log ownership,
   levels, structure, persistence, rotation, context fields, and frontend/backend
   responsibilities before implementation.
