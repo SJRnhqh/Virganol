@@ -11,6 +11,7 @@ const repoRoot = path.resolve(scriptDir, "../../..");
 // Quality gates / 质量门
 const steps = [
   { name: "lint", command: "node", args: [path.resolve(scriptDir, "lint-source-headers.mjs")] },
+  { name: "check", command: "cargo", args: ["check"] },
   { name: "test", command: "cargo", args: ["test"] },
 ];
 

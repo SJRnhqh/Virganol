@@ -21,3 +21,4 @@
 - [x] Dev tooling: `pnpm test` orchestrator with per-stack scripts (Rust: lint + cargo test, TS: eslint)
 - [x] Husky pre-commit simplified to `pnpm test` (lint + test in one gate)
 - [x] Go test script added — all three stacks covered by `pnpm test`
+- [x] Rust `cargo check` + Go `go vet` added; router reordered Go→Rust→TS

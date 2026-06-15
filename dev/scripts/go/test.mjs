@@ -7,10 +7,12 @@ import { fileURLToPath } from "node:url";
 // Path setup / 路径设置
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
+const serverDir = path.join(repoRoot, "apps/server");
 
 // Quality gates / 质量门
 const steps = [
-  { name: "test", command: "go", args: ["test", "./..."], cwd: path.join(repoRoot, "apps/server") },
+  { name: "vet", command: "go", args: ["vet", "./..."] },
+  { name: "test", command: "go", args: ["test", "./..."] },
   // TODO: lint — gofmt -l or golangci-lint
 ];
 
@@ -19,7 +21,7 @@ let failed = 0;
 for (const step of steps) {
   try {
     execFileSync(step.command, step.args, {
-      cwd: step.cwd || repoRoot,
+      cwd: serverDir,
       encoding: "utf8",
       stdio: "inherit",
       timeout: 120_000,

@@ -11,12 +11,12 @@ const repoRoot = path.resolve(scriptDir, "../../..");
 // Suite routing / 测试套件路由
 const suites = [
   {
-    name: "Rust (desktop)",
-    script: path.resolve(scriptDir, "../rust/test.mjs"),
-  },
-  {
     name: "Go (server)",
     script: path.resolve(scriptDir, "../go/test.mjs"),
+  },
+  {
+    name: "Rust (desktop)",
+    script: path.resolve(scriptDir, "../rust/test.mjs"),
   },
   {
     name: "TS (ui)",
