@@ -14,7 +14,6 @@ const suites = [
     name: "Rust (desktop)",
     script: path.resolve(scriptDir, "../rust/test.mjs"),
   },
-  // TODO: Go (server)   — dev/scripts/go/test.mjs
   {
     name: "Go (server)",
     script: path.resolve(scriptDir, "../go/test.mjs"),
@@ -25,13 +24,19 @@ const suites = [
   },
 ];
 
+const SEP = "═".repeat(60);
+
 // Test execution / 测试执行
-console.log("virganol test\n");
+console.log("virganol test");
 
 let passed = 0;
 let failed = 0;
 
 for (const suite of suites) {
+  console.log(`\n${SEP}`);
+  console.log(`  ${suite.name}`);
+  console.log(SEP);
+
   const result = spawnSync("node", [suite.script], {
     cwd: repoRoot,
     encoding: "utf8",
@@ -47,8 +52,8 @@ for (const suite of suites) {
 }
 
 // Summary / 汇总
-console.log("\n" + "═".repeat(60));
+console.log(`\n${SEP}`);
 console.log(`passed: ${passed}  failed: ${failed}`);
-console.log("═".repeat(60));
+console.log(SEP);
 
 process.exit(failed > 0 ? 1 : 0);

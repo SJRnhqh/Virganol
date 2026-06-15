@@ -10,20 +10,10 @@ const repoRoot = path.resolve(scriptDir, "../../..");
 
 // Quality gates / 质量门
 const steps = [
-  {
-    name: "test",
-    command: "go",
-    args: ["test", "./..."],
-    cwd: path.join(repoRoot, "apps/server"),
-  },
+  { name: "test", command: "go", args: ["test", "./..."], cwd: path.join(repoRoot, "apps/server") },
   // TODO: lint — gofmt -l or golangci-lint
 ];
 
-// Execution / 执行
-console.log("Go (server)");
-console.log("─".repeat(60));
-
-let passed = 0;
 let failed = 0;
 
 for (const step of steps) {
@@ -34,17 +24,12 @@ for (const step of steps) {
       stdio: "inherit",
       timeout: 120_000,
     });
-    passed += 1;
   } catch {
     failed += 1;
   }
 }
 
-// Result / 结果
-console.log("");
-if (failed === 0) {
-  console.log("✅ Go (server) passed");
-} else {
-  console.error(`❌ Go (server) failed (${failed} step(s) failed)`);
+if (failed > 0) {
+  console.error(`\n❌ ${failed} step(s) failed`);
   process.exit(1);
 }
