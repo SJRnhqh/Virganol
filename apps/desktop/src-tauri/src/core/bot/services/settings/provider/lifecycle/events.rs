@@ -25,9 +25,8 @@ pub(super) fn emit_check_started(
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckStartedPayload::new(run_id, trigger);
 
-    app.emit(EVT_CHECK_STARTED, &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_STARTED, e))
-    })
+    app.emit(EVT_CHECK_STARTED, &payload)
+        .map_err(|e| ProviderError::CheckStartedEmit(e.to_string()))
 }
 
 /// Emits one provider check status event.
@@ -58,9 +57,8 @@ pub(super) fn emit_check_completed(
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckCompletedPayload::new(run_id, failed);
 
-    app.emit(EVT_CHECK_COMPLETED, &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_COMPLETED, e))
-    })
+    app.emit(EVT_CHECK_COMPLETED, &payload)
+        .map_err(|e| ProviderError::CheckCompletedEmit(e.to_string()))
 }
 
 /// Emits the lifecycle failed event.

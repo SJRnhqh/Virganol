@@ -9,8 +9,11 @@
 
 - [ ] Connect manager: review and upgrade health-check failure boundary error
   (deferred pending unified error contract for health check results).
-- [ ] Reset manager: review and upgrade reset rollback double-failure boundary
-  error at `reset.rs:29-33`.
+- [ ] Lifecycle: upgrade `emit_check_status` event error variant + code mapping.
+- [ ] Lifecycle: upgrade `emit_check_failed` event error variant, payload field,
+  and code mapping.
+- [ ] Lifecycle: review and classify `run_provider_checks` concurrent/join error
+  (`flow.rs` line ~93).
 
 ## Planned
 
@@ -157,3 +160,17 @@
 - [x] Fixed reset manager double-failure compile error: replaced `format!` with
   `ProviderAppError::with_message(ProviderErrorCode::from(&e), ...)`.
 - [x] Added `ProviderAppError::with_message` for custom boundary error messages.
+- [x] Added `CheckLifecycleFailed` boundary code to `ProviderErrorCode`
+  (lifecycle layer, second position after manager).
+- [x] Added `CheckStartedEmit` `ProviderError` variant (first position), mapped
+  to `CheckLifecycleFailed`.
+- [x] Added `CheckCompletedEmit` `ProviderError` variant (second position),
+  mapped to `CheckLifecycleFailed`.
+- [x] Moved `UnsupportedProvider` to early position in `ProviderError`
+  (third, after lifecycle variants) with doc comment.
+- [x] Removed `SkippedProviderDetail` struct; simplified snapshot.skipped to
+  `Vec<String>`.
+- [x] Added `downgrade()` for unsupported provider in
+  `load_provider_check_snapshot`; kept context-rich `warn!` in flow.
+- [x] Simplified `ProviderCheckSnapshot`: dropped `skipped()` iteration in
+  favor of count-based info log.

@@ -6,6 +6,18 @@ use super::ProviderErrorKind;
 
 #[derive(Debug)]
 pub(in crate::core::bot) enum ProviderError {
+    /// Provider check lifecycle started event emission failed.
+    ///
+    /// Provider 检查生命周期开始事件推送失败。
+    CheckStartedEmit(String),
+    /// Provider check lifecycle completed event emission failed.
+    ///
+    /// Provider 检查生命周期完成事件推送失败。
+    CheckCompletedEmit(String),
+    /// Provider id from storage is not supported by the current backend.
+    ///
+    /// 存储中的 provider id 不被当前后端支持。
+    UnsupportedProvider(String),
     /// Requested provider has no persisted configuration record.
     ///
     /// 请求的 provider 没有对应的持久化配置记录。
@@ -64,7 +76,6 @@ pub(in crate::core::bot) enum ProviderError {
     SecretStoreRemove(String),
     Serde(serde_json::Error),
     Io(String),
-    UnsupportedProvider(String),
     LifecycleEventEmit(String),
     LifecycleConcurrentCheck(String),
 }
@@ -77,7 +88,9 @@ crate::impl_downgrade!(ProviderError);
 impl fmt::Display for ProviderError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::ConfigNotFound(msg)
+            Self::CheckStartedEmit(msg)
+            | Self::CheckCompletedEmit(msg)
+            | Self::ConfigNotFound(msg)
             | Self::ConfigStoreOpen(msg)
             | Self::ConfigStorePath(msg)
             | Self::ConfigStoreTempCreate(msg)
@@ -113,6 +126,9 @@ impl From<serde_json::Error> for ProviderError {
 impl ProviderError {
     pub fn kind(&self) -> ProviderErrorKind {
         match self {
+            Self::CheckStartedEmit(_) | Self::CheckCompletedEmit(_) => {
+                ProviderErrorKind::LifecycleEventEmit
+            }
             Self::ConfigNotFound(_) => {
                 unreachable!("ConfigNotFound is not part of legacy ProviderErrorKind")
             }

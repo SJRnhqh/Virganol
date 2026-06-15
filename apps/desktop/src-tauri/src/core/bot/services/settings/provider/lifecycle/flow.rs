@@ -40,14 +40,12 @@ pub(crate) async fn check_providers_lifecycle(
         snapshot.skipped_count(),
     );
 
-    for detail in snapshot.skipped() {
+    for raw_id in snapshot.skipped() {
         warn!(
-            "[Tauri] ⚠️ Skip unsupported provider in store: run_id={}, trigger={}, raw_id={}, code={}, message={}",
+            "[Tauri] ⚠️ Skip unsupported provider in store: run_id={}, trigger={}, raw_id={}",
             run_id,
             trigger.as_tag(),
-            detail.raw_id,
-            detail.code,
-            detail.message
+            raw_id
         );
     }
 

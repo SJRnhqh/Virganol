@@ -13,6 +13,11 @@ pub(in crate::core::bot) enum ProviderErrorCode {
     /// manager/request 层：收到缺少必需 data 字段的命令载荷。
     #[serde(rename = "missing_request_data")]
     MissingRequestData,
+    /// Lifecycle layer: provider check lifecycle event emission failed.
+    ///
+    /// lifecycle 层：Provider 检查生命周期事件推送失败。
+    #[serde(rename = "check_lifecycle_failed")]
+    CheckLifecycleFailed,
     /// Store/config layer: requested provider has no persisted configuration.
     ///
     /// store/config 层：请求的 provider 在 store 中没有持久化配置。
@@ -42,6 +47,7 @@ impl ProviderErrorCode {
     pub(super) fn default_message(&self) -> &'static str {
         match self {
             Self::MissingRequestData => "Missing request data.",
+            Self::CheckLifecycleFailed => "Provider check lifecycle event emission failed.",
             Self::ProviderNotFound => "Provider configuration not found.",
             Self::ConfigStoreFailed => "Provider configuration store operation failed.",
             Self::SecretStoreFailed => "Provider secret store operation failed.",
@@ -56,6 +62,9 @@ impl From<&ProviderError> for ProviderErrorCode {
     /// 将内部 Provider 错误粗粒化为 Provider 边界错误码。
     fn from(error: &ProviderError) -> Self {
         match error {
+            ProviderError::CheckStartedEmit(_) | ProviderError::CheckCompletedEmit(_) => {
+                Self::CheckLifecycleFailed
+            }
             ProviderError::ConfigNotFound(_) => Self::ProviderNotFound,
             ProviderError::JsonSerialize(_)
             | ProviderError::JsonDeserialize(_)
