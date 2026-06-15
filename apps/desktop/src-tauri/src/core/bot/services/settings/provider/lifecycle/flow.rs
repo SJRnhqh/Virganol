@@ -40,14 +40,12 @@ pub(crate) async fn check_providers_lifecycle(
         snapshot.skipped_count(),
     );
 
-    for detail in snapshot.skipped() {
+    for raw_id in snapshot.skipped() {
         warn!(
-            "[Tauri] ⚠️ Skip unsupported provider in store: run_id={}, trigger={}, raw_id={}, code={}, message={}",
+            "[Tauri] ⚠️ Skip unsupported provider in store: run_id={}, trigger={}, raw_id={}",
             run_id,
             trigger.as_tag(),
-            detail.raw_id,
-            detail.code,
-            detail.message
+            raw_id
         );
     }
 
@@ -92,7 +90,7 @@ pub(crate) async fn check_providers_lifecycle(
 
     if let Some(e) = join_error.or_else(|| {
         (!provider_issues.is_empty()).then(|| {
-            ProviderError::LifecycleConcurrentCheck(
+            ProviderError::CheckConcurrentFailed(
                 "concurrent check error: provider issues detected".to_string(),
             )
         })

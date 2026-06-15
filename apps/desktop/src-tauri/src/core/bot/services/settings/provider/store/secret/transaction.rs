@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/secret/transaction.rs
+use super::super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::super::{
     ProviderError, ProviderId, ProviderKey, ProviderKeyChange,
 };
@@ -70,12 +71,8 @@ impl Drop for ProviderKeyTransaction {
             remove_provider_key(provider_id)
         };
 
-        if let Err(error) = result {
-            log::warn!(
-                "[Tauri] rollback key failed for {}: {}",
-                provider_id.as_str(),
-                error
-            );
+        if let Err(e) = result {
+            e.downgrade();
         }
     }
 }

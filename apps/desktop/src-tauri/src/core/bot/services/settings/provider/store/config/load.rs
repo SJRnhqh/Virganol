@@ -2,9 +2,9 @@
 use std::collections::HashMap;
 use tauri::AppHandle;
 
+use super::super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::super::{
-    ProviderCheckSnapshot, ProviderError, ProviderId, ProviderRecord, SkippedProviderDetail,
-    SPIRIT_PROVIDERS_KEY,
+    ProviderCheckSnapshot, ProviderError, ProviderId, ProviderRecord, SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::load_settings;
 
@@ -19,7 +19,8 @@ pub(super) fn load_all_providers(
         return Ok(HashMap::new());
     };
 
-    let providers: HashMap<String, ProviderRecord> = serde_json::from_value(value)?;
+    let providers: HashMap<String, ProviderRecord> =
+        serde_json::from_value(value).map_err(ProviderError::JsonDeserialize)?;
     Ok(providers)
 }
 
@@ -37,11 +38,10 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_check_sn
     for (raw_id, record) in providers {
         match ProviderId::try_from(raw_id.as_str()) {
             Ok(provider_id) => supported.push((provider_id, record)),
-            Err(error) => skipped.push(SkippedProviderDetail::new(
-                raw_id,
-                error.code(),
-                error.message(),
-            )),
+            Err(e) => {
+                e.downgrade();
+                skipped.push(raw_id);
+            }
         }
     }
 

@@ -2,6 +2,7 @@
 use log::error;
 use tauri::AppHandle;
 
+use super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::{ProviderCheckTrigger, ProviderError, ProviderIssue};
 use super::emit_check_failed;
 
@@ -16,28 +17,22 @@ pub(super) fn report_lifecycle_failure(
     issues: Option<Vec<ProviderIssue>>,
 ) {
     if let Err(e) = emit_check_failed(app, run_id, error, issues.as_deref()) {
-        let code = error.code();
-        let message = error.message();
+        e.downgrade();
+        error.downgrade();
         match &issues {
             Some(issues) => {
                 error!(
-                    "[Tauri] ❌ emit providers-check-lifecycle-failed fallback: run_id={}, trigger={}, code={}, message={}, issues={:?}, emit_err={}",
+                    "[Tauri] ❌ lifecycle failed event emit fallback: run_id={}, trigger={}, issues_count={}",
                     run_id,
                     trigger.as_tag(),
-                    code,
-                    message,
-                    issues,
-                    e
+                    issues.len(),
                 );
             }
             None => {
                 error!(
-                    "[Tauri] ❌ emit providers-check-lifecycle-failed fallback: run_id={}, trigger={}, code={}, message={}, emit_err={}",
+                    "[Tauri] ❌ lifecycle failed event emit fallback: run_id={}, trigger={}",
                     run_id,
                     trigger.as_tag(),
-                    code,
-                    message,
-                    e
                 );
             }
         }

@@ -20,7 +20,7 @@ pub(in crate::core::bot::services::settings::provider) fn update_models(
     let mut providers = load_all_providers(app)?;
 
     let Some(record) = providers.get_mut(provider_id.as_str()) else {
-        return Err(ProviderError::UnsupportedProvider(format!(
+        return Err(ProviderError::ConfigNotFound(format!(
             "{} not found in store",
             provider_id
         )));
@@ -28,6 +28,6 @@ pub(in crate::core::bot::services::settings::provider) fn update_models(
 
     record.replace_enabled_models(enabled_models);
 
-    let value = serde_json::to_value(&providers)?;
+    let value = serde_json::to_value(&providers).map_err(ProviderError::JsonSerialize)?;
     save_settings(app, SPIRIT_PROVIDERS_KEY, value)
 }

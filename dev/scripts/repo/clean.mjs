@@ -1,4 +1,4 @@
-// scripts/repo/clean.mjs
+// dev/scripts/repo/clean.mjs
 // Imports / 依赖导入
 import { existsSync, lstatSync, readdirSync, rmSync } from "node:fs";
 import path from "node:path";
@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 // Path setup / 路径设置
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(scriptDir, "../..");
+const repoRoot = path.resolve(scriptDir, "../../..");
 
 // Clean target setup / 清理目标设置
 const buildTargets = [

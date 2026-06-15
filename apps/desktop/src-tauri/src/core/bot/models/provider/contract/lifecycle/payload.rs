@@ -1,11 +1,10 @@
-// apps/desktop/src-tauri/src/core/bot/models/provider/lifecycle/payload.rs
+// apps/desktop/src-tauri/src/core/bot/models/provider/contract/lifecycle/payload.rs
 use serde::Serialize;
 
-use super::super::{
-    HealthCheckResult, ProviderErrorCode, ProviderId, ProviderIssue, ProviderKeyMeta,
-    ProviderRecord,
+use super::super::super::lifecycle::ProviderCheckTrigger;
+use super::super::super::{
+    HealthCheckResult, ProviderAppError, ProviderId, ProviderIssue, ProviderKeyMeta, ProviderRecord,
 };
-use super::ProviderCheckTrigger;
 
 /// Event payload emitted when one provider check lifecycle starts.
 ///
@@ -112,14 +111,10 @@ pub(in crate::core::bot) struct ProviderCheckFailedPayload<'a> {
     ///
     /// 借用的本轮检查唯一标识，用于关联同一生命周期内的事件。
     run_id: &'a str,
-    /// Structured error code for this lifecycle failure.
+    /// Structured boundary error for this lifecycle failure.
     ///
-    /// 本轮生命周期失败的结构化错误码。
-    code: ProviderErrorCode,
-    /// Error message used for frontend display or logging.
-    ///
-    /// 面向前端展示或日志记录的错误信息。
-    message: String,
+    /// 本轮生命周期失败的结构化边界错误。
+    error: ProviderAppError,
     /// Provider-level issues returned when failures can be attributed to providers.
     ///
     /// Provider 级问题列表；仅在存在可定位到具体 Provider 的问题时返回。
@@ -133,14 +128,12 @@ impl<'a> ProviderCheckFailedPayload<'a> {
     /// 创建生命周期 failed 事件载荷。
     pub(in crate::core::bot) fn new(
         run_id: &'a str,
-        code: ProviderErrorCode,
-        message: String,
+        error: ProviderAppError,
         issues: Option<&'a [ProviderIssue]>,
     ) -> Self {
         Self {
             run_id,
-            code,
-            message,
+            error,
             issues,
         }
     }

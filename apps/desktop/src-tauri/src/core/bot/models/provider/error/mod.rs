@@ -1,11 +1,13 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/mod.rs
 // 导出内容
-mod base;
+mod app;
 mod code;
+mod details;
+mod internal;
 mod issue;
-mod skip;
 
-pub use base::ProviderError;
-pub use code::ProviderErrorCode;
+pub(in crate::core::bot) use app::ProviderAppError;
+pub(in crate::core::bot) use code::ProviderErrorCode;
+pub(self) use details::ProviderErrorDetails;
+pub(in crate::core::bot) use internal::ProviderError;
 pub use issue::ProviderIssue;
-pub use skip::SkippedProviderDetail;

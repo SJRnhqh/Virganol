@@ -31,64 +31,43 @@ LLM Provider 接入分为两条主线：
 - update_models 链路：持久化层重构、日志优化、Hooks 层重构、语义对齐
 - 查漏补缺：并发控制、原子写入、回滚逻辑、契约升级
 
-### 🚧 Phase 6：错误精细化与全局收尾
+### ✅ Phase 6：错误精细化与全局收尾
 
 #### 6.1 错误精细化（交互式 CRUD）
 
-按命令链路逐个审查：update_models → reset → connect
-
 **已完成**：
 
-- update_models 链路错误上抛点审查
-- reset 链路错误上抛点审查
-- connect 链路错误上抛点审查
-- connect 健康检查业务失败点审查（Ollama / DeepSeek）
-- `HealthCheckResult` 命名、可见性、trait、模块位置和注释规范化
-- 明确健康检查 `error: Option<String>` 暂保持扁平错误消息，后续随统一错误契约升级
+- [x] CRUD 链路错误上抛点全部分类（update_models / reset / connect）
+- [x] 健康检查业务失败点审查，`HealthCheckResult.error` 升级为 `ProviderError`
+- [x] 统一错误响应契约：`ProviderAppError`（code + message），全链 `From<&ProviderError>`
+- [x] 扩展 `ProviderErrorCode`：manager / lifecycle / health check / store 四层边界码
+- [x] 健康检查错误分类：`HealthCheckMissingConfig` / `HealthCheckNetwork` / `HealthCheckHttp` / `HealthCheckResponseFormat`
+- [x] 区分领域错误（`ProviderError` 变体）与边界错误（`ProviderErrorCode` 粗粒化）
+- [x] 删除 `ProviderErrorKind` 旧分类系统，清理 `kind()` 方法
+- [x] `ProviderIssue` 字段收紧：`code + message` → `error: ProviderAppError`
+- [x] `ProviderCheckFailedPayload` 字段收紧：`code + message` → `error: ProviderAppError`
+- [x] `Downgrade` trait 优化为引用实现
+- [x] 删除死变体：`Serde`、`Io`、`LifecycleEventEmit`、`LifecycleConcurrentCheck`
+- [x] lifecycle payload 迁入 `contract/lifecycle/` 统一管理
 
-**待统一升级**：
+**待后续**：
 
-- [x] 完成 CRUD 链路错误上抛点梳理（update_models / reset / connect）
-- [x] 审查 connect 健康检查业务错误上抛点
-- [ ] 统一推进错误响应泛型化升级
-- [ ] 扩展 `ProviderErrorCode`（健康检查错误：网络不可达 / 认证失败 / 超时 / 响应格式错误）
 - [ ] 迁移 `ProviderError` 至 `thiserror`（修复 `source()` 空实现，错误链可追溯）
-- [ ] 扩展 `HealthCheckResult` 添加 `error_code` 字段
-- [ ] 区分系统错误（io/serde/keyring）与业务错误（network/auth/timeout/format）
-- [ ] 统一错误响应契约（code / message / details / trace_id）
-- [ ] 契约序列化命名统一 camelCase（`HealthCheckResult` / `ProviderRecord` / `ProviderStatusPayload`）
+- [ ] 契约序列化命名统一 camelCase
 - [ ] 单元测试覆盖各命令链路错误场景
 
 #### 6.2 错误精细化（生命周期）
 
-startup_check 和 manual_refresh 共享生命周期核心，当前按命令入口 →
-`flow.rs` → `runner.rs` 的顺序做后端错误传播审查。
-
 **已完成**：
 
-- commands 层 startup_check / manual_refresh 边界审查，保留独立命令入口并共享生命周期核心
-- 生命周期模型从旧 `check.rs` 拆入 `models/provider/lifecycle`
-- `flow.rs` Step 1-3 审查：run ID 归属、started/completed/failed 事件、持久化 provider snapshot 加载、skipped provider 处理
-- provider config snapshot 加载收敛到 `provider/store/config`
-- lifecycle key 解析收敛为 `ProviderKeyResolution` 与 `resolve_provider_key`
-- key-resolved health check 入口移动到 connection 模块
-- provider key metadata 移入 `models/provider/secret/meta.rs`，并收紧 trait、字段和构造方法可见性
-- `runner.rs` Step 4-6 审查收口：并发调度、`match Ok` 结果处理（`finalize_provider_check_result`）、状态事件发射（`emit_check_status`）、Step 5/6 结构性失败与完成事件
-- 后端 `core::bot` 域可见性封装收紧：provider id / secret / record / lifecycle / 健康检查结果 / manager 请求响应等 model 模块字段与访问器收敛到 bot 域
-- provider services 可见性收口：保留 command-facing facade 所需入口，内部 store / connection / lifecycle helpers 收敛到实际使用域
-- 生命周期链路错误上抛点记录完成：started/completed 事件推送失败、snapshot store/serde 失败、runner join error、provider-level issues、reconciliation 持久化失败均已按链路顺序梳理
-- 明确 `run_provider_checks` 不即时上抛错误，而是返回 `ProviderCheckRunResult`，由 flow 层统一处理全局结构性错误与 provider 级结构性问题
-- 明确 unsupported provider、keyring 宽容读取、health check 业务失败、failed event fallback 等仍保持降级/状态表达，不在本分支升级为统一错误契约
-
-**本分支收尾状态**：
-
-- [x] 生命周期链路错误上抛点的思路整理与记录（仅梳理与记录，不实现精细化处理）
+- [x] 生命周期链路错误上抛点全部审查并分类
 - [x] 收紧 provider services 模块可见性
-- [ ] 准备 PR 信息并提交 review
-
-**推迟到错误处理专项讨论**（统一错误契约升级，见 6.1「待统一升级」）：
-
-- [ ] 错误精细化的实现工作（错误码扩展 / thiserror 迁移 / 响应契约泛型化 / 边界场景单元测试）整体留待错误契约升级时推进，本分支不实现
+- [x] 4 个 lifecycle 事件变体（`CheckStartedEmit` / `CheckStatusEmit` / `CheckCompletedEmit` / `CheckFailedEmit`）
+- [x] `CheckConcurrentFailed` 替换 `LifecycleConcurrentCheck`
+- [x] 失败事件降级日志优化（`Downgrade` + `issues_count`）
+- [x] `SkippedProviderDetail` 删除，简化 snapshot 为 `Vec<String>`
+- [x] `load_provider_check_snapshot` 降级模式（unsupported provider → `downgrade()`）
+- [x] `finalize.rs` 删除冗余 `error!` 日志
 
 #### 6.3 前端错误系统
 
@@ -97,7 +76,15 @@ startup_check 和 manual_refresh 共享生命周期核心，当前按命令入�
 - [ ] 设计错误展示组件（Toast / inline 错误消息）
 - [ ] 评估 provider 级操作串行化需求（connect/reset/update 并发冲突）
 
-#### 6.4 日志系统（错误精细化完成后）
+#### 6.4 错误系统深入（details / thiserror / trace_id）
+
+- [ ] 实现 `ProviderErrorDetails`（trace_id / operation_id / 嵌套错误源）
+- [ ] 评估并迁移 `ProviderError` 至 `thiserror`
+- [ ] `ProviderIssue` 并入 `ProviderAppError`（通过 details）
+- [ ] 移除 `ProviderError::message()`
+- [ ] trace_id 生成与传播（后端 → 前端）
+
+#### 6.5 日志系统
 
 - [ ] 设计日志持久化策略（文件轮转 / 结构化格式）
 - [ ] 定义日志埋点（CRUD 入口/出口、健康检查、持久化操作、错误路径）
@@ -105,16 +92,15 @@ startup_check 和 manual_refresh 共享生命周期核心，当前按命令入�
 - [ ] 添加结构化上下文（trace_id / operation_id / provider_id / error_code）
 - [ ] 实现日志级别策略（info 成功 / warn 可重试 / error 致命）
 - [ ] 前端日志策略（dev 用 console / prod 用上报）
-- [ ] trace_id 生成与传播（后端 → 前端）
 
-#### 6.5 集成测试与验证
+#### 6.6 集成测试与验证
 
 - [ ] 5 条命令链路端到端集成测试
 - [ ] 错误传播链路验证
 - [ ] 错误响应契约验证
-- [ ] 日志输出验证（如 Phase 6.4 完成）
+- [ ] 日志输出验证（如 Phase 6.5 完成）
 
-#### 6.6 收尾优化
+#### 6.7 收尾优化
 
 - [ ] 前端状态转换验证（`useProviderCollectionStore` 防御性编程）
 - [ ] 表单输入验证（URL 格式检查 / 必填字段提示 / 错误状态视觉反馈）
