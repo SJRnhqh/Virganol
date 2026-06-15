@@ -7,8 +7,9 @@
 
 ## Current
 
-- [ ] Connect manager: review and upgrade health-check failure boundary error
-  (deferred pending unified error contract for health check results).
+- [ ] Connection services: add `ProviderError` variants for health check
+  failures (network/auth/timeout/format) and update `fail()` call sites
+  in `deepseek.rs` / `ollama.rs` / `health.rs`.
 
 ## Planned
 

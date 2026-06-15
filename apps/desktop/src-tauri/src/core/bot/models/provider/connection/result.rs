@@ -1,6 +1,8 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/connection/result.rs
 use serde::Serialize;
 
+use super::super::ProviderError;
+
 /// Result of a provider health check.
 ///
 /// Provider 健康检查结果。
@@ -16,11 +18,11 @@ pub(in crate::core::bot) struct HealthCheckResult {
     /// 健康检查成功时发现的模型列表。
     available_models: Vec<String>,
 
-    /// Failure message for the current flat error contract.
+    /// Domain error when the health check fails.
     ///
-    /// 当前扁平错误契约下的失败消息。
+    /// 健康检查失败时的领域错误。
     #[serde(skip_serializing_if = "Option::is_none")]
-    error: Option<String>,
+    error: Option<ProviderError>,
 }
 
 impl HealthCheckResult {
@@ -38,11 +40,11 @@ impl HealthCheckResult {
     /// Creates a failed health check result.
     ///
     /// 创建健康检查失败结果。
-    pub(in crate::core::bot) fn fail(msg: impl Into<String>) -> Self {
+    pub(in crate::core::bot) fn fail(error: ProviderError) -> Self {
         Self {
             success: false,
             available_models: vec![],
-            error: Some(msg.into()),
+            error: Some(error),
         }
     }
 
@@ -60,17 +62,13 @@ impl HealthCheckResult {
         &self.available_models
     }
 
-    /// Returns the current flat failure message, if any.
+    /// Consumes the result and returns either discovered models or the domain error.
     ///
-    /// 返回当前扁平错误契约下的失败消息。
-    pub(in crate::core::bot) fn error_message(&self) -> Option<&str> {
-        self.error.as_deref()
-    }
-
-    /// Consumes the result and returns discovered models.
-    ///
-    /// 消费结果并返回健康检查发现的模型列表。
-    pub(in crate::core::bot) fn into_available_models(self) -> Vec<String> {
-        self.available_models
+    /// 消费结果，返回发现的模型列表或领域错误。
+    pub(in crate::core::bot) fn into_models(self) -> Result<Vec<String>, ProviderError> {
+        match self.error {
+            Some(error) => Err(error),
+            None => Ok(self.available_models),
+        }
     }
 }

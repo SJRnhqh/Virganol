@@ -27,11 +27,14 @@ pub(crate) async fn connect_and_save(
     let normalized_key = data.normalized_api_key();
     let normalized_url = data.normalized_base_url();
 
-    let result = probe_provider_connection(provider_id, normalized_url, normalized_key).await;
-
-    if !result.is_success() {
-        return ConnectAndSaveProviderResponse::failure(result.error_message().unwrap_or_default());
-    }
+    let available_models =
+        match probe_provider_connection(provider_id, normalized_url, normalized_key)
+            .await
+            .into_models()
+        {
+            Ok(models) => models,
+            Err(e) => return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e)),
+        };
 
     let previous_record = match load_provider_record(app, provider_id) {
         Ok(record) => record,
@@ -40,7 +43,7 @@ pub(crate) async fn connect_and_save(
 
     let record = ProviderRecord::from_connection(
         normalized_url,
-        result.available_models(),
+        &available_models,
         previous_record.as_ref(),
     );
 
@@ -59,5 +62,5 @@ pub(crate) async fn connect_and_save(
         transaction.commit();
     }
 
-    ConnectAndSaveProviderResponse::ok(result.into_available_models(), enabled_models)
+    ConnectAndSaveProviderResponse::ok(available_models, enabled_models)
 }
