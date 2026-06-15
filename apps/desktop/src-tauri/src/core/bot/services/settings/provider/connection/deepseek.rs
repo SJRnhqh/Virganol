@@ -1,7 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/deepseek.rs
 use log::{debug, error, info};
 
-use super::super::super::super::super::{HealthCheckResult, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS};
+use super::super::super::super::super::{
+    HealthCheckResult, ProviderError, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS,
+};
 use super::get_http_client;
 
 const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
@@ -11,7 +13,9 @@ const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
 /// 通过 bearer 认证请求 `{base_url}/v1/models` 检查 DeepSeek，并解析模型列表。
 pub(super) async fn deepseek_check(key: &str) -> HealthCheckResult {
     if key.is_empty() {
-        return HealthCheckResult::fail("Missing API key");
+        return HealthCheckResult::fail(ProviderError::HealthCheckMissingConfig(
+            "Missing API key".to_string(),
+        ));
     }
 
     let endpoint = format!("{}/v1/models", DEEPSEEK_BASE_URL);
@@ -29,21 +33,27 @@ pub(super) async fn deepseek_check(key: &str) -> HealthCheckResult {
         Ok(r) => r,
         Err(e) => {
             error!("[Tauri][DeepSeek] request failed: {}", e);
-            return HealthCheckResult::fail(format!("Connection failed: {}", e));
+            return HealthCheckResult::fail(ProviderError::HealthCheckNetwork(format!(
+                "Connection failed: {}",
+                e
+            )));
         }
     };
 
     if !resp.status().is_success() {
         let msg = format!("HTTP {}", resp.status());
         error!("[Tauri][DeepSeek] {}", msg);
-        return HealthCheckResult::fail(msg);
+        return HealthCheckResult::fail(ProviderError::HealthCheckHttp(msg));
     }
 
     let json: serde_json::Value = match resp.json().await {
         Ok(v) => v,
         Err(e) => {
             error!("[Tauri][DeepSeek] JSON parse error: {}", e);
-            return HealthCheckResult::fail(format!("Invalid response: {}", e));
+            return HealthCheckResult::fail(ProviderError::HealthCheckResponseFormat(format!(
+                "Invalid response: {}",
+                e
+            )));
         }
     };
 
@@ -62,7 +72,8 @@ pub(super) async fn deepseek_check(key: &str) -> HealthCheckResult {
         .unwrap_or_default();
 
     if models.is_empty() {
-        return HealthCheckResult::fail("No models available");
+        info!("[Tauri][DeepSeek] ⚠️ no models returned");
+        return HealthCheckResult::ok(vec![]);
     }
 
     info!("[Tauri][DeepSeek] ✅ {} models found", models.len());

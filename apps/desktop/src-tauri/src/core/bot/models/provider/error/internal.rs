@@ -31,6 +31,22 @@ pub(in crate::core::bot) enum ProviderError {
     ///
     /// 存储中的 provider id 不被当前后端支持。
     UnsupportedProvider(String),
+    /// Required health check configuration is missing.
+    ///
+    /// 健康检查所需配置缺失。
+    HealthCheckMissingConfig(String),
+    /// Health check network connection failed.
+    ///
+    /// 健康检查网络连接失败。
+    HealthCheckNetwork(String),
+    /// Health check HTTP status indicates failure.
+    ///
+    /// 健康检查 HTTP 状态码表示失败。
+    HealthCheckHttp(String),
+    /// Health check response format is invalid.
+    ///
+    /// 健康检查响应格式无效。
+    HealthCheckResponseFormat(String),
     /// Requested provider has no persisted configuration record.
     ///
     /// 请求的 provider 没有对应的持久化配置记录。
@@ -102,6 +118,10 @@ impl fmt::Display for ProviderError {
             | Self::CheckCompletedEmit(msg)
             | Self::CheckFailedEmit(msg)
             | Self::CheckConcurrentFailed(msg)
+            | Self::HealthCheckMissingConfig(msg)
+            | Self::HealthCheckNetwork(msg)
+            | Self::HealthCheckHttp(msg)
+            | Self::HealthCheckResponseFormat(msg)
             | Self::ConfigNotFound(msg)
             | Self::ConfigStoreOpen(msg)
             | Self::ConfigStorePath(msg)

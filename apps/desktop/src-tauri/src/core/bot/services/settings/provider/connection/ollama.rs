@@ -1,7 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/ollama.rs
 use log::{debug, error, info};
 
-use super::super::super::super::super::{HealthCheckResult, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS};
+use super::super::super::super::super::{
+    HealthCheckResult, ProviderError, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS,
+};
 use super::get_http_client;
 
 /// Checks Ollama by requesting `{url}/api/tags` and adding bearer auth only when `key` is present.
@@ -9,7 +11,9 @@ use super::get_http_client;
 /// 通过请求 `{url}/api/tags` 检查 Ollama，并仅在 `key` 非空时附带 bearer 认证。
 pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResult {
     if url.is_empty() {
-        return HealthCheckResult::fail("Missing URL");
+        return HealthCheckResult::fail(ProviderError::HealthCheckMissingConfig(
+            "Missing URL".to_string(),
+        ));
     }
 
     let base = url.trim_end_matches('/');
@@ -29,21 +33,27 @@ pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResult {
         Ok(r) => r,
         Err(e) => {
             error!("[Tauri][Ollama] request failed: {}", e);
-            return HealthCheckResult::fail(format!("Connection failed: {}", e));
+            return HealthCheckResult::fail(ProviderError::HealthCheckNetwork(format!(
+                "Connection failed: {}",
+                e
+            )));
         }
     };
 
     if !resp.status().is_success() {
         let msg = format!("HTTP {}", resp.status());
         error!("[Tauri][Ollama] {}", msg);
-        return HealthCheckResult::fail(msg);
+        return HealthCheckResult::fail(ProviderError::HealthCheckHttp(msg));
     }
 
     let json: serde_json::Value = match resp.json().await {
         Ok(v) => v,
         Err(e) => {
             error!("[Tauri][Ollama] JSON parse error: {}", e);
-            return HealthCheckResult::fail(format!("Invalid response: {}", e));
+            return HealthCheckResult::fail(ProviderError::HealthCheckResponseFormat(format!(
+                "Invalid response: {}",
+                e
+            )));
         }
     };
 
@@ -61,7 +71,8 @@ pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResult {
         .unwrap_or_default();
 
     if models.is_empty() {
-        return HealthCheckResult::fail("No models available");
+        info!("[Tauri][Ollama] ⚠️ no models returned");
+        return HealthCheckResult::ok(vec![]);
     }
 
     info!("[Tauri][Ollama] ✅ {} models found", models.len());

@@ -18,6 +18,11 @@ pub(in crate::core::bot) enum ProviderErrorCode {
     /// lifecycle 层：Provider 检查生命周期事件推送失败。
     #[serde(rename = "check_lifecycle_failed")]
     CheckLifecycleFailed,
+    /// Connection layer: provider health check failed.
+    ///
+    /// connection 层：Provider 健康检查失败。
+    #[serde(rename = "health_check_failed")]
+    HealthCheckFailed,
     /// Store/config layer: requested provider has no persisted configuration.
     ///
     /// store/config 层：请求的 provider 在 store 中没有持久化配置。
@@ -48,6 +53,7 @@ impl ProviderErrorCode {
         match self {
             Self::MissingRequestData => "Missing request data.",
             Self::CheckLifecycleFailed => "Provider check lifecycle event emission failed.",
+            Self::HealthCheckFailed => "Provider health check failed.",
             Self::ProviderNotFound => "Provider configuration not found.",
             Self::ConfigStoreFailed => "Provider configuration store operation failed.",
             Self::SecretStoreFailed => "Provider secret store operation failed.",
@@ -67,6 +73,10 @@ impl From<&ProviderError> for ProviderErrorCode {
             | ProviderError::CheckFailedEmit(_)
             | ProviderError::CheckStatusEmit(_)
             | ProviderError::CheckConcurrentFailed(_) => Self::CheckLifecycleFailed,
+            ProviderError::HealthCheckMissingConfig(_)
+            | ProviderError::HealthCheckNetwork(_)
+            | ProviderError::HealthCheckHttp(_)
+            | ProviderError::HealthCheckResponseFormat(_) => Self::HealthCheckFailed,
             ProviderError::ConfigNotFound(_) => Self::ProviderNotFound,
             ProviderError::JsonSerialize(_)
             | ProviderError::JsonDeserialize(_)

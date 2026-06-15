@@ -7,9 +7,7 @@
 
 ## Current
 
-- [ ] Connection services: add `ProviderError` variants for health check
-  failures (network/auth/timeout/format) and update `fail()` call sites
-  in `deepseek.rs` / `ollama.rs` / `health.rs`.
+_(code/message layer complete — next: ProviderErrorDetails, logging)_
 
 ## Planned
 
@@ -185,3 +183,10 @@
   lines) — fully replaced by `ProviderErrorCode`.
 - [x] Moved lifecycle event payloads to `contract/lifecycle/` for consistent
   boundary module organization; re-exported at provider level.
+- [x] Added `HealthCheckFailed` boundary code to `ProviderErrorCode`.
+- [x] Added `HealthCheckMissingConfig`, `HealthCheckNetwork`, `HealthCheckHttp`,
+  `HealthCheckResponseFormat` `ProviderError` variants, mapped to
+  `HealthCheckFailed`.
+- [x] Upgraded all health check `fail()` call sites in `health.rs`,
+  `deepseek.rs`, `ollama.rs` to use typed `ProviderError` variants.
+- [x] Changed \"No models available\" from failure to `ok(vec![])`.
