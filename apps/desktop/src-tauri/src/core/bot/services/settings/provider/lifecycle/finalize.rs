@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/finalize.rs
-use log::{error, info};
+use log::info;
 use tauri::AppHandle;
 
 use super::super::super::super::super::{
@@ -34,14 +34,7 @@ fn persist_reconciled_enabled_models(
             );
             (updated, None)
         }
-        Err(e) => {
-            error!(
-                "[Tauri] ❌ {} enabled_models reconcile persist failed: {}",
-                provider_id,
-                e.message()
-            );
-            (record, Some(e))
-        }
+        Err(e) => (record, Some(e)),
     }
 }
 

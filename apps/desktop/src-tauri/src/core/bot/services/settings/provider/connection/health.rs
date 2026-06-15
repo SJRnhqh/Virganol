@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/health.rs
-use super::super::super::super::super::{HealthCheckResult, ProviderId};
+use super::super::super::super::super::{HealthCheckResult, ProviderError, ProviderId};
 use super::get_driver;
 
 /// Unified health check entry point for the connection layer.
@@ -11,7 +11,10 @@ pub(super) async fn health_check(
     key: &str,
 ) -> HealthCheckResult {
     let Some(driver) = get_driver(provider_id) else {
-        return HealthCheckResult::fail(format!("Driver not registered: {}", provider_id));
+        return HealthCheckResult::fail(ProviderError::UnsupportedProvider(format!(
+            "Driver not registered: {}",
+            provider_id
+        )));
     };
     driver.health_check(url, key).await
 }

@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/config/snapshot.rs
-use super::super::{ProviderId, SkippedProviderDetail};
+use super::super::ProviderId;
 use super::ProviderRecord;
 
 /// Provider check snapshot loaded from persisted settings.
@@ -8,7 +8,7 @@ use super::ProviderRecord;
 pub(in crate::core::bot) struct ProviderCheckSnapshot {
     total: usize,
     supported: Vec<(ProviderId, ProviderRecord)>,
-    skipped: Vec<SkippedProviderDetail>,
+    skipped: Vec<String>,
 }
 
 impl ProviderCheckSnapshot {
@@ -18,7 +18,7 @@ impl ProviderCheckSnapshot {
     pub(in crate::core::bot) fn new(
         total: usize,
         supported: Vec<(ProviderId, ProviderRecord)>,
-        skipped: Vec<SkippedProviderDetail>,
+        skipped: Vec<String>,
     ) -> Self {
         Self {
             total,
@@ -48,10 +48,10 @@ impl ProviderCheckSnapshot {
         self.skipped.len()
     }
 
-    /// Returns unsupported provider details.
+    /// Returns unsupported provider raw ids.
     ///
-    /// 返回不受支持的 provider 明细。
-    pub(in crate::core::bot) fn skipped(&self) -> &[SkippedProviderDetail] {
+    /// 返回不受支持的 provider 原始 id。
+    pub(in crate::core::bot) fn skipped(&self) -> &[String] {
         &self.skipped
     }
 

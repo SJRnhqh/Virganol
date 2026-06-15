@@ -10,9 +10,9 @@ use super::super::super::super::super::super::{
 /// 将 provider 的 API Key 写入系统密钥库。
 pub(super) fn save_provider_key(provider_id: ProviderId, key: &str) -> Result<(), ProviderError> {
     let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str())
-        .map_err(|e| ProviderError::Keyring(format!("init keyring entry failed: {}", e)))?;
+        .map_err(|e| ProviderError::SecretStoreInit(format!("init keyring entry failed: {}", e)))?;
     entry.set_password(key).map_err(|e| {
-        ProviderError::Keyring(format!(
+        ProviderError::SecretStoreWrite(format!(
             "save key failed for {}: {}",
             provider_id.as_str(),
             e

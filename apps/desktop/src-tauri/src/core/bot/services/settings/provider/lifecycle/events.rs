@@ -2,7 +2,7 @@
 use tauri::{AppHandle, Emitter};
 
 use super::super::super::super::super::{
-    HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
+    HealthCheckResult, ProviderAppError, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderCheckTrigger, ProviderError,
     ProviderId, ProviderIssue, ProviderKeyMeta, ProviderRecord,
 };
@@ -25,9 +25,8 @@ pub(super) fn emit_check_started(
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckStartedPayload::new(run_id, trigger);
 
-    app.emit(EVT_CHECK_STARTED, &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_STARTED, e))
-    })
+    app.emit(EVT_CHECK_STARTED, &payload)
+        .map_err(|e| ProviderError::CheckStartedEmit(e.to_string()))
 }
 
 /// Emits one provider check status event.
@@ -43,9 +42,8 @@ pub(super) fn emit_check_status(
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckStatusPayload::new(run_id, provider_id, config, health, key_meta);
 
-    app.emit(EVT_CHECK_STATUS, &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_STATUS, e))
-    })
+    app.emit(EVT_CHECK_STATUS, &payload)
+        .map_err(|e| ProviderError::CheckStatusEmit(e.to_string()))
 }
 
 /// Emits the lifecycle completed event.
@@ -58,9 +56,8 @@ pub(super) fn emit_check_completed(
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckCompletedPayload::new(run_id, failed);
 
-    app.emit(EVT_CHECK_COMPLETED, &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_COMPLETED, e))
-    })
+    app.emit(EVT_CHECK_COMPLETED, &payload)
+        .map_err(|e| ProviderError::CheckCompletedEmit(e.to_string()))
 }
 
 /// Emits the lifecycle failed event.
@@ -72,9 +69,8 @@ pub(super) fn emit_check_failed(
     error: &ProviderError,
     issues: Option<&[ProviderIssue]>,
 ) -> Result<(), ProviderError> {
-    let payload = ProviderCheckFailedPayload::new(run_id, error.code(), error.message(), issues);
+    let payload = ProviderCheckFailedPayload::new(run_id, ProviderAppError::from(error), issues);
 
-    app.emit(EVT_CHECK_FAILED, &payload).map_err(|e| {
-        ProviderError::LifecycleEventEmit(format!("emit {} failed: {}", EVT_CHECK_FAILED, e))
-    })
+    app.emit(EVT_CHECK_FAILED, &payload)
+        .map_err(|e| ProviderError::CheckFailedEmit(e.to_string()))
 }

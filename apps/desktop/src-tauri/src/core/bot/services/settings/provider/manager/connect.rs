@@ -3,7 +3,7 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::AppState;
 use super::super::super::super::super::{
-    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderRecord,
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderAppError, ProviderRecord,
 };
 use super::super::{
     load_provider_record, probe_provider_connection, save_provider, ProviderKeyTransaction,
@@ -21,26 +21,29 @@ pub(crate) async fn connect_and_save(
     let provider_state = state.provider();
 
     let Some(data) = data else {
-        return ConnectAndSaveProviderResponse::failure("missing data field");
+        return ConnectAndSaveProviderResponse::failure(ProviderAppError::missing_request_data());
     };
 
     let normalized_key = data.normalized_api_key();
     let normalized_url = data.normalized_base_url();
 
-    let result = probe_provider_connection(provider_id, normalized_url, normalized_key).await;
-
-    if !result.is_success() {
-        return ConnectAndSaveProviderResponse::failure(result.error_message().unwrap_or_default());
-    }
+    let available_models =
+        match probe_provider_connection(provider_id, normalized_url, normalized_key)
+            .await
+            .into_models()
+        {
+            Ok(models) => models,
+            Err(e) => return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e)),
+        };
 
     let previous_record = match load_provider_record(app, provider_id) {
         Ok(record) => record,
-        Err(e) => return ConnectAndSaveProviderResponse::failure(e.message()),
+        Err(e) => return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e)),
     };
 
     let record = ProviderRecord::from_connection(
         normalized_url,
-        result.available_models(),
+        &available_models,
         previous_record.as_ref(),
     );
 
@@ -48,16 +51,16 @@ pub(crate) async fn connect_and_save(
 
     let key_transaction = match ProviderKeyTransaction::begin(provider_id, normalized_key) {
         Ok(transaction) => transaction,
-        Err(e) => return ConnectAndSaveProviderResponse::failure(e.message()),
+        Err(e) => return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e)),
     };
 
     if let Err(e) = save_provider(app, provider_state, provider_id, record) {
-        return ConnectAndSaveProviderResponse::failure(e.message());
+        return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
     }
 
     if let Some(transaction) = key_transaction {
         transaction.commit();
     }
 
-    ConnectAndSaveProviderResponse::ok(result.into_available_models(), enabled_models)
+    ConnectAndSaveProviderResponse::ok(available_models, enabled_models)
 }
