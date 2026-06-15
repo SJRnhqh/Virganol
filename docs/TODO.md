@@ -22,3 +22,4 @@
 - [x] Husky pre-commit simplified to `pnpm test` (lint + test in one gate)
 - [x] Go test script added — all three stacks covered by `pnpm test`
 - [x] Rust `cargo check` + Go `go vet` added; router reordered Go→Rust→TS
+- [x] CI simplified: removed `.github/ci/` shell scripts, `ci.yml` reduced to `pnpm test`

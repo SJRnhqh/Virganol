@@ -5,8 +5,8 @@ on:
   push:
     branches:
       - main
-      - master
       - dev
+      - version
       - "feat/**"
 
 concurrency:
@@ -17,8 +17,8 @@ permissions:
   contents: read
 
 jobs:
-  checks:
-    name: Lint, Test, Check
+  test:
+    name: Test
     runs-on: macos-latest
     timeout-minutes: 30
 
@@ -50,13 +50,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint UI
-        run: bash .github/ci/ui-lint.sh
-
-      - name: Test Go server
-        env:
-          GOCACHE: ${{ runner.temp }}/go-cache
-        run: bash .github/ci/go-test.sh
-
-      - name: Check Rust desktop
-        run: bash .github/ci/rust-check.sh
+      - name: Test
+        run: pnpm test
