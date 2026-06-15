@@ -16,6 +16,10 @@ const suites = [
   },
   // TODO: Go (server)   — dev/scripts/go/test.mjs
   {
+    name: "Go (server)",
+    script: path.resolve(scriptDir, "../go/test.mjs"),
+  },
+  {
     name: "TS (ui)",
     script: path.resolve(scriptDir, "../ts/test.mjs"),
   },
