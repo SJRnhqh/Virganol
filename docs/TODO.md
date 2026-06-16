@@ -14,10 +14,10 @@
 - [ ] `trace_id` / `operation_id` — traceable error chains, log correlation
 - [ ] `ProviderIssue` merge into `ProviderAppError` — multiple issues carried via details
 - [ ] `message()` retirement — `reset.rs` dual-failure pattern reworked to embed via details
-- [ ] `ProviderCheckStatusPayload` boundary fix — replace raw `HealthCheckResult` with a lifecycle-specific type that converts `ProviderError` → `ProviderAppError` before serialization (currently bypasses boundary contract)
 
 ## Completed
 
+- [x] `ProviderCheckStatusPayload` boundary fix — projected lifecycle status through a private contract adapter so serialized status carries `ProviderAppError` instead of raw `ProviderError`
 - [x] Dev tooling: `pnpm test` orchestrator with per-stack scripts (Rust: lint + cargo test, TS: eslint)
 - [x] Husky pre-commit simplified to `pnpm test` (lint + test in one gate)
 - [x] Go test script added — all three stacks covered by `pnpm test`

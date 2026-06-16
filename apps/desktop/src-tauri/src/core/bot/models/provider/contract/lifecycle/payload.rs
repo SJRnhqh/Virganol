@@ -5,6 +5,7 @@ use super::super::super::lifecycle::ProviderCheckTrigger;
 use super::super::super::{
     HealthCheckResult, ProviderAppError, ProviderId, ProviderIssue, ProviderKeyMeta, ProviderRecord,
 };
+use super::ProviderRuntimeStatus;
 
 /// Event payload emitted when one provider check lifecycle starts.
 ///
@@ -43,18 +44,10 @@ pub(in crate::core::bot) struct ProviderCheckStatusPayload<'a> {
     ///
     /// 当前状态所属的 Provider。
     provider: ProviderId,
-    /// Persisted provider config snapshot used for this status update.
+    /// Boundary-safe runtime status for this provider.
     ///
-    /// 当前 Provider 的已持久化配置快照。
-    config: ProviderRecord,
-    /// Health check result for this provider.
-    ///
-    /// 当前 Provider 的健康检查结果。
-    health: HealthCheckResult,
-    /// Sanitized provider key metadata resolved for this check.
-    ///
-    /// 当前 Provider 的去敏密钥元信息。
-    key_meta: ProviderKeyMeta,
+    /// 当前 Provider 面向边界契约的运行时状态。
+    status: ProviderRuntimeStatus,
 }
 
 impl<'a> ProviderCheckStatusPayload<'a> {
@@ -71,9 +64,7 @@ impl<'a> ProviderCheckStatusPayload<'a> {
         Self {
             run_id,
             provider,
-            config,
-            health,
-            key_meta,
+            status: ProviderRuntimeStatus::from_parts(config, key_meta, health),
         }
     }
 }
