@@ -8,6 +8,10 @@ import { fileURLToPath } from "node:url";
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
 
+// Timeout budget / 超时预算
+const DEFAULT_STEP_TIMEOUT_MS = 120_000;
+const RUST_BUILD_STEP_TIMEOUT_MS = 300_000;
+
 // Quality gates / 质量门
 const steps = [
   {
@@ -19,9 +23,20 @@ const steps = [
     name: "sidecar",
     command: "node",
     args: [path.resolve(repoRoot, "apps/desktop/scripts/build-sidecar.js")],
+    timeoutMs: RUST_BUILD_STEP_TIMEOUT_MS,
   },
-  { name: "check", command: "cargo", args: ["check"] },
-  { name: "test", command: "cargo", args: ["test"] },
+  {
+    name: "check",
+    command: "cargo",
+    args: ["check"],
+    timeoutMs: RUST_BUILD_STEP_TIMEOUT_MS,
+  },
+  {
+    name: "test",
+    command: "cargo",
+    args: ["test"],
+    timeoutMs: RUST_BUILD_STEP_TIMEOUT_MS,
+  },
 ];
 
 let failed = 0;
@@ -32,7 +47,7 @@ for (const step of steps) {
       cwd: repoRoot,
       encoding: "utf8",
       stdio: "inherit",
-      timeout: 120_000,
+      timeout: step.timeoutMs ?? DEFAULT_STEP_TIMEOUT_MS,
     });
   } catch {
     failed += 1;

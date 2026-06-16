@@ -8,6 +8,10 @@ import { fileURLToPath } from "node:url";
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
 
+// Timeout budget / 超时预算
+const DEFAULT_SUITE_TIMEOUT_MS = 180_000;
+const RUST_SUITE_TIMEOUT_MS = 600_000;
+
 // Suite routing / 测试套件路由
 const suites = [
   {
@@ -17,6 +21,7 @@ const suites = [
   {
     name: "Rust (desktop)",
     script: path.resolve(scriptDir, "../rust/test.mjs"),
+    timeoutMs: RUST_SUITE_TIMEOUT_MS,
   },
   {
     name: "TS (ui)",
@@ -41,12 +46,15 @@ for (const suite of suites) {
     cwd: repoRoot,
     encoding: "utf8",
     stdio: "inherit",
-    timeout: 180_000,
+    timeout: suite.timeoutMs ?? DEFAULT_SUITE_TIMEOUT_MS,
   });
 
   if (result.status === 0) {
     passed += 1;
   } else {
+    if (result.error) {
+      console.error(`suite failed: ${suite.name}: ${result.error.message}`);
+    }
     failed += 1;
   }
 }

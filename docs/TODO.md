@@ -20,6 +20,7 @@
 - [x] `ProviderCheckStatusPayload` boundary fix — projected lifecycle status through a private contract adapter so serialized status carries `ProviderAppError` instead of raw `ProviderError`
 - [x] Dev tooling: `pnpm test` orchestrator with per-stack scripts (Rust: lint + cargo test, TS: eslint)
 - [x] Rust CI sidecar preflight — build the Tauri external sidecar before `cargo check` / `cargo test`
+- [x] CI timeout budget — extend Rust suite and Rust build-step timeouts for cold GitHub Actions builds
 - [x] Husky pre-commit simplified to `pnpm test` (lint + test in one gate)
 - [x] Go test script added — all three stacks covered by `pnpm test`
 - [x] Rust `cargo check` + Go `go vet` added; router reordered Go→Rust→TS
