@@ -10,7 +10,16 @@ const repoRoot = path.resolve(scriptDir, "../../..");
 
 // Quality gates / 质量门
 const steps = [
-  { name: "lint", command: "node", args: [path.resolve(scriptDir, "lint-source-headers.mjs")] },
+  {
+    name: "lint",
+    command: "node",
+    args: [path.resolve(scriptDir, "lint-source-headers.mjs")],
+  },
+  {
+    name: "sidecar",
+    command: "node",
+    args: [path.resolve(repoRoot, "apps/desktop/scripts/build-sidecar.js")],
+  },
   { name: "check", command: "cargo", args: ["check"] },
   { name: "test", command: "cargo", args: ["test"] },
 ];
