@@ -5,15 +5,15 @@
 
 ## Current
 
-- [ ] `ProviderErrorDetails` design & implementation — replace PhantomData with structured fields (trace_id, operation_id, nested error source)
+- [ ] `ProviderErrorDetails` design & implementation — replace PhantomData with structured fields (trace_id, operation_id, nested source / secondary errors)
 
 ## Planned
 
+- [ ] `AppError` details carrier — replace marker-only PhantomData with serializable optional details and skip absent details
+- [ ] `ProviderError` typed source coverage — replace source-capable `String` variants with typed sources/context so `source()` chains extend beyond serde_json errors
 - [ ] `trace_id` / `operation_id` — traceable error chains, log correlation
 - [ ] `ProviderIssue` merge into `ProviderAppError` — multiple issues carried via details
 - [ ] `message()` retirement — `reset.rs` dual-failure pattern reworked to embed via details
-- [ ] Front-end error type sync — mirror `ProviderErrorCode` on the TS side
-- [ ] Integration tests — 5 command chains + lifecycle endpoint verification
 - [ ] `ProviderCheckStatusPayload` boundary fix — replace raw `HealthCheckResult` with a lifecycle-specific type that converts `ProviderError` → `ProviderAppError` before serialization (currently bypasses boundary contract)
 
 ## Completed
