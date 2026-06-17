@@ -7,6 +7,11 @@ use thiserror::Error;
 /// Provider 子系统的内部领域错误。
 #[derive(Error, Debug)]
 pub(in crate::core::bot) enum ProviderError {
+    /// Provider manager received a command payload without the expected data section.
+    ///
+    /// Provider manager 收到缺少预期 data 区块的命令载荷。
+    #[error("{0}")]
+    ManagerRequestPayloadAbsent(String),
     /// Provider check lifecycle started event emission failed.
     ///
     /// Provider 检查生命周期开始事件推送失败。

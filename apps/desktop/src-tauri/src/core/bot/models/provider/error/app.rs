@@ -15,10 +15,10 @@ impl ProviderAppError {
     /// Creates a provider boundary error from an error code.
     ///
     /// 使用错误码创建 Provider 边界错误。
-    fn new(code: ProviderErrorCode) -> Self {
+    fn new(code: ProviderErrorCode, details: ProviderErrorDetails) -> Self {
         let message = code.default_message();
 
-        Self(AppError::new(code, message))
+        Self(AppError::new(code, message, details))
     }
 
     /// Creates a provider boundary error with a custom message.
@@ -30,13 +30,6 @@ impl ProviderAppError {
     ) -> Self {
         Self(AppError::new(code, message))
     }
-
-    /// Creates an error for command payloads missing required request data.
-    ///
-    /// 创建命令载荷缺少必需请求数据时的错误。
-    pub(in crate::core::bot) fn missing_request_data() -> Self {
-        Self::new(ProviderErrorCode::MissingRequestData)
-    }
 }
 
 impl From<&ProviderError> for ProviderAppError {
@@ -44,6 +37,9 @@ impl From<&ProviderError> for ProviderAppError {
     ///
     /// 将内部 Provider 错误转换为 Provider 边界错误。
     fn from(error: &ProviderError) -> Self {
-        Self::new(ProviderErrorCode::from(error))
+        let code = ProviderErrorCode::from(error);
+        let details = ProviderErrorDetails::from(error);
+
+        Self::new(code, details)
     }
 }

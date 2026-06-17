@@ -5,11 +5,12 @@
 
 ## Current
 
-- [ ] `ProviderErrorDetails` design & implementation — replace PhantomData with structured fields (trace_id, operation_id, nested source / secondary errors)
+- [ ] `ProviderErrorDetails` domainScope mapping — replace the `provider.unknown` fallback with variant-level Provider domain scopes
+- [ ] `reset.rs` transitional `with_message` gap — replace custom boundary-message construction with details-based dual-error modeling
 
 ## Planned
 
-- [ ] `AppError` details carrier — replace marker-only PhantomData with serializable optional details and skip absent details
+- [ ] `ProviderAppError` cleanup — remove transitional `with_message` after reset dual-error details can replace custom boundary messages
 - [ ] `ProviderError` typed source coverage — replace source-capable `String` variants with typed sources/context so `source()` chains extend beyond serde_json errors
 - [ ] `trace_id` / `operation_id` — traceable error chains, log correlation
 - [ ] `ProviderIssue` merge into `ProviderAppError` — multiple issues carried via details
@@ -17,6 +18,9 @@
 
 ## Completed
 
+- [x] `AppError` details carrier — replaced marker-only `PhantomData` with a required serializable details field
+- [x] `ProviderErrorDetails` scaffold — introduced `domainScope` and a field-level projection shell from `ProviderError`
+- [x] Manager request payload error routing — added `ManagerRequestPayloadAbsent`, mapped it to `missing_request_data`, and routed connect/update payload failures through `ProviderError`
 - [x] `ProviderCheckStatusPayload` boundary fix — projected lifecycle status through a private contract adapter so serialized status carries `ProviderAppError` instead of raw `ProviderError`
 - [x] Dev tooling: `pnpm test` orchestrator with per-stack scripts (Rust: lint + cargo test, TS: eslint)
 - [x] Rust CI sidecar preflight — build the Tauri external sidecar before `cargo check` / `cargo test`

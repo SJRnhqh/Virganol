@@ -3,7 +3,7 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::AppState;
 use super::super::super::super::super::{
-    ProviderAppError, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
+    ProviderAppError, ProviderError, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
 use super::super::update_models;
 
@@ -18,8 +18,14 @@ pub(crate) fn update_provider_enabled_models(
     let (provider_id, data) = request.into_parts();
     let provider_state = state.provider();
 
-    let Some(payload) = data else {
-        return UpdateEnabledModelsResponse::failure(ProviderAppError::missing_request_data());
+    let payload = match data {
+        Some(payload) => payload,
+        None => {
+            let e = ProviderError::ManagerRequestPayloadAbsent(
+                "provider manager request payload is absent".to_string(),
+            );
+            return UpdateEnabledModelsResponse::failure(ProviderAppError::from(&e));
+        }
     };
 
     match update_models(

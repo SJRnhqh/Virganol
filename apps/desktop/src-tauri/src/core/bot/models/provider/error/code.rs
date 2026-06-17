@@ -68,6 +68,7 @@ impl From<&ProviderError> for ProviderErrorCode {
     /// 将内部 Provider 错误粗粒化为 Provider 边界错误码。
     fn from(error: &ProviderError) -> Self {
         match error {
+            ProviderError::ManagerRequestPayloadAbsent(_) => Self::MissingRequestData,
             ProviderError::CheckStartedEmit(_)
             | ProviderError::CheckCompletedEmit(_)
             | ProviderError::CheckFailedEmit(_)
