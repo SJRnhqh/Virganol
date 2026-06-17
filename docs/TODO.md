@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] `ProviderErrorDetails` domainScope mapping — replace the `provider.unknown` fallback with variant-level Provider domain scopes
+- [ ] `ProviderErrorDetails` extended fields — design structured details beyond `domainScope` for issues, dual-error reset failures, and front-end-safe diagnostics
 - [ ] `reset.rs` transitional `with_message` gap — replace custom boundary-message construction with details-based dual-error modeling
 
 ## Planned
@@ -20,6 +20,7 @@
 
 - [x] `AppError` details carrier — replaced marker-only `PhantomData` with a required serializable details field
 - [x] `ProviderErrorDetails` scaffold — introduced `domainScope` and a field-level projection shell from `ProviderError`
+- [x] `ProviderErrorDetails` domainScope mapping — mapped manager, lifecycle, connection, store/config, and store/secret errors to stable Provider domain scopes while keeping unsupported provider errors on the unknown fallback
 - [x] Manager request payload error routing — added `ManagerRequestPayloadAbsent`, mapped it to `missing_request_data`, and routed connect/update payload failures through `ProviderError`
 - [x] `ProviderCheckStatusPayload` boundary fix — projected lifecycle status through a private contract adapter so serialized status carries `ProviderAppError` instead of raw `ProviderError`
 - [x] Dev tooling: `pnpm test` orchestrator with per-stack scripts (Rust: lint + cargo test, TS: eslint)

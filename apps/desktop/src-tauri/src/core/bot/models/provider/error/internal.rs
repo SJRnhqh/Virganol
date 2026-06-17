@@ -37,11 +37,6 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider 并发检查执行失败（join 错误或结构性问题）。
     #[error("{0}")]
     CheckConcurrentFailed(String),
-    /// Provider id from storage is not supported by the current backend.
-    ///
-    /// 存储中的 provider id 不被当前后端支持。
-    #[error("{0}")]
-    UnsupportedProvider(String),
     /// Required health check configuration is missing.
     ///
     /// 健康检查所需配置缺失。
@@ -132,6 +127,11 @@ pub(in crate::core::bot) enum ProviderError {
     /// 系统密钥存储无法删除。
     #[error("{0}")]
     SecretStoreRemove(String),
+    /// Provider id from storage is not supported by the current backend.
+    ///
+    /// 存储中的 provider id 不被当前后端支持。
+    #[error("{0}")]
+    UnsupportedProvider(String),
 }
 
 // Downgrades a ProviderError into a warning log rather than propagating to the boundary.

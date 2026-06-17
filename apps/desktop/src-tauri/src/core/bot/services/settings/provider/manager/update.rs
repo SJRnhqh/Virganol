@@ -18,8 +18,8 @@ pub(crate) fn update_provider_enabled_models(
     let (provider_id, data) = request.into_parts();
     let provider_state = state.provider();
 
-    let payload = match data {
-        Some(payload) => payload,
+    let data = match data {
+        Some(data) => data,
         None => {
             let e = ProviderError::ManagerRequestPayloadAbsent(
                 "provider manager request payload is absent".to_string(),
@@ -28,12 +28,7 @@ pub(crate) fn update_provider_enabled_models(
         }
     };
 
-    match update_models(
-        app,
-        provider_state,
-        provider_id,
-        payload.into_enabled_models(),
-    ) {
+    match update_models(app, provider_state, provider_id, data.into_enabled_models()) {
         Ok(()) => UpdateEnabledModelsResponse::success(),
         Err(e) => UpdateEnabledModelsResponse::failure(ProviderAppError::from(&e)),
     }
