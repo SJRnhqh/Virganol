@@ -1,0 +1,7 @@
+[project]
+name = "virganol-dev-tools"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "headroom-ai[mcp]>=0.26.0",
+]

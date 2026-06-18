@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/details.rs
 use serde::Serialize;
 
-use super::ProviderError;
+use super::{ProviderAppError, ProviderError};
 
 /// Provider-specific structured application boundary error details.
 ///
@@ -9,13 +9,31 @@ use super::ProviderError;
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub(super) struct ProviderErrorDetails {
-    /// Always-present provider-domain scope for locating the error.
+    /// Provider-domain scope that identifies where the error originated.
     ///
-    /// 常驻的 Provider 领域范围，用于定位错误源头。
+    /// 标识错误来源位置的 Provider 领域范围。
     domain_scope: String,
+    /// Provider boundary error produced while recovering from the primary failure.
+    ///
+    /// 主错误发生后，恢复状态时产生的 Provider 边界错误。
+    #[serde(skip_serializing_if = "Option::is_none")]
+    recovery_failure: Option<Box<ProviderAppError>>,
 }
 
 impl ProviderErrorDetails {
+    /// Creates provider details with a recovery failure attached.
+    ///
+    /// 创建附带恢复失败的 Provider 错误细节。
+    pub(super) fn with_recovery_failure(
+        error: &ProviderError,
+        recovery_failure: &ProviderError,
+    ) -> Self {
+        Self {
+            domain_scope: Self::domain_scope_from(error).to_string(),
+            recovery_failure: Some(Box::new(ProviderAppError::from(recovery_failure))),
+        }
+    }
+
     /// Projects an internal provider error into a provider-domain scope.
     ///
     /// 将内部 Provider 错误投影为 Provider 领域范围。
@@ -59,6 +77,7 @@ impl From<&ProviderError> for ProviderErrorDetails {
     fn from(error: &ProviderError) -> Self {
         Self {
             domain_scope: Self::domain_scope_from(error).to_string(),
+            recovery_failure: None,
         }
     }
 }

@@ -5,19 +5,22 @@
 
 ## Current
 
-- [ ] `ProviderErrorDetails` extended fields — design structured details beyond `domainScope` for issues, dual-error reset failures, and front-end-safe diagnostics
-- [ ] `reset.rs` transitional `with_message` gap — replace custom boundary-message construction with details-based dual-error modeling
+- [ ] `ProviderErrorDetails` remaining fields — continue structured details beyond `domainScope` for multi-provider issues and front-end-safe diagnostics
 
 ## Planned
 
-- [ ] `ProviderAppError` cleanup — remove transitional `with_message` after reset dual-error details can replace custom boundary messages
 - [ ] `ProviderError` typed source coverage — replace source-capable `String` variants with typed sources/context so `source()` chains extend beyond serde_json errors
 - [ ] `trace_id` / `operation_id` — traceable error chains, log correlation
 - [ ] `ProviderIssue` merge into `ProviderAppError` — multiple issues carried via details
-- [ ] `message()` retirement — `reset.rs` dual-failure pattern reworked to embed via details
 
 ## Completed
 
+- [x] `ProviderErrorDetails` recoveryFailure field — modeled reset recovery failures as nested `ProviderAppError` details without changing normal single-error projection
+- [x] `reset.rs` transitional `with_message` gap — replaced custom dual-error message construction with details-based recovery failure modeling
+- [x] `ProviderAppError` cleanup — removed transitional `with_message` and kept recovery failure construction behind a semantic boundary helper
+- [x] `message()` retirement — removed the reset-only `ProviderError::message()` helper after dual-failure embedding moved into details
+- [x] `ProviderErrorCode` visibility cleanup — confined provider boundary code mapping to the error module
+- [x] Dev tools workspace — added `dev/tools` Python project scaffolding with `headroom-ai[mcp]`
 - [x] `AppError` details carrier — replaced marker-only `PhantomData` with a required serializable details field
 - [x] `ProviderErrorDetails` scaffold — introduced `domainScope` and a field-level projection shell from `ProviderError`
 - [x] `ProviderErrorDetails` domainScope mapping — mapped manager, lifecycle, connection, store/config, and store/secret errors to stable Provider domain scopes while keeping unsupported provider errors on the unknown fallback

@@ -7,7 +7,7 @@ use super::ProviderError;
 ///
 /// Provider 领域的应用边界错误码。
 #[derive(Serialize)]
-pub(in crate::core::bot) enum ProviderErrorCode {
+pub(super) enum ProviderErrorCode {
     /// Manager/request layer: received a command payload without required data.
     ///
     /// manager/request 层：收到缺少必需 data 字段的命令载荷。

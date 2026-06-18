@@ -21,14 +21,17 @@ impl ProviderAppError {
         Self(AppError::new(code, message, details))
     }
 
-    /// Creates a provider boundary error with a custom message.
+    /// Creates a provider boundary error with a recovery failure attached.
     ///
-    /// 使用自定义消息创建 Provider 边界错误。
-    pub(in crate::core::bot) fn with_message(
-        code: ProviderErrorCode,
-        message: impl Into<String>,
+    /// 创建附带恢复失败的 Provider 边界错误。
+    pub(in crate::core::bot) fn with_recovery_failure(
+        error: &ProviderError,
+        recovery_failure: &ProviderError,
     ) -> Self {
-        Self(AppError::new(code, message))
+        let code = ProviderErrorCode::from(error);
+        let details = ProviderErrorDetails::with_recovery_failure(error, recovery_failure);
+
+        Self::new(code, details)
     }
 }
 

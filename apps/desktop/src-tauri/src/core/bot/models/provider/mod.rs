@@ -20,7 +20,7 @@ pub(in crate::core::bot) use contract::{
     ProviderCheckStatusPayload,
 };
 pub(crate) use error::ProviderIssue;
-pub(in crate::core::bot) use error::{ProviderAppError, ProviderError, ProviderErrorCode};
+pub(in crate::core::bot) use error::{ProviderAppError, ProviderError};
 pub(crate) use lifecycle::ProviderCheckTrigger;
 pub(in crate::core::bot) use lifecycle::{ProviderCheckFinalization, ProviderCheckRunResult};
 pub(in crate::core::bot) use secret::{

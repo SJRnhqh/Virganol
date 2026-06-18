@@ -139,12 +139,6 @@ pub(in crate::core::bot) enum ProviderError {
 // 将 ProviderError 降级为警告日志，不上抛到边界。
 crate::impl_downgrade!(ProviderError);
 
-impl ProviderError {
-    pub fn message(&self) -> String {
-        self.to_string()
-    }
-}
-
 impl Serialize for ProviderError {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
