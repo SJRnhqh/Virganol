@@ -27,7 +27,10 @@ pub(crate) async fn connect_and_save(
             let e = ProviderError::ManagerRequestPayloadAbsent(
                 "provider manager request payload is absent".to_string(),
             );
-            return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+            return ConnectAndSaveProviderResponse::failure(ProviderAppError::with_provider_id(
+                &e,
+                provider_id,
+            ));
         }
     };
 
@@ -40,12 +43,21 @@ pub(crate) async fn connect_and_save(
             .into_models()
         {
             Ok(models) => models,
-            Err(e) => return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e)),
+            Err(e) => {
+                return ConnectAndSaveProviderResponse::failure(
+                    ProviderAppError::with_provider_id(&e, provider_id),
+                );
+            }
         };
 
     let previous_record = match load_provider_record(app, provider_id) {
         Ok(record) => record,
-        Err(e) => return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e)),
+        Err(e) => {
+            return ConnectAndSaveProviderResponse::failure(ProviderAppError::with_provider_id(
+                &e,
+                provider_id,
+            ));
+        }
     };
 
     let record = ProviderRecord::from_connection(
@@ -58,11 +70,19 @@ pub(crate) async fn connect_and_save(
 
     let key_transaction = match ProviderKeyTransaction::begin(provider_id, normalized_key) {
         Ok(transaction) => transaction,
-        Err(e) => return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e)),
+        Err(e) => {
+            return ConnectAndSaveProviderResponse::failure(ProviderAppError::with_provider_id(
+                &e,
+                provider_id,
+            ));
+        }
     };
 
     if let Err(e) = save_provider(app, provider_state, provider_id, record) {
-        return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+        return ConnectAndSaveProviderResponse::failure(ProviderAppError::with_provider_id(
+            &e,
+            provider_id,
+        ));
     }
 
     if let Some(transaction) = key_transaction {

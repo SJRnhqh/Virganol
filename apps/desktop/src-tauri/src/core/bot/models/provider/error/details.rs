@@ -1,6 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/details.rs
 use serde::Serialize;
 
+use super::super::ProviderId;
 use super::{ProviderAppError, ProviderError};
 
 /// Provider-specific structured application boundary error details.
@@ -13,6 +14,11 @@ pub(super) struct ProviderErrorDetails {
     ///
     /// 标识错误来源位置的 Provider 领域范围。
     domain_scope: String,
+    /// Provider task context where this error occurred, when available.
+    ///
+    /// 错误发生时可归属的 Provider 任务上下文。
+    #[serde(skip_serializing_if = "Option::is_none")]
+    provider_id: Option<ProviderId>,
     /// Provider boundary error produced while recovering from the primary failure.
     ///
     /// 主错误发生后，恢复状态时产生的 Provider 边界错误。
@@ -21,6 +27,27 @@ pub(super) struct ProviderErrorDetails {
 }
 
 impl ProviderErrorDetails {
+    /// Projects an internal provider error into the base boundary details.
+    ///
+    /// 将内部 Provider 错误投影为基础边界细节。
+    fn from_error(error: &ProviderError) -> Self {
+        Self {
+            domain_scope: Self::domain_scope_from(error).to_string(),
+            provider_id: None,
+            recovery_failure: None,
+        }
+    }
+
+    /// Creates provider details with provider task context attached.
+    ///
+    /// 创建附带 Provider 任务上下文的错误细节。
+    pub(super) fn with_provider_id(error: &ProviderError, provider_id: ProviderId) -> Self {
+        Self {
+            provider_id: Some(provider_id),
+            ..Self::from_error(error)
+        }
+    }
+
     /// Creates provider details with a recovery failure attached.
     ///
     /// 创建附带恢复失败的 Provider 错误细节。
@@ -29,8 +56,8 @@ impl ProviderErrorDetails {
         recovery_failure: &ProviderError,
     ) -> Self {
         Self {
-            domain_scope: Self::domain_scope_from(error).to_string(),
             recovery_failure: Some(Box::new(ProviderAppError::from(recovery_failure))),
+            ..Self::from_error(error)
         }
     }
 
@@ -75,9 +102,6 @@ impl From<&ProviderError> for ProviderErrorDetails {
     ///
     /// 将内部 Provider 错误投影为结构化边界细节。
     fn from(error: &ProviderError) -> Self {
-        Self {
-            domain_scope: Self::domain_scope_from(error).to_string(),
-            recovery_failure: None,
-        }
+        Self::from_error(error)
     }
 }

@@ -5,15 +5,18 @@
 
 ## Current
 
-- [ ] `ProviderError` internal cause chain — replace source-capable `String` variants with typed sources/context so `source()` chains extend beyond serde_json errors
+- [ ] `ProviderErrorDetails.providerId` follow-through — make reset and lifecycle provider task-context attribution self-consistent before issue aggregation
 
 ## Planned
 
-- [ ] `ProviderIssue` merge into `ProviderAppError` — multiple issues carried via details
+- [ ] `ProviderIssue` merge into `ProviderAppError.details` — collapse lifecycle failed payload to a single `error` field and carry provider-scoped related errors as a `ProviderAppError` list in details
+- [ ] `ProviderError` internal cause chain — replace source-capable `String` variants with typed sources/context so `source()` chains extend beyond serde_json errors
 - [ ] Logging system handoff — defer trace/correlation identifiers to the logging context design instead of modeling them in the current error-system pass
 
 ## Completed
 
+- [x] `ProviderErrorDetails.providerId` scaffold — added optional provider task context to Provider boundary details and centralized ProviderAppError construction through projected details
+- [x] Connect/update provider context projection — attached `providerId` to connect and update boundary errors while leaving reset for a separate self-consistency pass
 - [x] `ProviderErrorDetails` recoveryFailure field — modeled reset recovery failures as nested `ProviderAppError` details without changing normal single-error projection
 - [x] `reset.rs` transitional `with_message` gap — replaced custom dual-error message construction with details-based recovery failure modeling
 - [x] `ProviderAppError` cleanup — removed transitional `with_message` and kept recovery failure construction behind a semantic boundary helper

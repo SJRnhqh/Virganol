@@ -24,12 +24,18 @@ pub(crate) fn update_provider_enabled_models(
             let e = ProviderError::ManagerRequestPayloadAbsent(
                 "provider manager request payload is absent".to_string(),
             );
-            return UpdateEnabledModelsResponse::failure(ProviderAppError::from(&e));
+            return UpdateEnabledModelsResponse::failure(ProviderAppError::with_provider_id(
+                &e,
+                provider_id,
+            ));
         }
     };
 
     match update_models(app, provider_state, provider_id, data.into_enabled_models()) {
         Ok(()) => UpdateEnabledModelsResponse::success(),
-        Err(e) => UpdateEnabledModelsResponse::failure(ProviderAppError::from(&e)),
+        Err(e) => UpdateEnabledModelsResponse::failure(ProviderAppError::with_provider_id(
+            &e,
+            provider_id,
+        )),
     }
 }

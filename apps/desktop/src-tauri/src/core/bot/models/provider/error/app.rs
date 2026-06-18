@@ -2,6 +2,7 @@
 use serde::Serialize;
 
 use super::super::super::super::super::AppError;
+use super::super::ProviderId;
 use super::{ProviderError, ProviderErrorCode, ProviderErrorDetails};
 
 /// Provider-specific application boundary error type.
@@ -21,6 +22,27 @@ impl ProviderAppError {
         Self(AppError::new(code, message, details))
     }
 
+    /// Creates a provider boundary error from an internal error and projected details.
+    ///
+    /// 使用内部错误与已投影细节创建 Provider 边界错误。
+    fn from_details(error: &ProviderError, details: ProviderErrorDetails) -> Self {
+        let code = ProviderErrorCode::from(error);
+
+        Self::new(code, details)
+    }
+
+    /// Creates a provider boundary error with provider task context attached.
+    ///
+    /// 创建附带 Provider 任务上下文的边界错误。
+    pub(in crate::core::bot) fn with_provider_id(
+        error: &ProviderError,
+        provider_id: ProviderId,
+    ) -> Self {
+        let details = ProviderErrorDetails::with_provider_id(error, provider_id);
+
+        Self::from_details(error, details)
+    }
+
     /// Creates a provider boundary error with a recovery failure attached.
     ///
     /// 创建附带恢复失败的 Provider 边界错误。
@@ -28,10 +50,9 @@ impl ProviderAppError {
         error: &ProviderError,
         recovery_failure: &ProviderError,
     ) -> Self {
-        let code = ProviderErrorCode::from(error);
         let details = ProviderErrorDetails::with_recovery_failure(error, recovery_failure);
 
-        Self::new(code, details)
+        Self::from_details(error, details)
     }
 }
 
@@ -40,9 +61,8 @@ impl From<&ProviderError> for ProviderAppError {
     ///
     /// 将内部 Provider 错误转换为 Provider 边界错误。
     fn from(error: &ProviderError) -> Self {
-        let code = ProviderErrorCode::from(error);
         let details = ProviderErrorDetails::from(error);
 
-        Self::new(code, details)
+        Self::from_details(error, details)
     }
 }
