@@ -1,17 +1,16 @@
 # Branch TODO
 
 - Branch: feat/spirit-errors-deep
-- Goal: Provider error system deep dive — details / thiserror / trace_id / front-end sync / integration tests (Phase 6.4–6.6)
+- Goal: Provider backend error system deep dive — typed source chains / issue aggregation, then logging system design (Phase 6.2–6.3)
 
 ## Current
 
-- [ ] `ProviderErrorDetails` remaining fields — continue structured details beyond `domainScope` for multi-provider issues and front-end-safe diagnostics
+- [ ] `ProviderError` internal cause chain — replace source-capable `String` variants with typed sources/context so `source()` chains extend beyond serde_json errors
 
 ## Planned
 
-- [ ] `ProviderError` typed source coverage — replace source-capable `String` variants with typed sources/context so `source()` chains extend beyond serde_json errors
-- [ ] `trace_id` / `operation_id` — traceable error chains, log correlation
 - [ ] `ProviderIssue` merge into `ProviderAppError` — multiple issues carried via details
+- [ ] Logging system handoff — defer trace/correlation identifiers to the logging context design instead of modeling them in the current error-system pass
 
 ## Completed
 
