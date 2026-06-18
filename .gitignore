@@ -28,6 +28,9 @@ bin/
 # AI
 .claude/
 
+# Python
+.venv/
+
 # CodeArt
 .arts/*
 
