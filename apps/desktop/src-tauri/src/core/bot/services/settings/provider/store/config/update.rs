@@ -20,10 +20,7 @@ pub(in crate::core::bot::services::settings::provider) fn update_models(
     let mut providers = load_all_providers(app)?;
 
     let Some(record) = providers.get_mut(provider_id.as_str()) else {
-        return Err(ProviderError::ConfigNotFound(format!(
-            "{} not found in store",
-            provider_id
-        )));
+        return Err(ProviderError::ConfigNotFound { provider_id });
     };
 
     record.replace_enabled_models(enabled_models);

@@ -43,7 +43,8 @@ impl ProviderErrorDetails {
     /// 从内部 Provider 错误中投影可用的 Provider 任务上下文。
     fn provider_id_from(error: &ProviderError) -> Option<ProviderId> {
         match error {
-            ProviderError::ManagerRequestPayloadAbsent { provider_id } => Some(*provider_id),
+            ProviderError::ManagerRequestPayloadAbsent { provider_id }
+            | ProviderError::ConfigNotFound { provider_id } => Some(*provider_id),
             _ => None,
         }
     }
@@ -89,7 +90,7 @@ impl ProviderErrorDetails {
                 "provider.connection.check.request"
             }
             ProviderError::HealthCheckResponseFormat(_) => "provider.connection.check.parse",
-            ProviderError::ConfigNotFound(_) => "provider.store.config.find",
+            ProviderError::ConfigNotFound { .. } => "provider.store.config.find",
             ProviderError::JsonSerialize(_) | ProviderError::ConfigStoreSerialize(_) => {
                 "provider.store.config.serialize"
             }

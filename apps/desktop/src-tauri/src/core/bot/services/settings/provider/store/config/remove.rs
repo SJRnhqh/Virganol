@@ -21,7 +21,7 @@ pub(in crate::core::bot::services::settings::provider) fn remove_provider(
     let previous = providers.remove(provider_id.as_str());
 
     if previous.is_none() {
-        ProviderError::ConfigNotFound(format!("{} config not found, already clean", provider_id))
+        ProviderError::ConfigNotFound { provider_id }
             .downgrade();
         return Ok(None);
     }

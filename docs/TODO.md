@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Connect/update provider context review — continue migrating provider-scoped manager errors from boundary-level `ProviderAppError::with_provider_id` projection into typed `ProviderError` context/source fields one error at a time
+- [ ] Update provider store error field review — continue upgrading update-chain `ProviderError` variants into typed context/source fields one error at a time
 
 ## Planned
 
@@ -17,6 +17,7 @@
 
 ## Completed
 
+- [x] `ConfigNotFound` typed provider context — replaced free-text store/config not-found messages with `provider_id`, projected `details.providerId` from `ProviderError`, and updated update/remove store constructors
 - [x] `ManagerRequestPayloadAbsent` typed provider context — replaced free-text `String` with `provider_id`, projected `details.providerId` from `ProviderError`, and moved connect/update missing-payload responses onto `ProviderAppError::from`
 - [x] `ProviderErrorDetails.providerId` scaffold — added optional provider task context to Provider boundary details and centralized ProviderAppError construction through projected details
 - [x] Connect/update provider context projection scaffold — attached `providerId` to connect and update boundary errors as an interim boundary projection while deeper ProviderError context modeling remains open

@@ -62,8 +62,8 @@ pub(in crate::core::bot) enum ProviderError {
     /// Requested provider has no persisted configuration record.
     ///
     /// 请求的 provider 没有对应的持久化配置记录。
-    #[error("{0}")]
-    ConfigNotFound(String),
+    #[error("provider configuration not found for {provider_id}")]
+    ConfigNotFound { provider_id: ProviderId },
     /// Provider configuration failed to serialize into JSON.
     ///
     /// Provider 配置序列化为 JSON 失败。
