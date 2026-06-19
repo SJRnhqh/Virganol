@@ -85,8 +85,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider configuration store could not be opened.
     ///
     /// Provider 配置存储无法打开。
-    #[error("{0}")]
-    ConfigStoreOpen(String),
+    #[error("provider configuration store could not be opened: {source}")]
+    ConfigStoreOpen {
+        provider_id: Option<ProviderId>,
+        #[source]
+        source: tauri_plugin_store::Error,
+    },
     /// Provider configuration store path could not be resolved.
     ///
     /// Provider 配置存储路径无法解析。

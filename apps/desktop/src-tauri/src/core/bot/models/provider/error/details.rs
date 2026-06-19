@@ -52,7 +52,8 @@ impl ProviderErrorDetails {
             | ProviderError::ConfigStoreWrite { provider_id, .. }
             | ProviderError::ConfigStoreSync { provider_id, .. }
             | ProviderError::ConfigStoreReplace { provider_id, .. } => Some(*provider_id),
-            ProviderError::JsonDeserialize { provider_id, .. } => *provider_id,
+            ProviderError::JsonDeserialize { provider_id, .. }
+            | ProviderError::ConfigStoreOpen { provider_id, .. } => *provider_id,
             _ => None,
         }
     }
@@ -103,7 +104,7 @@ impl ProviderErrorDetails {
                 "provider.store.config.serialize"
             }
             ProviderError::JsonDeserialize { .. } => "provider.store.config.deserialize",
-            ProviderError::ConfigStoreOpen(_) => "provider.store.config.open",
+            ProviderError::ConfigStoreOpen { .. } => "provider.store.config.open",
             ProviderError::ConfigStorePath { .. } => "provider.store.config.resolve",
             ProviderError::ConfigStoreTempCreate { .. }
             | ProviderError::ConfigStoreWrite { .. }

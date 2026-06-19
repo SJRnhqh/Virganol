@@ -3,16 +3,20 @@ use std::sync::Arc;
 use tauri::AppHandle;
 use tauri_plugin_store::StoreExt;
 
-use super::super::super::super::super::{ProviderError, SETTINGS_FILE};
+use super::super::super::super::super::{ProviderError, ProviderId, SETTINGS_FILE};
 
 /// Opens the settings store.
 ///
 /// 打开 settings store。
 pub(super) fn open_store(
     app: &AppHandle,
+    provider_id: Option<ProviderId>,
 ) -> Result<Arc<tauri_plugin_store::Store<tauri::Wry>>, ProviderError> {
     app.store(SETTINGS_FILE)
-        .map_err(|e| ProviderError::ConfigStoreOpen(format!("open settings store failed: {}", e)))
+        .map_err(|source| ProviderError::ConfigStoreOpen {
+            provider_id,
+            source,
+        })
 }
 
 /// Loads a JSON value by key from settings.json.
@@ -21,7 +25,8 @@ pub(super) fn open_store(
 pub(in crate::core::bot::services::settings) fn load_settings(
     app: &AppHandle,
     key: &str,
+    provider_id: Option<ProviderId>,
 ) -> Result<Option<serde_json::Value>, ProviderError> {
-    let store = open_store(app)?;
+    let store = open_store(app, provider_id)?;
     Ok(store.get(key))
 }

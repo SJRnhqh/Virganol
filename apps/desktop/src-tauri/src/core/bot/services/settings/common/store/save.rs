@@ -99,7 +99,7 @@ pub(in crate::core::bot::services::settings) fn save_settings(
     value: serde_json::Value,
     provider_id: ProviderId,
 ) -> Result<(), ProviderError> {
-    let store = open_store(app)?;
+    let store = open_store(app, Some(provider_id))?;
 
     store.set(key, value);
 

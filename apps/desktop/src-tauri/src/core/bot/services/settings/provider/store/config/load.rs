@@ -15,7 +15,7 @@ pub(super) fn load_all_providers(
     app: &AppHandle,
     provider_id: Option<ProviderId>,
 ) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
-    let maybe_value = load_settings(app, SPIRIT_PROVIDERS_KEY)?;
+    let maybe_value = load_settings(app, SPIRIT_PROVIDERS_KEY, provider_id)?;
     let Some(value) = maybe_value else {
         return Ok(HashMap::new());
     };
