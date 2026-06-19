@@ -5,15 +5,18 @@
 
 ## Current
 
-- [ ] Update provider store error field review — continue upgrading update-chain `ProviderError` variants into typed context/source fields one error at a time
+- [ ] Update provider store error field review — continue upgrading update-chain `ProviderError` variants into typed context/source fields one error at a time, using `provider_id` as the first concrete context field
 
 ## Planned
 
+- [ ] `ProviderError` field-structure pass — complete provider-scoped `String` variants by separating typed context fields from optional `#[source]` causes
+- [ ] `ProviderAppError::from` adoption pass — move manager/store call sites away from boundary `with_provider_id` once each `ProviderError` variant can project its own details context
+- [ ] `ProviderErrorDetails` projection pass — keep boundary `details` derived from structured `ProviderError` fields rather than service-layer field injection
 - [ ] Reset/lifecycle provider context adaptation — make provider task-context attribution self-consistent after the ProviderError context boundary is clarified
 - [ ] `ProviderIssue` merge into `ProviderAppError.details` — collapse lifecycle failed payload to a single `error` field and carry provider-scoped related errors as a `ProviderAppError` list in details
-- [ ] `ProviderError` internal cause chain — replace source-capable `String` variants with typed sources/context so `source()` chains extend beyond serde_json errors
-- [ ] Domain error context/source checkpoint — keep typed `ProviderError` fields split between structured context and optional source causes, then evaluate a shared context/source abstraction before the logging system pass if repetition stabilizes
-- [ ] Logging system handoff — defer trace/correlation identifiers to the logging context design instead of modeling them in the current error-system pass
+- [ ] Domain error context/source checkpoint — evaluate extracting provider error context as a first-class error-system concept after enough variants prove the context/source pattern
+- [ ] Error-system architecture note — document the Provider error design: domain error fields, source chains, boundary code/details projection, issue aggregation, and future shared abstractions
+- [ ] Logging system kickoff — start with structured log context reuse after the error context model is stable, keeping trace/correlation identifiers in logging rather than current error details
 
 ## Completed
 
