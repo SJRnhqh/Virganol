@@ -67,7 +67,7 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider configuration failed to serialize into JSON.
     ///
     /// Provider 配置序列化为 JSON 失败。
-    #[error("provider configuration failed to serialize for {provider_id}: {source}")]
+    #[error("provider configuration failed to serialize: {source}")]
     JsonSerialize {
         provider_id: ProviderId,
         #[source]
@@ -90,8 +90,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider configuration store path could not be resolved.
     ///
     /// Provider 配置存储路径无法解析。
-    #[error("{0}")]
-    ConfigStorePath(String),
+    #[error("provider configuration store path could not be resolved: {source}")]
+    ConfigStorePath {
+        provider_id: ProviderId,
+        #[source]
+        source: tauri::Error,
+    },
     /// Provider configuration store failed to serialize into JSON bytes.
     ///
     /// Provider 配置存储序列化为 JSON 字节失败。

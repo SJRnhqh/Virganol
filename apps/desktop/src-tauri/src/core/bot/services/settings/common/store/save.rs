@@ -10,11 +10,17 @@ use super::open_store;
 /// Gets store file path and temporary file path.
 ///
 /// 获取 store 文件路径和临时文件路径。
-fn get_store_paths(app: &AppHandle) -> Result<(PathBuf, PathBuf), ProviderError> {
+fn get_store_paths(
+    app: &AppHandle,
+    provider_id: ProviderId,
+) -> Result<(PathBuf, PathBuf), ProviderError> {
     let store_path = app
         .path()
         .app_data_dir()
-        .map_err(|e| ProviderError::ConfigStorePath(format!("get app data dir failed: {}", e)))?
+        .map_err(|source| ProviderError::ConfigStorePath {
+            provider_id,
+            source,
+        })?
         .join(SETTINGS_FILE);
 
     let tmp_path = store_path.with_file_name(format!("{}.tmp", SETTINGS_FILE));
@@ -86,7 +92,7 @@ pub(in crate::core::bot::services::settings) fn save_settings(
 
     store.set(key, value);
 
-    let (store_path, tmp_path) = get_store_paths(app)?;
+    let (store_path, tmp_path) = get_store_paths(app, provider_id)?;
     let json_bytes = serialize_store_to_bytes(&store, provider_id)?;
 
     atomic_write(&store_path, &tmp_path, &json_bytes)?;
