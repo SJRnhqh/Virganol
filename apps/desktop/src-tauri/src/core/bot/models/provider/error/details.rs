@@ -46,6 +46,7 @@ impl ProviderErrorDetails {
             ProviderError::ManagerRequestPayloadAbsent { provider_id }
             | ProviderError::ConfigNotFound { provider_id }
             | ProviderError::JsonSerialize { provider_id, .. } => Some(*provider_id),
+            ProviderError::JsonDeserialize { provider_id, .. } => *provider_id,
             _ => None,
         }
     }
@@ -95,7 +96,7 @@ impl ProviderErrorDetails {
             ProviderError::JsonSerialize { .. } | ProviderError::ConfigStoreSerialize(_) => {
                 "provider.store.config.serialize"
             }
-            ProviderError::JsonDeserialize(_) => "provider.store.config.deserialize",
+            ProviderError::JsonDeserialize { .. } => "provider.store.config.deserialize",
             ProviderError::ConfigStoreOpen(_) => "provider.store.config.open",
             ProviderError::ConfigStorePath(_) => "provider.store.config.resolve",
             ProviderError::ConfigStoreTempCreate(_)

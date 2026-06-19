@@ -13,6 +13,7 @@ use super::super::super::super::load_settings;
 /// 从配置中读取所有已保存的 providers。
 pub(super) fn load_all_providers(
     app: &AppHandle,
+    provider_id: Option<ProviderId>,
 ) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
     let maybe_value = load_settings(app, SPIRIT_PROVIDERS_KEY)?;
     let Some(value) = maybe_value else {
@@ -20,7 +21,10 @@ pub(super) fn load_all_providers(
     };
 
     let providers: HashMap<String, ProviderRecord> =
-        serde_json::from_value(value).map_err(ProviderError::JsonDeserialize)?;
+        serde_json::from_value(value).map_err(|source| ProviderError::JsonDeserialize {
+            provider_id,
+            source,
+        })?;
     Ok(providers)
 }
 
@@ -30,7 +34,7 @@ pub(super) fn load_all_providers(
 pub(in crate::core::bot::services::settings::provider) fn load_provider_check_snapshot(
     app: &AppHandle,
 ) -> Result<ProviderCheckSnapshot, ProviderError> {
-    let providers = load_all_providers(app)?;
+    let providers = load_all_providers(app, None)?;
     let total = providers.len();
     let mut supported = Vec::new();
     let mut skipped = Vec::new();
@@ -55,7 +59,7 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_record(
     app: &AppHandle,
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {
-    let providers = load_all_providers(app)?;
+    let providers = load_all_providers(app, Some(provider_id))?;
     // TODO(post-0.0.1): avoid this clone if a provider cache or per-provider store is introduced.
     Ok(providers.get(provider_id.as_str()).cloned())
 }

@@ -17,6 +17,7 @@
 
 ## Completed
 
+- [x] `JsonDeserialize` typed context/source chain — upgraded provider config deserialization errors to carry optional provider task context plus serde `source`, preserving global lifecycle reads without pretending the corrupted store belongs to one provider
 - [x] `JsonSerialize` typed context/source chain — upgraded provider config serialization errors to carry `provider_id` plus serde `source`, projected `details.providerId` from `ProviderError`, and removed free-text construction from save/update/remove store paths
 - [x] `ConfigNotFound` typed provider context — replaced free-text store/config not-found messages with `provider_id`, projected `details.providerId` from `ProviderError`, and updated update/remove store constructors
 - [x] `ManagerRequestPayloadAbsent` typed provider context — replaced free-text `String` with `provider_id`, projected `details.providerId` from `ProviderError`, and moved connect/update missing-payload responses onto `ProviderAppError::from`

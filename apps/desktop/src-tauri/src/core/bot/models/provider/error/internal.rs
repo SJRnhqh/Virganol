@@ -76,8 +76,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider configuration failed to deserialize from JSON.
     ///
     /// Provider 配置从 JSON 反序列化失败。
-    #[error("{0}")]
-    JsonDeserialize(#[source] serde_json::Error),
+    #[error("provider configuration failed to deserialize: {source}")]
+    JsonDeserialize {
+        provider_id: Option<ProviderId>,
+        #[source]
+        source: serde_json::Error,
+    },
     /// Provider configuration store could not be opened.
     ///
     /// Provider 配置存储无法打开。

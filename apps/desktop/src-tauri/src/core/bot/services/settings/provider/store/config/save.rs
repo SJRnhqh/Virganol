@@ -17,7 +17,7 @@ pub(in crate::core::bot::services::settings::provider) fn save_provider(
     record: ProviderRecord,
 ) -> Result<(), ProviderError> {
     let _guard = provider_state.lock_store();
-    let mut providers = load_all_providers(app)?;
+    let mut providers = load_all_providers(app, Some(provider_id))?;
     providers.insert(provider_id.to_string(), record);
 
     let value =
