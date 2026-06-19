@@ -33,8 +33,18 @@ impl ProviderErrorDetails {
     fn from_error(error: &ProviderError) -> Self {
         Self {
             domain_scope: Self::domain_scope_from(error).to_string(),
-            provider_id: None,
+            provider_id: Self::provider_id_from(error),
             recovery_failure: None,
+        }
+    }
+
+    /// Projects provider task context from an internal provider error when present.
+    ///
+    /// 从内部 Provider 错误中投影可用的 Provider 任务上下文。
+    fn provider_id_from(error: &ProviderError) -> Option<ProviderId> {
+        match error {
+            ProviderError::ManagerRequestPayloadAbsent { provider_id } => Some(*provider_id),
+            _ => None,
         }
     }
 
@@ -66,7 +76,9 @@ impl ProviderErrorDetails {
     /// 将内部 Provider 错误投影为 Provider 领域范围。
     fn domain_scope_from(error: &ProviderError) -> &'static str {
         match error {
-            ProviderError::ManagerRequestPayloadAbsent(_) => "provider.manager.request.validate",
+            ProviderError::ManagerRequestPayloadAbsent { .. } => {
+                "provider.manager.request.validate"
+            }
             ProviderError::CheckStartedEmit(_)
             | ProviderError::CheckStatusEmit(_)
             | ProviderError::CheckCompletedEmit(_)

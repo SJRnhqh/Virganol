@@ -5,18 +5,19 @@
 
 ## Current
 
-- [ ] Provider context modeling pass — re-evaluate which provider-scoped errors should carry `provider_id` inside `ProviderError` typed context vs. which call-site-only tasks should keep using boundary `ProviderAppError::with_provider_id`
+- [ ] Connect/update provider context review — continue migrating provider-scoped manager errors from boundary-level `ProviderAppError::with_provider_id` projection into typed `ProviderError` context/source fields one error at a time
 
 ## Planned
 
-- [ ] Connect/update provider context review — treat the current boundary-level `providerId` projection as a transitional scaffold and reconcile it with typed `ProviderError` context once source-capable `String` variants are refactored
 - [ ] Reset/lifecycle provider context adaptation — make provider task-context attribution self-consistent after the ProviderError context boundary is clarified
 - [ ] `ProviderIssue` merge into `ProviderAppError.details` — collapse lifecycle failed payload to a single `error` field and carry provider-scoped related errors as a `ProviderAppError` list in details
 - [ ] `ProviderError` internal cause chain — replace source-capable `String` variants with typed sources/context so `source()` chains extend beyond serde_json errors
+- [ ] Domain error context/source checkpoint — keep typed `ProviderError` fields split between structured context and optional source causes, then evaluate a shared context/source abstraction before the logging system pass if repetition stabilizes
 - [ ] Logging system handoff — defer trace/correlation identifiers to the logging context design instead of modeling them in the current error-system pass
 
 ## Completed
 
+- [x] `ManagerRequestPayloadAbsent` typed provider context — replaced free-text `String` with `provider_id`, projected `details.providerId` from `ProviderError`, and moved connect/update missing-payload responses onto `ProviderAppError::from`
 - [x] `ProviderErrorDetails.providerId` scaffold — added optional provider task context to Provider boundary details and centralized ProviderAppError construction through projected details
 - [x] Connect/update provider context projection scaffold — attached `providerId` to connect and update boundary errors as an interim boundary projection while deeper ProviderError context modeling remains open
 - [x] `ProviderErrorDetails` recoveryFailure field — modeled reset recovery failures as nested `ProviderAppError` details without changing normal single-error projection

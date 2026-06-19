@@ -21,13 +21,8 @@ pub(crate) fn update_provider_enabled_models(
     let data = match data {
         Some(data) => data,
         None => {
-            let e = ProviderError::ManagerRequestPayloadAbsent(
-                "provider manager request payload is absent".to_string(),
-            );
-            return UpdateEnabledModelsResponse::failure(ProviderAppError::with_provider_id(
-                &e,
-                provider_id,
-            ));
+            let e = ProviderError::ManagerRequestPayloadAbsent { provider_id };
+            return UpdateEnabledModelsResponse::failure(ProviderAppError::from(&e));
         }
     };
 

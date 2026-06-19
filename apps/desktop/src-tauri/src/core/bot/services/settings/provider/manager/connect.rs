@@ -24,13 +24,8 @@ pub(crate) async fn connect_and_save(
     let data = match data {
         Some(data) => data,
         None => {
-            let e = ProviderError::ManagerRequestPayloadAbsent(
-                "provider manager request payload is absent".to_string(),
-            );
-            return ConnectAndSaveProviderResponse::failure(ProviderAppError::with_provider_id(
-                &e,
-                provider_id,
-            ));
+            let e = ProviderError::ManagerRequestPayloadAbsent { provider_id };
+            return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
         }
     };
 

@@ -2,6 +2,8 @@
 use serde::{Serialize, Serializer};
 use thiserror::Error;
 
+use super::super::ProviderId;
+
 /// Internal domain error for the provider subsystem.
 ///
 /// Provider 子系统的内部领域错误。
@@ -10,8 +12,8 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider manager received a command payload without the expected data section.
     ///
     /// Provider manager 收到缺少预期 data 区块的命令载荷。
-    #[error("{0}")]
-    ManagerRequestPayloadAbsent(String),
+    #[error("provider manager request payload is absent for {provider_id}")]
+    ManagerRequestPayloadAbsent { provider_id: ProviderId },
     /// Provider check lifecycle started event emission failed.
     ///
     /// Provider 检查生命周期开始事件推送失败。
