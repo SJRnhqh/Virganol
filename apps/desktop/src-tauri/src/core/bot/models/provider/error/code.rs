@@ -84,10 +84,10 @@ impl From<&ProviderError> for ProviderErrorCode {
             | ProviderError::ConfigStoreOpen(_)
             | ProviderError::ConfigStorePath { .. }
             | ProviderError::ConfigStoreSerialize { .. }
-            | ProviderError::ConfigStoreTempCreate(_)
-            | ProviderError::ConfigStoreWrite(_)
-            | ProviderError::ConfigStoreSync(_)
-            | ProviderError::ConfigStoreReplace(_) => Self::ConfigStoreFailed,
+            | ProviderError::ConfigStoreTempCreate { .. }
+            | ProviderError::ConfigStoreWrite { .. }
+            | ProviderError::ConfigStoreSync { .. }
+            | ProviderError::ConfigStoreReplace { .. } => Self::ConfigStoreFailed,
             ProviderError::SecretStoreInit(_)
             | ProviderError::SecretStoreWrite(_)
             | ProviderError::SecretStoreRead(_)

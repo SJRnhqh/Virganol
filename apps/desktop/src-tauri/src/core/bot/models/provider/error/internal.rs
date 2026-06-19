@@ -108,23 +108,39 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider configuration store temporary file could not be created.
     ///
     /// Provider 配置存储临时文件无法创建。
-    #[error("{0}")]
-    ConfigStoreTempCreate(String),
+    #[error("provider configuration store temporary file could not be created: {source}")]
+    ConfigStoreTempCreate {
+        provider_id: ProviderId,
+        #[source]
+        source: std::io::Error,
+    },
     /// Provider configuration store could not be written.
     ///
     /// Provider 配置存储无法写入。
-    #[error("{0}")]
-    ConfigStoreWrite(String),
+    #[error("provider configuration store could not be written: {source}")]
+    ConfigStoreWrite {
+        provider_id: ProviderId,
+        #[source]
+        source: std::io::Error,
+    },
     /// Provider configuration store could not be synced to disk.
     ///
     /// Provider 配置存储无法同步到磁盘。
-    #[error("{0}")]
-    ConfigStoreSync(String),
+    #[error("provider configuration store could not be synced to disk: {source}")]
+    ConfigStoreSync {
+        provider_id: ProviderId,
+        #[source]
+        source: std::io::Error,
+    },
     /// Provider configuration store could not be replaced atomically.
     ///
     /// Provider 配置存储无法原子替换。
-    #[error("{0}")]
-    ConfigStoreReplace(String),
+    #[error("provider configuration store could not be replaced atomically: {source}")]
+    ConfigStoreReplace {
+        provider_id: ProviderId,
+        #[source]
+        source: std::io::Error,
+    },
     /// System secret store failed to initialize.
     ///
     /// 系统密钥存储初始化失败。

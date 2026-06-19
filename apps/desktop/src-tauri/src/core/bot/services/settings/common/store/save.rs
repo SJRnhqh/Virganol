@@ -49,25 +49,36 @@ fn serialize_store_to_bytes(
 /// Performs atomic write using temp file + rename strategy.
 ///
 /// 使用临时文件 + rename 策略执行原子写入。
-fn atomic_write(store_path: &Path, tmp_path: &Path, data: &[u8]) -> Result<(), ProviderError> {
+fn atomic_write(
+    store_path: &Path,
+    tmp_path: &Path,
+    data: &[u8],
+    provider_id: ProviderId,
+) -> Result<(), ProviderError> {
     {
-        let mut file = File::create(tmp_path).map_err(|e| {
-            ProviderError::ConfigStoreTempCreate(format!("create temp file failed: {}", e))
-        })?;
-        file.write_all(data).map_err(|e| {
-            ProviderError::ConfigStoreWrite(format!("write temp file failed: {}", e))
-        })?;
-        file.sync_all().map_err(|e| {
-            ProviderError::ConfigStoreSync(format!("fsync temp file failed: {}", e))
-        })?;
+        let mut file =
+            File::create(tmp_path).map_err(|source| ProviderError::ConfigStoreTempCreate {
+                provider_id,
+                source,
+            })?;
+        file.write_all(data)
+            .map_err(|source| ProviderError::ConfigStoreWrite {
+                provider_id,
+                source,
+            })?;
+        file.sync_all()
+            .map_err(|source| ProviderError::ConfigStoreSync {
+                provider_id,
+                source,
+            })?;
     }
 
-    if let Err(e) = fs::rename(tmp_path, store_path) {
+    if let Err(source) = fs::rename(tmp_path, store_path) {
         let _ = fs::remove_file(tmp_path);
-        return Err(ProviderError::ConfigStoreReplace(format!(
-            "atomic replace failed: {}",
-            e
-        )));
+        return Err(ProviderError::ConfigStoreReplace {
+            provider_id,
+            source,
+        });
     }
 
     if let Some(parent) = store_path.parent() {
@@ -95,7 +106,7 @@ pub(in crate::core::bot::services::settings) fn save_settings(
     let (store_path, tmp_path) = get_store_paths(app, provider_id)?;
     let json_bytes = serialize_store_to_bytes(&store, provider_id)?;
 
-    atomic_write(&store_path, &tmp_path, &json_bytes)?;
+    atomic_write(&store_path, &tmp_path, &json_bytes, provider_id)?;
 
     Ok(())
 }

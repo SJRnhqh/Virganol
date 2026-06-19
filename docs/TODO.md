@@ -21,6 +21,7 @@
 
 ## Completed
 
+- [x] Config store atomic write source chain — upgraded temp-create/write/sync/replace failures to carry provider task context plus `std::io::Error` sources through `atomic_write`
 - [x] `ConfigStorePath` typed context/source chain — upgraded app-data-dir path resolution failures to carry provider task context plus Tauri `source`, and aligned `JsonSerialize` Display text to avoid duplicating provider context
 - [x] `ConfigStoreSerialize` typed context/source chain — upgraded settings store JSON-byte serialization errors to carry provider task context plus serde `source`, keeping store key context deferred until a first-class error context model exists
 - [x] `JsonDeserialize` typed context/source chain — upgraded provider config deserialization errors to carry optional provider task context plus serde `source`, preserving global lifecycle reads without pretending the corrupted store belongs to one provider

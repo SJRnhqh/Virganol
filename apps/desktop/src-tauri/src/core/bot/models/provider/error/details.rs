@@ -47,7 +47,11 @@ impl ProviderErrorDetails {
             | ProviderError::ConfigNotFound { provider_id }
             | ProviderError::JsonSerialize { provider_id, .. }
             | ProviderError::ConfigStoreSerialize { provider_id, .. }
-            | ProviderError::ConfigStorePath { provider_id, .. } => Some(*provider_id),
+            | ProviderError::ConfigStorePath { provider_id, .. }
+            | ProviderError::ConfigStoreTempCreate { provider_id, .. }
+            | ProviderError::ConfigStoreWrite { provider_id, .. }
+            | ProviderError::ConfigStoreSync { provider_id, .. }
+            | ProviderError::ConfigStoreReplace { provider_id, .. } => Some(*provider_id),
             ProviderError::JsonDeserialize { provider_id, .. } => *provider_id,
             _ => None,
         }
@@ -101,10 +105,10 @@ impl ProviderErrorDetails {
             ProviderError::JsonDeserialize { .. } => "provider.store.config.deserialize",
             ProviderError::ConfigStoreOpen(_) => "provider.store.config.open",
             ProviderError::ConfigStorePath { .. } => "provider.store.config.resolve",
-            ProviderError::ConfigStoreTempCreate(_)
-            | ProviderError::ConfigStoreWrite(_)
-            | ProviderError::ConfigStoreSync(_)
-            | ProviderError::ConfigStoreReplace(_) => "provider.store.config.write",
+            ProviderError::ConfigStoreTempCreate { .. }
+            | ProviderError::ConfigStoreWrite { .. }
+            | ProviderError::ConfigStoreSync { .. }
+            | ProviderError::ConfigStoreReplace { .. } => "provider.store.config.write",
             ProviderError::SecretStoreInit(_) => "provider.store.secret.init",
             ProviderError::SecretStoreWrite(_) => "provider.store.secret.write",
             ProviderError::SecretStoreRead(_) => "provider.store.secret.read",
