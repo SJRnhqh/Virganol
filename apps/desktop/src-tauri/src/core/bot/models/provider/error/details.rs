@@ -45,7 +45,8 @@ impl ProviderErrorDetails {
         match error {
             ProviderError::ManagerRequestPayloadAbsent { provider_id }
             | ProviderError::ConfigNotFound { provider_id }
-            | ProviderError::JsonSerialize { provider_id, .. } => Some(*provider_id),
+            | ProviderError::JsonSerialize { provider_id, .. }
+            | ProviderError::ConfigStoreSerialize { provider_id, .. } => Some(*provider_id),
             ProviderError::JsonDeserialize { provider_id, .. } => *provider_id,
             _ => None,
         }
@@ -93,7 +94,7 @@ impl ProviderErrorDetails {
             }
             ProviderError::HealthCheckResponseFormat(_) => "provider.connection.check.parse",
             ProviderError::ConfigNotFound { .. } => "provider.store.config.find",
-            ProviderError::JsonSerialize { .. } | ProviderError::ConfigStoreSerialize(_) => {
+            ProviderError::JsonSerialize { .. } | ProviderError::ConfigStoreSerialize { .. } => {
                 "provider.store.config.serialize"
             }
             ProviderError::JsonDeserialize { .. } => "provider.store.config.deserialize",

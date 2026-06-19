@@ -4,7 +4,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use tauri::{AppHandle, Manager};
 
-use super::super::super::super::super::{ProviderError, SETTINGS_FILE};
+use super::super::super::super::super::{ProviderError, ProviderId, SETTINGS_FILE};
 use super::open_store;
 
 /// Gets store file path and temporary file path.
@@ -26,6 +26,7 @@ fn get_store_paths(app: &AppHandle) -> Result<(PathBuf, PathBuf), ProviderError>
 /// 将 store 条目序列化为 JSON 字节。
 fn serialize_store_to_bytes(
     store: &tauri_plugin_store::Store<tauri::Wry>,
+    provider_id: ProviderId,
 ) -> Result<Vec<u8>, ProviderError> {
     let all_data: std::collections::HashMap<String, serde_json::Value> = store
         .entries()
@@ -33,7 +34,10 @@ fn serialize_store_to_bytes(
         .map(|(k, v)| (k.clone(), v.clone()))
         .collect();
 
-    serde_json::to_vec_pretty(&all_data).map_err(ProviderError::ConfigStoreSerialize)
+    serde_json::to_vec_pretty(&all_data).map_err(|source| ProviderError::ConfigStoreSerialize {
+        provider_id,
+        source,
+    })
 }
 
 /// Performs atomic write using temp file + rename strategy.
@@ -76,13 +80,14 @@ pub(in crate::core::bot::services::settings) fn save_settings(
     app: &AppHandle,
     key: &str,
     value: serde_json::Value,
+    provider_id: ProviderId,
 ) -> Result<(), ProviderError> {
     let store = open_store(app)?;
 
     store.set(key, value);
 
     let (store_path, tmp_path) = get_store_paths(app)?;
-    let json_bytes = serialize_store_to_bytes(&store)?;
+    let json_bytes = serialize_store_to_bytes(&store, provider_id)?;
 
     atomic_write(&store_path, &tmp_path, &json_bytes)?;
 

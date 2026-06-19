@@ -25,5 +25,5 @@ pub(in crate::core::bot::services::settings::provider) fn save_provider(
             provider_id,
             source,
         })?;
-    save_settings(app, SPIRIT_PROVIDERS_KEY, value)
+    save_settings(app, SPIRIT_PROVIDERS_KEY, value, provider_id)
 }

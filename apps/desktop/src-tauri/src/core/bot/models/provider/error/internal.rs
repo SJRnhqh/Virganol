@@ -95,8 +95,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider configuration store failed to serialize into JSON bytes.
     ///
     /// Provider 配置存储序列化为 JSON 字节失败。
-    #[error("{0}")]
-    ConfigStoreSerialize(#[source] serde_json::Error),
+    #[error("provider configuration store failed to serialize: {source}")]
+    ConfigStoreSerialize {
+        provider_id: ProviderId,
+        #[source]
+        source: serde_json::Error,
+    },
     /// Provider configuration store temporary file could not be created.
     ///
     /// Provider 配置存储临时文件无法创建。

@@ -83,7 +83,7 @@ impl From<&ProviderError> for ProviderErrorCode {
             | ProviderError::JsonDeserialize { .. }
             | ProviderError::ConfigStoreOpen(_)
             | ProviderError::ConfigStorePath(_)
-            | ProviderError::ConfigStoreSerialize(_)
+            | ProviderError::ConfigStoreSerialize { .. }
             | ProviderError::ConfigStoreTempCreate(_)
             | ProviderError::ConfigStoreWrite(_)
             | ProviderError::ConfigStoreSync(_)
