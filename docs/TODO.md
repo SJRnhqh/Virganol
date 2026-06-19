@@ -17,6 +17,7 @@
 
 ## Completed
 
+- [x] `JsonSerialize` typed context/source chain — upgraded provider config serialization errors to carry `provider_id` plus serde `source`, projected `details.providerId` from `ProviderError`, and removed free-text construction from save/update/remove store paths
 - [x] `ConfigNotFound` typed provider context — replaced free-text store/config not-found messages with `provider_id`, projected `details.providerId` from `ProviderError`, and updated update/remove store constructors
 - [x] `ManagerRequestPayloadAbsent` typed provider context — replaced free-text `String` with `provider_id`, projected `details.providerId` from `ProviderError`, and moved connect/update missing-payload responses onto `ProviderAppError::from`
 - [x] `ProviderErrorDetails.providerId` scaffold — added optional provider task context to Provider boundary details and centralized ProviderAppError construction through projected details

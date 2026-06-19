@@ -67,8 +67,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider configuration failed to serialize into JSON.
     ///
     /// Provider 配置序列化为 JSON 失败。
-    #[error("{0}")]
-    JsonSerialize(#[source] serde_json::Error),
+    #[error("provider configuration failed to serialize for {provider_id}: {source}")]
+    JsonSerialize {
+        provider_id: ProviderId,
+        #[source]
+        source: serde_json::Error,
+    },
     /// Provider configuration failed to deserialize from JSON.
     ///
     /// Provider 配置从 JSON 反序列化失败。

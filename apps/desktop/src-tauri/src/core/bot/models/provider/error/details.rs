@@ -44,7 +44,8 @@ impl ProviderErrorDetails {
     fn provider_id_from(error: &ProviderError) -> Option<ProviderId> {
         match error {
             ProviderError::ManagerRequestPayloadAbsent { provider_id }
-            | ProviderError::ConfigNotFound { provider_id } => Some(*provider_id),
+            | ProviderError::ConfigNotFound { provider_id }
+            | ProviderError::JsonSerialize { provider_id, .. } => Some(*provider_id),
             _ => None,
         }
     }
@@ -91,7 +92,7 @@ impl ProviderErrorDetails {
             }
             ProviderError::HealthCheckResponseFormat(_) => "provider.connection.check.parse",
             ProviderError::ConfigNotFound { .. } => "provider.store.config.find",
-            ProviderError::JsonSerialize(_) | ProviderError::ConfigStoreSerialize(_) => {
+            ProviderError::JsonSerialize { .. } | ProviderError::ConfigStoreSerialize(_) => {
                 "provider.store.config.serialize"
             }
             ProviderError::JsonDeserialize(_) => "provider.store.config.deserialize",

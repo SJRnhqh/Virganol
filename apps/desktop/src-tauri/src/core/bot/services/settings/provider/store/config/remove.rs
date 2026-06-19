@@ -21,12 +21,15 @@ pub(in crate::core::bot::services::settings::provider) fn remove_provider(
     let previous = providers.remove(provider_id.as_str());
 
     if previous.is_none() {
-        ProviderError::ConfigNotFound { provider_id }
-            .downgrade();
+        ProviderError::ConfigNotFound { provider_id }.downgrade();
         return Ok(None);
     }
 
-    let value = serde_json::to_value(&providers).map_err(ProviderError::JsonSerialize)?;
+    let value =
+        serde_json::to_value(&providers).map_err(|source| ProviderError::JsonSerialize {
+            provider_id,
+            source,
+        })?;
     save_settings(app, SPIRIT_PROVIDERS_KEY, value)?;
     Ok(previous)
 }
