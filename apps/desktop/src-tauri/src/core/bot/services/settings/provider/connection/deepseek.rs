@@ -31,27 +31,27 @@ pub(super) async fn deepseek_check(provider_id: ProviderId, key: &str) -> Health
         Ok(r) => r,
         Err(e) => {
             error!("[Tauri][DeepSeek] request failed: {}", e);
-            return HealthCheckResult::fail(ProviderError::HealthCheckNetwork(format!(
-                "Connection failed: {}",
-                e
-            )));
+            return HealthCheckResult::fail(ProviderError::HealthCheckNetwork {
+                provider_id,
+                source: e,
+            });
         }
     };
 
     if !resp.status().is_success() {
-        let msg = format!("HTTP {}", resp.status());
-        error!("[Tauri][DeepSeek] {}", msg);
-        return HealthCheckResult::fail(ProviderError::HealthCheckHttp(msg));
+        let status = resp.status();
+        error!("[Tauri][DeepSeek] HTTP {}", status);
+        return HealthCheckResult::fail(ProviderError::HealthCheckHttp(format!("HTTP {}", status)));
     }
 
     let json: serde_json::Value = match resp.json().await {
         Ok(v) => v,
         Err(e) => {
             error!("[Tauri][DeepSeek] JSON parse error: {}", e);
-            return HealthCheckResult::fail(ProviderError::HealthCheckResponseFormat(format!(
-                "Invalid response: {}",
-                e
-            )));
+            return HealthCheckResult::fail(ProviderError::HealthCheckResponseFormat {
+                provider_id,
+                source: e,
+            });
         }
     };
 

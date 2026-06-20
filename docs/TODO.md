@@ -5,11 +5,10 @@
 
 ## Current
 
-- [ ] Provider non-config error field review — continue after missing health-check config by upgrading connection network / HTTP / response-format `ProviderError` string variants into typed context/source fields one error at a time
+- [ ] `ProviderError` field-structure pass — complete remaining `String` variants by separating typed context fields from optional `#[source]` causes
 
 ## Planned
 
-- [ ] `ProviderError` field-structure pass — complete provider-scoped `String` variants by separating typed context fields from optional `#[source]` causes
 - [ ] `ProviderAppError::from` adoption pass — move manager/store call sites away from boundary `with_provider_id` once each `ProviderError` variant can project its own details context
 - [ ] `ProviderErrorDetails` projection pass — keep boundary `details` derived from structured `ProviderError` fields rather than service-layer field injection
 - [ ] Source display consistency pass — keep source-backed `thiserror` messages focused on domain failure plus `source`, with provider identity carried by details/log context
@@ -21,6 +20,7 @@
 
 ## Completed
 
+- [x] Health-check network/response-format source chain — upgraded DeepSeek/Ollama request and JSON parse failures to carry `provider_id` plus `reqwest::Error` source, with HTTP status failures left as free-text until the broader context model is designed
 - [x] `HealthCheckMissingConfig` typed provider context — replaced free-text missing API key / URL errors with `provider_id`, allowing connect health-check validation failures to project provider context from `ProviderError`
 - [x] `UnsupportedProvider` typed raw provider context — replaced the free-text fallback with `raw_provider_id`, preserving the unknown boundary classification while removing string-built errors from persisted-provider parsing and connection driver lookup
 - [x] Secret store typed context/source chain — upgraded keyring init/read/write/remove failures to carry `provider_id` plus `keyring::Error` source, keeping source-backed Display messages source-focused while allowing reset primary and recovery failures to project provider context from `ProviderError`

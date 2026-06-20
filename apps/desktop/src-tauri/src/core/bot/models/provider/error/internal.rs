@@ -1,6 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/internal.rs
 use keyring::Error as KeyringError;
+use reqwest::Error as ReqwestError;
 use serde::{Serialize, Serializer};
+use serde_json::Error as JsonError;
+use std::io::Error as IoError;
+use tauri::Error as TauriError;
+use tauri_plugin_store::Error as StoreError;
 use thiserror::Error;
 
 use super::super::ProviderId;
@@ -48,8 +53,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// Health check network connection failed.
     ///
     /// 健康检查网络连接失败。
-    #[error("{0}")]
-    HealthCheckNetwork(String),
+    #[error("provider health check network request failed: {source}")]
+    HealthCheckNetwork {
+        provider_id: ProviderId,
+        #[source]
+        source: ReqwestError,
+    },
     /// Health check HTTP status indicates failure.
     ///
     /// 健康检查 HTTP 状态码表示失败。
@@ -58,8 +67,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// Health check response format is invalid.
     ///
     /// 健康检查响应格式无效。
-    #[error("{0}")]
-    HealthCheckResponseFormat(String),
+    #[error("provider health check response format is invalid: {source}")]
+    HealthCheckResponseFormat {
+        provider_id: ProviderId,
+        #[source]
+        source: ReqwestError,
+    },
     /// Requested provider has no persisted configuration record.
     ///
     /// 请求的 provider 没有对应的持久化配置记录。
@@ -72,7 +85,7 @@ pub(in crate::core::bot) enum ProviderError {
     JsonSerialize {
         provider_id: ProviderId,
         #[source]
-        source: serde_json::Error,
+        source: JsonError,
     },
     /// Provider configuration failed to deserialize from JSON.
     ///
@@ -81,7 +94,7 @@ pub(in crate::core::bot) enum ProviderError {
     JsonDeserialize {
         provider_id: Option<ProviderId>,
         #[source]
-        source: serde_json::Error,
+        source: JsonError,
     },
     /// Provider configuration store could not be opened.
     ///
@@ -90,7 +103,7 @@ pub(in crate::core::bot) enum ProviderError {
     ConfigStoreOpen {
         provider_id: Option<ProviderId>,
         #[source]
-        source: tauri_plugin_store::Error,
+        source: StoreError,
     },
     /// Provider configuration store path could not be resolved.
     ///
@@ -99,7 +112,7 @@ pub(in crate::core::bot) enum ProviderError {
     ConfigStorePath {
         provider_id: ProviderId,
         #[source]
-        source: tauri::Error,
+        source: TauriError,
     },
     /// Provider configuration store failed to serialize into JSON bytes.
     ///
@@ -108,7 +121,7 @@ pub(in crate::core::bot) enum ProviderError {
     ConfigStoreSerialize {
         provider_id: ProviderId,
         #[source]
-        source: serde_json::Error,
+        source: JsonError,
     },
     /// Provider configuration store temporary file could not be created.
     ///
@@ -117,7 +130,7 @@ pub(in crate::core::bot) enum ProviderError {
     ConfigStoreTempCreate {
         provider_id: ProviderId,
         #[source]
-        source: std::io::Error,
+        source: IoError,
     },
     /// Provider configuration store could not be written.
     ///
@@ -126,7 +139,7 @@ pub(in crate::core::bot) enum ProviderError {
     ConfigStoreWrite {
         provider_id: ProviderId,
         #[source]
-        source: std::io::Error,
+        source: IoError,
     },
     /// Provider configuration store could not be synced to disk.
     ///
@@ -135,7 +148,7 @@ pub(in crate::core::bot) enum ProviderError {
     ConfigStoreSync {
         provider_id: ProviderId,
         #[source]
-        source: std::io::Error,
+        source: IoError,
     },
     /// Provider configuration store could not be replaced atomically.
     ///
@@ -144,7 +157,7 @@ pub(in crate::core::bot) enum ProviderError {
     ConfigStoreReplace {
         provider_id: ProviderId,
         #[source]
-        source: std::io::Error,
+        source: IoError,
     },
     /// System secret store failed to initialize.
     ///
