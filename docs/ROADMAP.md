@@ -48,11 +48,12 @@ LLM Provider 接入分为两条主线：
 #### 6.2 后端错误系统深入（details / source chain / issue aggregation）
 
 - [x] `ProviderError` 迁移至 `thiserror`
-- [x] `ProviderErrorDetails` 增加 `recoveryFailure`，承载 reset 恢复失败
+- [x] `ProviderErrorDetails` 增加 `recoveryFailure`，承载 reset 恢复失败 → 随后并入 `suppressedErrors`，移除独立字段和构造方法
 - [x] 移除 `ProviderError::message()`
 - [x] `ProviderError` typed source 覆盖：CRUD / store / secret / health check 的 `String` 变体替换为 typed source + `provider_id` context
-- [ ] Lifecycle 错误字段 typed context：emit / concurrent 的 `ProviderError` 变体分类建模
-- [ ] `ProviderIssue` 并入 `ProviderAppError.details`：借 `provider_id` → details 包裹层，生命周期失败事件只暴露 `error` 字段
+- [x] Lifecycle 错误字段 typed context：emit / concurrent 的 `ProviderError` 变体分类建模
+- [x] `ProviderIssue` 并入 `ProviderAppError.details`：借 `provider_id` → details 包裹层，生命周期失败事件只暴露 `error` 字段
+- [x] Error 详情字段合并：reset 恢复失败并入 `suppressedErrors`，移除 `with_recovery_failure` 构造方法
 - [ ] Provider 上下文抽象设计：上下文模型、工程基础规则，为日志系统铺路
 - [ ] 错误系统架构文档：领域功能适配方案凝练写入 `ARCHITECTURE.md`
 
