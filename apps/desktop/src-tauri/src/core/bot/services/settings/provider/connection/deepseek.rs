@@ -2,7 +2,7 @@
 use log::{debug, error, info};
 
 use super::super::super::super::super::{
-    HealthCheckResult, ProviderError, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS,
+    HealthCheckResult, ProviderError, ProviderId, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS,
 };
 use super::get_http_client;
 
@@ -11,11 +11,9 @@ const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
 /// Checks DeepSeek by requesting `{base_url}/v1/models` with bearer authentication.
 ///
 /// 通过 bearer 认证请求 `{base_url}/v1/models` 检查 DeepSeek，并解析模型列表。
-pub(super) async fn deepseek_check(key: &str) -> HealthCheckResult {
+pub(super) async fn deepseek_check(provider_id: ProviderId, key: &str) -> HealthCheckResult {
     if key.is_empty() {
-        return HealthCheckResult::fail(ProviderError::HealthCheckMissingConfig(
-            "Missing API key".to_string(),
-        ));
+        return HealthCheckResult::fail(ProviderError::HealthCheckMissingConfig { provider_id });
     }
 
     let endpoint = format!("{}/v1/models", DEEPSEEK_BASE_URL);

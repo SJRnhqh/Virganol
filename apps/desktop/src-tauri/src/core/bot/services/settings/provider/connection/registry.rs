@@ -13,7 +13,7 @@ impl ProviderDriver for DeepSeekDriver {
         ProviderId::DeepSeek
     }
     fn health_check<'a>(&'a self, _url: &'a str, key: &'a str) -> DriverFuture<'a> {
-        Box::pin(async move { deepseek_check(key).await })
+        Box::pin(async move { deepseek_check(ProviderId::DeepSeek, key).await })
     }
 }
 
@@ -22,7 +22,7 @@ impl ProviderDriver for OllamaDriver {
         ProviderId::Ollama
     }
     fn health_check<'a>(&'a self, url: &'a str, key: &'a str) -> DriverFuture<'a> {
-        Box::pin(async move { ollama_check(url, key).await })
+        Box::pin(async move { ollama_check(ProviderId::Ollama, url, key).await })
     }
 }
 

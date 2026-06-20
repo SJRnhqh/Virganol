@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Provider non-config error field review — continue after the unsupported-provider fallback by upgrading connection health-check `ProviderError` string variants into typed context/source fields one error at a time
+- [ ] Provider non-config error field review — continue after missing health-check config by upgrading connection network / HTTP / response-format `ProviderError` string variants into typed context/source fields one error at a time
 
 ## Planned
 
@@ -21,6 +21,7 @@
 
 ## Completed
 
+- [x] `HealthCheckMissingConfig` typed provider context — replaced free-text missing API key / URL errors with `provider_id`, allowing connect health-check validation failures to project provider context from `ProviderError`
 - [x] `UnsupportedProvider` typed raw provider context — replaced the free-text fallback with `raw_provider_id`, preserving the unknown boundary classification while removing string-built errors from persisted-provider parsing and connection driver lookup
 - [x] Secret store typed context/source chain — upgraded keyring init/read/write/remove failures to carry `provider_id` plus `keyring::Error` source, keeping source-backed Display messages source-focused while allowing reset primary and recovery failures to project provider context from `ProviderError`
 - [x] `ConfigStoreOpen` typed context/source chain — upgraded settings store open failures to carry optional provider task context plus `tauri_plugin_store::Error` source, preserving global lifecycle reads while allowing update-chain details projection from `ProviderError`

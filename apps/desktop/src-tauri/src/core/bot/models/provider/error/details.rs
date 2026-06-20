@@ -55,7 +55,8 @@ impl ProviderErrorDetails {
             | ProviderError::SecretStoreInit { provider_id, .. }
             | ProviderError::SecretStoreWrite { provider_id, .. }
             | ProviderError::SecretStoreRead { provider_id, .. }
-            | ProviderError::SecretStoreRemove { provider_id, .. } => Some(*provider_id),
+            | ProviderError::SecretStoreRemove { provider_id, .. }
+            | ProviderError::HealthCheckMissingConfig { provider_id } => Some(*provider_id),
             ProviderError::JsonDeserialize { provider_id, .. }
             | ProviderError::ConfigStoreOpen { provider_id, .. } => *provider_id,
             _ => None,
@@ -98,7 +99,7 @@ impl ProviderErrorDetails {
             | ProviderError::CheckCompletedEmit(_)
             | ProviderError::CheckFailedEmit(_) => "provider.lifecycle.event.emit",
             ProviderError::CheckConcurrentFailed(_) => "provider.lifecycle.check.execute",
-            ProviderError::HealthCheckMissingConfig(_) => "provider.connection.check.validate",
+            ProviderError::HealthCheckMissingConfig { .. } => "provider.connection.check.validate",
             ProviderError::HealthCheckNetwork(_) | ProviderError::HealthCheckHttp(_) => {
                 "provider.connection.check.request"
             }

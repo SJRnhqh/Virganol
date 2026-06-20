@@ -2,18 +2,20 @@
 use log::{debug, error, info};
 
 use super::super::super::super::super::{
-    HealthCheckResult, ProviderError, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS,
+    HealthCheckResult, ProviderError, ProviderId, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS,
 };
 use super::get_http_client;
 
 /// Checks Ollama by requesting `{url}/api/tags` and adding bearer auth only when `key` is present.
 ///
 /// 通过请求 `{url}/api/tags` 检查 Ollama，并仅在 `key` 非空时附带 bearer 认证。
-pub(super) async fn ollama_check(url: &str, key: &str) -> HealthCheckResult {
+pub(super) async fn ollama_check(
+    provider_id: ProviderId,
+    url: &str,
+    key: &str,
+) -> HealthCheckResult {
     if url.is_empty() {
-        return HealthCheckResult::fail(ProviderError::HealthCheckMissingConfig(
-            "Missing URL".to_string(),
-        ));
+        return HealthCheckResult::fail(ProviderError::HealthCheckMissingConfig { provider_id });
     }
 
     let base = url.trim_end_matches('/');

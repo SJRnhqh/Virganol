@@ -74,7 +74,7 @@ impl From<&ProviderError> for ProviderErrorCode {
             | ProviderError::CheckCompletedEmit(_)
             | ProviderError::CheckFailedEmit(_)
             | ProviderError::CheckConcurrentFailed(_) => Self::CheckLifecycleFailed,
-            ProviderError::HealthCheckMissingConfig(_)
+            ProviderError::HealthCheckMissingConfig { .. }
             | ProviderError::HealthCheckNetwork(_)
             | ProviderError::HealthCheckHttp(_)
             | ProviderError::HealthCheckResponseFormat(_) => Self::HealthCheckFailed,

@@ -43,8 +43,8 @@ pub(in crate::core::bot) enum ProviderError {
     /// Required health check configuration is missing.
     ///
     /// 健康检查所需配置缺失。
-    #[error("{0}")]
-    HealthCheckMissingConfig(String),
+    #[error("provider health check configuration is missing for {provider_id}")]
+    HealthCheckMissingConfig { provider_id: ProviderId },
     /// Health check network connection failed.
     ///
     /// 健康检查网络连接失败。
