@@ -1,7 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/internal.rs
 use keyring::Error as KeyringError;
 use reqwest::Error as ReqwestError;
-use serde::{Serialize, Serializer};
 use serde_json::Error as JsonError;
 use std::io::Error as IoError;
 use tauri::Error as TauriError;
@@ -228,12 +227,3 @@ pub(in crate::core::bot) enum ProviderError {
 //
 // 将 ProviderError 降级为警告日志，不上抛到边界。
 crate::impl_downgrade!(ProviderError);
-
-impl Serialize for ProviderError {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        serializer.serialize_str(&self.to_string())
-    }
-}

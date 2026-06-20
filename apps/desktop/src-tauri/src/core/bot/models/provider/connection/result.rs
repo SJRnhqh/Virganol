@@ -1,12 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/connection/result.rs
-use serde::Serialize;
-
 use super::super::ProviderError;
 
 /// Result of a provider health check.
 ///
 /// Provider 健康检查结果。
-#[derive(Serialize)]
 pub(in crate::core::bot) struct HealthCheckResult {
     /// Whether the health check succeeded.
     ///
@@ -21,7 +18,6 @@ pub(in crate::core::bot) struct HealthCheckResult {
     /// Domain error when the health check fails.
     ///
     /// 健康检查失败时的领域错误。
-    #[serde(skip_serializing_if = "Option::is_none")]
     error: Option<ProviderError>,
 }
 
