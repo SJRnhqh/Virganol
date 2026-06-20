@@ -19,11 +19,6 @@ pub(super) struct ProviderErrorDetails {
     /// 错误发生时可归属的 Provider 任务上下文。
     #[serde(skip_serializing_if = "Option::is_none")]
     provider_id: Option<ProviderId>,
-    /// Provider boundary error produced while recovering from the primary failure.
-    ///
-    /// 主错误发生后，恢复状态时产生的 Provider 边界错误。
-    #[serde(skip_serializing_if = "Option::is_none")]
-    recovery_failure: Option<Box<ProviderAppError>>,
     /// Provider boundary errors observed but not selected as the primary error.
     ///
     /// 已观察到但未被选为主错误的 Provider 边界错误。
@@ -39,7 +34,6 @@ impl ProviderErrorDetails {
         Self {
             domain_scope: Self::domain_scope_from(error).to_string(),
             provider_id: Self::provider_id_from(error),
-            recovery_failure: None,
             suppressed_errors: None,
         }
     }
@@ -70,19 +64,6 @@ impl ProviderErrorDetails {
             ProviderError::JsonDeserialize { provider_id, .. }
             | ProviderError::ConfigStoreOpen { provider_id, .. } => *provider_id,
             _ => None,
-        }
-    }
-
-    /// Creates provider details with a recovery failure attached.
-    ///
-    /// 创建附带恢复失败的 Provider 错误细节。
-    pub(super) fn with_recovery_failure(
-        error: &ProviderError,
-        recovery_failure: &ProviderError,
-    ) -> Self {
-        Self {
-            recovery_failure: Some(Box::new(ProviderAppError::from(recovery_failure))),
-            ..Self::from_error(error)
         }
     }
 

@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Error field consolidation and context checkpoint — decide whether recovery/suppressed fields and provider/task/log context should become shared first-class error-system concepts
+- [ ] Provider error context checkpoint — decide whether provider/task/log context should become a first-class error-system concept beyond `provider_id`
 
 ## Planned
 
@@ -20,6 +20,7 @@
   - [x] `CheckTaskJoin` — split true join failures into `{ #[source] source: JoinError }`
   - [x] `CheckAggregate` — added a lifecycle primary error for collected provider-level errors
 - [x] Provider issue aggregation — removed backend `ProviderIssue`/failed-payload `issues`, collected provider-level errors as internal `ProviderError`s, and projected them through `details.suppressedErrors`
+- [x] Error detail field consolidation — folded reset recovery failures into `details.suppressedErrors`, removed `with_recovery_failure` constructor
 - [x] Source binding style unified — `Err(source)` + field shorthand `source,` across connection (`deepseek`, `ollama`) and secret store (`load`) files
 - [x] Health-check network/response-format source chain — upgraded DeepSeek/Ollama request and JSON parse failures to carry `provider_id` plus `reqwest::Error` source
 - [x] `HealthCheckHttp` typed provider context — replaced free-text HTTP status failures with `provider_id` context in `ProviderError`, keeping status details in driver logs until the broader context model is designed
@@ -38,7 +39,7 @@
 - [x] `ManagerRequestPayloadAbsent` typed provider context — replaced free-text `String` with `provider_id`, projected `details.providerId` from `ProviderError`, and moved connect/update missing-payload responses onto `ProviderAppError::from`
 - [x] `ProviderErrorDetails.providerId` scaffold — added optional provider task context to Provider boundary details and centralized ProviderAppError construction through projected details
 - [x] Connect/update provider context projection scaffold — attached `providerId` to connect and update boundary errors as an interim boundary projection while deeper ProviderError context modeling remains open
-- [x] `ProviderErrorDetails` recoveryFailure field — modeled reset recovery failures as nested `ProviderAppError` details without changing normal single-error projection
+- [x] Reset recovery failure modeling — kept recovery failures behind a semantic `with_recovery_failure` app-layer constructor
 - [x] `reset.rs` transitional `with_message` gap — replaced custom dual-error message construction with details-based recovery failure modeling
 - [x] `ProviderAppError` cleanup — removed transitional `with_message` and kept recovery failure construction behind a semantic boundary helper
 - [x] `message()` retirement — removed the reset-only `ProviderError::message()` helper after dual-failure embedding moved into details

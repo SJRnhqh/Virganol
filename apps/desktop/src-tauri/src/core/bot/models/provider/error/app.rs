@@ -30,18 +30,6 @@ impl ProviderAppError {
         Self::new(code, details)
     }
 
-    /// Creates a provider boundary error with a recovery failure attached.
-    ///
-    /// 创建附带恢复失败的 Provider 边界错误。
-    pub(in crate::core::bot) fn with_recovery_failure(
-        error: &ProviderError,
-        recovery_failure: &ProviderError,
-    ) -> Self {
-        let details = ProviderErrorDetails::with_recovery_failure(error, recovery_failure);
-
-        Self::from_details(error, details)
-    }
-
     /// Creates a provider boundary error with suppressed errors attached.
     ///
     /// 创建附带被抑制错误的 Provider 边界错误。
