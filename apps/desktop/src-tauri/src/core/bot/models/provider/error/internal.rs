@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/internal.rs
+use keyring::Error as KeyringError;
 use serde::{Serialize, Serializer};
 use thiserror::Error;
 
@@ -148,23 +149,39 @@ pub(in crate::core::bot) enum ProviderError {
     /// System secret store failed to initialize.
     ///
     /// 系统密钥存储初始化失败。
-    #[error("{0}")]
-    SecretStoreInit(String),
+    #[error("provider secret store could not be initialized: {source}")]
+    SecretStoreInit {
+        provider_id: ProviderId,
+        #[source]
+        source: KeyringError,
+    },
     /// System secret store could not be written.
     ///
     /// 系统密钥存储无法写入。
-    #[error("{0}")]
-    SecretStoreWrite(String),
+    #[error("provider secret store could not be written: {source}")]
+    SecretStoreWrite {
+        provider_id: ProviderId,
+        #[source]
+        source: KeyringError,
+    },
     /// System secret store could not be read.
     ///
     /// 系统密钥存储无法读取。
-    #[error("{0}")]
-    SecretStoreRead(String),
+    #[error("provider secret store could not be read: {source}")]
+    SecretStoreRead {
+        provider_id: ProviderId,
+        #[source]
+        source: KeyringError,
+    },
     /// System secret store could not be removed (delete).
     ///
     /// 系统密钥存储无法删除。
-    #[error("{0}")]
-    SecretStoreRemove(String),
+    #[error("provider secret store could not be removed: {source}")]
+    SecretStoreRemove {
+        provider_id: ProviderId,
+        #[source]
+        source: KeyringError,
+    },
     /// Provider id from storage is not supported by the current backend.
     ///
     /// 存储中的 provider id 不被当前后端支持。

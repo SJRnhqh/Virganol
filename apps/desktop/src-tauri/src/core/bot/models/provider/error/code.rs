@@ -88,10 +88,10 @@ impl From<&ProviderError> for ProviderErrorCode {
             | ProviderError::ConfigStoreWrite { .. }
             | ProviderError::ConfigStoreSync { .. }
             | ProviderError::ConfigStoreReplace { .. } => Self::ConfigStoreFailed,
-            ProviderError::SecretStoreInit(_)
-            | ProviderError::SecretStoreWrite(_)
-            | ProviderError::SecretStoreRead(_)
-            | ProviderError::SecretStoreRemove(_) => Self::SecretStoreFailed,
+            ProviderError::SecretStoreInit { .. }
+            | ProviderError::SecretStoreWrite { .. }
+            | ProviderError::SecretStoreRead { .. }
+            | ProviderError::SecretStoreRemove { .. } => Self::SecretStoreFailed,
             _ => Self::Unknown,
         }
     }

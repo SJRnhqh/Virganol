@@ -51,7 +51,11 @@ impl ProviderErrorDetails {
             | ProviderError::ConfigStoreTempCreate { provider_id, .. }
             | ProviderError::ConfigStoreWrite { provider_id, .. }
             | ProviderError::ConfigStoreSync { provider_id, .. }
-            | ProviderError::ConfigStoreReplace { provider_id, .. } => Some(*provider_id),
+            | ProviderError::ConfigStoreReplace { provider_id, .. }
+            | ProviderError::SecretStoreInit { provider_id, .. }
+            | ProviderError::SecretStoreWrite { provider_id, .. }
+            | ProviderError::SecretStoreRead { provider_id, .. }
+            | ProviderError::SecretStoreRemove { provider_id, .. } => Some(*provider_id),
             ProviderError::JsonDeserialize { provider_id, .. }
             | ProviderError::ConfigStoreOpen { provider_id, .. } => *provider_id,
             _ => None,
@@ -110,10 +114,10 @@ impl ProviderErrorDetails {
             | ProviderError::ConfigStoreWrite { .. }
             | ProviderError::ConfigStoreSync { .. }
             | ProviderError::ConfigStoreReplace { .. } => "provider.store.config.write",
-            ProviderError::SecretStoreInit(_) => "provider.store.secret.init",
-            ProviderError::SecretStoreWrite(_) => "provider.store.secret.write",
-            ProviderError::SecretStoreRead(_) => "provider.store.secret.read",
-            ProviderError::SecretStoreRemove(_) => "provider.store.secret.remove",
+            ProviderError::SecretStoreInit { .. } => "provider.store.secret.init",
+            ProviderError::SecretStoreWrite { .. } => "provider.store.secret.write",
+            ProviderError::SecretStoreRead { .. } => "provider.store.secret.read",
+            ProviderError::SecretStoreRemove { .. } => "provider.store.secret.remove",
             _ => "provider.unknown",
         }
     }

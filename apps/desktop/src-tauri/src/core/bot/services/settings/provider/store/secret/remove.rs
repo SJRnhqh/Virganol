@@ -11,15 +11,18 @@ use super::super::super::super::super::super::{
 pub(in crate::core::bot::services::settings::provider) fn remove_provider_key(
     provider_id: ProviderId,
 ) -> Result<(), ProviderError> {
-    let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str())
-        .map_err(|e| ProviderError::SecretStoreInit(format!("init keyring entry failed: {}", e)))?;
+    let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str()).map_err(|source| {
+        ProviderError::SecretStoreInit {
+            provider_id,
+            source,
+        }
+    })?;
 
     match entry.delete_credential() {
         Ok(()) | Err(KeyringError::NoEntry) => Ok(()),
-        Err(e) => Err(ProviderError::SecretStoreRemove(format!(
-            "remove key failed for {}: {}",
-            provider_id.as_str(),
-            e
-        ))),
+        Err(source) => Err(ProviderError::SecretStoreRemove {
+            provider_id,
+            source,
+        }),
     }
 }

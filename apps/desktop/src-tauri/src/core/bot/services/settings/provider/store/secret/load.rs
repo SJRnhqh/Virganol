@@ -14,7 +14,11 @@ pub(super) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> 
     let entry = match Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str()) {
         Ok(e) => e,
         Err(e) => {
-            ProviderError::SecretStoreInit(format!("init keyring entry failed: {}", e)).downgrade();
+            ProviderError::SecretStoreInit {
+                provider_id,
+                source: e,
+            }
+            .downgrade();
             return None;
         }
     };
@@ -23,11 +27,10 @@ pub(super) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> 
         Ok(v) => v,
         Err(KeyringError::NoEntry) => return None,
         Err(e) => {
-            ProviderError::SecretStoreRead(format!(
-                "load key failed for {}: {}",
-                provider_id.as_str(),
-                e
-            ))
+            ProviderError::SecretStoreRead {
+                provider_id,
+                source: e,
+            }
             .downgrade();
             return None;
         }

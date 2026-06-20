@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Provider non-config error field review — continue after the config-store chain by upgrading the next `ProviderError` string variants into typed context/source fields one error at a time
+- [ ] Provider non-config error field review — continue after the secret-store chain by upgrading lifecycle/connection `ProviderError` string variants into typed context/source fields one error at a time
 
 ## Planned
 
@@ -21,6 +21,7 @@
 
 ## Completed
 
+- [x] Secret store typed context/source chain — upgraded keyring init/read/write/remove failures to carry `provider_id` plus `keyring::Error` source, keeping source-backed Display messages source-focused while allowing reset primary and recovery failures to project provider context from `ProviderError`
 - [x] `ConfigStoreOpen` typed context/source chain — upgraded settings store open failures to carry optional provider task context plus `tauri_plugin_store::Error` source, preserving global lifecycle reads while allowing update-chain details projection from `ProviderError`
 - [x] Config store atomic write source chain — upgraded temp-create/write/sync/replace failures to carry provider task context plus `std::io::Error` sources through `atomic_write`
 - [x] `ConfigStorePath` typed context/source chain — upgraded app-data-dir path resolution failures to carry provider task context plus Tauri `source`, and aligned `JsonSerialize` Display text to avoid duplicating provider context
