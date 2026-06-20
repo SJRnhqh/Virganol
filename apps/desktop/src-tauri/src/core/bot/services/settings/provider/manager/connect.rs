@@ -39,19 +39,14 @@ pub(crate) async fn connect_and_save(
         {
             Ok(models) => models,
             Err(e) => {
-                return ConnectAndSaveProviderResponse::failure(
-                    ProviderAppError::with_provider_id(&e, provider_id),
-                );
+                return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
             }
         };
 
     let previous_record = match load_provider_record(app, provider_id) {
         Ok(record) => record,
         Err(e) => {
-            return ConnectAndSaveProviderResponse::failure(ProviderAppError::with_provider_id(
-                &e,
-                provider_id,
-            ));
+            return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
         }
     };
 
@@ -66,18 +61,12 @@ pub(crate) async fn connect_and_save(
     let key_transaction = match ProviderKeyTransaction::begin(provider_id, normalized_key) {
         Ok(transaction) => transaction,
         Err(e) => {
-            return ConnectAndSaveProviderResponse::failure(ProviderAppError::with_provider_id(
-                &e,
-                provider_id,
-            ));
+            return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
         }
     };
 
     if let Err(e) = save_provider(app, provider_state, provider_id, record) {
-        return ConnectAndSaveProviderResponse::failure(ProviderAppError::with_provider_id(
-            &e,
-            provider_id,
-        ));
+        return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
     }
 
     if let Some(transaction) = key_transaction {

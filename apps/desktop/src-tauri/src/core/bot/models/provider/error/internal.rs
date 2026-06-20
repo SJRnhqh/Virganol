@@ -62,8 +62,8 @@ pub(in crate::core::bot) enum ProviderError {
     /// Health check HTTP status indicates failure.
     ///
     /// 健康检查 HTTP 状态码表示失败。
-    #[error("{0}")]
-    HealthCheckHttp(String),
+    #[error("provider health check HTTP status indicates failure for {provider_id}")]
+    HealthCheckHttp { provider_id: ProviderId },
     /// Health check response format is invalid.
     ///
     /// 健康检查响应格式无效。

@@ -41,7 +41,7 @@ pub(super) async fn deepseek_check(provider_id: ProviderId, key: &str) -> Health
     if !resp.status().is_success() {
         let status = resp.status();
         error!("[Tauri][DeepSeek] HTTP {}", status);
-        return HealthCheckResult::fail(ProviderError::HealthCheckHttp(format!("HTTP {}", status)));
+        return HealthCheckResult::fail(ProviderError::HealthCheckHttp { provider_id });
     }
 
     let json: serde_json::Value = match resp.json().await {

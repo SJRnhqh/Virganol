@@ -76,7 +76,7 @@ impl From<&ProviderError> for ProviderErrorCode {
             | ProviderError::CheckConcurrentFailed(_) => Self::CheckLifecycleFailed,
             ProviderError::HealthCheckMissingConfig { .. }
             | ProviderError::HealthCheckNetwork { .. }
-            | ProviderError::HealthCheckHttp(_)
+            | ProviderError::HealthCheckHttp { .. }
             | ProviderError::HealthCheckResponseFormat { .. } => Self::HealthCheckFailed,
             ProviderError::ConfigNotFound { .. } => Self::ProviderNotFound,
             ProviderError::JsonSerialize { .. }

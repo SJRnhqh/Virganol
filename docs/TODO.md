@@ -5,22 +5,22 @@
 
 ## Current
 
-- [ ] `ProviderError` field-structure pass — complete remaining `String` variants by separating typed context fields from optional `#[source]` causes
+- [ ] Lifecycle error field pass — classify lifecycle emit/concurrent `ProviderError` string variants into typed context fields and real source causes where available
 
 ## Planned
 
-- [ ] `ProviderAppError::from` adoption pass — move manager/store call sites away from boundary `with_provider_id` once each `ProviderError` variant can project its own details context
-- [ ] `ProviderErrorDetails` projection pass — keep boundary `details` derived from structured `ProviderError` fields rather than service-layer field injection
-- [ ] Source display consistency pass — keep source-backed `thiserror` messages focused on domain failure plus `source`, with provider identity carried by details/log context
-- [ ] Reset/lifecycle provider context adaptation — make provider task-context attribution self-consistent after the ProviderError context boundary is clarified
+- [ ] `ProviderErrorDetails` issue aggregation helper — add a details-level helper for related provider errors before collapsing lifecycle issues
 - [ ] `ProviderIssue` merge into `ProviderAppError.details` — collapse lifecycle failed payload to a single `error` field and carry provider-scoped related errors as a `ProviderAppError` list in details
-- [ ] Domain error context/source checkpoint — evaluate extracting provider error context as a first-class error-system concept after enough variants prove the context/source pattern
+- [ ] Provider error context checkpoint — decide whether provider/task/log context should become a first-class error-system concept beyond `provider_id`
 - [ ] Error-system architecture note — document the Provider error design: domain error fields, source chains, boundary code/details projection, issue aggregation, and future shared abstractions
 - [ ] Logging system kickoff — start with structured log context reuse after the error context model is stable, keeping trace/correlation identifiers in logging rather than current error details
 
 ## Completed
 
-- [x] Health-check network/response-format source chain — upgraded DeepSeek/Ollama request and JSON parse failures to carry `provider_id` plus `reqwest::Error` source, with HTTP status failures left as free-text until the broader context model is designed
+- [x] Health-check network/response-format source chain — upgraded DeepSeek/Ollama request and JSON parse failures to carry `provider_id` plus `reqwest::Error` source
+- [x] `HealthCheckHttp` typed provider context — replaced free-text HTTP status failures with `provider_id` context in `ProviderError`, keeping status details in driver logs until the broader context model is designed
+- [x] `ProviderAppError::from` connect adoption — moved connect manager/store failure responses off the transitional `with_provider_id` helper now that provider context projects from `ProviderError`
+- [x] Source-chain checkpoint — CRUD, connection, config store, and secret store failures now preserve real source causes where available; remaining error-system work is lifecycle field modeling, issue aggregation, and context design
 - [x] `HealthCheckMissingConfig` typed provider context — replaced free-text missing API key / URL errors with `provider_id`, allowing connect health-check validation failures to project provider context from `ProviderError`
 - [x] `UnsupportedProvider` typed raw provider context — replaced the free-text fallback with `raw_provider_id`, preserving the unknown boundary classification while removing string-built errors from persisted-provider parsing and connection driver lookup
 - [x] Secret store typed context/source chain — upgraded keyring init/read/write/remove failures to carry `provider_id` plus `keyring::Error` source, keeping source-backed Display messages source-focused while allowing reset primary and recovery failures to project provider context from `ProviderError`

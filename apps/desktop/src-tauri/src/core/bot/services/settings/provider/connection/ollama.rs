@@ -45,7 +45,7 @@ pub(super) async fn ollama_check(
     if !resp.status().is_success() {
         let status = resp.status();
         error!("[Tauri][Ollama] HTTP {}", status);
-        return HealthCheckResult::fail(ProviderError::HealthCheckHttp(format!("HTTP {}", status)));
+        return HealthCheckResult::fail(ProviderError::HealthCheckHttp { provider_id });
     }
 
     let json: serde_json::Value = match resp.json().await {

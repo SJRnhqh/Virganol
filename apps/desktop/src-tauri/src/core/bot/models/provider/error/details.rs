@@ -58,20 +58,11 @@ impl ProviderErrorDetails {
             | ProviderError::SecretStoreRemove { provider_id, .. }
             | ProviderError::HealthCheckMissingConfig { provider_id }
             | ProviderError::HealthCheckNetwork { provider_id, .. }
+            | ProviderError::HealthCheckHttp { provider_id }
             | ProviderError::HealthCheckResponseFormat { provider_id, .. } => Some(*provider_id),
             ProviderError::JsonDeserialize { provider_id, .. }
             | ProviderError::ConfigStoreOpen { provider_id, .. } => *provider_id,
             _ => None,
-        }
-    }
-
-    /// Creates provider details with provider task context attached.
-    ///
-    /// 创建附带 Provider 任务上下文的错误细节。
-    pub(super) fn with_provider_id(error: &ProviderError, provider_id: ProviderId) -> Self {
-        Self {
-            provider_id: Some(provider_id),
-            ..Self::from_error(error)
         }
     }
 
@@ -102,7 +93,7 @@ impl ProviderErrorDetails {
             | ProviderError::CheckFailedEmit(_) => "provider.lifecycle.event.emit",
             ProviderError::CheckConcurrentFailed(_) => "provider.lifecycle.check.execute",
             ProviderError::HealthCheckMissingConfig { .. } => "provider.connection.check.validate",
-            ProviderError::HealthCheckNetwork { .. } | ProviderError::HealthCheckHttp(_) => {
+            ProviderError::HealthCheckNetwork { .. } | ProviderError::HealthCheckHttp { .. } => {
                 "provider.connection.check.request"
             }
             ProviderError::HealthCheckResponseFormat { .. } => "provider.connection.check.parse",
