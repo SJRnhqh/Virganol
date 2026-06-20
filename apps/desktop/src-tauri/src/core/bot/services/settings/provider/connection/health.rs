@@ -11,10 +11,9 @@ pub(super) async fn health_check(
     key: &str,
 ) -> HealthCheckResult {
     let Some(driver) = get_driver(provider_id) else {
-        return HealthCheckResult::fail(ProviderError::UnsupportedProvider(format!(
-            "Driver not registered: {}",
-            provider_id
-        )));
+        return HealthCheckResult::fail(ProviderError::UnsupportedProvider {
+            raw_provider_id: provider_id.to_string(),
+        });
     };
     driver.health_check(url, key).await
 }

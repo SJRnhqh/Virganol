@@ -185,8 +185,8 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider id from storage is not supported by the current backend.
     ///
     /// 存储中的 provider id 不被当前后端支持。
-    #[error("{0}")]
-    UnsupportedProvider(String),
+    #[error("provider is not supported by the current backend: {raw_provider_id}")]
+    UnsupportedProvider { raw_provider_id: String },
 }
 
 // Downgrades a ProviderError into a warning log rather than propagating to the boundary.

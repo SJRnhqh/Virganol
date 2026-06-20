@@ -47,7 +47,9 @@ impl TryFrom<&str> for ProviderId {
         match value {
             "ollama" => Ok(Self::Ollama),
             "deepseek" => Ok(Self::DeepSeek),
-            other => Err(ProviderError::UnsupportedProvider(other.to_string())),
+            other => Err(ProviderError::UnsupportedProvider {
+                raw_provider_id: other.to_string(),
+            }),
         }
     }
 }
