@@ -41,6 +41,18 @@ impl ProviderAppError {
 
         Self::from_details(error, details)
     }
+
+    /// Creates a provider boundary error with suppressed errors attached.
+    ///
+    /// 创建附带被抑制错误的 Provider 边界错误。
+    pub(in crate::core::bot) fn with_suppressed_errors(
+        error: &ProviderError,
+        suppressed_errors: Vec<ProviderAppError>,
+    ) -> Self {
+        let details = ProviderErrorDetails::with_suppressed_errors(error, suppressed_errors);
+
+        Self::from_details(error, details)
+    }
 }
 
 impl From<&ProviderError> for ProviderAppError {

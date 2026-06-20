@@ -23,14 +23,14 @@ pub(crate) async fn check_providers_lifecycle(
     let started_at = Instant::now();
 
     if let Err(e) = emit_check_started(&app, run_id.as_str(), &trigger) {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
+        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
         return;
     }
 
     let snapshot = match load_provider_check_snapshot(&app) {
         Ok(snapshot) => snapshot,
         Err(e) => {
-            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
+            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
             return;
         }
     };
@@ -72,7 +72,7 @@ pub(crate) async fn check_providers_lifecycle(
             );
         }
         if let Err(e) = emit_check_completed(&app, run_id.as_str(), supported_total) {
-            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
+            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
             return;
         }
         return;
@@ -86,32 +86,18 @@ pub(crate) async fn check_providers_lifecycle(
     )
     .await;
 
-    let (failed_count, provider_issues, join_error) = check_result.into_parts();
+    let (failed_count, join_error, suppressed_errors) = check_result.into_parts();
 
-    if let Some(e) = join_error.or_else(|| {
-        (!provider_issues.is_empty()).then(|| {
-            ProviderError::CheckConcurrentFailed(
-                "concurrent check error: provider issues detected".to_string(),
-            )
-        })
-    }) {
-        report_lifecycle_failure(
-            &app,
-            run_id.as_str(),
-            &trigger,
-            &e,
-            if provider_issues.is_empty() {
-                None
-            } else {
-                Some(provider_issues)
-            },
-        );
+    let primary_error = join_error
+        .or_else(|| (!suppressed_errors.is_empty()).then_some(ProviderError::CheckAggregate));
+    if let Some(e) = primary_error {
+        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &suppressed_errors);
         return;
     }
 
     let duration_ms = started_at.elapsed().as_millis() as u64;
     if let Err(e) = emit_check_completed(&app, run_id.as_str(), failed_count) {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, None);
+        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
         return;
     }
 

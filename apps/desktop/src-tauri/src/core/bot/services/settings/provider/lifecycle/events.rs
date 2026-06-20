@@ -4,7 +4,7 @@ use tauri::{AppHandle, Emitter};
 use super::super::super::super::super::{
     HealthCheckResult, ProviderAppError, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderCheckTrigger, ProviderError,
-    ProviderId, ProviderIssue, ProviderKeyMeta, ProviderRecord,
+    ProviderId, ProviderKeyMeta, ProviderRecord,
 };
 
 // Provider check lifecycle event names kept aligned with frontend PROVIDER_CHECK_EVENTS.
@@ -69,10 +69,9 @@ pub(super) fn emit_check_completed(
 pub(super) fn emit_check_failed(
     app: &AppHandle,
     run_id: &str,
-    error: &ProviderError,
-    issues: Option<&[ProviderIssue]>,
+    error: ProviderAppError,
 ) -> Result<(), ProviderError> {
-    let payload = ProviderCheckFailedPayload::new(run_id, ProviderAppError::from(error), issues);
+    let payload = ProviderCheckFailedPayload::new(run_id, error);
 
     app.emit(EVT_CHECK_FAILED, &payload)
         .map_err(|source| ProviderError::CheckFailedEmit { source })

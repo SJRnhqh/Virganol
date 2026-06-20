@@ -3,7 +3,7 @@ use serde::Serialize;
 
 use super::super::super::lifecycle::ProviderCheckTrigger;
 use super::super::super::{
-    HealthCheckResult, ProviderAppError, ProviderId, ProviderIssue, ProviderKeyMeta, ProviderRecord,
+    HealthCheckResult, ProviderAppError, ProviderId, ProviderKeyMeta, ProviderRecord,
 };
 use super::ProviderRuntimeStatus;
 
@@ -106,26 +106,13 @@ pub(in crate::core::bot) struct ProviderCheckFailedPayload<'a> {
     ///
     /// 本轮生命周期失败的结构化边界错误。
     error: ProviderAppError,
-    /// Provider-level issues returned when failures can be attributed to providers.
-    ///
-    /// Provider 级问题列表；仅在存在可定位到具体 Provider 的问题时返回。
-    #[serde(skip_serializing_if = "Option::is_none")]
-    issues: Option<&'a [ProviderIssue]>,
 }
 
 impl<'a> ProviderCheckFailedPayload<'a> {
     /// Creates a lifecycle failed event payload.
     ///
     /// 创建生命周期 failed 事件载荷。
-    pub(in crate::core::bot) fn new(
-        run_id: &'a str,
-        error: ProviderAppError,
-        issues: Option<&'a [ProviderIssue]>,
-    ) -> Self {
-        Self {
-            run_id,
-            error,
-            issues,
-        }
+    pub(in crate::core::bot) fn new(run_id: &'a str, error: ProviderAppError) -> Self {
+        Self { run_id, error }
     }
 }

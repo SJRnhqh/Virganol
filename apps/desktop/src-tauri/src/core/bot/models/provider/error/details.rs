@@ -24,6 +24,11 @@ pub(super) struct ProviderErrorDetails {
     /// 主错误发生后，恢复状态时产生的 Provider 边界错误。
     #[serde(skip_serializing_if = "Option::is_none")]
     recovery_failure: Option<Box<ProviderAppError>>,
+    /// Provider boundary errors observed but not selected as the primary error.
+    ///
+    /// 已观察到但未被选为主错误的 Provider 边界错误。
+    #[serde(skip_serializing_if = "Option::is_none")]
+    suppressed_errors: Option<Vec<ProviderAppError>>,
 }
 
 impl ProviderErrorDetails {
@@ -35,6 +40,7 @@ impl ProviderErrorDetails {
             domain_scope: Self::domain_scope_from(error).to_string(),
             provider_id: Self::provider_id_from(error),
             recovery_failure: None,
+            suppressed_errors: None,
         }
     }
 
@@ -80,6 +86,19 @@ impl ProviderErrorDetails {
         }
     }
 
+    /// Creates provider details with suppressed boundary errors attached.
+    ///
+    /// 创建附带被抑制边界错误的 Provider 错误细节。
+    pub(super) fn with_suppressed_errors(
+        error: &ProviderError,
+        suppressed_errors: Vec<ProviderAppError>,
+    ) -> Self {
+        Self {
+            suppressed_errors: (!suppressed_errors.is_empty()).then_some(suppressed_errors),
+            ..Self::from_error(error)
+        }
+    }
+
     /// Projects an internal provider error into a provider-domain scope.
     ///
     /// 将内部 Provider 错误投影为 Provider 领域范围。
@@ -92,7 +111,9 @@ impl ProviderErrorDetails {
             | ProviderError::CheckStatusEmit { .. }
             | ProviderError::CheckCompletedEmit { .. }
             | ProviderError::CheckFailedEmit { .. } => "provider.lifecycle.event.emit",
-            ProviderError::CheckConcurrentFailed(_) => "provider.lifecycle.check.execute",
+            ProviderError::CheckTaskJoin { .. } | ProviderError::CheckAggregate => {
+                "provider.lifecycle.check.execute"
+            }
             ProviderError::HealthCheckMissingConfig { .. } => "provider.connection.check.validate",
             ProviderError::HealthCheckNetwork { .. } | ProviderError::HealthCheckHttp { .. } => {
                 "provider.connection.check.request"

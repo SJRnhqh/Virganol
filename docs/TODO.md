@@ -5,21 +5,21 @@
 
 ## Current
 
-- [ ] Lifecycle error field pass — classify lifecycle emit/concurrent `ProviderError` string variants into typed context fields and real source causes where available
-  - [x] `CheckStartedEmit` / `CheckCompletedEmit` / `CheckFailedEmit` — upgraded from `String` to `{ #[source] source: TauriError }`
-  - [x] `CheckStatusEmit` — upgraded to `{ provider_id, #[source] source: TauriError }`, with provider context projected through details rather than duplicated in the source-backed Display text
-  - [ ] `CheckConcurrentFailed` — pending; current String variant still covers both join errors and provider issue sentinel flow
+- [ ] Error field consolidation and context checkpoint — decide whether recovery/suppressed fields and provider/task/log context should become shared first-class error-system concepts
 
 ## Planned
 
-- [ ] `ProviderErrorDetails` issue aggregation helper — add a details-level helper for related provider errors before collapsing lifecycle issues
-- [ ] `ProviderIssue` merge into `ProviderAppError.details` — collapse lifecycle failed payload to a single `error` field and carry provider-scoped related errors as a `ProviderAppError` list in details
-- [ ] Provider error context checkpoint — decide whether provider/task/log context should become a first-class error-system concept beyond `provider_id`
 - [ ] Error-system architecture note — document the Provider error design: domain error fields, source chains, boundary code/details projection, issue aggregation, and future shared abstractions
 - [ ] Logging system kickoff — start with structured log context reuse after the error context model is stable, keeping trace/correlation identifiers in logging rather than current error details
 
 ## Completed
 
+- [x] Lifecycle error field pass — classified lifecycle emit/concurrent `ProviderError` variants into typed context fields and real source causes where available
+  - [x] `CheckStartedEmit` / `CheckCompletedEmit` / `CheckFailedEmit` — upgraded from `String` to `{ #[source] source: TauriError }`
+  - [x] `CheckStatusEmit` — upgraded to `{ provider_id, #[source] source: TauriError }`, with provider context projected through details rather than duplicated in the source-backed Display text
+  - [x] `CheckTaskJoin` — split true join failures into `{ #[source] source: JoinError }`
+  - [x] `CheckAggregate` — added a lifecycle primary error for collected provider-level errors
+- [x] Provider issue aggregation — removed backend `ProviderIssue`/failed-payload `issues`, collected provider-level errors as internal `ProviderError`s, and projected them through `details.suppressedErrors`
 - [x] Source binding style unified — `Err(source)` + field shorthand `source,` across connection (`deepseek`, `ollama`) and secret store (`load`) files
 - [x] Health-check network/response-format source chain — upgraded DeepSeek/Ollama request and JSON parse failures to carry `provider_id` plus `reqwest::Error` source
 - [x] `HealthCheckHttp` typed provider context — replaced free-text HTTP status failures with `provider_id` context in `ProviderError`, keeping status details in driver logs until the broader context model is designed

@@ -73,7 +73,8 @@ impl From<&ProviderError> for ProviderErrorCode {
             | ProviderError::CheckStatusEmit { .. }
             | ProviderError::CheckCompletedEmit { .. }
             | ProviderError::CheckFailedEmit { .. }
-            | ProviderError::CheckConcurrentFailed(_) => Self::CheckLifecycleFailed,
+            | ProviderError::CheckTaskJoin { .. }
+            | ProviderError::CheckAggregate => Self::CheckLifecycleFailed,
             ProviderError::HealthCheckMissingConfig { .. }
             | ProviderError::HealthCheckNetwork { .. }
             | ProviderError::HealthCheckHttp { .. }

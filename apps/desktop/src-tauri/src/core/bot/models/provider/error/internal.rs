@@ -7,6 +7,7 @@ use std::io::Error as IoError;
 use tauri::Error as TauriError;
 use tauri_plugin_store::Error as StoreError;
 use thiserror::Error;
+use tokio::task::JoinError;
 
 use super::super::ProviderId;
 
@@ -53,11 +54,19 @@ pub(in crate::core::bot) enum ProviderError {
         #[source]
         source: TauriError,
     },
-    /// Provider check concurrent execution failed (join error or structural issue).
+    /// Provider check task join failed.
     ///
-    /// Provider 并发检查执行失败（join 错误或结构性问题）。
-    #[error("{0}")]
-    CheckConcurrentFailed(String),
+    /// Provider 检查任务 join 失败。
+    #[error("provider check task join failed: {source}")]
+    CheckTaskJoin {
+        #[source]
+        source: JoinError,
+    },
+    /// Provider check collected provider-level errors during lifecycle execution.
+    ///
+    /// Provider 检查生命周期执行期间收集到了 Provider 级错误。
+    #[error("provider check collected provider-level errors")]
+    CheckAggregate,
     /// Required health check configuration is missing.
     ///
     /// 健康检查所需配置缺失。
