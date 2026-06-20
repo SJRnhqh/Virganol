@@ -44,6 +44,7 @@ impl ProviderErrorDetails {
     fn provider_id_from(error: &ProviderError) -> Option<ProviderId> {
         match error {
             ProviderError::ManagerRequestPayloadAbsent { provider_id }
+            | ProviderError::CheckStatusEmit { provider_id, .. }
             | ProviderError::ConfigNotFound { provider_id }
             | ProviderError::JsonSerialize { provider_id, .. }
             | ProviderError::ConfigStoreSerialize { provider_id, .. }
@@ -88,7 +89,7 @@ impl ProviderErrorDetails {
                 "provider.manager.request.validate"
             }
             ProviderError::CheckStartedEmit { .. }
-            | ProviderError::CheckStatusEmit(_)
+            | ProviderError::CheckStatusEmit { .. }
             | ProviderError::CheckCompletedEmit { .. }
             | ProviderError::CheckFailedEmit { .. } => "provider.lifecycle.event.emit",
             ProviderError::CheckConcurrentFailed(_) => "provider.lifecycle.check.execute",

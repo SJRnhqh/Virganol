@@ -43,7 +43,10 @@ pub(super) fn emit_check_status(
     let payload = ProviderCheckStatusPayload::new(run_id, provider_id, config, health, key_meta);
 
     app.emit(EVT_CHECK_STATUS, &payload)
-        .map_err(|e| ProviderError::CheckStatusEmit(e.to_string()))
+        .map_err(|source| ProviderError::CheckStatusEmit {
+            provider_id,
+            source,
+        })
 }
 
 /// Emits the lifecycle completed event.

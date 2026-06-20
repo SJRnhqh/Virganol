@@ -70,7 +70,7 @@ impl From<&ProviderError> for ProviderErrorCode {
         match error {
             ProviderError::ManagerRequestPayloadAbsent { .. } => Self::MissingRequestData,
             ProviderError::CheckStartedEmit { .. }
-            | ProviderError::CheckStatusEmit(_)
+            | ProviderError::CheckStatusEmit { .. }
             | ProviderError::CheckCompletedEmit { .. }
             | ProviderError::CheckFailedEmit { .. }
             | ProviderError::CheckConcurrentFailed(_) => Self::CheckLifecycleFailed,

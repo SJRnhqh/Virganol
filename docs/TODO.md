@@ -7,8 +7,8 @@
 
 - [ ] Lifecycle error field pass — classify lifecycle emit/concurrent `ProviderError` string variants into typed context fields and real source causes where available
   - [x] `CheckStartedEmit` / `CheckCompletedEmit` / `CheckFailedEmit` — upgraded from `String` to `{ #[source] source: TauriError }`
-  - [ ] `CheckStatusEmit` — pending (has provider context, needs design discussion)
-  - [ ] `CheckConcurrentFailed` — pending
+  - [x] `CheckStatusEmit` — upgraded to `{ provider_id, #[source] source: TauriError }`, with provider context projected through details rather than duplicated in the source-backed Display text
+  - [ ] `CheckConcurrentFailed` — pending; current String variant still covers both join errors and provider issue sentinel flow
 
 ## Planned
 
