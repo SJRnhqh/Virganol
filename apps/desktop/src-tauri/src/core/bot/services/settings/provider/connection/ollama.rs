@@ -33,11 +33,11 @@ pub(super) async fn ollama_check(
 
     let resp = match request.send().await {
         Ok(r) => r,
-        Err(e) => {
-            error!("[Tauri][Ollama] request failed: {}", e);
+        Err(source) => {
+            error!("[Tauri][Ollama] request failed: {}", source);
             return HealthCheckResult::fail(ProviderError::HealthCheckNetwork {
                 provider_id,
-                source: e,
+                source,
             });
         }
     };
@@ -50,11 +50,11 @@ pub(super) async fn ollama_check(
 
     let json: serde_json::Value = match resp.json().await {
         Ok(v) => v,
-        Err(e) => {
-            error!("[Tauri][Ollama] JSON parse error: {}", e);
+        Err(source) => {
+            error!("[Tauri][Ollama] JSON parse error: {}", source);
             return HealthCheckResult::fail(ProviderError::HealthCheckResponseFormat {
                 provider_id,
-                source: e,
+                source,
             });
         }
     };

@@ -69,9 +69,9 @@ impl From<&ProviderError> for ProviderErrorCode {
     fn from(error: &ProviderError) -> Self {
         match error {
             ProviderError::ManagerRequestPayloadAbsent { .. } => Self::MissingRequestData,
-            ProviderError::CheckStartedEmit(_)
+            ProviderError::CheckStartedEmit { .. }
             | ProviderError::CheckStatusEmit(_)
-            | ProviderError::CheckCompletedEmit(_)
+            | ProviderError::CheckCompletedEmit { .. }
             | ProviderError::CheckFailedEmit(_)
             | ProviderError::CheckConcurrentFailed(_) => Self::CheckLifecycleFailed,
             ProviderError::HealthCheckMissingConfig { .. }

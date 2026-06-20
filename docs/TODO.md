@@ -6,6 +6,10 @@
 ## Current
 
 - [ ] Lifecycle error field pass — classify lifecycle emit/concurrent `ProviderError` string variants into typed context fields and real source causes where available
+  - [x] `CheckStartedEmit` / `CheckCompletedEmit` — upgraded from `String` to `{ #[source] source: TauriError }`
+  - [ ] `CheckStatusEmit` — pending (has provider context, needs design discussion)
+  - [ ] `CheckFailedEmit` — pending
+  - [ ] `CheckConcurrentFailed` — pending
 
 ## Planned
 
@@ -17,6 +21,7 @@
 
 ## Completed
 
+- [x] Source binding style unified — `Err(source)` + field shorthand `source,` across connection (`deepseek`, `ollama`) and secret store (`load`) files
 - [x] Health-check network/response-format source chain — upgraded DeepSeek/Ollama request and JSON parse failures to carry `provider_id` plus `reqwest::Error` source
 - [x] `HealthCheckHttp` typed provider context — replaced free-text HTTP status failures with `provider_id` context in `ProviderError`, keeping status details in driver logs until the broader context model is designed
 - [x] `ProviderAppError::from` connect adoption — moved connect manager/store failure responses off the transitional `with_provider_id` helper now that provider context projects from `ProviderError`

@@ -23,8 +23,11 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider check lifecycle started event emission failed.
     ///
     /// Provider 检查生命周期开始事件推送失败。
-    #[error("{0}")]
-    CheckStartedEmit(String),
+    #[error("provider check lifecycle started event emission failed: {source}")]
+    CheckStartedEmit {
+        #[source]
+        source: TauriError,
+    },
     /// Provider check lifecycle status event emission failed.
     ///
     /// Provider 检查生命周期状态事件推送失败。
@@ -33,8 +36,11 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider check lifecycle completed event emission failed.
     ///
     /// Provider 检查生命周期完成事件推送失败。
-    #[error("{0}")]
-    CheckCompletedEmit(String),
+    #[error("provider check lifecycle completed event emission failed: {source}")]
+    CheckCompletedEmit {
+        #[source]
+        source: TauriError,
+    },
     /// Provider check lifecycle failed event emission failed.
     ///
     /// Provider 检查生命周期失败事件推送失败。

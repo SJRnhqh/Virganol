@@ -29,11 +29,11 @@ pub(super) async fn deepseek_check(provider_id: ProviderId, key: &str) -> Health
         .await
     {
         Ok(r) => r,
-        Err(e) => {
-            error!("[Tauri][DeepSeek] request failed: {}", e);
+        Err(source) => {
+            error!("[Tauri][DeepSeek] request failed: {}", source);
             return HealthCheckResult::fail(ProviderError::HealthCheckNetwork {
                 provider_id,
-                source: e,
+                source,
             });
         }
     };
@@ -46,11 +46,11 @@ pub(super) async fn deepseek_check(provider_id: ProviderId, key: &str) -> Health
 
     let json: serde_json::Value = match resp.json().await {
         Ok(v) => v,
-        Err(e) => {
-            error!("[Tauri][DeepSeek] JSON parse error: {}", e);
+        Err(source) => {
+            error!("[Tauri][DeepSeek] JSON parse error: {}", source);
             return HealthCheckResult::fail(ProviderError::HealthCheckResponseFormat {
                 provider_id,
-                source: e,
+                source,
             });
         }
     };

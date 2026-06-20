@@ -87,9 +87,9 @@ impl ProviderErrorDetails {
             ProviderError::ManagerRequestPayloadAbsent { .. } => {
                 "provider.manager.request.validate"
             }
-            ProviderError::CheckStartedEmit(_)
+            ProviderError::CheckStartedEmit { .. }
             | ProviderError::CheckStatusEmit(_)
-            | ProviderError::CheckCompletedEmit(_)
+            | ProviderError::CheckCompletedEmit { .. }
             | ProviderError::CheckFailedEmit(_) => "provider.lifecycle.event.emit",
             ProviderError::CheckConcurrentFailed(_) => "provider.lifecycle.check.execute",
             ProviderError::HealthCheckMissingConfig { .. } => "provider.connection.check.validate",
