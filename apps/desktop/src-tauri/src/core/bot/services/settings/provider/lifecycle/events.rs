@@ -72,5 +72,5 @@ pub(super) fn emit_check_failed(
     let payload = ProviderCheckFailedPayload::new(run_id, ProviderAppError::from(error), issues);
 
     app.emit(EVT_CHECK_FAILED, &payload)
-        .map_err(|e| ProviderError::CheckFailedEmit(e.to_string()))
+        .map_err(|source| ProviderError::CheckFailedEmit { source })
 }

@@ -90,7 +90,7 @@ impl ProviderErrorDetails {
             ProviderError::CheckStartedEmit { .. }
             | ProviderError::CheckStatusEmit(_)
             | ProviderError::CheckCompletedEmit { .. }
-            | ProviderError::CheckFailedEmit(_) => "provider.lifecycle.event.emit",
+            | ProviderError::CheckFailedEmit { .. } => "provider.lifecycle.event.emit",
             ProviderError::CheckConcurrentFailed(_) => "provider.lifecycle.check.execute",
             ProviderError::HealthCheckMissingConfig { .. } => "provider.connection.check.validate",
             ProviderError::HealthCheckNetwork { .. } | ProviderError::HealthCheckHttp { .. } => {

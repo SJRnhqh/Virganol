@@ -44,8 +44,11 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider check lifecycle failed event emission failed.
     ///
     /// Provider 检查生命周期失败事件推送失败。
-    #[error("{0}")]
-    CheckFailedEmit(String),
+    #[error("provider check lifecycle failed event emission failed: {source}")]
+    CheckFailedEmit {
+        #[source]
+        source: TauriError,
+    },
     /// Provider check concurrent execution failed (join error or structural issue).
     ///
     /// Provider 并发检查执行失败（join 错误或结构性问题）。
