@@ -1,10 +1,12 @@
 # Virganol Architecture
 
-> System design and architectural overview
+> Project architecture, runtime boundaries, and reliability design
 
 ---
 
-## System Overview
+## System Architecture
+
+### Runtime Topology
 
 Virganol is a modern desktop application built with a three-layer architecture:
 
@@ -34,12 +36,24 @@ Virganol is a modern desktop application built with a three-layer architecture:
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## Landlord-Tenant Model
+### Landlord-Tenant Model
 
 **Rust (Landlord)**: Controls lifecycle, manages secrets, grants scoped
 access to Go
 
 **Go (Tenant)**: Receives `--app-data-dir` from Rust, file I/O limited to
 that directory
+
+---
+
+## Reliability Architecture
+
+### Context Architecture
+
+### Error Architecture
+
+### Logging Architecture
+
+### Tracing Architecture
+
+### Testing Architecture
