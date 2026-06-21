@@ -16,6 +16,7 @@
 ## Completed
 
 - [x] Reliability architecture scaffold — reorganized `ARCHITECTURE.md` around system architecture and reliability architecture, with context propagation as the foundation for error architecture, observability, and testing strategy
+- [x] Backend periphery review — cleaned `Cargo.toml` (cargo sort, description), annotated `build.rs` TODOs for standardization / capabilities / tauri config, confirmed caps and tauri.conf roles
 - [x] Provider context checkpoint — decided that context is a reliability-level foundation rather than an error-only detail beyond `provider_id`
 - [x] Lifecycle error field pass — classified lifecycle emit/concurrent `ProviderError` variants into typed context fields and real source causes where available
   - [x] `CheckStartedEmit` / `CheckCompletedEmit` / `CheckFailedEmit` — upgraded from `String` to `{ #[source] source: TauriError }`
