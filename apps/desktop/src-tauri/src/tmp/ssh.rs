@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/tmp/ssh.rs
+// TODO: demolish
 use ssh2::Session;
 use std::net::TcpStream;
 

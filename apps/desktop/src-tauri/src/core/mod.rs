@@ -1,8 +1,5 @@
 // apps/desktop/src-tauri/src/core/mod.rs
 mod bot;
-mod init;
-mod manager;
-mod rpc;
 mod shared;
 
 pub(self) use bot::ProviderState;
@@ -12,7 +9,13 @@ pub(super) use bot::{
     ProviderCheckTrigger, ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
     UpdateEnabledModelsResponse,
 };
-pub(super) use init::init;
-pub(super) use manager::{SidecarManager, SidecarState};
 pub(super) use shared::AppState;
 pub(self) use shared::{AppError, Downgrade};
+
+// TODO: standardize
+mod init;
+mod manager;
+mod rpc;
+
+pub(super) use init::init;
+pub(super) use manager::{SidecarManager, SidecarState};

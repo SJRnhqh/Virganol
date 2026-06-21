@@ -26,6 +26,9 @@
 - [x] Provider issue aggregation — removed backend `ProviderIssue`/failed-payload `issues`, collected provider-level errors as internal `ProviderError`s, and projected them through `details.suppressedErrors`
 - [x] Error detail field consolidation — folded reset recovery failures into `details.suppressedErrors`, removed `with_recovery_failure` constructor
 - [x] Serialize cleanup — removed vestigial `impl Serialize for ProviderError` and `#[derive(Serialize)]` from `HealthCheckResult`, both superseded by `ProviderAppError` boundary projection
+- [x] Cargo.toml cleanup — removed grouping comments, `cargo sort` alphabetized, `description` updated to "Virganol desktop backend"
+- [x] Backend TODO audit — marked 14 non-Provider files (`standardize` / `demolish`), reorganized `core/mod.rs` to separate sidecar infra from provider domain
+- [x] Architecture doc scaffold — added Reliability Architecture section with Context / Error / Observability / Testing stubs
 - [x] Source binding style unified — `Err(source)` + field shorthand `source,` across connection (`deepseek`, `ollama`) and secret store (`load`) files
 - [x] Health-check network/response-format source chain — upgraded DeepSeek/Ollama request and JSON parse failures to carry `provider_id` plus `reqwest::Error` source
 - [x] `HealthCheckHttp` typed provider context — replaced free-text HTTP status failures with `provider_id` context in `ProviderError`, keeping status details in driver logs until the broader context model is designed
