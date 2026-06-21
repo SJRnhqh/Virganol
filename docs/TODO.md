@@ -5,17 +5,17 @@
 
 ## Current
 
-- [ ] Context architecture design — define the reliability context model that
-  underpins error, logging, tracing, and testing architecture
+- [ ] Context propagation design — define the reliability context model that
+  underpins error architecture, observability, and testing strategy
 
 ## Planned
 
 - [ ] Error architecture note — document the Provider error design: domain error fields, source chains, boundary code/details projection, issue aggregation, and future shared abstractions
-- [ ] Logging architecture kickoff — start with structured log context reuse after the context model is stable, keeping trace/correlation identifiers in logging rather than current error details
+- [ ] Observability kickoff — start with structured log context reuse after the context model is stable, keeping trace/correlation identifiers in observability rather than current error details
 
 ## Completed
 
-- [x] Reliability architecture scaffold — reorganized `ARCHITECTURE.md` around system architecture and reliability architecture, with context as the foundation for error, logging, tracing, and testing design
+- [x] Reliability architecture scaffold — reorganized `ARCHITECTURE.md` around system architecture and reliability architecture, with context propagation as the foundation for error architecture, observability, and testing strategy
 - [x] Provider context checkpoint — decided that context is a reliability-level foundation rather than an error-only detail beyond `provider_id`
 - [x] Lifecycle error field pass — classified lifecycle emit/concurrent `ProviderError` variants into typed context fields and real source causes where available
   - [x] `CheckStartedEmit` / `CheckCompletedEmit` / `CheckFailedEmit` — upgraded from `String` to `{ #[source] source: TauriError }`

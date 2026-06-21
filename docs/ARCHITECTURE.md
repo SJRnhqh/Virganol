@@ -48,12 +48,14 @@ that directory
 
 ## Reliability Architecture
 
-### Context Architecture
+### Context Propagation
 
 ### Error Architecture
 
-### Logging Architecture
+### Observability
 
-### Tracing Architecture
+#### Structured Logging
 
-### Testing Architecture
+#### Tracing
+
+### Testing Strategy
