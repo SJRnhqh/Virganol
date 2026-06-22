@@ -7,11 +7,10 @@
     "clean": "node dev/scripts/repo/clean.mjs clean",
     "purge": "node dev/scripts/repo/clean.mjs purge",
     "diff:budget": "node dev/scripts/repo/diff-budget.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node dev/scripts/repo/test.mjs",
     "dev:ui": "pnpm -F @virganol/ui dev",
     "dev": "pnpm -F @virganol/desktop dev",
     "build": "pnpm -F @virganol/desktop build",
-    "lint:rust:source-headers": "node dev/scripts/rust/lint-source-headers.mjs",
     "prepare": "husky"
   },
   "keywords": [],

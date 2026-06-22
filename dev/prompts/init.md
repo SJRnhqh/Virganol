@@ -12,9 +12,11 @@ and reason about development order.
 ## Procedure
 
 - Read `AGENTS.md` for project-level development guidance.
-- Read the Markdown documents under `docs/` to understand current development
-  progress, branch tasks, and project structure.
-- Inspect the current git branch and worktree status.
+- Inspect the current git branch, worktree status, latest commit, and diff
+  summary.
+- Read `docs/TODO.md` for branch-level execution state.
+- Read other Markdown documents under `docs/` only when needed for the current
+  request.
 - Inspect relevant directories only when needed to understand project structure.
 - Summarize the current project context and call out any documentation/code
   mismatch.

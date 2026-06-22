@@ -7,4 +7,4 @@ mod resolution;
 pub(in crate::core::bot) use change::ProviderKeyChange;
 pub(in crate::core::bot) use key::ProviderKey;
 pub(in crate::core::bot) use meta::{ProviderKeyMeta, ProviderKeySource};
-pub(in crate::core::bot) use resolution::ProviderKeyResolution;
+pub(in crate::core::bot) use resolution::ProviderResolvedKey;

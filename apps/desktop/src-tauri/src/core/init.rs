@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/core/init.rs
+// TODO: standardize
 use tauri::AppHandle;
 use tauri::Manager;
 use tauri_plugin_shell::process::CommandEvent;

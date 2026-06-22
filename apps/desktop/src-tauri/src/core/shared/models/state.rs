@@ -5,16 +5,16 @@ use super::super::super::ProviderState;
 ///
 /// 由桌面运行时管理的 Tauri 共享应用状态。
 pub(crate) struct AppState {
-    /// Provider settings and lifecycle state.
+    /// Provider-domain runtime coordination state.
     ///
-    /// Provider 设置与生命周期状态。
+    /// Provider 领域运行时协调状态。
     provider: ProviderState,
 }
 
 impl AppState {
-    /// Returns provider settings and lifecycle state.
+    /// Returns provider-domain runtime coordination state.
     ///
-    /// 返回 Provider 设置与生命周期状态。
+    /// 返回 Provider 领域运行时协调状态。
     pub(in crate::core) fn provider(&self) -> &ProviderState {
         &self.provider
     }

@@ -52,10 +52,8 @@ impl Drop for ProviderKeyTransaction {
 
         let provider_id = change.provider_id();
         let expected_current = change.new_key().as_str();
-        let current_matches = load_provider_key(provider_id)
-            .as_ref()
-            .map(|key| key.as_str())
-            == Some(expected_current);
+        let current_matches =
+            load_provider_key(provider_id).as_ref().map(|k| k.as_str()) == Some(expected_current);
 
         if !current_matches {
             log::warn!(

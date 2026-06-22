@@ -17,9 +17,13 @@ pub(in crate::core::bot::services::settings::provider) fn save_provider(
     record: ProviderRecord,
 ) -> Result<(), ProviderError> {
     let _guard = provider_state.lock_store();
-    let mut providers = load_all_providers(app)?;
+    let mut providers = load_all_providers(app, Some(provider_id))?;
     providers.insert(provider_id.to_string(), record);
 
-    let value = serde_json::to_value(&providers).map_err(ProviderError::JsonSerialize)?;
-    save_settings(app, SPIRIT_PROVIDERS_KEY, value)
+    let value =
+        serde_json::to_value(&providers).map_err(|source| ProviderError::JsonSerialize {
+            provider_id,
+            source,
+        })?;
+    save_settings(app, SPIRIT_PROVIDERS_KEY, value, provider_id)
 }

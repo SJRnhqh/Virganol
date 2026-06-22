@@ -28,6 +28,10 @@ bin/
 # AI
 .claude/
 
+# Python
+.venv/
+dev/tools/uv.lock
+
 # CodeArt
 .arts/*
 

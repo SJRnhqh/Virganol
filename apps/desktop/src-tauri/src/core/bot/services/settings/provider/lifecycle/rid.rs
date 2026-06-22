@@ -15,7 +15,7 @@ static RUN_SEQ: AtomicU64 = AtomicU64::new(0);
 pub(super) fn next_run_id(trigger: &ProviderCheckTrigger) -> String {
     let timestamp_ms = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .map(|d| d.as_millis())
+        .map(|duration| duration.as_millis())
         .unwrap_or(0);
     let seq = RUN_SEQ.fetch_add(1, Ordering::Relaxed);
 

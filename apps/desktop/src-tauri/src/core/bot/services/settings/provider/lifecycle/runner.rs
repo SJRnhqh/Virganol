@@ -1,11 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/runner.rs
-use log::{error, info, warn};
+use log::{error, info};
 use tauri::AppHandle;
 use tokio::task::JoinSet;
 
+use super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::{
-    ProviderAppError, ProviderCheckRunResult, ProviderError, ProviderId, ProviderIssue,
-    ProviderRecord, ProviderState,
+    ProviderCheckRunResult, ProviderError, ProviderId, ProviderRecord, ProviderState,
 };
 use super::super::health_check_with_resolved_key;
 use super::{emit_check_status, finalize_provider_check_result};
@@ -17,7 +17,7 @@ const CHECK_CONCURRENCY_LIMIT: usize = 4;
 
 /// Runs provider health checks with bounded concurrency.
 ///
-/// 使用有限并发执行 Provider 健康检查，并收集失败数量、Provider 级结构性问题与首个 join 错误。
+/// 使用有限并发执行 Provider 健康检查，并收集失败数量、被抑制错误与首个 join 错误。
 pub(super) async fn run_provider_checks(
     app: &AppHandle,
     provider_state: &ProviderState,
@@ -25,7 +25,7 @@ pub(super) async fn run_provider_checks(
     supported: Vec<(ProviderId, ProviderRecord)>,
 ) -> ProviderCheckRunResult {
     let mut failed_count: usize = 0;
-    let mut provider_issues: Vec<ProviderIssue> = Vec::new();
+    let mut suppressed_errors: Vec<ProviderError> = Vec::new();
     let mut join_error: Option<ProviderError> = None;
 
     let mut pending = supported.into_iter();
@@ -54,9 +54,8 @@ pub(super) async fn run_provider_checks(
                 )
                 .into_parts();
 
-                if let Some(e) = reconciliation_error {
-                    provider_issues
-                        .push(ProviderIssue::new(provider_id, ProviderAppError::from(&e)));
+                if let Some(se) = reconciliation_error {
+                    suppressed_errors.push(se);
                 }
 
                 if !online {
@@ -70,27 +69,23 @@ pub(super) async fn run_provider_checks(
                     online
                 );
 
-                if let Err(e) =
+                if let Err(se) =
                     emit_check_status(app, run_id, provider_id, status_record, result, key_meta)
                 {
-                    provider_issues
-                        .push(ProviderIssue::new(provider_id, ProviderAppError::from(&e)));
+                    suppressed_errors.push(se);
                 }
             }
-            Some(Err(e)) => {
+            Some(Err(source)) => {
                 if join_error.is_none() {
-                    join_error = Some(ProviderError::CheckConcurrentFailed(format!(
-                        "concurrent check error: {}",
-                        e
-                    )));
-                    error!("[Tauri] ❌ concurrent check error: {}", e);
+                    error!("[Tauri] ❌ concurrent check error: {}", source);
+                    join_error = Some(ProviderError::CheckTaskJoin { source });
                 } else {
-                    warn!("[Tauri] ⚠️ concurrent check error (suppressed): {}", e);
+                    ProviderError::CheckTaskJoin { source }.downgrade();
                 }
             }
             None => break,
         }
     }
 
-    ProviderCheckRunResult::new(failed_count, provider_issues, join_error)
+    ProviderCheckRunResult::new(failed_count, join_error, suppressed_errors)
 }

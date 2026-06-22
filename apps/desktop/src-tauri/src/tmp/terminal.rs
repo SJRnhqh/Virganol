@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/tmp/terminal.rs
+// TODO: demolish
 use portable_pty::{CommandBuilder, NativePtySystem, PtySize, PtySystem};
 use std::{
     collections::HashMap,

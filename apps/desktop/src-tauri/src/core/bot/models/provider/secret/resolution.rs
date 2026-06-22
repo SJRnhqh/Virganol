@@ -4,49 +4,58 @@ use super::{ProviderKey, ProviderKeyMeta, ProviderKeySource};
 /// Result of resolving a provider API key and its source metadata.
 ///
 /// Provider API key 及其来源元信息的解析结果。
-pub(in crate::core::bot) struct ProviderKeyResolution {
-    /// Resolved provider API key, if one is available.
+pub(in crate::core::bot) enum ProviderResolvedKey {
+    /// Provider API key resolved from a concrete source.
     ///
-    /// 已解析到的 Provider API key；不存在可用 key 时为 None。
-    key: Option<ProviderKey>,
-    /// Source metadata for the resolved key.
+    /// 从明确来源解析到的 Provider API key。
+    Available {
+        /// Resolved provider API key.
+        ///
+        /// 已解析到的 Provider API key。
+        key: ProviderKey,
+        /// Source used to resolve the provider API key.
+        ///
+        /// Provider API key 的解析来源。
+        source: ProviderKeySource,
+    },
+    /// No usable provider API key is available.
     ///
-    /// 已解析 key 的来源元信息。
-    meta: ProviderKeyMeta,
+    /// 未解析到可用的 Provider API key。
+    Unavailable,
 }
 
-impl ProviderKeyResolution {
-    /// Creates a resolution for a key found from a concrete source.
+impl ProviderResolvedKey {
+    /// Creates an available resolved key from a concrete source.
     ///
-    /// 创建带有明确来源的 key 解析结果。
-    pub(in crate::core::bot) fn found(key: ProviderKey, source: ProviderKeySource) -> Self {
-        Self {
-            key: Some(key),
-            meta: ProviderKeyMeta::with_source(source),
-        }
+    /// 创建带有明确来源的可用解析 key。
+    pub(in crate::core::bot) fn available(key: ProviderKey, source: ProviderKeySource) -> Self {
+        Self::Available { key, source }
     }
 
-    /// Creates an empty resolution when no key is available.
+    /// Creates an unavailable resolved key when no key is available.
     ///
-    /// 创建未解析到可用 key 的空解析结果。
-    pub(in crate::core::bot) fn none() -> Self {
-        Self {
-            key: None,
-            meta: ProviderKeyMeta::none(),
-        }
+    /// 创建未解析到可用 key 的不可用解析状态。
+    pub(in crate::core::bot) fn unavailable() -> Self {
+        Self::Unavailable
     }
 
     /// Returns the resolved key, if available.
     ///
     /// 返回已解析到的 key；不存在可用 key 时返回 None。
     pub(in crate::core::bot) fn key(&self) -> Option<&ProviderKey> {
-        self.key.as_ref()
+        match self {
+            Self::Available { key, .. } => Some(key),
+            Self::Unavailable => None,
+        }
     }
 
-    /// Consumes the resolution and returns the source metadata.
+    /// Consumes the resolved key and returns the source metadata.
     ///
-    /// 消费解析结果并返回来源元信息。
+    /// 消费解析 key 并返回来源元信息。
     pub(in crate::core::bot) fn into_meta(self) -> ProviderKeyMeta {
-        self.meta
+        match self {
+            Self::Available { source, .. } => ProviderKeyMeta::with_source(source),
+            Self::Unavailable => ProviderKeyMeta::none(),
+        }
     }
 }

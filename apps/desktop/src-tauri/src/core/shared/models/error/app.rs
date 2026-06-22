@@ -1,12 +1,11 @@
 // apps/desktop/src-tauri/src/core/shared/models/error/app.rs
 use serde::Serialize;
-use std::marker::PhantomData;
 
 /// Generic application boundary error.
 ///
 /// 应用边界错误。
 #[derive(Serialize)]
-pub(in crate::core) struct AppError<C, D = ()> {
+pub(in crate::core) struct AppError<C, D> {
     /// Machine-readable domain error code.
     ///
     /// 机器可读的领域错误码。
@@ -15,21 +14,21 @@ pub(in crate::core) struct AppError<C, D = ()> {
     ///
     /// 用于展示或日志记录的安全兜底消息。
     message: String,
-    /// Reserved marker for domain-specific structured error details.
+    /// Domain-specific structured error details.
     ///
-    /// 预留给领域结构化错误细节的类型标记。
-    _details: PhantomData<D>,
+    /// 领域结构化错误细节。
+    details: D,
 }
 
 impl<C, D> AppError<C, D> {
-    /// Creates an application boundary error.
+    /// Creates an application boundary error with structured details.
     ///
-    /// 创建应用边界错误。
-    pub(in crate::core) fn new(code: C, message: impl Into<String>) -> Self {
+    /// 创建带结构化细节的应用边界错误。
+    pub(in crate::core) fn new(code: C, message: impl Into<String>, details: D) -> Self {
         Self {
             code,
             message: message.into(),
-            _details: PhantomData,
+            details,
         }
     }
 }

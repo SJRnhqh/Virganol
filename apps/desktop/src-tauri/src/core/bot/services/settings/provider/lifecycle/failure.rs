@@ -3,7 +3,7 @@ use log::error;
 use tauri::AppHandle;
 
 use super::super::super::super::super::super::Downgrade;
-use super::super::super::super::super::{ProviderCheckTrigger, ProviderError, ProviderIssue};
+use super::super::super::super::super::{ProviderAppError, ProviderCheckTrigger, ProviderError};
 use super::emit_check_failed;
 
 /// Reports a lifecycle failure through the failed event with log fallback.
@@ -14,27 +14,29 @@ pub(super) fn report_lifecycle_failure(
     run_id: &str,
     trigger: &ProviderCheckTrigger,
     error: &ProviderError,
-    issues: Option<Vec<ProviderIssue>>,
+    suppressed_errors: &[ProviderError],
 ) {
-    if let Err(e) = emit_check_failed(app, run_id, error, issues.as_deref()) {
+    let app_error = match suppressed_errors {
+        [] => ProviderAppError::from(error),
+        suppressed_errors => {
+            let suppressed_app_errors = suppressed_errors
+                .iter()
+                .map(ProviderAppError::from)
+                .collect();
+            ProviderAppError::with_suppressed_errors(error, suppressed_app_errors)
+        }
+    };
+
+    if let Err(e) = emit_check_failed(app, run_id, app_error) {
         e.downgrade();
         error.downgrade();
-        match &issues {
-            Some(issues) => {
-                error!(
-                    "[Tauri] ❌ lifecycle failed event emit fallback: run_id={}, trigger={}, issues_count={}",
-                    run_id,
-                    trigger.as_tag(),
-                    issues.len(),
-                );
-            }
-            None => {
-                error!(
-                    "[Tauri] ❌ lifecycle failed event emit fallback: run_id={}, trigger={}",
-                    run_id,
-                    trigger.as_tag(),
-                );
-            }
+        for se in suppressed_errors {
+            se.downgrade();
         }
+        error!(
+            "[Tauri] ❌ lifecycle failed event emit fallback: run_id={}, trigger={}",
+            run_id,
+            trigger.as_tag(),
+        );
     }
 }
