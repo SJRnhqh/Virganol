@@ -6,15 +6,24 @@ use super::ProviderRecord;
 ///
 /// 从持久化配置加载得到的 Provider 检查快照。
 pub(in crate::core::bot) struct ProviderCheckSnapshot {
+    /// Total provider records loaded from storage.
+    ///
+    /// 从持久化存储加载到的 provider 记录总数。
     total: usize,
+    /// Backend-supported provider records ready for health checks.
+    ///
+    /// 后端支持且可进入健康检查的 provider 记录。
     supported: Vec<(ProviderId, ProviderRecord)>,
+    /// Raw provider ids skipped because the backend does not support them.
+    ///
+    /// 因后端不支持而跳过的原始 provider id。
     skipped: Vec<String>,
 }
 
 impl ProviderCheckSnapshot {
-    /// Creates a provider check snapshot from loaded provider records.
+    /// Creates a provider check snapshot from classified provider records.
     ///
-    /// 基于已加载的 provider 记录创建检查快照。
+    /// 基于已分类的 provider 记录创建检查快照。
     pub(in crate::core::bot) fn new(
         total: usize,
         supported: Vec<(ProviderId, ProviderRecord)>,

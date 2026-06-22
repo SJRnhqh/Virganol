@@ -1,7 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/config/record.rs
-use std::collections::HashSet;
-
 use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 /// Provider configuration record persisted in settings.json.
 ///
@@ -20,9 +19,9 @@ pub(in crate::core::bot) struct ProviderRecord {
 }
 
 impl ProviderRecord {
-    /// Creates a provider record with a normalized optional URL.
+    /// Creates a provider record with an empty URL stored as absent.
     ///
-    /// 创建 URL 已规范化为可选值的 Provider 配置记录。
+    /// 创建将空 URL 存储为缺省值的 Provider 配置记录。
     fn new(url: &str, enabled_models: Vec<String>) -> Self {
         Self {
             url: (!url.is_empty()).then(|| url.to_string()),
@@ -64,9 +63,9 @@ impl ProviderRecord {
             .collect()
     }
 
-    /// Creates a provider record if enabled models are pruned by available models.
+    /// Creates a pruned provider record when enabled models contain unavailable models.
     ///
-    /// 当当前可用模型会修剪 enabled_models 时，创建新的 Provider 配置记录。
+    /// 当已启用模型包含当前不可用模型时，创建修剪后的 Provider 配置记录。
     pub(in crate::core::bot) fn reconcile_enabled_models_if_pruned(
         &self,
         available_models: &[String],
