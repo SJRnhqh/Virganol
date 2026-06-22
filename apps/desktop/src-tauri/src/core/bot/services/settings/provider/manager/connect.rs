@@ -3,7 +3,8 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::AppState;
 use super::super::super::super::super::{
-    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderAppError, ProviderRecord,
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderAppError, ProviderError,
+    ProviderRecord,
 };
 use super::super::{
     load_provider_record, probe_provider_connection, save_provider, ProviderKeyTransaction,
@@ -20,8 +21,12 @@ pub(crate) async fn connect_and_save(
     let (provider_id, data) = request.into_parts();
     let provider_state = state.provider();
 
-    let Some(data) = data else {
-        return ConnectAndSaveProviderResponse::failure(ProviderAppError::missing_request_data());
+    let data = match data {
+        Some(data) => data,
+        None => {
+            let e = ProviderError::ManagerRequestPayloadAbsent { provider_id };
+            return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+        }
     };
 
     let normalized_key = data.normalized_api_key();
@@ -33,12 +38,16 @@ pub(crate) async fn connect_and_save(
             .into_models()
         {
             Ok(models) => models,
-            Err(e) => return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e)),
+            Err(e) => {
+                return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+            }
         };
 
     let previous_record = match load_provider_record(app, provider_id) {
         Ok(record) => record,
-        Err(e) => return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e)),
+        Err(e) => {
+            return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+        }
     };
 
     let record = ProviderRecord::from_connection(
@@ -51,7 +60,9 @@ pub(crate) async fn connect_and_save(
 
     let key_transaction = match ProviderKeyTransaction::begin(provider_id, normalized_key) {
         Ok(transaction) => transaction,
-        Err(e) => return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e)),
+        Err(e) => {
+            return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+        }
     };
 
     if let Err(e) = save_provider(app, provider_state, provider_id, record) {

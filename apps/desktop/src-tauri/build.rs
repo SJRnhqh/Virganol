@@ -1,4 +1,7 @@
 // apps/desktop/src-tauri/build.rs
+// TODO: standardize
+// TODO: capabilites refine per-window later
+// TODO: review tauri.conf.json fields
 
 fn main() {
     // 1. 设置 PROTOC 环境变量 (防止找不到编译器)

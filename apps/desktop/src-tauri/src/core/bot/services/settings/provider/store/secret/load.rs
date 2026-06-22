@@ -12,9 +12,13 @@ use super::super::super::super::super::super::{
 /// 从系统密钥库读取 provider 的 API Key（宽容模式：错误降级为 warn）。
 pub(super) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
     let entry = match Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str()) {
-        Ok(e) => e,
-        Err(e) => {
-            ProviderError::SecretStoreInit(format!("init keyring entry failed: {}", e)).downgrade();
+        Ok(entry) => entry,
+        Err(source) => {
+            ProviderError::SecretStoreInit {
+                provider_id,
+                source,
+            }
+            .downgrade();
             return None;
         }
     };
@@ -22,12 +26,11 @@ pub(super) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> 
     let value = match entry.get_password() {
         Ok(v) => v,
         Err(KeyringError::NoEntry) => return None,
-        Err(e) => {
-            ProviderError::SecretStoreRead(format!(
-                "load key failed for {}: {}",
-                provider_id.as_str(),
-                e
-            ))
+        Err(source) => {
+            ProviderError::SecretStoreRead {
+                provider_id,
+                source,
+            }
             .downgrade();
             return None;
         }

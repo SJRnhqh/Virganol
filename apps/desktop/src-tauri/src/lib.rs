@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/lib.rs
+// TODO: standardize
 mod commands;
 mod core;
 mod platform;

@@ -9,8 +9,14 @@ use super::super::ProviderError;
 /// commands、持久化和事件共用的受支持 provider 标识。
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub(in crate::core::bot) enum ProviderId {
+    /// Local Ollama provider.
+    ///
+    /// 本地 Ollama provider。
     #[serde(rename = "ollama")]
     Ollama,
+    /// DeepSeek hosted provider.
+    ///
+    /// DeepSeek 托管 provider。
     #[serde(rename = "deepseek")]
     DeepSeek,
 }
@@ -47,7 +53,9 @@ impl TryFrom<&str> for ProviderId {
         match value {
             "ollama" => Ok(Self::Ollama),
             "deepseek" => Ok(Self::DeepSeek),
-            other => Err(ProviderError::UnsupportedProvider(other.to_string())),
+            other => Err(ProviderError::UnsupportedProvider {
+                raw_provider_id: other.to_string(),
+            }),
         }
     }
 }

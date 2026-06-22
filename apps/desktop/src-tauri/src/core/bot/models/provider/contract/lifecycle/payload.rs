@@ -3,8 +3,9 @@ use serde::Serialize;
 
 use super::super::super::lifecycle::ProviderCheckTrigger;
 use super::super::super::{
-    HealthCheckResult, ProviderAppError, ProviderId, ProviderIssue, ProviderKeyMeta, ProviderRecord,
+    HealthCheckResult, ProviderAppError, ProviderId, ProviderKeyMeta, ProviderRecord,
 };
+use super::ProviderRuntimeStatus;
 
 /// Event payload emitted when one provider check lifecycle starts.
 ///
@@ -43,18 +44,10 @@ pub(in crate::core::bot) struct ProviderCheckStatusPayload<'a> {
     ///
     /// 当前状态所属的 Provider。
     provider: ProviderId,
-    /// Persisted provider config snapshot used for this status update.
+    /// Boundary-safe runtime status for this provider.
     ///
-    /// 当前 Provider 的已持久化配置快照。
-    config: ProviderRecord,
-    /// Health check result for this provider.
-    ///
-    /// 当前 Provider 的健康检查结果。
-    health: HealthCheckResult,
-    /// Sanitized provider key metadata resolved for this check.
-    ///
-    /// 当前 Provider 的去敏密钥元信息。
-    key_meta: ProviderKeyMeta,
+    /// 当前 Provider 面向边界契约的运行时状态。
+    status: ProviderRuntimeStatus,
 }
 
 impl<'a> ProviderCheckStatusPayload<'a> {
@@ -71,9 +64,7 @@ impl<'a> ProviderCheckStatusPayload<'a> {
         Self {
             run_id,
             provider,
-            config,
-            health,
-            key_meta,
+            status: ProviderRuntimeStatus::from_parts(config, key_meta, health),
         }
     }
 }
@@ -115,26 +106,13 @@ pub(in crate::core::bot) struct ProviderCheckFailedPayload<'a> {
     ///
     /// 本轮生命周期失败的结构化边界错误。
     error: ProviderAppError,
-    /// Provider-level issues returned when failures can be attributed to providers.
-    ///
-    /// Provider 级问题列表；仅在存在可定位到具体 Provider 的问题时返回。
-    #[serde(skip_serializing_if = "Option::is_none")]
-    issues: Option<&'a [ProviderIssue]>,
 }
 
 impl<'a> ProviderCheckFailedPayload<'a> {
     /// Creates a lifecycle failed event payload.
     ///
     /// 创建生命周期 failed 事件载荷。
-    pub(in crate::core::bot) fn new(
-        run_id: &'a str,
-        error: ProviderAppError,
-        issues: Option<&'a [ProviderIssue]>,
-    ) -> Self {
-        Self {
-            run_id,
-            error,
-            issues,
-        }
+    pub(in crate::core::bot) fn new(run_id: &'a str, error: ProviderAppError) -> Self {
+        Self { run_id, error }
     }
 }

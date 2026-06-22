@@ -7,7 +7,7 @@ use super::ProviderError;
 ///
 /// Provider 领域的应用边界错误码。
 #[derive(Serialize)]
-pub(in crate::core::bot) enum ProviderErrorCode {
+pub(super) enum ProviderErrorCode {
     /// Manager/request layer: received a command payload without required data.
     ///
     /// manager/request 层：收到缺少必需 data 字段的命令载荷。
@@ -68,29 +68,31 @@ impl From<&ProviderError> for ProviderErrorCode {
     /// 将内部 Provider 错误粗粒化为 Provider 边界错误码。
     fn from(error: &ProviderError) -> Self {
         match error {
-            ProviderError::CheckStartedEmit(_)
-            | ProviderError::CheckCompletedEmit(_)
-            | ProviderError::CheckFailedEmit(_)
-            | ProviderError::CheckStatusEmit(_)
-            | ProviderError::CheckConcurrentFailed(_) => Self::CheckLifecycleFailed,
-            ProviderError::HealthCheckMissingConfig(_)
-            | ProviderError::HealthCheckNetwork(_)
-            | ProviderError::HealthCheckHttp(_)
-            | ProviderError::HealthCheckResponseFormat(_) => Self::HealthCheckFailed,
-            ProviderError::ConfigNotFound(_) => Self::ProviderNotFound,
-            ProviderError::JsonSerialize(_)
-            | ProviderError::JsonDeserialize(_)
-            | ProviderError::ConfigStoreOpen(_)
-            | ProviderError::ConfigStorePath(_)
-            | ProviderError::ConfigStoreSerialize(_)
-            | ProviderError::ConfigStoreTempCreate(_)
-            | ProviderError::ConfigStoreWrite(_)
-            | ProviderError::ConfigStoreSync(_)
-            | ProviderError::ConfigStoreReplace(_) => Self::ConfigStoreFailed,
-            ProviderError::SecretStoreInit(_)
-            | ProviderError::SecretStoreWrite(_)
-            | ProviderError::SecretStoreRead(_)
-            | ProviderError::SecretStoreRemove(_) => Self::SecretStoreFailed,
+            ProviderError::ManagerRequestPayloadAbsent { .. } => Self::MissingRequestData,
+            ProviderError::CheckStartedEmit { .. }
+            | ProviderError::CheckStatusEmit { .. }
+            | ProviderError::CheckCompletedEmit { .. }
+            | ProviderError::CheckFailedEmit { .. }
+            | ProviderError::CheckTaskJoin { .. }
+            | ProviderError::CheckAggregate => Self::CheckLifecycleFailed,
+            ProviderError::HealthCheckMissingConfig { .. }
+            | ProviderError::HealthCheckNetwork { .. }
+            | ProviderError::HealthCheckHttp { .. }
+            | ProviderError::HealthCheckResponseFormat { .. } => Self::HealthCheckFailed,
+            ProviderError::ConfigNotFound { .. } => Self::ProviderNotFound,
+            ProviderError::JsonSerialize { .. }
+            | ProviderError::JsonDeserialize { .. }
+            | ProviderError::ConfigStoreOpen { .. }
+            | ProviderError::ConfigStorePath { .. }
+            | ProviderError::ConfigStoreSerialize { .. }
+            | ProviderError::ConfigStoreTempCreate { .. }
+            | ProviderError::ConfigStoreWrite { .. }
+            | ProviderError::ConfigStoreSync { .. }
+            | ProviderError::ConfigStoreReplace { .. } => Self::ConfigStoreFailed,
+            ProviderError::SecretStoreInit { .. }
+            | ProviderError::SecretStoreWrite { .. }
+            | ProviderError::SecretStoreRead { .. }
+            | ProviderError::SecretStoreRemove { .. } => Self::SecretStoreFailed,
             _ => Self::Unknown,
         }
     }

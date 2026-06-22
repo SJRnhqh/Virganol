@@ -4,19 +4,29 @@ use super::super::{ProviderError, ProviderRecord};
 /// Single-provider result produced after health check post-processing.
 ///
 /// 单个 Provider 健康检查后处理后的结果。
-pub(in crate::core::bot) struct ProviderCheckFinalization {
-    /// Provider record used for status event emission.
+pub(in crate::core::bot) enum ProviderCheckFinalization {
+    /// Online provider finalization with optional reconciliation error.
     ///
-    /// 用于状态事件推送的 Provider 配置。
-    status_record: ProviderRecord,
-    /// Whether the provider health check succeeded.
+    /// 在线 Provider 的后处理结果，可携带协调错误。
+    Online {
+        /// Provider record used for status event emission.
+        ///
+        /// 用于状态事件推送的 Provider 配置。
+        status_record: ProviderRecord,
+        /// Structural error raised while reconciling local provider state.
+        ///
+        /// 协调本地 Provider 状态时产生的结构性错误。
+        reconciliation_error: Option<ProviderError>,
+    },
+    /// Offline provider finalization.
     ///
-    /// 当前 Provider 健康检查是否成功。
-    online: bool,
-    /// Structural error raised while reconciling local provider state.
-    ///
-    /// 协调本地 Provider 状态时产生的结构性错误。
-    reconciliation_error: Option<ProviderError>,
+    /// 离线 Provider 的后处理结果。
+    Offline {
+        /// Provider record used for status event emission.
+        ///
+        /// 用于状态事件推送的 Provider 配置。
+        status_record: ProviderRecord,
+    },
 }
 
 impl ProviderCheckFinalization {
@@ -27,9 +37,8 @@ impl ProviderCheckFinalization {
         status_record: ProviderRecord,
         reconciliation_error: Option<ProviderError>,
     ) -> Self {
-        Self {
+        Self::Online {
             status_record,
-            online: true,
             reconciliation_error,
         }
     }
@@ -38,17 +47,19 @@ impl ProviderCheckFinalization {
     ///
     /// 创建离线 Provider 的后处理结果。
     pub(in crate::core::bot) fn offline(status_record: ProviderRecord) -> Self {
-        Self {
-            status_record,
-            online: false,
-            reconciliation_error: None,
-        }
+        Self::Offline { status_record }
     }
 
     /// Consumes the finalization into status emission data.
     ///
     /// 消费后处理结果并返回状态推送所需数据。
     pub(in crate::core::bot) fn into_parts(self) -> (ProviderRecord, bool, Option<ProviderError>) {
-        (self.status_record, self.online, self.reconciliation_error)
+        match self {
+            Self::Online {
+                status_record,
+                reconciliation_error,
+            } => (status_record, true, reconciliation_error),
+            Self::Offline { status_record } => (status_record, false, None),
+        }
     }
 }

@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/core/manager.rs
+// TODO: standardize
 
 use std::sync::Arc;
 use tauri_plugin_shell::process::CommandChild;

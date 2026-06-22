@@ -21,7 +21,7 @@ pub(in crate::core::bot::services::settings::provider) async fn probe_provider_c
         fallback_key
             .as_ref()
             .and_then(|resolution| resolution.key())
-            .map(|key| key.as_str())
+            .map(|k| k.as_str())
             .unwrap_or(normalized_key),
     )
     .await

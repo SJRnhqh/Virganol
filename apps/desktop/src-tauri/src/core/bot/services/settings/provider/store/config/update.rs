@@ -17,17 +17,18 @@ pub(in crate::core::bot::services::settings::provider) fn update_models(
     enabled_models: Vec<String>,
 ) -> Result<(), ProviderError> {
     let _guard = provider_state.lock_store();
-    let mut providers = load_all_providers(app)?;
+    let mut providers = load_all_providers(app, Some(provider_id))?;
 
     let Some(record) = providers.get_mut(provider_id.as_str()) else {
-        return Err(ProviderError::ConfigNotFound(format!(
-            "{} not found in store",
-            provider_id
-        )));
+        return Err(ProviderError::ConfigNotFound { provider_id });
     };
 
     record.replace_enabled_models(enabled_models);
 
-    let value = serde_json::to_value(&providers).map_err(ProviderError::JsonSerialize)?;
-    save_settings(app, SPIRIT_PROVIDERS_KEY, value)
+    let value =
+        serde_json::to_value(&providers).map_err(|source| ProviderError::JsonSerialize {
+            provider_id,
+            source,
+        })?;
+    save_settings(app, SPIRIT_PROVIDERS_KEY, value, provider_id)
 }
