@@ -28,7 +28,7 @@ pub(super) async fn deepseek_check(provider_id: ProviderId, key: &str) -> Health
         .send()
         .await
     {
-        Ok(r) => r,
+        Ok(resp) => resp,
         Err(source) => {
             error!("[Tauri][DeepSeek] request failed: {}", source);
             return HealthCheckResult::fail(ProviderError::HealthCheckNetwork {
@@ -60,11 +60,12 @@ pub(super) async fn deepseek_check(provider_id: ProviderId, key: &str) -> Health
     // OpenAI-compatible: { "data": [{ "id": "model-name" }] }
     let models: Vec<String> = json
         .get("data")
-        .and_then(|d| d.as_array())
-        .map(|arr| {
-            arr.iter()
+        .and_then(|data| data.as_array())
+        .map(|items| {
+            items
+                .iter()
                 .filter_map(|item| item.get("id").and_then(|id| id.as_str()))
-                .map(|s| s.to_string())
+                .map(|model| model.to_string())
                 .collect()
         })
         .unwrap_or_default();

@@ -59,7 +59,6 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_record(
     app: &AppHandle,
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {
-    let providers = load_all_providers(app, Some(provider_id))?;
-    // TODO(post-0.0.1): avoid this clone if a provider cache or per-provider store is introduced.
-    Ok(providers.get(provider_id.as_str()).cloned())
+    let mut providers = load_all_providers(app, Some(provider_id))?;
+    Ok(providers.remove(provider_id.as_str()))
 }

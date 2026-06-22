@@ -5,8 +5,8 @@
 
 ## Current
 
-- [ ] Backend core services review — finish `core::bot` services after the
-  constants/interfaces/models pass, then resume Context Propagation design
+- [ ] Backend core services review — finish provider lifecycle services review,
+  then resume Context Propagation design
 
 ## Planned
 
@@ -21,6 +21,10 @@
 
 ## Completed
 
+- [x] Provider manager/store/connection services review — tightened short-lived
+  variable naming, removed the stale provider-record clone TODO via owned
+  `HashMap::remove`, and recorded follow-up persistence / HTTP-client boundary
+  cleanup items in `ROADMAP.md`
 - [x] Provider models review — tightened model/contract state representations, completed error field documentation, and confirmed common/config/connection/contract/lifecycle/secret model boundaries
 - [x] Bot constants/interfaces review — cleaned the unused health-check timeout placeholder and confirmed the provider driver interface boundary, visibility, and service-backed implementation path
 - [x] Backend module organization note — documented Rust runtime command/core module organization and left Go sidecar modules as a scoped architecture placeholder

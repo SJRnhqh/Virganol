@@ -12,7 +12,7 @@ use super::super::super::super::super::super::{
 /// 从系统密钥库读取 provider 的 API Key（宽容模式：错误降级为 warn）。
 pub(super) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
     let entry = match Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str()) {
-        Ok(e) => e,
+        Ok(entry) => entry,
         Err(source) => {
             ProviderError::SecretStoreInit {
                 provider_id,

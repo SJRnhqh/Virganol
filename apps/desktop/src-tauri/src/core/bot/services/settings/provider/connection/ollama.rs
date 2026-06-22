@@ -32,7 +32,7 @@ pub(super) async fn ollama_check(
     }
 
     let resp = match request.send().await {
-        Ok(r) => r,
+        Ok(resp) => resp,
         Err(source) => {
             error!("[Tauri][Ollama] request failed: {}", source);
             return HealthCheckResult::fail(ProviderError::HealthCheckNetwork {
@@ -63,11 +63,12 @@ pub(super) async fn ollama_check(
 
     let models: Vec<String> = json
         .get("models")
-        .and_then(|m| m.as_array())
-        .map(|arr| {
-            arr.iter()
-                .filter_map(|item| item.get("name").and_then(|n| n.as_str()))
-                .map(|s| s.to_string())
+        .and_then(|models| models.as_array())
+        .map(|items| {
+            items
+                .iter()
+                .filter_map(|item| item.get("name").and_then(|name| name.as_str()))
+                .map(|model| model.to_string())
                 .collect()
         })
         .unwrap_or_default();

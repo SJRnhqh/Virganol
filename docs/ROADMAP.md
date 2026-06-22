@@ -91,6 +91,8 @@ LLM Provider 接入分为两条主线：
 - [ ] 契约序列化命名收口（lifecycle payload camelCase）
 - [ ] 前端并发锁架构对齐（`useToggleModels` 迁至 store 层 `isPending`）
 - [ ] 后端异步执行架构对齐（同步持久化调用用 `tokio::task::spawn_blocking` 包裹）
+- [ ] Provider HTTP client 初始化错误收口（避免 `reqwest::Client` 构建失败通过 `expect` panic，纳入 health-check 错误路径）
+- [ ] Provider 持久化边界收口（将 `ProviderKeyTransaction` 隐藏为 store 层实现细节，由组合持久化服务统一处理 config + secret 写入与补偿回滚）
 - [ ] 后端锁实现升级（`std::sync::Mutex` → `parking_lot::Mutex`）
 - [ ] 后端锁粒度细化（全局锁 → per-provider 锁）
 - [ ] 功能开发完结
