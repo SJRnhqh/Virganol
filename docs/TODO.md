@@ -5,13 +5,11 @@
 
 ## Current
 
-- [ ] Backend core services review — finish provider lifecycle services review,
-  then resume Context Propagation design
+- [ ] Context propagation design — define the reliability context model that
+  underpins error architecture, observability, and testing strategy
 
 ## Planned
 
-- [ ] Context propagation design — define the reliability context model that
-  underpins error architecture, observability, and testing strategy
 - [ ] Error architecture note — document the Provider error design: domain error fields, source chains, boundary code/details projection, issue aggregation, and future shared abstractions
 - [ ] Observability kickoff — start with structured log context reuse after the context model is stable, keeping trace/correlation identifiers in observability rather than current error details
 - [ ] Command boundary fallback logging — include command-layer context usage in the context propagation design, so Tauri command boundaries can log fallback failures without reinterpreting core business errors
@@ -21,6 +19,9 @@
 
 ## Completed
 
+- [x] Provider lifecycle services review — tightened run-id / suppressed-error
+  naming, confirmed lifecycle service visibility boundaries, and left broader
+  lifecycle context integration to Context Propagation design
 - [x] Provider manager/store/connection services review — tightened short-lived
   variable naming, removed the stale provider-record clone TODO via owned
   `HashMap::remove`, and recorded follow-up persistence / HTTP-client boundary

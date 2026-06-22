@@ -19,19 +19,19 @@ pub(super) fn report_lifecycle_failure(
     let app_error = match suppressed_errors {
         [] => ProviderAppError::from(error),
         suppressed_errors => {
-            let suppressed_errors = suppressed_errors
+            let suppressed_app_errors = suppressed_errors
                 .iter()
                 .map(ProviderAppError::from)
                 .collect();
-            ProviderAppError::with_suppressed_errors(error, suppressed_errors)
+            ProviderAppError::with_suppressed_errors(error, suppressed_app_errors)
         }
     };
 
     if let Err(e) = emit_check_failed(app, run_id, app_error) {
         e.downgrade();
         error.downgrade();
-        for e in suppressed_errors {
-            e.downgrade();
+        for se in suppressed_errors {
+            se.downgrade();
         }
         error!(
             "[Tauri] ❌ lifecycle failed event emit fallback: run_id={}, trigger={}",

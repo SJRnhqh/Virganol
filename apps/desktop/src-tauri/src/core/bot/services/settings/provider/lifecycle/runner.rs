@@ -54,8 +54,8 @@ pub(super) async fn run_provider_checks(
                 )
                 .into_parts();
 
-                if let Some(e) = reconciliation_error {
-                    suppressed_errors.push(e);
+                if let Some(se) = reconciliation_error {
+                    suppressed_errors.push(se);
                 }
 
                 if !online {
@@ -69,10 +69,10 @@ pub(super) async fn run_provider_checks(
                     online
                 );
 
-                if let Err(e) =
+                if let Err(se) =
                     emit_check_status(app, run_id, provider_id, status_record, result, key_meta)
                 {
-                    suppressed_errors.push(e);
+                    suppressed_errors.push(se);
                 }
             }
             Some(Err(source)) => {
