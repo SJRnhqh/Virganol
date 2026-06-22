@@ -45,7 +45,9 @@ docs/
 Use `docs/templates/branch-todo.md` when creating or refreshing branch-level
 `docs/TODO.md` files.
 
-## Context Budget Management
+## Agent Operating Guidelines
+
+### Context Budget Management
 
 When the `headroom` MCP tools are available, treat them as optional context
 budget helpers for large inputs. Before reasoning over long logs, large JSON or
