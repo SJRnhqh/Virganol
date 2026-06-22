@@ -44,6 +44,73 @@ access to Go
 **Go (Tenant)**: Receives `--app-data-dir` from Rust, file I/O limited to
 that directory
 
+### Backend Module Organization
+
+Backend modules cover Rust runtime modules and the Go sidecar runtime.
+
+#### Rust Runtime Modules
+
+Rust runtime modules currently cover the Tauri command boundary and backend
+core modules, using **domain modules** and **subdomain modules** as their
+primary semantic organization units.
+
+##### Command Modules
+
+Command modules are organized by domain and subdomain at the Tauri
+boundary, with each command backed by a function exported by Core Modules.
+
+```txt
+commands/
+└── <domain>/
+    └── <subdomain>/
+        ├── <command>.rs
+        └── mod.rs
+```
+
+##### Core Modules
+
+Core modules add internal layers under each domain module.
+
+```txt
+core/
+├── shared/                    # Cross-domain core support
+└── <domain>/                  # Domain module
+    ├── constants/             # Static values local to the domain
+    ├── models/                # Data models, value objects, errors, contracts
+    │   └── <subdomain>/       # Subdomain models
+    ├── interfaces/            # Traits and ports expressed with models
+    │   └── <subdomain>/       # Subdomain interfaces
+    └── services/              # Domain behavior and infrastructure adapters
+        └── <subdomain>/       # Subdomain services
+```
+
+The intended dependency direction inside a domain is:
+
+```txt
+┌───────────────────────────────────┐
+│ <domain>                          │
+│           ┌───────────┐           │
+│           │ services  │           │
+│           └───────────┘           │
+│                 │                 │
+│                 ▼                 │
+│ ┌───────────────────────────────┐ │
+│ │       domain foundation       │ │
+│ │                               │ │
+│ │ ┌────────────┐                │ │
+│ │ │ interfaces │                │ │
+│ │ └────────────┘  ┌───────────┐ │ │
+│ │       │         │ constants │ │ │
+│ │       ▼         └───────────┘ │ │
+│ │   ┌────────┐                  │ │
+│ │   │ models │                  │ │
+│ │   └────────┘                  │ │
+│ └───────────────────────────────┘ │
+└───────────────────────────────────┘
+```
+
+#### Go Sidecar Modules
+
 ---
 
 ## Reliability Architecture

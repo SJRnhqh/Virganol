@@ -5,18 +5,23 @@
 
 ## Current
 
-- [ ] Context propagation design — define the reliability context model that
-  underpins error architecture, observability, and testing strategy
+- [ ] Backend core review — finish `core::bot` models and services after the
+  constants/interfaces pass, then resume Context Propagation design
 
 ## Planned
 
+- [ ] Context propagation design — define the reliability context model that
+  underpins error architecture, observability, and testing strategy
 - [ ] Error architecture note — document the Provider error design: domain error fields, source chains, boundary code/details projection, issue aggregation, and future shared abstractions
 - [ ] Observability kickoff — start with structured log context reuse after the context model is stable, keeping trace/correlation identifiers in observability rather than current error details
 - [ ] Command boundary fallback logging — include command-layer context usage in the context propagation design, so Tauri command boundaries can log fallback failures without reinterpreting core business errors
 - [ ] Lifecycle trigger context integration — decide whether `ProviderCheckTrigger` should remain a standalone lifecycle value object or become part of the provider lifecycle context carried by Context Propagation
+- [ ] Context-aware downgrade logging — revisit `Downgrade` after Context Propagation / Observability design so downgraded domain errors log structured context instead of only stringified warnings
 
 ## Completed
 
+- [x] Bot constants/interfaces review — cleaned the unused health-check timeout placeholder and confirmed the provider driver interface boundary, visibility, and service-backed implementation path
+- [x] Backend module organization note — documented Rust runtime command/core module organization and left Go sidecar modules as a scoped architecture placeholder
 - [x] Reliability architecture scaffold — reorganized `ARCHITECTURE.md` around system architecture and reliability architecture, with context propagation as the foundation for error architecture, observability, and testing strategy
 - [x] Backend periphery review — cleaned `Cargo.toml` (cargo sort, description), annotated `build.rs` TODOs for standardization / capabilities / tauri config, confirmed caps and tauri.conf roles
 - [x] Provider context checkpoint — decided that context is a reliability-level foundation rather than an error-only detail beyond `provider_id`
