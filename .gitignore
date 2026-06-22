@@ -30,7 +30,6 @@ bin/
 
 # Python
 .venv/
-dev/tools/uv.lock
 
 # CodeArt
 .arts/*
