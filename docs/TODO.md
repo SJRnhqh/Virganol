@@ -5,17 +5,12 @@
 
 ## Current
 
-- [ ] Context propagation design — define the reliability context model that
-  underpins error architecture, observability, and testing strategy
+- [x] Branch closeout ready — remaining context / architecture / observability
+  follow-ups have been moved into `docs/ROADMAP.md`
 
 ## Planned
 
-- [ ] Error architecture note — document the Provider error design: domain error fields, source chains, boundary code/details projection, issue aggregation, and future shared abstractions
-- [ ] Observability kickoff — start with structured log context reuse after the context model is stable, keeping trace/correlation identifiers in observability rather than current error details
-- [ ] Command boundary fallback logging — include command-layer context usage in the context propagation design, so Tauri command boundaries can log fallback failures without reinterpreting core business errors
-- [ ] Lifecycle trigger context integration — decide whether `ProviderCheckTrigger` should remain a standalone lifecycle value object or become part of the provider lifecycle context carried by Context Propagation
-- [ ] Lifecycle snapshot context integration — decide whether `ProviderCheckSnapshot` should remain a standalone classified config snapshot or be folded into a provider lifecycle context model after Context Propagation is designed
-- [ ] Context-aware downgrade logging — revisit `Downgrade` after Context Propagation / Observability design so downgraded domain errors log structured context instead of only stringified warnings
+- No branch-local planned tasks remain.
 
 ## Completed
 

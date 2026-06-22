@@ -55,15 +55,20 @@ LLM Provider 接入分为两条主线：
 - [x] `ProviderIssue` 并入 `ProviderAppError.details`：借 `provider_id` → details 包裹层，生命周期失败事件只暴露 `error` 字段
 - [x] Error 详情字段合并：reset 恢复失败并入 `suppressedErrors`，移除 `with_recovery_failure` 构造方法
 - [ ] Provider 上下文抽象设计：上下文模型、工程基础规则，为日志系统铺路
-- [ ] 错误系统架构文档：领域功能适配方案凝练写入 `ARCHITECTURE.md`
+- [ ] Command boundary fallback logging 设计：纳入命令层上下文使用规则，使 Tauri command 边界可记录 fallback failure，而不重新解释 core business errors
+- [ ] Lifecycle trigger context integration：决定 `ProviderCheckTrigger` 保持独立生命周期值对象，还是并入 Context Propagation 携带的 provider lifecycle context
+- [ ] Lifecycle snapshot context integration：决定 `ProviderCheckSnapshot` 保持独立分类配置快照，还是在 Context Propagation 设计后折入 provider lifecycle context model
+- [ ] 错误系统架构文档：领域功能适配方案凝练写入 `ARCHITECTURE.md`，覆盖 domain error fields、source chains、boundary code/details projection、issue aggregation 与未来共享抽象
 
 #### 6.3 日志系统
 
+- [ ] Observability kickoff：在 context model 稳定后启动结构化日志上下文复用，保持 trace/correlation 标识属于 observability 而非当前 error details
 - [ ] 设计日志上下文模型，并在该阶段决定 trace/correlation/operation 标识是否拆分
 - [ ] 设计日志持久化策略（文件轮转 / 结构化格式）
 - [ ] 定义日志埋点（CRUD 入口/出口、健康检查、持久化操作、错误路径）
 - [ ] 标准化日志格式（级别 / 时间戳 / 模块 / 消息 / 上下文）
 - [ ] 添加结构化上下文（correlation/operation 标识、provider_id、error_code）
+- [ ] Context-aware downgrade logging：Context Propagation / Observability 设计后重访 `Downgrade`，让降级领域错误记录结构化上下文而不只输出字符串化 warning
 - [ ] 实现日志级别策略（info 成功 / warn 可重试 / error 致命）
 - [ ] 前端日志策略（dev 用 console / prod 用上报）
 
