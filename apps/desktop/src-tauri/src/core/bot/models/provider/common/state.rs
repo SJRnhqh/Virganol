@@ -1,9 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/common/state.rs
 use parking_lot::{Mutex, MutexGuard};
 
-/// State management for provider-related functionality.
+/// Provider-domain runtime coordination state.
 ///
-/// Provider 功能的状态管理。
+/// Provider 领域运行时协调状态。
 pub(in crate::core) struct ProviderState {
     /// Global store lock for protecting provider config read-write transactions.
     ///

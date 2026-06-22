@@ -44,9 +44,8 @@ impl<T> ProviderCommandResponse<T> {
     /// 创建带数据的成功响应。
     pub(in crate::core::bot::models::provider::contract) fn success_with(data: T) -> Self {
         Self {
-            success: true,
-            error: None,
             data: Some(data),
+            ..Self::success()
         }
     }
 

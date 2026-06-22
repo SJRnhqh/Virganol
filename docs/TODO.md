@@ -12,6 +12,8 @@
 
 - [ ] Error architecture note — document the Provider error design: domain error fields, source chains, boundary code/details projection, issue aggregation, and future shared abstractions
 - [ ] Observability kickoff — start with structured log context reuse after the context model is stable, keeping trace/correlation identifiers in observability rather than current error details
+- [ ] Command boundary fallback logging — include command-layer context usage in the context propagation design, so Tauri command boundaries can log fallback failures without reinterpreting core business errors
+- [ ] Lifecycle trigger context integration — decide whether `ProviderCheckTrigger` should remain a standalone lifecycle value object or become part of the provider lifecycle context carried by Context Propagation
 
 ## Completed
 
