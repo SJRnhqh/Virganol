@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/mod.rs
-// 导出内容
 mod app;
 mod code;
 mod details;
