@@ -3,7 +3,8 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::AppState;
 use super::super::super::super::super::{
-    ProviderAppError, ProviderError, UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
+    ProviderAppError, ProviderError, ProviderManagerContext, UpdateEnabledModelsRequest,
+    UpdateEnabledModelsResponse,
 };
 use super::super::update_models;
 
@@ -16,6 +17,7 @@ pub(crate) fn update_provider_enabled_models(
     request: UpdateEnabledModelsRequest,
 ) -> UpdateEnabledModelsResponse {
     let (provider_id, data) = request.into_parts();
+    let _ctx = ProviderManagerContext::update_models(provider_id);
     let provider_state = state.provider();
 
     let data = match data {

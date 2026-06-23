@@ -22,3 +22,4 @@
 
 - [x] Branch TODO initialized from ROADMAP Phase 6.2 context propagation scope.
 - [x] Provider context model scaffolded with private base, operation, stage, and manager-link context types under `core::bot::models::provider::context`.
+- [x] Provider manager context creation wired into connect, reset, and update-models manager handlers with context visibility scoped to `core::bot`.

@@ -11,6 +11,6 @@ pub(super) use provider::{
     HealthCheckResult, ProviderAppError, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckFinalization, ProviderCheckRunResult, ProviderCheckSnapshot,
     ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError, ProviderId,
-    ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderKeySource, ProviderRecord,
-    ProviderResolvedKey,
+    ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderKeySource, ProviderManagerContext,
+    ProviderRecord, ProviderResolvedKey,
 };
