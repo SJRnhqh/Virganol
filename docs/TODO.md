@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Context propagation design — define the backend reliability context model that can carry provider/task/lifecycle context across Provider services without turning error details or logs into duplicated ad hoc context stores.
+- [ ] Command boundary fallback logging design — define how Provider command handlers create concrete context, pass or observe command results, and emit backend fallback logs without leaking the generic base context across layers.
 
 ## Planned
 
@@ -21,3 +21,4 @@
 ## Completed
 
 - [x] Branch TODO initialized from ROADMAP Phase 6.2 context propagation scope.
+- [x] Provider context model scaffolded with private base, operation, stage, and manager-link context types under `core::bot::models::provider::context`.

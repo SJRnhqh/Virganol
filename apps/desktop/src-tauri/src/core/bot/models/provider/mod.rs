@@ -2,6 +2,7 @@
 mod common;
 mod config;
 mod connection;
+mod context;
 mod contract;
 mod error;
 mod lifecycle;
