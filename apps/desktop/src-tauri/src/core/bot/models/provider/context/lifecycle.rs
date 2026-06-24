@@ -1,6 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/lifecycle.rs
-use super::super::lifecycle::ProviderCheckTrigger;
-use super::{ProviderContext, ProviderErrorContext, ProviderStage};
+use super::super::{lifecycle::ProviderCheckTrigger, ProviderId};
+use super::{
+    ProviderContext, ProviderErrorContext, ProviderExecutionContext, ProviderExecutionOperation,
+    ProviderStage,
+};
 
 /// Link-specific metadata for the lifecycle flow.
 ///
@@ -55,6 +58,20 @@ impl<'a> ProviderLifecycleContext<'a> {
     /// 将当前生命周期上下文派生到密钥存储阶段。
     pub(in crate::core::bot) fn at_secret_store(self) -> Self {
         Self(self.0.at_secret_store())
+    }
+
+    /// Creates shared execution context for checking one provider in this lifecycle run.
+    ///
+    /// 基于当前生命周期运行创建单个 Provider 检查对应的共享执行上下文。
+    pub(in crate::core::bot) fn execution_context_for(
+        &self,
+        provider_id: ProviderId,
+    ) -> ProviderExecutionContext {
+        ProviderExecutionContext::from_operation(
+            self.0.stage(),
+            provider_id,
+            ProviderExecutionOperation::lifecycle_check(),
+        )
     }
 
     /// Projects this lifecycle context into an error attribution snapshot.

@@ -1,6 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/manager.rs
 use super::super::ProviderId;
-use super::{ProviderContext, ProviderErrorContext, ProviderManagerOperation, ProviderStage};
+use super::{
+    ProviderContext, ProviderErrorContext, ProviderExecutionContext, ProviderManagerOperation,
+    ProviderStage,
+};
 
 /// Link-specific metadata for interactive manager flows.
 ///
@@ -43,6 +46,13 @@ impl ProviderManagerContext {
         Self::new(provider_id, ProviderManagerOperation::update_models())
     }
 
+    /// Derives this interactive manager flow context at the connection stage.
+    ///
+    /// 将当前交互式 manager 链路上下文派生到连接阶段。
+    pub(in crate::core::bot) fn at_connection(self) -> Self {
+        Self(self.0.at_connection())
+    }
+
     /// Derives this interactive manager flow context at the config-store stage.
     ///
     /// 将当前交互式 manager 链路上下文派生到配置存储阶段。
@@ -57,11 +67,13 @@ impl ProviderManagerContext {
         Self(self.0.at_secret_store())
     }
 
-    /// Derives this interactive manager flow context at the connection stage.
+    /// Converts this manager context into shared provider execution context.
     ///
-    /// 将当前交互式 manager 链路上下文派生到连接阶段。
-    pub(in crate::core::bot) fn at_connection(self) -> Self {
-        Self(self.0.at_connection())
+    /// 将当前 manager 上下文转换为共享 Provider 执行上下文。
+    pub(in crate::core::bot) fn into_execution_context(self) -> ProviderExecutionContext {
+        let stage = self.0.stage();
+        let extra = self.0.into_extra();
+        ProviderExecutionContext::from_operation(stage, extra.provider_id, extra.operation.into())
     }
 
     /// Projects this live manager context into an error attribution snapshot.

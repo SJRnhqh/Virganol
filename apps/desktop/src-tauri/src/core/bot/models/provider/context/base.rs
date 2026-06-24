@@ -51,11 +51,25 @@ impl<T> ProviderContext<T> {
         ProviderErrorContext::from_parts(None, self.stage)
     }
 
+    /// Returns the current Provider-domain stage.
+    ///
+    /// 返回当前 Provider 领域阶段。
+    pub(super) fn stage(&self) -> ProviderStage {
+        self.stage
+    }
+
     /// Returns the link-specific context metadata.
     ///
     /// 返回具体链路的上下文元信息。
     pub(super) fn extra(&self) -> &T {
         &self.extra
+    }
+
+    /// Consumes this context and returns the link-specific metadata.
+    ///
+    /// 消费当前上下文并返回具体链路的上下文元信息。
+    pub(super) fn into_extra(self) -> T {
+        self.extra
     }
 
     /// Creates a Provider-domain base context at the given execution stage.

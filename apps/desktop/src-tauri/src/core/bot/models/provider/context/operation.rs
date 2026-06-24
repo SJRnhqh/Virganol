@@ -65,6 +65,9 @@ impl ProviderExecutionOperation {
 }
 
 impl From<ProviderManagerOperation> for ProviderExecutionOperation {
+    /// Wraps a manager operation as a shared execution operation.
+    ///
+    /// 将 manager 操作包装为共享执行操作。
     fn from(operation: ProviderManagerOperation) -> Self {
         Self::Manager(operation)
     }
