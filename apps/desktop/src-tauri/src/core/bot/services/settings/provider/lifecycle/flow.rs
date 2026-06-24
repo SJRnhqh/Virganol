@@ -26,14 +26,14 @@ pub(crate) async fn check_providers_lifecycle(
     let started_at = Instant::now();
 
     if let Err(e) = emit_check_started(&app, &ctx, run_id.as_str(), &trigger) {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
+        report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &[]);
         return;
     }
 
     let snapshot = match load_provider_check_snapshot(&app) {
         Ok(snapshot) => snapshot,
         Err(e) => {
-            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
+            report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &[]);
             return;
         }
     };
@@ -75,7 +75,7 @@ pub(crate) async fn check_providers_lifecycle(
             );
         }
         if let Err(e) = emit_check_completed(&app, run_id.as_str(), supported_total) {
-            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
+            report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &[]);
             return;
         }
         return;
@@ -94,13 +94,13 @@ pub(crate) async fn check_providers_lifecycle(
     let primary_error = join_error
         .or_else(|| (!suppressed_errors.is_empty()).then_some(ProviderError::CheckAggregate));
     if let Some(e) = primary_error {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &suppressed_errors);
+        report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &suppressed_errors);
         return;
     }
 
     let duration_ms = started_at.elapsed().as_millis() as u64;
     if let Err(e) = emit_check_completed(&app, run_id.as_str(), failed_count) {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
+        report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &[]);
         return;
     }
 

@@ -25,10 +25,6 @@ pub(super) enum ProviderStage {
     ///
     /// Provider 生命周期事件推送阶段。
     LifecycleEmit,
-    /// Fallback logging after a reliability reporting failure.
-    ///
-    /// 可靠性上报失败后的日志兜底阶段。
-    FallbackLogging,
 }
 
 impl ProviderStage {
@@ -42,7 +38,6 @@ impl ProviderStage {
             Self::SecretStore => "the secret-store stage",
             Self::Connection => "the connection stage",
             Self::LifecycleEmit => "the lifecycle-event stage",
-            Self::FallbackLogging => "the fallback-logging stage",
         }
     }
 }

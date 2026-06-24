@@ -44,7 +44,8 @@ impl ProviderErrorDetails {
     fn provider_id_from(error: &ProviderError) -> Option<ProviderId> {
         match error {
             ProviderError::ManagerRequestPayloadAbsent { context }
-            | ProviderError::CheckStartedEmit { context, .. } => context.provider_id(),
+            | ProviderError::CheckStartedEmit { context, .. }
+            | ProviderError::CheckFailedEmit { context, .. } => context.provider_id(),
             ProviderError::CheckStatusEmit { provider_id, .. }
             | ProviderError::ConfigNotFound { provider_id }
             | ProviderError::JsonSerialize { provider_id, .. }

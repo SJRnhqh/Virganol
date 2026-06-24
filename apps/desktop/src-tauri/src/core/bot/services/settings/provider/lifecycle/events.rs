@@ -69,11 +69,12 @@ pub(super) fn emit_check_completed(
 /// 推送生命周期 failed 事件。
 pub(super) fn emit_check_failed(
     app: &AppHandle,
+    ctx: &ProviderLifecycleContext,
     run_id: &str,
     error: ProviderAppError,
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckFailedPayload::new(run_id, error);
 
     app.emit(EVT_CHECK_FAILED, &payload)
-        .map_err(|source| ProviderError::CheckFailedEmit { source })
+        .map_err(|source| ProviderError::check_failed_emit(ctx.error_context(), source))
 }
