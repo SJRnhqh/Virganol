@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/manager.rs
 use super::super::ProviderId;
-use super::{ProviderContext, ProviderOperation, ProviderStage};
+use super::{ProviderContext, ProviderErrorContext, ProviderOperation, ProviderStage};
 
 /// Provider manager reliability context.
 ///
@@ -27,6 +27,16 @@ impl ProviderManagerContext {
     /// 创建更新单个 Provider 启用模型列表的上下文。
     pub(in crate::core::bot) fn update_models(provider_id: ProviderId) -> Self {
         Self::new(provider_id, ProviderOperation::UpdateModels)
+    }
+
+    /// Projects this live manager context into an error attribution snapshot.
+    ///
+    /// 将当前 manager 执行上下文投影为错误归因快照。
+    pub(in crate::core::bot) fn error_context(&self) -> ProviderErrorContext {
+        match self.0.provider_id {
+            Some(provider_id) => ProviderErrorContext::with_provider(provider_id),
+            None => ProviderErrorContext::without_provider(),
+        }
     }
 
     /// Centralizes manager context construction while keeping the base context private.

@@ -19,13 +19,13 @@ pub(crate) async fn connect_and_save(
     request: ConnectAndSaveProviderRequest,
 ) -> ConnectAndSaveProviderResponse {
     let (provider_id, data) = request.into_parts();
-    let _ctx = ProviderManagerContext::connect(provider_id);
+    let ctx = ProviderManagerContext::connect(provider_id);
     let provider_state = state.provider();
 
     let data = match data {
         Some(data) => data,
         None => {
-            let e = ProviderError::ManagerRequestPayloadAbsent { provider_id };
+            let e = ProviderError::manager_request_payload_absent(ctx.error_context());
             return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
         }
     };

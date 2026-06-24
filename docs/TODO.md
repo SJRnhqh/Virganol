@@ -24,3 +24,4 @@
 - [x] Provider context model scaffolded with private base, operation, stage, and manager-link context types under `core::bot::models::provider::context`.
 - [x] Provider manager context creation wired into connect, reset, and update-models manager handlers with context visibility scoped to `core::bot`.
 - [x] Provider context stage model narrowed to core-owned stages by removing the Tauri command stage and documenting manager context construction as the private base-context entrypoint.
+- [x] Provider error attribution context introduced under the context model and wired into manager payload validation errors through a typed ProviderError constructor.

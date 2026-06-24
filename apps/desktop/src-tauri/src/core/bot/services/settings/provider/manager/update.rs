@@ -17,13 +17,13 @@ pub(crate) fn update_provider_enabled_models(
     request: UpdateEnabledModelsRequest,
 ) -> UpdateEnabledModelsResponse {
     let (provider_id, data) = request.into_parts();
-    let _ctx = ProviderManagerContext::update_models(provider_id);
+    let ctx = ProviderManagerContext::update_models(provider_id);
     let provider_state = state.provider();
 
     let data = match data {
         Some(data) => data,
         None => {
-            let e = ProviderError::ManagerRequestPayloadAbsent { provider_id };
+            let e = ProviderError::manager_request_payload_absent(ctx.error_context());
             return UpdateEnabledModelsResponse::failure(ProviderAppError::from(&e));
         }
     };

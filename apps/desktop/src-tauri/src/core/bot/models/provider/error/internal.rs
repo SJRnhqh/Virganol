@@ -8,7 +8,7 @@ use tauri_plugin_store::Error as StoreError;
 use thiserror::Error;
 use tokio::task::JoinError;
 
-use super::super::ProviderId;
+use super::super::{ProviderErrorContext, ProviderId};
 
 /// Internal domain error for the provider subsystem.
 ///
@@ -18,12 +18,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider manager received a command payload without the expected data section.
     ///
     /// Provider manager 收到缺少预期 data 区块的命令载荷。
-    #[error("provider manager request payload is absent for {provider_id}")]
+    #[error("provider manager request payload is absent for {context}")]
     ManagerRequestPayloadAbsent {
-        /// Provider targeted by the malformed command payload.
+        /// Provider manager error attribution context.
         ///
-        /// 格式不完整的命令载荷所指向的 Provider。
-        provider_id: ProviderId,
+        /// Provider manager 错误归因上下文。
+        context: ProviderErrorContext,
     },
     /// Provider check lifecycle started event emission failed.
     ///
@@ -354,6 +354,17 @@ pub(in crate::core::bot) enum ProviderError {
         /// 无法解析为后端支持 Provider 的原始 provider id。
         raw_provider_id: String,
     },
+}
+
+impl ProviderError {
+    /// Creates a manager payload validation error from projected context.
+    ///
+    /// 基于已投影上下文创建 manager 载荷校验错误。
+    pub(in crate::core::bot) fn manager_request_payload_absent(
+        context: ProviderErrorContext,
+    ) -> Self {
+        Self::ManagerRequestPayloadAbsent { context }
+    }
 }
 
 // Downgrades a ProviderError into a warning log rather than propagating to the boundary.
