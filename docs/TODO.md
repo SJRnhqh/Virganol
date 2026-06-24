@@ -5,7 +5,11 @@
 
 ## Current
 
-- [ ] Connect/reset context propagation review — inspect how manager contexts should pass through config store, secret store, connection check, rollback, and fallback logging boundaries without expanding update-only changes prematurely.
+- [ ] Reset context propagation review — inspect how manager contexts should pass through reset-path store layers (config store, secret store, connection re-check), handling shared lifecycle boundaries (healthcheck), same-business error attribution (ProviderError), and rollback/fallback logging without over-propagating into cross-business paths.
+
+## Completed
+
+- [x] Connect context propagation review — wired manager contexts through config store, secret store, and connection check boundaries on the connect path with conservative scope; `at_secret_store` and `at_connection` stage helpers added to `ProviderManagerContext`.
 
 ## Planned
 
