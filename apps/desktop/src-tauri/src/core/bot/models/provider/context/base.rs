@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/base.rs
 use super::super::ProviderId;
-use super::{ProviderOperation, ProviderStage};
+use super::{ProviderErrorContext, ProviderOperation, ProviderStage};
 
 /// Provider-domain reliability context.
 ///
@@ -22,4 +22,46 @@ pub(super) struct ProviderContext<T = ()> {
     ///
     /// 具体链路携带的可靠性元信息。
     pub(super) extra: T,
+}
+
+impl<T> ProviderContext<T> {
+    /// Derives this context at the config-store stage.
+    ///
+    /// 将当前上下文派生到配置存储阶段。
+    pub(super) fn at_config_store(self) -> Self {
+        self.at_stage(ProviderStage::ConfigStore)
+    }
+
+    /// Derives this context at the secret-store stage.
+    ///
+    /// 将当前上下文派生到密钥存储阶段。
+    pub(super) fn at_secret_store(self) -> Self {
+        self.at_stage(ProviderStage::SecretStore)
+    }
+
+    /// Derives this context at the connection stage.
+    ///
+    /// 将当前上下文派生到连接阶段。
+    pub(super) fn at_connection(self) -> Self {
+        self.at_stage(ProviderStage::Connection)
+    }
+
+    /// Projects this context into an error attribution snapshot.
+    ///
+    /// 将当前执行上下文投影为错误归因快照。
+    pub(super) fn error_context(&self) -> ProviderErrorContext {
+        ProviderErrorContext::from_parts(self.provider_id, self.stage)
+    }
+
+    /// Reuses the current context identity at another execution stage.
+    ///
+    /// 在另一个执行阶段复用当前上下文身份。
+    fn at_stage(self, stage: ProviderStage) -> Self {
+        Self {
+            provider_id: self.provider_id,
+            operation: self.operation,
+            stage,
+            extra: self.extra,
+        }
+    }
 }

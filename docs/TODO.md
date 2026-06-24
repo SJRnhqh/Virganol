@@ -9,6 +9,7 @@
 
 ## Completed
 
+- [x] Provider lifecycle context model — `ProviderLifecycleContext` with `LifecycleExtra { run_id, trigger }`; shares `ProviderContext<T>` base with manager; `at_stage`/`error_context`/stage derivations unified in base and delegated by both wrappers.
 - [x] Connect context propagation review — wired manager contexts through config store, secret store, and connection check boundaries on the connect path with conservative scope; `at_secret_store` and `at_connection` stage helpers added to `ProviderManagerContext`.
 
 ## Planned
