@@ -16,10 +16,12 @@ pub(crate) fn reset_provider_config(
     request: ResetProviderRequest,
 ) -> ResetProviderResponse {
     let provider_id = request.into_provider_id();
-    let _ctx = ProviderManagerContext::reset(provider_id);
+    let ctx = ProviderManagerContext::reset(provider_id);
     let provider_state = state.provider();
 
-    let previous = match remove_provider(app, provider_state, provider_id) {
+    let ctx = ctx.at_config_store();
+
+    let previous = match remove_provider(app, provider_state, &ctx, provider_id) {
         Ok(removed) => removed,
         Err(e) => return ResetProviderResponse::failure(ProviderAppError::from(&e)),
     };

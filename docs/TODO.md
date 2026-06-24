@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Reset context propagation review — inspect how manager contexts should pass through reset-path store layers (config store, secret store, connection re-check), handling shared lifecycle boundaries (healthcheck), same-business error attribution (ProviderError), and rollback/fallback logging without over-propagating into cross-business paths.
+- [ ] Reset context propagation review — config store wired; secret store deferred (pending transaction ctx unification); connection re-check and healthcheck boundary TBD.
 
 ## Completed
 
