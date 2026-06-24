@@ -20,6 +20,13 @@ pub(in crate::core::bot) struct ProviderErrorContext {
 }
 
 impl ProviderErrorContext {
+    /// Returns the provider attribution carried by this error context.
+    ///
+    /// 返回当前错误上下文携带的 Provider 归因。
+    pub(in crate::core::bot) fn provider_id(&self) -> Option<ProviderId> {
+        self.provider_id
+    }
+
     /// Creates error context from provider attribution and execution stage.
     ///
     /// 基于 Provider 归因与执行阶段创建错误上下文。
@@ -27,11 +34,14 @@ impl ProviderErrorContext {
         Self { provider_id, stage }
     }
 
-    /// Returns the provider attribution carried by this error context.
+    /// Adds provider attribution to this error context.
     ///
-    /// 返回当前错误上下文携带的 Provider 归因。
-    pub(in crate::core::bot) fn provider_id(&self) -> Option<ProviderId> {
-        self.provider_id
+    /// 为当前错误上下文补充 Provider 归因。
+    pub(super) fn with_provider(self, provider_id: ProviderId) -> Self {
+        Self {
+            provider_id: Some(provider_id),
+            stage: self.stage,
+        }
     }
 }
 

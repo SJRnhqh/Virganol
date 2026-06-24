@@ -23,6 +23,8 @@
 
 ## Completed
 
+- [x] Provider context base responsibility narrowed — `ProviderContext<T>` now keeps shared stage/extra state private, exposes narrow construction/access/projection methods, and leaves provider attribution and operation intent to business-specific context extras.
+- [x] Provider context operation and stage constructors aligned — manager operations and Provider stages now use named constructors; execution operation typing is scaffolded for future shared provider-scoped context handoff while retaining the context-module self re-export.
 - [x] Interactive manager-owned context propagation baseline — connect, reset, and update-models direct manager paths now create and carry `ProviderManagerContext`; non-reuse manager-owned propagation is complete, while shared store/secret/connection reuse semantics remain tracked separately.
 - [x] Pure lifecycle context propagation baseline — lifecycle started/completed/failed event emission, lifecycle failure reporting, snapshot-load ctx handoff, and fallback logging now use `ProviderLifecycleContext`; provider-scoped runner handoff remains separate work.
 - [x] Lifecycle runner borrowed context handoff — `check_providers_lifecycle` now passes `ProviderLifecycleContext` into `run_provider_checks` by reference as a narrow entrypoint while provider-scoped context architecture remains under design.

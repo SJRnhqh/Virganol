@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/lifecycle.rs
 use super::super::lifecycle::ProviderCheckTrigger;
-use super::{ProviderContext, ProviderErrorContext, ProviderOperation, ProviderStage};
+use super::{ProviderContext, ProviderErrorContext, ProviderStage};
 
 /// Link-specific metadata for the lifecycle flow.
 ///
@@ -68,25 +68,23 @@ impl<'a> ProviderLifecycleContext<'a> {
     ///
     /// 返回本次生命周期运行的稳定关联标识。
     pub(in crate::core::bot) fn run_id(&self) -> &str {
-        self.0.extra.run_id
+        self.0.extra().run_id
     }
 
     /// Returns the source trigger for this lifecycle check.
     ///
     /// 返回触发本次生命周期检查的来源。
     pub(in crate::core::bot) fn trigger(&self) -> &ProviderCheckTrigger {
-        self.0.extra.trigger
+        self.0.extra().trigger
     }
 
     /// Creates context for one provider lifecycle run.
     ///
     /// 为一次 Provider 生命周期运行创建上下文。
     fn new(run_id: &'a str, trigger: &'a ProviderCheckTrigger) -> Self {
-        Self(ProviderContext {
-            provider_id: None,
-            operation: ProviderOperation::LifecycleCheck,
-            stage: ProviderStage::LifecycleEmit,
-            extra: LifecycleExtra { run_id, trigger },
-        })
+        Self(ProviderContext::new(
+            ProviderStage::lifecycle_emit(),
+            LifecycleExtra { run_id, trigger },
+        ))
     }
 }

@@ -28,6 +28,41 @@ pub(super) enum ProviderStage {
 }
 
 impl ProviderStage {
+    /// Creates the manager orchestration stage.
+    ///
+    /// 创建 manager 编排阶段。
+    pub(super) fn manager() -> Self {
+        Self::Manager
+    }
+
+    /// Creates the lifecycle-event emission stage.
+    ///
+    /// 创建生命周期事件推送阶段。
+    pub(super) fn lifecycle_emit() -> Self {
+        Self::LifecycleEmit
+    }
+
+    /// Creates the connection stage.
+    ///
+    /// 创建连接阶段。
+    pub(super) fn connection() -> Self {
+        Self::Connection
+    }
+
+    /// Creates the config-store stage.
+    ///
+    /// 创建配置存储阶段。
+    pub(super) fn config_store() -> Self {
+        Self::ConfigStore
+    }
+
+    /// Creates the secret-store stage.
+    ///
+    /// 创建密钥存储阶段。
+    pub(super) fn secret_store() -> Self {
+        Self::SecretStore
+    }
+
     /// Returns a natural phrase for internal error context messages.
     ///
     /// 返回用于内部错误上下文消息的自然语言短语。

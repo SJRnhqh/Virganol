@@ -1,9 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/operation.rs
 
-/// Provider-domain operation carried by reliability context.
+/// Interactive provider manager operation carried by manager context.
 ///
-/// Provider 领域可靠性上下文携带的操作意图。
-pub(super) enum ProviderOperation {
+/// manager 上下文携带的交互式 Provider 操作意图。
+pub(super) enum ProviderManagerOperation {
     /// Connect a provider and persist its configuration after a successful probe.
     ///
     /// 连接 Provider，并在探测成功后持久化配置。
@@ -16,8 +16,56 @@ pub(super) enum ProviderOperation {
     ///
     /// 更新已持久化 Provider 的启用模型列表。
     UpdateModels,
-    /// Run the provider lifecycle check flow.
+}
+
+impl ProviderManagerOperation {
+    /// Creates a manager operation for connecting one provider.
     ///
-    /// 执行 Provider 生命周期检查流程。
+    /// 创建连接单个 Provider 的 manager 操作意图。
+    pub(super) fn connect() -> Self {
+        Self::Connect
+    }
+
+    /// Creates a manager operation for resetting one provider.
+    ///
+    /// 创建重置单个 Provider 的 manager 操作意图。
+    pub(super) fn reset() -> Self {
+        Self::Reset
+    }
+
+    /// Creates a manager operation for updating enabled models.
+    ///
+    /// 创建更新启用模型列表的 manager 操作意图。
+    pub(super) fn update_models() -> Self {
+        Self::UpdateModels
+    }
+}
+
+/// Provider-scoped execution operation carried by shared execution context.
+///
+/// 共享执行上下文携带的单 Provider 执行操作意图。
+pub(super) enum ProviderExecutionOperation {
+    /// Shared execution entered from an interactive manager operation.
+    ///
+    /// 从交互式 manager 操作进入共享执行链路。
+    Manager(ProviderManagerOperation),
+    /// Shared execution entered from the provider lifecycle check flow.
+    ///
+    /// 从 Provider 生命周期检查链路进入共享执行链路。
     LifecycleCheck,
+}
+
+impl ProviderExecutionOperation {
+    /// Creates execution operation context for a lifecycle check.
+    ///
+    /// 创建生命周期检查对应的执行操作上下文。
+    pub(super) fn lifecycle_check() -> Self {
+        Self::LifecycleCheck
+    }
+}
+
+impl From<ProviderManagerOperation> for ProviderExecutionOperation {
+    fn from(operation: ProviderManagerOperation) -> Self {
+        Self::Manager(operation)
+    }
 }
