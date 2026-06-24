@@ -29,14 +29,30 @@ impl ProviderManagerContext {
         Self::new(provider_id, ProviderOperation::UpdateModels)
     }
 
+    /// Derives this interactive manager flow context at the config-store stage.
+    ///
+    /// 将当前交互式 manager 链路上下文派生到配置存储阶段。
+    pub(in crate::core::bot) fn at_config_store(self) -> Self {
+        self.at_stage(ProviderStage::ConfigStore)
+    }
+
     /// Projects this live manager context into an error attribution snapshot.
     ///
     /// 将当前 manager 执行上下文投影为错误归因快照。
     pub(in crate::core::bot) fn error_context(&self) -> ProviderErrorContext {
-        match self.0.provider_id {
-            Some(provider_id) => ProviderErrorContext::with_provider(provider_id),
-            None => ProviderErrorContext::without_provider(),
-        }
+        ProviderErrorContext::from_parts(self.0.provider_id, self.0.stage)
+    }
+
+    /// Reuses the current manager flow identity at another execution stage.
+    ///
+    /// 在另一个执行阶段复用当前 manager 链路身份。
+    fn at_stage(self, stage: ProviderStage) -> Self {
+        Self(ProviderContext {
+            provider_id: self.0.provider_id,
+            operation: self.0.operation,
+            stage,
+            extra: (),
+        })
     }
 
     /// Centralizes manager context construction while keeping the base context private.

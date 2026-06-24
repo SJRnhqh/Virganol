@@ -3,6 +3,7 @@
 /// Provider-domain execution stage carried by reliability context.
 ///
 /// Provider 领域可靠性上下文携带的执行阶段。
+#[derive(Debug, Clone, Copy)]
 pub(super) enum ProviderStage {
     /// Provider manager orchestration.
     ///
@@ -28,4 +29,20 @@ pub(super) enum ProviderStage {
     ///
     /// 可靠性上报失败后的日志兜底阶段。
     FallbackLogging,
+}
+
+impl ProviderStage {
+    /// Returns a natural phrase for internal error context messages.
+    ///
+    /// 返回用于内部错误上下文消息的自然语言短语。
+    pub(super) fn as_phrase(self) -> &'static str {
+        match self {
+            Self::Manager => "the manager stage",
+            Self::ConfigStore => "the config-store stage",
+            Self::SecretStore => "the secret-store stage",
+            Self::Connection => "the connection stage",
+            Self::LifecycleEmit => "the lifecycle-event stage",
+            Self::FallbackLogging => "the fallback-logging stage",
+        }
+    }
 }

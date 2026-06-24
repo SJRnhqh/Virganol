@@ -2,6 +2,7 @@
 use std::fmt;
 
 use super::super::ProviderId;
+use super::ProviderStage;
 
 /// Provider error attribution context snapshot.
 ///
@@ -12,23 +13,18 @@ pub(in crate::core::bot) struct ProviderErrorContext {
     ///
     /// 当失败执行可归属到单个 Provider 时携带对应 Provider ID。
     provider_id: Option<ProviderId>,
+    /// Provider-domain execution stage where the failure was observed.
+    ///
+    /// 观察到失败时所在的 Provider 领域执行阶段。
+    stage: ProviderStage,
 }
 
 impl ProviderErrorContext {
-    /// Creates error context for a failure without provider attribution.
+    /// Creates error context from provider attribution and execution stage.
     ///
-    /// 创建无法归属到单个 Provider 的错误上下文。
-    pub(in crate::core::bot) fn without_provider() -> Self {
-        Self { provider_id: None }
-    }
-
-    /// Creates error context for a provider-attributed failure.
-    ///
-    /// 创建可归属到单个 Provider 的错误上下文。
-    pub(in crate::core::bot) fn with_provider(provider_id: ProviderId) -> Self {
-        Self {
-            provider_id: Some(provider_id),
-        }
+    /// 基于 Provider 归因与执行阶段创建错误上下文。
+    pub(super) fn from_parts(provider_id: Option<ProviderId>, stage: ProviderStage) -> Self {
+        Self { provider_id, stage }
     }
 
     /// Returns the provider attribution carried by this error context.
@@ -45,8 +41,8 @@ impl fmt::Display for ProviderErrorContext {
     /// 将错误上下文格式化为内部错误消息。
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.provider_id {
-            Some(provider_id) => write!(f, "provider {provider_id}"),
-            None => f.write_str("an unknown provider"),
+            Some(provider_id) => write!(f, "provider {provider_id} at {}", self.stage.as_phrase()),
+            None => write!(f, "an unknown provider at {}", self.stage.as_phrase()),
         }
     }
 }

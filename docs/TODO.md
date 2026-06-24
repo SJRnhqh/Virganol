@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Provider manager context propagation design — define how manager contexts created in connect, reset, and update-models should be passed, borrowed, or projected across store, connection, and error boundaries while keeping commands out of the context lifecycle.
+- [ ] Connect/reset context propagation review — inspect how manager contexts should pass through config store, secret store, connection check, rollback, and fallback logging boundaries without expanding update-only changes prematurely.
 
 ## Planned
 
@@ -25,3 +25,4 @@
 - [x] Provider manager context creation wired into connect, reset, and update-models manager handlers with context visibility scoped to `core::bot`.
 - [x] Provider context stage model narrowed to core-owned stages by removing the Tauri command stage and documenting manager context construction as the private base-context entrypoint.
 - [x] Provider error attribution context introduced under the context model and wired into manager payload validation errors through a typed ProviderError constructor.
+- [x] Update-models manager context now hands off to the config-store stage before entering the update store function, while keeping business fields explicit and leaving save/remove store paths unchanged.
