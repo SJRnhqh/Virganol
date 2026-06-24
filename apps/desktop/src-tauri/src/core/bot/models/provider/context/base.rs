@@ -25,6 +25,20 @@ pub(super) struct ProviderContext<T = ()> {
 }
 
 impl<T> ProviderContext<T> {
+    /// Derives this context at the lifecycle-event stage.
+    ///
+    /// 将当前上下文派生到生命周期事件阶段。
+    pub(super) fn at_lifecycle_emit(self) -> Self {
+        self.at_stage(ProviderStage::LifecycleEmit)
+    }
+
+    /// Derives this context at the connection stage.
+    ///
+    /// 将当前上下文派生到连接阶段。
+    pub(super) fn at_connection(self) -> Self {
+        self.at_stage(ProviderStage::Connection)
+    }
+
     /// Derives this context at the config-store stage.
     ///
     /// 将当前上下文派生到配置存储阶段。
@@ -37,13 +51,6 @@ impl<T> ProviderContext<T> {
     /// 将当前上下文派生到密钥存储阶段。
     pub(super) fn at_secret_store(self) -> Self {
         self.at_stage(ProviderStage::SecretStore)
-    }
-
-    /// Derives this context at the connection stage.
-    ///
-    /// 将当前上下文派生到连接阶段。
-    pub(super) fn at_connection(self) -> Self {
-        self.at_stage(ProviderStage::Connection)
     }
 
     /// Projects this context into an error attribution snapshot.

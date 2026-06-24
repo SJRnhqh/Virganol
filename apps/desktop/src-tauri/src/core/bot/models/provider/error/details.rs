@@ -45,6 +45,7 @@ impl ProviderErrorDetails {
         match error {
             ProviderError::ManagerRequestPayloadAbsent { context }
             | ProviderError::CheckStartedEmit { context, .. }
+            | ProviderError::CheckCompletedEmit { context, .. }
             | ProviderError::CheckFailedEmit { context, .. } => context.provider_id(),
             ProviderError::CheckStatusEmit { provider_id, .. }
             | ProviderError::ConfigNotFound { provider_id }

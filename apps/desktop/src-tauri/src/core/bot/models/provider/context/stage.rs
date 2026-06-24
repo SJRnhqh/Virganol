@@ -9,6 +9,14 @@ pub(super) enum ProviderStage {
     ///
     /// Provider manager 编排阶段。
     Manager,
+    /// Provider lifecycle event emission.
+    ///
+    /// Provider 生命周期事件推送阶段。
+    LifecycleEmit,
+    /// Provider connection path.
+    ///
+    /// Provider 连接阶段。
+    Connection,
     /// Provider config store path.
     ///
     /// Provider 配置存储阶段。
@@ -17,14 +25,6 @@ pub(super) enum ProviderStage {
     ///
     /// Provider 密钥存储阶段。
     SecretStore,
-    /// Provider connection path.
-    ///
-    /// Provider 连接阶段。
-    Connection,
-    /// Provider lifecycle event emission.
-    ///
-    /// Provider 生命周期事件推送阶段。
-    LifecycleEmit,
 }
 
 impl ProviderStage {
@@ -34,10 +34,10 @@ impl ProviderStage {
     pub(super) fn as_phrase(self) -> &'static str {
         match self {
             Self::Manager => "the manager stage",
+            Self::LifecycleEmit => "the lifecycle-event stage",
+            Self::Connection => "the connection stage",
             Self::ConfigStore => "the config-store stage",
             Self::SecretStore => "the secret-store stage",
-            Self::Connection => "the connection stage",
-            Self::LifecycleEmit => "the lifecycle-event stage",
         }
     }
 }

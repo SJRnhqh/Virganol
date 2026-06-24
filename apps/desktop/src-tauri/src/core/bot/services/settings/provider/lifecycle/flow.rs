@@ -30,7 +30,8 @@ pub(crate) async fn check_providers_lifecycle(
         return;
     }
 
-    let snapshot = match load_provider_check_snapshot(&app) {
+    let ctx = ctx.at_config_store();
+    let snapshot = match load_provider_check_snapshot(&app, &ctx) {
         Ok(snapshot) => snapshot,
         Err(e) => {
             report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &[]);
@@ -74,7 +75,8 @@ pub(crate) async fn check_providers_lifecycle(
                 trigger.as_tag()
             );
         }
-        if let Err(e) = emit_check_completed(&app, run_id.as_str(), supported_total) {
+        let ctx = ctx.at_lifecycle_emit();
+        if let Err(e) = emit_check_completed(&app, &ctx, run_id.as_str(), supported_total) {
             report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &[]);
             return;
         }
@@ -99,7 +101,8 @@ pub(crate) async fn check_providers_lifecycle(
     }
 
     let duration_ms = started_at.elapsed().as_millis() as u64;
-    if let Err(e) = emit_check_completed(&app, run_id.as_str(), failed_count) {
+    let ctx = ctx.at_lifecycle_emit();
+    if let Err(e) = emit_check_completed(&app, &ctx, run_id.as_str(), failed_count) {
         report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &[]);
         return;
     }

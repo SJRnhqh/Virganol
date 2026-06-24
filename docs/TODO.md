@@ -13,7 +13,6 @@
 - [ ] Context propagation boundary rules — define which layers create, enrich, pass through, project, or intentionally avoid context across commands, managers, services, stores, connection drivers, and lifecycle runner code.
 - [ ] Core fallback logging design — specify how Provider core entrypoints should log or report fallback failures using carried context without involving Tauri command handlers or reinterpreting core business errors.
 - [ ] Lifecycle trigger context integration — decide whether `ProviderCheckTrigger` remains an independent lifecycle value object or becomes part of the provider lifecycle context.
-- [ ] Lifecycle snapshot context integration — decide whether `ProviderCheckSnapshot` remains a standalone classified config snapshot or folds into the provider lifecycle context model.
 - [ ] Provider error attribution model — replace the current optional provider-id attribution with a typed attribution model, distinguishing single-provider, lifecycle-run, provider-collection, and subsystem/global failures while keeping boundary details stable.
 - [ ] Error projection alignment — document how context propagation should support `ProviderErrorDetails` projection while avoiding duplicated domain fields, string-built errors, or observability-only identifiers in current error details.
 - [ ] Observability handoff notes — capture the context fields and boundaries that Phase 6.3 structured logging should reuse, while keeping trace/correlation policy deferred to the observability design.
@@ -25,6 +24,9 @@
 - [x] Lifecycle started event context attribution — lifecycle flow now creates a borrowed `ProviderLifecycleContext`, passes it into started-event emission, and projects `ProviderErrorContext` into `CheckStartedEmit` without exposing lifecycle-only `run_id`/`trigger` through boundary details.
 - [x] Provider lifecycle context model — `ProviderLifecycleContext` with `LifecycleExtra { run_id, trigger }`; shares `ProviderContext<T>` base with manager; `at_stage`/`error_context`/stage derivations unified in base and delegated by both wrappers.
 - [x] Connect context propagation review — wired manager contexts through config store, secret store, and connection check boundaries on the connect path with conservative scope; `at_secret_store` and `at_connection` stage helpers added to `ProviderManagerContext`.
+- [x] CheckCompletedEmit context alignment — completed lifecycle event now carries `ProviderErrorContext`, matching started/failed event attribution and completing the emit error projection set.
+- [x] Stage ordering normalization — `LifecycleEmit` and `Connection` stages moved to logical position directly after `Manager` in enum definition, method order, and match arms.
+- [x] Lifecycle snapshot context integration resolved — snapshot stays standalone value object; `load_provider_check_snapshot` reserves ctx signature for future error attribution without coupling snapshot structure to context model.
 - [x] Branch TODO initialized from ROADMAP Phase 6.2 context propagation scope.
 - [x] Provider context model scaffolded with private base, operation, stage, and manager-link context types under `core::bot::models::provider::context`.
 - [x] Provider manager context creation wired into connect, reset, and update-models manager handlers with context visibility scoped to `core::bot`.

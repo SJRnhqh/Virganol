@@ -29,6 +29,20 @@ impl<'a> ProviderLifecycleContext<'a> {
         Self::new(run_id, trigger)
     }
 
+    /// Derives this lifecycle context at the lifecycle-event stage.
+    ///
+    /// 将当前生命周期上下文派生到生命周期事件阶段。
+    pub(in crate::core::bot) fn at_lifecycle_emit(self) -> Self {
+        Self(self.0.at_lifecycle_emit())
+    }
+
+    /// Derives this lifecycle context at the connection stage.
+    ///
+    /// 将当前生命周期上下文派生到连接阶段。
+    pub(in crate::core::bot) fn at_connection(self) -> Self {
+        Self(self.0.at_connection())
+    }
+
     /// Derives this lifecycle context at the config-store stage.
     ///
     /// 将当前生命周期上下文派生到配置存储阶段。
@@ -41,13 +55,6 @@ impl<'a> ProviderLifecycleContext<'a> {
     /// 将当前生命周期上下文派生到密钥存储阶段。
     pub(in crate::core::bot) fn at_secret_store(self) -> Self {
         Self(self.0.at_secret_store())
-    }
-
-    /// Derives this lifecycle context at the connection stage.
-    ///
-    /// 将当前生命周期上下文派生到连接阶段。
-    pub(in crate::core::bot) fn at_connection(self) -> Self {
-        Self(self.0.at_connection())
     }
 
     /// Projects this lifecycle context into an error attribution snapshot.

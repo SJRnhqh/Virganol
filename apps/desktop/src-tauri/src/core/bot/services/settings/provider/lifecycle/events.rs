@@ -55,13 +55,14 @@ pub(super) fn emit_check_status(
 /// 推送生命周期 completed 事件。
 pub(super) fn emit_check_completed(
     app: &AppHandle,
+    ctx: &ProviderLifecycleContext,
     run_id: &str,
     failed: usize,
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckCompletedPayload::new(run_id, failed);
 
     app.emit(EVT_CHECK_COMPLETED, &payload)
-        .map_err(|source| ProviderError::CheckCompletedEmit { source })
+        .map_err(|source| ProviderError::check_completed_emit(ctx.error_context(), source))
 }
 
 /// Emits the lifecycle failed event.

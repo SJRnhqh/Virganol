@@ -58,8 +58,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider check lifecycle completed event emission failed.
     ///
     /// Provider 检查生命周期完成事件推送失败。
-    #[error("provider check lifecycle completed event emission failed: {source}")]
+    #[error("failed to emit provider check completed event for {context}: {source}")]
     CheckCompletedEmit {
+        /// Provider lifecycle error attribution context.
+        ///
+        /// Provider 生命周期错误归因上下文。
+        context: ProviderErrorContext,
         /// Tauri event emission error.
         ///
         /// Tauri 事件推送错误。
@@ -382,6 +386,16 @@ impl ProviderError {
         source: TauriError,
     ) -> Self {
         Self::CheckStartedEmit { context, source }
+    }
+
+    /// Creates a lifecycle completed event emission error from projected context.
+    ///
+    /// 基于已投影上下文创建生命周期 completed 事件推送错误。
+    pub(in crate::core::bot) fn check_completed_emit(
+        context: ProviderErrorContext,
+        source: TauriError,
+    ) -> Self {
+        Self::CheckCompletedEmit { context, source }
     }
 
     /// Creates a lifecycle failed event emission error from projected context.
