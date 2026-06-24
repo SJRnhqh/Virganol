@@ -29,6 +29,9 @@ impl ProviderManagerContext {
         Self::new(provider_id, ProviderOperation::UpdateModels)
     }
 
+    /// Centralizes manager context construction while keeping the base context private.
+    ///
+    /// 集中管理 manager 上下文构造，并保持基础上下文不向业务调用方外泄。
     fn new(provider_id: ProviderId, operation: ProviderOperation) -> Self {
         Self(ProviderContext {
             provider_id: Some(provider_id),

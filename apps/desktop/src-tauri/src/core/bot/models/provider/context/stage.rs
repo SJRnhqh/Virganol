@@ -4,10 +4,6 @@
 ///
 /// Provider 领域可靠性上下文携带的执行阶段。
 pub(super) enum ProviderStage {
-    /// Tauri command boundary.
-    ///
-    /// Tauri 命令边界。
-    Command,
     /// Provider manager orchestration.
     ///
     /// Provider manager 编排阶段。

@@ -5,13 +5,13 @@
 
 ## Current
 
-- [ ] Command boundary fallback logging design — define how Provider command handlers create concrete context, pass or observe command results, and emit backend fallback logs without leaking the generic base context across layers.
+- [ ] Provider manager context propagation design — define how manager contexts created in connect, reset, and update-models should be passed, borrowed, or projected across store, connection, and error boundaries while keeping commands out of the context lifecycle.
 
 ## Planned
 
 - [ ] Provider context model scope — decide the minimum first-class context fields for Provider reliability work, including provider identity, operation/task intent, lifecycle trigger, snapshot classification, and future correlation/trace compatibility.
 - [ ] Context propagation boundary rules — define which layers create, enrich, pass through, project, or intentionally avoid context across commands, managers, services, stores, connection drivers, and lifecycle runner code.
-- [ ] Command boundary fallback logging design — specify how Tauri command boundaries should log fallback failures using carried context without reinterpreting core business errors.
+- [ ] Core fallback logging design — specify how Provider core entrypoints should log or report fallback failures using carried context without involving Tauri command handlers or reinterpreting core business errors.
 - [ ] Lifecycle trigger context integration — decide whether `ProviderCheckTrigger` remains an independent lifecycle value object or becomes part of the provider lifecycle context.
 - [ ] Lifecycle snapshot context integration — decide whether `ProviderCheckSnapshot` remains a standalone classified config snapshot or folds into the provider lifecycle context model.
 - [ ] Error projection alignment — document how context propagation should support `ProviderErrorDetails` projection while avoiding duplicated domain fields, string-built errors, or observability-only identifiers in current error details.
@@ -23,3 +23,4 @@
 - [x] Branch TODO initialized from ROADMAP Phase 6.2 context propagation scope.
 - [x] Provider context model scaffolded with private base, operation, stage, and manager-link context types under `core::bot::models::provider::context`.
 - [x] Provider manager context creation wired into connect, reset, and update-models manager handlers with context visibility scoped to `core::bot`.
+- [x] Provider context stage model narrowed to core-owned stages by removing the Tauri command stage and documenting manager context construction as the private base-context entrypoint.
