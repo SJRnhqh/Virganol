@@ -43,7 +43,8 @@ impl ProviderErrorDetails {
     /// 从内部 Provider 错误中投影可用的 Provider 任务上下文。
     fn provider_id_from(error: &ProviderError) -> Option<ProviderId> {
         match error {
-            ProviderError::ManagerRequestPayloadAbsent { context } => context.provider_id(),
+            ProviderError::ManagerRequestPayloadAbsent { context }
+            | ProviderError::CheckStartedEmit { context, .. } => context.provider_id(),
             ProviderError::CheckStatusEmit { provider_id, .. }
             | ProviderError::ConfigNotFound { provider_id }
             | ProviderError::JsonSerialize { provider_id, .. }

@@ -42,7 +42,7 @@ impl fmt::Display for ProviderErrorContext {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.provider_id {
             Some(provider_id) => write!(f, "provider {provider_id} at {}", self.stage.as_phrase()),
-            None => write!(f, "an unknown provider at {}", self.stage.as_phrase()),
+            None => write!(f, "the provider subsystem at {}", self.stage.as_phrase()),
         }
     }
 }

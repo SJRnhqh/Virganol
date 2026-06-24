@@ -4,7 +4,9 @@ use std::time::Instant;
 use tauri::AppHandle;
 
 use super::super::super::super::super::super::AppState;
-use super::super::super::super::super::{ProviderCheckTrigger, ProviderError};
+use super::super::super::super::super::{
+    ProviderCheckTrigger, ProviderError, ProviderLifecycleContext,
+};
 use super::super::load_provider_check_snapshot;
 use super::{
     emit_check_completed, emit_check_started, next_run_id, report_lifecycle_failure,
@@ -20,9 +22,10 @@ pub(crate) async fn check_providers_lifecycle(
     trigger: ProviderCheckTrigger,
 ) {
     let run_id = next_run_id(&trigger);
+    let ctx = ProviderLifecycleContext::start(run_id.as_str(), &trigger);
     let started_at = Instant::now();
 
-    if let Err(e) = emit_check_started(&app, run_id.as_str(), &trigger) {
+    if let Err(e) = emit_check_started(&app, &ctx, run_id.as_str(), &trigger) {
         report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
         return;
     }

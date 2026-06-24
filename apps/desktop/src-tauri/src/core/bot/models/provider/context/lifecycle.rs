@@ -5,23 +5,30 @@ use super::{ProviderContext, ProviderErrorContext, ProviderOperation, ProviderSt
 /// Link-specific metadata for the lifecycle flow.
 ///
 /// 生命周期链路携带的可靠性元信息。
-struct LifecycleExtra {
+struct LifecycleExtra<'a> {
     /// Stable correlation id for this lifecycle run.
     ///
     /// 本次生命周期运行的稳定关联标识。
-    run_id: String,
+    run_id: &'a str,
     /// Source trigger for this lifecycle check.
     ///
     /// 触发本次生命周期检查的来源。
-    trigger: ProviderCheckTrigger,
+    trigger: &'a ProviderCheckTrigger,
 }
 
 /// Provider lifecycle reliability context.
 ///
 /// Provider 生命周期链路的可靠性上下文。
-pub(in crate::core::bot) struct ProviderLifecycleContext(ProviderContext<LifecycleExtra>);
+pub(in crate::core::bot) struct ProviderLifecycleContext<'a>(ProviderContext<LifecycleExtra<'a>>);
 
-impl ProviderLifecycleContext {
+impl<'a> ProviderLifecycleContext<'a> {
+    /// Starts a provider lifecycle run context.
+    ///
+    /// 启动一次 Provider 生命周期运行的上下文。
+    pub(in crate::core::bot) fn start(run_id: &'a str, trigger: &'a ProviderCheckTrigger) -> Self {
+        Self::new(run_id, trigger)
+    }
+
     /// Derives this lifecycle context at the config-store stage.
     ///
     /// 将当前生命周期上下文派生到配置存储阶段。
@@ -54,20 +61,20 @@ impl ProviderLifecycleContext {
     ///
     /// 返回本次生命周期运行的稳定关联标识。
     pub(in crate::core::bot) fn run_id(&self) -> &str {
-        &self.0.extra.run_id
+        self.0.extra.run_id
     }
 
     /// Returns the source trigger for this lifecycle check.
     ///
     /// 返回触发本次生命周期检查的来源。
     pub(in crate::core::bot) fn trigger(&self) -> &ProviderCheckTrigger {
-        &self.0.extra.trigger
+        self.0.extra.trigger
     }
 
     /// Creates context for one provider lifecycle run.
     ///
     /// 为一次 Provider 生命周期运行创建上下文。
-    fn new(run_id: String, trigger: ProviderCheckTrigger) -> Self {
+    fn new(run_id: &'a str, trigger: &'a ProviderCheckTrigger) -> Self {
         Self(ProviderContext {
             provider_id: None,
             operation: ProviderOperation::LifecycleCheck,
