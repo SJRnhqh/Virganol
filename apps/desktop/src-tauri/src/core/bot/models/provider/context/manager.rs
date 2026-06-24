@@ -70,10 +70,15 @@ impl ProviderManagerContext {
     /// Converts this manager context into shared provider execution context.
     ///
     /// 将当前 manager 上下文转换为共享 Provider 执行上下文。
-    pub(in crate::core::bot) fn into_execution_context(self) -> ProviderExecutionContext {
-        let stage = self.0.stage();
+    pub(in crate::core::bot) fn into_execution_context(self) -> Option<ProviderExecutionContext> {
+        let stage = self.0.stage().as_execution_stage()?;
         let extra = self.0.into_extra();
-        ProviderExecutionContext::from_operation(stage, extra.provider_id, extra.operation.into())
+
+        Some(ProviderExecutionContext::from_operation(
+            stage,
+            extra.provider_id,
+            extra.operation.into(),
+        ))
     }
 
     /// Projects this live manager context into an error attribution snapshot.

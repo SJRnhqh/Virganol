@@ -1,6 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/execution.rs
 use super::super::ProviderId;
-use super::{ProviderContext, ProviderErrorContext, ProviderExecutionOperation, ProviderStage};
+use super::{
+    ProviderContext, ProviderErrorContext, ProviderExecutionOperation, ProviderExecutionStage,
+    ProviderStage,
+};
 
 /// Link-specific metadata for shared provider execution flows.
 ///
@@ -56,7 +59,7 @@ impl ProviderExecutionContext {
     ///
     /// 基于 Provider 执行操作创建共享执行上下文。
     pub(super) fn from_operation(
-        stage: ProviderStage,
+        stage: ProviderExecutionStage,
         provider_id: ProviderId,
         operation: ProviderExecutionOperation,
     ) -> Self {
@@ -67,12 +70,12 @@ impl ProviderExecutionContext {
     ///
     /// 集中管理共享执行上下文构造。
     fn new(
-        stage: ProviderStage,
+        stage: ProviderExecutionStage,
         provider_id: ProviderId,
         operation: ProviderExecutionOperation,
     ) -> Self {
         Self(ProviderContext::new(
-            stage,
+            ProviderStage::execution(stage),
             ExecutionExtra {
                 provider_id,
                 operation,

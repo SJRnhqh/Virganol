@@ -108,6 +108,23 @@ impl ProviderStage {
         Self::execution(ProviderExecutionStage::secret_store())
     }
 
+    /// Returns this stage as a provider-scoped shared execution stage, when possible.
+    ///
+    /// 当当前阶段属于单 Provider 共享执行阶段时返回对应执行阶段。
+    pub(super) fn as_execution_stage(self) -> Option<ProviderExecutionStage> {
+        match self {
+            Self::Execution(stage) => Some(stage),
+            _ => None,
+        }
+    }
+
+    /// Creates a provider-scoped shared execution stage.
+    ///
+    /// 创建单 Provider 共享执行阶段。
+    pub(super) fn execution(stage: ProviderExecutionStage) -> Self {
+        Self::Execution(stage)
+    }
+
     /// Returns a natural phrase for internal error context messages.
     ///
     /// 返回用于内部错误上下文消息的自然语言短语。
@@ -117,12 +134,5 @@ impl ProviderStage {
             Self::LifecycleEmit => "the lifecycle-event stage",
             Self::Execution(stage) => stage.as_phrase(),
         }
-    }
-
-    /// Creates a provider-scoped shared execution stage.
-    ///
-    /// 创建单 Provider 共享执行阶段。
-    fn execution(stage: ProviderExecutionStage) -> Self {
-        Self::Execution(stage)
     }
 }
