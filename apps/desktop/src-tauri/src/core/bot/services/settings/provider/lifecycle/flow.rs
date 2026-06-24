@@ -86,6 +86,7 @@ pub(crate) async fn check_providers_lifecycle(
     let check_result = run_provider_checks(
         &app,
         state.provider(),
+        &ctx,
         run_id.as_str(),
         snapshot.into_supported(),
     )

@@ -5,7 +5,8 @@ use tokio::task::JoinSet;
 
 use super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::{
-    ProviderCheckRunResult, ProviderError, ProviderId, ProviderRecord, ProviderState,
+    ProviderCheckRunResult, ProviderError, ProviderId, ProviderLifecycleContext, ProviderRecord,
+    ProviderState,
 };
 use super::super::health_check_with_resolved_key;
 use super::{emit_check_status, finalize_provider_check_result};
@@ -21,6 +22,7 @@ const CHECK_CONCURRENCY_LIMIT: usize = 4;
 pub(super) async fn run_provider_checks(
     app: &AppHandle,
     provider_state: &ProviderState,
+    _ctx: &ProviderLifecycleContext<'_>,
     run_id: &str,
     supported: Vec<(ProviderId, ProviderRecord)>,
 ) -> ProviderCheckRunResult {
