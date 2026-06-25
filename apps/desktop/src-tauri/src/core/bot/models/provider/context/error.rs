@@ -27,13 +27,6 @@ impl ProviderErrorContext {
         self.provider_id
     }
 
-    /// Creates error context from provider attribution and execution stage.
-    ///
-    /// 基于 Provider 归因与执行阶段创建错误上下文。
-    pub(super) fn from_parts(provider_id: Option<ProviderId>, stage: ProviderStage) -> Self {
-        Self { provider_id, stage }
-    }
-
     /// Adds provider attribution to this error context.
     ///
     /// 为当前错误上下文补充 Provider 归因。
@@ -42,6 +35,13 @@ impl ProviderErrorContext {
             provider_id: Some(provider_id),
             stage: self.stage,
         }
+    }
+
+    /// Creates error context from provider attribution and execution stage.
+    ///
+    /// 基于 Provider 归因与执行阶段创建错误上下文。
+    pub(super) fn from_parts(provider_id: Option<ProviderId>, stage: ProviderStage) -> Self {
+        Self { provider_id, stage }
     }
 }
 
