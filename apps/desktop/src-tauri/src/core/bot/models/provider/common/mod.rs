@@ -2,5 +2,5 @@
 mod element;
 mod guard;
 
-pub(in crate::core::bot) use element::ProviderId;
+pub(in crate::core::bot) use element::{ProviderId, ProviderSubject};
 pub(in crate::core) use guard::ProviderState;

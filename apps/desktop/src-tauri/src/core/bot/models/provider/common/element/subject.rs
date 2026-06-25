@@ -4,7 +4,8 @@ use super::ProviderId;
 /// Provider-domain attribution subject.
 ///
 /// Provider 领域上下文、日志与错误归因的领域主体。
-pub(super) enum ProviderSubject {
+#[derive(Clone)]
+pub(in crate::core::bot) enum ProviderSubject {
     /// A concrete provider identified by a stable provider id.
     ///
     /// 由稳定 Provider ID 标识的单个具体 Provider。
@@ -13,6 +14,18 @@ pub(super) enum ProviderSubject {
     ///
     /// 持久化配置中的已配置 Provider 集合。
     ConfiguredProviders,
+}
+
+impl ProviderSubject {
+    /// Projects this Provider-domain subject into a concrete provider id when available.
+    ///
+    /// 当当前 Provider 领域主体可归因到单个具体 Provider 时，投影出对应 Provider ID。
+    pub(in crate::core::bot) fn provider_id(&self) -> Option<ProviderId> {
+        match self {
+            Self::Provider(provider_id) => Some(*provider_id),
+            Self::ConfiguredProviders => None,
+        }
+    }
 }
 
 impl From<ProviderId> for ProviderSubject {

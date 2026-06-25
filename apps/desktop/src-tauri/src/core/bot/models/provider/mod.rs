@@ -8,8 +8,8 @@ mod error;
 mod lifecycle;
 mod secret;
 
-pub(in crate::core::bot) use common::ProviderId;
 pub(in crate::core) use common::ProviderState;
+pub(in crate::core::bot) use common::{ProviderId, ProviderSubject};
 pub(in crate::core::bot) use config::{ProviderCheckSnapshot, ProviderRecord};
 pub(in crate::core::bot) use connection::HealthCheckResult;
 pub(in crate::core::bot) use context::{

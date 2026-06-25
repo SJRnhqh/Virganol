@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/execution.rs
-use super::super::ProviderId;
+use super::super::{ProviderId, ProviderSubject};
 use super::{ProviderContext, ProviderErrorContext, ProviderExecutionOperation, ProviderStage};
 
 /// Execution business context fields.
@@ -7,10 +7,10 @@ use super::{ProviderContext, ProviderErrorContext, ProviderExecutionOperation, P
 /// 执行业务上下文字段。
 #[derive(Clone)]
 struct ExecutionExtra {
-    /// Provider targeted by this execution.
+    /// Provider domain subject targeted by this execution.
     ///
-    /// 当前执行链路目标 Provider。
-    provider_id: ProviderId,
+    /// 当前执行链路归因的 Provider 领域主体。
+    subject: ProviderSubject,
     /// Provider execution operation currently being executed.
     ///
     /// 当前正在执行的 Provider 执行操作。
@@ -69,9 +69,12 @@ impl ProviderExecutionContext {
     ///
     /// 将当前执行上下文投影为错误归因快照。
     pub(in crate::core::bot) fn error_context(&self) -> ProviderErrorContext {
-        self.0
-            .error_context()
-            .with_provider(self.0.extra().provider_id)
+        let ctx = self.0.error_context();
+
+        match self.0.extra().subject.provider_id() {
+            Some(provider_id) => ctx.with_provider(provider_id),
+            None => ctx,
+        }
     }
 
     /// Creates an execution context from a provider execution operation.
@@ -96,7 +99,7 @@ impl ProviderExecutionContext {
         Self(ProviderContext::new(
             stage,
             ExecutionExtra {
-                provider_id,
+                subject: provider_id.into(),
                 operation,
             },
         ))

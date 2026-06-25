@@ -3,3 +3,4 @@ mod id;
 mod subject;
 
 pub(in crate::core::bot) use id::ProviderId;
+pub(in crate::core::bot) use subject::ProviderSubject;
