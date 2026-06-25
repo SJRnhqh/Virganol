@@ -46,25 +46,25 @@ impl ProviderManagerContext {
         Self::new(provider_id, ProviderManagerOperation::update_models())
     }
 
-    /// Derives this interactive management context at the connection stage.
+    /// Consumes this interactive management context into the connection stage.
     ///
-    /// 将当前交互式管理上下文派生到连接阶段。
-    pub(in crate::core::bot) fn at_connection(self) -> Self {
-        Self(self.0.at_connection())
+    /// 消费当前交互式管理上下文，并将其转换为连接阶段。
+    pub(in crate::core::bot) fn into_connection(self) -> Self {
+        Self(self.0.into_connection())
     }
 
-    /// Derives this interactive management context at the config-store stage.
+    /// Consumes this interactive management context into the config-store stage.
     ///
-    /// 将当前交互式管理上下文派生到配置存储阶段。
-    pub(in crate::core::bot) fn at_config_store(self) -> Self {
-        Self(self.0.at_config_store())
+    /// 消费当前交互式管理上下文，并将其转换为配置存储阶段。
+    pub(in crate::core::bot) fn into_config_store(self) -> Self {
+        Self(self.0.into_config_store())
     }
 
-    /// Derives this interactive management context at the secret-store stage.
+    /// Consumes this interactive management context into the secret-store stage.
     ///
-    /// 将当前交互式管理上下文派生到密钥存储阶段。
-    pub(in crate::core::bot) fn at_secret_store(self) -> Self {
-        Self(self.0.at_secret_store())
+    /// 消费当前交互式管理上下文，并将其转换为密钥存储阶段。
+    pub(in crate::core::bot) fn into_secret_store(self) -> Self {
+        Self(self.0.into_secret_store())
     }
 
     /// Converts this interactive management context into an execution context.

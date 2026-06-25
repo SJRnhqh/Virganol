@@ -32,7 +32,7 @@ pub(crate) async fn connect_and_save(
 
     let normalized_key = data.normalized_api_key();
     let normalized_url = data.normalized_base_url();
-    let ctx = ctx.at_connection();
+    let ctx = ctx.into_connection().into_execution_context();
 
     let available_models =
         match probe_provider_connection(&ctx, provider_id, normalized_url, normalized_key)
@@ -45,7 +45,7 @@ pub(crate) async fn connect_and_save(
             }
         };
 
-    let ctx = ctx.at_config_store();
+    let ctx = ctx.into_config_store();
 
     let previous_record = match load_provider_record(app, &ctx, provider_id) {
         Ok(record) => record,
@@ -62,7 +62,7 @@ pub(crate) async fn connect_and_save(
 
     let enabled_models = record.enabled_models().to_vec();
 
-    let ctx = ctx.at_secret_store();
+    let ctx = ctx.for_secret_store();
 
     let key_transaction = match ProviderKeyTransaction::begin(&ctx, provider_id, normalized_key) {
         Ok(transaction) => transaction,

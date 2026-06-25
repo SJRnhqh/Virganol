@@ -3,7 +3,7 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::super::{
-    ProviderError, ProviderId, ProviderManagerContext, ProviderRecord, ProviderState,
+    ProviderError, ProviderExecutionContext, ProviderId, ProviderRecord, ProviderState,
     SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::save_settings;
@@ -15,7 +15,7 @@ use super::load_all_providers;
 pub(in crate::core::bot::services::settings::provider) fn remove_provider(
     app: &AppHandle,
     provider_state: &ProviderState,
-    _ctx: &ProviderManagerContext,
+    _ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {
     let _guard = provider_state.lock_store();

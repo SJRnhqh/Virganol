@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/secret/transaction.rs
 use super::super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::super::{
-    ProviderError, ProviderId, ProviderKey, ProviderKeyChange, ProviderManagerContext,
+    ProviderError, ProviderExecutionContext, ProviderId, ProviderKey, ProviderKeyChange,
 };
 use super::{load_provider_key, remove_provider_key, save_provider_key};
 
@@ -17,7 +17,7 @@ impl ProviderKeyTransaction {
     ///
     /// 通过写入新 Key 并捕获旧 Key，启动一次 provider key 事务。
     pub(in crate::core::bot::services::settings::provider) fn begin(
-        _ctx: &ProviderManagerContext,
+        _ctx: &ProviderExecutionContext,
         provider_id: ProviderId,
         normalized_key: &str,
     ) -> Result<Option<Self>, ProviderError> {

@@ -23,6 +23,7 @@
 
 ## Completed
 
+- [x] Provider context stage transition API split — `ProviderContext` now separates consuming stage transitions (`into_*`) from owned stage-view derivation (`for_*`); `ProviderExecutionContext` exposes provider-scoped `for_*` views for reusable execution attribution while manager/lifecycle contexts keep consuming `into_*` transitions; connect, reset, update-models, and lifecycle flow call sites migrated away from `at_*`; provider-scoped connection/config store entrypoints now receive `ProviderExecutionContext` where the current branch scope already needs execution attribution.
 - [x] Provider stage model flattened — `ProviderExecutionStage` removed; `Connection`, `ConfigStore`, and `SecretStore` are now direct `ProviderStage` variants, eliminating the nested `Execution(ProviderExecutionStage)` representation and simplifying stage-to-context mapping.
 - [x] Context conversion `Option` eliminated — `execution_context_for()` and `into_execution_context()` now return their target context directly instead of `Option<…>`, since `from_operation()` already accepts any `ProviderStage` value and stage validity is a caller-level contract.
 - [x] Context field semantics clarified — `ProviderContext.stage` renamed to "business execution stage" with positioning semantics; `extra` renamed to "module-specific domain business context fields".

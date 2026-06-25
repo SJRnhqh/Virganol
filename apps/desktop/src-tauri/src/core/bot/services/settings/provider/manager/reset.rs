@@ -19,7 +19,7 @@ pub(crate) fn reset_provider_config(
     let ctx = ProviderManagerContext::reset(provider_id);
     let provider_state = state.provider();
 
-    let ctx = ctx.at_config_store();
+    let ctx = ctx.into_config_store().into_execution_context();
 
     let previous = match remove_provider(app, provider_state, &ctx, provider_id) {
         Ok(removed) => removed,

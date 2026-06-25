@@ -2,7 +2,7 @@
 use tauri::AppHandle;
 
 use super::super::super::super::super::super::{
-    ProviderError, ProviderId, ProviderManagerContext, ProviderState, SPIRIT_PROVIDERS_KEY,
+    ProviderError, ProviderExecutionContext, ProviderId, ProviderState, SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::save_settings;
 use super::load_all_providers;
@@ -13,7 +13,7 @@ use super::load_all_providers;
 pub(in crate::core::bot::services::settings::provider) fn update_models(
     app: &AppHandle,
     provider_state: &ProviderState,
-    _ctx: ProviderManagerContext,
+    _ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
     enabled_models: Vec<String>,
 ) -> Result<(), ProviderError> {

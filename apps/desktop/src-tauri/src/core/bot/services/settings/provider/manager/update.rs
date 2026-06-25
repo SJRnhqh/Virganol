@@ -28,10 +28,12 @@ pub(crate) fn update_provider_enabled_models(
         }
     };
 
+    let ctx = ctx.into_config_store().into_execution_context();
+
     match update_models(
         app,
         provider_state,
-        ctx.at_config_store(),
+        &ctx,
         provider_id,
         data.into_enabled_models(),
     ) {

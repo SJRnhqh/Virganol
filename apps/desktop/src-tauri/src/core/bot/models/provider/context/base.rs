@@ -5,43 +5,83 @@ use super::{ProviderErrorContext, ProviderStage};
 ///
 /// Provider 领域基础上下文。
 pub(super) struct ProviderContext<E = ()> {
-    /// Provider domain business execution stage.
+    /// Provider domain business execution stage represented by this context view.
     ///
-    /// Provider 领域业务执行阶段。
+    /// 当前上下文视图表示的 Provider 领域业务执行阶段。
     stage: ProviderStage,
-    /// Domain business context fields.
+    /// Domain business context fields shared across derived stage views.
     ///
-    /// 领域业务上下文字段。
+    /// 跨派生阶段视图共享的领域业务上下文字段。
     extra: E,
 }
 
+impl<E: Clone> ProviderContext<E> {
+    /// Derives an owned lifecycle-event stage view from this context.
+    ///
+    /// 从当前上下文派生一个拥有所有权的生命周期事件阶段视图，不改变来源上下文。
+    pub(super) fn for_lifecycle_emit(&self) -> Self {
+        self.for_stage(ProviderStage::lifecycle_emit())
+    }
+
+    /// Derives an owned connection stage view from this context.
+    ///
+    /// 从当前上下文派生一个拥有所有权的连接阶段视图，不改变来源上下文。
+    pub(super) fn for_connection(&self) -> Self {
+        self.for_stage(ProviderStage::connection())
+    }
+
+    /// Derives an owned config-store stage view from this context.
+    ///
+    /// 从当前上下文派生一个拥有所有权的配置存储阶段视图，不改变来源上下文。
+    pub(super) fn for_config_store(&self) -> Self {
+        self.for_stage(ProviderStage::config_store())
+    }
+
+    /// Derives an owned secret-store stage view from this context.
+    ///
+    /// 从当前上下文派生一个拥有所有权的密钥存储阶段视图，不改变来源上下文。
+    pub(super) fn for_secret_store(&self) -> Self {
+        self.for_stage(ProviderStage::secret_store())
+    }
+
+    /// Derives an owned stage view while preserving the source context identity.
+    ///
+    /// 在保留来源上下文身份的同时，派生一个拥有所有权的阶段视图。
+    fn for_stage(&self, stage: ProviderStage) -> Self {
+        Self {
+            stage,
+            extra: self.extra.clone(),
+        }
+    }
+}
+
 impl<E> ProviderContext<E> {
-    /// Derives this context at the lifecycle-event stage.
+    /// Consumes this context into the lifecycle-event stage.
     ///
-    /// 将当前上下文派生到生命周期事件阶段。
-    pub(super) fn at_lifecycle_emit(self) -> Self {
-        self.at_stage(ProviderStage::lifecycle_emit())
+    /// 消费当前上下文，并将其转换为生命周期事件阶段。
+    pub(super) fn into_lifecycle_emit(self) -> Self {
+        self.into_stage(ProviderStage::lifecycle_emit())
     }
 
-    /// Derives this context at the connection stage.
+    /// Consumes this context into the connection stage.
     ///
-    /// 将当前上下文派生到连接阶段。
-    pub(super) fn at_connection(self) -> Self {
-        self.at_stage(ProviderStage::connection())
+    /// 消费当前上下文，并将其转换为连接阶段。
+    pub(super) fn into_connection(self) -> Self {
+        self.into_stage(ProviderStage::connection())
     }
 
-    /// Derives this context at the config-store stage.
+    /// Consumes this context into the config-store stage.
     ///
-    /// 将当前上下文派生到配置存储阶段。
-    pub(super) fn at_config_store(self) -> Self {
-        self.at_stage(ProviderStage::config_store())
+    /// 消费当前上下文，并将其转换为配置存储阶段。
+    pub(super) fn into_config_store(self) -> Self {
+        self.into_stage(ProviderStage::config_store())
     }
 
-    /// Derives this context at the secret-store stage.
+    /// Consumes this context into the secret-store stage.
     ///
-    /// 将当前上下文派生到密钥存储阶段。
-    pub(super) fn at_secret_store(self) -> Self {
-        self.at_stage(ProviderStage::secret_store())
+    /// 消费当前上下文，并将其转换为密钥存储阶段。
+    pub(super) fn into_secret_store(self) -> Self {
+        self.into_stage(ProviderStage::secret_store())
     }
 
     /// Projects this context into an error attribution snapshot.
@@ -79,10 +119,10 @@ impl<E> ProviderContext<E> {
         Self { stage, extra }
     }
 
-    /// Reuses the current context identity at another execution stage.
+    /// Reuses this context identity at another execution stage.
     ///
     /// 在另一个执行阶段复用当前上下文身份。
-    fn at_stage(self, stage: ProviderStage) -> Self {
+    fn into_stage(self, stage: ProviderStage) -> Self {
         Self {
             stage,
             extra: self.extra,

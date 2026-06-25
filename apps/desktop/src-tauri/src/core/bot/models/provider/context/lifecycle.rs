@@ -32,32 +32,32 @@ impl<'a> ProviderLifecycleContext<'a> {
         Self::new(run_id, trigger)
     }
 
-    /// Derives this lifecycle context at the lifecycle-event stage.
+    /// Consumes this lifecycle context into the lifecycle-event stage.
     ///
-    /// 将当前生命周期上下文派生到生命周期事件阶段。
-    pub(in crate::core::bot) fn at_lifecycle_emit(self) -> Self {
-        Self(self.0.at_lifecycle_emit())
+    /// 消费当前生命周期上下文，并将其转换为生命周期事件阶段。
+    pub(in crate::core::bot) fn into_lifecycle_emit(self) -> Self {
+        Self(self.0.into_lifecycle_emit())
     }
 
-    /// Derives this lifecycle context at the connection stage.
+    /// Consumes this lifecycle context into the connection stage.
     ///
-    /// 将当前生命周期上下文派生到连接阶段。
-    pub(in crate::core::bot) fn at_connection(self) -> Self {
-        Self(self.0.at_connection())
+    /// 消费当前生命周期上下文，并将其转换为连接阶段。
+    pub(in crate::core::bot) fn into_connection(self) -> Self {
+        Self(self.0.into_connection())
     }
 
-    /// Derives this lifecycle context at the config-store stage.
+    /// Consumes this lifecycle context into the config-store stage.
     ///
-    /// 将当前生命周期上下文派生到配置存储阶段。
-    pub(in crate::core::bot) fn at_config_store(self) -> Self {
-        Self(self.0.at_config_store())
+    /// 消费当前生命周期上下文，并将其转换为配置存储阶段。
+    pub(in crate::core::bot) fn into_config_store(self) -> Self {
+        Self(self.0.into_config_store())
     }
 
-    /// Derives this lifecycle context at the secret-store stage.
+    /// Consumes this lifecycle context into the secret-store stage.
     ///
-    /// 将当前生命周期上下文派生到密钥存储阶段。
-    pub(in crate::core::bot) fn at_secret_store(self) -> Self {
-        Self(self.0.at_secret_store())
+    /// 消费当前生命周期上下文，并将其转换为密钥存储阶段。
+    pub(in crate::core::bot) fn into_secret_store(self) -> Self {
+        Self(self.0.into_secret_store())
     }
 
     /// Creates an execution context for checking one provider in this lifecycle run.

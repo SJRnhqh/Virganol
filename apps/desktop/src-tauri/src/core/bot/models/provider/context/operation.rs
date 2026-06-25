@@ -3,6 +3,7 @@
 /// Interactive management operation carried by the interactive management context.
 ///
 /// 交互式管理上下文携带的交互式 Provider 操作意图。
+#[derive(Clone)]
 pub(super) enum ProviderManagerOperation {
     /// Connect a provider and persist its configuration after a successful probe.
     ///
@@ -44,6 +45,7 @@ impl ProviderManagerOperation {
 /// Provider-scoped execution operation carried by the execution context.
 ///
 /// 执行上下文携带的单 Provider 执行操作意图。
+#[derive(Clone)]
 pub(super) enum ProviderExecutionOperation {
     /// Interactive management operation.
     ///

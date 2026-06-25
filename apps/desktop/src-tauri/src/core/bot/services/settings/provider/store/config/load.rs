@@ -4,8 +4,8 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::super::{
-    ProviderCheckSnapshot, ProviderError, ProviderId, ProviderLifecycleContext,
-    ProviderManagerContext, ProviderRecord, SPIRIT_PROVIDERS_KEY,
+    ProviderCheckSnapshot, ProviderError, ProviderExecutionContext, ProviderId,
+    ProviderLifecycleContext, ProviderRecord, SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::load_settings;
 
@@ -59,7 +59,7 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_check_sn
 /// 读取单个 provider 的配置，返回拥有所有权的只读快照。
 pub(in crate::core::bot::services::settings::provider) fn load_provider_record(
     app: &AppHandle,
-    _ctx: &ProviderManagerContext,
+    _ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {
     let mut providers = load_all_providers(app, Some(provider_id))?;
