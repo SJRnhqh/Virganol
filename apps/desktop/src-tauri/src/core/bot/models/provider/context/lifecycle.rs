@@ -5,9 +5,9 @@ use super::{
     ProviderStage,
 };
 
-/// Link-specific metadata for the lifecycle flow.
+/// Lifecycle business context fields.
 ///
-/// 生命周期链路携带的可靠性元信息。
+/// 生命周期业务上下文字段。
 struct LifecycleExtra<'a> {
     /// Stable correlation id for this lifecycle run.
     ///
@@ -19,15 +19,15 @@ struct LifecycleExtra<'a> {
     trigger: &'a ProviderCheckTrigger,
 }
 
-/// Provider lifecycle reliability context.
+/// Provider lifecycle domain business context.
 ///
-/// Provider 生命周期链路的可靠性上下文。
+/// Provider 领域生命周期业务上下文。
 pub(in crate::core::bot) struct ProviderLifecycleContext<'a>(ProviderContext<LifecycleExtra<'a>>);
 
 impl<'a> ProviderLifecycleContext<'a> {
-    /// Starts a provider lifecycle run context.
+    /// Starts a lifecycle business context.
     ///
-    /// 启动一次 Provider 生命周期运行的上下文。
+    /// 启动生命周期业务上下文。
     pub(in crate::core::bot) fn start(run_id: &'a str, trigger: &'a ProviderCheckTrigger) -> Self {
         Self::new(run_id, trigger)
     }
@@ -60,9 +60,9 @@ impl<'a> ProviderLifecycleContext<'a> {
         Self(self.0.at_secret_store())
     }
 
-    /// Creates shared execution context for checking one provider in this lifecycle run.
+    /// Creates an execution context for checking one provider in this lifecycle run.
     ///
-    /// 基于当前生命周期运行创建单个 Provider 检查对应的共享执行上下文。
+    /// 基于当前生命周期运行创建单个 Provider 检查对应的执行上下文。
     pub(in crate::core::bot) fn execution_context_for(
         &self,
         provider_id: ProviderId,
@@ -76,7 +76,7 @@ impl<'a> ProviderLifecycleContext<'a> {
 
     /// Projects this lifecycle context into an error attribution snapshot.
     ///
-    /// 将当前生命周期执行上下文投影为错误归因快照。
+    /// 将当前生命周期上下文投影为错误归因快照。
     pub(in crate::core::bot) fn error_context(&self) -> ProviderErrorContext {
         self.0.error_context()
     }
@@ -95,9 +95,9 @@ impl<'a> ProviderLifecycleContext<'a> {
         self.0.extra().trigger
     }
 
-    /// Creates context for one provider lifecycle run.
+    /// Creates a lifecycle business context.
     ///
-    /// 为一次 Provider 生命周期运行创建上下文。
+    /// 创建生命周期业务上下文。
     fn new(run_id: &'a str, trigger: &'a ProviderCheckTrigger) -> Self {
         Self(ProviderContext::new(
             ProviderStage::lifecycle_emit(),

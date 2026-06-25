@@ -1,17 +1,17 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/base.rs
 use super::{ProviderErrorContext, ProviderStage};
 
-/// Provider-domain reliability context.
+/// Provider domain base context.
 ///
-/// Provider 领域可靠性上下文，用领域语言标记一次 Provider 操作的执行处境。
+/// Provider 领域基础上下文。
 pub(super) struct ProviderContext<E = ()> {
-    /// Provider-domain business execution stage.
+    /// Provider domain business execution stage.
     ///
-    /// Provider 领域业务执行阶段，代表上下文当前所在的层级位置语义。
+    /// Provider 领域业务执行阶段。
     stage: ProviderStage,
-    /// Module-specific domain business context fields.
+    /// Domain business context fields.
     ///
-    /// 具体模块领域业务上下文的各自字段。
+    /// 领域业务上下文字段。
     extra: E,
 }
 
@@ -46,33 +46,33 @@ impl<E> ProviderContext<E> {
 
     /// Projects this context into an error attribution snapshot.
     ///
-    /// 将当前执行上下文投影为错误归因快照。
+    /// 将当前上下文投影为错误归因快照。
     pub(super) fn error_context(&self) -> ProviderErrorContext {
         ProviderErrorContext::from_parts(None, self.stage)
     }
 
-    /// Returns the current Provider-domain stage.
+    /// Returns the current Provider domain stage.
     ///
     /// 返回当前 Provider 领域阶段。
     pub(super) fn stage(&self) -> ProviderStage {
         self.stage
     }
 
-    /// Returns the link-specific context metadata.
+    /// Returns the domain business context fields.
     ///
-    /// 返回具体链路的上下文元信息。
+    /// 返回领域业务上下文字段。
     pub(super) fn extra(&self) -> &E {
         &self.extra
     }
 
-    /// Consumes this context and returns the link-specific metadata.
+    /// Consumes this context and returns the domain business context fields.
     ///
-    /// 消费当前上下文并返回具体链路的上下文元信息。
+    /// 消费当前上下文并返回领域业务上下文字段。
     pub(super) fn into_extra(self) -> E {
         self.extra
     }
 
-    /// Creates a Provider-domain base context at the given execution stage.
+    /// Creates a Provider domain base context at the given execution stage.
     ///
     /// 使用指定执行阶段创建 Provider 领域基础上下文。
     pub(super) fn new(stage: ProviderStage, extra: E) -> Self {

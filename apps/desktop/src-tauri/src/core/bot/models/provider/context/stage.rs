@@ -1,8 +1,8 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/stage.rs
 
-/// Provider-domain stage carried by reliability context.
+/// Provider domain business execution stage.
 ///
-/// Provider 领域可靠性上下文携带的阶段。
+/// Provider 领域业务执行阶段。
 #[derive(Debug, Clone, Copy)]
 pub(super) enum ProviderStage {
     /// Provider manager orchestration.

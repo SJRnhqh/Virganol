@@ -9,11 +9,11 @@ use super::ProviderStage;
 /// Provider 错误归因上下文快照。
 #[derive(Debug)]
 pub(in crate::core::bot) struct ProviderErrorContext {
-    /// Provider targeted by the failing execution, when attributable.
+    /// Provider targeted by the failure, when attributable.
     ///
-    /// 当失败执行可归属到单个 Provider 时携带对应 Provider ID。
+    /// 当失败可归属到单个 Provider 时携带对应 Provider ID。
     provider_id: Option<ProviderId>,
-    /// Provider-domain execution stage where the failure was observed.
+    /// Provider domain execution stage where the failure was observed.
     ///
     /// 观察到失败时所在的 Provider 领域执行阶段。
     stage: ProviderStage,
@@ -37,18 +37,18 @@ impl ProviderErrorContext {
         }
     }
 
-    /// Creates error context from provider attribution and execution stage.
+    /// Creates an error context snapshot from provider attribution and stage.
     ///
-    /// 基于 Provider 归因与执行阶段创建错误上下文。
+    /// 基于 Provider 归因与执行阶段创建错误上下文快照。
     pub(super) fn from_parts(provider_id: Option<ProviderId>, stage: ProviderStage) -> Self {
         Self { provider_id, stage }
     }
 }
 
 impl fmt::Display for ProviderErrorContext {
-    /// Formats the error context for internal error messages.
+    /// Formats this error context snapshot for internal error messages.
     ///
-    /// 将错误上下文格式化为内部错误消息。
+    /// 将此错误上下文快照格式化为内部错误消息。
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.provider_id {
             Some(provider_id) => write!(f, "provider {provider_id} at {}", self.stage.as_phrase()),

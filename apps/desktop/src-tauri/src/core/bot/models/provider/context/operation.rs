@@ -1,8 +1,8 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/operation.rs
 
-/// Interactive provider manager operation carried by manager context.
+/// Interactive management operation carried by the interactive management context.
 ///
-/// manager 上下文携带的交互式 Provider 操作意图。
+/// 交互式管理上下文携带的交互式 Provider 操作意图。
 pub(super) enum ProviderManagerOperation {
     /// Connect a provider and persist its configuration after a successful probe.
     ///
@@ -19,39 +19,39 @@ pub(super) enum ProviderManagerOperation {
 }
 
 impl ProviderManagerOperation {
-    /// Creates a manager operation for connecting one provider.
+    /// Creates an interactive management operation for connecting one provider.
     ///
-    /// 创建连接单个 Provider 的 manager 操作意图。
+    /// 创建连接单个 Provider 的交互式管理操作。
     pub(super) fn connect() -> Self {
         Self::Connect
     }
 
-    /// Creates a manager operation for resetting one provider.
+    /// Creates an interactive management operation for resetting one provider.
     ///
-    /// 创建重置单个 Provider 的 manager 操作意图。
+    /// 创建重置单个 Provider 的交互式管理操作。
     pub(super) fn reset() -> Self {
         Self::Reset
     }
 
-    /// Creates a manager operation for updating enabled models.
+    /// Creates an interactive management operation for updating enabled models.
     ///
-    /// 创建更新启用模型列表的 manager 操作意图。
+    /// 创建更新启用模型列表的交互式管理操作。
     pub(super) fn update_models() -> Self {
         Self::UpdateModels
     }
 }
 
-/// Provider-scoped execution operation carried by shared execution context.
+/// Provider-scoped execution operation carried by the execution context.
 ///
-/// 共享执行上下文携带的单 Provider 执行操作意图。
+/// 执行上下文携带的单 Provider 执行操作意图。
 pub(super) enum ProviderExecutionOperation {
-    /// Shared execution entered from an interactive manager operation.
+    /// Interactive management operation.
     ///
-    /// 从交互式 manager 操作进入共享执行链路。
+    /// 交互式管理操作。
     Manager(ProviderManagerOperation),
-    /// Shared execution entered from the provider lifecycle check flow.
+    /// Provider lifecycle health check.
     ///
-    /// 从 Provider 生命周期检查链路进入共享执行链路。
+    /// Provider 生命周期健康检查。
     LifecycleCheck,
 }
 
@@ -65,9 +65,9 @@ impl ProviderExecutionOperation {
 }
 
 impl From<ProviderManagerOperation> for ProviderExecutionOperation {
-    /// Wraps a manager operation as a shared execution operation.
+    /// Wraps an interactive management operation as an execution operation.
     ///
-    /// 将 manager 操作包装为共享执行操作。
+    /// 将交互式管理操作包装为执行操作。
     fn from(operation: ProviderManagerOperation) -> Self {
         Self::Manager(operation)
     }
