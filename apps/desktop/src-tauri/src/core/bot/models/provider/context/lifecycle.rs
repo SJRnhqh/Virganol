@@ -66,14 +66,12 @@ impl<'a> ProviderLifecycleContext<'a> {
     pub(in crate::core::bot) fn execution_context_for(
         &self,
         provider_id: ProviderId,
-    ) -> Option<ProviderExecutionContext> {
-        let stage = self.0.stage().as_execution_stage()?;
-
-        Some(ProviderExecutionContext::from_operation(
-            stage,
+    ) -> ProviderExecutionContext {
+        ProviderExecutionContext::from_operation(
+            self.0.stage(),
             provider_id,
             ProviderExecutionOperation::lifecycle_check(),
-        ))
+        )
     }
 
     /// Projects this lifecycle context into an error attribution snapshot.

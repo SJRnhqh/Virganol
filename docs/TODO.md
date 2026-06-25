@@ -23,6 +23,9 @@
 
 ## Completed
 
+- [x] Provider stage model flattened — `ProviderExecutionStage` removed; `Connection`, `ConfigStore`, and `SecretStore` are now direct `ProviderStage` variants, eliminating the nested `Execution(ProviderExecutionStage)` representation and simplifying stage-to-context mapping.
+- [x] Context conversion `Option` eliminated — `execution_context_for()` and `into_execution_context()` now return their target context directly instead of `Option<…>`, since `from_operation()` already accepts any `ProviderStage` value and stage validity is a caller-level contract.
+- [x] Context field semantics clarified — `ProviderContext.stage` renamed to "business execution stage" with positioning semantics; `extra` renamed to "module-specific domain business context fields".
 - [x] Provider execution context scaffold refined — `ProviderExecutionContext` now models provider-scoped shared execution handoff from lifecycle and manager contexts, keeps execution stage classification private to the context module, and inherits the current stage before projecting provider attribution.
 - [x] Provider context base responsibility narrowed — `ProviderContext<T>` now keeps shared stage/extra state private, exposes narrow construction/access/projection methods, and leaves provider attribution and operation intent to business-specific context extras.
 - [x] Provider context operation and stage constructors aligned — manager operations and Provider stages now use named constructors; execution operation typing is scaffolded for future shared provider-scoped context handoff while retaining the context-module self re-export.
