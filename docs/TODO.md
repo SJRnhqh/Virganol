@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Provider context architecture design — keep the lifecycle runner ctx handoff intentionally narrow for now, then define how Provider-domain business contexts sit on top of the generic `ProviderContext` base with clear responsibility seams, delegation/conversion contracts, and shared provider-scoped attribution.
+- [ ] Provider subject attribution integration — upgrade execution/error context attribution from raw optional provider id semantics toward typed Provider-domain subjects, then apply it to collection-level config loading paths such as `load_all_providers`.
 
 ## Planned
 
@@ -23,6 +23,7 @@
 
 ## Completed
 
+- [x] Provider common element/guard structure seeded — moved `ProviderId` under `common::element`, moved runtime `ProviderState` under `common::guard`, and introduced a private minimal `ProviderSubject` with single-provider and configured-provider collection variants for the next typed attribution step.
 - [x] Provider context stage transition API split — `ProviderContext` now separates consuming stage transitions (`into_*`) from owned stage-view derivation (`for_*`); `ProviderExecutionContext` exposes provider-scoped `for_*` views for reusable execution attribution while manager/lifecycle contexts keep consuming `into_*` transitions; connect, reset, update-models, and lifecycle flow call sites migrated away from `at_*`; provider-scoped connection/config store entrypoints now receive `ProviderExecutionContext` where the current branch scope already needs execution attribution.
 - [x] Provider stage model flattened — `ProviderExecutionStage` removed; `Connection`, `ConfigStore`, and `SecretStore` are now direct `ProviderStage` variants, eliminating the nested `Execution(ProviderExecutionStage)` representation and simplifying stage-to-context mapping.
 - [x] Context conversion `Option` eliminated — `execution_context_for()` and `into_execution_context()` now return their target context directly instead of `Option<…>`, since `from_operation()` already accepts any `ProviderStage` value and stage validity is a caller-level contract.
