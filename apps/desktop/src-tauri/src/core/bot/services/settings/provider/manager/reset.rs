@@ -26,9 +26,13 @@ pub(crate) fn reset_provider_config(
         Err(e) => return ResetProviderResponse::failure(ProviderAppError::from(&e)),
     };
 
-    if let Err(e) = remove_provider_key(provider_id) {
+    let ctx = ctx.into_secret_store();
+
+    if let Err(e) = remove_provider_key(&ctx, provider_id) {
         if let Some(record) = previous {
-            if let Err(se) = save_provider(app, provider_state, provider_id, record) {
+            let ctx = ctx.into_config_store();
+
+            if let Err(se) = save_provider(app, provider_state, &ctx, provider_id, record) {
                 return ResetProviderResponse::failure(ProviderAppError::with_suppressed_errors(
                     &e,
                     vec![ProviderAppError::from(&se)],

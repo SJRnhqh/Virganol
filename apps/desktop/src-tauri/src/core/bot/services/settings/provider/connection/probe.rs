@@ -7,14 +7,15 @@ use super::health_check;
 ///
 /// 探测单个 Provider 的连接状态，自动回退凭据（环境变量 → keyring）。
 pub(in crate::core::bot::services::settings::provider) async fn probe_provider_connection(
-    _ctx: &ProviderExecutionContext,
+    ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
     normalized_url: &str,
     normalized_key: &str,
 ) -> HealthCheckResult {
-    let fallback_key = normalized_key
-        .is_empty()
-        .then(|| resolve_provider_key(provider_id));
+    let fallback_key = normalized_key.is_empty().then(|| {
+        let ctx = ctx.for_secret_store();
+        resolve_provider_key(&ctx, provider_id)
+    });
 
     health_check(
         provider_id,

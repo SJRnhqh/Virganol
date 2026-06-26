@@ -2,7 +2,8 @@
 use tauri::AppHandle;
 
 use super::super::super::super::super::super::{
-    ProviderError, ProviderId, ProviderRecord, ProviderState, SPIRIT_PROVIDERS_KEY,
+    ProviderError, ProviderExecutionContext, ProviderId, ProviderRecord, ProviderState,
+    SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::save_settings;
 use super::load_all_providers;
@@ -13,6 +14,7 @@ use super::load_all_providers;
 pub(in crate::core::bot::services::settings::provider) fn save_provider(
     app: &AppHandle,
     provider_state: &ProviderState,
+    _ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
     record: ProviderRecord,
 ) -> Result<(), ProviderError> {

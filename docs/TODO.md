@@ -23,6 +23,11 @@
 
 ## Completed
 
+- [x] Store layer ctx parameter plumbing — `save_provider`, `remove_provider_key`, `save_provider_key`, `load_provider_key`, `load_provider_env`, `resolve_provider_key`, `update_models` all wired with `&ProviderExecutionContext`; resolve passes ctx through to env/keyring sub-functions
+- [x] Connection layer ctx wiring — `probe_provider_connection` and `health_check_with_resolved_key` use `for_secret_store()` small-scope fork for key resolution
+- [x] Transaction ctx ownership pattern — `ProviderKeyTransaction` owns `ProviderExecutionContext`, `begin()` takes owned ctx, Drop uses `&self.ctx` for `save_provider_key`/`remove_provider_key` calls
+- [x] Manager chain refinements — reset `into_config_store()` scoped inside rollback `if let Some(record)` block, connect `for_secret_store()` block scope for transaction fork
+- [x] Re-exports supplemented — `ProviderKeySource`, `ProviderResolvedKey` added to `core::bot`
 - [x] Provider execution subject attribution bridge — exposed `ProviderSubject` within the Provider domain, upgraded execution-context extra attribution from raw `ProviderId` to `ProviderSubject`, and added optional provider-id projection so execution error contexts remain compatible with the current `ProviderErrorContext` shape.
 - [x] Provider common element/guard structure seeded — moved `ProviderId` under `common::element`, moved runtime `ProviderState` under `common::guard`, and introduced a private minimal `ProviderSubject` with single-provider and configured-provider collection variants for the next typed attribution step.
 - [x] Provider context stage transition API split — `ProviderContext` now separates consuming stage transitions (`into_*`) from owned stage-view derivation (`for_*`); `ProviderExecutionContext` exposes provider-scoped `for_*` views for reusable execution attribution while manager/lifecycle contexts keep consuming `into_*` transitions; connect, reset, update-models, and lifecycle flow call sites migrated away from `at_*`; provider-scoped connection/config store entrypoints now receive `ProviderExecutionContext` where the current branch scope already needs execution attribution.

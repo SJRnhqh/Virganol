@@ -62,16 +62,18 @@ pub(crate) async fn connect_and_save(
 
     let enabled_models = record.enabled_models().to_vec();
 
-    let ctx = ctx.for_secret_store();
+    let key_transaction = {
+        let ctx = ctx.for_secret_store();
 
-    let key_transaction = match ProviderKeyTransaction::begin(&ctx, provider_id, normalized_key) {
-        Ok(transaction) => transaction,
-        Err(e) => {
-            return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+        match ProviderKeyTransaction::begin(ctx, provider_id, normalized_key) {
+            Ok(transaction) => transaction,
+            Err(e) => {
+                return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+            }
         }
     };
 
-    if let Err(e) = save_provider(app, provider_state, provider_id, record) {
+    if let Err(e) = save_provider(app, provider_state, &ctx, provider_id, record) {
         return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
     }
 
