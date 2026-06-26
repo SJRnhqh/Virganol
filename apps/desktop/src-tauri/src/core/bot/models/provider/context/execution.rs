@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/execution.rs
-use super::super::{ProviderId, ProviderSubject};
+use super::super::ProviderSubject;
 use super::{ProviderContext, ProviderErrorContext, ProviderExecutionOperation, ProviderStage};
 
 /// Execution business context fields.
@@ -23,27 +23,6 @@ struct ExecutionExtra {
 pub(in crate::core::bot) struct ProviderExecutionContext(ProviderContext<ExecutionExtra>);
 
 impl ProviderExecutionContext {
-    /// Derives an owned connection stage view from this execution context.
-    ///
-    /// 从当前执行上下文派生一个拥有所有权的连接阶段视图，不改变来源上下文。
-    pub(in crate::core::bot) fn for_connection(&self) -> Self {
-        Self(self.0.for_connection())
-    }
-
-    /// Derives an owned config-store stage view from this execution context.
-    ///
-    /// 从当前执行上下文派生一个拥有所有权的配置存储阶段视图，不改变来源上下文。
-    pub(in crate::core::bot) fn for_config_store(&self) -> Self {
-        Self(self.0.for_config_store())
-    }
-
-    /// Derives an owned secret-store stage view from this execution context.
-    ///
-    /// 从当前执行上下文派生一个拥有所有权的密钥存储阶段视图，不改变来源上下文。
-    pub(in crate::core::bot) fn for_secret_store(&self) -> Self {
-        Self(self.0.for_secret_store())
-    }
-
     /// Consumes this execution context into the connection stage.
     ///
     /// 消费当前执行上下文，并将其转换为连接阶段。
@@ -65,6 +44,27 @@ impl ProviderExecutionContext {
         Self(self.0.into_secret_store())
     }
 
+    /// Derives an owned connection stage view from this execution context.
+    ///
+    /// 从当前执行上下文派生一个拥有所有权的连接阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_connection(&self) -> Self {
+        Self(self.0.for_connection())
+    }
+
+    /// Derives an owned config-store stage view from this execution context.
+    ///
+    /// 从当前执行上下文派生一个拥有所有权的配置存储阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_config_store(&self) -> Self {
+        Self(self.0.for_config_store())
+    }
+
+    /// Derives an owned secret-store stage view from this execution context.
+    ///
+    /// 从当前执行上下文派生一个拥有所有权的密钥存储阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_secret_store(&self) -> Self {
+        Self(self.0.for_secret_store())
+    }
+
     /// Projects this execution context into an error attribution snapshot.
     ///
     /// 将当前执行上下文投影为错误归因快照。
@@ -77,15 +77,15 @@ impl ProviderExecutionContext {
         }
     }
 
-    /// Creates an execution context from a provider execution operation.
+    /// Creates an execution context from its constituent parts.
     ///
-    /// 基于 Provider 执行操作创建执行上下文。
-    pub(super) fn from_operation(
+    /// 基于组成部分创建执行上下文。
+    pub(super) fn from_parts(
         stage: ProviderStage,
-        provider_id: ProviderId,
+        subject: ProviderSubject,
         operation: ProviderExecutionOperation,
     ) -> Self {
-        Self::new(stage, provider_id, operation)
+        Self::new(stage, subject, operation)
     }
 
     /// Centralizes execution context construction.
@@ -93,15 +93,12 @@ impl ProviderExecutionContext {
     /// 集中创建执行上下文。
     fn new(
         stage: ProviderStage,
-        provider_id: ProviderId,
+        subject: ProviderSubject,
         operation: ProviderExecutionOperation,
     ) -> Self {
         Self(ProviderContext::new(
             stage,
-            ExecutionExtra {
-                subject: provider_id.into(),
-                operation,
-            },
+            ExecutionExtra { subject, operation },
         ))
     }
 }

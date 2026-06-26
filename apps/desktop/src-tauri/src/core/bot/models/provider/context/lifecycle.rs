@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/lifecycle.rs
-use super::super::{lifecycle::ProviderCheckTrigger, ProviderId};
+use super::super::{ProviderCheckTrigger, ProviderId, ProviderSubject};
 use super::{
     ProviderContext, ProviderErrorContext, ProviderExecutionContext, ProviderExecutionOperation,
     ProviderStage,
@@ -8,6 +8,7 @@ use super::{
 /// Lifecycle business context fields.
 ///
 /// 生命周期业务上下文字段。
+#[derive(Clone)]
 struct LifecycleExtra<'a> {
     /// Stable correlation id for this lifecycle run.
     ///
@@ -60,6 +61,24 @@ impl<'a> ProviderLifecycleContext<'a> {
         Self(self.0.into_secret_store())
     }
 
+    /// Derives an owned config-store stage view from this lifecycle context.
+    ///
+    /// 从当前生命周期上下文派生一个拥有所有权的配置存储阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_config_store(&self) -> Self {
+        Self(self.0.for_config_store())
+    }
+
+    /// Converts this lifecycle context into an execution context.
+    ///
+    /// 将当前生命周期上下文转换为执行上下文。
+    pub(in crate::core::bot) fn into_execution_context(self) -> ProviderExecutionContext {
+        ProviderExecutionContext::from_parts(
+            self.0.stage(),
+            ProviderSubject::configured_providers(),
+            ProviderExecutionOperation::lifecycle_check(),
+        )
+    }
+
     /// Creates an execution context for checking one provider in this lifecycle run.
     ///
     /// 基于当前生命周期运行创建单个 Provider 检查对应的执行上下文。
@@ -67,9 +86,9 @@ impl<'a> ProviderLifecycleContext<'a> {
         &self,
         provider_id: ProviderId,
     ) -> ProviderExecutionContext {
-        ProviderExecutionContext::from_operation(
+        ProviderExecutionContext::from_parts(
             self.0.stage(),
-            provider_id,
+            provider_id.into(),
             ProviderExecutionOperation::lifecycle_check(),
         )
     }

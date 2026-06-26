@@ -4,8 +4,8 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::super::{
-    ProviderCheckSnapshot, ProviderError, ProviderExecutionContext, ProviderId,
-    ProviderLifecycleContext, ProviderRecord, SPIRIT_PROVIDERS_KEY,
+    ProviderCheckSnapshot, ProviderError, ProviderExecutionContext, ProviderId, ProviderRecord,
+    SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::load_settings;
 
@@ -34,7 +34,7 @@ pub(super) fn load_all_providers(
 /// 从持久化配置中加载 Provider 检查快照。
 pub(in crate::core::bot::services::settings::provider) fn load_provider_check_snapshot(
     app: &AppHandle,
-    _ctx: &ProviderLifecycleContext,
+    _ctx: &ProviderExecutionContext,
 ) -> Result<ProviderCheckSnapshot, ProviderError> {
     let providers = load_all_providers(app, None)?;
     let total = providers.len();

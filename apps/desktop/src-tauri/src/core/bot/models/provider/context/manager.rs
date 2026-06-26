@@ -74,7 +74,11 @@ impl ProviderManagerContext {
         let stage = self.0.stage();
         let extra = self.0.into_extra();
 
-        ProviderExecutionContext::from_operation(stage, extra.provider_id, extra.operation.into())
+        ProviderExecutionContext::from_parts(
+            stage,
+            extra.provider_id.into(),
+            extra.operation.into(),
+        )
     }
 
     /// Projects this interactive management context into an error attribution snapshot.
