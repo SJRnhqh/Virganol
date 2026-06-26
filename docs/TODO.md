@@ -5,7 +5,8 @@
 
 ## Current
 
-- [ ] Provider collection subject attribution integration — apply typed Provider-domain subjects to collection-level config loading paths such as `load_all_providers`, then decide when `ProviderErrorContext` should carry full subject semantics instead of only optional provider-id projection.
+- [ ] Store error attribution integration — unwire `_ctx` prefix from store functions and project `ctx.error_context()` into `ProviderError` construction at each failure site; upgrade `CheckStatusEmit` to carry `ProviderErrorContext` instead of raw `provider_id`
+- [ ] Provider collection subject attribution — apply typed `ProviderSubject` to collection-level paths such as `load_all_providers`; decide when `ProviderErrorContext` should carry full subject semantics
 
 ## Planned
 
@@ -28,6 +29,9 @@
 - [x] Transaction ctx ownership pattern — `ProviderKeyTransaction` owns `ProviderExecutionContext`, `begin()` takes owned ctx, Drop uses `&self.ctx` for `save_provider_key`/`remove_provider_key` calls
 - [x] Manager chain refinements — reset `into_config_store()` scoped inside rollback `if let Some(record)` block, connect `for_secret_store()` block scope for transaction fork
 - [x] Subject-driven context switching — `ProviderExecutionContext::from_parts` widened from `ProviderId` to `ProviderSubject`; `ProviderSubject::configured_providers()` constructor added; lifecycle gains `for_config_store()` and `into_execution_context()`; manager and lifecycle callers unified on `provider_id.into()` / `configured_providers()`
+- [x] Lifecycle context switching unified — `into_execution_context` and `into_execution_context_for` merged into single `into_execution_context_with(subject)`; `execution_context_for(&self, id)` removed; lifecycle gains `for_connection`; `ProviderSubject` re-export chain completed to `core::bot`
+- [x] Lifecycle ctx propagation end-to-end — flow snapshot `for_config_store().into_execution_context_with(ConfiguredProviders)`; runner spawn `for_connection().into_execution_context_with(provider_id.into())`; finalize `for_config_store().into_execution_context_with(provider_id.into())`; `emit_check_status` ctx signature stubbed; ctx stays at `LifecycleEmit` throughout
+- [x] Context signatures normalized — `emit_check_status` ctx as 2nd param matching `emit_check_started/completed/failed`; `finalize_provider_check_result` / `persist_reconciled_enabled_models` receive `&ProviderLifecycleContext`
 - [x] Model layer normalization — base `impl<E>` before `impl<E: Clone>`, `into_stage`→`to_stage`; execution `into_*` before `for_*`; `from_operation`→`from_parts`; `LifecycleExtra` derives `Clone`
 - [x] Lifecycle ↔ execution boundary — flow.rs snapshot loading now forks via `for_config_store().into_execution_context()`; lifecycle ctx stays at `LifecycleEmit`; `load_provider_check_snapshot` signature switched to `&ProviderExecutionContext`; two dead `into_lifecycle_emit()` calls removed
 - [x] Re-exports supplemented — `ProviderKeySource`, `ProviderResolvedKey` added to `core::bot`

@@ -5,7 +5,7 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::AppState;
 use super::super::super::super::super::{
-    ProviderCheckTrigger, ProviderError, ProviderLifecycleContext,
+    ProviderCheckTrigger, ProviderError, ProviderLifecycleContext, ProviderSubject,
 };
 use super::super::load_provider_check_snapshot;
 use super::{
@@ -31,7 +31,9 @@ pub(crate) async fn check_providers_lifecycle(
     }
 
     let snapshot = match {
-        let ctx = ctx.for_config_store().into_execution_context();
+        let ctx = ctx
+            .for_config_store()
+            .into_execution_context_with(ProviderSubject::configured_providers());
         load_provider_check_snapshot(&app, &ctx)
     } {
         Ok(snapshot) => snapshot,

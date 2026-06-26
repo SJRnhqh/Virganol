@@ -4,7 +4,8 @@ use tauri::{AppHandle, Emitter};
 use super::super::super::super::super::{
     HealthCheckResult, ProviderAppError, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderCheckTrigger, ProviderError,
-    ProviderId, ProviderKeyMeta, ProviderLifecycleContext, ProviderRecord,
+    ProviderExecutionContext, ProviderId, ProviderKeyMeta, ProviderLifecycleContext,
+    ProviderRecord,
 };
 
 // Provider check lifecycle event names kept aligned with frontend PROVIDER_CHECK_EVENTS.
@@ -35,6 +36,7 @@ pub(super) fn emit_check_started(
 /// 推送单个 Provider 的 check status 事件。
 pub(super) fn emit_check_status(
     app: &AppHandle,
+    _ctx: &ProviderExecutionContext,
     run_id: &str,
     provider_id: ProviderId,
     config: ProviderRecord,

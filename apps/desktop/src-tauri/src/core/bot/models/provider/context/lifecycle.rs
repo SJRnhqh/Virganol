@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/lifecycle.rs
-use super::super::{ProviderCheckTrigger, ProviderId, ProviderSubject};
+use super::super::{ProviderCheckTrigger, ProviderSubject};
 use super::{
     ProviderContext, ProviderErrorContext, ProviderExecutionContext, ProviderExecutionOperation,
     ProviderStage,
@@ -61,6 +61,13 @@ impl<'a> ProviderLifecycleContext<'a> {
         Self(self.0.into_secret_store())
     }
 
+    /// Derives an owned connection stage view from this lifecycle context.
+    ///
+    /// 从当前生命周期上下文派生一个拥有所有权的连接阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_connection(&self) -> Self {
+        Self(self.0.for_connection())
+    }
+
     /// Derives an owned config-store stage view from this lifecycle context.
     ///
     /// 从当前生命周期上下文派生一个拥有所有权的配置存储阶段视图，不改变来源上下文。
@@ -68,27 +75,16 @@ impl<'a> ProviderLifecycleContext<'a> {
         Self(self.0.for_config_store())
     }
 
-    /// Converts this lifecycle context into an execution context.
+    /// Converts this lifecycle context into an execution context with a Provider-domain subject.
     ///
-    /// 将当前生命周期上下文转换为执行上下文。
-    pub(in crate::core::bot) fn into_execution_context(self) -> ProviderExecutionContext {
-        ProviderExecutionContext::from_parts(
-            self.0.stage(),
-            ProviderSubject::configured_providers(),
-            ProviderExecutionOperation::lifecycle_check(),
-        )
-    }
-
-    /// Creates an execution context for checking one provider in this lifecycle run.
-    ///
-    /// 基于当前生命周期运行创建单个 Provider 检查对应的执行上下文。
-    pub(in crate::core::bot) fn execution_context_for(
-        &self,
-        provider_id: ProviderId,
+    /// 将当前生命周期上下文转换为携带指定 Provider 领域主体的执行上下文。
+    pub(in crate::core::bot) fn into_execution_context_with(
+        self,
+        subject: ProviderSubject,
     ) -> ProviderExecutionContext {
         ProviderExecutionContext::from_parts(
             self.0.stage(),
-            provider_id.into(),
+            subject,
             ProviderExecutionOperation::lifecycle_check(),
         )
     }
