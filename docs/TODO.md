@@ -24,6 +24,7 @@
 
 ## Completed
 
+- [x] Common module structure review — ProviderSubject method ordering normalized to follow field order
 - [x] Store layer ctx parameter plumbing — `save_provider`, `remove_provider_key`, `save_provider_key`, `load_provider_key`, `load_provider_env`, `resolve_provider_key`, `update_models` all wired with `&ProviderExecutionContext`; resolve passes ctx through to env/keyring sub-functions
 - [x] Connection layer ctx wiring — `probe_provider_connection` and `health_check_with_resolved_key` use `for_secret_store()` small-scope fork for key resolution
 - [x] Transaction ctx ownership pattern — `ProviderKeyTransaction` owns `ProviderExecutionContext`, `begin()` takes owned ctx, Drop uses `&self.ctx` for `save_provider_key`/`remove_provider_key` calls
