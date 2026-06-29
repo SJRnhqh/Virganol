@@ -5,8 +5,7 @@
 
 ## Current
 
-- [ ] Store error attribution integration — project settings-owned common-store failures back into `ProviderError` at Provider config boundaries and upgrade `CheckStatusEmit` to carry `ProviderErrorContext` instead of raw `provider_id`; Provider config private errors now project `ctx.error_context()` through typed constructors
-- [ ] Settings storage error projection boundary — define how settings storage/process errors remain owned by the settings process layer and are projected back into `ProviderError` at Provider store boundaries, with Provider config load/save/update/remove as the first target
+- [ ] Store error attribution integration — wire explicit `ProviderError::config_store(ctx.error_context(), e)` projection at the 4 Provider config boundary sites (`load_all_providers` / `save_provider` / `remove_provider` / `update_models`) where `SettingsError` currently crosses back into Provider code; upgrade `CheckStatusEmit` from raw `provider_id` to `ProviderErrorContext`; remove legacy `ConfigStore*` variants superseded by the unified projection
 - [ ] Provider collection subject attribution — apply typed `ProviderSubject` to collection-level paths such as `load_all_providers`; decide when `ProviderErrorContext` should carry full subject semantics
 
 ## Planned
@@ -32,4 +31,5 @@
 - [x] Connection layer ctx wiring — `probe_provider_connection` / `health_check_with_resolved_key` use `for_secret_store()` small-scope fork
 - [x] Settings error system — `SettingsError` expanded from `StoreOpen` scaffold to full variants (open / path-resolution / serialize / temp-file / write / sync / atomic-replace); `SettingsStorageContext` carries `SettingsStage`, projects `SettingsErrorContext`; common load/save helpers switched from `ProviderError::ConfigStore*` to `SettingsError` typed constructors
 - [x] Provider config error context projection — `ConfigNotFound` / `JsonSerialize` / `JsonDeserialize` upgraded from raw `provider_id` to `ProviderErrorContext`, config CRUD failure sites project via `ctx.error_context()`
+- [x] Settings storage error projection boundary — `ProviderError::ConfigStore { context, source }` defined as unified projection variant; `config_store(ctx, source)` constructor in place; `details.rs` domain_scope_from inner-matches `*SettingsError` to preserve per-stage granularity; `code.rs` maps `ConfigStore` to `ConfigStoreFailed`
 - [x] Model layer normalization — stage order normalized (`LifecycleEmit` / `Connection` after `Manager`), `into_*` / `for_*` API split (no `at_*`), `Option` removed from context conversions, `impl<E>` before `impl<E: Clone>`, `into_stage`→`to_stage`, `from_operation`→`from_parts`, `LifecycleExtra: Clone`, `ProviderSubject` method order normalized; all emit payloads carry `ProviderErrorContext`; re-exports supplemented
