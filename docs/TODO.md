@@ -26,6 +26,7 @@
 ## Completed
 
 - [x] Provider config private error context projection — upgraded `ConfigNotFound`, `JsonSerialize`, and `JsonDeserialize` from direct provider-id fields to `ProviderErrorContext`, added typed constructors, and wired config load/save/update/remove failure sites to project `ctx.error_context()` while leaving settings common-store errors for process-owned projection work
+- [x] Settings internal error scaffold — introduced `SettingsError` under `models::process::settings::error` with an initial `StoreOpen { context, source }` variant for settings-owned store open failures, keeping Provider config-store projection as follow-up work
 - [x] Settings error context scaffold — introduced `SettingsErrorContext` as the settings-level error attribution snapshot, wired `SettingsStorageContext::error_context()` to project it, and re-exported the context through `core::bot` while leaving settings storage error ownership and Provider projection as follow-up work
 - [x] Settings storage context naming slice — introduced `models::process::settings::context` with `SettingsStorageContext`, re-exported it through `core::bot`, and switched common settings load/save store helpers plus Provider config store callers to derive settings storage context via `ProviderExecutionContext::for_settings_storage()`
 - [x] Common module structure review — ProviderSubject method ordering normalized to follow field order

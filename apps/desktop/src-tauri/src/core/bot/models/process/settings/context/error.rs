@@ -3,6 +3,7 @@
 /// Settings error attribution context snapshot.
 ///
 /// settings 错误归因上下文快照。
+#[derive(Debug)]
 pub(in crate::core::bot) struct SettingsErrorContext;
 
 impl SettingsErrorContext {
