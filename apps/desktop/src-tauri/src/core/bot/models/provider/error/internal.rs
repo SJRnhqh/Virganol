@@ -154,22 +154,22 @@ pub(in crate::core::bot) enum ProviderError {
     /// Requested provider has no persisted configuration record.
     ///
     /// 请求的 provider 没有对应的持久化配置记录。
-    #[error("provider configuration not found for {provider_id}")]
+    #[error("provider configuration not found for {context}")]
     ConfigNotFound {
-        /// Provider missing from persisted configuration.
+        /// Provider config-store error attribution context.
         ///
-        /// 持久化配置中缺失的 Provider。
-        provider_id: ProviderId,
+        /// Provider 配置存储错误归因上下文。
+        context: ProviderErrorContext,
     },
     /// Provider configuration failed to serialize into JSON.
     ///
     /// Provider 配置序列化为 JSON 失败。
-    #[error("provider configuration failed to serialize: {source}")]
+    #[error("provider configuration failed to serialize for {context}: {source}")]
     JsonSerialize {
-        /// Provider whose configuration failed to serialize.
+        /// Provider config-store error attribution context.
         ///
-        /// 配置序列化失败所属的 Provider。
-        provider_id: ProviderId,
+        /// Provider 配置存储错误归因上下文。
+        context: ProviderErrorContext,
         /// JSON serialization error.
         ///
         /// JSON 序列化错误。
@@ -179,12 +179,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// Provider configuration failed to deserialize from JSON.
     ///
     /// Provider 配置从 JSON 反序列化失败。
-    #[error("provider configuration failed to deserialize: {source}")]
+    #[error("provider configuration failed to deserialize for {context}: {source}")]
     JsonDeserialize {
-        /// Provider context when the corrupted record can be attributed to one provider.
+        /// Provider config-store error attribution context.
         ///
-        /// 当损坏记录可归属于单个 Provider 时携带的 Provider 上下文。
-        provider_id: Option<ProviderId>,
+        /// Provider 配置存储错误归因上下文。
+        context: ProviderErrorContext,
         /// JSON deserialization error.
         ///
         /// JSON 反序列化错误。
@@ -406,6 +406,33 @@ impl ProviderError {
         source: TauriError,
     ) -> Self {
         Self::CheckFailedEmit { context, source }
+    }
+
+    /// Creates a config-not-found error from projected context.
+    ///
+    /// 基于已投影上下文创建配置缺失错误。
+    pub(in crate::core::bot) fn config_not_found(context: ProviderErrorContext) -> Self {
+        Self::ConfigNotFound { context }
+    }
+
+    /// Creates a provider config serialization error from projected context.
+    ///
+    /// 基于已投影上下文创建 Provider 配置序列化错误。
+    pub(in crate::core::bot) fn json_serialize(
+        context: ProviderErrorContext,
+        source: JsonError,
+    ) -> Self {
+        Self::JsonSerialize { context, source }
+    }
+
+    /// Creates a provider config deserialization error from projected context.
+    ///
+    /// 基于已投影上下文创建 Provider 配置反序列化错误。
+    pub(in crate::core::bot) fn json_deserialize(
+        context: ProviderErrorContext,
+        source: JsonError,
+    ) -> Self {
+        Self::JsonDeserialize { context, source }
     }
 }
 

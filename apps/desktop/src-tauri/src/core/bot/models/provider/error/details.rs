@@ -46,10 +46,11 @@ impl ProviderErrorDetails {
             ProviderError::ManagerRequestPayloadAbsent { context }
             | ProviderError::CheckStartedEmit { context, .. }
             | ProviderError::CheckCompletedEmit { context, .. }
-            | ProviderError::CheckFailedEmit { context, .. } => context.provider_id(),
+            | ProviderError::CheckFailedEmit { context, .. }
+            | ProviderError::ConfigNotFound { context }
+            | ProviderError::JsonSerialize { context, .. }
+            | ProviderError::JsonDeserialize { context, .. } => context.provider_id(),
             ProviderError::CheckStatusEmit { provider_id, .. }
-            | ProviderError::ConfigNotFound { provider_id }
-            | ProviderError::JsonSerialize { provider_id, .. }
             | ProviderError::ConfigStoreSerialize { provider_id, .. }
             | ProviderError::ConfigStorePath { provider_id, .. }
             | ProviderError::ConfigStoreTempCreate { provider_id, .. }
@@ -64,8 +65,7 @@ impl ProviderErrorDetails {
             | ProviderError::HealthCheckNetwork { provider_id, .. }
             | ProviderError::HealthCheckHttp { provider_id }
             | ProviderError::HealthCheckResponseFormat { provider_id, .. } => Some(*provider_id),
-            ProviderError::JsonDeserialize { provider_id, .. }
-            | ProviderError::ConfigStoreOpen { provider_id, .. } => *provider_id,
+            ProviderError::ConfigStoreOpen { provider_id, .. } => *provider_id,
             _ => None,
         }
     }

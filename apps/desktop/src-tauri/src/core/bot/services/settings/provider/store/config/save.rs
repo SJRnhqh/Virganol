@@ -22,11 +22,8 @@ pub(in crate::core::bot::services::settings::provider) fn save_provider(
     let mut providers = load_all_providers(app, ctx, Some(provider_id))?;
     providers.insert(provider_id.to_string(), record);
 
-    let value =
-        serde_json::to_value(&providers).map_err(|source| ProviderError::JsonSerialize {
-            provider_id,
-            source,
-        })?;
+    let value = serde_json::to_value(&providers)
+        .map_err(|source| ProviderError::json_serialize(ctx.error_context(), source))?;
     {
         let ctx = ctx.for_settings_storage();
         save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value, provider_id)

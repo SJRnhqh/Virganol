@@ -25,11 +25,8 @@ pub(super) fn load_all_providers(
         return Ok(HashMap::new());
     };
 
-    let providers: HashMap<String, ProviderRecord> =
-        serde_json::from_value(value).map_err(|source| ProviderError::JsonDeserialize {
-            provider_id,
-            source,
-        })?;
+    let providers: HashMap<String, ProviderRecord> = serde_json::from_value(value)
+        .map_err(|source| ProviderError::json_deserialize(ctx.error_context(), source))?;
     Ok(providers)
 }
 
