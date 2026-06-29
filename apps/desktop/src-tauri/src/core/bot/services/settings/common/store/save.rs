@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use tauri::{AppHandle, Manager};
 
 use super::super::super::super::super::{
-    ProviderError, ProviderId, SettingsStorageContext, SETTINGS_FILE,
+    ProviderId, SettingsError, SettingsStorageContext, SETTINGS_FILE,
 };
 use super::open_store;
 
@@ -14,15 +14,12 @@ use super::open_store;
 /// 获取 store 文件路径和临时文件路径。
 fn get_store_paths(
     app: &AppHandle,
-    provider_id: ProviderId,
-) -> Result<(PathBuf, PathBuf), ProviderError> {
+    ctx: &SettingsStorageContext,
+) -> Result<(PathBuf, PathBuf), SettingsError> {
     let store_path = app
         .path()
         .app_data_dir()
-        .map_err(|source| ProviderError::ConfigStorePath {
-            provider_id,
-            source,
-        })?
+        .map_err(|source| SettingsError::store_path(ctx.error_context(), source))?
         .join(SETTINGS_FILE);
 
     let tmp_path = store_path.with_file_name(format!("{}.tmp", SETTINGS_FILE));
@@ -33,54 +30,40 @@ fn get_store_paths(
 ///
 /// 将 store 条目序列化为 JSON 字节。
 fn serialize_store_to_bytes(
+    ctx: &SettingsStorageContext,
     store: &tauri_plugin_store::Store<tauri::Wry>,
-    provider_id: ProviderId,
-) -> Result<Vec<u8>, ProviderError> {
+) -> Result<Vec<u8>, SettingsError> {
     let all_data: std::collections::HashMap<String, serde_json::Value> = store
         .entries()
         .iter()
         .map(|(k, v)| (k.clone(), v.clone()))
         .collect();
 
-    serde_json::to_vec_pretty(&all_data).map_err(|source| ProviderError::ConfigStoreSerialize {
-        provider_id,
-        source,
-    })
+    serde_json::to_vec_pretty(&all_data)
+        .map_err(|source| SettingsError::store_serialize(ctx.error_context(), source))
 }
 
 /// Performs atomic write using temp file + rename strategy.
 ///
 /// 使用临时文件 + rename 策略执行原子写入。
 fn atomic_write(
+    ctx: &SettingsStorageContext,
     store_path: &Path,
     tmp_path: &Path,
     data: &[u8],
-    provider_id: ProviderId,
-) -> Result<(), ProviderError> {
+) -> Result<(), SettingsError> {
     {
-        let mut file =
-            File::create(tmp_path).map_err(|source| ProviderError::ConfigStoreTempCreate {
-                provider_id,
-                source,
-            })?;
+        let mut file = File::create(tmp_path)
+            .map_err(|source| SettingsError::store_temp_create(ctx.error_context(), source))?;
         file.write_all(data)
-            .map_err(|source| ProviderError::ConfigStoreWrite {
-                provider_id,
-                source,
-            })?;
+            .map_err(|source| SettingsError::store_write(ctx.error_context(), source))?;
         file.sync_all()
-            .map_err(|source| ProviderError::ConfigStoreSync {
-                provider_id,
-                source,
-            })?;
+            .map_err(|source| SettingsError::store_sync(ctx.error_context(), source))?;
     }
 
     if let Err(source) = fs::rename(tmp_path, store_path) {
         let _ = fs::remove_file(tmp_path);
-        return Err(ProviderError::ConfigStoreReplace {
-            provider_id,
-            source,
-        });
+        return Err(SettingsError::store_replace(ctx.error_context(), source));
     }
 
     if let Some(parent) = store_path.parent() {
@@ -101,15 +84,15 @@ pub(in crate::core::bot::services::settings) fn save_settings(
     key: &str,
     value: serde_json::Value,
     provider_id: ProviderId,
-) -> Result<(), ProviderError> {
+) -> Result<(), SettingsError> {
     let store = open_store(app, ctx, Some(provider_id))?;
 
     store.set(key, value);
 
-    let (store_path, tmp_path) = get_store_paths(app, provider_id)?;
-    let json_bytes = serialize_store_to_bytes(&store, provider_id)?;
+    let (store_path, tmp_path) = get_store_paths(app, ctx)?;
+    let json_bytes = serialize_store_to_bytes(ctx, &store)?;
 
-    atomic_write(&store_path, &tmp_path, &json_bytes, provider_id)?;
+    atomic_write(ctx, &store_path, &tmp_path, &json_bytes)?;
 
     Ok(())
 }

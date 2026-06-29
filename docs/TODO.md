@@ -5,8 +5,8 @@
 
 ## Current
 
-- [ ] Store error attribution integration — finish common settings-store error projection and upgrade `CheckStatusEmit` to carry `ProviderErrorContext` instead of raw `provider_id`; Provider config private errors now project `ctx.error_context()` through typed constructors
-- [ ] Settings storage error projection boundary — define how settings storage/process errors remain owned by the settings process layer and are projected back into `ProviderError` at Provider store boundaries, with the update chain common-store failures as the first target
+- [ ] Store error attribution integration — project settings-owned common-store failures back into `ProviderError` at Provider config boundaries and upgrade `CheckStatusEmit` to carry `ProviderErrorContext` instead of raw `provider_id`; Provider config private errors now project `ctx.error_context()` through typed constructors
+- [ ] Settings storage error projection boundary — define how settings storage/process errors remain owned by the settings process layer and are projected back into `ProviderError` at Provider store boundaries, with Provider config load/save/update/remove as the first target
 - [ ] Provider collection subject attribution — apply typed `ProviderSubject` to collection-level paths such as `load_all_providers`; decide when `ProviderErrorContext` should carry full subject semantics
 
 ## Planned
@@ -25,6 +25,7 @@
 
 ## Completed
 
+- [x] Settings common-store error ownership — switched settings common load/save store helpers from `ProviderError::ConfigStore*` construction to `SettingsError` typed constructors backed by `SettingsStorageContext::error_context()`, leaving Provider boundary projection as the next responsibility slice
 - [x] Settings stage-backed context attribution — added private `SettingsStage`, stored the storage stage on `SettingsStorageContext`, and projected it into `SettingsErrorContext` with display formatting, keeping common-store error ownership wiring as the next boundary task
 - [x] Settings store internal error variants — expanded `SettingsError` from the initial `StoreOpen` scaffold into neutral settings-store failure variants for open, path resolution, serialization, temporary-file creation, write, sync, and atomic replace failures, while leaving Provider projection wiring as follow-up work
 - [x] Provider config private error context projection — upgraded `ConfigNotFound`, `JsonSerialize`, and `JsonDeserialize` from direct provider-id fields to `ProviderErrorContext`, added typed constructors, and wired config load/save/update/remove failure sites to project `ctx.error_context()` while leaving settings common-store errors for process-owned projection work
