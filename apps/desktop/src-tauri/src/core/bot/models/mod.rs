@@ -2,7 +2,7 @@
 mod process;
 mod provider;
 
-pub(super) use process::SettingsProcessContext;
+pub(super) use process::SettingsStorageContext;
 pub(in crate::core) use provider::ProviderState;
 pub(crate) use provider::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckTrigger,

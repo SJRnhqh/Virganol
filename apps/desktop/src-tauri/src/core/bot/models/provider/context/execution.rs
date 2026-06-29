@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/execution.rs
-use super::super::super::SettingsProcessContext;
+use super::super::super::SettingsStorageContext;
 use super::super::ProviderSubject;
 use super::{ProviderContext, ProviderErrorContext, ProviderExecutionOperation, ProviderStage};
 
@@ -66,11 +66,11 @@ impl ProviderExecutionContext {
         Self(self.0.for_secret_store())
     }
 
-    /// Derives a settings storage process context from this execution context.
+    /// Derives a settings storage context from this execution context.
     ///
-    /// 从当前执行上下文派生 settings 存储过程上下文。
-    pub(in crate::core::bot) fn for_settings_storage(&self) -> SettingsProcessContext {
-        SettingsProcessContext::storage()
+    /// 从当前执行上下文派生 settings 存储上下文。
+    pub(in crate::core::bot) fn for_settings_storage(&self) -> SettingsStorageContext {
+        SettingsStorageContext::storage()
     }
 
     /// Projects this execution context into an error attribution snapshot.

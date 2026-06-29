@@ -1,11 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/models/process/settings/context/storage.rs
 
-/// Settings business process context.
+/// Settings storage business context.
 ///
-/// 设置业务过程上下文。
-pub(in crate::core::bot) struct SettingsProcessContext;
+/// settings 存储业务上下文。
+pub(in crate::core::bot) struct SettingsStorageContext;
 
-impl SettingsProcessContext {
+impl SettingsStorageContext {
     /// Creates a settings storage context.
     ///
     /// 创建 settings 存储上下文。

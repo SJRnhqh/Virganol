@@ -26,7 +26,7 @@
 ## Completed
 
 - [x] Provider config private error context projection — upgraded `ConfigNotFound`, `JsonSerialize`, and `JsonDeserialize` from direct provider-id fields to `ProviderErrorContext`, added typed constructors, and wired config load/save/update/remove failure sites to project `ctx.error_context()` while leaving settings common-store errors for process-owned projection work
-- [x] Settings process storage context slice — introduced `models::process::settings::context` with `SettingsProcessContext`, re-exported it through `core::bot`, and switched common settings load/save store helpers plus Provider config store callers to derive settings storage context via `ProviderExecutionContext::for_settings_storage()`
+- [x] Settings storage context naming slice — introduced `models::process::settings::context` with `SettingsStorageContext`, re-exported it through `core::bot`, and switched common settings load/save store helpers plus Provider config store callers to derive settings storage context via `ProviderExecutionContext::for_settings_storage()`
 - [x] Common module structure review — ProviderSubject method ordering normalized to follow field order
 - [x] Store layer ctx parameter plumbing — `save_provider`, `remove_provider_key`, `save_provider_key`, `load_provider_key`, `load_provider_env`, `resolve_provider_key`, `update_models` all wired with `&ProviderExecutionContext`; resolve passes ctx through to env/keyring sub-functions
 - [x] Connection layer ctx wiring — `probe_provider_connection` and `health_check_with_resolved_key` use `for_secret_store()` small-scope fork for key resolution

@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use tauri::{AppHandle, Manager};
 
 use super::super::super::super::super::{
-    ProviderError, ProviderId, SettingsProcessContext, SETTINGS_FILE,
+    ProviderError, ProviderId, SettingsStorageContext, SETTINGS_FILE,
 };
 use super::open_store;
 
@@ -97,7 +97,7 @@ fn atomic_write(
 /// 将 JSON 值写入 settings.json 的指定 key（upsert 语义）。
 pub(in crate::core::bot::services::settings) fn save_settings(
     app: &AppHandle,
-    ctx: &SettingsProcessContext,
+    ctx: &SettingsStorageContext,
     key: &str,
     value: serde_json::Value,
     provider_id: ProviderId,
