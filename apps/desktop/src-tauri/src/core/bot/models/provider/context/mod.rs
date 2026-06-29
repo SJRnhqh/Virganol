@@ -8,7 +8,7 @@ mod operation;
 mod stage;
 
 pub(self) use base::ProviderContext;
-pub(in crate::core::bot) use error::ProviderErrorContext;
+pub(super) use error::ProviderErrorContext;
 pub(in crate::core::bot) use execution::ProviderExecutionContext;
 pub(in crate::core::bot) use lifecycle::ProviderLifecycleContext;
 pub(in crate::core::bot) use manager::ProviderManagerContext;

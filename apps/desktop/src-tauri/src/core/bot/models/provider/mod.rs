@@ -12,9 +12,9 @@ pub(in crate::core) use common::ProviderState;
 pub(in crate::core::bot) use common::{ProviderId, ProviderSubject};
 pub(in crate::core::bot) use config::{ProviderCheckSnapshot, ProviderRecord};
 pub(in crate::core::bot) use connection::HealthCheckResult;
+pub(self) use context::ProviderErrorContext;
 pub(in crate::core::bot) use context::{
-    ProviderErrorContext, ProviderExecutionContext, ProviderLifecycleContext,
-    ProviderManagerContext,
+    ProviderExecutionContext, ProviderLifecycleContext, ProviderManagerContext,
 };
 pub(crate) use contract::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ResetProviderRequest,
