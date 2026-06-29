@@ -25,6 +25,7 @@
 
 ## Completed
 
+- [x] Settings store internal error variants — expanded `SettingsError` from the initial `StoreOpen` scaffold into neutral settings-store failure variants for open, path resolution, serialization, temporary-file creation, write, sync, and atomic replace failures, while leaving Provider projection wiring as follow-up work
 - [x] Provider config private error context projection — upgraded `ConfigNotFound`, `JsonSerialize`, and `JsonDeserialize` from direct provider-id fields to `ProviderErrorContext`, added typed constructors, and wired config load/save/update/remove failure sites to project `ctx.error_context()` while leaving settings common-store errors for process-owned projection work
 - [x] Settings internal error scaffold — introduced `SettingsError` under `models::process::settings::error` with an initial `StoreOpen { context, source }` variant for settings-owned store open failures, keeping Provider config-store projection as follow-up work
 - [x] Settings error context scaffold — introduced `SettingsErrorContext` as the settings-level error attribution snapshot, wired `SettingsStorageContext::error_context()` to project it, and re-exported the context through `core::bot` while leaving settings storage error ownership and Provider projection as follow-up work
