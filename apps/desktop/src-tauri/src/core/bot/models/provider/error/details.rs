@@ -1,6 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/details.rs
 use serde::Serialize;
 
+use super::super::super::SettingsError;
 use super::super::ProviderId;
 use super::{ProviderAppError, ProviderError};
 
@@ -49,7 +50,8 @@ impl ProviderErrorDetails {
             | ProviderError::CheckFailedEmit { context, .. }
             | ProviderError::ConfigNotFound { context }
             | ProviderError::JsonSerialize { context, .. }
-            | ProviderError::JsonDeserialize { context, .. } => context.provider_id(),
+            | ProviderError::JsonDeserialize { context, .. }
+            | ProviderError::ConfigStore { context, .. } => context.provider_id(),
             ProviderError::CheckStatusEmit { provider_id, .. }
             | ProviderError::ConfigStoreSerialize { provider_id, .. }
             | ProviderError::ConfigStorePath { provider_id, .. }
@@ -114,6 +116,15 @@ impl ProviderErrorDetails {
             | ProviderError::ConfigStoreWrite { .. }
             | ProviderError::ConfigStoreSync { .. }
             | ProviderError::ConfigStoreReplace { .. } => "provider.store.config.write",
+            ProviderError::ConfigStore { source, .. } => match *source {
+                SettingsError::StoreOpen { .. } => "provider.store.config.open",
+                SettingsError::StorePath { .. } => "provider.store.config.resolve",
+                SettingsError::StoreSerialize { .. } => "provider.store.config.serialize",
+                SettingsError::StoreTempCreate { .. }
+                | SettingsError::StoreWrite { .. }
+                | SettingsError::StoreSync { .. }
+                | SettingsError::StoreReplace { .. } => "provider.store.config.write",
+            },
             ProviderError::SecretStoreInit { .. } => "provider.store.secret.init",
             ProviderError::SecretStoreWrite { .. } => "provider.store.secret.write",
             ProviderError::SecretStoreRead { .. } => "provider.store.secret.read",

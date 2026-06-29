@@ -8,6 +8,7 @@ use tauri_plugin_store::Error as StoreError;
 use thiserror::Error;
 use tokio::task::JoinError;
 
+use super::super::super::SettingsError;
 use super::super::{ProviderErrorContext, ProviderId};
 
 /// Internal domain error for the provider subsystem.
@@ -296,6 +297,22 @@ pub(in crate::core::bot) enum ProviderError {
         #[source]
         source: IoError,
     },
+    /// Provider configuration store failed at the Provider settings boundary.
+    ///
+    /// Provider 配置存储操作在 Provider settings 边界上失败。
+    #[error("provider configuration store failed for {context}: {source}")]
+    ConfigStore {
+        /// Provider config-store error attribution context.
+        ///
+        /// Provider 配置存储错误归因上下文。
+        context: ProviderErrorContext,
+        /// Settings-owned store error projected through the boundary.
+        ///
+        /// 穿过边界投影进来的 settings 存储错误。
+        #[source]
+        source: SettingsError,
+    },
+
     /// System secret store failed to initialize.
     ///
     /// 系统密钥存储初始化失败。
@@ -433,6 +450,17 @@ impl ProviderError {
         source: JsonError,
     ) -> Self {
         Self::JsonDeserialize { context, source }
+    }
+
+    /// Projects a settings-owned store error into a provider config-store error
+    /// at the Provider settings boundary.
+    ///
+    /// 在 Provider settings 边界上将 settings 持有的存储错误投影为 Provider 配置存储错误。
+    pub(in crate::core::bot) fn config_store(
+        context: ProviderErrorContext,
+        source: SettingsError,
+    ) -> Self {
+        Self::ConfigStore { context, source }
     }
 }
 

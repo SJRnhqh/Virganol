@@ -88,7 +88,8 @@ impl From<&ProviderError> for ProviderErrorCode {
             | ProviderError::ConfigStoreTempCreate { .. }
             | ProviderError::ConfigStoreWrite { .. }
             | ProviderError::ConfigStoreSync { .. }
-            | ProviderError::ConfigStoreReplace { .. } => Self::ConfigStoreFailed,
+            | ProviderError::ConfigStoreReplace { .. }
+            | ProviderError::ConfigStore { .. } => Self::ConfigStoreFailed,
             ProviderError::SecretStoreInit { .. }
             | ProviderError::SecretStoreWrite { .. }
             | ProviderError::SecretStoreRead { .. }
