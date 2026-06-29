@@ -6,6 +6,7 @@
 ## Current
 
 - [ ] Store error attribution integration — unwire `_ctx` prefix from store functions and project `ctx.error_context()` into `ProviderError` construction at each failure site; upgrade `CheckStatusEmit` to carry `ProviderErrorContext` instead of raw `provider_id`
+- [ ] Settings storage error projection boundary — define how settings storage/process errors remain owned by the settings process layer and are projected back into `ProviderError` at Provider store boundaries, with the update chain as the first target
 - [ ] Provider collection subject attribution — apply typed `ProviderSubject` to collection-level paths such as `load_all_providers`; decide when `ProviderErrorContext` should carry full subject semantics
 
 ## Planned
@@ -24,6 +25,7 @@
 
 ## Completed
 
+- [x] Settings process storage context slice — introduced `models::process::settings::context` with `SettingsProcessContext`, re-exported it through `core::bot`, and switched common settings load/save store helpers plus Provider config store callers to derive settings storage context via `ProviderExecutionContext::for_settings_storage()`
 - [x] Common module structure review — ProviderSubject method ordering normalized to follow field order
 - [x] Store layer ctx parameter plumbing — `save_provider`, `remove_provider_key`, `save_provider_key`, `load_provider_key`, `load_provider_env`, `resolve_provider_key`, `update_models` all wired with `&ProviderExecutionContext`; resolve passes ctx through to env/keyring sub-functions
 - [x] Connection layer ctx wiring — `probe_provider_connection` and `health_check_with_resolved_key` use `for_secret_store()` small-scope fork for key resolution

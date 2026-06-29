@@ -1,6 +1,8 @@
 // apps/desktop/src-tauri/src/core/bot/models/mod.rs
+mod process;
 mod provider;
 
+pub(super) use process::SettingsProcessContext;
 pub(in crate::core) use provider::ProviderState;
 pub(crate) use provider::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckTrigger,

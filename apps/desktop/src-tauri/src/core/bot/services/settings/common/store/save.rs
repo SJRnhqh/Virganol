@@ -4,7 +4,9 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use tauri::{AppHandle, Manager};
 
-use super::super::super::super::super::{ProviderError, ProviderId, SETTINGS_FILE};
+use super::super::super::super::super::{
+    ProviderError, ProviderId, SettingsProcessContext, SETTINGS_FILE,
+};
 use super::open_store;
 
 /// Gets store file path and temporary file path.
@@ -95,11 +97,12 @@ fn atomic_write(
 /// 将 JSON 值写入 settings.json 的指定 key（upsert 语义）。
 pub(in crate::core::bot::services::settings) fn save_settings(
     app: &AppHandle,
+    ctx: &SettingsProcessContext,
     key: &str,
     value: serde_json::Value,
     provider_id: ProviderId,
 ) -> Result<(), ProviderError> {
-    let store = open_store(app, Some(provider_id))?;
+    let store = open_store(app, ctx, Some(provider_id))?;
 
     store.set(key, value);
 

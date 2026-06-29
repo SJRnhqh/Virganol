@@ -14,9 +14,13 @@ use super::super::super::super::load_settings;
 /// 从配置中读取所有已保存的 providers。
 pub(super) fn load_all_providers(
     app: &AppHandle,
+    ctx: &ProviderExecutionContext,
     provider_id: Option<ProviderId>,
 ) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
-    let maybe_value = load_settings(app, SPIRIT_PROVIDERS_KEY, provider_id)?;
+    let maybe_value = {
+        let ctx = ctx.for_settings_storage();
+        load_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, provider_id)?
+    };
     let Some(value) = maybe_value else {
         return Ok(HashMap::new());
     };
@@ -34,9 +38,9 @@ pub(super) fn load_all_providers(
 /// 从持久化配置中加载 Provider 检查快照。
 pub(in crate::core::bot::services::settings::provider) fn load_provider_check_snapshot(
     app: &AppHandle,
-    _ctx: &ProviderExecutionContext,
+    ctx: &ProviderExecutionContext,
 ) -> Result<ProviderCheckSnapshot, ProviderError> {
-    let providers = load_all_providers(app, None)?;
+    let providers = load_all_providers(app, ctx, None)?;
     let total = providers.len();
     let mut supported = Vec::new();
     let mut skipped = Vec::new();
@@ -59,9 +63,9 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_check_sn
 /// 读取单个 provider 的配置，返回拥有所有权的只读快照。
 pub(in crate::core::bot::services::settings::provider) fn load_provider_record(
     app: &AppHandle,
-    _ctx: &ProviderExecutionContext,
+    ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {
-    let mut providers = load_all_providers(app, Some(provider_id))?;
+    let mut providers = load_all_providers(app, ctx, Some(provider_id))?;
     Ok(providers.remove(provider_id.as_str()))
 }

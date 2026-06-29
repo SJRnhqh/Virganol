@@ -14,12 +14,12 @@ use super::load_all_providers;
 pub(in crate::core::bot::services::settings::provider) fn save_provider(
     app: &AppHandle,
     provider_state: &ProviderState,
-    _ctx: &ProviderExecutionContext,
+    ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
     record: ProviderRecord,
 ) -> Result<(), ProviderError> {
     let _guard = provider_state.lock_store();
-    let mut providers = load_all_providers(app, Some(provider_id))?;
+    let mut providers = load_all_providers(app, ctx, Some(provider_id))?;
     providers.insert(provider_id.to_string(), record);
 
     let value =
@@ -27,5 +27,8 @@ pub(in crate::core::bot::services::settings::provider) fn save_provider(
             provider_id,
             source,
         })?;
-    save_settings(app, SPIRIT_PROVIDERS_KEY, value, provider_id)
+    {
+        let ctx = ctx.for_settings_storage();
+        save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value, provider_id)
+    }
 }
