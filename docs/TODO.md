@@ -20,6 +20,7 @@
 
 ## Completed
 
+- [x] Provider settings update chain reviewed — manager update, provider config load/update, and common settings load/save paths now have validated context/error propagation boundaries and normalized bilingual function comments.
 - [x] Provider context model landed — `ProviderContext<T>` / `ProviderStage` / lifecycle-manager-execution contexts now carry Provider business stage, operation intent, lifecycle trigger/run metadata, and typed `ProviderSubject` attribution.
 - [x] Context propagation wired through main paths — manager, lifecycle, execution, store, connection, and key transaction paths now pass or derive typed Provider contexts instead of rebuilding raw attribution fields at call sites.
 - [x] Settings common boundary stabilized — common settings store code is Provider-agnostic, owns `SettingsStorageContext` / `SettingsError`, and no longer accepts `ProviderId` or emits Provider-domain store errors directly.

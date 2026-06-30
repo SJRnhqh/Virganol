@@ -11,7 +11,7 @@ use super::super::super::super::load_settings;
 
 /// Loads all saved providers from settings.
 ///
-/// 从配置中读取所有已保存的 providers。
+/// 从设置中读取所有已保存的提供方配置。
 pub(super) fn load_all_providers(
     app: &AppHandle,
     ctx: &ProviderExecutionContext,

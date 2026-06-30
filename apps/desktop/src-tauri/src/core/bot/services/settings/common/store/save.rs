@@ -7,9 +7,9 @@ use tauri::{AppHandle, Manager};
 use super::super::super::super::super::{SettingsError, SettingsStorageContext, SETTINGS_FILE};
 use super::open_store;
 
-/// Gets store file path and temporary file path.
+/// Resolves the settings file and temporary file paths.
 ///
-/// 获取 store 文件路径和临时文件路径。
+/// 获取设置文件路径和临时文件路径。
 fn get_store_paths(
     app: &AppHandle,
     ctx: &SettingsStorageContext,
@@ -26,7 +26,7 @@ fn get_store_paths(
 
 /// Serializes store entries to JSON bytes.
 ///
-/// 将 store 条目序列化为 JSON 字节。
+/// 将存储条目序列化为 JSON 字节。
 fn serialize_store_to_bytes(
     ctx: &SettingsStorageContext,
     store: &tauri_plugin_store::Store<tauri::Wry>,
@@ -41,9 +41,9 @@ fn serialize_store_to_bytes(
         .map_err(|source| SettingsError::store_serialize(ctx, source))
 }
 
-/// Performs atomic write using temp file + rename strategy.
+/// Writes bytes atomically via a temporary file and rename.
 ///
-/// 使用临时文件 + rename 策略执行原子写入。
+/// 通过临时文件和重命名执行原子写入。
 fn atomic_write(
     ctx: &SettingsStorageContext,
     store_path: &Path,
@@ -73,9 +73,9 @@ fn atomic_write(
     Ok(())
 }
 
-/// Saves a JSON value to settings.json by key (upsert semantics).
+/// Saves a settings value by key, overwriting existing values.
 ///
-/// 将 JSON 值写入 settings.json 的指定 key（upsert 语义）。
+/// 按键写入或更新设置文件中的配置值。
 pub(in crate::core::bot::services::settings) fn save_settings(
     app: &AppHandle,
     ctx: &SettingsStorageContext,

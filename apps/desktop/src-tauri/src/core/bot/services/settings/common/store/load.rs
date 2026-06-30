@@ -7,7 +7,7 @@ use super::super::super::super::super::{SettingsError, SettingsStorageContext, S
 
 /// Opens the settings store.
 ///
-/// 打开 settings store。
+/// 打开设置存储。
 pub(super) fn open_store(
     app: &AppHandle,
     ctx: &SettingsStorageContext,
@@ -18,7 +18,7 @@ pub(super) fn open_store(
 
 /// Loads a JSON value by key from settings.json.
 ///
-/// 从 settings.json 按 key 读取一段 JSON 值。
+/// 按键从设置文件读取配置值。
 pub(in crate::core::bot::services::settings) fn load_settings(
     app: &AppHandle,
     ctx: &SettingsStorageContext,
