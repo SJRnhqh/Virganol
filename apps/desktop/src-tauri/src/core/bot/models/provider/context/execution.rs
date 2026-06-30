@@ -76,7 +76,7 @@ impl ProviderExecutionContext {
     /// Projects this execution context into an error attribution snapshot.
     ///
     /// 将当前执行上下文投影为错误归因快照。
-    pub(in crate::core::bot) fn error_context(&self) -> ProviderErrorContext {
+    pub(in crate::core::bot::models::provider) fn error_context(&self) -> ProviderErrorContext {
         let ctx = self.0.error_context();
 
         match self.0.extra().subject.provider_id() {

@@ -9,7 +9,10 @@ use thiserror::Error;
 use tokio::task::JoinError;
 
 use super::super::super::SettingsError;
-use super::super::{ProviderErrorContext, ProviderId};
+use super::super::{
+    ProviderErrorContext, ProviderExecutionContext, ProviderId, ProviderLifecycleContext,
+    ProviderManagerContext,
+};
 
 /// Internal domain error for the provider subsystem.
 ///
@@ -386,70 +389,89 @@ pub(in crate::core::bot) enum ProviderError {
 }
 
 impl ProviderError {
-    /// Creates a manager payload validation error from projected context.
+    /// Creates a manager payload validation error from the interactive management context.
     ///
-    /// 基于已投影上下文创建 manager 载荷校验错误。
+    /// 基于交互式管理上下文创建 manager 载荷校验错误。
     pub(in crate::core::bot) fn manager_request_payload_absent(
-        context: ProviderErrorContext,
+        ctx: &ProviderManagerContext,
     ) -> Self {
-        Self::ManagerRequestPayloadAbsent { context }
+        Self::ManagerRequestPayloadAbsent {
+            context: ctx.error_context(),
+        }
     }
 
-    /// Creates a lifecycle started event emission error from projected context.
+    /// Creates a lifecycle started event emission error from the lifecycle context.
     ///
-    /// 基于已投影上下文创建生命周期 started 事件推送错误。
+    /// 基于生命周期上下文创建 lifecycle started 事件推送错误。
     pub(in crate::core::bot) fn check_started_emit(
-        context: ProviderErrorContext,
+        ctx: &ProviderLifecycleContext,
         source: TauriError,
     ) -> Self {
-        Self::CheckStartedEmit { context, source }
+        Self::CheckStartedEmit {
+            context: ctx.error_context(),
+            source,
+        }
     }
 
-    /// Creates a lifecycle completed event emission error from projected context.
+    /// Creates a lifecycle completed event emission error from the lifecycle context.
     ///
-    /// 基于已投影上下文创建生命周期 completed 事件推送错误。
+    /// 基于生命周期上下文创建 lifecycle completed 事件推送错误。
     pub(in crate::core::bot) fn check_completed_emit(
-        context: ProviderErrorContext,
+        ctx: &ProviderLifecycleContext,
         source: TauriError,
     ) -> Self {
-        Self::CheckCompletedEmit { context, source }
+        Self::CheckCompletedEmit {
+            context: ctx.error_context(),
+            source,
+        }
     }
 
-    /// Creates a lifecycle failed event emission error from projected context.
+    /// Creates a lifecycle failed event emission error from the lifecycle context.
     ///
-    /// 基于已投影上下文创建生命周期 failed 事件推送错误。
+    /// 基于生命周期上下文创建 lifecycle failed 事件推送错误。
     pub(in crate::core::bot) fn check_failed_emit(
-        context: ProviderErrorContext,
+        ctx: &ProviderLifecycleContext,
         source: TauriError,
     ) -> Self {
-        Self::CheckFailedEmit { context, source }
+        Self::CheckFailedEmit {
+            context: ctx.error_context(),
+            source,
+        }
     }
 
-    /// Creates a config-not-found error from projected context.
+    /// Creates a config-not-found error from the execution context.
     ///
-    /// 基于已投影上下文创建配置缺失错误。
-    pub(in crate::core::bot) fn config_not_found(context: ProviderErrorContext) -> Self {
-        Self::ConfigNotFound { context }
+    /// 基于执行上下文创建配置缺失错误。
+    pub(in crate::core::bot) fn config_not_found(ctx: &ProviderExecutionContext) -> Self {
+        Self::ConfigNotFound {
+            context: ctx.error_context(),
+        }
     }
 
-    /// Creates a provider config serialization error from projected context.
+    /// Creates a provider config serialization error from the execution context.
     ///
-    /// 基于已投影上下文创建 Provider 配置序列化错误。
+    /// 基于执行上下文创建 Provider 配置序列化错误。
     pub(in crate::core::bot) fn json_serialize(
-        context: ProviderErrorContext,
+        ctx: &ProviderExecutionContext,
         source: JsonError,
     ) -> Self {
-        Self::JsonSerialize { context, source }
+        Self::JsonSerialize {
+            context: ctx.error_context(),
+            source,
+        }
     }
 
-    /// Creates a provider config deserialization error from projected context.
+    /// Creates a provider config deserialization error from the execution context.
     ///
-    /// 基于已投影上下文创建 Provider 配置反序列化错误。
+    /// 基于执行上下文创建 Provider 配置反序列化错误。
     pub(in crate::core::bot) fn json_deserialize(
-        context: ProviderErrorContext,
+        ctx: &ProviderExecutionContext,
         source: JsonError,
     ) -> Self {
-        Self::JsonDeserialize { context, source }
+        Self::JsonDeserialize {
+            context: ctx.error_context(),
+            source,
+        }
     }
 
     /// Projects a settings-owned store error into a provider config-store error
@@ -457,10 +479,13 @@ impl ProviderError {
     ///
     /// 在 Provider settings 边界上将 settings 持有的存储错误投影为 Provider 配置存储错误。
     pub(in crate::core::bot) fn config_store(
-        context: ProviderErrorContext,
+        ctx: &ProviderExecutionContext,
         source: SettingsError,
     ) -> Self {
-        Self::ConfigStore { context, source }
+        Self::ConfigStore {
+            context: ctx.error_context(),
+            source,
+        }
     }
 }
 

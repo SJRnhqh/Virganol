@@ -23,12 +23,12 @@ pub(in crate::core::bot::services::settings::provider) fn save_provider(
     providers.insert(provider_id.to_string(), record);
 
     let value = serde_json::to_value(&providers)
-        .map_err(|source| ProviderError::json_serialize(ctx.error_context(), source))?;
+        .map_err(|source| ProviderError::json_serialize(ctx, source))?;
     if let Err(e) = {
         let ctx = ctx.for_settings_storage();
         save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value, provider_id)
     } {
-        return Err(ProviderError::config_store(ctx.error_context(), e));
+        return Err(ProviderError::config_store(ctx, e));
     }
 
     Ok(())

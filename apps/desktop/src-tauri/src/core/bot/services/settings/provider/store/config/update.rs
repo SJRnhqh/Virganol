@@ -21,18 +21,18 @@ pub(in crate::core::bot::services::settings::provider) fn update_models(
     let mut providers = load_all_providers(app, ctx, Some(provider_id))?;
 
     let Some(record) = providers.get_mut(provider_id.as_str()) else {
-        return Err(ProviderError::config_not_found(ctx.error_context()));
+        return Err(ProviderError::config_not_found(ctx));
     };
 
     record.replace_enabled_models(enabled_models);
 
     let value = serde_json::to_value(&providers)
-        .map_err(|source| ProviderError::json_serialize(ctx.error_context(), source))?;
+        .map_err(|source| ProviderError::json_serialize(ctx, source))?;
     if let Err(e) = {
         let ctx = ctx.for_settings_storage();
         save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value, provider_id)
     } {
-        return Err(ProviderError::config_store(ctx.error_context(), e));
+        return Err(ProviderError::config_store(ctx, e));
     }
 
     Ok(())

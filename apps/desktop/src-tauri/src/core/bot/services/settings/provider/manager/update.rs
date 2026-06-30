@@ -23,7 +23,7 @@ pub(crate) fn update_provider_enabled_models(
     let data = match data {
         Some(data) => data,
         None => {
-            let e = ProviderError::manager_request_payload_absent(ctx.error_context());
+            let e = ProviderError::manager_request_payload_absent(&ctx);
             return UpdateEnabledModelsResponse::failure(ProviderAppError::from(&e));
         }
     };
