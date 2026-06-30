@@ -18,7 +18,7 @@ pub(in crate::core::bot::services::settings::provider) fn update_models(
     enabled_models: Vec<String>,
 ) -> Result<(), ProviderError> {
     let _guard = provider_state.lock_store();
-    let mut providers = load_all_providers(app, ctx, Some(provider_id))?;
+    let mut providers = load_all_providers(app, ctx)?;
 
     let Some(record) = providers.get_mut(provider_id.as_str()) else {
         return Err(ProviderError::config_not_found(ctx));
@@ -30,7 +30,7 @@ pub(in crate::core::bot::services::settings::provider) fn update_models(
         .map_err(|source| ProviderError::json_serialize(ctx, source))?;
     if let Err(e) = {
         let ctx = ctx.for_settings_storage();
-        save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value, provider_id)
+        save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value)
     } {
         return Err(ProviderError::config_store(ctx, e));
     }

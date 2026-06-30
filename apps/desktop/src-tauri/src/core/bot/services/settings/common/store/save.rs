@@ -4,9 +4,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use tauri::{AppHandle, Manager};
 
-use super::super::super::super::super::{
-    ProviderId, SettingsError, SettingsStorageContext, SETTINGS_FILE,
-};
+use super::super::super::super::super::{SettingsError, SettingsStorageContext, SETTINGS_FILE};
 use super::open_store;
 
 /// Gets store file path and temporary file path.
@@ -83,9 +81,8 @@ pub(in crate::core::bot::services::settings) fn save_settings(
     ctx: &SettingsStorageContext,
     key: &str,
     value: serde_json::Value,
-    provider_id: ProviderId,
 ) -> Result<(), SettingsError> {
-    let store = open_store(app, ctx, Some(provider_id))?;
+    let store = open_store(app, ctx)?;
 
     store.set(key, value);
 

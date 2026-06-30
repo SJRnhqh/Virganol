@@ -15,11 +15,10 @@ use super::super::super::super::load_settings;
 pub(super) fn load_all_providers(
     app: &AppHandle,
     ctx: &ProviderExecutionContext,
-    provider_id: Option<ProviderId>,
 ) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
     let value = match {
         let ctx = ctx.for_settings_storage();
-        load_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, provider_id)
+        load_settings(app, &ctx, SPIRIT_PROVIDERS_KEY)
     } {
         Ok(Some(v)) => v,
         Ok(None) => return Ok(HashMap::new()),
@@ -38,7 +37,7 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_check_sn
     app: &AppHandle,
     ctx: &ProviderExecutionContext,
 ) -> Result<ProviderCheckSnapshot, ProviderError> {
-    let providers = load_all_providers(app, ctx, None)?;
+    let providers = load_all_providers(app, ctx)?;
     let total = providers.len();
     let mut supported = Vec::new();
     let mut skipped = Vec::new();
@@ -64,6 +63,6 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_record(
     ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {
-    let mut providers = load_all_providers(app, ctx, Some(provider_id))?;
+    let mut providers = load_all_providers(app, ctx)?;
     Ok(providers.remove(provider_id.as_str()))
 }

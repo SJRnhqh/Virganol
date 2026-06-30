@@ -19,7 +19,7 @@ pub(in crate::core::bot::services::settings::provider) fn remove_provider(
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {
     let _guard = provider_state.lock_store();
-    let mut providers = load_all_providers(app, ctx, Some(provider_id))?;
+    let mut providers = load_all_providers(app, ctx)?;
     let previous = providers.remove(provider_id.as_str());
 
     if previous.is_none() {
@@ -31,7 +31,7 @@ pub(in crate::core::bot::services::settings::provider) fn remove_provider(
         .map_err(|source| ProviderError::json_serialize(ctx, source))?;
     if let Err(e) = {
         let ctx = ctx.for_settings_storage();
-        save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value, provider_id)
+        save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value)
     } {
         return Err(ProviderError::config_store(ctx, e));
     }
