@@ -8,9 +8,9 @@ use super::super::super::super::super::super::{
 use super::super::super::super::save_settings;
 use super::load_all_providers;
 
-/// Saves a single provider configuration (upsert: overwrite if exists, insert if not).
+/// Saves persisted configuration for a provider, overwriting any existing record.
 ///
-/// 保存单个 provider 的配置（upsert：有则覆盖，无则新增）。
+/// 写入或更新指定提供方的持久化配置。
 pub(in crate::core::bot::services::settings::provider) fn save_provider(
     app: &AppHandle,
     provider_state: &ProviderState,

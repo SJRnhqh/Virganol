@@ -9,9 +9,9 @@ use super::super::super::super::super::super::{
 use super::super::super::super::save_settings;
 use super::load_all_providers;
 
-/// Removes a provider configuration and returns the deleted record for rollback.
+/// Removes persisted configuration for a provider and returns the deleted record.
 ///
-/// 删除 provider 配置，返回被删除的记录用于回滚。
+/// 删除指定提供方的持久化配置，并返回已删除记录。
 pub(in crate::core::bot::services::settings::provider) fn remove_provider(
     app: &AppHandle,
     provider_state: &ProviderState,
@@ -20,12 +20,13 @@ pub(in crate::core::bot::services::settings::provider) fn remove_provider(
 ) -> Result<Option<ProviderRecord>, ProviderError> {
     let _guard = provider_state.lock_store();
     let mut providers = load_all_providers(app, ctx)?;
-    let previous = providers.remove(provider_id.as_str());
-
-    if previous.is_none() {
-        ProviderError::config_not_found(ctx).downgrade();
-        return Ok(None);
-    }
+    let previous = match providers.remove(provider_id.as_str()) {
+        Some(record) => record,
+        None => {
+            ProviderError::config_not_found(ctx).downgrade();
+            return Ok(None);
+        }
+    };
 
     let value = serde_json::to_value(&providers)
         .map_err(|source| ProviderError::json_serialize(ctx, source))?;
@@ -35,5 +36,5 @@ pub(in crate::core::bot::services::settings::provider) fn remove_provider(
     } {
         return Err(ProviderError::config_store(ctx, e));
     }
-    Ok(previous)
+    Ok(Some(previous))
 }

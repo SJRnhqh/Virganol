@@ -33,9 +33,9 @@ pub(super) enum ProviderErrorCode {
     /// store/config 层：Provider 配置存储读取或写入失败。
     #[serde(rename = "config_store_failed")]
     ConfigStoreFailed,
-    /// Store/secret layer: system secret store could not be read or written.
+    /// Store/secret layer: system secret store operation failed.
     ///
-    /// store/secret 层：系统密钥存储读取或写入失败。
+    /// store/secret 层：系统密钥存储操作失败。
     #[serde(rename = "secret_store_failed")]
     SecretStoreFailed,
     /// Unknown internal error (catch-all for unclassified provider errors).

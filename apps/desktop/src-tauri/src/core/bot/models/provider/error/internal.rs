@@ -212,12 +212,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// System secret store failed to initialize.
     ///
     /// 系统密钥存储初始化失败。
-    #[error("provider secret store could not be initialized: {source}")]
+    #[error("provider secret store could not be initialized for {context}: {source}")]
     SecretStoreInit {
-        /// Provider whose secret store entry failed to initialize.
+        /// Provider secret-store error attribution context.
         ///
-        /// 密钥存储条目初始化失败所属的 Provider。
-        provider_id: ProviderId,
+        /// Provider 密钥存储错误归因上下文。
+        context: ProviderErrorContext,
         /// Keyring initialization error.
         ///
         /// keyring 初始化错误。
@@ -257,12 +257,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// System secret store could not be removed (delete).
     ///
     /// 系统密钥存储无法删除。
-    #[error("provider secret store could not be removed: {source}")]
+    #[error("provider secret store could not be removed for {context}: {source}")]
     SecretStoreRemove {
-        /// Provider whose secret could not be removed.
+        /// Provider secret-store error attribution context.
         ///
-        /// 密钥无法删除所属的 Provider。
-        provider_id: ProviderId,
+        /// Provider 密钥存储错误归因上下文。
+        context: ProviderErrorContext,
         /// Keyring remove error.
         ///
         /// keyring 删除错误。
@@ -376,6 +376,32 @@ impl ProviderError {
         source: SettingsError,
     ) -> Self {
         Self::ConfigStore {
+            context: ctx.error_context(),
+            source,
+        }
+    }
+
+    /// Creates a secret-store initialization error from the execution context.
+    ///
+    /// 基于执行上下文创建密钥存储初始化错误。
+    pub(in crate::core::bot) fn secret_store_init(
+        ctx: &ProviderExecutionContext,
+        source: KeyringError,
+    ) -> Self {
+        Self::SecretStoreInit {
+            context: ctx.error_context(),
+            source,
+        }
+    }
+
+    /// Creates a secret-store remove error from the execution context.
+    ///
+    /// 基于执行上下文创建密钥存储删除错误。
+    pub(in crate::core::bot) fn secret_store_remove(
+        ctx: &ProviderExecutionContext,
+        source: KeyringError,
+    ) -> Self {
+        Self::SecretStoreRemove {
             context: ctx.error_context(),
             source,
         }

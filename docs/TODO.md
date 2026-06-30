@@ -5,6 +5,7 @@
 
 ## Current
 
+- [ ] Secret store init follow-up — adapt non-reset secret load/save paths away from direct `SecretStoreInit { provider_id }` construction after the reset-scoped context upgrade.
 - [ ] Store error attribution cleanup — upgrade `CheckStatusEmit` from raw `provider_id` to `ProviderErrorContext`
 - [ ] Provider collection subject attribution — apply typed `ProviderSubject` to collection-level paths such as `load_all_providers`; decide when `ProviderErrorContext` should carry full subject semantics
 
@@ -16,10 +17,12 @@
 - [ ] Lifecycle trigger context integration — decide whether `ProviderCheckTrigger` remains an independent lifecycle value object or becomes part of the provider lifecycle context.
 - [ ] Provider error attribution model — replace the current optional provider-id attribution with a typed attribution model, distinguishing single-provider, lifecycle-run, provider-collection, and subsystem/global failures while keeping boundary details stable.
 - [ ] Observability handoff notes — capture the context fields and boundaries that Phase 6.3 structured logging should reuse, while keeping trace/correlation policy deferred to the observability design.
+- [ ] Rust visibility guardrail lint — after the context/error design and technical docs settle, consider an optional MJS architecture lint that checks functions, structs, impl methods, and re-export chains do not expose a wider module scope than their declared visibility; treat this as discipline-oriented, non-blocking codebase hygiene.
 - [ ] Architecture documentation update — write the accepted context propagation design into `docs/ARCHITECTURE.md` and keep `docs/ROADMAP.md` aligned with completed Phase 6.2 items.
 
 ## Completed
 
+- [x] Provider settings reset chain reviewed — manager reset, provider config remove/save, and provider secret remove paths now use staged execution context/error projection for reset-owned failures, with rollback suppression semantics preserved.
 - [x] Provider settings update chain reviewed — manager update, provider config load/update, and common settings load/save paths now have validated context/error propagation boundaries and normalized bilingual function comments.
 - [x] Provider context model landed — `ProviderContext<T>` / `ProviderStage` / lifecycle-manager-execution contexts now carry Provider business stage, operation intent, lifecycle trigger/run metadata, and typed `ProviderSubject` attribution.
 - [x] Context propagation wired through main paths — manager, lifecycle, execution, store, connection, and key transaction paths now pass or derive typed Provider contexts instead of rebuilding raw attribution fields at call sites.

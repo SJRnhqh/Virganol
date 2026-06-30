@@ -51,12 +51,12 @@ impl ProviderErrorDetails {
             | ProviderError::ConfigNotFound { context }
             | ProviderError::JsonSerialize { context, .. }
             | ProviderError::JsonDeserialize { context, .. }
-            | ProviderError::ConfigStore { context, .. } => context.provider_id(),
+            | ProviderError::ConfigStore { context, .. }
+            | ProviderError::SecretStoreInit { context, .. }
+            | ProviderError::SecretStoreRemove { context, .. } => context.provider_id(),
             ProviderError::CheckStatusEmit { provider_id, .. }
-            | ProviderError::SecretStoreInit { provider_id, .. }
             | ProviderError::SecretStoreWrite { provider_id, .. }
             | ProviderError::SecretStoreRead { provider_id, .. }
-            | ProviderError::SecretStoreRemove { provider_id, .. }
             | ProviderError::HealthCheckMissingConfig { provider_id }
             | ProviderError::HealthCheckNetwork { provider_id, .. }
             | ProviderError::HealthCheckHttp { provider_id }

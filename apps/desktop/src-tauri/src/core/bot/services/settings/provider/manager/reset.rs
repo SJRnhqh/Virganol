@@ -7,9 +7,9 @@ use super::super::super::super::super::{
 };
 use super::super::{remove_provider, remove_provider_key, save_provider};
 
-/// Resets provider configuration.
+/// Resets persisted configuration for a provider.
 ///
-/// 重置 provider 的持久化配置。
+/// 重置指定提供方的持久化配置。
 pub(crate) fn reset_provider_config(
     app: &AppHandle,
     state: &AppState,
