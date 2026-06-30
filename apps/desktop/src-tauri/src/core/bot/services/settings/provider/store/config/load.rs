@@ -17,12 +17,13 @@ pub(super) fn load_all_providers(
     ctx: &ProviderExecutionContext,
     provider_id: Option<ProviderId>,
 ) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
-    let maybe_value = {
+    let value = match {
         let ctx = ctx.for_settings_storage();
-        load_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, provider_id)?
-    };
-    let Some(value) = maybe_value else {
-        return Ok(HashMap::new());
+        load_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, provider_id)
+    } {
+        Ok(Some(v)) => v,
+        Ok(None) => return Ok(HashMap::new()),
+        Err(e) => return Err(ProviderError::config_store(ctx.error_context(), e)),
     };
 
     let providers: HashMap<String, ProviderRecord> = serde_json::from_value(value)

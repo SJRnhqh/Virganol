@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Store error attribution integration — wire explicit `ProviderError::config_store(ctx.error_context(), e)` projection at the 4 Provider config boundary sites (`load_all_providers` / `save_provider` / `remove_provider` / `update_models`) where `SettingsError` currently crosses back into Provider code; upgrade `CheckStatusEmit` from raw `provider_id` to `ProviderErrorContext`; remove legacy `ConfigStore*` variants superseded by the unified projection
+- [ ] Store error attribution integration — wire explicit `ProviderError::config_store(ctx.error_context(), e)` projection at the 3 remaining Provider config boundary sites (`save_provider` / `remove_provider` / `update_models`) where `SettingsError` currently crosses back into Provider code; upgrade `CheckStatusEmit` from raw `provider_id` to `ProviderErrorContext`; remove legacy `ConfigStore*` variants superseded by the unified projection
 - [ ] Provider collection subject attribution — apply typed `ProviderSubject` to collection-level paths such as `load_all_providers`; decide when `ProviderErrorContext` should carry full subject semantics
 
 ## Planned
