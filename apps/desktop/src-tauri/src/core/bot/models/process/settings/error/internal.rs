@@ -5,7 +5,7 @@ use tauri::Error as TauriError;
 use tauri_plugin_store::Error as StoreError;
 use thiserror::Error;
 
-use super::super::SettingsErrorContext;
+use super::super::{SettingsErrorContext, SettingsStorageContext};
 
 /// Internal process error for the settings module.
 ///
@@ -120,70 +120,88 @@ pub(in crate::core::bot) enum SettingsError {
 }
 
 impl SettingsError {
-    /// Creates a settings store open error from projected context.
+    /// Creates a settings store open error from the storage context.
     ///
-    /// 基于已投影上下文创建 settings 存储打开错误。
+    /// 基于存储上下文创建 settings 存储打开错误。
     pub(in crate::core::bot) fn store_open(
-        context: SettingsErrorContext,
+        ctx: &SettingsStorageContext,
         source: StoreError,
     ) -> Self {
-        Self::StoreOpen { context, source }
+        Self::StoreOpen {
+            context: ctx.error_context(),
+            source,
+        }
     }
 
-    /// Creates a settings store path resolution error from projected context.
+    /// Creates a settings store path resolution error from the storage context.
     ///
-    /// 基于已投影上下文创建 settings 存储路径解析错误。
+    /// 基于存储上下文创建 settings 存储路径解析错误。
     pub(in crate::core::bot) fn store_path(
-        context: SettingsErrorContext,
+        ctx: &SettingsStorageContext,
         source: TauriError,
     ) -> Self {
-        Self::StorePath { context, source }
+        Self::StorePath {
+            context: ctx.error_context(),
+            source,
+        }
     }
 
-    /// Creates a settings store serialization error from projected context.
+    /// Creates a settings store serialization error from the storage context.
     ///
-    /// 基于已投影上下文创建 settings 存储序列化错误。
+    /// 基于存储上下文创建 settings 存储序列化错误。
     pub(in crate::core::bot) fn store_serialize(
-        context: SettingsErrorContext,
+        ctx: &SettingsStorageContext,
         source: JsonError,
     ) -> Self {
-        Self::StoreSerialize { context, source }
+        Self::StoreSerialize {
+            context: ctx.error_context(),
+            source,
+        }
     }
 
-    /// Creates a settings store temporary-file creation error from projected context.
+    /// Creates a settings store temporary-file creation error from the storage context.
     ///
-    /// 基于已投影上下文创建 settings 存储临时文件创建错误。
+    /// 基于存储上下文创建 settings 存储临时文件创建错误。
     pub(in crate::core::bot) fn store_temp_create(
-        context: SettingsErrorContext,
+        ctx: &SettingsStorageContext,
         source: IoError,
     ) -> Self {
-        Self::StoreTempCreate { context, source }
+        Self::StoreTempCreate {
+            context: ctx.error_context(),
+            source,
+        }
     }
 
-    /// Creates a settings store file write error from projected context.
+    /// Creates a settings store file write error from the storage context.
     ///
-    /// 基于已投影上下文创建 settings 存储文件写入错误。
-    pub(in crate::core::bot) fn store_write(
-        context: SettingsErrorContext,
-        source: IoError,
-    ) -> Self {
-        Self::StoreWrite { context, source }
+    /// 基于存储上下文创建 settings 存储文件写入错误。
+    pub(in crate::core::bot) fn store_write(ctx: &SettingsStorageContext, source: IoError) -> Self {
+        Self::StoreWrite {
+            context: ctx.error_context(),
+            source,
+        }
     }
 
-    /// Creates a settings store file sync error from projected context.
+    /// Creates a settings store file sync error from the storage context.
     ///
-    /// 基于已投影上下文创建 settings 存储文件同步错误。
-    pub(in crate::core::bot) fn store_sync(context: SettingsErrorContext, source: IoError) -> Self {
-        Self::StoreSync { context, source }
+    /// 基于存储上下文创建 settings 存储文件同步错误。
+    pub(in crate::core::bot) fn store_sync(ctx: &SettingsStorageContext, source: IoError) -> Self {
+        Self::StoreSync {
+            context: ctx.error_context(),
+            source,
+        }
     }
 
-    /// Creates a settings store file replace error from projected context.
+    /// Creates a settings store file replace error from the storage context.
     ///
-    /// 基于已投影上下文创建 settings 存储文件替换错误。
+    /// 基于存储上下文创建 settings 存储文件替换错误。
     pub(in crate::core::bot) fn store_replace(
-        context: SettingsErrorContext,
+        ctx: &SettingsStorageContext,
         source: IoError,
     ) -> Self {
-        Self::StoreReplace { context, source }
+        Self::StoreReplace {
+            context: ctx.error_context(),
+            source,
+        }
     }
 }

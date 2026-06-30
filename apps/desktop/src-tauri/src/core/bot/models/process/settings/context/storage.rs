@@ -24,7 +24,9 @@ impl SettingsStorageContext {
     /// Projects this storage context into an error attribution snapshot.
     ///
     /// 将当前存储上下文投影为错误归因快照。
-    pub(in crate::core::bot) fn error_context(&self) -> SettingsErrorContext {
+    pub(in crate::core::bot::models::process::settings) fn error_context(
+        &self,
+    ) -> SettingsErrorContext {
         SettingsErrorContext::from_parts(self.stage)
     }
 }

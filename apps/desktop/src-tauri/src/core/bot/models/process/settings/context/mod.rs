@@ -3,6 +3,6 @@ mod error;
 mod stage;
 mod storage;
 
-pub(in crate::core::bot) use error::SettingsErrorContext;
+pub(super) use error::SettingsErrorContext;
 pub(self) use stage::SettingsStage;
 pub(in crate::core::bot) use storage::SettingsStorageContext;

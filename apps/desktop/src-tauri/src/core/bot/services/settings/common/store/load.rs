@@ -16,7 +16,7 @@ pub(super) fn open_store(
     _provider_id: Option<ProviderId>,
 ) -> Result<Arc<tauri_plugin_store::Store<tauri::Wry>>, SettingsError> {
     app.store(SETTINGS_FILE)
-        .map_err(|source| SettingsError::store_open(ctx.error_context(), source))
+        .map_err(|source| SettingsError::store_open(ctx, source))
 }
 
 /// Loads a JSON value by key from settings.json.

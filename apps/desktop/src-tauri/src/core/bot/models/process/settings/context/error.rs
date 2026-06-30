@@ -7,7 +7,7 @@ use super::SettingsStage;
 ///
 /// settings 错误归因上下文快照。
 #[derive(Debug)]
-pub(in crate::core::bot) struct SettingsErrorContext {
+pub(in crate::core::bot::models::process::settings) struct SettingsErrorContext {
     /// Settings process execution stage where the failure was observed.
     ///
     /// 观察到失败时所在的 settings 过程执行阶段。

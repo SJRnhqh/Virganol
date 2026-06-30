@@ -2,5 +2,6 @@
 mod context;
 mod error;
 
-pub(in crate::core::bot) use context::{SettingsErrorContext, SettingsStorageContext};
+pub(self) use context::SettingsErrorContext;
+pub(in crate::core::bot) use context::SettingsStorageContext;
 pub(in crate::core::bot) use error::SettingsError;

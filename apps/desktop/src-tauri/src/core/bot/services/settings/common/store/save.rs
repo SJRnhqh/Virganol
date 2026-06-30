@@ -19,7 +19,7 @@ fn get_store_paths(
     let store_path = app
         .path()
         .app_data_dir()
-        .map_err(|source| SettingsError::store_path(ctx.error_context(), source))?
+        .map_err(|source| SettingsError::store_path(ctx, source))?
         .join(SETTINGS_FILE);
 
     let tmp_path = store_path.with_file_name(format!("{}.tmp", SETTINGS_FILE));
@@ -40,7 +40,7 @@ fn serialize_store_to_bytes(
         .collect();
 
     serde_json::to_vec_pretty(&all_data)
-        .map_err(|source| SettingsError::store_serialize(ctx.error_context(), source))
+        .map_err(|source| SettingsError::store_serialize(ctx, source))
 }
 
 /// Performs atomic write using temp file + rename strategy.
@@ -54,16 +54,16 @@ fn atomic_write(
 ) -> Result<(), SettingsError> {
     {
         let mut file = File::create(tmp_path)
-            .map_err(|source| SettingsError::store_temp_create(ctx.error_context(), source))?;
+            .map_err(|source| SettingsError::store_temp_create(ctx, source))?;
         file.write_all(data)
-            .map_err(|source| SettingsError::store_write(ctx.error_context(), source))?;
+            .map_err(|source| SettingsError::store_write(ctx, source))?;
         file.sync_all()
-            .map_err(|source| SettingsError::store_sync(ctx.error_context(), source))?;
+            .map_err(|source| SettingsError::store_sync(ctx, source))?;
     }
 
     if let Err(source) = fs::rename(tmp_path, store_path) {
         let _ = fs::remove_file(tmp_path);
-        return Err(SettingsError::store_replace(ctx.error_context(), source));
+        return Err(SettingsError::store_replace(ctx, source));
     }
 
     if let Some(parent) = store_path.parent() {
