@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Store error attribution integration — wire explicit `ProviderError::config_store(ctx.error_context(), e)` projection at the 3 remaining Provider config boundary sites (`save_provider` / `remove_provider` / `update_models`) where `SettingsError` currently crosses back into Provider code; upgrade `CheckStatusEmit` from raw `provider_id` to `ProviderErrorContext`; remove legacy `ConfigStore*` variants superseded by the unified projection
+- [ ] Store error attribution integration — wire explicit `ProviderError::config_store(ctx.error_context(), e)` projection at the 2 remaining Provider config boundary sites (`remove_provider` / `update_models`) where `SettingsError` currently crosses back into Provider code; upgrade `CheckStatusEmit` from raw `provider_id` to `ProviderErrorContext`; remove legacy `ConfigStore*` variants superseded by the unified projection
 - [ ] Provider collection subject attribution — apply typed `ProviderSubject` to collection-level paths such as `load_all_providers`; decide when `ProviderErrorContext` should carry full subject semantics
 
 ## Planned
@@ -34,3 +34,4 @@
 - [x] Settings storage error projection boundary — `ProviderError::ConfigStore { context, source }` defined as unified projection variant; `config_store(ctx, source)` constructor in place; `details.rs` domain_scope_from inner-matches `*SettingsError` to preserve per-stage granularity; `code.rs` maps `ConfigStore` to `ConfigStoreFailed`
 - [x] Model layer normalization — stage order normalized (`LifecycleEmit` / `Connection` after `Manager`), `into_*` / `for_*` API split (no `at_*`), `Option` removed from context conversions, `impl<E>` before `impl<E: Clone>`, `into_stage`→`to_stage`, `from_operation`→`from_parts`, `LifecycleExtra: Clone`, `ProviderSubject` method order normalized; all emit payloads carry `ProviderErrorContext`; re-exports supplemented
 - [x] ProviderErrorContext visibility tightened — tightened from `pub(in crate::core::bot)` to `pub(in super::super::super)` at struct level, `context/mod.rs` opens `mod error` as `pub(super)` and re-exports internally as `pub(self)`, `provider/mod.rs` splits `ProviderErrorContext` out as `pub(self) use`
+- [x] Settings→Provider error boundary wired (load/save) — `config_store` projection applied at `load_all_providers` and `save_provider` boundary sites; `remove_provider` / `update_models` deferred until `ProviderErrorContext` visibility resolved
