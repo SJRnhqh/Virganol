@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Store error attribution cleanup — upgrade `CheckStatusEmit` from raw `provider_id` to `ProviderErrorContext`; remove legacy `ConfigStore*` variants superseded by the unified projection
+- [ ] Store error attribution cleanup — upgrade `CheckStatusEmit` from raw `provider_id` to `ProviderErrorContext`
 - [ ] Provider collection subject attribution — apply typed `ProviderSubject` to collection-level paths such as `load_all_providers`; decide when `ProviderErrorContext` should carry full subject semantics
 
 ## Planned
@@ -37,3 +37,4 @@
 - [x] Settings→Provider error boundary wired (load/save) — `config_store` projection applied at `load_all_providers` and `save_provider` boundary sites; `remove_provider` / `update_models` deferred until `ProviderErrorContext` visibility resolved
 - [x] Settings→Provider error boundary wired — all 4 Provider config boundary sites use consistent `if let Err(e) { ctx.for_settings_storage() → call } { return config_store(ctx, e) }` pattern
 - [x] `error_context` projection internalized — all 8 `ProviderError` constructors accept specific context reference instead of `ProviderErrorContext`; projection call moved inside constructor; services layer zero direct references to `ProviderErrorContext`; `error_context()` methods tightened to `pub(in crate::core::bot::models::provider)`
+- [x] Legacy ConfigStore* variants removed — 7 superseded `ConfigStoreOpen` / `ConfigStorePath` / `ConfigStoreSerialize` / `ConfigStoreTempCreate` / `ConfigStoreWrite` / `ConfigStoreSync` / `ConfigStoreReplace` variants deleted from `ProviderError` enum; match arms cleaned from `details.rs` and `code.rs`; unused `IoError` / `StoreError` imports dropped

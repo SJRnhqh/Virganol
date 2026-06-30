@@ -53,12 +53,6 @@ impl ProviderErrorDetails {
             | ProviderError::JsonDeserialize { context, .. }
             | ProviderError::ConfigStore { context, .. } => context.provider_id(),
             ProviderError::CheckStatusEmit { provider_id, .. }
-            | ProviderError::ConfigStoreSerialize { provider_id, .. }
-            | ProviderError::ConfigStorePath { provider_id, .. }
-            | ProviderError::ConfigStoreTempCreate { provider_id, .. }
-            | ProviderError::ConfigStoreWrite { provider_id, .. }
-            | ProviderError::ConfigStoreSync { provider_id, .. }
-            | ProviderError::ConfigStoreReplace { provider_id, .. }
             | ProviderError::SecretStoreInit { provider_id, .. }
             | ProviderError::SecretStoreWrite { provider_id, .. }
             | ProviderError::SecretStoreRead { provider_id, .. }
@@ -67,7 +61,6 @@ impl ProviderErrorDetails {
             | ProviderError::HealthCheckNetwork { provider_id, .. }
             | ProviderError::HealthCheckHttp { provider_id }
             | ProviderError::HealthCheckResponseFormat { provider_id, .. } => Some(*provider_id),
-            ProviderError::ConfigStoreOpen { provider_id, .. } => *provider_id,
             _ => None,
         }
     }
@@ -106,16 +99,8 @@ impl ProviderErrorDetails {
             }
             ProviderError::HealthCheckResponseFormat { .. } => "provider.connection.check.parse",
             ProviderError::ConfigNotFound { .. } => "provider.store.config.find",
-            ProviderError::JsonSerialize { .. } | ProviderError::ConfigStoreSerialize { .. } => {
-                "provider.store.config.serialize"
-            }
+            ProviderError::JsonSerialize { .. } => "provider.store.config.serialize",
             ProviderError::JsonDeserialize { .. } => "provider.store.config.deserialize",
-            ProviderError::ConfigStoreOpen { .. } => "provider.store.config.open",
-            ProviderError::ConfigStorePath { .. } => "provider.store.config.resolve",
-            ProviderError::ConfigStoreTempCreate { .. }
-            | ProviderError::ConfigStoreWrite { .. }
-            | ProviderError::ConfigStoreSync { .. }
-            | ProviderError::ConfigStoreReplace { .. } => "provider.store.config.write",
             ProviderError::ConfigStore { source, .. } => match *source {
                 SettingsError::StoreOpen { .. } => "provider.store.config.open",
                 SettingsError::StorePath { .. } => "provider.store.config.resolve",

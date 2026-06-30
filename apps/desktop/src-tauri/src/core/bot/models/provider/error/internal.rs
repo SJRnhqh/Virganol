@@ -2,9 +2,7 @@
 use keyring::Error as KeyringError;
 use reqwest::Error as ReqwestError;
 use serde_json::Error as JsonError;
-use std::io::Error as IoError;
 use tauri::Error as TauriError;
-use tauri_plugin_store::Error as StoreError;
 use thiserror::Error;
 use tokio::task::JoinError;
 
@@ -194,111 +192,6 @@ pub(in crate::core::bot) enum ProviderError {
         /// JSON 反序列化错误。
         #[source]
         source: JsonError,
-    },
-    /// Provider configuration store could not be opened.
-    ///
-    /// Provider 配置存储无法打开。
-    #[error("provider configuration store could not be opened: {source}")]
-    ConfigStoreOpen {
-        /// Provider context when the store open failure is tied to one provider task.
-        ///
-        /// 当存储打开失败可归属于单个 Provider 任务时携带的 Provider 上下文。
-        provider_id: Option<ProviderId>,
-        /// Settings store open error.
-        ///
-        /// settings 存储打开错误。
-        #[source]
-        source: StoreError,
-    },
-    /// Provider configuration store path could not be resolved.
-    ///
-    /// Provider 配置存储路径无法解析。
-    #[error("provider configuration store path could not be resolved: {source}")]
-    ConfigStorePath {
-        /// Provider task context for the path resolution failure.
-        ///
-        /// 路径解析失败所属的 Provider 任务上下文。
-        provider_id: ProviderId,
-        /// Tauri path resolution error.
-        ///
-        /// Tauri 路径解析错误。
-        #[source]
-        source: TauriError,
-    },
-    /// Provider configuration store failed to serialize into JSON bytes.
-    ///
-    /// Provider 配置存储序列化为 JSON 字节失败。
-    #[error("provider configuration store failed to serialize: {source}")]
-    ConfigStoreSerialize {
-        /// Provider task context for the store serialization failure.
-        ///
-        /// 存储序列化失败所属的 Provider 任务上下文。
-        provider_id: ProviderId,
-        /// JSON serialization error.
-        ///
-        /// JSON 序列化错误。
-        #[source]
-        source: JsonError,
-    },
-    /// Provider configuration store temporary file could not be created.
-    ///
-    /// Provider 配置存储临时文件无法创建。
-    #[error("provider configuration store temporary file could not be created: {source}")]
-    ConfigStoreTempCreate {
-        /// Provider task context for the temporary-file creation failure.
-        ///
-        /// 临时文件创建失败所属的 Provider 任务上下文。
-        provider_id: ProviderId,
-        /// File creation error.
-        ///
-        /// 文件创建错误。
-        #[source]
-        source: IoError,
-    },
-    /// Provider configuration store could not be written.
-    ///
-    /// Provider 配置存储无法写入。
-    #[error("provider configuration store could not be written: {source}")]
-    ConfigStoreWrite {
-        /// Provider task context for the store write failure.
-        ///
-        /// 存储写入失败所属的 Provider 任务上下文。
-        provider_id: ProviderId,
-        /// File write error.
-        ///
-        /// 文件写入错误。
-        #[source]
-        source: IoError,
-    },
-    /// Provider configuration store could not be synced to disk.
-    ///
-    /// Provider 配置存储无法同步到磁盘。
-    #[error("provider configuration store could not be synced to disk: {source}")]
-    ConfigStoreSync {
-        /// Provider task context for the store sync failure.
-        ///
-        /// 存储同步失败所属的 Provider 任务上下文。
-        provider_id: ProviderId,
-        /// File sync error.
-        ///
-        /// 文件同步错误。
-        #[source]
-        source: IoError,
-    },
-    /// Provider configuration store could not be replaced atomically.
-    ///
-    /// Provider 配置存储无法原子替换。
-    #[error("provider configuration store could not be replaced atomically: {source}")]
-    ConfigStoreReplace {
-        /// Provider task context for the atomic replace failure.
-        ///
-        /// 原子替换失败所属的 Provider 任务上下文。
-        provider_id: ProviderId,
-        /// Atomic replace error.
-        ///
-        /// 原子替换错误。
-        #[source]
-        source: IoError,
     },
     /// Provider configuration store failed at the Provider settings boundary.
     ///

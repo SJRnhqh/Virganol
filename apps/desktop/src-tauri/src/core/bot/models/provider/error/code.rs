@@ -82,13 +82,6 @@ impl From<&ProviderError> for ProviderErrorCode {
             ProviderError::ConfigNotFound { .. } => Self::ProviderNotFound,
             ProviderError::JsonSerialize { .. }
             | ProviderError::JsonDeserialize { .. }
-            | ProviderError::ConfigStoreOpen { .. }
-            | ProviderError::ConfigStorePath { .. }
-            | ProviderError::ConfigStoreSerialize { .. }
-            | ProviderError::ConfigStoreTempCreate { .. }
-            | ProviderError::ConfigStoreWrite { .. }
-            | ProviderError::ConfigStoreSync { .. }
-            | ProviderError::ConfigStoreReplace { .. }
             | ProviderError::ConfigStore { .. } => Self::ConfigStoreFailed,
             ProviderError::SecretStoreInit { .. }
             | ProviderError::SecretStoreWrite { .. }
