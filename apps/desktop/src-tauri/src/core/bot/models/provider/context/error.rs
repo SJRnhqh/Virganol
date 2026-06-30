@@ -8,7 +8,7 @@ use super::ProviderStage;
 ///
 /// Provider 错误归因上下文快照。
 #[derive(Debug)]
-pub(in crate::core::bot::models::provider) struct ProviderErrorContext {
+pub(in crate::core::bot) struct ProviderErrorContext {
     /// Provider targeted by the failure, when attributable.
     ///
     /// 当失败可归属到单个 Provider 时携带对应 Provider ID。
