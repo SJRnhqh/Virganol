@@ -3,33 +3,38 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::super::{
-    ProviderError, ProviderId, ProviderRecord, ProviderState, SPIRIT_PROVIDERS_KEY,
+    ProviderError, ProviderExecutionContext, ProviderId, ProviderRecord, ProviderState,
+    SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::save_settings;
 use super::load_all_providers;
 
-/// Removes a provider configuration and returns the deleted record for rollback.
+/// Removes persisted configuration for a provider and returns the deleted record.
 ///
-/// 删除 provider 配置，返回被删除的记录用于回滚。
+/// 删除指定供应商的持久化配置，并返回已删除记录。
 pub(in crate::core::bot::services::settings::provider) fn remove_provider(
     app: &AppHandle,
     provider_state: &ProviderState,
+    ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {
     let _guard = provider_state.lock_store();
-    let mut providers = load_all_providers(app, Some(provider_id))?;
-    let previous = providers.remove(provider_id.as_str());
+    let mut providers = load_all_providers(app, ctx)?;
+    let previous = match providers.remove(provider_id.as_str()) {
+        Some(record) => record,
+        None => {
+            ProviderError::config_not_found(ctx).downgrade();
+            return Ok(None);
+        }
+    };
 
-    if previous.is_none() {
-        ProviderError::ConfigNotFound { provider_id }.downgrade();
-        return Ok(None);
+    let value = serde_json::to_value(&providers)
+        .map_err(|source| ProviderError::json_serialize(ctx, source))?;
+    if let Err(e) = {
+        let ctx = ctx.for_settings_storage();
+        save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value)
+    } {
+        return Err(ProviderError::config_store(ctx, e));
     }
-
-    let value =
-        serde_json::to_value(&providers).map_err(|source| ProviderError::JsonSerialize {
-            provider_id,
-            source,
-        })?;
-    save_settings(app, SPIRIT_PROVIDERS_KEY, value, provider_id)?;
-    Ok(previous)
+    Ok(Some(previous))
 }

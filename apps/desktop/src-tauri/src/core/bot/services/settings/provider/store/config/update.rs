@@ -2,33 +2,38 @@
 use tauri::AppHandle;
 
 use super::super::super::super::super::super::{
-    ProviderError, ProviderId, ProviderState, SPIRIT_PROVIDERS_KEY,
+    ProviderError, ProviderExecutionContext, ProviderId, ProviderState, SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::save_settings;
 use super::load_all_providers;
 
 /// Updates enabled models for a provider.
 ///
-/// 更新某个 provider 的 enabled_models。
+/// 更新指定供应商的启用模型列表。
 pub(in crate::core::bot::services::settings::provider) fn update_models(
     app: &AppHandle,
     provider_state: &ProviderState,
+    ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
     enabled_models: Vec<String>,
 ) -> Result<(), ProviderError> {
     let _guard = provider_state.lock_store();
-    let mut providers = load_all_providers(app, Some(provider_id))?;
+    let mut providers = load_all_providers(app, ctx)?;
 
     let Some(record) = providers.get_mut(provider_id.as_str()) else {
-        return Err(ProviderError::ConfigNotFound { provider_id });
+        return Err(ProviderError::config_not_found(ctx));
     };
 
     record.replace_enabled_models(enabled_models);
 
-    let value =
-        serde_json::to_value(&providers).map_err(|source| ProviderError::JsonSerialize {
-            provider_id,
-            source,
-        })?;
-    save_settings(app, SPIRIT_PROVIDERS_KEY, value, provider_id)
+    let value = serde_json::to_value(&providers)
+        .map_err(|source| ProviderError::json_serialize(ctx, source))?;
+    if let Err(e) = {
+        let ctx = ctx.for_settings_storage();
+        save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value)
+    } {
+        return Err(ProviderError::config_store(ctx, e));
+    }
+
+    Ok(())
 }

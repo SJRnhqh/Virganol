@@ -17,10 +17,6 @@ and reason about development order.
 - Read `docs/TODO.md` for branch-level execution state.
 - Read other Markdown documents under `docs/` only when needed for the current
   request.
-- For large Markdown documents, long logs, or broad multi-file documentation
-  reads, prefer `headroom_compress` before reasoning over the full content, and
-  retrieve exact sections with `headroom_retrieve` when precision matters. If
-  the `headroom` tools are unavailable, ignore this step and continue normally.
 - Inspect relevant directories only when needed to understand project structure.
 - Summarize the current project context and call out any documentation/code
   mismatch.

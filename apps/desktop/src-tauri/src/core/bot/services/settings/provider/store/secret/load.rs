@@ -4,67 +4,65 @@ use zeroize::Zeroize;
 
 use super::super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::super::{
-    ProviderError, ProviderId, ProviderKey, PROVIDER_KEYRING_SERVICE,
+    ProviderError, ProviderExecutionContext, ProviderId, ProviderKey, PROVIDER_KEYRING_SERVICE,
 };
 
-/// Loads provider API key from the system keyring (permissive: errors downgraded to warn).
+/// Loads a provider API key from the system keyring.
 ///
-/// 从系统密钥库读取 provider 的 API Key（宽容模式：错误降级为 warn）。
-pub(super) fn load_provider_key(provider_id: ProviderId) -> Option<ProviderKey> {
+/// 从系统密钥库读取供应商 API 密钥。
+pub(super) fn load_provider_key(
+    ctx: &ProviderExecutionContext,
+    provider_id: ProviderId,
+) -> Option<ProviderKey> {
     let entry = match Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str()) {
         Ok(entry) => entry,
         Err(source) => {
-            ProviderError::SecretStoreInit {
-                provider_id,
-                source,
-            }
-            .downgrade();
+            ProviderError::secret_store_init(ctx, source).downgrade();
             return None;
         }
     };
 
-    let value = match entry.get_password() {
-        Ok(v) => v,
+    let raw_key = match entry.get_password() {
+        Ok(raw_key) => raw_key,
         Err(KeyringError::NoEntry) => return None,
         Err(source) => {
-            ProviderError::SecretStoreRead {
-                provider_id,
-                source,
-            }
-            .downgrade();
+            ProviderError::secret_store_read(ctx, source).downgrade();
             return None;
         }
     };
 
-    normalize_and_wrap_key(value)
+    normalize_and_wrap_key(raw_key)
 }
 
-/// Loads provider API key from environment variables (dev/CI fallback).
+/// Loads a provider API key from environment variables.
 ///
-/// 从环境变量读取 provider 的 API Key（开发/CI 兜底）。
-pub(super) fn load_provider_env(provider_id: ProviderId) -> Option<ProviderKey> {
+/// 从环境变量读取供应商 API 密钥。
+pub(super) fn load_provider_env(
+    _ctx: &ProviderExecutionContext,
+    provider_id: ProviderId,
+) -> Option<ProviderKey> {
     provider_id
         .env_key_names()
         .iter()
         .find_map(|env_name| normalize_and_wrap_key(std::env::var(env_name).ok()?))
 }
 
-/// Normalizes a raw key value: trims whitespace, zeroizes the source on copy or empty.
+/// Normalizes a raw API key and clears discarded buffer content.
 ///
-/// 规范化原始密钥：trim 空白；需复制或为空时清零原始缓冲区，无空白时零拷贝复用。
-fn normalize_and_wrap_key(mut value: String) -> Option<ProviderKey> {
-    let trimmed = value.trim();
+/// 归一化原始 API 密钥，并清理被丢弃的缓冲区。
+fn normalize_and_wrap_key(mut raw_key: String) -> Option<ProviderKey> {
+    let trimmed = raw_key.trim();
 
     if trimmed.is_empty() {
-        value.zeroize();
+        raw_key.zeroize();
         return None;
     }
 
-    if trimmed.len() == value.len() {
-        return Some(ProviderKey::new(value));
+    if trimmed.len() == raw_key.len() {
+        return Some(ProviderKey::new(raw_key));
     }
 
     let key = trimmed.to_string();
-    value.zeroize();
+    raw_key.zeroize();
     Some(ProviderKey::new(key))
 }

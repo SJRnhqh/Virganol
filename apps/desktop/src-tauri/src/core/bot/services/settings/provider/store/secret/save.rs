@@ -2,23 +2,20 @@
 use keyring::Entry;
 
 use super::super::super::super::super::super::{
-    ProviderError, ProviderId, PROVIDER_KEYRING_SERVICE,
+    ProviderError, ProviderExecutionContext, ProviderId, PROVIDER_KEYRING_SERVICE,
 };
 
-/// Saves provider API key to the system keyring.
+/// Saves a provider API key to the system keyring.
 ///
-/// 将 provider 的 API Key 写入系统密钥库。
-pub(super) fn save_provider_key(provider_id: ProviderId, key: &str) -> Result<(), ProviderError> {
-    let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str()).map_err(|source| {
-        ProviderError::SecretStoreInit {
-            provider_id,
-            source,
-        }
-    })?;
+/// 将供应商 API 密钥写入系统密钥库。
+pub(super) fn save_provider_key(
+    ctx: &ProviderExecutionContext,
+    provider_id: ProviderId,
+    key: &str,
+) -> Result<(), ProviderError> {
+    let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str())
+        .map_err(|source| ProviderError::secret_store_init(ctx, source))?;
     entry
         .set_password(key)
-        .map_err(|source| ProviderError::SecretStoreWrite {
-            provider_id,
-            source,
-        })
+        .map_err(|source| ProviderError::secret_store_write(ctx, source))
 }

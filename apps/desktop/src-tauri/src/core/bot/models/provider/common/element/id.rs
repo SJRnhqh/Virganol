@@ -1,8 +1,8 @@
-// apps/desktop/src-tauri/src/core/bot/models/provider/common/id.rs
+// apps/desktop/src-tauri/src/core/bot/models/provider/common/element/id.rs
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
-use super::super::ProviderError;
+use super::super::super::ProviderError;
 
 /// Supported provider identifier shared across commands, storage, and events.
 ///

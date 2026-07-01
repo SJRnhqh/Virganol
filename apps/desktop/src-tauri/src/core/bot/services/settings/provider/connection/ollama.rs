@@ -2,20 +2,20 @@
 use log::{debug, error, info};
 
 use super::super::super::super::super::{
-    HealthCheckResult, ProviderError, ProviderId, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS,
+    HealthCheckResult, ProviderError, ProviderExecutionContext, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS,
 };
 use super::get_http_client;
 
 /// Checks Ollama by requesting `{url}/api/tags` and adding bearer auth only when `key` is present.
 ///
-/// 通过请求 `{url}/api/tags` 检查 Ollama，并仅在 `key` 非空时附带 bearer 认证。
+/// 通过请求 `{url}/api/tags` 检查 Ollama，并在密钥非空时附带认证。
 pub(super) async fn ollama_check(
-    provider_id: ProviderId,
+    ctx: &ProviderExecutionContext,
     url: &str,
     key: &str,
 ) -> HealthCheckResult {
     if url.is_empty() {
-        return HealthCheckResult::fail(ProviderError::HealthCheckMissingConfig { provider_id });
+        return HealthCheckResult::fail(ProviderError::health_check_missing_config(ctx));
     }
 
     let base = url.trim_end_matches('/');
@@ -35,27 +35,23 @@ pub(super) async fn ollama_check(
         Ok(resp) => resp,
         Err(source) => {
             error!("[Tauri][Ollama] request failed: {}", source);
-            return HealthCheckResult::fail(ProviderError::HealthCheckNetwork {
-                provider_id,
-                source,
-            });
+            return HealthCheckResult::fail(ProviderError::health_check_network(ctx, source));
         }
     };
 
     if !resp.status().is_success() {
         let status = resp.status();
         error!("[Tauri][Ollama] HTTP {}", status);
-        return HealthCheckResult::fail(ProviderError::HealthCheckHttp { provider_id });
+        return HealthCheckResult::fail(ProviderError::health_check_http(ctx));
     }
 
     let json: serde_json::Value = match resp.json().await {
         Ok(v) => v,
         Err(source) => {
             error!("[Tauri][Ollama] JSON parse error: {}", source);
-            return HealthCheckResult::fail(ProviderError::HealthCheckResponseFormat {
-                provider_id,
-                source,
-            });
+            return HealthCheckResult::fail(ProviderError::health_check_response_format(
+                ctx, source,
+            ));
         }
     };
 

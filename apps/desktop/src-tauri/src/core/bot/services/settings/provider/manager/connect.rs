@@ -4,36 +4,38 @@ use tauri::AppHandle;
 use super::super::super::super::super::super::AppState;
 use super::super::super::super::super::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderAppError, ProviderError,
-    ProviderRecord,
+    ProviderManagerContext, ProviderRecord,
 };
 use super::super::{
     load_provider_record, probe_provider_connection, save_provider, ProviderKeyTransaction,
 };
 
-/// Connects to a provider and saves the configuration if health check succeeds.
+/// Connects a provider and saves its configuration after a successful probe.
 ///
-/// 连接 Provider 并在健康检查成功后持久化配置。
+/// 连接供应商，并在探测成功后保存配置。
 pub(crate) async fn connect_and_save(
     app: &AppHandle,
     state: &AppState,
     request: ConnectAndSaveProviderRequest,
 ) -> ConnectAndSaveProviderResponse {
     let (provider_id, data) = request.into_parts();
+    let ctx = ProviderManagerContext::connect(provider_id);
     let provider_state = state.provider();
 
     let data = match data {
         Some(data) => data,
         None => {
-            let e = ProviderError::ManagerRequestPayloadAbsent { provider_id };
+            let e = ProviderError::manager_request_payload_absent(&ctx);
             return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
         }
     };
 
     let normalized_key = data.normalized_api_key();
     let normalized_url = data.normalized_base_url();
+    let ctx = ctx.into_connection().into_execution_context();
 
     let available_models =
-        match probe_provider_connection(provider_id, normalized_url, normalized_key)
+        match probe_provider_connection(&ctx, provider_id, normalized_url, normalized_key)
             .await
             .into_models()
         {
@@ -43,7 +45,9 @@ pub(crate) async fn connect_and_save(
             }
         };
 
-    let previous_record = match load_provider_record(app, provider_id) {
+    let ctx = ctx.into_config_store();
+
+    let previous_record = match load_provider_record(app, &ctx, provider_id) {
         Ok(record) => record,
         Err(e) => {
             return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
@@ -58,14 +62,18 @@ pub(crate) async fn connect_and_save(
 
     let enabled_models = record.enabled_models().to_vec();
 
-    let key_transaction = match ProviderKeyTransaction::begin(provider_id, normalized_key) {
-        Ok(transaction) => transaction,
-        Err(e) => {
-            return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+    let key_transaction = {
+        let ctx = ctx.for_secret_store();
+
+        match ProviderKeyTransaction::begin(ctx, provider_id, normalized_key) {
+            Ok(transaction) => transaction,
+            Err(e) => {
+                return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+            }
         }
     };
 
-    if let Err(e) = save_provider(app, provider_state, provider_id, record) {
+    if let Err(e) = save_provider(app, provider_state, &ctx, provider_id, record) {
         return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
     }
 

@@ -3,8 +3,8 @@ use log::info;
 use tauri::AppHandle;
 
 use super::super::super::super::super::{
-    HealthCheckResult, ProviderCheckFinalization, ProviderError, ProviderId, ProviderRecord,
-    ProviderState,
+    HealthCheckResult, ProviderCheckFinalization, ProviderError, ProviderId,
+    ProviderLifecycleContext, ProviderRecord, ProviderState,
 };
 use super::super::save_provider;
 
@@ -14,6 +14,7 @@ use super::super::save_provider;
 fn persist_reconciled_enabled_models(
     app: &AppHandle,
     provider_state: &ProviderState,
+    ctx: &ProviderLifecycleContext,
     provider_id: ProviderId,
     record: ProviderRecord,
     available_models: &[String],
@@ -24,7 +25,14 @@ fn persist_reconciled_enabled_models(
 
     let previous_enabled_model_count = record.enabled_models().len();
 
-    match save_provider(app, provider_state, provider_id, updated.clone()) {
+    let save_result = {
+        let ctx = ctx
+            .for_config_store()
+            .into_execution_context_with(provider_id.into());
+        save_provider(app, provider_state, &ctx, provider_id, updated.clone())
+    };
+
+    match save_result {
         Ok(()) => {
             info!(
                 "[Tauri] 🔄 {} enabled_models reconciled: {} → {}",
@@ -44,6 +52,7 @@ fn persist_reconciled_enabled_models(
 pub(super) fn finalize_provider_check_result(
     app: &AppHandle,
     provider_state: &ProviderState,
+    ctx: &ProviderLifecycleContext,
     provider_id: ProviderId,
     record: ProviderRecord,
     health: &HealthCheckResult,
@@ -52,6 +61,7 @@ pub(super) fn finalize_provider_check_result(
         let (status_record, reconciliation_error) = persist_reconciled_enabled_models(
             app,
             provider_state,
+            ctx,
             provider_id,
             record,
             health.available_models(),

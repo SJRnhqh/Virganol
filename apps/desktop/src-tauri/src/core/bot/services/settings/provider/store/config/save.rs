@@ -2,28 +2,34 @@
 use tauri::AppHandle;
 
 use super::super::super::super::super::super::{
-    ProviderError, ProviderId, ProviderRecord, ProviderState, SPIRIT_PROVIDERS_KEY,
+    ProviderError, ProviderExecutionContext, ProviderId, ProviderRecord, ProviderState,
+    SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::save_settings;
 use super::load_all_providers;
 
-/// Saves a single provider configuration (upsert: overwrite if exists, insert if not).
+/// Saves persisted configuration for a provider, overwriting any existing record.
 ///
-/// 保存单个 provider 的配置（upsert：有则覆盖，无则新增）。
+/// 写入或更新指定供应商的持久化配置。
 pub(in crate::core::bot::services::settings::provider) fn save_provider(
     app: &AppHandle,
     provider_state: &ProviderState,
+    ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
     record: ProviderRecord,
 ) -> Result<(), ProviderError> {
     let _guard = provider_state.lock_store();
-    let mut providers = load_all_providers(app, Some(provider_id))?;
+    let mut providers = load_all_providers(app, ctx)?;
     providers.insert(provider_id.to_string(), record);
 
-    let value =
-        serde_json::to_value(&providers).map_err(|source| ProviderError::JsonSerialize {
-            provider_id,
-            source,
-        })?;
-    save_settings(app, SPIRIT_PROVIDERS_KEY, value, provider_id)
+    let value = serde_json::to_value(&providers)
+        .map_err(|source| ProviderError::json_serialize(ctx, source))?;
+    if let Err(e) = {
+        let ctx = ctx.for_settings_storage();
+        save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value)
+    } {
+        return Err(ProviderError::config_store(ctx, e));
+    }
+
+    Ok(())
 }

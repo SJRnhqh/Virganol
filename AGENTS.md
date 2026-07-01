@@ -45,6 +45,20 @@ docs/
 Use `docs/templates/branch-todo.md` when creating or refreshing branch-level
 `docs/TODO.md` files.
 
+## Agent Operating Guidelines
+
+### Context Budget Management
+
+When the `headroom` MCP tools are available, treat them as optional context
+budget helpers for large inputs. Before reasoning over long logs, large JSON or
+search results, large Markdown documents, or broad multi-file documentation
+reads, prefer `headroom_compress`. Use `headroom_retrieve` when exact source
+sections are needed.
+
+Do not use compression for small outputs, branch TODO state, or source content
+that must be edited or quoted exactly. Prefer CodeGraph and targeted reads for
+source-code inspection. If `headroom` is unavailable, continue normally.
+
 ## Development Workflow
 
 The workflow is defined from coarse to fine: version development, feature

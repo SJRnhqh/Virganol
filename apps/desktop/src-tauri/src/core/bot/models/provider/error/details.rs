@@ -1,6 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/details.rs
 use serde::Serialize;
 
+use super::super::super::SettingsError;
 use super::super::ProviderId;
 use super::{ProviderAppError, ProviderError};
 
@@ -43,26 +44,23 @@ impl ProviderErrorDetails {
     /// 从内部 Provider 错误中投影可用的 Provider 任务上下文。
     fn provider_id_from(error: &ProviderError) -> Option<ProviderId> {
         match error {
-            ProviderError::ManagerRequestPayloadAbsent { provider_id }
-            | ProviderError::CheckStatusEmit { provider_id, .. }
-            | ProviderError::ConfigNotFound { provider_id }
-            | ProviderError::JsonSerialize { provider_id, .. }
-            | ProviderError::ConfigStoreSerialize { provider_id, .. }
-            | ProviderError::ConfigStorePath { provider_id, .. }
-            | ProviderError::ConfigStoreTempCreate { provider_id, .. }
-            | ProviderError::ConfigStoreWrite { provider_id, .. }
-            | ProviderError::ConfigStoreSync { provider_id, .. }
-            | ProviderError::ConfigStoreReplace { provider_id, .. }
-            | ProviderError::SecretStoreInit { provider_id, .. }
-            | ProviderError::SecretStoreWrite { provider_id, .. }
-            | ProviderError::SecretStoreRead { provider_id, .. }
-            | ProviderError::SecretStoreRemove { provider_id, .. }
-            | ProviderError::HealthCheckMissingConfig { provider_id }
-            | ProviderError::HealthCheckNetwork { provider_id, .. }
-            | ProviderError::HealthCheckHttp { provider_id }
-            | ProviderError::HealthCheckResponseFormat { provider_id, .. } => Some(*provider_id),
-            ProviderError::JsonDeserialize { provider_id, .. }
-            | ProviderError::ConfigStoreOpen { provider_id, .. } => *provider_id,
+            ProviderError::ManagerRequestPayloadAbsent { context }
+            | ProviderError::CheckStartedEmit { context, .. }
+            | ProviderError::CheckCompletedEmit { context, .. }
+            | ProviderError::CheckFailedEmit { context, .. }
+            | ProviderError::HealthCheckMissingConfig { context }
+            | ProviderError::HealthCheckNetwork { context, .. }
+            | ProviderError::HealthCheckHttp { context }
+            | ProviderError::HealthCheckResponseFormat { context, .. }
+            | ProviderError::ConfigNotFound { context }
+            | ProviderError::JsonSerialize { context, .. }
+            | ProviderError::JsonDeserialize { context, .. }
+            | ProviderError::ConfigStore { context, .. }
+            | ProviderError::SecretStoreInit { context, .. }
+            | ProviderError::SecretStoreWrite { context, .. }
+            | ProviderError::SecretStoreRead { context, .. }
+            | ProviderError::SecretStoreRemove { context, .. } => context.provider_id(),
+            ProviderError::CheckStatusEmit { provider_id, .. } => Some(*provider_id),
             _ => None,
         }
     }
@@ -101,16 +99,17 @@ impl ProviderErrorDetails {
             }
             ProviderError::HealthCheckResponseFormat { .. } => "provider.connection.check.parse",
             ProviderError::ConfigNotFound { .. } => "provider.store.config.find",
-            ProviderError::JsonSerialize { .. } | ProviderError::ConfigStoreSerialize { .. } => {
-                "provider.store.config.serialize"
-            }
+            ProviderError::JsonSerialize { .. } => "provider.store.config.serialize",
             ProviderError::JsonDeserialize { .. } => "provider.store.config.deserialize",
-            ProviderError::ConfigStoreOpen { .. } => "provider.store.config.open",
-            ProviderError::ConfigStorePath { .. } => "provider.store.config.resolve",
-            ProviderError::ConfigStoreTempCreate { .. }
-            | ProviderError::ConfigStoreWrite { .. }
-            | ProviderError::ConfigStoreSync { .. }
-            | ProviderError::ConfigStoreReplace { .. } => "provider.store.config.write",
+            ProviderError::ConfigStore { source, .. } => match *source {
+                SettingsError::StoreOpen { .. } => "provider.store.config.open",
+                SettingsError::StorePath { .. } => "provider.store.config.resolve",
+                SettingsError::StoreSerialize { .. } => "provider.store.config.serialize",
+                SettingsError::StoreTempCreate { .. }
+                | SettingsError::StoreWrite { .. }
+                | SettingsError::StoreSync { .. }
+                | SettingsError::StoreReplace { .. } => "provider.store.config.write",
+            },
             ProviderError::SecretStoreInit { .. } => "provider.store.secret.init",
             ProviderError::SecretStoreWrite { .. } => "provider.store.secret.write",
             ProviderError::SecretStoreRead { .. } => "provider.store.secret.read",

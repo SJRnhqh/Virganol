@@ -5,7 +5,8 @@ use tokio::task::JoinSet;
 
 use super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::{
-    ProviderCheckRunResult, ProviderError, ProviderId, ProviderRecord, ProviderState,
+    ProviderCheckRunResult, ProviderError, ProviderId, ProviderLifecycleContext, ProviderRecord,
+    ProviderState,
 };
 use super::super::health_check_with_resolved_key;
 use super::{emit_check_status, finalize_provider_check_result};
@@ -21,6 +22,7 @@ const CHECK_CONCURRENCY_LIMIT: usize = 4;
 pub(super) async fn run_provider_checks(
     app: &AppHandle,
     provider_state: &ProviderState,
+    ctx: &ProviderLifecycleContext<'_>,
     run_id: &str,
     supported: Vec<(ProviderId, ProviderRecord)>,
 ) -> ProviderCheckRunResult {
@@ -36,9 +38,13 @@ pub(super) async fn run_provider_checks(
             let Some((provider_id, record)) = pending.next() else {
                 break;
             };
+            let ctx = ctx
+                .for_connection()
+                .into_execution_context_with(provider_id.into());
             in_flight.spawn(async move {
                 let url = record.url().unwrap_or("").to_string();
-                let (result, key_meta) = health_check_with_resolved_key(provider_id, &url).await;
+                let (result, key_meta) =
+                    health_check_with_resolved_key(&ctx, provider_id, &url).await;
                 (provider_id, record, result, key_meta)
             });
         }
@@ -48,6 +54,7 @@ pub(super) async fn run_provider_checks(
                 let (status_record, online, reconciliation_error) = finalize_provider_check_result(
                     app,
                     provider_state,
+                    ctx,
                     provider_id,
                     record,
                     &result,
@@ -69,9 +76,20 @@ pub(super) async fn run_provider_checks(
                     online
                 );
 
-                if let Err(se) =
-                    emit_check_status(app, run_id, provider_id, status_record, result, key_meta)
-                {
+                if let Err(se) = {
+                    let ctx = ctx
+                        .for_connection()
+                        .into_execution_context_with(provider_id.into());
+                    emit_check_status(
+                        app,
+                        &ctx,
+                        run_id,
+                        provider_id,
+                        status_record,
+                        result,
+                        key_meta,
+                    )
+                } {
                     suppressed_errors.push(se);
                 }
             }

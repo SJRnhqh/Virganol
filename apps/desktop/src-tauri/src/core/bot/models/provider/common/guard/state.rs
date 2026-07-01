@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/bot/models/provider/common/state.rs
+// apps/desktop/src-tauri/src/core/bot/models/provider/common/guard/state.rs
 use parking_lot::{Mutex, MutexGuard};
 
 /// Provider-domain runtime coordination state.

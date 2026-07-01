@@ -4,7 +4,8 @@ use tauri::{AppHandle, Emitter};
 use super::super::super::super::super::{
     HealthCheckResult, ProviderAppError, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderCheckTrigger, ProviderError,
-    ProviderId, ProviderKeyMeta, ProviderRecord,
+    ProviderExecutionContext, ProviderId, ProviderKeyMeta, ProviderLifecycleContext,
+    ProviderRecord,
 };
 
 // Provider check lifecycle event names kept aligned with frontend PROVIDER_CHECK_EVENTS.
@@ -20,13 +21,14 @@ const EVT_CHECK_FAILED: &str = "providers-check-lifecycle-failed";
 /// 推送生命周期 started 事件。
 pub(super) fn emit_check_started(
     app: &AppHandle,
+    ctx: &ProviderLifecycleContext,
     run_id: &str,
     trigger: &ProviderCheckTrigger,
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckStartedPayload::new(run_id, trigger);
 
     app.emit(EVT_CHECK_STARTED, &payload)
-        .map_err(|source| ProviderError::CheckStartedEmit { source })
+        .map_err(|source| ProviderError::check_started_emit(ctx, source))
 }
 
 /// Emits one provider check status event.
@@ -34,6 +36,7 @@ pub(super) fn emit_check_started(
 /// 推送单个 Provider 的 check status 事件。
 pub(super) fn emit_check_status(
     app: &AppHandle,
+    _ctx: &ProviderExecutionContext,
     run_id: &str,
     provider_id: ProviderId,
     config: ProviderRecord,
@@ -54,13 +57,14 @@ pub(super) fn emit_check_status(
 /// 推送生命周期 completed 事件。
 pub(super) fn emit_check_completed(
     app: &AppHandle,
+    ctx: &ProviderLifecycleContext,
     run_id: &str,
     failed: usize,
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckCompletedPayload::new(run_id, failed);
 
     app.emit(EVT_CHECK_COMPLETED, &payload)
-        .map_err(|source| ProviderError::CheckCompletedEmit { source })
+        .map_err(|source| ProviderError::check_completed_emit(ctx, source))
 }
 
 /// Emits the lifecycle failed event.
@@ -68,11 +72,12 @@ pub(super) fn emit_check_completed(
 /// 推送生命周期 failed 事件。
 pub(super) fn emit_check_failed(
     app: &AppHandle,
+    ctx: &ProviderLifecycleContext,
     run_id: &str,
     error: ProviderAppError,
 ) -> Result<(), ProviderError> {
     let payload = ProviderCheckFailedPayload::new(run_id, error);
 
     app.emit(EVT_CHECK_FAILED, &payload)
-        .map_err(|source| ProviderError::CheckFailedEmit { source })
+        .map_err(|source| ProviderError::check_failed_emit(ctx, source))
 }

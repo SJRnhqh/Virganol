@@ -4,37 +4,40 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::super::{
-    ProviderCheckSnapshot, ProviderError, ProviderId, ProviderRecord, SPIRIT_PROVIDERS_KEY,
+    ProviderCheckSnapshot, ProviderError, ProviderExecutionContext, ProviderId, ProviderRecord,
+    SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::load_settings;
 
-/// Loads all saved providers from settings.
+/// Loads all saved provider records.
 ///
-/// 从配置中读取所有已保存的 providers。
+/// 读取所有已保存的供应商配置。
 pub(super) fn load_all_providers(
     app: &AppHandle,
-    provider_id: Option<ProviderId>,
+    ctx: &ProviderExecutionContext,
 ) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
-    let maybe_value = load_settings(app, SPIRIT_PROVIDERS_KEY, provider_id)?;
-    let Some(value) = maybe_value else {
-        return Ok(HashMap::new());
+    let value = match {
+        let ctx = ctx.for_settings_storage();
+        load_settings(app, &ctx, SPIRIT_PROVIDERS_KEY)
+    } {
+        Ok(Some(v)) => v,
+        Ok(None) => return Ok(HashMap::new()),
+        Err(e) => return Err(ProviderError::config_store(ctx, e)),
     };
 
-    let providers: HashMap<String, ProviderRecord> =
-        serde_json::from_value(value).map_err(|source| ProviderError::JsonDeserialize {
-            provider_id,
-            source,
-        })?;
+    let providers: HashMap<String, ProviderRecord> = serde_json::from_value(value)
+        .map_err(|source| ProviderError::json_deserialize(ctx, source))?;
     Ok(providers)
 }
 
-/// Loads the provider check snapshot from persisted settings.
+/// Loads the persisted provider check snapshot.
 ///
-/// 从持久化配置中加载 Provider 检查快照。
+/// 读取持久化的供应商检查快照。
 pub(in crate::core::bot::services::settings::provider) fn load_provider_check_snapshot(
     app: &AppHandle,
+    ctx: &ProviderExecutionContext,
 ) -> Result<ProviderCheckSnapshot, ProviderError> {
-    let providers = load_all_providers(app, None)?;
+    let providers = load_all_providers(app, ctx)?;
     let total = providers.len();
     let mut supported = Vec::new();
     let mut skipped = Vec::new();
@@ -52,13 +55,14 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_check_sn
     Ok(ProviderCheckSnapshot::new(total, supported, skipped))
 }
 
-/// Loads one provider configuration as an owned read-only snapshot.
+/// Loads one saved provider record.
 ///
-/// 读取单个 provider 的配置，返回拥有所有权的只读快照。
+/// 读取单个已保存的供应商配置。
 pub(in crate::core::bot::services::settings::provider) fn load_provider_record(
     app: &AppHandle,
+    ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
 ) -> Result<Option<ProviderRecord>, ProviderError> {
-    let mut providers = load_all_providers(app, Some(provider_id))?;
+    let mut providers = load_all_providers(app, ctx)?;
     Ok(providers.remove(provider_id.as_str()))
 }

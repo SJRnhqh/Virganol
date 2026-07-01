@@ -2,27 +2,21 @@
 use keyring::{Entry, Error as KeyringError};
 
 use super::super::super::super::super::super::{
-    ProviderError, ProviderId, PROVIDER_KEYRING_SERVICE,
+    ProviderError, ProviderExecutionContext, ProviderId, PROVIDER_KEYRING_SERVICE,
 };
 
-/// Removes provider API key from system keyring.
+/// Removes the stored API key for a provider from the system keyring.
 ///
-/// 从系统密钥库删除 provider 的 API Key。
+/// 从系统密钥库删除指定供应商的 API 密钥。
 pub(in crate::core::bot::services::settings::provider) fn remove_provider_key(
+    ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
 ) -> Result<(), ProviderError> {
-    let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str()).map_err(|source| {
-        ProviderError::SecretStoreInit {
-            provider_id,
-            source,
-        }
-    })?;
+    let entry = Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str())
+        .map_err(|source| ProviderError::secret_store_init(ctx, source))?;
 
     match entry.delete_credential() {
         Ok(()) | Err(KeyringError::NoEntry) => Ok(()),
-        Err(source) => Err(ProviderError::SecretStoreRemove {
-            provider_id,
-            source,
-        }),
+        Err(source) => Err(ProviderError::secret_store_remove(ctx, source)),
     }
 }

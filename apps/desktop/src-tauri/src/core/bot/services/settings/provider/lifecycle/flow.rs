@@ -4,7 +4,9 @@ use std::time::Instant;
 use tauri::AppHandle;
 
 use super::super::super::super::super::super::AppState;
-use super::super::super::super::super::{ProviderCheckTrigger, ProviderError};
+use super::super::super::super::super::{
+    ProviderCheckTrigger, ProviderError, ProviderLifecycleContext, ProviderSubject,
+};
 use super::super::load_provider_check_snapshot;
 use super::{
     emit_check_completed, emit_check_started, next_run_id, report_lifecycle_failure,
@@ -13,24 +15,30 @@ use super::{
 
 /// Runs one provider lifecycle check from snapshot loading through event emission.
 ///
-/// 管理一轮 Provider 生命周期检查，覆盖持久化快照读取、健康检查和事件推送。
+/// 执行一轮供应商生命周期检查，负责读取快照、运行健康检查并推送事件。
 pub(crate) async fn check_providers_lifecycle(
     app: AppHandle,
     state: &AppState,
     trigger: ProviderCheckTrigger,
 ) {
     let run_id = next_run_id(&trigger);
+    let ctx = ProviderLifecycleContext::start(run_id.as_str(), &trigger);
     let started_at = Instant::now();
 
-    if let Err(e) = emit_check_started(&app, run_id.as_str(), &trigger) {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
+    if let Err(e) = emit_check_started(&app, &ctx, run_id.as_str(), &trigger) {
+        report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &[]);
         return;
     }
 
-    let snapshot = match load_provider_check_snapshot(&app) {
+    let snapshot = match {
+        let ctx = ctx
+            .for_config_store()
+            .into_execution_context_with(ProviderSubject::configured_providers());
+        load_provider_check_snapshot(&app, &ctx)
+    } {
         Ok(snapshot) => snapshot,
         Err(e) => {
-            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
+            report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &[]);
             return;
         }
     };
@@ -71,8 +79,8 @@ pub(crate) async fn check_providers_lifecycle(
                 trigger.as_tag()
             );
         }
-        if let Err(e) = emit_check_completed(&app, run_id.as_str(), supported_total) {
-            report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
+        if let Err(e) = emit_check_completed(&app, &ctx, run_id.as_str(), supported_total) {
+            report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &[]);
             return;
         }
         return;
@@ -81,6 +89,7 @@ pub(crate) async fn check_providers_lifecycle(
     let check_result = run_provider_checks(
         &app,
         state.provider(),
+        &ctx,
         run_id.as_str(),
         snapshot.into_supported(),
     )
@@ -91,13 +100,13 @@ pub(crate) async fn check_providers_lifecycle(
     let primary_error = join_error
         .or_else(|| (!suppressed_errors.is_empty()).then_some(ProviderError::CheckAggregate));
     if let Some(e) = primary_error {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &suppressed_errors);
+        report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &suppressed_errors);
         return;
     }
 
     let duration_ms = started_at.elapsed().as_millis() as u64;
-    if let Err(e) = emit_check_completed(&app, run_id.as_str(), failed_count) {
-        report_lifecycle_failure(&app, run_id.as_str(), &trigger, &e, &[]);
+    if let Err(e) = emit_check_completed(&app, &ctx, run_id.as_str(), failed_count) {
+        report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &[]);
         return;
     }
 
