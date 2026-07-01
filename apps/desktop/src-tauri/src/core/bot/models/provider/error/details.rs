@@ -46,8 +46,11 @@ impl ProviderErrorDetails {
         match error {
             ProviderError::ManagerRequestPayloadAbsent { context }
             | ProviderError::CheckStartedEmit { context, .. }
+            | ProviderError::CheckStatusEmit { context, .. }
             | ProviderError::CheckCompletedEmit { context, .. }
             | ProviderError::CheckFailedEmit { context, .. }
+            | ProviderError::CheckTaskJoin { context, .. }
+            | ProviderError::CheckAggregate { context }
             | ProviderError::HealthCheckMissingConfig { context }
             | ProviderError::HealthCheckNetwork { context, .. }
             | ProviderError::HealthCheckHttp { context }
@@ -61,8 +64,6 @@ impl ProviderErrorDetails {
             | ProviderError::SecretStoreWrite { context, .. }
             | ProviderError::SecretStoreRead { context, .. }
             | ProviderError::SecretStoreRemove { context, .. } => context.subject().provider_id(),
-            ProviderError::CheckStatusEmit { provider_id, .. } => Some(*provider_id),
-            _ => None,
         }
     }
 
@@ -91,7 +92,7 @@ impl ProviderErrorDetails {
             | ProviderError::CheckStatusEmit { .. }
             | ProviderError::CheckCompletedEmit { .. }
             | ProviderError::CheckFailedEmit { .. } => "provider.lifecycle.event.emit",
-            ProviderError::CheckTaskJoin { .. } | ProviderError::CheckAggregate => {
+            ProviderError::CheckTaskJoin { .. } | ProviderError::CheckAggregate { .. } => {
                 "provider.lifecycle.check.execute"
             }
             ProviderError::HealthCheckMissingConfig { .. } => "provider.connection.check.validate",

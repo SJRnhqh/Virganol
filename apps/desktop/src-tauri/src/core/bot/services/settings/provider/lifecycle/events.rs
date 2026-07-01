@@ -33,10 +33,10 @@ pub(super) fn emit_check_started(
 
 /// Emits one provider check status event.
 ///
-/// 推送单个 Provider 的 check status 事件。
+/// 推送单个供应商状态事件。
 pub(super) fn emit_check_status(
     app: &AppHandle,
-    _ctx: &ProviderExecutionContext,
+    ctx: &ProviderExecutionContext,
     run_id: &str,
     provider_id: ProviderId,
     config: ProviderRecord,
@@ -46,10 +46,7 @@ pub(super) fn emit_check_status(
     let payload = ProviderCheckStatusPayload::new(run_id, provider_id, config, health, key_meta);
 
     app.emit(EVT_CHECK_STATUS, &payload)
-        .map_err(|source| ProviderError::CheckStatusEmit {
-            provider_id,
-            source,
-        })
+        .map_err(|source| ProviderError::check_status_emit(ctx, source))
 }
 
 /// Emits the lifecycle completed event.

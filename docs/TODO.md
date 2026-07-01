@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Lifecycle error attribution: upgrade status emit / join / aggregate errors to lifecycle context projection
+- [ ] Error boundary contract follow-up: align lifecycle failure code/details and frontend failed-event payload after context propagation
 
 ## Planned
 
@@ -17,4 +17,6 @@
 
 ## Completed
 
+- [x] Lifecycle error attribution: upgraded status emit, join, and aggregate errors to lifecycle context projection
+- [x] Lifecycle comment cleanup: normalized touched runner/finalize Chinese comments
 - [x] Provider collection subject attribution: Subject→Candidate variant, ProviderErrorContext→ProviderSubject, load_provider_check_snapshot context wiring, TryFrom→parse decoupling

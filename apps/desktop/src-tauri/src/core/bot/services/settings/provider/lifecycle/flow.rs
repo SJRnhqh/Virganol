@@ -98,7 +98,7 @@ pub(crate) async fn check_providers_lifecycle(
     let (failed_count, join_error, suppressed_errors) = check_result.into_parts();
 
     let primary_error = join_error
-        .or_else(|| (!suppressed_errors.is_empty()).then_some(ProviderError::CheckAggregate));
+        .or_else(|| (!suppressed_errors.is_empty()).then(|| ProviderError::check_aggregate(&ctx)));
     if let Some(e) = primary_error {
         report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &suppressed_errors);
         return;

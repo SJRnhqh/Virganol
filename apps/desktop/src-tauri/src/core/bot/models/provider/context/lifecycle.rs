@@ -61,6 +61,13 @@ impl<'a> ProviderLifecycleContext<'a> {
         Self(self.0.into_secret_store())
     }
 
+    /// Derives an owned lifecycle-event stage view from this lifecycle context.
+    ///
+    /// 从当前生命周期上下文派生一个拥有所有权的生命周期事件阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_lifecycle_emit(&self) -> Self {
+        Self(self.0.for_lifecycle_emit())
+    }
+
     /// Derives an owned connection stage view from this lifecycle context.
     ///
     /// 从当前生命周期上下文派生一个拥有所有权的连接阶段视图，不改变来源上下文。

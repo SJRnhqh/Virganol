@@ -8,7 +8,7 @@ use tokio::task::JoinError;
 
 use super::super::super::SettingsError;
 use super::super::{
-    ProviderErrorContext, ProviderExecutionContext, ProviderId, ProviderLifecycleContext,
+    ProviderErrorContext, ProviderExecutionContext, ProviderLifecycleContext,
     ProviderManagerContext,
 };
 
@@ -44,13 +44,13 @@ pub(in crate::core::bot) enum ProviderError {
     },
     /// Provider check lifecycle status event emission failed.
     ///
-    /// Provider 检查生命周期状态事件推送失败。
-    #[error("provider check lifecycle status event emission failed: {source}")]
+    /// 供应商检查生命周期状态事件推送失败。
+    #[error("failed to emit provider check status event for {context}: {source}")]
     CheckStatusEmit {
-        /// Provider whose status event failed to emit.
+        /// Provider status event error attribution context.
         ///
-        /// 状态事件推送失败所属的 Provider。
-        provider_id: ProviderId,
+        /// 供应商状态事件错误归因上下文。
+        context: ProviderErrorContext,
         /// Tauri event emission error.
         ///
         /// Tauri 事件推送错误。
@@ -89,9 +89,13 @@ pub(in crate::core::bot) enum ProviderError {
     },
     /// Provider check task join failed.
     ///
-    /// Provider 检查任务 join 失败。
-    #[error("provider check task join failed: {source}")]
+    /// 供应商检查任务汇合失败。
+    #[error("provider check task join failed for {context}: {source}")]
     CheckTaskJoin {
+        /// Provider lifecycle execution error attribution context.
+        ///
+        /// 供应商生命周期执行错误归因上下文。
+        context: ProviderErrorContext,
         /// Tokio task join error raised by the concurrent health-check task.
         ///
         /// 并发健康检查任务产生的 Tokio task join 错误。
@@ -100,9 +104,14 @@ pub(in crate::core::bot) enum ProviderError {
     },
     /// Provider check collected provider-level errors during lifecycle execution.
     ///
-    /// Provider 检查生命周期执行期间收集到了 Provider 级错误。
-    #[error("provider check collected provider-level errors")]
-    CheckAggregate,
+    /// 供应商检查生命周期执行期间收集到了供应商级错误。
+    #[error("provider check collected provider-level errors for {context}")]
+    CheckAggregate {
+        /// Provider lifecycle aggregate error attribution context.
+        ///
+        /// 供应商生命周期聚合错误归因上下文。
+        context: ProviderErrorContext,
+    },
     /// Required health check configuration is missing.
     ///
     /// 健康检查所需配置缺失。
@@ -306,6 +315,19 @@ impl ProviderError {
         }
     }
 
+    /// Creates a lifecycle status event emission error from the execution context.
+    ///
+    /// 基于执行上下文创建生命周期状态事件推送错误。
+    pub(in crate::core::bot) fn check_status_emit(
+        ctx: &ProviderExecutionContext,
+        source: TauriError,
+    ) -> Self {
+        Self::CheckStatusEmit {
+            context: ctx.error_context(),
+            source,
+        }
+    }
+
     /// Creates a lifecycle completed event emission error from the lifecycle context.
     ///
     /// 基于生命周期上下文创建 lifecycle completed 事件推送错误。
@@ -329,6 +351,28 @@ impl ProviderError {
         Self::CheckFailedEmit {
             context: ctx.error_context(),
             source,
+        }
+    }
+
+    /// Creates a lifecycle health-check task join error from the lifecycle context.
+    ///
+    /// 基于生命周期上下文创建健康检查任务汇合错误。
+    pub(in crate::core::bot) fn check_task_join(
+        ctx: &ProviderLifecycleContext,
+        source: JoinError,
+    ) -> Self {
+        Self::CheckTaskJoin {
+            context: ctx.error_context(),
+            source,
+        }
+    }
+
+    /// Creates a lifecycle aggregate error from the lifecycle context.
+    ///
+    /// 基于生命周期上下文创建生命周期聚合错误。
+    pub(in crate::core::bot) fn check_aggregate(ctx: &ProviderLifecycleContext) -> Self {
+        Self::CheckAggregate {
+            context: ctx.error_context(),
         }
     }
 

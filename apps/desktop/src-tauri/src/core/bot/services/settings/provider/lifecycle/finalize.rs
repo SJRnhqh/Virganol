@@ -10,7 +10,7 @@ use super::super::save_provider;
 
 /// Persists a provider record when enabled models are pruned by available models.
 ///
-/// 当 enabled_models 被当前可用模型修剪时，持久化已协调的 Provider 配置。
+/// 当已启用模型被当前可用模型修剪时，持久化已协调的供应商配置。
 fn persist_reconciled_enabled_models(
     app: &AppHandle,
     provider_state: &ProviderState,
@@ -48,7 +48,7 @@ fn persist_reconciled_enabled_models(
 
 /// Finalizes one provider health check result for lifecycle status emission.
 ///
-/// 单个 Provider 健康检查完成后，生成生命周期状态推送前的后处理结果。
+/// 单个供应商健康检查完成后，生成生命周期状态推送前的后处理结果。
 pub(super) fn finalize_provider_check_result(
     app: &AppHandle,
     provider_state: &ProviderState,
