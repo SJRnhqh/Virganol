@@ -5,19 +5,11 @@
 
 ## Current
 
-- [ ] Lifecycle error attribution cleanup — upgrade status, join, and aggregate errors to lifecycle-aware context/projection.
-- [ ] Provider collection subject attribution — apply typed `ProviderSubject` to collection-level paths such as `load_all_providers`; decide when `ProviderErrorContext` should carry full subject semantics
+No active branch-local items. Deferred lifecycle/context follow-ups are tracked in `docs/ROADMAP.md`.
 
 ## Planned
 
-- [ ] Architecture design closeout — document accepted Provider context fields, propagation boundaries, Provider/Settings responsibility split, and error projection rules.
-- [ ] Lifecycle runner concurrency decision — defer the `JoinSet` versus `FuturesUnordered` implementation choice until lifecycle-to-provider context conversion semantics are settled, then evaluate the concurrency primitive against ownership, lifetime, cancellation, panic isolation, and error attribution requirements.
-- [ ] Core fallback logging design — specify how Provider core entrypoints should log or report fallback failures using carried context without involving Tauri command handlers or reinterpreting core business errors.
-- [ ] Lifecycle trigger context integration — decide whether `ProviderCheckTrigger` remains an independent lifecycle value object or becomes part of the provider lifecycle context.
-- [ ] Provider error attribution model — replace the current optional provider-id attribution with a typed attribution model, distinguishing single-provider, lifecycle-run, provider-collection, and subsystem/global failures while keeping boundary details stable.
-- [ ] Observability handoff notes — capture the context fields and boundaries that Phase 6.3 structured logging should reuse, while keeping trace/correlation policy deferred to the observability design.
-- [ ] Rust visibility guardrail lint — after the context/error design and technical docs settle, consider an optional MJS architecture lint that checks functions, structs, impl methods, and re-export chains do not expose a wider module scope than their declared visibility; treat this as discipline-oriented, non-blocking codebase hygiene.
-- [ ] Architecture documentation update — write the accepted context propagation design into `docs/ARCHITECTURE.md` and keep `docs/ROADMAP.md` aligned with completed Phase 6.2 items.
+No branch-local planned items.
 
 ## Completed
 
