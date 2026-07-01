@@ -5,13 +5,10 @@
 
 ## Current
 
-- [ ] Error boundary contract follow-up: align lifecycle failure code/details and frontend failed-event payload after context propagation
-
 ## Planned
 
-- [ ] Error attribution model upgrade: typed subject for lifecycle run / subsystem
-- [ ] Snapshot context + concurrency review: decide ProviderCheckSnapshot disposition, assess JoinSet / FuturesUnordered impact
-- [ ] Fallback logging rules: record core-path fallbacks with existing context, no reinterpretation at command boundary
+- [ ] Error attribution model upgrade: typed subject for single provider, lifecycle run, provider collection, and subsystem-level failures; keep boundary details stable
+- [ ] Error boundary contract: split error out of response payload — ProviderAppError as a standalone boundary field instead of nested inside the response wrapper
 - [ ] Logging system design discussion (exploration only — trace / correlation / persistence directions)
 - [ ] ARCHITECTURE.md reliability sections: Context Propagation / Error Architecture full technical design
 

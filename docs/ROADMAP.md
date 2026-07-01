@@ -40,7 +40,7 @@ LLM Provider 接入分为两条主线：
 
 #### 6.2 后端错误系统深入（details / source chain / issue aggregation / context propagation）
 
-**当前状态**：交互式 settings 链路已闭合；生命周期归因、集合主体语义与架构文档转入后续路线。
+**当前状态**：交互式 settings 链路已闭合；生命周期归因与集合主体语义已完成；架构文档转入后续路线。
 
 **已完成**：
 
@@ -52,17 +52,16 @@ LLM Provider 接入分为两条主线：
 
 **后续路线**：
 
-- [ ] 生命周期错误归因收尾：将 status emit、join、aggregate 错误升级为生命周期上下文归因与边界投影
-- [ ] 供应商集合主体归因：保留 `load_provider_check_snapshot` 中 `ProviderId::try_from(raw_id)` 的降级分类逻辑；待 `ProviderSubject` / `ProviderErrorContext` 支持完整主体语义后，统一原始供应商 ID、已配置供应商集合与快照分类错误的归因规则
+- [x] 生命周期错误归因收尾：将 status emit、join、aggregate 错误升级为生命周期上下文归因与边界投影
+- [x] 供应商集合主体归因：保留 `load_provider_check_snapshot` 中 `ProviderId::try_from(raw_id)` 的降级分类逻辑；待 `ProviderSubject` / `ProviderErrorContext` 支持完整主体语义后，统一原始供应商 ID、已配置供应商集合与快照分类错误的归因规则
 - [ ] 错误归因模型升级：以 typed subject 区分单供应商、生命周期运行、供应商集合与子系统级失败，并保持边界 details 稳定
-- [ ] 生命周期快照上下文收口：在集合主体归因定型后，决定 `ProviderCheckSnapshot` 保持独立分类配置快照，还是折入供应商生命周期上下文模型
-- [ ] 生命周期并发模型复核：在上下文归因稳定后，评估 `JoinSet` / `FuturesUnordered` 对所有权、取消、panic 隔离与错误归因的影响
-- [ ] 核心 fallback 日志规则：基于已携带上下文记录 fallback failure，命令边界不重新解释 core business errors
+- [ ] 错误边界契约重构：将 ProviderAppError 从 response 载荷中拆出为独立边界字段，不再嵌套在响应包装内
 - [ ] 可靠性架构文档：将上下文字段、传播边界、Provider/Settings 责任边界、错误投影、source chain 与 issue aggregation 写入 `ARCHITECTURE.md`
 
 #### 6.3 日志系统
 
 - [ ] 上下文日志接力：复用 Provider context 字段，trace/correlation 策略留到日志系统设计
+- [ ] ProviderCheckSnapshot 归入 Span attribute：生命周期日志 Span 携带快照分类结果（supported/skipped/total），不折入上下文字段
 - [ ] 设计日志上下文模型，并在该阶段决定 trace/correlation/operation 标识是否拆分
 - [ ] 设计日志持久化策略（文件轮转 / 结构化格式）
 - [ ] 定义日志埋点（CRUD 入口/出口、健康检查、持久化操作、错误路径）
