@@ -54,7 +54,7 @@ pub(super) fn emit_check_status(
 
 /// Emits the lifecycle completed event.
 ///
-/// 推送生命周期 completed 事件。
+/// 推送生命周期完成事件。
 pub(super) fn emit_check_completed(
     app: &AppHandle,
     ctx: &ProviderLifecycleContext,
