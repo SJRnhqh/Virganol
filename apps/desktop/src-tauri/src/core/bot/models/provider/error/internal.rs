@@ -153,6 +153,16 @@ pub(in crate::core::bot) enum ProviderError {
         #[source]
         source: ReqwestError,
     },
+    /// Provider id from storage is not supported by the current backend.
+    ///
+    /// 存储中的供应商标识不被当前后端支持。
+    #[error("provider is not supported by the current backend for {context}")]
+    UnsupportedProvider {
+        /// Provider error attribution context.
+        ///
+        /// Provider 错误归因上下文。
+        context: ProviderErrorContext,
+    },
     /// Requested provider has no persisted configuration record.
     ///
     /// 请求的 provider 没有对应的持久化配置记录。
@@ -269,16 +279,6 @@ pub(in crate::core::bot) enum ProviderError {
         #[source]
         source: KeyringError,
     },
-    /// Provider id from storage is not supported by the current backend.
-    ///
-    /// 存储中的供应商标识不被当前后端支持。
-    #[error("provider is not supported by the current backend: {raw_provider_id}")]
-    UnsupportedProvider {
-        /// Raw provider id that could not be parsed as a supported backend provider.
-        ///
-        /// 无法解析为后端支持供应商的原始标识。
-        raw_provider_id: String,
-    },
 }
 
 impl ProviderError {
@@ -375,6 +375,15 @@ impl ProviderError {
         Self::HealthCheckResponseFormat {
             context: ctx.error_context(),
             source,
+        }
+    }
+
+    /// Creates an unsupported-provider error from the execution context.
+    ///
+    /// 基于执行上下文创建不支持的 provider 错误。
+    pub(in crate::core::bot) fn unsupported_provider(ctx: &ProviderExecutionContext) -> Self {
+        Self::UnsupportedProvider {
+            context: ctx.error_context(),
         }
     }
 

@@ -52,6 +52,7 @@ impl ProviderErrorDetails {
             | ProviderError::HealthCheckNetwork { context, .. }
             | ProviderError::HealthCheckHttp { context }
             | ProviderError::HealthCheckResponseFormat { context, .. }
+            | ProviderError::UnsupportedProvider { context, .. }
             | ProviderError::ConfigNotFound { context }
             | ProviderError::JsonSerialize { context, .. }
             | ProviderError::JsonDeserialize { context, .. }
@@ -59,7 +60,7 @@ impl ProviderErrorDetails {
             | ProviderError::SecretStoreInit { context, .. }
             | ProviderError::SecretStoreWrite { context, .. }
             | ProviderError::SecretStoreRead { context, .. }
-            | ProviderError::SecretStoreRemove { context, .. } => context.provider_id(),
+            | ProviderError::SecretStoreRemove { context, .. } => context.subject().provider_id(),
             ProviderError::CheckStatusEmit { provider_id, .. } => Some(*provider_id),
             _ => None,
         }
@@ -98,6 +99,7 @@ impl ProviderErrorDetails {
                 "provider.connection.check.request"
             }
             ProviderError::HealthCheckResponseFormat { .. } => "provider.connection.check.parse",
+            ProviderError::UnsupportedProvider { .. } => "provider.store.config.validate",
             ProviderError::ConfigNotFound { .. } => "provider.store.config.find",
             ProviderError::JsonSerialize { .. } => "provider.store.config.serialize",
             ProviderError::JsonDeserialize { .. } => "provider.store.config.deserialize",
@@ -114,7 +116,6 @@ impl ProviderErrorDetails {
             ProviderError::SecretStoreWrite { .. } => "provider.store.secret.write",
             ProviderError::SecretStoreRead { .. } => "provider.store.secret.read",
             ProviderError::SecretStoreRemove { .. } => "provider.store.secret.remove",
-            _ => "provider.unknown",
         }
     }
 }

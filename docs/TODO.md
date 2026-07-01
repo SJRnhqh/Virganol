@@ -9,11 +9,12 @@
 
 ## Planned
 
-- [ ] Provider collection subject attribution: finalize ProviderSubject / ProviderErrorContext, clean up load_provider_check_snapshot fallback
-- [ ] Error attribution model upgrade: typed subject for single provider / lifecycle run / collection / subsystem
+- [ ] Error attribution model upgrade: typed subject for lifecycle run / subsystem
 - [ ] Snapshot context + concurrency review: decide ProviderCheckSnapshot disposition, assess JoinSet / FuturesUnordered impact
 - [ ] Fallback logging rules: record core-path fallbacks with existing context, no reinterpretation at command boundary
 - [ ] Logging system design discussion (exploration only — trace / correlation / persistence directions)
 - [ ] ARCHITECTURE.md reliability sections: Context Propagation / Error Architecture full technical design
 
 ## Completed
+
+- [x] Provider collection subject attribution: Subject→Candidate variant, ProviderErrorContext→ProviderSubject, load_provider_check_snapshot context wiring, TryFrom→parse decoupling

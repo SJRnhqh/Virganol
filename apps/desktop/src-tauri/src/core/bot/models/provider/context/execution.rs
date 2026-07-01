@@ -66,6 +66,19 @@ impl ProviderExecutionContext {
         Self(self.0.for_secret_store())
     }
 
+    /// Derives a context view for a specific Provider-domain subject.
+    ///
+    /// 派生针对指定 Provider 领域主体的上下文视图。
+    pub(in crate::core::bot) fn for_subject(&self, subject: ProviderSubject) -> Self {
+        Self(ProviderContext::new(
+            self.0.stage(),
+            ExecutionExtra {
+                subject,
+                operation: self.0.extra().operation.clone(),
+            },
+        ))
+    }
+
     /// Derives a settings storage context from this execution context.
     ///
     /// 从当前执行上下文派生 settings 存储上下文。
@@ -77,12 +90,9 @@ impl ProviderExecutionContext {
     ///
     /// 将当前执行上下文投影为错误归因快照。
     pub(in crate::core::bot::models::provider) fn error_context(&self) -> ProviderErrorContext {
-        let ctx = self.0.error_context();
-
-        match self.0.extra().subject.provider_id() {
-            Some(provider_id) => ctx.with_provider(provider_id),
-            None => ctx,
-        }
+        self.0
+            .error_context()
+            .with_subject(self.0.extra().subject.clone())
     }
 
     /// Creates an execution context from its constituent parts.

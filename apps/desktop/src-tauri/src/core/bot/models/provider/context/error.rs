@@ -1,47 +1,47 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/error.rs
 use std::fmt;
 
-use super::super::ProviderId;
+use super::super::ProviderSubject;
 use super::ProviderStage;
 
 /// Provider error attribution context snapshot.
 ///
 /// Provider 错误归因上下文快照。
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub(in crate::core::bot) struct ProviderErrorContext {
-    /// Provider targeted by the failure, when attributable.
-    ///
-    /// 当失败可归属到单个 Provider 时携带对应 Provider ID。
-    provider_id: Option<ProviderId>,
     /// Provider domain execution stage where the failure was observed.
     ///
     /// 观察到失败时所在的 Provider 领域执行阶段。
     stage: ProviderStage,
+    /// Provider-domain subject targeted by the failure.
+    ///
+    /// 当前失败归因的 Provider 领域主体。
+    subject: ProviderSubject,
 }
 
 impl ProviderErrorContext {
-    /// Returns the provider attribution carried by this error context.
+    /// Returns the provider-domain subject carried by this error context.
     ///
-    /// 返回当前错误上下文携带的 Provider 归因。
-    pub(in crate::core::bot::models::provider) fn provider_id(&self) -> Option<ProviderId> {
-        self.provider_id
+    /// 返回当前错误上下文携带的 Provider 领域主体。
+    pub(in crate::core::bot::models::provider) fn subject(&self) -> &ProviderSubject {
+        &self.subject
     }
 
-    /// Adds provider attribution to this error context.
+    /// Replaces the provider-domain subject on this error context.
     ///
-    /// 为当前错误上下文补充 Provider 归因。
-    pub(super) fn with_provider(self, provider_id: ProviderId) -> Self {
+    /// 替换当前错误上下文上的 Provider 领域主体。
+    pub(super) fn with_subject(self, subject: ProviderSubject) -> Self {
         Self {
-            provider_id: Some(provider_id),
             stage: self.stage,
+            subject,
         }
     }
 
-    /// Creates an error context snapshot from provider attribution and stage.
+    /// Creates an error context snapshot from stage and subject.
     ///
-    /// 基于 Provider 归因与执行阶段创建错误上下文快照。
-    pub(super) fn from_parts(provider_id: Option<ProviderId>, stage: ProviderStage) -> Self {
-        Self { provider_id, stage }
+    /// 基于执行阶段与领域主体创建错误上下文快照。
+    pub(super) fn from_parts(stage: ProviderStage, subject: ProviderSubject) -> Self {
+        Self { stage, subject }
     }
 }
 
@@ -50,9 +50,16 @@ impl fmt::Display for ProviderErrorContext {
     ///
     /// 将此错误上下文快照格式化为内部错误消息。
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self.provider_id {
-            Some(provider_id) => write!(f, "provider {provider_id} at {}", self.stage.as_phrase()),
-            None => write!(f, "the provider subsystem at {}", self.stage.as_phrase()),
+        match &self.subject {
+            ProviderSubject::Provider(id) => {
+                write!(f, "provider {id} at {}", self.stage.as_phrase())
+            }
+            ProviderSubject::Candidate(raw) => {
+                write!(f, "candidate {raw} at {}", self.stage.as_phrase())
+            }
+            ProviderSubject::ConfiguredProviders => {
+                write!(f, "the configured providers at {}", self.stage.as_phrase())
+            }
         }
     }
 }

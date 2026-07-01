@@ -13,9 +13,9 @@ use super::{
     run_provider_checks,
 };
 
-/// Runs one provider lifecycle check from snapshot loading through event emission.
+/// Orchestrates one provider lifecycle check run.
 ///
-/// 执行一轮供应商生命周期检查，负责读取快照、运行健康检查并推送事件。
+/// 编排一轮供应商生命周期检查。
 pub(crate) async fn check_providers_lifecycle(
     app: AppHandle,
     state: &AppState,

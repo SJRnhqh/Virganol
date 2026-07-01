@@ -2,8 +2,6 @@
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
-use super::super::super::ProviderError;
-
 /// Supported provider identifier shared across commands, storage, and events.
 ///
 /// commands、持久化和事件共用的受支持 provider 标识。
@@ -22,6 +20,17 @@ pub(in crate::core::bot) enum ProviderId {
 }
 
 impl ProviderId {
+    /// Parses a persisted raw identifier into a backend-supported provider id.
+    ///
+    /// 将持久化的原始标识解析为后端支持的 provider id。
+    pub(in crate::core::bot) fn parse(value: &str) -> Option<Self> {
+        match value {
+            "ollama" => Some(Self::Ollama),
+            "deepseek" => Some(Self::DeepSeek),
+            _ => None,
+        }
+    }
+
     /// Returns the stable provider id string.
     ///
     /// 返回稳定的 provider id 字符串。
@@ -39,23 +48,6 @@ impl ProviderId {
         match self {
             Self::DeepSeek => &["DEEPSEEK_API_KEY"],
             _ => &[],
-        }
-    }
-}
-
-impl TryFrom<&str> for ProviderId {
-    type Error = ProviderError;
-
-    /// Parses a persisted provider id into a backend-supported provider id.
-    ///
-    /// 将持久化的 provider id 解析为后端当前支持的 provider id。
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        match value {
-            "ollama" => Ok(Self::Ollama),
-            "deepseek" => Ok(Self::DeepSeek),
-            other => Err(ProviderError::UnsupportedProvider {
-                raw_provider_id: other.to_string(),
-            }),
         }
     }
 }

@@ -18,7 +18,7 @@ const EVT_CHECK_FAILED: &str = "providers-check-lifecycle-failed";
 
 /// Emits the lifecycle started event.
 ///
-/// 推送生命周期 started 事件。
+/// 推送生命周期开始事件。
 pub(super) fn emit_check_started(
     app: &AppHandle,
     ctx: &ProviderLifecycleContext,
@@ -69,7 +69,7 @@ pub(super) fn emit_check_completed(
 
 /// Emits the lifecycle failed event.
 ///
-/// 推送生命周期 failed 事件。
+/// 推送生命周期失败事件。
 pub(super) fn emit_check_failed(
     app: &AppHandle,
     ctx: &ProviderLifecycleContext,
