@@ -60,13 +60,6 @@ impl ProviderManagerContext {
         Self(self.0.into_config_store())
     }
 
-    /// Consumes this interactive management context into the secret-store stage.
-    ///
-    /// 消费当前交互式管理上下文，并将其转换为密钥存储阶段。
-    pub(in crate::core::bot) fn into_secret_store(self) -> Self {
-        Self(self.0.into_secret_store())
-    }
-
     /// Converts this interactive management context into an execution context.
     ///
     /// 将当前交互式管理上下文转换为执行上下文。

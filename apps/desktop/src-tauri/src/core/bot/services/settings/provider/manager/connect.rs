@@ -10,9 +10,9 @@ use super::super::{
     load_provider_record, probe_provider_connection, save_provider, ProviderKeyTransaction,
 };
 
-/// Connects to a provider and saves the configuration if health check succeeds.
+/// Connects a provider and saves its configuration after a successful probe.
 ///
-/// 连接 Provider 并在健康检查成功后持久化配置。
+/// 连接供应商，并在探测成功后保存配置。
 pub(crate) async fn connect_and_save(
     app: &AppHandle,
     state: &AppState,

@@ -5,8 +5,7 @@
 
 ## Current
 
-- [ ] Secret store init follow-up — adapt non-reset secret load/save paths away from direct `SecretStoreInit { provider_id }` construction after the reset-scoped context upgrade.
-- [ ] Store error attribution cleanup — upgrade `CheckStatusEmit` from raw `provider_id` to `ProviderErrorContext`
+- [ ] Lifecycle error attribution cleanup — upgrade status, join, and aggregate errors to lifecycle-aware context/projection.
 - [ ] Provider collection subject attribution — apply typed `ProviderSubject` to collection-level paths such as `load_all_providers`; decide when `ProviderErrorContext` should carry full subject semantics
 
 ## Planned
@@ -22,6 +21,7 @@
 
 ## Completed
 
+- [x] Provider settings interactive chains closed — connect/reset/update now pass staged context through health, config, and secret errors; built-in health routing is exhaustive.
 - [x] Provider settings reset chain reviewed — manager reset, provider config remove/save, and provider secret remove paths now use staged execution context/error projection for reset-owned failures, with rollback suppression semantics preserved.
 - [x] Provider settings update chain reviewed — manager update, provider config load/update, and common settings load/save paths now have validated context/error propagation boundaries and normalized bilingual function comments.
 - [x] Provider context model landed — `ProviderContext<T>` / `ProviderStage` / lifecycle-manager-execution contexts now carry Provider business stage, operation intent, lifecycle trigger/run metadata, and typed `ProviderSubject` attribution.

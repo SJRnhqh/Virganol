@@ -7,7 +7,7 @@ use super::health_check;
 
 /// Runs a health check with the resolved provider key and source metadata.
 ///
-/// 使用已解析的 Provider key 执行健康检查，并返回 key 来源元信息。
+/// 使用已解析的供应商密钥执行健康检查，并返回密钥来源元信息。
 pub(in crate::core::bot::services::settings::provider) async fn health_check_with_resolved_key(
     ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
@@ -20,7 +20,7 @@ pub(in crate::core::bot::services::settings::provider) async fn health_check_wit
 
     let response = {
         let key = key_resolution.key().map(|k| k.as_str()).unwrap_or("");
-        health_check(provider_id, url, key).await
+        health_check(ctx, provider_id, url, key).await
     };
     (response, key_resolution.into_meta())
 }

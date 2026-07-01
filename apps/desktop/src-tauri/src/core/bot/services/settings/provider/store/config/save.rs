@@ -10,7 +10,7 @@ use super::load_all_providers;
 
 /// Saves persisted configuration for a provider, overwriting any existing record.
 ///
-/// 写入或更新指定提供方的持久化配置。
+/// 写入或更新指定供应商的持久化配置。
 pub(in crate::core::bot::services::settings::provider) fn save_provider(
     app: &AppHandle,
     provider_state: &ProviderState,

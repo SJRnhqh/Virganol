@@ -4,9 +4,9 @@ use super::super::super::super::super::super::{
 };
 use super::{load_provider_env, load_provider_key};
 
-/// Resolves the provider API key using environment variables before keyring.
+/// Resolves a provider API key from environment variables or keyring.
 ///
-/// 按环境变量优先、keyring 兜底的顺序解析 Provider API key。
+/// 按环境变量优先、系统密钥库兜底的顺序解析供应商 API 密钥。
 pub(in crate::core::bot::services::settings::provider) fn resolve_provider_key(
     ctx: &ProviderExecutionContext,
     provider_id: ProviderId,

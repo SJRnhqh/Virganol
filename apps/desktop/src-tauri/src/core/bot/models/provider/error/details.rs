@@ -48,19 +48,19 @@ impl ProviderErrorDetails {
             | ProviderError::CheckStartedEmit { context, .. }
             | ProviderError::CheckCompletedEmit { context, .. }
             | ProviderError::CheckFailedEmit { context, .. }
+            | ProviderError::HealthCheckMissingConfig { context }
+            | ProviderError::HealthCheckNetwork { context, .. }
+            | ProviderError::HealthCheckHttp { context }
+            | ProviderError::HealthCheckResponseFormat { context, .. }
             | ProviderError::ConfigNotFound { context }
             | ProviderError::JsonSerialize { context, .. }
             | ProviderError::JsonDeserialize { context, .. }
             | ProviderError::ConfigStore { context, .. }
             | ProviderError::SecretStoreInit { context, .. }
+            | ProviderError::SecretStoreWrite { context, .. }
+            | ProviderError::SecretStoreRead { context, .. }
             | ProviderError::SecretStoreRemove { context, .. } => context.provider_id(),
-            ProviderError::CheckStatusEmit { provider_id, .. }
-            | ProviderError::SecretStoreWrite { provider_id, .. }
-            | ProviderError::SecretStoreRead { provider_id, .. }
-            | ProviderError::HealthCheckMissingConfig { provider_id }
-            | ProviderError::HealthCheckNetwork { provider_id, .. }
-            | ProviderError::HealthCheckHttp { provider_id }
-            | ProviderError::HealthCheckResponseFormat { provider_id, .. } => Some(*provider_id),
+            ProviderError::CheckStatusEmit { provider_id, .. } => Some(*provider_id),
             _ => None,
         }
     }

@@ -9,9 +9,9 @@ use super::super::super::super::super::super::{
 };
 use super::super::super::super::load_settings;
 
-/// Loads all saved providers from settings.
+/// Loads all saved provider records.
 ///
-/// 从设置中读取所有已保存的提供方配置。
+/// 读取所有已保存的供应商配置。
 pub(super) fn load_all_providers(
     app: &AppHandle,
     ctx: &ProviderExecutionContext,
@@ -30,9 +30,9 @@ pub(super) fn load_all_providers(
     Ok(providers)
 }
 
-/// Loads the provider check snapshot from persisted settings.
+/// Loads the persisted provider check snapshot.
 ///
-/// 从持久化配置中加载 Provider 检查快照。
+/// 读取持久化的供应商检查快照。
 pub(in crate::core::bot::services::settings::provider) fn load_provider_check_snapshot(
     app: &AppHandle,
     ctx: &ProviderExecutionContext,
@@ -55,9 +55,9 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_check_sn
     Ok(ProviderCheckSnapshot::new(total, supported, skipped))
 }
 
-/// Loads one provider configuration as an owned read-only snapshot.
+/// Loads one saved provider record.
 ///
-/// 读取单个 provider 的配置，返回拥有所有权的只读快照。
+/// 读取单个已保存的供应商配置。
 pub(in crate::core::bot::services::settings::provider) fn load_provider_record(
     app: &AppHandle,
     ctx: &ProviderExecutionContext,

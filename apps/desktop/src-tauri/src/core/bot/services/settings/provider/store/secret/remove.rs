@@ -7,7 +7,7 @@ use super::super::super::super::super::super::{
 
 /// Removes the stored API key for a provider from the system keyring.
 ///
-/// 从系统密钥库删除指定提供方的 API 密钥。
+/// 从系统密钥库删除指定供应商的 API 密钥。
 pub(in crate::core::bot::services::settings::provider) fn remove_provider_key(
     ctx: &ProviderExecutionContext,
     provider_id: ProviderId,

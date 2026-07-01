@@ -2,7 +2,7 @@
 use log::{debug, error, info};
 
 use super::super::super::super::super::{
-    HealthCheckResult, ProviderError, ProviderId, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS,
+    HealthCheckResult, ProviderError, ProviderExecutionContext, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS,
 };
 use super::get_http_client;
 
@@ -10,10 +10,10 @@ const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
 
 /// Checks DeepSeek by requesting `{base_url}/v1/models` with bearer authentication.
 ///
-/// 通过 bearer 认证请求 `{base_url}/v1/models` 检查 DeepSeek，并解析模型列表。
-pub(super) async fn deepseek_check(provider_id: ProviderId, key: &str) -> HealthCheckResult {
+/// 通过认证请求 `{base_url}/v1/models` 检查 DeepSeek。
+pub(super) async fn deepseek_check(ctx: &ProviderExecutionContext, key: &str) -> HealthCheckResult {
     if key.is_empty() {
-        return HealthCheckResult::fail(ProviderError::HealthCheckMissingConfig { provider_id });
+        return HealthCheckResult::fail(ProviderError::health_check_missing_config(ctx));
     }
 
     let endpoint = format!("{}/v1/models", DEEPSEEK_BASE_URL);
@@ -31,33 +31,28 @@ pub(super) async fn deepseek_check(provider_id: ProviderId, key: &str) -> Health
         Ok(resp) => resp,
         Err(source) => {
             error!("[Tauri][DeepSeek] request failed: {}", source);
-            return HealthCheckResult::fail(ProviderError::HealthCheckNetwork {
-                provider_id,
-                source,
-            });
+            return HealthCheckResult::fail(ProviderError::health_check_network(ctx, source));
         }
     };
 
     if !resp.status().is_success() {
         let status = resp.status();
         error!("[Tauri][DeepSeek] HTTP {}", status);
-        return HealthCheckResult::fail(ProviderError::HealthCheckHttp { provider_id });
+        return HealthCheckResult::fail(ProviderError::health_check_http(ctx));
     }
 
     let json: serde_json::Value = match resp.json().await {
         Ok(v) => v,
         Err(source) => {
             error!("[Tauri][DeepSeek] JSON parse error: {}", source);
-            return HealthCheckResult::fail(ProviderError::HealthCheckResponseFormat {
-                provider_id,
-                source,
-            });
+            return HealthCheckResult::fail(ProviderError::health_check_response_format(
+                ctx, source,
+            ));
         }
     };
 
     debug!("[Tauri][DeepSeek] response: {}", json);
 
-    // OpenAI-compatible: { "data": [{ "id": "model-name" }] }
     let models: Vec<String> = json
         .get("data")
         .and_then(|data| data.as_array())

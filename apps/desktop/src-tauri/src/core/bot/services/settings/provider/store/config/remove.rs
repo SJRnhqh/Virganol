@@ -11,7 +11,7 @@ use super::load_all_providers;
 
 /// Removes persisted configuration for a provider and returns the deleted record.
 ///
-/// 删除指定提供方的持久化配置，并返回已删除记录。
+/// 删除指定供应商的持久化配置，并返回已删除记录。
 pub(in crate::core::bot::services::settings::provider) fn remove_provider(
     app: &AppHandle,
     provider_state: &ProviderState,

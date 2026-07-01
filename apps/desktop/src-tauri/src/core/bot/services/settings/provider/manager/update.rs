@@ -10,7 +10,7 @@ use super::super::update_models;
 
 /// Updates enabled models for a provider.
 ///
-/// 更新指定提供方的启用模型列表。
+/// 更新指定供应商的启用模型列表。
 pub(crate) fn update_provider_enabled_models(
     app: &AppHandle,
     state: &AppState,

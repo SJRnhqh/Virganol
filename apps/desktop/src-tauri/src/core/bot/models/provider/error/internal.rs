@@ -106,22 +106,22 @@ pub(in crate::core::bot) enum ProviderError {
     /// Required health check configuration is missing.
     ///
     /// 健康检查所需配置缺失。
-    #[error("provider health check configuration is missing for {provider_id}")]
+    #[error("provider health check configuration is missing for {context}")]
     HealthCheckMissingConfig {
-        /// Provider missing the required health-check configuration.
+        /// Provider connection error attribution context.
         ///
-        /// 缺少必需健康检查配置的 Provider。
-        provider_id: ProviderId,
+        /// Provider 连接错误归因上下文。
+        context: ProviderErrorContext,
     },
     /// Health check network connection failed.
     ///
     /// 健康检查网络连接失败。
-    #[error("provider health check network request failed: {source}")]
+    #[error("provider health check network request failed for {context}: {source}")]
     HealthCheckNetwork {
-        /// Provider whose health-check request failed.
+        /// Provider connection error attribution context.
         ///
-        /// 健康检查请求失败所属的 Provider。
-        provider_id: ProviderId,
+        /// Provider 连接错误归因上下文。
+        context: ProviderErrorContext,
         /// HTTP client request error.
         ///
         /// HTTP 客户端请求错误。
@@ -131,22 +131,22 @@ pub(in crate::core::bot) enum ProviderError {
     /// Health check HTTP status indicates failure.
     ///
     /// 健康检查 HTTP 状态码表示失败。
-    #[error("provider health check HTTP status indicates failure for {provider_id}")]
+    #[error("provider health check HTTP status indicates failure for {context}")]
     HealthCheckHttp {
-        /// Provider whose health-check response returned a failing status.
+        /// Provider connection error attribution context.
         ///
-        /// 健康检查响应返回失败状态码的 Provider。
-        provider_id: ProviderId,
+        /// Provider 连接错误归因上下文。
+        context: ProviderErrorContext,
     },
     /// Health check response format is invalid.
     ///
     /// 健康检查响应格式无效。
-    #[error("provider health check response format is invalid: {source}")]
+    #[error("provider health check response format is invalid for {context}: {source}")]
     HealthCheckResponseFormat {
-        /// Provider whose health-check response could not be parsed.
+        /// Provider connection error attribution context.
         ///
-        /// 健康检查响应无法解析的 Provider。
-        provider_id: ProviderId,
+        /// Provider 连接错误归因上下文。
+        context: ProviderErrorContext,
         /// HTTP response decoding error.
         ///
         /// HTTP 响应解码错误。
@@ -227,12 +227,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// System secret store could not be written.
     ///
     /// 系统密钥存储无法写入。
-    #[error("provider secret store could not be written: {source}")]
+    #[error("provider secret store could not be written for {context}: {source}")]
     SecretStoreWrite {
-        /// Provider whose secret could not be written.
+        /// Provider secret-store error attribution context.
         ///
-        /// 密钥无法写入所属的 Provider。
-        provider_id: ProviderId,
+        /// Provider 密钥存储错误归因上下文。
+        context: ProviderErrorContext,
         /// Keyring write error.
         ///
         /// keyring 写入错误。
@@ -242,12 +242,12 @@ pub(in crate::core::bot) enum ProviderError {
     /// System secret store could not be read.
     ///
     /// 系统密钥存储无法读取。
-    #[error("provider secret store could not be read: {source}")]
+    #[error("provider secret store could not be read for {context}: {source}")]
     SecretStoreRead {
-        /// Provider whose secret could not be read.
+        /// Provider secret-store error attribution context.
         ///
-        /// 密钥无法读取所属的 Provider。
-        provider_id: ProviderId,
+        /// Provider 密钥存储错误归因上下文。
+        context: ProviderErrorContext,
         /// Keyring read error.
         ///
         /// keyring 读取错误。
@@ -271,12 +271,12 @@ pub(in crate::core::bot) enum ProviderError {
     },
     /// Provider id from storage is not supported by the current backend.
     ///
-    /// 存储中的 provider id 不被当前后端支持。
+    /// 存储中的供应商标识不被当前后端支持。
     #[error("provider is not supported by the current backend: {raw_provider_id}")]
     UnsupportedProvider {
         /// Raw provider id that could not be parsed as a supported backend provider.
         ///
-        /// 无法解析为后端支持 Provider 的原始 provider id。
+        /// 无法解析为后端支持供应商的原始标识。
         raw_provider_id: String,
     },
 }
@@ -327,6 +327,52 @@ impl ProviderError {
         source: TauriError,
     ) -> Self {
         Self::CheckFailedEmit {
+            context: ctx.error_context(),
+            source,
+        }
+    }
+
+    /// Creates a health-check missing configuration error from the execution context.
+    ///
+    /// 基于执行上下文创建健康检查配置缺失错误。
+    pub(in crate::core::bot) fn health_check_missing_config(
+        ctx: &ProviderExecutionContext,
+    ) -> Self {
+        Self::HealthCheckMissingConfig {
+            context: ctx.error_context(),
+        }
+    }
+
+    /// Creates a health-check network error from the execution context.
+    ///
+    /// 基于执行上下文创建健康检查网络错误。
+    pub(in crate::core::bot) fn health_check_network(
+        ctx: &ProviderExecutionContext,
+        source: ReqwestError,
+    ) -> Self {
+        Self::HealthCheckNetwork {
+            context: ctx.error_context(),
+            source,
+        }
+    }
+
+    /// Creates a health-check HTTP status error from the execution context.
+    ///
+    /// 基于执行上下文创建健康检查状态码错误。
+    pub(in crate::core::bot) fn health_check_http(ctx: &ProviderExecutionContext) -> Self {
+        Self::HealthCheckHttp {
+            context: ctx.error_context(),
+        }
+    }
+
+    /// Creates a health-check response format error from the execution context.
+    ///
+    /// 基于执行上下文创建健康检查响应格式错误。
+    pub(in crate::core::bot) fn health_check_response_format(
+        ctx: &ProviderExecutionContext,
+        source: ReqwestError,
+    ) -> Self {
+        Self::HealthCheckResponseFormat {
             context: ctx.error_context(),
             source,
         }
@@ -389,6 +435,32 @@ impl ProviderError {
         source: KeyringError,
     ) -> Self {
         Self::SecretStoreInit {
+            context: ctx.error_context(),
+            source,
+        }
+    }
+
+    /// Creates a secret-store write error from the execution context.
+    ///
+    /// 基于执行上下文创建密钥存储写入错误。
+    pub(in crate::core::bot) fn secret_store_write(
+        ctx: &ProviderExecutionContext,
+        source: KeyringError,
+    ) -> Self {
+        Self::SecretStoreWrite {
+            context: ctx.error_context(),
+            source,
+        }
+    }
+
+    /// Creates a secret-store read error from the execution context.
+    ///
+    /// 基于执行上下文创建密钥存储读取错误。
+    pub(in crate::core::bot) fn secret_store_read(
+        ctx: &ProviderExecutionContext,
+        source: KeyringError,
+    ) -> Self {
+        Self::SecretStoreRead {
             context: ctx.error_context(),
             source,
         }

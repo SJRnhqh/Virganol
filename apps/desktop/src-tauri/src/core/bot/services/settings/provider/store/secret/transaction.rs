@@ -7,16 +7,16 @@ use super::{load_provider_key, remove_provider_key, save_provider_key};
 
 /// Best-effort transaction guard for provider keyring writes.
 ///
-/// Provider keyring 写入的补偿事务守卫：未 commit 时自动回滚。
+/// 供应商密钥写入的补偿事务守卫，未提交时自动回滚。
 pub(in crate::core::bot::services::settings::provider) struct ProviderKeyTransaction {
     ctx: ProviderExecutionContext,
     change: Option<ProviderKeyChange>,
 }
 
 impl ProviderKeyTransaction {
-    /// Starts a provider key transaction by writing the new key and capturing the previous key.
+    /// Starts a key transaction by saving the new key and capturing the previous one.
     ///
-    /// 通过写入新 Key 并捕获旧 Key，启动一次 provider key 事务。
+    /// 保存新密钥并捕获旧密钥，启动密钥事务。
     pub(in crate::core::bot::services::settings::provider) fn begin(
         ctx: ProviderExecutionContext,
         provider_id: ProviderId,
@@ -31,23 +31,23 @@ impl ProviderKeyTransaction {
         save_provider_key(&ctx, provider_id, new_key.as_str())?;
 
         Ok(Some(Self {
-            ctx: ctx,
+            ctx,
             change: Some(ProviderKeyChange::new(provider_id, previous_key, new_key)),
         }))
     }
 
-    /// Commits the key transaction and prevents automatic rollback on drop.
+    /// Commits the key transaction and disables rollback on drop.
     ///
-    /// 提交 Key 事务，并阻止释放时自动回滚。
+    /// 提交密钥事务，并在释放时跳过回滚。
     pub(in crate::core::bot::services::settings::provider) fn commit(mut self) {
         self.change.take();
     }
 }
 
 impl Drop for ProviderKeyTransaction {
-    /// Rolls back the keyring write if the transaction was not committed.
+    /// Rolls back the keyring write when the transaction was not committed.
     ///
-    /// 如果事务未提交，则在释放时回滚 keyring 写入。
+    /// 事务未提交时回滚系统密钥库写入。
     fn drop(&mut self) {
         let Some(change) = self.change.as_ref() else {
             return;
