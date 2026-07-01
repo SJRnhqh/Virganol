@@ -24,13 +24,6 @@ struct ExecutionExtra {
 pub(in crate::core::bot) struct ProviderExecutionContext(ProviderContext<ExecutionExtra>);
 
 impl ProviderExecutionContext {
-    /// Consumes this execution context into the connection stage.
-    ///
-    /// 消费当前执行上下文，并将其转换为连接阶段。
-    pub(in crate::core::bot) fn into_connection(self) -> Self {
-        Self(self.0.into_connection())
-    }
-
     /// Consumes this execution context into the config-store stage.
     ///
     /// 消费当前执行上下文，并将其转换为配置存储阶段。
@@ -43,20 +36,6 @@ impl ProviderExecutionContext {
     /// 消费当前执行上下文，并将其转换为密钥存储阶段。
     pub(in crate::core::bot) fn into_secret_store(self) -> Self {
         Self(self.0.into_secret_store())
-    }
-
-    /// Derives an owned connection stage view from this execution context.
-    ///
-    /// 从当前执行上下文派生一个拥有所有权的连接阶段视图，不改变来源上下文。
-    pub(in crate::core::bot) fn for_connection(&self) -> Self {
-        Self(self.0.for_connection())
-    }
-
-    /// Derives an owned config-store stage view from this execution context.
-    ///
-    /// 从当前执行上下文派生一个拥有所有权的配置存储阶段视图，不改变来源上下文。
-    pub(in crate::core::bot) fn for_config_store(&self) -> Self {
-        Self(self.0.for_config_store())
     }
 
     /// Derives an owned secret-store stage view from this execution context.
