@@ -6,9 +6,9 @@ use crate::core::{
     UpdateEnabledModelsResponse,
 };
 
-/// Updates the enabled models for a provider.
+/// Handles enabled model updates at the command boundary.
 ///
-/// 更新 Provider 的已启用模型列表。
+/// 在命令边界处理启用模型更新。
 #[tauri::command]
 pub(crate) async fn update_enabled_models(
     app: AppHandle,

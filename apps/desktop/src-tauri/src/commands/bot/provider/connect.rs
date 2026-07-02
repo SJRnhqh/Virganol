@@ -5,9 +5,9 @@ use crate::core::{
     connect_and_save, AppState, ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse,
 };
 
-/// Connects to a provider and saves the configuration if health check succeeds.
+/// Handles provider connection and configuration persistence at the command boundary.
 ///
-/// 连接 Provider 并在健康检查成功后持久化配置。
+/// 在命令边界处理供应商连接与配置持久化。
 #[tauri::command]
 pub(crate) async fn connect_and_save_provider(
     app: AppHandle,

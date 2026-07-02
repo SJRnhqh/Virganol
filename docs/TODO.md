@@ -5,7 +5,6 @@
 
 ## Current
 
-- [ ] Commands layer comment normalization: repair command doc comments against the new item-doc-comment lint coverage
 - [ ] Visibility discipline enforcement: design configurable Rust visibility lint coverage for pub(in ...) / pub(self) / pub(super) rules
 
 ## Planned
@@ -17,6 +16,7 @@
 
 ## Completed
 
+- [x] Commands layer comment normalization: normalized command boundary doc comments against the item-doc-comment lint coverage
 - [x] Rust item doc comment lint: added configurable commands-layer coverage for English / blank / Chinese item doc comments, with exact Chinese-line term allowlist
 - [x] Lifecycle error attribution: upgraded status emit, join, and aggregate errors to lifecycle context projection
 - [x] Lifecycle comment cleanup: normalized touched runner/finalize Chinese comments
