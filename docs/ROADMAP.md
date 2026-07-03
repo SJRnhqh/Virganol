@@ -98,6 +98,7 @@ LLM Provider 接入分为两条主线：
 - [ ] Provider HTTP client 初始化错误收口（避免 `reqwest::Client` 构建失败通过 `expect` panic，纳入 health-check 错误路径）
 - [ ] Provider 持久化边界收口（将 `ProviderKeyTransaction` 隐藏为 store 层实现细节，由组合持久化服务统一处理 config + secret 写入与补偿回滚）
 - [ ] Rust 可见性纪律检查（可选 MJS lint，约束函数、结构体、impl 方法与 re-export 暴露范围）
+- [ ] Rust 规范脚本可靠性验证（为 lint / contract 脚本增加 fixture-based 自测，覆盖 valid / invalid 样例，避免规范脚本假阴性）
 - [ ] 后端锁实现升级（`std::sync::Mutex` → `parking_lot::Mutex`）
 - [ ] 后端锁粒度细化（全局锁 → per-provider 锁）
 - [ ] 功能开发完结

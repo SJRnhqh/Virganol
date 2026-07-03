@@ -9,6 +9,7 @@
 
 ## Planned
 
+- [ ] Rust item doc comment lint coverage expansion: add enum, type alias, macro_rules, and other needed item kinds after visibility discipline enforcement stabilizes
 - [ ] Error attribution model upgrade: typed subject for single provider, lifecycle run, provider collection, and subsystem-level failures; keep boundary details stable
 - [ ] Error boundary contract: split error out of response payload — ProviderAppError as a standalone boundary field instead of nested inside the response wrapper
 - [ ] Logging system design discussion (exploration only — trace / correlation / persistence directions)

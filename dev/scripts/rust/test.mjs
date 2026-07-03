@@ -37,6 +37,11 @@ const steps = [
     args: [path.resolve(scriptDir, "lint-item-doc-comments.mjs")],
   },
   {
+    name: "contract:reexport-visibility",
+    command: "node",
+    args: [path.resolve(scriptDir, "contract-reexport-visibility.mjs")],
+  },
+  {
     name: "sidecar",
     command: "node",
     args: [path.resolve(repoRoot, "apps/desktop/scripts/build-sidecar.js")],
