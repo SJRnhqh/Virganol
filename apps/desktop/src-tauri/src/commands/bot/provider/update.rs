@@ -2,7 +2,7 @@
 use tauri::{AppHandle, State};
 
 use crate::core::{
-    update_provider_enabled_models, AppState, UpdateEnabledModelsRequest,
+    update_provider_enabled_models, AppState, ProviderAppError, UpdateEnabledModelsRequest,
     UpdateEnabledModelsResponse,
 };
 
@@ -14,6 +14,6 @@ pub(crate) async fn update_enabled_models(
     app: AppHandle,
     state: State<'_, AppState>,
     payload: UpdateEnabledModelsRequest,
-) -> Result<UpdateEnabledModelsResponse, ()> {
-    Ok(update_provider_enabled_models(&app, state.inner(), payload))
+) -> Result<UpdateEnabledModelsResponse, ProviderAppError> {
+    update_provider_enabled_models(&app, state.inner(), payload)
 }

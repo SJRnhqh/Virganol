@@ -3,6 +3,7 @@ use tauri::{AppHandle, State};
 
 use crate::core::{
     connect_and_save, AppState, ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse,
+    ProviderAppError,
 };
 
 /// Handles provider connection and configuration persistence at the command boundary.
@@ -13,6 +14,6 @@ pub(crate) async fn connect_and_save_provider(
     app: AppHandle,
     state: State<'_, AppState>,
     payload: ConnectAndSaveProviderRequest,
-) -> Result<ConnectAndSaveProviderResponse, ()> {
-    Ok(connect_and_save(&app, state.inner(), payload).await)
+) -> Result<ConnectAndSaveProviderResponse, ProviderAppError> {
+    connect_and_save(&app, state.inner(), payload).await
 }

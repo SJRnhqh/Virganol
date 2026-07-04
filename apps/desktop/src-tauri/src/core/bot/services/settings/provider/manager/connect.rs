@@ -17,7 +17,7 @@ pub(crate) async fn connect_and_save(
     app: &AppHandle,
     state: &AppState,
     request: ConnectAndSaveProviderRequest,
-) -> ConnectAndSaveProviderResponse {
+) -> Result<ConnectAndSaveProviderResponse, ProviderAppError> {
     let (provider_id, data) = request.into_parts();
     let ctx = ProviderManagerContext::connect(provider_id);
     let provider_state = state.provider();
@@ -26,7 +26,7 @@ pub(crate) async fn connect_and_save(
         Some(data) => data,
         None => {
             let e = ProviderError::manager_request_payload_absent(&ctx);
-            return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+            return Err(ProviderAppError::from(&e));
         }
     };
 
@@ -41,7 +41,7 @@ pub(crate) async fn connect_and_save(
         {
             Ok(models) => models,
             Err(e) => {
-                return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+                return Err(ProviderAppError::from(&e));
             }
         };
 
@@ -50,7 +50,7 @@ pub(crate) async fn connect_and_save(
     let previous_record = match load_provider_record(app, &ctx, provider_id) {
         Ok(record) => record,
         Err(e) => {
-            return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+            return Err(ProviderAppError::from(&e));
         }
     };
 
@@ -68,18 +68,21 @@ pub(crate) async fn connect_and_save(
         match ProviderKeyTransaction::begin(ctx, provider_id, normalized_key) {
             Ok(transaction) => transaction,
             Err(e) => {
-                return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+                return Err(ProviderAppError::from(&e));
             }
         }
     };
 
     if let Err(e) = save_provider(app, provider_state, &ctx, provider_id, record) {
-        return ConnectAndSaveProviderResponse::failure(ProviderAppError::from(&e));
+        return Err(ProviderAppError::from(&e));
     }
 
     if let Some(transaction) = key_transaction {
         transaction.commit();
     }
 
-    ConnectAndSaveProviderResponse::ok(available_models, enabled_models)
+    Ok(ConnectAndSaveProviderResponse::success(
+        available_models,
+        enabled_models,
+    ))
 }

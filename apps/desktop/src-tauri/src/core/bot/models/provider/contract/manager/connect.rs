@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/contract/manager/connect.rs
 use serde::{Deserialize, Serialize};
 
-use super::super::super::{ProviderAppError, ProviderId};
+use super::super::super::ProviderId;
 use super::super::{ProviderCommandRequest, ProviderCommandResponse};
 
 /// Request data for connecting a provider.
@@ -87,7 +87,7 @@ impl ConnectAndSaveProviderResponse {
     /// Creates a successful response with model data.
     ///
     /// 创建带模型数据的成功响应。
-    pub(in crate::core::bot) fn ok(
+    pub(in crate::core::bot) fn success(
         available_models: Vec<String>,
         enabled_models: Vec<String>,
     ) -> Self {
@@ -97,12 +97,5 @@ impl ConnectAndSaveProviderResponse {
                 enabled_models,
             },
         ))
-    }
-
-    /// Creates a failed response with a boundary error.
-    ///
-    /// 创建带边界错误的失败响应。
-    pub(in crate::core::bot) fn failure(error: ProviderAppError) -> Self {
-        Self(ProviderCommandResponse::failure(error))
     }
 }

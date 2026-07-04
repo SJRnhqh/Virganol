@@ -15,7 +15,7 @@ pub(crate) fn update_provider_enabled_models(
     app: &AppHandle,
     state: &AppState,
     request: UpdateEnabledModelsRequest,
-) -> UpdateEnabledModelsResponse {
+) -> Result<UpdateEnabledModelsResponse, ProviderAppError> {
     let (provider_id, data) = request.into_parts();
     let ctx = ProviderManagerContext::update_models(provider_id);
     let provider_state = state.provider();
@@ -24,7 +24,7 @@ pub(crate) fn update_provider_enabled_models(
         Some(data) => data,
         None => {
             let e = ProviderError::manager_request_payload_absent(&ctx);
-            return UpdateEnabledModelsResponse::failure(ProviderAppError::from(&e));
+            return Err(ProviderAppError::from(&e));
         }
     };
 
@@ -37,7 +37,7 @@ pub(crate) fn update_provider_enabled_models(
         provider_id,
         data.into_enabled_models(),
     ) {
-        Ok(()) => UpdateEnabledModelsResponse::success(),
-        Err(e) => UpdateEnabledModelsResponse::failure(ProviderAppError::from(&e)),
+        Ok(()) => Ok(UpdateEnabledModelsResponse::success()),
+        Err(e) => Err(ProviderAppError::from(&e)),
     }
 }

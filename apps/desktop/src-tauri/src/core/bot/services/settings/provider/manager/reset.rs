@@ -14,7 +14,7 @@ pub(crate) fn reset_provider_config(
     app: &AppHandle,
     state: &AppState,
     request: ResetProviderRequest,
-) -> ResetProviderResponse {
+) -> Result<ResetProviderResponse, ProviderAppError> {
     let provider_id = request.into_provider_id();
     let ctx = ProviderManagerContext::reset(provider_id);
     let provider_state = state.provider();
@@ -23,7 +23,7 @@ pub(crate) fn reset_provider_config(
 
     let previous = match remove_provider(app, provider_state, &ctx, provider_id) {
         Ok(removed) => removed,
-        Err(e) => return ResetProviderResponse::failure(ProviderAppError::from(&e)),
+        Err(e) => return Err(ProviderAppError::from(&e)),
     };
 
     let ctx = ctx.into_secret_store();
@@ -33,14 +33,14 @@ pub(crate) fn reset_provider_config(
             let ctx = ctx.into_config_store();
 
             if let Err(se) = save_provider(app, provider_state, &ctx, provider_id, record) {
-                return ResetProviderResponse::failure(ProviderAppError::with_suppressed_errors(
+                return Err(ProviderAppError::with_suppressed_errors(
                     &e,
                     vec![ProviderAppError::from(&se)],
                 ));
             }
         }
-        return ResetProviderResponse::failure(ProviderAppError::from(&e));
+        return Err(ProviderAppError::from(&e));
     }
 
-    ResetProviderResponse::success()
+    Ok(ResetProviderResponse::success())
 }

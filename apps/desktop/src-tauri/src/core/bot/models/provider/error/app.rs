@@ -9,7 +9,7 @@ use super::{ProviderError, ProviderErrorCode, ProviderErrorDetails};
 /// Provider 领域的应用边界错误类型。
 #[derive(Serialize)]
 #[serde(transparent)]
-pub(in crate::core::bot) struct ProviderAppError(AppError<ProviderErrorCode, ProviderErrorDetails>);
+pub(crate) struct ProviderAppError(AppError<ProviderErrorCode, ProviderErrorDetails>);
 
 impl ProviderAppError {
     /// Creates a provider boundary error from an error code.
