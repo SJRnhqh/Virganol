@@ -2,6 +2,6 @@
 mod interfaces;
 mod models;
 
-pub(super) use interfaces::Downgrade;
+pub(super) use interfaces::{impl_downgrade, Downgrade};
 pub(super) use models::AppError;
 pub(crate) use models::AppState;

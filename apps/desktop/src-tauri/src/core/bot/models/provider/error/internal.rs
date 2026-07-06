@@ -6,6 +6,7 @@ use tauri::Error as TauriError;
 use thiserror::Error;
 use tokio::task::JoinError;
 
+use super::super::super::super::super::impl_downgrade;
 use super::super::super::SettingsError;
 use super::super::{
     ProviderErrorContext, ProviderExecutionContext, ProviderLifecycleContext,
@@ -533,7 +534,7 @@ impl ProviderError {
     }
 }
 
-// Downgrades a ProviderError into a warning log rather than propagating to the boundary.
+// Enables warning-level downgrades for provider internal errors.
 //
-// 将 ProviderError 降级为警告日志，不上抛到边界。
-crate::impl_downgrade!(ProviderError);
+// 为供应商内部错误启用警告级降级。
+impl_downgrade!(ProviderError);

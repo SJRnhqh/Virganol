@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Error attribution model upgrade: typed subject for single provider, lifecycle run, provider collection, and subsystem-level failures; keep boundary details stable
+- [ ] Provider error architecture cleanup: apply the stabilized bilingual item-doc and visibility rules from commands/shared to Provider error, context, and boundary projection code
 
 ## Planned
 
@@ -18,6 +18,8 @@
 
 ## Completed
 
+- [x] Core shared comment and visibility normalization: normalized `Downgrade`, `AppError`, and `AppState` item docs, removed stale domain wording from shared abstractions, scoped the downgrade implementation macro within `core`, and kept `AppState` visibility aligned with Tauri command usage
+- [x] Rust lint coverage refinement: limited current item-doc and re-export visibility checks to commands plus `core/shared`, and taught the re-export visibility contract script to parse local scoped re-exports such as `pub(in ...) use impl_downgrade;`
 - [x] Interactive command error boundary split: initially moved connect / reset / update commands to `Result<SuccessResponse, ProviderAppError>`, exposed `ProviderAppError` at the command boundary, simplified `ProviderCommandResponse` into a success-only data envelope, and normalized success response constructors
 - [x] Provider command request / response comments: initially normalized base request and response comments for bilingual item-doc consistency
 - [x] Commands layer comment normalization: initially normalized command boundary doc comments against the item-doc-comment lint coverage

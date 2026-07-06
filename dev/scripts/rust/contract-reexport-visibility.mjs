@@ -282,7 +282,12 @@ function parseUseTarget(target) {
   const separatorIndex = target.lastIndexOf("::");
 
   if (separatorIndex === -1) {
-    return null;
+    return isRustIdentifier(target)
+      ? {
+          sourcePath: "self",
+          symbols: [target],
+        }
+      : null;
   }
 
   const symbol = target.slice(separatorIndex + 2).trim();
