@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Agent pipeline response style: replaced the generic concise-Chinese rule across all development pipelines with result-first terse Chinese fragments, one required fact per line, and no greetings, process narration, transitions, or repeated context
 - [x] Core shared comment and visibility normalization: normalized `Downgrade`, `AppError`, and `AppState` item docs, clarified that downgrade handling borrows errors rather than consuming their values, removed stale domain wording from shared abstractions, scoped the downgrade implementation macro within `core`, and kept `AppState` visibility aligned with Tauri command usage
 - [x] Rust lint coverage refinement: limited current item-doc and re-export visibility checks to commands plus `core/shared`, and taught the re-export visibility contract script to parse local scoped re-exports such as `pub(in ...) use impl_downgrade;`
 - [x] Interactive command error boundary split: initially moved connect / reset / update commands to `Result<SuccessResponse, ProviderAppError>`, exposed `ProviderAppError` at the command boundary, simplified `ProviderCommandResponse` into a success-only data envelope, and normalized success response constructors

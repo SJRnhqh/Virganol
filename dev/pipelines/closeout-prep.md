@@ -14,7 +14,9 @@ closeout by removing the branch TODO and generating a commit message.
 
 - Treat this as preparation only: do not stage, commit, push, or open a PR.
 - Do not generate PR information.
-- Keep the response concise and in Chinese.
+- Write in terse Chinese fragments, not explanatory paragraphs.
+- Lead with the result; use one short line per required fact; omit greetings,
+  transitions, process narration, and repeated context.
 
 ## Deliverable
 
