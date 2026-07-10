@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Provider error architecture cleanup: apply the stabilized bilingual item-doc and visibility rules from commands/shared to Provider error, context, and boundary projection code
+- [ ] Remaining Core normalization: manually review item docs, implementation ordering, and visibility boundaries outside `core/shared` and the completed Provider error module
 
 ## Planned
 
@@ -18,6 +18,8 @@
 
 ## Completed
 
+- [x] Provider error architecture: separated closed failure facts from runtime attribution, reduced `ProviderError` to a thin context-plus-failure contract, preserved causal sources, and kept failure construction private to the error module
+- [x] Provider boundary projection: exhaustively projected internal errors into stable code, safe message, business scope, optional concrete Provider attribution, and optional suppressed errors without an `Unknown` fallback
 - [x] Agent pipeline response style: replaced the generic concise-Chinese rule across all development pipelines with result-first terse Chinese fragments, one required fact per line, and no greetings, process narration, transitions, or repeated context
 - [x] Core shared comment and visibility normalization: normalized `Downgrade`, `AppError`, and `AppState` item docs, clarified that downgrade handling borrows errors rather than consuming their values, removed stale domain wording from shared abstractions, scoped the downgrade implementation macro within `core`, and kept `AppState` visibility aligned with Tauri command usage
 - [x] Rust lint coverage refinement: limited current item-doc and re-export visibility checks to commands plus `core/shared`, and taught the re-export visibility contract script to parse local scoped re-exports such as `pub(in ...) use impl_downgrade;`
