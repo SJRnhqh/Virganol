@@ -3,20 +3,20 @@ use serde::Serialize;
 
 /// Generic application boundary error.
 ///
-/// 应用边界错误。
+/// 通用应用边界错误。
 #[derive(Serialize)]
 pub(in crate::core) struct AppError<C, D> {
-    /// Machine-readable domain error code.
+    /// Machine readable application boundary error code.
     ///
-    /// 机器可读的领域错误码。
+    /// 机器可读的应用边界错误码。
     code: C,
     /// Safe fallback message for display or logging.
     ///
     /// 用于展示或日志记录的安全兜底消息。
     message: String,
-    /// Domain-specific structured error details.
+    /// Structured application boundary error details.
     ///
-    /// 领域结构化错误细节。
+    /// 结构化应用边界错误细节。
     details: D,
 }
 

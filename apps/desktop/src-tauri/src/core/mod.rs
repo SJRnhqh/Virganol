@@ -6,11 +6,11 @@ pub(self) use bot::ProviderState;
 pub(super) use bot::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,
     update_provider_enabled_models, ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse,
-    ProviderCheckTrigger, ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
-    UpdateEnabledModelsResponse,
+    ProviderAppError, ProviderCheckTrigger, ResetProviderRequest, ResetProviderResponse,
+    UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
 pub(super) use shared::AppState;
-pub(self) use shared::{AppError, Downgrade};
+pub(self) use shared::{impl_downgrade, AppError, Downgrade};
 
 // TODO: standardize
 mod init;

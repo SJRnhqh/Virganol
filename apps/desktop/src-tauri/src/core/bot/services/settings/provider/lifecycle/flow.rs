@@ -13,9 +13,9 @@ use super::{
     run_provider_checks,
 };
 
-/// Runs one provider lifecycle check from snapshot loading through event emission.
+/// Orchestrates one provider lifecycle check run.
 ///
-/// 执行一轮供应商生命周期检查，负责读取快照、运行健康检查并推送事件。
+/// 编排一轮供应商生命周期检查。
 pub(crate) async fn check_providers_lifecycle(
     app: AppHandle,
     state: &AppState,
@@ -98,7 +98,7 @@ pub(crate) async fn check_providers_lifecycle(
     let (failed_count, join_error, suppressed_errors) = check_result.into_parts();
 
     let primary_error = join_error
-        .or_else(|| (!suppressed_errors.is_empty()).then_some(ProviderError::CheckAggregate));
+        .or_else(|| (!suppressed_errors.is_empty()).then(|| ProviderError::check_aggregate(&ctx)));
     if let Some(e) = primary_error {
         report_lifecycle_failure(&app, &ctx, run_id.as_str(), &e, &suppressed_errors);
         return;

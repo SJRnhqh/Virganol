@@ -3,28 +3,28 @@ use serde::Deserialize;
 
 use super::super::super::ProviderId;
 
-/// Internal generic request envelope for Provider commands.
+/// Internal generic request envelope for Provider command payloads.
 ///
-/// Provider 命令的内部通用请求包裹。
+/// 供应商命令载荷的内部通用请求包裹。
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase", bound(deserialize = "T: Deserialize<'de>"))]
 pub(in crate::core::bot::models::provider::contract) struct ProviderCommandRequest<T = ()> {
-    /// Target provider ID.
+    /// Target provider for this command request.
     ///
-    /// 目标 Provider ID。
+    /// 当前命令请求的目标供应商。
     provider_id: ProviderId,
 
-    /// Operation-specific payload.
+    /// Optional operation-specific data section.
     ///
-    /// 特定操作的载荷数据。
+    /// 命令请求中的可选操作数据区块。
     #[serde(default)]
     data: Option<T>,
 }
 
 impl<T> ProviderCommandRequest<T> {
-    /// Consumes the request envelope into its provider id and payload.
+    /// Consumes the request envelope into its target provider and optional data.
     ///
-    /// 消费请求包裹并返回 provider id 与载荷。
+    /// 消费请求包裹并返回目标供应商与可选操作数据。
     pub(in crate::core::bot::models::provider::contract) fn into_parts(
         self,
     ) -> (ProviderId, Option<T>) {

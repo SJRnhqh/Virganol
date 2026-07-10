@@ -2,18 +2,18 @@
 use tauri::{AppHandle, State};
 
 use crate::core::{
-    update_provider_enabled_models, AppState, UpdateEnabledModelsRequest,
+    update_provider_enabled_models, AppState, ProviderAppError, UpdateEnabledModelsRequest,
     UpdateEnabledModelsResponse,
 };
 
-/// Updates the enabled models for a provider.
+/// Handles enabled model updates at the command boundary.
 ///
-/// 更新 Provider 的已启用模型列表。
+/// 在命令边界处理启用模型更新。
 #[tauri::command]
 pub(crate) async fn update_enabled_models(
     app: AppHandle,
     state: State<'_, AppState>,
     payload: UpdateEnabledModelsRequest,
-) -> Result<UpdateEnabledModelsResponse, ()> {
-    Ok(update_provider_enabled_models(&app, state.inner(), payload))
+) -> Result<UpdateEnabledModelsResponse, ProviderAppError> {
+    update_provider_enabled_models(&app, state.inner(), payload)
 }

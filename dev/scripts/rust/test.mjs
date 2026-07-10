@@ -27,9 +27,19 @@ const RUST_BUILD_STEP_TIMEOUT_MS = 300_000;
 // Quality gates / 质量门
 const steps = [
   {
-    name: "lint",
+    name: "lint:source-headers",
     command: "node",
     args: [path.resolve(scriptDir, "lint-source-headers.mjs")],
+  },
+  {
+    name: "lint:item-doc-comments",
+    command: "node",
+    args: [path.resolve(scriptDir, "lint-item-doc-comments.mjs")],
+  },
+  {
+    name: "contract:reexport-visibility",
+    command: "node",
+    args: [path.resolve(scriptDir, "contract-reexport-visibility.mjs")],
   },
   {
     name: "sidecar",

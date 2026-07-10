@@ -11,12 +11,12 @@ pub(self) use constants::{
 pub(self) use interfaces::{DriverFuture, ProviderDriver};
 pub(super) use models::ProviderState;
 pub(crate) use models::{
-    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderCheckTrigger,
-    ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
+    ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderAppError,
+    ProviderCheckTrigger, ResetProviderRequest, ResetProviderResponse, UpdateEnabledModelsRequest,
     UpdateEnabledModelsResponse,
 };
 pub(self) use models::{
-    HealthCheckResult, ProviderAppError, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
+    HealthCheckResult, ProviderCheckCompletedPayload, ProviderCheckFailedPayload,
     ProviderCheckFinalization, ProviderCheckRunResult, ProviderCheckSnapshot,
     ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError,
     ProviderExecutionContext, ProviderId, ProviderKey, ProviderKeyChange, ProviderKeyMeta,

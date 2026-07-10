@@ -80,7 +80,7 @@ impl ProviderManagerContext {
     pub(in crate::core::bot::models::provider) fn error_context(&self) -> ProviderErrorContext {
         self.0
             .error_context()
-            .with_provider(self.0.extra().provider_id)
+            .with_subject(self.0.extra().provider_id.into())
     }
 
     /// Centralizes interactive management context construction.

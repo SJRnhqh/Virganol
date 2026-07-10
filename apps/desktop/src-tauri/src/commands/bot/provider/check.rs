@@ -3,9 +3,9 @@ use tauri::{AppHandle, State};
 
 use crate::core::{check_providers_lifecycle, AppState, ProviderCheckTrigger};
 
-/// Triggers the provider lifecycle check on application startup.
+/// Triggers provider lifecycle checks after application startup.
 ///
-/// 应用启动时触发 Provider 生命周期检查。
+/// 应用启动后触发供应商生命周期检查。
 #[tauri::command]
 pub(crate) async fn trigger_provider_startup_check(
     app: AppHandle,
@@ -15,9 +15,9 @@ pub(crate) async fn trigger_provider_startup_check(
     Ok(())
 }
 
-/// Triggers the provider lifecycle check on manual refresh.
+/// Triggers provider lifecycle checks for manual refresh.
 ///
-/// 手动刷新时触发 Provider 生命周期检查。
+/// 手动刷新时触发供应商生命周期检查。
 #[tauri::command]
 pub(crate) async fn trigger_provider_manual_refresh(
     app: AppHandle,

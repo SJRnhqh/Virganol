@@ -14,7 +14,9 @@ commit message has already been prepared or provided.
 - Run this pipeline only for an explicit commit request with an available commit
   message.
 - Do not run commit preparation steps.
-- Keep the response concise and in Chinese.
+- Write in terse Chinese fragments, not explanatory paragraphs.
+- Lead with the result; use one short line per required fact; omit greetings,
+  transitions, process narration, and repeated context.
 
 ## Deliverable
 

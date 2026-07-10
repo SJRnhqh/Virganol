@@ -12,7 +12,9 @@ for the current branch.
 ## Rules
 
 - Do not modify files, stage, commit, push, or open a PR.
-- Keep the response concise and in Chinese.
+- Write in terse Chinese fragments, not explanatory paragraphs.
+- Lead with the result; use one short line per required fact; omit greetings,
+  transitions, process narration, and repeated context.
 
 ## Deliverable
 

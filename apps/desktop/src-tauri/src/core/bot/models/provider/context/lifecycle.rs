@@ -33,32 +33,11 @@ impl<'a> ProviderLifecycleContext<'a> {
         Self::new(run_id, trigger)
     }
 
-    /// Consumes this lifecycle context into the lifecycle-event stage.
+    /// Derives an owned lifecycle-event stage view from this lifecycle context.
     ///
-    /// 消费当前生命周期上下文，并将其转换为生命周期事件阶段。
-    pub(in crate::core::bot) fn into_lifecycle_emit(self) -> Self {
-        Self(self.0.into_lifecycle_emit())
-    }
-
-    /// Consumes this lifecycle context into the connection stage.
-    ///
-    /// 消费当前生命周期上下文，并将其转换为连接阶段。
-    pub(in crate::core::bot) fn into_connection(self) -> Self {
-        Self(self.0.into_connection())
-    }
-
-    /// Consumes this lifecycle context into the config-store stage.
-    ///
-    /// 消费当前生命周期上下文，并将其转换为配置存储阶段。
-    pub(in crate::core::bot) fn into_config_store(self) -> Self {
-        Self(self.0.into_config_store())
-    }
-
-    /// Consumes this lifecycle context into the secret-store stage.
-    ///
-    /// 消费当前生命周期上下文，并将其转换为密钥存储阶段。
-    pub(in crate::core::bot) fn into_secret_store(self) -> Self {
-        Self(self.0.into_secret_store())
+    /// 从当前生命周期上下文派生一个拥有所有权的生命周期事件阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_lifecycle_emit(&self) -> Self {
+        Self(self.0.for_lifecycle_emit())
     }
 
     /// Derives an owned connection stage view from this lifecycle context.

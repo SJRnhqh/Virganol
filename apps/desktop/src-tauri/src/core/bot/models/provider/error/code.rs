@@ -1,93 +1,93 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/code.rs
 use serde::Serialize;
 
-use super::ProviderError;
+use super::{ProviderError, ProviderFailure};
 
-/// Provider-specific application boundary error code.
+/// Application boundary error codes for the Provider subject subdomain.
 ///
-/// Provider 领域的应用边界错误码。
+/// 供应商主体子域的应用边界错误码。
 #[derive(Serialize)]
 pub(super) enum ProviderErrorCode {
-    /// Manager/request layer: received a command payload without required data.
+    /// Required data is missing from a Provider manager command payload.
     ///
-    /// manager/request 层：收到缺少必需 data 字段的命令载荷。
+    /// 供应商管理命令载荷缺少必要数据。
     #[serde(rename = "missing_request_data")]
     MissingRequestData,
-    /// Lifecycle layer: provider check lifecycle event emission failed.
+    /// Provider check lifecycle event emission failed.
     ///
-    /// lifecycle 层：Provider 检查生命周期事件推送失败。
+    /// 供应商检查生命周期事件推送失败。
     #[serde(rename = "check_lifecycle_failed")]
     CheckLifecycleFailed,
-    /// Connection layer: provider health check failed.
+    /// Provider health check failed.
     ///
-    /// connection 层：Provider 健康检查失败。
+    /// 供应商健康检查失败。
     #[serde(rename = "health_check_failed")]
     HealthCheckFailed,
-    /// Store/config layer: requested provider has no persisted configuration.
+    /// Stored Provider id is not supported by the current backend.
     ///
-    /// store/config 层：请求的 provider 在 store 中没有持久化配置。
+    /// 存储中的供应商标识不受当前后端支持。
+    #[serde(rename = "unsupported_provider")]
+    UnsupportedProvider,
+    /// Requested Provider has no persisted configuration.
+    ///
+    /// 请求的供应商没有持久化配置。
     #[serde(rename = "provider_not_found")]
     ProviderNotFound,
-    /// Store/config layer: provider config store could not be read or written.
+    /// Provider configuration store operation failed.
     ///
-    /// store/config 层：Provider 配置存储读取或写入失败。
+    /// 供应商配置存储操作失败。
     #[serde(rename = "config_store_failed")]
     ConfigStoreFailed,
-    /// Store/secret layer: system secret store operation failed.
+    /// Provider secret store operation failed.
     ///
-    /// store/secret 层：系统密钥存储操作失败。
+    /// 供应商密钥存储操作失败。
     #[serde(rename = "secret_store_failed")]
     SecretStoreFailed,
-    /// Unknown internal error (catch-all for unclassified provider errors).
-    ///
-    /// 未知内部错误（未分类的 provider 错误兜底）。
-    #[serde(rename = "unknown")]
-    Unknown,
 }
 
 impl ProviderErrorCode {
-    /// Returns the safe fallback message for this error code.
+    /// Returns the safe default message for this error code.
     ///
-    /// 返回该错误码对应的安全兜底消息。
+    /// 返回错误码对应的安全默认消息。
     pub(super) fn default_message(&self) -> &'static str {
         match self {
             Self::MissingRequestData => "Missing request data.",
             Self::CheckLifecycleFailed => "Provider check lifecycle event emission failed.",
             Self::HealthCheckFailed => "Provider health check failed.",
+            Self::UnsupportedProvider => "Provider is not supported by the current backend.",
             Self::ProviderNotFound => "Provider configuration not found.",
             Self::ConfigStoreFailed => "Provider configuration store operation failed.",
             Self::SecretStoreFailed => "Provider secret store operation failed.",
-            Self::Unknown => "An unexpected error occurred.",
         }
     }
 }
 
 impl From<&ProviderError> for ProviderErrorCode {
-    /// Coarsens an internal provider error into a provider boundary error code.
+    /// Projects an internal Provider error into a boundary error code.
     ///
-    /// 将内部 Provider 错误粗粒化为 Provider 边界错误码。
+    /// 将供应商内部错误投影为边界错误码。
     fn from(error: &ProviderError) -> Self {
-        match error {
-            ProviderError::ManagerRequestPayloadAbsent { .. } => Self::MissingRequestData,
-            ProviderError::CheckStartedEmit { .. }
-            | ProviderError::CheckStatusEmit { .. }
-            | ProviderError::CheckCompletedEmit { .. }
-            | ProviderError::CheckFailedEmit { .. }
-            | ProviderError::CheckTaskJoin { .. }
-            | ProviderError::CheckAggregate => Self::CheckLifecycleFailed,
-            ProviderError::HealthCheckMissingConfig { .. }
-            | ProviderError::HealthCheckNetwork { .. }
-            | ProviderError::HealthCheckHttp { .. }
-            | ProviderError::HealthCheckResponseFormat { .. } => Self::HealthCheckFailed,
-            ProviderError::ConfigNotFound { .. } => Self::ProviderNotFound,
-            ProviderError::JsonSerialize { .. }
-            | ProviderError::JsonDeserialize { .. }
-            | ProviderError::ConfigStore { .. } => Self::ConfigStoreFailed,
-            ProviderError::SecretStoreInit { .. }
-            | ProviderError::SecretStoreWrite { .. }
-            | ProviderError::SecretStoreRead { .. }
-            | ProviderError::SecretStoreRemove { .. } => Self::SecretStoreFailed,
-            _ => Self::Unknown,
+        match error.failure() {
+            ProviderFailure::ManagerRequestPayloadAbsent => Self::MissingRequestData,
+            ProviderFailure::CheckStartedEmit { .. }
+            | ProviderFailure::CheckStatusEmit { .. }
+            | ProviderFailure::CheckCompletedEmit { .. }
+            | ProviderFailure::CheckFailedEmit { .. }
+            | ProviderFailure::CheckTaskJoin { .. }
+            | ProviderFailure::CheckAggregate => Self::CheckLifecycleFailed,
+            ProviderFailure::HealthCheckMissingConfig
+            | ProviderFailure::HealthCheckNetwork { .. }
+            | ProviderFailure::HealthCheckHttp
+            | ProviderFailure::HealthCheckResponseFormat { .. } => Self::HealthCheckFailed,
+            ProviderFailure::UnsupportedProvider => Self::UnsupportedProvider,
+            ProviderFailure::ConfigNotFound => Self::ProviderNotFound,
+            ProviderFailure::JsonSerialize { .. }
+            | ProviderFailure::JsonDeserialize { .. }
+            | ProviderFailure::ConfigStore { .. } => Self::ConfigStoreFailed,
+            ProviderFailure::SecretStoreInit { .. }
+            | ProviderFailure::SecretStoreWrite { .. }
+            | ProviderFailure::SecretStoreRead { .. }
+            | ProviderFailure::SecretStoreRemove { .. } => Self::SecretStoreFailed,
         }
     }
 }

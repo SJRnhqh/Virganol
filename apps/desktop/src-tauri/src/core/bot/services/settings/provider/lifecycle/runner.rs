@@ -13,12 +13,12 @@ use super::{emit_check_status, finalize_provider_check_result};
 
 /// Maximum number of provider health checks allowed to run concurrently.
 ///
-/// Provider 健康检查允许同时运行的最大任务数量。
+/// 供应商健康检查允许同时运行的最大任务数量。
 const CHECK_CONCURRENCY_LIMIT: usize = 4;
 
 /// Runs provider health checks with bounded concurrency.
 ///
-/// 使用有限并发执行 Provider 健康检查，并收集失败数量、被抑制错误与首个 join 错误。
+/// 使用有限并发执行供应商健康检查，并收集失败数量、被抑制错误与首个任务汇合错误。
 pub(super) async fn run_provider_checks(
     app: &AppHandle,
     provider_state: &ProviderState,
@@ -78,7 +78,7 @@ pub(super) async fn run_provider_checks(
 
                 if let Err(se) = {
                     let ctx = ctx
-                        .for_connection()
+                        .for_lifecycle_emit()
                         .into_execution_context_with(provider_id.into());
                     emit_check_status(
                         app,
@@ -94,11 +94,13 @@ pub(super) async fn run_provider_checks(
                 }
             }
             Some(Err(source)) => {
+                let e = ProviderError::check_task_join(ctx, source);
+
                 if join_error.is_none() {
-                    error!("[Tauri] ❌ concurrent check error: {}", source);
-                    join_error = Some(ProviderError::CheckTaskJoin { source });
+                    error!("[Tauri] ❌ concurrent check error: {}", e);
+                    join_error = Some(e);
                 } else {
-                    ProviderError::CheckTaskJoin { source }.downgrade();
+                    e.downgrade();
                 }
             }
             None => break,

@@ -14,7 +14,9 @@ and create a GitHub pull request using an available PR title and summary.
 
 - Run this pipeline only for an explicit PR creation request with available PR
   title and summary; run `dev/pipelines/pr-prep.md` first if either is missing.
-- Keep the response concise and in Chinese.
+- Write in terse Chinese fragments, not explanatory paragraphs.
+- Lead with the result; use one short line per required fact; omit greetings,
+  transitions, process narration, and repeated context.
 
 ## Deliverable
 

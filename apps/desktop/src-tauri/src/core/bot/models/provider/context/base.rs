@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/base.rs
+use super::super::ProviderSubject;
 use super::{ProviderErrorContext, ProviderStage};
 
 /// Provider domain base context.
@@ -16,13 +17,6 @@ pub(super) struct ProviderContext<E = ()> {
 }
 
 impl<E> ProviderContext<E> {
-    /// Consumes this context into the lifecycle-event stage.
-    ///
-    /// 消费当前上下文，并将其转换为生命周期事件阶段。
-    pub(super) fn into_lifecycle_emit(self) -> Self {
-        self.to_stage(ProviderStage::lifecycle_emit())
-    }
-
     /// Consumes this context into the connection stage.
     ///
     /// 消费当前上下文，并将其转换为连接阶段。
@@ -48,7 +42,7 @@ impl<E> ProviderContext<E> {
     ///
     /// 将当前上下文投影为错误归因快照。
     pub(super) fn error_context(&self) -> ProviderErrorContext {
-        ProviderErrorContext::from_parts(None, self.stage)
+        ProviderErrorContext::from_parts(self.stage, ProviderSubject::configured_providers())
     }
 
     /// Consumes this context and returns the domain business context fields.
