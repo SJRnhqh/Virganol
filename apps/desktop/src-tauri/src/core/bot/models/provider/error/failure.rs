@@ -6,7 +6,7 @@ use tauri::Error as TauriError;
 use thiserror::Error;
 use tokio::task::JoinError;
 
-use super::super::super::SettingsError;
+use super::super::super::{SettingsError, SettingsFailure};
 
 /// Failure facts defined by the Provider subject subdomain.
 ///
@@ -220,14 +220,14 @@ impl ProviderFailure {
             Self::ConfigNotFound => "provider.store.config.find",
             Self::JsonSerialize { .. } => "provider.store.config.serialize",
             Self::JsonDeserialize { .. } => "provider.store.config.deserialize",
-            Self::ConfigStore { source } => match source {
-                SettingsError::StoreOpen { .. } => "provider.store.config.open",
-                SettingsError::StorePath { .. } => "provider.store.config.resolve",
-                SettingsError::StoreSerialize { .. } => "provider.store.config.serialize",
-                SettingsError::StoreTempCreate { .. }
-                | SettingsError::StoreWrite { .. }
-                | SettingsError::StoreSync { .. }
-                | SettingsError::StoreReplace { .. } => "provider.store.config.write",
+            Self::ConfigStore { source } => match source.failure() {
+                SettingsFailure::StoreOpen { .. } => "provider.store.config.open",
+                SettingsFailure::StorePath { .. } => "provider.store.config.resolve",
+                SettingsFailure::StoreSerialize { .. } => "provider.store.config.serialize",
+                SettingsFailure::StoreTempCreate { .. }
+                | SettingsFailure::StoreWrite { .. }
+                | SettingsFailure::StoreSync { .. }
+                | SettingsFailure::StoreReplace { .. } => "provider.store.config.write",
             },
             Self::SecretStoreInit { .. } => "provider.store.secret.init",
             Self::SecretStoreWrite { .. } => "provider.store.secret.write",

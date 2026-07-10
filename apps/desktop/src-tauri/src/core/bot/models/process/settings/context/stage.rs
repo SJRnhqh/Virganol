@@ -2,12 +2,12 @@
 
 /// Settings process business execution stage.
 ///
-/// settings 过程业务执行阶段。
+/// 设置业务过程执行阶段。
 #[derive(Debug, Clone, Copy)]
 pub(super) enum SettingsStage {
     /// Settings storage path.
     ///
-    /// settings 存储阶段。
+    /// 设置存储阶段。
     Storage,
 }
 

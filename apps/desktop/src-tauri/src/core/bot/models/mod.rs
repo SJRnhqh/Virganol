@@ -2,7 +2,7 @@
 mod process;
 mod provider;
 
-pub(super) use process::{SettingsError, SettingsStorageContext};
+pub(super) use process::{SettingsError, SettingsFailure, SettingsStorageContext};
 pub(in crate::core) use provider::ProviderState;
 pub(crate) use provider::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderAppError,
