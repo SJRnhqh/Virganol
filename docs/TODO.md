@@ -14,4 +14,5 @@
 
 ## Completed
 
+- [x] Seed a minimal cargo-deny dependency policy as infrastructure groundwork
 - [x] Upgrade SettingsError to Context+Failure split, matching Provider pattern
