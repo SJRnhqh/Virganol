@@ -72,7 +72,8 @@ impl<'a> ProviderLifecycleContext<'a> {
     ///
     /// 将当前生命周期上下文投影为错误归因快照。
     pub(in crate::core::bot::models::provider) fn error_context(&self) -> ProviderErrorContext {
-        self.0.error_context()
+        self.0
+            .error_context_for(ProviderSubject::configured_providers())
     }
 
     /// Returns the stable correlation id for this lifecycle run.

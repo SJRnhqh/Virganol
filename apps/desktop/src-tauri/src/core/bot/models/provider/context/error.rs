@@ -27,16 +27,6 @@ impl ProviderErrorContext {
         &self.subject
     }
 
-    /// Replaces the provider-domain subject on this error context.
-    ///
-    /// 替换当前错误上下文上的 Provider 领域主体。
-    pub(super) fn with_subject(self, subject: ProviderSubject) -> Self {
-        Self {
-            stage: self.stage,
-            subject,
-        }
-    }
-
     /// Creates an error context snapshot from stage and subject.
     ///
     /// 基于执行阶段与领域主体创建错误上下文快照。
