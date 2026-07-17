@@ -2,5 +2,5 @@
 mod failure;
 mod internal;
 
-pub(in crate::core::bot) use failure::SettingsFailure;
+pub(super) use failure::SettingsFailure;
 pub(in crate::core::bot) use internal::SettingsError;

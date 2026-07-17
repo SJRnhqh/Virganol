@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/execution.rs
 use super::super::super::SettingsStorageContext;
 use super::super::ProviderSubject;
-use super::{ProviderContext, ProviderErrorContext, ProviderExecutionOperation, ProviderStage};
+use super::{ProviderContext, ProviderErrorContext, ProviderOperation, ProviderStage};
 
 /// Execution business context fields.
 ///
@@ -15,7 +15,7 @@ struct ExecutionExtra {
     /// Provider execution operation currently being executed.
     ///
     /// 当前正在执行的 Provider 执行操作。
-    operation: ProviderExecutionOperation,
+    operation: ProviderOperation,
 }
 
 /// Provider execution domain business context.
@@ -53,7 +53,7 @@ impl ProviderExecutionContext {
             self.0.stage(),
             ExecutionExtra {
                 subject,
-                operation: self.0.extra().operation.clone(),
+                operation: self.0.extra().operation,
             },
         ))
     }
@@ -69,7 +69,8 @@ impl ProviderExecutionContext {
     ///
     /// 将当前执行上下文投影为错误归因快照。
     pub(in crate::core::bot::models::provider) fn error_context(&self) -> ProviderErrorContext {
-        self.0.error_context_for(self.0.extra().subject.clone())
+        self.0
+            .error_context_for(self.0.extra().subject.clone(), self.0.extra().operation)
     }
 
     /// Creates an execution context from its constituent parts.
@@ -78,7 +79,7 @@ impl ProviderExecutionContext {
     pub(super) fn from_parts(
         stage: ProviderStage,
         subject: ProviderSubject,
-        operation: ProviderExecutionOperation,
+        operation: ProviderOperation,
     ) -> Self {
         Self::new(stage, subject, operation)
     }
@@ -86,11 +87,7 @@ impl ProviderExecutionContext {
     /// Centralizes execution context construction.
     ///
     /// 集中创建执行上下文。
-    fn new(
-        stage: ProviderStage,
-        subject: ProviderSubject,
-        operation: ProviderExecutionOperation,
-    ) -> Self {
+    fn new(stage: ProviderStage, subject: ProviderSubject, operation: ProviderOperation) -> Self {
         Self(ProviderContext::new(
             stage,
             ExecutionExtra { subject, operation },

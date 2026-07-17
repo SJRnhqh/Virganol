@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/stage.rs
+use std::fmt;
 
 /// Provider domain business execution stage.
 ///
@@ -62,17 +63,19 @@ impl ProviderStage {
     pub(super) fn secret_store() -> Self {
         Self::SecretStore
     }
+}
 
-    /// Returns a natural phrase for internal error context messages.
+impl fmt::Display for ProviderStage {
+    /// Formats this Provider stage for diagnostic context messages.
     ///
-    /// 返回用于内部错误上下文消息的自然语言短语。
-    pub(super) fn as_phrase(self) -> &'static str {
+    /// 将当前 Provider 阶段格式化为诊断上下文消息。
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Manager => "the manager stage",
-            Self::LifecycleEmit => "the lifecycle-event stage",
-            Self::Connection => "the connection stage",
-            Self::ConfigStore => "the config-store stage",
-            Self::SecretStore => "the secret-store stage",
+            Self::Manager => f.write_str("the manager stage"),
+            Self::LifecycleEmit => f.write_str("the lifecycle event stage"),
+            Self::Connection => f.write_str("the connection stage"),
+            Self::ConfigStore => f.write_str("the config store stage"),
+            Self::SecretStore => f.write_str("the secret store stage"),
         }
     }
 }

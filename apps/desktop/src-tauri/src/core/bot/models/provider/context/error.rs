@@ -2,7 +2,7 @@
 use std::fmt;
 
 use super::super::ProviderSubject;
-use super::ProviderStage;
+use super::{ProviderOperation, ProviderScope, ProviderStage};
 
 /// Provider error attribution context snapshot.
 ///
@@ -17,9 +17,20 @@ pub(in crate::core::bot) struct ProviderErrorContext {
     ///
     /// 当前失败归因的 Provider 领域主体。
     subject: ProviderSubject,
+    /// Provider business operation being performed when the failure was observed.
+    ///
+    /// 观察到失败时正在执行的 Provider 业务操作。
+    operation: ProviderOperation,
 }
 
 impl ProviderErrorContext {
+    /// Derives the stable Provider business scope carried by this error context.
+    ///
+    /// 派生当前错误上下文携带的稳定 Provider 业务范围。
+    pub(in crate::core::bot::models::provider) fn scope(&self) -> ProviderScope {
+        ProviderScope::from_parts(self.stage, self.operation)
+    }
+
     /// Returns the provider-domain subject carried by this error context.
     ///
     /// 返回当前错误上下文携带的 Provider 领域主体。
@@ -27,11 +38,19 @@ impl ProviderErrorContext {
         &self.subject
     }
 
-    /// Creates an error context snapshot from stage and subject.
+    /// Creates an error context snapshot from stage, subject, and operation.
     ///
-    /// 基于执行阶段与领域主体创建错误上下文快照。
-    pub(super) fn from_parts(stage: ProviderStage, subject: ProviderSubject) -> Self {
-        Self { stage, subject }
+    /// 基于执行阶段、领域主体与业务操作创建错误上下文快照。
+    pub(super) fn from_parts(
+        stage: ProviderStage,
+        subject: ProviderSubject,
+        operation: ProviderOperation,
+    ) -> Self {
+        Self {
+            stage,
+            subject,
+            operation,
+        }
     }
 }
 
@@ -40,16 +59,10 @@ impl fmt::Display for ProviderErrorContext {
     ///
     /// 将此错误上下文快照格式化为内部错误消息。
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match &self.subject {
-            ProviderSubject::Provider(id) => {
-                write!(f, "provider {id} at {}", self.stage.as_phrase())
-            }
-            ProviderSubject::Candidate(raw) => {
-                write!(f, "candidate {raw} at {}", self.stage.as_phrase())
-            }
-            ProviderSubject::ConfiguredProviders => {
-                write!(f, "the configured providers at {}", self.stage.as_phrase())
-            }
-        }
+        write!(
+            f,
+            "{} during {} at {}",
+            self.subject, self.operation, self.stage
+        )
     }
 }

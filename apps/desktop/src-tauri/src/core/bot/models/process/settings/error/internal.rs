@@ -96,13 +96,6 @@ impl SettingsError {
         )
     }
 
-    /// Returns the Settings failure fact.
-    ///
-    /// 返回设置失败事实。
-    pub(in crate::core::bot) fn failure(&self) -> &SettingsFailure {
-        &self.failure
-    }
-
     /// Creates an internal settings error.
     ///
     /// 创建设置内部错误。

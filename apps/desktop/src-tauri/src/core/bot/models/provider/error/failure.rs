@@ -6,7 +6,7 @@ use tauri::Error as TauriError;
 use thiserror::Error;
 use tokio::task::JoinError;
 
-use super::super::super::{SettingsError, SettingsFailure};
+use super::super::super::SettingsError;
 
 /// Failure facts defined by the Provider subject subdomain.
 ///
@@ -197,42 +197,4 @@ pub(super) enum ProviderFailure {
         #[source]
         source: KeyringError,
     },
-}
-
-impl ProviderFailure {
-    /// Returns the Provider business scope for this failure.
-    ///
-    /// 返回该失败对应的供应商业务范围。
-    pub(super) fn scope(&self) -> &'static str {
-        match self {
-            Self::ManagerRequestPayloadAbsent => "provider.manager.request.validate",
-            Self::CheckStartedEmit { .. }
-            | Self::CheckStatusEmit { .. }
-            | Self::CheckCompletedEmit { .. }
-            | Self::CheckFailedEmit { .. } => "provider.lifecycle.event.emit",
-            Self::CheckTaskJoin { .. } | Self::CheckAggregate => "provider.lifecycle.check.execute",
-            Self::HealthCheckMissingConfig => "provider.connection.check.validate",
-            Self::HealthCheckNetwork { .. } | Self::HealthCheckHttp => {
-                "provider.connection.check.request"
-            }
-            Self::HealthCheckResponseFormat { .. } => "provider.connection.check.parse",
-            Self::UnsupportedProvider => "provider.store.config.validate",
-            Self::ConfigNotFound => "provider.store.config.find",
-            Self::JsonSerialize { .. } => "provider.store.config.serialize",
-            Self::JsonDeserialize { .. } => "provider.store.config.deserialize",
-            Self::ConfigStore { source } => match source.failure() {
-                SettingsFailure::StoreOpen { .. } => "provider.store.config.open",
-                SettingsFailure::StorePath { .. } => "provider.store.config.resolve",
-                SettingsFailure::StoreSerialize { .. } => "provider.store.config.serialize",
-                SettingsFailure::StoreTempCreate { .. }
-                | SettingsFailure::StoreWrite { .. }
-                | SettingsFailure::StoreSync { .. }
-                | SettingsFailure::StoreReplace { .. } => "provider.store.config.write",
-            },
-            Self::SecretStoreInit { .. } => "provider.store.secret.init",
-            Self::SecretStoreWrite { .. } => "provider.store.secret.write",
-            Self::SecretStoreRead { .. } => "provider.store.secret.read",
-            Self::SecretStoreRemove { .. } => "provider.store.secret.remove",
-        }
-    }
 }

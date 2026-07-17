@@ -1,4 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/common/element/subject.rs
+use std::fmt;
+
 use super::ProviderId;
 
 /// Provider-domain attribution subject.
@@ -45,5 +47,18 @@ impl From<ProviderId> for ProviderSubject {
     /// 将单个具体 Provider ID 提升为 Provider 领域归因主体。
     fn from(provider_id: ProviderId) -> Self {
         Self::Provider(provider_id)
+    }
+}
+
+impl fmt::Display for ProviderSubject {
+    /// Formats this Provider-domain subject for diagnostic attribution messages.
+    ///
+    /// 将当前 Provider 领域主体格式化为诊断归因消息。
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Provider(provider_id) => write!(f, "provider {provider_id}"),
+            Self::ConfiguredProviders => f.write_str("the configured providers"),
+            Self::Candidate(raw) => write!(f, "candidate {raw}"),
+        }
     }
 }
