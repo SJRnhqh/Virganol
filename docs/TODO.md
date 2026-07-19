@@ -5,14 +5,10 @@
 
 ## Current
 
-- [ ] Implement Source File Header repository checking in `dev/scripts/rust/comments/check.mjs`
+- [ ] Define the Module Documentation rule and audit backend Rust sources
 
 ## Planned
 
-- [ ] Implement `dev/scripts/rust/comments/test.mjs` to verify rules before repository checks
-- [ ] Route Rust comment checks through `dev/scripts/rust/test.mjs`
-- [ ] Retire `dev/scripts/rust/lint-source-headers.mjs` after migration parity is verified
-- [ ] Define the Module Documentation rule and audit backend Rust sources
 - [ ] Define the Item Documentation rule and audit backend Rust sources
 - [ ] Define the Explanatory Comments rule and audit backend Rust sources
 - [ ] Upgrade Rust comment checks with rule-specific parsing and test coverage
@@ -26,6 +22,8 @@
 
 ## Completed
 
+- [x] Route Rust comment checks through Rust tests and retire the legacy source-header lint
+- [x] Implement Rust comment repository checking and rule-first test orchestration
 - [x] Implement and cover the Source File Header rule with rule-level tests
 - [x] Define the Source File Header rule in `docs/rules/rust-code-style.md`
 - [x] Establish development standards documentation and seed the Rust code style structure
