@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Define the Source File Header rule and audit backend Rust sources
+- [ ] Cover the Source File Header rule with a rule test and repository check
 
 ## Planned
 
@@ -23,6 +23,7 @@
 
 ## Completed
 
+- [x] Define the Source File Header rule in `docs/rules/rust-code-style.md`
 - [x] Establish development standards documentation and seed the Rust code style structure
 - [x] Polish Provider context propagation, error architecture, and context-derived business scopes
 - [x] Decouple Provider scope from failure facts and tighten SettingsFailure visibility
