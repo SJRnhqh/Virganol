@@ -5,11 +5,11 @@
 
 ## Current
 
-- [ ] Define the Module Documentation rule and audit backend Rust sources
+- [ ] Define the Item Documentation rule and audit backend Rust sources
 
 ## Planned
 
-- [ ] Define the Item Documentation rule and audit backend Rust sources
+- [ ] Define the Module Documentation rule and audit backend Rust sources
 - [ ] Define the Explanatory Comments rule and audit backend Rust sources
 - [ ] Upgrade Rust comment checks with rule-specific parsing and test coverage
 - [ ] Finalize the Comments rules in `docs/rules/rust-code-style.md`
