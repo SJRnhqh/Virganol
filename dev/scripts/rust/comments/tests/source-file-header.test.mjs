@@ -39,8 +39,8 @@ function loadInvalidFirstLineCase(name) {
 const invalidFirstLineCases = [
   "empty-file",
   "non-comment-first-line",
-  "module-documentation",
-  "item-documentation",
+  "inner-doc-comment",
+  "outer-doc-comment",
   "bare-comment-marker",
   "missing-space",
   "tab-instead-of-space",
@@ -147,9 +147,9 @@ describe("Source File Header", () => {
   });
 
   describe("invalid-header-marker", () => {
-    test("reports for module documentation", () => {
+    test("reports for an inner doc comment", () => {
       const { repositoryRelativePath, source } = loadFixture(
-        "module-documentation",
+        "inner-doc-comment",
       );
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
@@ -159,9 +159,9 @@ describe("Source File Header", () => {
       });
     });
 
-    test("reports for item documentation", () => {
+    test("reports for an outer doc comment", () => {
       const { repositoryRelativePath, source } = loadFixture(
-        "item-documentation",
+        "outer-doc-comment",
       );
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {

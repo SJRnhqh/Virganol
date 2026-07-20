@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Define the Item Documentation rule and audit backend Rust sources
+- [ ] Complete Declaration Documentation coverage for external items and audit remaining backend Rust sources
 
 ## Planned
 
@@ -22,6 +22,7 @@
 
 ## Completed
 
+- [x] Define the Declaration Documentation targets and pattern, and re-audit commands and core/shared Rust sources
 - [x] Route Rust comment checks through Rust tests and retire the legacy source-header lint
 - [x] Implement Rust comment repository checking and rule-first test orchestration
 - [x] Implement and cover the Source File Header rule with rule-level tests
