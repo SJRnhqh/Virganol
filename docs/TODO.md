@@ -5,13 +5,13 @@
 
 ## Current
 
-- [ ] Complete Declaration Documentation coverage for external items and audit remaining backend Rust sources
+- [ ] Design Outer Doc Comments fixture coverage and implement `syn`-based structural parsing
 
 ## Planned
 
-- [ ] Define the Module Documentation rule and audit backend Rust sources
+- [ ] Audit remaining backend Rust sources against the Outer Doc Comments rule
+- [ ] Define the Inner Doc Comments rule and audit backend Rust sources
 - [ ] Define the Explanatory Comments rule and audit backend Rust sources
-- [ ] Upgrade Rust comment checks with rule-specific parsing and test coverage
 - [ ] Finalize the Comments rules in `docs/rules/rust-code-style.md`
 - [ ] Define visibility rule categories and audit module item visibility
 - [ ] Audit associated item visibility across backend Rust sources
@@ -22,7 +22,7 @@
 
 ## Completed
 
-- [x] Define the Declaration Documentation targets and pattern, and re-audit commands and core/shared Rust sources
+- [x] Define the Outer Doc Comments targets, excludes, and pattern, and re-audit commands and core/shared Rust sources
 - [x] Route Rust comment checks through Rust tests and retire the legacy source-header lint
 - [x] Implement Rust comment repository checking and rule-first test orchestration
 - [x] Implement and cover the Source File Header rule with rule-level tests

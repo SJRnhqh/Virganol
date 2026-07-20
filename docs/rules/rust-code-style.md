@@ -12,14 +12,12 @@ Project conventions for Rust source code.
   - Pattern: `// <repository-relative-path>`
   - Separator: `/`
 
-### Module Documentation
-
-### Declaration Documentation
+### Outer Doc Comments
 
 - Scope: `**/*.rs`
 - Excludes: `**/mod.rs`
 - Rule:
-  - Targets:
+  - Targets (Required):
     - Item Declarations:
       - Free functions
       - Structs, enums, unions, traits, and type aliases
@@ -29,14 +27,19 @@ Project conventions for Rust source code.
       - Associated functions and methods
       - Associated constants
       - Associated types
+    - External Items:
+      - Functions and statics declared in extern blocks
     - Members:
       - Struct and union fields
       - Enum variants and their fields
-  - Non-Targets:
+  - Excludes (Prohibited):
     - Module declarations
+    - Extern crate declarations
     - Use declarations and reexports
+    - Anonymous const items
     - Impl blocks themselves; their associated items remain in scope
-    - Macro invocations in item or associated-item position
+    - Extern blocks themselves; their external items remain in scope
+    - Macro invocations in item, associated-item, or external-item position
   - Pattern:
 
     ```rust
@@ -44,6 +47,8 @@ Project conventions for Rust source code.
     ///
     /// <Chinese with whitelisted ASCII terms>
     ```
+
+### Inner Doc Comments
 
 ### Explanatory Comments
 
