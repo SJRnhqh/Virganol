@@ -4,6 +4,8 @@ import { readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { prepareTestEnvironment } from "./build/environment.mjs";
+
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../../..");
 const testDir = path.resolve(scriptDir, "tests");
@@ -15,6 +17,17 @@ const ruleTests = readdirSync(testDir, { withFileTypes: true })
 
 if (ruleTests.length === 0) {
   console.error("rust comments test failed: no rule tests found");
+  process.exit(1);
+}
+
+let testEnvironment;
+
+try {
+  testEnvironment = prepareTestEnvironment();
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error);
+
+  console.error(`rust comments test failed: environment preparation: ${message}`);
   process.exit(1);
 }
 
@@ -34,6 +47,7 @@ for (const step of steps) {
 
   const result = spawnSync(process.execPath, step.args, {
     cwd: repoRoot,
+    env: testEnvironment,
     stdio: "inherit",
     timeout: 120_000,
   });

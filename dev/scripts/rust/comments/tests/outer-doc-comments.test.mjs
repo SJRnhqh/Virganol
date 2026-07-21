@@ -4,7 +4,7 @@ import { parseArgs } from "node:util";
 
 import { loadConfig } from "../config/load.mjs";
 import { loadFixture } from "../fixtures/load.mjs";
-import { assertOuterDocCommentsAdapter } from "../rules/outer-doc-comments.mjs";
+import { checkOuterDocComments } from "../rules/outer-doc-comments.mjs";
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
@@ -15,10 +15,11 @@ const { values } = parseArgs({
   },
 });
 const adapter = values.adapter ?? loadConfig("outer-doc-comments").adapter;
-assertOuterDocCommentsAdapter(adapter);
 
-function loadOuterDocCommentsFixture(name) {
-  return loadFixture("outer-doc-comments", name);
+function checkOuterDocCommentsFixture(name) {
+  const { source } = loadFixture("outer-doc-comments", name);
+
+  return checkOuterDocComments({ adapter, source });
 }
 
 test.todo(`Outer Doc Comments fixtures (${adapter} adapter)`);
