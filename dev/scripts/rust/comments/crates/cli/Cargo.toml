@@ -1,0 +1,9 @@
+[package]
+name = "virganol-rust-comment-checker-cli"
+version = "0.0.1"
+description = "CLI adapter for the Virganol Rust comment checker."
+edition = "2021"
+publish = false
+
+[dependencies]
+virganol-rust-comment-checker-core = { path = "../core" }

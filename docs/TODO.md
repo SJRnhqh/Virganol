@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Design Outer Doc Comments fixture coverage and extend the core parser into structural target discovery
+- [ ] Design reusable Rust comments test and benchmark orchestration for adapter comparison
 
 ## Planned
 
@@ -22,6 +22,7 @@
 
 ## Completed
 
+- [x] Establish a stdin-based CLI adapter that invokes the shared Rust comment checker core
 - [x] Establish Outer Doc Comments config and a workspace-managed Rust core crate with a single-source `syn` parsing entrypoint
 - [x] Define the Outer Doc Comments targets, excludes, and pattern, and re-audit commands and core/shared Rust sources
 - [x] Route Rust comment checks through Rust tests and retire the legacy source-header lint
