@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Design Outer Doc Comments fixture coverage and implement `syn`-based structural parsing
+- [ ] Design Outer Doc Comments fixture coverage and extend the core parser into structural target discovery
 
 ## Planned
 
@@ -22,6 +22,7 @@
 
 ## Completed
 
+- [x] Establish Outer Doc Comments config and a workspace-managed Rust core crate with a single-source `syn` parsing entrypoint
 - [x] Define the Outer Doc Comments targets, excludes, and pattern, and re-audit commands and core/shared Rust sources
 - [x] Route Rust comment checks through Rust tests and retire the legacy source-header lint
 - [x] Implement Rust comment repository checking and rule-first test orchestration
