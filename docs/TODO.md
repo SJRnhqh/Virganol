@@ -5,11 +5,10 @@
 
 ## Current
 
-- [ ] Add a minimal release-mode CLI invocation benchmark with build and warmup excluded from timing
+- [ ] Add Outer Doc Comments fixtures through the shared check interface
 
 ## Planned
 
-- [ ] Add Outer Doc Comments fixtures through the shared check interface
 - [ ] Design the shared Rust comments workload and adapter contract used by correctness tests and benchmarks
 - [ ] Define shared `checkSource(source)` result semantics for CLI and NAPI adapters
 - [ ] Scaffold the Node/NAPI crate and expose an equivalent source-checking interface
@@ -32,6 +31,7 @@
 
 ## Completed
 
+- [x] Scaffold the non-concurrent CLI side of the adapter comparison benchmark with release build, warmup, and summary statistics
 - [x] Connect config-driven test-environment preparation to the Outer Doc Comments CLI check facade, with a NAPI placeholder
 - [x] Scaffold Outer Doc Comments tests with configurable CLI/NAPI adapter selection
 - [x] Centralize Rust comment fixture loading for reusable test and benchmark inputs
