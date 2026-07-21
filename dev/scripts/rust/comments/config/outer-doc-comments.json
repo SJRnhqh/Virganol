@@ -1,6 +1,10 @@
 {
+  "adapter": "napi",
   "coverage": {
-    "include": ["apps/desktop/src-tauri/src/commands/*.rs", "apps/desktop/src-tauri/src/core/shared/*.rs"],
+    "include": [
+      "apps/desktop/src-tauri/src/commands/*.rs",
+      "apps/desktop/src-tauri/src/core/shared/*.rs"
+    ],
     "exclude": ["**/mod.rs"]
   },
   "allowedAsciiTerms": ["API", "JSON"]

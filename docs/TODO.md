@@ -5,10 +5,12 @@
 
 ## Current
 
-- [ ] Design the shared Rust comments workload and adapter contract used by correctness tests and benchmarks
+- [ ] Implement the Outer Doc Comments check facade with CLI routing and a NAPI placeholder
 
 ## Planned
 
+- [ ] Add Outer Doc Comments fixtures through the shared check interface
+- [ ] Design the shared Rust comments workload and adapter contract used by correctness tests and benchmarks
 - [ ] Define shared `checkSource(source)` result semantics for CLI and NAPI adapters
 - [ ] Implement a benchmark-scoped MJS adapter for the stdin CLI and verify the JavaScript-to-core bridge
 - [ ] Scaffold the Node/NAPI crate and expose an equivalent source-checking interface
@@ -30,6 +32,7 @@
 
 ## Completed
 
+- [x] Scaffold Outer Doc Comments tests with configurable CLI/NAPI adapter selection
 - [x] Centralize Rust comment fixture loading for reusable test and benchmark inputs
 - [x] Establish layered repository, Rust, and Rust comments benchmark orchestration behind `pnpm bench`
 - [x] Establish a stdin-based CLI adapter that invokes the shared Rust comment checker core
