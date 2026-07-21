@@ -1,27 +1,16 @@
 // dev/scripts/rust/comments/tests/source-file-header.test.mjs
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import path from "node:path";
 import { describe, test } from "node:test";
-import { fileURLToPath } from "node:url";
 
+import { loadFixture } from "../fixtures/load.mjs";
 import { checkSourceFileHeader } from "../rules/source-file-header.mjs";
 
-const testDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(testDir, "../../../../..");
-const fixtureDir = path.resolve(testDir, "../fixtures/source-file-header");
-
-function loadFixture(name) {
-  const fixturePath = path.resolve(fixtureDir, `${name}.rs.template`);
-  const repositoryRelativePath = path
-    .relative(repoRoot, fixturePath)
-    .split(path.sep)
-    .join("/")
-    .replace(/\.template$/, "");
+function loadSourceFileHeaderFixture(name) {
+  const { fixtureRelativePath, source } = loadFixture("source-file-header", name);
 
   return {
-    repositoryRelativePath,
-    source: readFileSync(fixturePath, "utf8"),
+    repositoryRelativePath: fixtureRelativePath.replace(/\.template$/, ""),
+    source,
   };
 }
 
@@ -33,7 +22,7 @@ function loadInvalidFirstLineCase(name) {
     };
   }
 
-  return loadFixture(name);
+  return loadSourceFileHeaderFixture(name);
 }
 
 const invalidFirstLineCases = [
@@ -67,14 +56,14 @@ const misplacedHeaderLayouts = [
 describe("Source File Header", () => {
   describe("valid-header", () => {
     test("accepts an LF first-line header", () => {
-      const { repositoryRelativePath, source } = loadFixture("valid");
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("valid");
       const lfSource = `${source.trimEnd()}\n`;
 
       assert.equal(checkSourceFileHeader(repositoryRelativePath, lfSource), null);
     });
 
     test("accepts a CRLF first-line header", () => {
-      const { repositoryRelativePath, source } = loadFixture("valid");
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("valid");
       const crlfSource = `${source.trimEnd()}\r\n`;
 
       assert.equal(checkSourceFileHeader(repositoryRelativePath, crlfSource), null);
@@ -85,29 +74,17 @@ describe("Source File Header", () => {
     for (const caseName of invalidFirstLineCases) {
       for (const { description, middleLines } of misplacedHeaderLayouts) {
         test(`reports ${description} for ${caseName}`, () => {
-          const { repositoryRelativePath, source } =
-            loadInvalidFirstLineCase(caseName);
+          const { repositoryRelativePath, source } = loadInvalidFirstLineCase(caseName);
           const expected = `// ${repositoryRelativePath}`;
           const firstLine = source.split(/\r?\n/, 1)[0] ?? "";
-          const generatedSource = [
-            firstLine,
-            ...middleLines,
-            expected,
-          ].join("\n");
+          const generatedSource = [firstLine, ...middleLines, expected].join("\n");
 
-          assert.notEqual(
-            firstLine,
+          assert.notEqual(firstLine, expected, `${caseName} must have an invalid first line`);
+          assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, generatedSource), {
+            code: "header-not-first",
             expected,
-            `${caseName} must have an invalid first line`,
-          );
-          assert.deepEqual(
-            checkSourceFileHeader(repositoryRelativePath, generatedSource),
-            {
-              code: "header-not-first",
-              expected,
-              line: middleLines.length + 2,
-            },
-          );
+            line: middleLines.length + 2,
+          });
         });
       }
     }
@@ -115,8 +92,8 @@ describe("Source File Header", () => {
 
   describe("missing-header", () => {
     test("reports when an empty first line has no later valid header", () => {
-      const { repositoryRelativePath, source } = loadFixture(
-        "empty-first-line-without-valid-header",
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture(
+        "empty-first-line-without-valid-header"
       );
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
@@ -126,7 +103,7 @@ describe("Source File Header", () => {
     });
 
     test("reports for an empty file", () => {
-      const { repositoryRelativePath, source } = loadFixture("empty-file");
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("empty-file");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "missing-header",
@@ -135,9 +112,8 @@ describe("Source File Header", () => {
     });
 
     test("reports for a non-comment first line", () => {
-      const { repositoryRelativePath, source } = loadFixture(
-        "non-comment-first-line",
-      );
+      const { repositoryRelativePath, source } =
+        loadSourceFileHeaderFixture("non-comment-first-line");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "missing-header",
@@ -148,9 +124,7 @@ describe("Source File Header", () => {
 
   describe("invalid-header-marker", () => {
     test("reports for an inner doc comment", () => {
-      const { repositoryRelativePath, source } = loadFixture(
-        "inner-doc-comment",
-      );
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("inner-doc-comment");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "invalid-header-marker",
@@ -160,9 +134,7 @@ describe("Source File Header", () => {
     });
 
     test("reports for an outer doc comment", () => {
-      const { repositoryRelativePath, source } = loadFixture(
-        "outer-doc-comment",
-      );
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("outer-doc-comment");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "invalid-header-marker",
@@ -174,9 +146,7 @@ describe("Source File Header", () => {
 
   describe("invalid-spacing", () => {
     test("reports for a bare comment marker", () => {
-      const { repositoryRelativePath, source } = loadFixture(
-        "bare-comment-marker",
-      );
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("bare-comment-marker");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "invalid-spacing",
@@ -186,7 +156,7 @@ describe("Source File Header", () => {
     });
 
     test("reports for a missing space", () => {
-      const { repositoryRelativePath, source } = loadFixture("missing-space");
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("missing-space");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "invalid-spacing",
@@ -196,9 +166,8 @@ describe("Source File Header", () => {
     });
 
     test("reports for a tab instead of the required space", () => {
-      const { repositoryRelativePath, source } = loadFixture(
-        "tab-instead-of-space",
-      );
+      const { repositoryRelativePath, source } =
+        loadSourceFileHeaderFixture("tab-instead-of-space");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "invalid-spacing",
@@ -208,8 +177,8 @@ describe("Source File Header", () => {
     });
 
     test("reports for a missing space with a mismatched path", () => {
-      const { repositoryRelativePath, source } = loadFixture(
-        "missing-space-and-mismatched-path",
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture(
+        "missing-space-and-mismatched-path"
       );
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
@@ -220,7 +189,7 @@ describe("Source File Header", () => {
     });
 
     test("reports for an extra space", () => {
-      const { repositoryRelativePath, source } = loadFixture("extra-space");
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("extra-space");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "invalid-spacing",
@@ -230,7 +199,7 @@ describe("Source File Header", () => {
     });
 
     test("reports for a tab after the required space", () => {
-      const { repositoryRelativePath, source } = loadFixture("tab-after-space");
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("tab-after-space");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "invalid-spacing",
@@ -240,8 +209,8 @@ describe("Source File Header", () => {
     });
 
     test("reports for an extra space with a mismatched path", () => {
-      const { repositoryRelativePath, source } = loadFixture(
-        "extra-space-and-mismatched-path",
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture(
+        "extra-space-and-mismatched-path"
       );
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
@@ -253,7 +222,7 @@ describe("Source File Header", () => {
   });
 
   test("reports invalid-separator for a backslash path separator", () => {
-    const { repositoryRelativePath, source } = loadFixture("backslash-path");
+    const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("backslash-path");
 
     assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
       code: "invalid-separator",
@@ -264,8 +233,7 @@ describe("Source File Header", () => {
 
   describe("path-mismatch", () => {
     test("reports for a missing repository path", () => {
-      const { repositoryRelativePath, source } =
-        loadInvalidFirstLineCase("missing-path");
+      const { repositoryRelativePath, source } = loadInvalidFirstLineCase("missing-path");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "path-mismatch",
@@ -275,7 +243,7 @@ describe("Source File Header", () => {
     });
 
     test("reports for an incorrect repository path", () => {
-      const { repositoryRelativePath, source } = loadFixture("wrong-path");
+      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("wrong-path");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "path-mismatch",

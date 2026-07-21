@@ -30,6 +30,7 @@
 
 ## Completed
 
+- [x] Centralize Rust comment fixture loading for reusable test and benchmark inputs
 - [x] Establish layered repository, Rust, and Rust comments benchmark orchestration behind `pnpm bench`
 - [x] Establish a stdin-based CLI adapter that invokes the shared Rust comment checker core
 - [x] Establish Outer Doc Comments config and a workspace-managed Rust core crate with a single-source `syn` parsing entrypoint
