@@ -5,10 +5,18 @@
 
 ## Current
 
-- [ ] Design reusable Rust comments test and benchmark orchestration for adapter comparison
+- [ ] Design the shared Rust comments workload and adapter contract used by correctness tests and benchmarks
 
 ## Planned
 
+- [ ] Define shared `checkSource(source)` result semantics for CLI and NAPI adapters
+- [ ] Implement a benchmark-scoped MJS adapter for the stdin CLI and verify the JavaScript-to-core bridge
+- [ ] Scaffold the Node/NAPI crate and expose an equivalent source-checking interface
+- [ ] Define reusable source corpus loading, result normalization, and correctness preflight
+- [ ] Add CLI/NAPI parity coverage and a representative adapter comparison benchmark
+- [ ] Select the production adapter using correctness, performance, and maintenance evidence
+- [ ] Design Outer Doc Comments fixture coverage and extend the core parser into structural target discovery
+- [ ] Integrate the selected adapter into the Outer Doc Comments rule, tests, and repository check
 - [ ] Audit remaining backend Rust sources against the Outer Doc Comments rule
 - [ ] Define the Inner Doc Comments rule and audit backend Rust sources
 - [ ] Define the Explanatory Comments rule and audit backend Rust sources
@@ -22,6 +30,7 @@
 
 ## Completed
 
+- [x] Establish layered repository, Rust, and Rust comments benchmark orchestration behind `pnpm bench`
 - [x] Establish a stdin-based CLI adapter that invokes the shared Rust comment checker core
 - [x] Establish Outer Doc Comments config and a workspace-managed Rust core crate with a single-source `syn` parsing entrypoint
 - [x] Define the Outer Doc Comments targets, excludes, and pattern, and re-audit commands and core/shared Rust sources
