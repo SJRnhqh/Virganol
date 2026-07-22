@@ -1,5 +1,6 @@
 // dev/scripts/rust/comments/tests/outer-doc-comments.test.mjs
-import { test } from "node:test";
+import assert from "node:assert/strict";
+import { describe, test } from "node:test";
 import { parseArgs } from "node:util";
 
 import { loadConfig } from "../config/load.mjs";
@@ -22,4 +23,8 @@ function checkOuterDocCommentsFixture(name) {
   return checkOuterDocComments({ adapter, source });
 }
 
-test.todo(`Outer Doc Comments fixtures (${adapter} adapter)`);
+describe("Outer Doc Comments fixtures", () => {
+  test("accepts a documented free function", async () => {
+    await assert.doesNotReject(() => checkOuterDocCommentsFixture("valid-free-function"));
+  });
+});

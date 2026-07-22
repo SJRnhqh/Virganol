@@ -5,17 +5,17 @@
 
 ## Current
 
-- [ ] Add Outer Doc Comments fixtures through the shared check interface
+- [ ] Scaffold the Node/NAPI crate and expose an equivalent source-checking interface
 
 ## Planned
 
 - [ ] Design the shared Rust comments workload and adapter contract used by correctness tests and benchmarks
 - [ ] Define shared `checkSource(source)` result semantics for CLI and NAPI adapters
-- [ ] Scaffold the Node/NAPI crate and expose an equivalent source-checking interface
 - [ ] Implement config-driven NAPI test-environment preparation
 - [ ] Define reusable source corpus loading, result normalization, and correctness preflight
 - [ ] Add CLI/NAPI parity coverage and a representative adapter comparison benchmark
 - [ ] Select the production adapter using correctness, performance, and maintenance evidence
+- [ ] Expand Outer Doc Comments fixtures through the shared check interface
 - [ ] Design Outer Doc Comments fixture coverage and extend the core parser into structural target discovery
 - [ ] Integrate the selected adapter into the Outer Doc Comments rule, tests, and repository check
 - [ ] Audit remaining backend Rust sources against the Outer Doc Comments rule
@@ -31,6 +31,7 @@
 
 ## Completed
 
+- [x] Activate the first valid free-function Outer Doc Comments fixture through the shared CLI check and benchmark path
 - [x] Scaffold the non-concurrent CLI side of the adapter comparison benchmark with release build, warmup, and summary statistics
 - [x] Connect config-driven test-environment preparation to the Outer Doc Comments CLI check facade, with a NAPI placeholder
 - [x] Scaffold Outer Doc Comments tests with configurable CLI/NAPI adapter selection

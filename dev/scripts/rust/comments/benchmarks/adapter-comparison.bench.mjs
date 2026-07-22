@@ -72,7 +72,7 @@ function benchmarkAdapter(adapter, environment) {
 }
 
 console.log("rust comments adapter comparison bench");
-console.log("note: Outer fixtures are TODO; current CLI result is a test-process baseline");
+console.log("note: Outer rule semantics are TODO; current CLI result covers fixture parsing");
 console.log("\nrust comments adapter comparison: build cli release");
 
 const cliBinaryPath = buildCli({ profile: "release" });
