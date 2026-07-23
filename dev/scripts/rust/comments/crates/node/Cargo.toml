@@ -1,0 +1,17 @@
+[package]
+name = "virganol-rust-comment-checker-node"
+version = "0.0.1"
+description = "Node-API adapter for the Virganol Rust comment checker."
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+napi = "3"
+napi-derive = "3"
+virganol-rust-comment-checker-core = { path = "../core" }
+
+[build-dependencies]
+napi-build = "2"

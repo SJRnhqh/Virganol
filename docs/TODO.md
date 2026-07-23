@@ -5,12 +5,12 @@
 
 ## Current
 
-- [ ] Scaffold the Node/NAPI crate and expose an equivalent source-checking interface
+- [ ] Implement the Node addon build script and resolve the platform-specific `.node` artifact
 
 ## Planned
 
 - [ ] Design the shared Rust comments workload and adapter contract used by correctness tests and benchmarks
-- [ ] Define shared `checkSource(source)` result semantics for CLI and NAPI adapters
+- [ ] Define shared adapter result semantics for CLI and NAPI checks
 - [ ] Implement config-driven NAPI test-environment preparation
 - [ ] Define reusable source corpus loading, result normalization, and correctness preflight
 - [ ] Add CLI/NAPI parity coverage and a representative adapter comparison benchmark
@@ -31,6 +31,7 @@
 
 ## Completed
 
+- [x] Scaffold the Node/NAPI crate and expose its `check(source)` interface through the shared Rust core
 - [x] Activate the first valid free-function Outer Doc Comments fixture through the shared CLI check and benchmark path
 - [x] Scaffold the non-concurrent CLI side of the adapter comparison benchmark with release build, warmup, and summary statistics
 - [x] Connect config-driven test-environment preparation to the Outer Doc Comments CLI check facade, with a NAPI placeholder
