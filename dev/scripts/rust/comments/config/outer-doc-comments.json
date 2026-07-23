@@ -1,5 +1,5 @@
 {
-  "adapter": "cli",
+  "adapter": "napi",
   "coverage": {
     "include": [
       "apps/desktop/src-tauri/src/commands/*.rs",

@@ -4,7 +4,8 @@ import { readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { prepareTestEnvironment } from "./build/environment.mjs";
+import { prepareAdapterEnvironment } from "./build/environment.mjs";
+import { loadConfig } from "./config/load.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../../..");
@@ -23,7 +24,9 @@ if (ruleTests.length === 0) {
 let testEnvironment;
 
 try {
-  testEnvironment = prepareTestEnvironment();
+  const { adapter } = loadConfig("outer-doc-comments");
+
+  testEnvironment = await prepareAdapterEnvironment({ adapter, profile: "debug" });
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error);
 

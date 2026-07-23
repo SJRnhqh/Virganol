@@ -1,10 +1,12 @@
 // dev/scripts/rust/comments/rules/outer-doc-comments.mjs
 import { spawn } from "node:child_process";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ruleDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(ruleDir, "../../../../..");
+const require = createRequire(import.meta.url);
 
 function checkWithCli(source) {
   const cliBinaryPath = process.env.VIRGANOL_RUST_COMMENTS_CLI_PATH;
@@ -43,8 +45,34 @@ function checkWithCli(source) {
   });
 }
 
-function checkWithNapi() {
-  throw new Error("TODO: implement Outer Doc Comments NAPI adapter");
+function loadNapiAdapter() {
+  const addonPath = process.env.VIRGANOL_RUST_COMMENTS_NAPI_PATH;
+
+  if (!addonPath) {
+    throw new Error("Outer Doc Comments NAPI adapter is not built");
+  }
+
+  let adapter;
+
+  try {
+    adapter = require(addonPath);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+
+    throw new Error(`failed to load Outer Doc Comments NAPI adapter: ${message}`, {
+      cause: error,
+    });
+  }
+
+  if (typeof adapter.check !== "function") {
+    throw new Error("Outer Doc Comments NAPI adapter does not export check");
+  }
+
+  return adapter;
+}
+
+function checkWithNapi(source) {
+  return loadNapiAdapter().check(source);
 }
 
 export async function checkOuterDocComments({ adapter, source }) {
@@ -53,7 +81,7 @@ export async function checkOuterDocComments({ adapter, source }) {
   }
 
   if (adapter === "napi") {
-    return checkWithNapi();
+    return checkWithNapi(source);
   }
 
   throw new Error(`unsupported Outer Doc Comments adapter: ${adapter}`);

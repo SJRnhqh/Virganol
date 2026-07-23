@@ -1,19 +1,19 @@
 // dev/scripts/rust/comments/build/environment.mjs
-import { loadConfig } from "../config/load.mjs";
 import { buildCli } from "./cli.mjs";
+import { buildNapi } from "./napi.mjs";
 
-export function prepareTestEnvironment() {
-  const { adapter } = loadConfig("outer-doc-comments");
+export async function prepareAdapterEnvironment({ adapter, profile = "debug" }) {
   const environment = { ...process.env };
 
   if (adapter === "cli") {
     console.log("\nrust comments: build cli adapter");
-    environment.VIRGANOL_RUST_COMMENTS_CLI_PATH = buildCli({ profile: "debug" });
+    environment.VIRGANOL_RUST_COMMENTS_CLI_PATH = buildCli({ profile });
     return environment;
   }
 
   if (adapter === "napi") {
-    // TODO: build the NAPI adapter once its crate is available.
+    console.log("\nrust comments: build napi adapter");
+    environment.VIRGANOL_RUST_COMMENTS_NAPI_PATH = await buildNapi({ profile });
     return environment;
   }
 

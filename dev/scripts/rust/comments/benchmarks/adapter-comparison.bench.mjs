@@ -4,11 +4,12 @@ import path from "node:path";
 import { performance } from "node:perf_hooks";
 import { fileURLToPath } from "node:url";
 
-import { buildCli } from "../build/cli.mjs";
+import { prepareAdapterEnvironment } from "../build/environment.mjs";
 
 const benchmarkDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(benchmarkDir, "../../../../..");
 const outerTestPath = path.resolve(benchmarkDir, "../tests/outer-doc-comments.test.mjs");
+const adapters = ["cli", "napi"];
 const warmupRuns = 3;
 const sampleRuns = 20;
 
@@ -72,16 +73,21 @@ function benchmarkAdapter(adapter, environment) {
 }
 
 console.log("rust comments adapter comparison bench");
-console.log("note: Outer rule semantics are TODO; current CLI result covers fixture parsing");
-console.log("\nrust comments adapter comparison: build cli release");
+console.log("note: Outer rule semantics are TODO; current results cover fixture parsing");
 
-const cliBinaryPath = buildCli({ profile: "release" });
-const cliEnvironment = {
-  ...process.env,
-  VIRGANOL_RUST_COMMENTS_CLI_PATH: cliBinaryPath,
-};
+const preparedAdapters = [];
 
-console.log("\nrust comments adapter comparison: cli");
-console.table([benchmarkAdapter("cli", cliEnvironment)]);
+for (const adapter of adapters) {
+  preparedAdapters.push({
+    adapter,
+    environment: await prepareAdapterEnvironment({ adapter, profile: "release" }),
+  });
+}
 
-console.log("rust comments adapter comparison: napi TODO");
+const results = preparedAdapters.map(({ adapter, environment }) => {
+  console.log(`\nrust comments adapter comparison: ${adapter}`);
+
+  return benchmarkAdapter(adapter, environment);
+});
+
+console.table(results);
