@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/base.rs
 use super::super::ProviderSubject;
-use super::{ProviderErrorContext, ProviderStage};
+use super::{ProviderErrorContext, ProviderOperation, ProviderStage};
 
 /// Provider domain base context.
 ///
@@ -38,11 +38,15 @@ impl<E> ProviderContext<E> {
         self.to_stage(ProviderStage::secret_store())
     }
 
-    /// Projects this context into an error attribution snapshot.
+    /// Projects this context into an error attribution snapshot for a subject.
     ///
-    /// 将当前上下文投影为错误归因快照。
-    pub(super) fn error_context(&self) -> ProviderErrorContext {
-        ProviderErrorContext::from_parts(self.stage, ProviderSubject::configured_providers())
+    /// 为指定主体将当前上下文投影为错误归因快照。
+    pub(super) fn error_context_for(
+        &self,
+        subject: ProviderSubject,
+        operation: ProviderOperation,
+    ) -> ProviderErrorContext {
+        ProviderErrorContext::from_parts(self.stage, subject, operation)
     }
 
     /// Consumes this context and returns the domain business context fields.

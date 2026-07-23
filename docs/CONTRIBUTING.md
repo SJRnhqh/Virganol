@@ -1,5 +1,24 @@
 # Virganol Contributing Guide
 
+## Contribution Workflow
+
+## Development Standards
+
+### Code Style
+
+Code style rules for each technology stack:
+
+- [Rust Code Style](rules/rust-code-style.md)
+
+## Local Validation
+
+Run the repository validation command before committing. The same checks run
+in the pre-commit hook and CI:
+
+```bash
+pnpm test
+```
+
 ## Commit Message Convention
 
 Virganol uses emoji-prefixed commit messages to indicate the type and scope of changes. The format is enforced by commitlint.
@@ -66,15 +85,4 @@ Virganol uses emoji-prefixed commit messages to indicate the type and scope of c
 🚀 release: v0.1.0
 ```
 
-## Local Validation
-
-Commit messages are validated by commitlint via husky hooks. Note that some IDEs may bypass hooks, so manual validation may be needed.
-
-CI workflow is defined in `.github/workflows/ci.yml` and uses the same root
-validation command as the local pre-commit hook.
-
-Run CI checks locally from the repository root:
-
-```bash
-pnpm test
-```
+## Pull Request Guidelines

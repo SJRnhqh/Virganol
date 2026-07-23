@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/details.rs
 use serde::Serialize;
 
-use super::super::ProviderId;
+use super::super::{ProviderId, ProviderScope};
 use super::{ProviderAppError, ProviderError};
 
 /// Structured application boundary error details for the Provider subject subdomain.
@@ -13,7 +13,7 @@ pub(super) struct ProviderErrorDetails {
     /// Provider business scope for this error.
     ///
     /// 当前错误对应的供应商业务范围。
-    scope: &'static str,
+    scope: ProviderScope,
     /// Concrete Provider id attributed to the error, when available.
     ///
     /// 错误可归因到具体供应商时对应的标识。
@@ -47,7 +47,7 @@ impl From<&ProviderError> for ProviderErrorDetails {
     /// 将内部供应商错误投影为结构化边界细节。
     fn from(error: &ProviderError) -> Self {
         Self {
-            scope: error.failure().scope(),
+            scope: error.context().scope(),
             provider_id: error.context().subject().provider_id(),
             suppressed_errors: None,
         }

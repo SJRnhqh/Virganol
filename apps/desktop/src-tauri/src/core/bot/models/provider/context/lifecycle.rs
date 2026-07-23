@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/lifecycle.rs
 use super::super::{ProviderCheckTrigger, ProviderSubject};
 use super::{
-    ProviderContext, ProviderErrorContext, ProviderExecutionContext, ProviderExecutionOperation,
+    ProviderContext, ProviderErrorContext, ProviderExecutionContext, ProviderOperation,
     ProviderStage,
 };
 
@@ -64,7 +64,7 @@ impl<'a> ProviderLifecycleContext<'a> {
         ProviderExecutionContext::from_parts(
             self.0.stage(),
             subject,
-            ProviderExecutionOperation::lifecycle_check(),
+            ProviderOperation::lifecycle_check(),
         )
     }
 
@@ -72,7 +72,10 @@ impl<'a> ProviderLifecycleContext<'a> {
     ///
     /// 将当前生命周期上下文投影为错误归因快照。
     pub(in crate::core::bot::models::provider) fn error_context(&self) -> ProviderErrorContext {
-        self.0.error_context()
+        self.0.error_context_for(
+            ProviderSubject::configured_providers(),
+            ProviderOperation::lifecycle_check(),
+        )
     }
 
     /// Returns the stable correlation id for this lifecycle run.

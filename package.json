@@ -8,6 +8,7 @@
     "purge": "node dev/scripts/repo/clean.mjs purge",
     "diff:budget": "node dev/scripts/repo/diff-budget.mjs",
     "test": "node dev/scripts/repo/test.mjs",
+    "bench": "node dev/scripts/repo/bench.mjs",
     "dev:ui": "pnpm -F @virganol/ui dev",
     "dev": "pnpm -F @virganol/desktop dev",
     "build": "pnpm -F @virganol/desktop build",

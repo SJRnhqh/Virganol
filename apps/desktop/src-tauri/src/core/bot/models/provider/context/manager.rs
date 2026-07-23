@@ -78,9 +78,10 @@ impl ProviderManagerContext {
     ///
     /// 将当前交互式管理上下文投影为错误归因快照。
     pub(in crate::core::bot::models::provider) fn error_context(&self) -> ProviderErrorContext {
-        self.0
-            .error_context()
-            .with_subject(self.0.extra().provider_id.into())
+        self.0.error_context_for(
+            self.0.extra().provider_id.into(),
+            self.0.extra().operation.into(),
+        )
     }
 
     /// Centralizes interactive management context construction.

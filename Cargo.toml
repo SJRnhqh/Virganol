@@ -1,3 +1,8 @@
 [workspace]
-members = ["apps/desktop/src-tauri"]
+members = [
+  "apps/desktop/src-tauri",
+  "dev/scripts/rust/comments/crates/cli",
+  "dev/scripts/rust/comments/crates/core",
+  "dev/scripts/rust/comments/crates/node",
+]
 resolver = "2"

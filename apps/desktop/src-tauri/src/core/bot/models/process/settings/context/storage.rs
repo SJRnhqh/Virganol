@@ -3,18 +3,18 @@ use super::{SettingsErrorContext, SettingsStage};
 
 /// Settings storage business context.
 ///
-/// settings 存储业务上下文。
+/// 设置存储业务上下文。
 pub(in crate::core::bot) struct SettingsStorageContext {
     /// Settings process execution stage represented by this context view.
     ///
-    /// 当前上下文视图表示的 settings 过程执行阶段。
+    /// 当前上下文视图表示的设置业务过程执行阶段。
     stage: SettingsStage,
 }
 
 impl SettingsStorageContext {
     /// Creates a settings storage context.
     ///
-    /// 创建 settings 存储上下文。
+    /// 创建设置存储上下文。
     pub(in crate::core::bot) fn storage() -> Self {
         Self {
             stage: SettingsStage::storage(),

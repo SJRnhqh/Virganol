@@ -1,0 +1,6 @@
+/// Returns an example value.
+///
+/// 返回示例值。
+fn example() -> usize {
+    1
+}

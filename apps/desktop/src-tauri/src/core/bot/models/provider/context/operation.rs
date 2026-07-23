@@ -1,9 +1,10 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/operation.rs
+use std::fmt;
 
 /// Interactive management operation carried by the interactive management context.
 ///
 /// 交互式管理上下文携带的交互式 Provider 操作意图。
-#[derive(Clone)]
+#[derive(Debug, Clone, Copy)]
 pub(super) enum ProviderManagerOperation {
     /// Connect a provider and persist its configuration after a successful probe.
     ///
@@ -42,11 +43,11 @@ impl ProviderManagerOperation {
     }
 }
 
-/// Provider-scoped execution operation carried by the execution context.
+/// Provider business operation carried across domain context views.
 ///
-/// 执行上下文携带的单 Provider 执行操作意图。
-#[derive(Clone)]
-pub(super) enum ProviderExecutionOperation {
+/// 跨领域上下文视图传播的 Provider 业务操作意图。
+#[derive(Debug, Clone, Copy)]
+pub(super) enum ProviderOperation {
     /// Interactive management operation.
     ///
     /// 交互式管理操作。
@@ -57,20 +58,38 @@ pub(super) enum ProviderExecutionOperation {
     LifecycleCheck,
 }
 
-impl ProviderExecutionOperation {
-    /// Creates execution operation context for a lifecycle check.
+impl ProviderOperation {
+    /// Creates operation context for a lifecycle check.
     ///
-    /// 创建生命周期检查对应的执行操作上下文。
+    /// 创建生命周期检查对应的操作上下文。
     pub(super) fn lifecycle_check() -> Self {
         Self::LifecycleCheck
     }
 }
 
-impl From<ProviderManagerOperation> for ProviderExecutionOperation {
-    /// Wraps an interactive management operation as an execution operation.
+impl From<ProviderManagerOperation> for ProviderOperation {
+    /// Wraps an interactive management operation as a Provider operation.
     ///
-    /// 将交互式管理操作包装为执行操作。
+    /// 将交互式管理操作包装为 Provider 操作。
     fn from(operation: ProviderManagerOperation) -> Self {
         Self::Manager(operation)
+    }
+}
+
+impl fmt::Display for ProviderOperation {
+    /// Formats this Provider operation for diagnostic context messages.
+    ///
+    /// 将当前 Provider 操作格式化为诊断上下文消息。
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Manager(ProviderManagerOperation::Connect) => {
+                f.write_str("the connect operation")
+            }
+            Self::Manager(ProviderManagerOperation::Reset) => f.write_str("the reset operation"),
+            Self::Manager(ProviderManagerOperation::UpdateModels) => {
+                f.write_str("the update models operation")
+            }
+            Self::LifecycleCheck => f.write_str("the lifecycle check operation"),
+        }
     }
 }
