@@ -1,8 +1,9 @@
 // dev/scripts/rust/comments/build/environment.mjs
 import { loadConfig } from "../config/load.mjs";
 import { buildCli } from "./cli.mjs";
+import { buildNapi } from "./napi.mjs";
 
-export function prepareTestEnvironment() {
+export async function prepareTestEnvironment() {
   const { adapter } = loadConfig("outer-doc-comments");
   const environment = { ...process.env };
 
@@ -13,7 +14,8 @@ export function prepareTestEnvironment() {
   }
 
   if (adapter === "napi") {
-    // TODO: build the NAPI adapter once its crate is available.
+    console.log("\nrust comments: build napi adapter");
+    environment.VIRGANOL_RUST_COMMENTS_NAPI_PATH = await buildNapi({ profile: "debug" });
     return environment;
   }
 

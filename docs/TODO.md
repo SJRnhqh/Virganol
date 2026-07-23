@@ -5,13 +5,15 @@
 
 ## Current
 
-- [ ] Connect the NAPI adapter to the rule facade
+- [ ] Prepare branch closeout
 
 ## Planned
 
-- [ ] Verify adapter correctness and repository tests
+- None.
 
 ## Completed
 
+- [x] Verify the NAPI adapter through the full repository test suite
+- [x] Connect the NAPI adapter to the rule facade
 - [x] Complete the NAPI build path
 - [x] Establish the NAPI crate and shared core interface

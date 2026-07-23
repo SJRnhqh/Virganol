@@ -23,7 +23,7 @@ if (ruleTests.length === 0) {
 let testEnvironment;
 
 try {
-  testEnvironment = prepareTestEnvironment();
+  testEnvironment = await prepareTestEnvironment();
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error);
 
