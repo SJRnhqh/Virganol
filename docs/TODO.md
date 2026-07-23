@@ -5,13 +5,13 @@
 
 ## Current
 
-- [ ] Complete the NAPI build path
+- [ ] Connect the NAPI adapter to the rule facade
 
 ## Planned
 
-- [ ] Connect the NAPI adapter to the rule facade
 - [ ] Verify adapter correctness and repository tests
 
 ## Completed
 
+- [x] Complete the NAPI build path
 - [x] Establish the NAPI crate and shared core interface
