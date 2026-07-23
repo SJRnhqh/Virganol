@@ -95,7 +95,8 @@ LLM Provider 接入分为两条主线：
 - [ ] Provider HTTP client 初始化错误收口（避免 `reqwest::Client` 构建失败通过 `expect` panic，纳入 health-check 错误路径）
 - [ ] Provider 持久化边界收口（将 `ProviderKeyTransaction` 隐藏为 store 层实现细节，由组合持久化服务统一处理 config + secret 写入与补偿回滚）
 - [ ] Core 规范化：继续人工校验剩余 Core 的 item docs、实现顺序与可见范围
-- [ ] Rust 注释规范实验：完成跨平台 NAPI 构建与配置驱动的测试环境接入，统一共享语料、工作负载、结果语义与正确性前置校验
+- [x] Rust 注释规范实验基础：完成 NAPI addon 构建脚本、配置驱动的默认测试接入、共享适配器环境与 CLI/NAPI release 基线 benchmark
+- [ ] Rust 注释规范实验：验证跨平台构建，统一共享语料、工作负载、结果语义与正确性前置校验
 - [ ] Outer Doc Comments：扩展 fixtures 与 `syn` 结构识别，并将选定适配器接入规则测试、仓库检查和源码审计
 - [ ] 适配器选型：完成 CLI/NAPI 正确性对齐与代表性 benchmark，以性能和维护成本确定生产方案
 - [ ] Comments 规则收口：完成 Outer、Inner 与 Explanatory Comments 的源码审计和文档定稿
