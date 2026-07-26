@@ -23,8 +23,30 @@ function checkOuterDocCommentsFixture(fixtureName) {
   return checkOuterDocComments({ adapter, source });
 }
 
-describe("Outer Doc Comments fixtures", () => {
-  test("accepts a documented free function", async () => {
-    await assert.doesNotReject(() => checkOuterDocCommentsFixture("valid-free-function"));
+const documentedTargetFixtureNames = [
+  "valid-free-function",
+  "valid-struct",
+  "valid-enum",
+  "valid-trait",
+  "valid-type-alias",
+  "valid-constant",
+  "valid-static",
+  "valid-declarative-macro",
+  "valid-attributed-struct",
+  "valid-struct-fields",
+  "valid-enum-variants-and-fields",
+  "valid-union-fields",
+  "valid-trait-associated-items",
+  "valid-impl-associated-items",
+  "valid-extern-items",
+];
+
+describe("Outer Doc Comments", () => {
+  describe("documented targets", () => {
+    for (const fixtureName of documentedTargetFixtureNames) {
+      test(`accepts ${fixtureName}`, async () => {
+        await assert.doesNotReject(() => checkOuterDocCommentsFixture(fixtureName));
+      });
+    }
   });
 });

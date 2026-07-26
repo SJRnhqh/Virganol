@@ -1,0 +1,8 @@
+/// Expands to an example value.
+///
+/// 展开为示例值。
+macro_rules! example_value {
+    () => {
+        1usize
+    };
+}

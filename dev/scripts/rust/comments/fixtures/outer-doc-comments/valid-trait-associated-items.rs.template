@@ -1,0 +1,24 @@
+/// Defines example behavior.
+///
+/// 定义示例行为。
+trait ExampleBehavior {
+    /// Creates an example value.
+    ///
+    /// 创建示例值。
+    fn create() -> Self;
+
+    /// Returns the example value.
+    ///
+    /// 返回示例值。
+    fn value(&self) -> usize;
+
+    /// Defines the example limit.
+    ///
+    /// 定义示例上限。
+    const EXAMPLE_LIMIT: usize;
+
+    /// Defines the example output.
+    ///
+    /// 定义示例输出。
+    type Output;
+}

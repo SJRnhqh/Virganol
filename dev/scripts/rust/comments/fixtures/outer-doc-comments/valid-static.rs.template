@@ -1,0 +1,4 @@
+/// Stores an example value.
+///
+/// 存储示例值。
+static EXAMPLE_VALUE: usize = 1;

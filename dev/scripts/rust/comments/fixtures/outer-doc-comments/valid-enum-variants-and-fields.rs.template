@@ -1,0 +1,27 @@
+/// Represents an example state.
+///
+/// 表示示例状态。
+enum ExampleState {
+    /// Represents an idle state.
+    ///
+    /// 表示空闲状态。
+    Idle,
+    /// Represents a tuple state.
+    ///
+    /// 表示元组状态。
+    Tuple(
+        /// Stores the tuple value.
+        ///
+        /// 存储元组值。
+        usize,
+    ),
+    /// Represents a named state.
+    ///
+    /// 表示具名状态。
+    Named {
+        /// Stores the named value.
+        ///
+        /// 存储具名值。
+        value: usize,
+    },
+}

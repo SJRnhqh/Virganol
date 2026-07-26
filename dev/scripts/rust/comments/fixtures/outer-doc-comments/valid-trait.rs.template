@@ -1,0 +1,4 @@
+/// Defines example behavior.
+///
+/// 定义示例行为。
+trait ExampleBehavior {}

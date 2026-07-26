@@ -1,0 +1,4 @@
+/// Represents an example.
+///
+/// 表示示例。
+struct Example;

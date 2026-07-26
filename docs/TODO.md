@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Expand Outer Doc Comments fixtures and implement `syn` structure recognition
+- [ ] Implement Outer Doc Comments `syn` structure recognition
 
 ## Planned
 
@@ -16,4 +16,5 @@
 
 ## Completed
 
+- [x] Expand positive fixtures across required targets and attributed declarations
 - [x] Standardize fixture identifiers across the shared loader and rule tests

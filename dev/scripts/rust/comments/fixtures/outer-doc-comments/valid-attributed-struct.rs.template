@@ -1,0 +1,5 @@
+/// Represents an attributed example.
+///
+/// 表示带属性的示例。
+#[derive(Debug)]
+struct Example;
