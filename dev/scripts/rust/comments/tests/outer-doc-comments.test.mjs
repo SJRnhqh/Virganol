@@ -17,8 +17,8 @@ const { values } = parseArgs({
 });
 const adapter = values.adapter ?? loadConfig("outer-doc-comments").adapter;
 
-function checkOuterDocCommentsFixture(name) {
-  const { source } = loadFixture("outer-doc-comments", name);
+function checkOuterDocCommentsFixture(fixtureName) {
+  const { source } = loadFixture("outer-doc-comments", fixtureName);
 
   return checkOuterDocComments({ adapter, source });
 }

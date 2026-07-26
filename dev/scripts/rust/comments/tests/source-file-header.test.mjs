@@ -5,8 +5,8 @@ import { describe, test } from "node:test";
 import { loadFixture } from "../fixtures/load.mjs";
 import { checkSourceFileHeader } from "../rules/source-file-header.mjs";
 
-function loadSourceFileHeaderFixture(name) {
-  const { fixtureRelativePath, source } = loadFixture("source-file-header", name);
+function loadSourceFileHeaderFixture(fixtureName) {
+  const { fixtureRelativePath, source } = loadFixture("source-file-header", fixtureName);
 
   return {
     repositoryRelativePath: fixtureRelativePath.replace(/\.template$/, ""),
@@ -14,15 +14,15 @@ function loadSourceFileHeaderFixture(name) {
   };
 }
 
-function loadInvalidFirstLineCase(name) {
-  if (name === "missing-path") {
+function loadInvalidFirstLineCase(caseName) {
+  if (caseName === "missing-path") {
     return {
       repositoryRelativePath: "example.rs",
       source: "// ",
     };
   }
 
-  return loadSourceFileHeaderFixture(name);
+  return loadSourceFileHeaderFixture(caseName);
 }
 
 const invalidFirstLineCases = [

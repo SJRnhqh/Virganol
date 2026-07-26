@@ -16,4 +16,4 @@
 
 ## Completed
 
-- None.
+- [x] Standardize fixture identifiers across the shared loader and rule tests
