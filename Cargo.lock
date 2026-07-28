@@ -5824,6 +5824,7 @@ dependencies = [
 name = "virganol-rust-comment-checker-core"
 version = "0.0.1"
 dependencies = [
+ "proc-macro2",
  "syn 2.0.117",
 ]
 

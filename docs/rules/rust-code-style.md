@@ -36,7 +36,6 @@ Project conventions for Rust source code.
     - Module declarations
     - Extern crate declarations
     - Use declarations and reexports
-    - Anonymous const items
     - Impl blocks themselves; their associated items remain in scope
     - Extern blocks themselves; their external items remain in scope
     - Macro invocations in item, associated-item, or external-item position

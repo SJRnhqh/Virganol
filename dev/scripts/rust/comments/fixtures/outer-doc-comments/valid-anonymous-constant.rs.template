@@ -1,0 +1,4 @@
+/// Performs a compile-time assertion.
+///
+/// 执行编译期断言。
+const _: () = assert!(usize::BITS >= 32);

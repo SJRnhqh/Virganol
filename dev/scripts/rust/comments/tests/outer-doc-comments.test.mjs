@@ -24,15 +24,16 @@ function checkOuterDocCommentsFixture(fixtureName) {
 }
 
 const outerDocLinePattern = /^\s*\/\/\/(?:\s|$)/;
-const attributeLinePattern = /^\s*#\[/;
 
 function createMissingDocumentationCases(fixtureName) {
   const { source } = loadFixture("outer-doc-comments", fixtureName);
   const lines = source.split(/\r?\n/);
   const cases = [];
+  let lineIndex = 0;
 
-  for (let lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
+  while (lineIndex < lines.length) {
     if (!outerDocLinePattern.test(lines[lineIndex])) {
+      lineIndex += 1;
       continue;
     }
 
@@ -50,32 +51,15 @@ function createMissingDocumentationCases(fixtureName) {
       `${fixtureName}:${blockStart + 1} must contain a three-line outer doc block`
     );
 
-    let targetIndex = blockEnd;
-
-    while (attributeLinePattern.test(lines[targetIndex] ?? "")) {
-      targetIndex += 1;
-    }
-
-    const targetLine = lines[targetIndex]?.trim();
-
-    assert.ok(
-      targetLine,
-      `${fixtureName}:${blockEnd + 1} outer doc block must attach to a target`
-    );
-
     const missingDocumentationLines = [...lines];
 
     missingDocumentationLines.fill("", blockStart, blockEnd);
 
-    const missingDocumentationSource = missingDocumentationLines.join("\n");
-
-    assert.notEqual(missingDocumentationSource, source);
     cases.push({
       fixtureName,
-      source: missingDocumentationSource,
-      targetLine,
+      lineNumber: blockStart + 1,
+      source: missingDocumentationLines.join("\n"),
     });
-    lineIndex = blockEnd - 1;
   }
 
   assert.ok(cases.length > 0, `${fixtureName} must contain at least one outer doc block`);
@@ -90,6 +74,7 @@ const documentedTargetFixtureNames = [
   "valid-trait",
   "valid-type-alias",
   "valid-constant",
+  "valid-anonymous-constant",
   "valid-static",
   "valid-declarative-macro",
   "valid-attributed-struct",
@@ -101,9 +86,14 @@ const documentedTargetFixtureNames = [
   "valid-extern-items",
 ];
 
-const missingDocumentationCases = documentedTargetFixtureNames.flatMap(
-  createMissingDocumentationCases
+const missingDocumentationCases = documentedTargetFixtureNames.flatMap((fixtureName) =>
+  createMissingDocumentationCases(fixtureName)
 );
+const missingBoundaryFixtureNames = [
+  "missing-inline-struct-field",
+  "missing-adjacent-struct",
+  "missing-source-start-struct",
+];
 
 describe("Outer Doc Comments", () => {
   describe("documented targets", () => {
@@ -115,8 +105,22 @@ describe("Outer Doc Comments", () => {
   });
 
   describe("missing documentation", () => {
-    for (const { fixtureName, targetLine } of missingDocumentationCases) {
-      test.todo(`reports for ${fixtureName} without documentation on ${targetLine}`);
+    for (const { fixtureName, lineNumber, source } of missingDocumentationCases) {
+      test(`reports for ${fixtureName}:${lineNumber} without documentation`, async () => {
+        await assert.rejects(
+          () => checkOuterDocComments({ adapter, source }),
+          /missing outer doc comment/
+        );
+      });
+    }
+
+    for (const fixtureName of missingBoundaryFixtureNames) {
+      test(`reports for ${fixtureName}`, async () => {
+        await assert.rejects(
+          () => checkOuterDocCommentsFixture(fixtureName),
+          /missing outer doc comment/
+        );
+      });
     }
   });
 });
