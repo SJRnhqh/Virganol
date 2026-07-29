@@ -3,6 +3,8 @@ use proc_macro2::Span;
 use syn::spanned::Spanned;
 use syn::{parse_file, AttrStyle, Attribute, Fields, ForeignItem, ImplItem, Item, TraitItem};
 
+use super::target_anchor;
+
 /// Checks required Rust declarations for outer documentation.
 ///
 /// 检查必需的声明是否具有外部文档注释。
@@ -133,10 +135,7 @@ where
         return Ok(());
     }
 
-    let anchor = attrs
-        .first()
-        .map(|attribute| attribute.span())
-        .unwrap_or_else(|| target.span());
+    let anchor = target_anchor(attrs, target);
 
     if has_line_comment_candidate_before(source, anchor)? {
         // TODO: Classify and validate non-empty source comment candidates.

@@ -5,17 +5,20 @@
 
 ## Current
 
-- [ ] Classify and validate non-missing Outer Doc comment candidates
+- [ ] Define Missing source behavior from each target anchor to the previous code boundary or source start
 
 ## Planned
 
-- [ ] Expand Missing source fallback to the three-line documentation window
+- [ ] Implement reusable leading-region exploration for code, whitespace, and comment candidates
+- [ ] Handle Inner Doc evidence before Missing source fallback
+- [ ] Classify and validate non-missing documentation candidates
 - [ ] Connect the Outer Doc Comments rule to repository checks and source audits
 - [ ] Expand representative CLI/NAPI benchmarks and select the production adapter
 - [ ] Validate the selected adapter across supported platforms
 
 ## Completed
 
+- [x] Extract reusable target-anchor resolution behind the core helper boundary
 - [x] Align Missing fixture expectations and CLI/NAPI correctness
 - [x] Cover Missing source boundaries with dedicated negative fixtures
 - [x] Implement source-aware missing Outer Doc detection
