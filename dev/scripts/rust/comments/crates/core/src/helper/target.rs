@@ -7,14 +7,11 @@ use super::{has_line_comment_candidate_before, target_anchor};
 /// Checks one target against the Outer Doc Comments rule.
 ///
 /// 根据外部文档注释规则检查单个目标。
-pub(crate) fn check_target_outer_doc<T>(
+pub(crate) fn check_target_outer_doc<T: Spanned>(
     source: &str,
     attrs: &[Attribute],
     target: &T,
-) -> Result<(), String>
-where
-    T: Spanned + ?Sized,
-{
+) -> Result<(), String> {
     if attrs.iter().any(|attribute| {
         matches!(attribute.style, AttrStyle::Outer) && attribute.path().is_ident("doc")
     }) {
