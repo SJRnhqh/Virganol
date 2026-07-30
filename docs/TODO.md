@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Localize leading-region validation and Missing reporting behind the region helper
 - [x] Encapsulate target-level Outer Doc validation behind a single core helper interface
 - [x] Extract reusable target-anchor resolution behind the core helper boundary
 - [x] Align Missing fixture expectations and CLI/NAPI correctness

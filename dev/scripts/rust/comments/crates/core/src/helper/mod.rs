@@ -4,5 +4,5 @@ mod region;
 mod target;
 
 pub(self) use anchor::target_anchor;
-pub(self) use region::has_line_comment_candidate_before;
+pub(self) use region::check_leading_region;
 pub(super) use target::check_target_outer_doc;

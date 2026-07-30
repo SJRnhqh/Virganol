@@ -2,7 +2,7 @@
 use syn::spanned::Spanned;
 use syn::{AttrStyle, Attribute};
 
-use super::{has_line_comment_candidate_before, target_anchor};
+use super::{check_leading_region, target_anchor};
 
 /// Checks one target against the Outer Doc Comments rule.
 ///
@@ -20,10 +20,5 @@ pub(crate) fn check_target_outer_doc<T: Spanned>(
 
     let anchor = target_anchor(attrs, target);
 
-    if has_line_comment_candidate_before(source, anchor)? {
-        // TODO: Classify and validate non-empty source comment candidates.
-        return Ok(());
-    }
-
-    Err("missing outer doc comment".to_owned())
+    check_leading_region(source, anchor)
 }
