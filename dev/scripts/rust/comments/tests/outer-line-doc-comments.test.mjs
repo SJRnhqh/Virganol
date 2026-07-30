@@ -94,6 +94,12 @@ const missingBoundaryFixtureNames = [
   "missing-adjacent-struct",
   "missing-source-start-struct",
 ];
+const invalidCommentCases = [
+  {
+    fixtureName: "invalid-inline-ordinary-block-comment-struct-field",
+    errorPattern: /an ordinary block comment is not a valid outer line doc comment/,
+  },
+];
 
 describe("Outer Line Doc Comments", () => {
   describe("documented targets", () => {
@@ -119,6 +125,17 @@ describe("Outer Line Doc Comments", () => {
         await assert.rejects(
           () => checkOuterLineDocCommentsFixture(fixtureName),
           /missing outer line doc comment/
+        );
+      });
+    }
+  });
+
+  describe("invalid comments", () => {
+    for (const { fixtureName, errorPattern } of invalidCommentCases) {
+      test(`reports for ${fixtureName}`, async () => {
+        await assert.rejects(
+          () => checkOuterLineDocCommentsFixture(fixtureName),
+          errorPattern
         );
       });
     }

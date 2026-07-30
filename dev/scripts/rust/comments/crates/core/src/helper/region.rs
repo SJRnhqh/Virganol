@@ -1,5 +1,6 @@
 // dev/scripts/rust/comments/crates/core/src/helper/region.rs
 use proc_macro2::Span;
+use ra_ap_rustc_lexer::{tokenize, FrontmatterAllowed, TokenKind};
 
 /// Checks the source region leading a documentation target.
 ///
@@ -27,12 +28,20 @@ fn split_source_before_anchor(source: &str, anchor: Span) -> Option<(&str, &str)
 ///
 /// 检查锚点所在行中位于锚点之前的源代码前缀。
 fn check_anchor_line_prefix(line_prefix: &str) -> Result<(), String> {
-    if line_prefix.trim().is_empty() {
-        return Ok(());
-    }
+    let nearest_kind = tokenize(line_prefix, FrontmatterAllowed::No)
+        .map(|token| token.kind)
+        .filter(|kind| *kind != TokenKind::Whitespace)
+        .last();
 
-    // TODO: Classify same line comment candidates before reporting missing documentation.
-    Err("missing outer line doc comment".to_owned())
+    // TODO: Classify inner doc comments when invalid-marker diagnostics
+    // are introduced.
+    match nearest_kind {
+        None => Ok(()),
+        Some(TokenKind::BlockComment {
+            doc_style: None, ..
+        }) => Err("an ordinary block comment is not a valid outer line doc comment".to_owned()),
+        Some(_) => Err("missing outer line doc comment".to_owned()),
+    }
 }
 
 /// Checks complete source lines before an anchor line.

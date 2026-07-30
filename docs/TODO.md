@@ -5,11 +5,10 @@
 
 ## Current
 
-- [ ] Introduce `ra_ap_rustc_lexer` through same-line comment candidate discovery
+- [ ] Extend lexer-backed scanning across preceding source lines with explicit code-boundary and source-start termination
 
 ## Planned
 
-- [ ] Extend lexer-backed scanning across preceding source lines with explicit code-boundary and source-start termination
 - [ ] Unify same-line and preceding-region comment candidate validation
 - [ ] Handle Inner Doc evidence before Missing source fallback
 - [ ] Classify and validate non-missing documentation candidates
@@ -19,6 +18,7 @@
 
 ## Completed
 
+- [x] Introduce lexer-backed same-line candidate classification with an ordinary block-comment fixture
 - [x] Separate same-line gating from reverse blank-line exploration with fail-closed Missing fallback
 - [x] Encapsulate anchor source partitioning into preceding lines and the current line prefix
 - [x] Standardize the strict rule name as Outer Line Doc Comments across docs, paths, fixtures, JavaScript, and Rust
