@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Define Missing source behavior from each target anchor to the previous code boundary or source start
+- [ ] Define leading-region decisions for Missing detection from each target anchor to the previous code boundary or source start
 
 ## Planned
 
@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Encapsulate target-level Outer Doc validation behind a single core helper interface
 - [x] Extract reusable target-anchor resolution behind the core helper boundary
 - [x] Align Missing fixture expectations and CLI/NAPI correctness
 - [x] Cover Missing source boundaries with dedicated negative fixtures

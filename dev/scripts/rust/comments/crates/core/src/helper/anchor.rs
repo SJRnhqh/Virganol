@@ -6,7 +6,7 @@ use syn::Attribute;
 /// Resolves the earliest source span for a documentation target.
 ///
 /// 解析文档目标最早的源代码位置。
-pub(crate) fn target_anchor<T>(attrs: &[Attribute], target: &T) -> Span
+pub(super) fn target_anchor<T>(attrs: &[Attribute], target: &T) -> Span
 where
     T: Spanned + ?Sized,
 {
