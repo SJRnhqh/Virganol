@@ -1,4 +1,4 @@
-// dev/scripts/rust/comments/rules/outer-doc-comments.mjs
+// dev/scripts/rust/comments/rules/outer-line-doc-comments.mjs
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -12,7 +12,7 @@ function checkWithCli(source) {
   const cliBinaryPath = process.env.VIRGANOL_RUST_COMMENTS_CLI_PATH;
 
   if (!cliBinaryPath) {
-    throw new Error("Outer Doc Comments CLI adapter is not built");
+    throw new Error("Outer Line Doc Comments CLI adapter is not built");
   }
 
   return new Promise((resolve, reject) => {
@@ -28,7 +28,9 @@ function checkWithCli(source) {
     });
     child.on("error", (error) => {
       reject(
-        new Error(`failed to start Outer Doc Comments CLI: ${error.message}`, { cause: error })
+        new Error(`failed to start Outer Line Doc Comments CLI: ${error.message}`, {
+          cause: error,
+        })
       );
     });
     child.on("close", (code) => {
@@ -39,7 +41,7 @@ function checkWithCli(source) {
 
       const detail = stderr.trim() || `exit code ${code ?? "unknown"}`;
 
-      reject(new Error(`Outer Doc Comments CLI failed: ${detail}`));
+      reject(new Error(`Outer Line Doc Comments CLI failed: ${detail}`));
     });
     child.stdin.end(source);
   });
@@ -49,7 +51,7 @@ function loadNapiAdapter() {
   const addonPath = process.env.VIRGANOL_RUST_COMMENTS_NAPI_PATH;
 
   if (!addonPath) {
-    throw new Error("Outer Doc Comments NAPI adapter is not built");
+    throw new Error("Outer Line Doc Comments NAPI adapter is not built");
   }
 
   let adapter;
@@ -59,13 +61,13 @@ function loadNapiAdapter() {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
 
-    throw new Error(`failed to load Outer Doc Comments NAPI adapter: ${message}`, {
+    throw new Error(`failed to load Outer Line Doc Comments NAPI adapter: ${message}`, {
       cause: error,
     });
   }
 
   if (typeof adapter.check !== "function") {
-    throw new Error("Outer Doc Comments NAPI adapter does not export check");
+    throw new Error("Outer Line Doc Comments NAPI adapter does not export check");
   }
 
   return adapter;
@@ -75,7 +77,7 @@ function checkWithNapi(source) {
   return loadNapiAdapter().check(source);
 }
 
-export async function checkOuterDocComments({ adapter, source }) {
+export async function checkOuterLineDocComments({ adapter, source }) {
   if (adapter === "cli") {
     return checkWithCli(source);
   }
@@ -84,5 +86,5 @@ export async function checkOuterDocComments({ adapter, source }) {
     return checkWithNapi(source);
   }
 
-  throw new Error(`unsupported Outer Doc Comments adapter: ${adapter}`);
+  throw new Error(`unsupported Outer Line Doc Comments adapter: ${adapter}`);
 }

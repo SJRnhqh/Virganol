@@ -8,13 +8,16 @@ import { prepareAdapterEnvironment } from "../build/environment.mjs";
 
 const benchmarkDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(benchmarkDir, "../../../../..");
-const outerTestPath = path.resolve(benchmarkDir, "../tests/outer-doc-comments.test.mjs");
+const outerLineDocTestPath = path.resolve(
+  benchmarkDir,
+  "../tests/outer-line-doc-comments.test.mjs"
+);
 const adapters = ["cli", "napi"];
 const warmupRuns = 3;
 const sampleRuns = 20;
 
-function runOuterTest(adapter, environment) {
-  const result = spawnSync(process.execPath, [outerTestPath, `--adapter=${adapter}`], {
+function runOuterLineDocTest(adapter, environment) {
+  const result = spawnSync(process.execPath, [outerLineDocTestPath, `--adapter=${adapter}`], {
     cwd: repoRoot,
     encoding: "utf8",
     env: environment,
@@ -57,7 +60,7 @@ function summarize(adapter, samples) {
 
 function benchmarkAdapter(adapter, environment) {
   for (let run = 0; run < warmupRuns; run += 1) {
-    runOuterTest(adapter, environment);
+    runOuterLineDocTest(adapter, environment);
   }
 
   const samples = [];
@@ -65,7 +68,7 @@ function benchmarkAdapter(adapter, environment) {
   for (let run = 0; run < sampleRuns; run += 1) {
     const startedAt = performance.now();
 
-    runOuterTest(adapter, environment);
+    runOuterLineDocTest(adapter, environment);
     samples.push(performance.now() - startedAt);
   }
 
@@ -73,7 +76,9 @@ function benchmarkAdapter(adapter, environment) {
 }
 
 console.log("rust comments adapter comparison bench");
-console.log("note: Outer rule semantics are TODO; current results cover fixture parsing");
+console.log(
+  "note: Outer Line Doc Comments rule semantics are TODO; current results cover fixture parsing"
+);
 
 const preparedAdapters = [];
 

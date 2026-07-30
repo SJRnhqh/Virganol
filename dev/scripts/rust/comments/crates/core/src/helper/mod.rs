@@ -5,4 +5,4 @@ mod target;
 
 pub(self) use anchor::target_anchor;
 pub(self) use region::check_leading_region;
-pub(super) use target::check_target_outer_doc;
+pub(super) use target::check_target_outer_line_doc;

@@ -29,7 +29,7 @@ const invalidFirstLineCases = [
   "empty-file",
   "non-comment-first-line",
   "inner-doc-comment",
-  "outer-doc-comment",
+  "outer-line-doc-comment",
   "bare-comment-marker",
   "missing-space",
   "tab-instead-of-space",
@@ -133,8 +133,9 @@ describe("Source File Header", () => {
       });
     });
 
-    test("reports for an outer doc comment", () => {
-      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("outer-doc-comment");
+    test("reports for an outer line doc comment", () => {
+      const { repositoryRelativePath, source } =
+        loadSourceFileHeaderFixture("outer-line-doc-comment");
 
       assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
         code: "invalid-header-marker",

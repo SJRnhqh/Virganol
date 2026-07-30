@@ -4,10 +4,10 @@ use syn::{AttrStyle, Attribute};
 
 use super::{check_leading_region, target_anchor};
 
-/// Checks one target against the Outer Doc Comments rule.
+/// Checks one target against the Outer Line Doc Comments rule.
 ///
-/// 根据外部文档注释规则检查单个目标。
-pub(crate) fn check_target_outer_doc<T: Spanned>(
+/// 根据外部行文档注释规则检查单个目标。
+pub(crate) fn check_target_outer_line_doc<T: Spanned>(
     source: &str,
     attrs: &[Attribute],
     target: &T,

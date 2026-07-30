@@ -24,7 +24,7 @@ if (ruleTests.length === 0) {
 let testEnvironment;
 
 try {
-  const { adapter } = loadConfig("outer-doc-comments");
+  const { adapter } = loadConfig("outer-line-doc-comments");
 
   testEnvironment = await prepareAdapterEnvironment({ adapter, profile: "debug" });
 } catch (error) {

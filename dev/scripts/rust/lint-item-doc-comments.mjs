@@ -262,7 +262,7 @@ for (const { filePath, relativePath } of rustFiles) {
 if (failures.length > 0) {
   console.error(`rust item doc comment lint failed (${failures.length} failure(s))\n`);
   console.error(
-    "rule: exactly three adjacent outer doc lines: English, blank, Chinese without non-whitelisted ASCII\n"
+    "rule: exactly three adjacent outer line doc comment lines: English, blank, Chinese without non-whitelisted ASCII\n"
   );
   console.error(`targets: ${config.targets.join(", ")}`);
   console.error(`excludes: ${config.excludes.length > 0 ? config.excludes.join(", ") : "<none>"}`);

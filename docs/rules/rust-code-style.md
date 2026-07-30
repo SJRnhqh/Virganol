@@ -12,7 +12,7 @@ Project conventions for Rust source code.
   - Pattern: `// <repository-relative-path>`
   - Separator: `/`
 
-### Outer Doc Comments
+### Outer Line Doc Comments
 
 - Scope: `**/*.rs`
 - Excludes: `**/mod.rs`

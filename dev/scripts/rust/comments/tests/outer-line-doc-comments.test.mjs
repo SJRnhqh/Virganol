@@ -1,11 +1,11 @@
-// dev/scripts/rust/comments/tests/outer-doc-comments.test.mjs
+// dev/scripts/rust/comments/tests/outer-line-doc-comments.test.mjs
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { parseArgs } from "node:util";
 
 import { loadConfig } from "../config/load.mjs";
 import { loadFixture } from "../fixtures/load.mjs";
-import { checkOuterDocComments } from "../rules/outer-doc-comments.mjs";
+import { checkOuterLineDocComments } from "../rules/outer-line-doc-comments.mjs";
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
@@ -15,54 +15,54 @@ const { values } = parseArgs({
     },
   },
 });
-const adapter = values.adapter ?? loadConfig("outer-doc-comments").adapter;
+const adapter = values.adapter ?? loadConfig("outer-line-doc-comments").adapter;
 
-function checkOuterDocCommentsFixture(fixtureName) {
-  const { source } = loadFixture("outer-doc-comments", fixtureName);
+function checkOuterLineDocCommentsFixture(fixtureName) {
+  const { source } = loadFixture("outer-line-doc-comments", fixtureName);
 
-  return checkOuterDocComments({ adapter, source });
+  return checkOuterLineDocComments({ adapter, source });
 }
 
-const outerDocLinePattern = /^\s*\/\/\/(?:\s|$)/;
+const outerLineDocPattern = /^\s*\/\/\/(?:\s|$)/;
 
 function createMissingDocumentationCases(fixtureName) {
-  const { source } = loadFixture("outer-doc-comments", fixtureName);
+  const { source } = loadFixture("outer-line-doc-comments", fixtureName);
   const lines = source.split(/\r?\n/);
   const cases = [];
   let lineIndex = 0;
 
   while (lineIndex < lines.length) {
-    if (!outerDocLinePattern.test(lines[lineIndex])) {
+    if (!outerLineDocPattern.test(lines[lineIndex])) {
       lineIndex += 1;
       continue;
     }
 
-    const blockStart = lineIndex;
+    const groupStart = lineIndex;
 
-    while (lineIndex < lines.length && outerDocLinePattern.test(lines[lineIndex])) {
+    while (lineIndex < lines.length && outerLineDocPattern.test(lines[lineIndex])) {
       lineIndex += 1;
     }
 
-    const blockEnd = lineIndex;
+    const groupEnd = lineIndex;
 
     assert.equal(
-      blockEnd - blockStart,
+      groupEnd - groupStart,
       3,
-      `${fixtureName}:${blockStart + 1} must contain a three-line outer doc block`
+      `${fixtureName}:${groupStart + 1} must contain a three-line outer line doc group`
     );
 
     const missingDocumentationLines = [...lines];
 
-    missingDocumentationLines.fill("", blockStart, blockEnd);
+    missingDocumentationLines.fill("", groupStart, groupEnd);
 
     cases.push({
       fixtureName,
-      lineNumber: blockStart + 1,
+      lineNumber: groupStart + 1,
       source: missingDocumentationLines.join("\n"),
     });
   }
 
-  assert.ok(cases.length > 0, `${fixtureName} must contain at least one outer doc block`);
+  assert.ok(cases.length > 0, `${fixtureName} must contain at least one outer line doc group`);
 
   return cases;
 }
@@ -95,11 +95,11 @@ const missingBoundaryFixtureNames = [
   "missing-source-start-struct",
 ];
 
-describe("Outer Doc Comments", () => {
+describe("Outer Line Doc Comments", () => {
   describe("documented targets", () => {
     for (const fixtureName of documentedTargetFixtureNames) {
       test(`accepts ${fixtureName}`, async () => {
-        await assert.doesNotReject(() => checkOuterDocCommentsFixture(fixtureName));
+        await assert.doesNotReject(() => checkOuterLineDocCommentsFixture(fixtureName));
       });
     }
   });
@@ -108,8 +108,8 @@ describe("Outer Doc Comments", () => {
     for (const { fixtureName, lineNumber, source } of missingDocumentationCases) {
       test(`reports for ${fixtureName}:${lineNumber} without documentation`, async () => {
         await assert.rejects(
-          () => checkOuterDocComments({ adapter, source }),
-          /missing outer doc comment/
+          () => checkOuterLineDocComments({ adapter, source }),
+          /missing outer line doc comment/
         );
       });
     }
@@ -117,8 +117,8 @@ describe("Outer Doc Comments", () => {
     for (const fixtureName of missingBoundaryFixtureNames) {
       test(`reports for ${fixtureName}`, async () => {
         await assert.rejects(
-          () => checkOuterDocCommentsFixture(fixtureName),
-          /missing outer doc comment/
+          () => checkOuterLineDocCommentsFixture(fixtureName),
+          /missing outer line doc comment/
         );
       });
     }

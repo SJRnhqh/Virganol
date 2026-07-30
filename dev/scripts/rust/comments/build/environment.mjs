@@ -17,5 +17,5 @@ export async function prepareAdapterEnvironment({ adapter, profile = "debug" }) 
     return environment;
   }
 
-  throw new Error(`unsupported Outer Doc Comments adapter: ${adapter}`);
+  throw new Error(`unsupported Outer Line Doc Comments adapter: ${adapter}`);
 }

@@ -11,12 +11,12 @@ pub(super) fn check_leading_region(source: &str, anchor: Span) -> Result<(), Str
     let line_prefix = &prefix[current_line_start..];
 
     if has_content_before_anchor(line_prefix) {
-        return Err("missing outer doc comment".to_owned());
+        return Err("missing outer line doc comment".to_owned());
     }
 
     let previous_lines = &prefix[..current_line_start];
     let Some(previous_line) = previous_lines.lines().next_back() else {
-        return Err("missing outer doc comment".to_owned());
+        return Err("missing outer line doc comment".to_owned());
     };
 
     if previous_line.trim_start().starts_with("//") {
@@ -24,7 +24,7 @@ pub(super) fn check_leading_region(source: &str, anchor: Span) -> Result<(), Str
         return Ok(());
     }
 
-    Err("missing outer doc comment".to_owned())
+    Err("missing outer line doc comment".to_owned())
 }
 
 /// Returns the source preceding an anchor.
