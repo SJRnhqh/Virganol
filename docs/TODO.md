@@ -5,11 +5,12 @@
 
 ## Current
 
-- [ ] Define same-line short-circuit and backward leading-region decisions for Missing detection to the previous code boundary or source start
+- [ ] Introduce `ra_ap_rustc_lexer` through same-line comment candidate discovery
 
 ## Planned
 
-- [ ] Implement reusable leading-region exploration for code, whitespace, and comment candidates
+- [ ] Extend lexer-backed scanning across preceding source lines with explicit code-boundary and source-start termination
+- [ ] Unify same-line and preceding-region comment candidate validation
 - [ ] Handle Inner Doc evidence before Missing source fallback
 - [ ] Classify and validate non-missing documentation candidates
 - [ ] Connect the Outer Line Doc Comments rule to repository checks and source audits
@@ -18,6 +19,7 @@
 
 ## Completed
 
+- [x] Separate same-line gating from reverse blank-line exploration with fail-closed Missing fallback
 - [x] Encapsulate anchor source partitioning into preceding lines and the current line prefix
 - [x] Standardize the strict rule name as Outer Line Doc Comments across docs, paths, fixtures, JavaScript, and Rust
 - [x] Localize leading-region validation and Missing reporting behind the region helper
