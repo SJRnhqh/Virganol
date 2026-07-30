@@ -33,6 +33,8 @@ fn check_anchor_line_prefix(line_prefix: &str) -> Result<(), String> {
         .filter(|kind| *kind != TokenKind::Whitespace)
         .last();
 
+    // TODO: Prefer a placement diagnostic for same-line comment candidates
+    // once typed errors are introduced.
     // TODO: Classify inner doc comments when invalid-marker diagnostics
     // are introduced.
     match nearest_kind {
@@ -48,14 +50,50 @@ fn check_anchor_line_prefix(line_prefix: &str) -> Result<(), String> {
 ///
 /// 检查锚点所在行之前的完整源代码行。
 fn check_previous_lines(previous_lines: &str) -> Result<(), String> {
-    for line in previous_lines.lines().rev() {
-        if line.trim().is_empty() {
-            continue;
-        }
+    let comment_region = extract_comment_region(previous_lines);
 
-        // TODO: Identify and collect the preceding comment candidate region.
-        break;
+    if comment_region.trim().is_empty() {
+        return Err("missing outer line doc comment".to_owned());
     }
 
-    Err("missing outer line doc comment".to_owned())
+    // TODO: Split candidate placement, marker, and content failures when
+    // typed diagnostics are introduced.
+    Err("invalid outer line doc comment candidate".to_owned())
+}
+
+/// Extracts the comment region, excluding comments trailing code.
+///
+/// 提取注释区域，并排除尾随在代码之后的注释。
+fn extract_comment_region(source: &str) -> &str {
+    let (_, region_start, _) = tokenize(source, FrontmatterAllowed::No).fold(
+        (0, 0, false),
+        |(token_start, mut region_start, mut pending_code_boundary), token| {
+            let token_end = token_start + token.len as usize;
+
+            match token.kind {
+                TokenKind::Whitespace if pending_code_boundary => {
+                    if let Some(newline_offset) = source[token_start..token_end].find('\n') {
+                        region_start = token_start + newline_offset + 1;
+                        pending_code_boundary = false;
+                    }
+                }
+                TokenKind::LineComment { .. } | TokenKind::BlockComment { .. }
+                    if pending_code_boundary =>
+                {
+                    region_start = token_end;
+                }
+                TokenKind::Whitespace
+                | TokenKind::LineComment { .. }
+                | TokenKind::BlockComment { .. } => {}
+                _ => {
+                    region_start = token_end;
+                    pending_code_boundary = true;
+                }
+            }
+
+            (token_end, region_start, pending_code_boundary)
+        },
+    );
+
+    &source[region_start..]
 }

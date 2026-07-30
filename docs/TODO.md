@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Extend lexer-backed scanning across preceding source lines with explicit code-boundary and source-start termination
+- [ ] Define placement-first classification for extracted preceding-line comment regions
 
 ## Planned
 
@@ -18,6 +18,8 @@
 
 ## Completed
 
+- [x] Extract preceding-line comment regions from source start or the last code boundary
+- [x] Preserve blank-line evidence while excluding comments trailing code
 - [x] Introduce lexer-backed same-line candidate classification with an ordinary block-comment fixture
 - [x] Separate same-line gating from reverse blank-line exploration with fail-closed Missing fallback
 - [x] Encapsulate anchor source partitioning into preceding lines and the current line prefix
