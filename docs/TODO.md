@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Define placement-first classification for extracted preceding-line comment regions
+- [ ] Classify candidate placement across same-line and preceding comment regions
 
 ## Planned
 
@@ -28,7 +28,7 @@
 - [x] Encapsulate target-level Outer Line Doc validation behind a single core helper interface
 - [x] Extract reusable target-anchor resolution behind the core helper boundary
 - [x] Align Missing fixture expectations and CLI/NAPI correctness
-- [x] Cover Missing source boundaries with dedicated negative fixtures
+- [x] Complete Missing coverage with generated target cases and dedicated inline, source-start, adjacency, and trailing-comment boundaries
 - [x] Implement source-aware missing Outer Line Doc detection
 - [x] Implement broad Outer Doc attribute recognition with `syn`
 - [x] Derive and execute missing-documentation cases from positive fixtures

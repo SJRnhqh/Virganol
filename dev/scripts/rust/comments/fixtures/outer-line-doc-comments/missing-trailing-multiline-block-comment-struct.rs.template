@@ -1,0 +1,6 @@
+/// Represents a documented example.
+///
+/// 表示一个已有文档的示例。
+struct DocumentedExample; /* Keeps a trailing
+comment. */
+struct MissingExample;

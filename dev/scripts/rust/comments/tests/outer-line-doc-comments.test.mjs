@@ -93,6 +93,8 @@ const missingBoundaryFixtureNames = [
   "missing-inline-struct-field",
   "missing-adjacent-struct",
   "missing-source-start-struct",
+  "missing-trailing-line-comment-struct",
+  "missing-trailing-multiline-block-comment-struct",
 ];
 const invalidCommentCases = [
   {
