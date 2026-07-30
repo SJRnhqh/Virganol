@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Define leading-region decisions for Missing detection from each target anchor to the previous code boundary or source start
+- [ ] Define same-line short-circuit and backward leading-region decisions for Missing detection to the previous code boundary or source start
 
 ## Planned
 
@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Encapsulate anchor source partitioning into preceding lines and the current line prefix
 - [x] Standardize the strict rule name as Outer Line Doc Comments across docs, paths, fixtures, JavaScript, and Rust
 - [x] Localize leading-region validation and Missing reporting behind the region helper
 - [x] Encapsulate target-level Outer Line Doc validation behind a single core helper interface
