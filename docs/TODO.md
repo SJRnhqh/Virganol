@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Record deferred 0.0.1 test coverage and quality-gate evaluation in the roadmap
 - [x] Extract preceding-line comment regions from source start or the last code boundary
 - [x] Preserve blank-line evidence while excluding comments trailing code
 - [x] Introduce lexer-backed same-line candidate classification with an ordinary block-comment fixture

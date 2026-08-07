@@ -104,3 +104,8 @@ LLM Provider 接入分为两条主线：
 - [ ] 后端锁实现升级（`std::sync::Mutex` → `parking_lot::Mutex`）
 - [ ] 后端锁粒度细化（全局锁 → per-provider 锁）
 - [ ] 功能开发完结
+
+#### 6.7 测试覆盖与质量门禁
+
+- [ ] 0.0.1 功能开发完成后补齐测试覆盖
+- [ ] 结合测试体系评估 `pnpm test` 与 `pnpm verify` 的职责和入口
