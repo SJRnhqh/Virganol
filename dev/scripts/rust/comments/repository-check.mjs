@@ -1,4 +1,4 @@
-// dev/scripts/rust/comments/check.mjs
+// dev/scripts/rust/comments/repository-check.mjs
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";

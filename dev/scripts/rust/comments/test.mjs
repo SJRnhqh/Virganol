@@ -41,7 +41,7 @@ const steps = [
   },
   {
     name: "repository check",
-    args: [path.resolve(scriptDir, "check.mjs")],
+    args: [path.resolve(scriptDir, "repository-check.mjs")],
   },
 ];
 
