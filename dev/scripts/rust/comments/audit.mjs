@@ -1,4 +1,4 @@
-// dev/scripts/rust/comments/repository-check.mjs
+// dev/scripts/rust/comments/audit.mjs
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -50,12 +50,12 @@ try {
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error);
 
-  console.error(`rust comments check failed: ${message}`);
+  console.error(`rust comments audit failed: ${message}`);
   process.exit(1);
 }
 
 if (failures.length > 0) {
-  console.error(`rust comments check failed (${failures.length} failure(s))\n`);
+  console.error(`rust comments audit failed (${failures.length} failure(s))\n`);
   console.error("rule: source-file-header\n");
 
   for (const failure of failures) {
@@ -73,4 +73,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`rust comments check passed (${rustFiles.length} files)`);
+console.log(`rust comments audit passed (${rustFiles.length} files)`);

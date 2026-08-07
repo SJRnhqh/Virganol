@@ -34,33 +34,20 @@ try {
   process.exit(1);
 }
 
-const steps = [
-  {
-    name: "rule tests",
-    args: ["--test", ...ruleTests],
-  },
-  {
-    name: "repository check",
-    args: [path.resolve(scriptDir, "repository-check.mjs")],
-  },
-];
+console.log("\nrust comments test: rule tests");
 
-for (const step of steps) {
-  console.log(`\nrust comments: ${step.name}`);
+const result = spawnSync(process.execPath, ["--test", ...ruleTests], {
+  cwd: repoRoot,
+  env: testEnvironment,
+  stdio: "inherit",
+  timeout: 120_000,
+});
 
-  const result = spawnSync(process.execPath, step.args, {
-    cwd: repoRoot,
-    env: testEnvironment,
-    stdio: "inherit",
-    timeout: 120_000,
-  });
+if (result.status !== 0) {
+  const detail = result.error ? `: ${result.error.message}` : "";
 
-  if (result.status !== 0) {
-    const detail = result.error ? `: ${result.error.message}` : "";
-
-    console.error(`rust comments test failed: ${step.name}${detail}`);
-    process.exit(1);
-  }
+  console.error(`rust comments test failed: rule tests${detail}`);
+  process.exit(1);
 }
 
 console.log("\nrust comments test passed");

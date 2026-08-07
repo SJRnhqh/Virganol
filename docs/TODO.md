@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Separate rule conformance tests and repository audit behind the Comments Check entry
 - [x] Record deferred 0.0.1 test coverage and quality-gate evaluation in the roadmap
 - [x] Extract preceding-line comment regions from source start or the last code boundary
 - [x] Preserve blank-line evidence while excluding comments trailing code
