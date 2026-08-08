@@ -15,7 +15,10 @@ const { values } = parseArgs({
     },
   },
 });
-const adapter = values.adapter ?? loadConfig("outer-line-doc-comments").adapter;
+const adapter =
+  values.adapter ??
+  process.env.VIRGANOL_RUST_COMMENTS_ADAPTER ??
+  loadConfig("outer-line-doc-comments").adapter;
 
 function checkOuterLineDocCommentsFixture(fixtureName) {
   const { source } = loadFixture("outer-line-doc-comments", fixtureName);

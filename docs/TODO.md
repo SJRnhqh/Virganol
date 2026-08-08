@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Classify candidate placement across same-line and preceding comment regions
+- [ ] Calibrate core candidate classification against positive and negative same-line and preceding-region fixtures
 
 ## Planned
 
@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Propagate the selected CLI/NAPI adapter through the prepared test environment
 - [x] Separate rule conformance tests and repository audit behind the Comments Check entry
 - [x] Record deferred 0.0.1 test coverage and quality-gate evaluation in the roadmap
 - [x] Extract preceding-line comment regions from source start or the last code boundary
