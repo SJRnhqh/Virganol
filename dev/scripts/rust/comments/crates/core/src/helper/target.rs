@@ -13,7 +13,8 @@ pub(crate) fn check_target_outer_line_doc<T: Spanned>(
     target: &T,
 ) -> Result<(), String> {
     if attrs.iter().any(|attribute| {
-        matches!(attribute.style, AttrStyle::Outer) && attribute.path().is_ident("doc")
+        matches!(attribute.style, AttrStyle::Outer | AttrStyle::Inner(_))
+            && attribute.path().is_ident("doc")
     }) {
         return Ok(());
     }

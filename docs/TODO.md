@@ -5,19 +5,21 @@
 
 ## Current
 
-- [ ] Calibrate core candidate classification against positive and negative same-line and preceding-region fixtures
+- [ ] Exhaust leading-region comment candidates before terminal Missing
 
 ## Planned
 
-- [ ] Unify same-line and preceding-region comment candidate validation
-- [ ] Handle Inner Doc evidence before Missing source fallback
-- [ ] Classify and validate non-missing documentation candidates
+- [ ] Classify candidate placement, marker, and form across same-line and preceding regions
+- [ ] Audit target-anchor completeness across attributes and source gaps
+- [ ] Classify target-owned Outer and Inner Doc attributes before short-circuiting
+- [ ] Keep `syn` parse failures distinct from comment evidence and Missing
 - [ ] Connect the Outer Line Doc Comments rule to repository checks and source audits
 - [ ] Expand representative CLI/NAPI benchmarks and select the production adapter
 - [ ] Validate the selected adapter across supported platforms
 
 ## Completed
 
+- [x] Gate leading-region analysis on the absence of target-owned Outer and Inner Doc attributes
 - [x] Propagate the selected CLI/NAPI adapter through the prepared test environment
 - [x] Separate rule conformance tests and repository audit behind the Comments Check entry
 - [x] Record deferred 0.0.1 test coverage and quality-gate evaluation in the roadmap
