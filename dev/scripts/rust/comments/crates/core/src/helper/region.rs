@@ -1,99 +1,91 @@
 // dev/scripts/rust/comments/crates/core/src/helper/region.rs
 use proc_macro2::Span;
-use ra_ap_rustc_lexer::{tokenize, FrontmatterAllowed, TokenKind};
+use ra_ap_rustc_lexer::{
+    tokenize,
+    DocStyle::Inner,
+    FrontmatterAllowed,
+    TokenKind::{BlockComment, LineComment, Whitespace},
+};
+
+use super::super::{
+    LeadingRegion::{self, Inline, PreviousLines},
+    LeadingRegionState::{Leading, Pending},
+};
 
 /// Checks the source region leading a documentation target.
 ///
 /// 检查文档目标之前的源代码区域。
 pub(super) fn check_leading_region(source: &str, anchor: Span) -> Result<(), String> {
-    let (previous_lines, anchor_line_prefix) = split_source_before_anchor(source, anchor)
+    let prefix = source
+        .get(..anchor.byte_range().start)
         .ok_or_else(|| "invalid source span".to_owned())?;
 
-    check_anchor_line_prefix(anchor_line_prefix)?;
-
-    check_previous_lines(previous_lines)
-}
-
-/// Splits source before an anchor into preceding lines and the current line prefix.
-///
-/// 将锚点前的源代码拆分为之前的行与当前行前缀。
-fn split_source_before_anchor(source: &str, anchor: Span) -> Option<(&str, &str)> {
-    let prefix = source.get(..anchor.byte_range().start)?;
-    let anchor_line_start = prefix.rfind('\n').map_or(0, |index| index + 1);
-
-    Some(prefix.split_at(anchor_line_start))
-}
-
-/// Checks the source prefix before an anchor on its line.
-///
-/// 检查锚点所在行中位于锚点之前的源代码前缀。
-fn check_anchor_line_prefix(line_prefix: &str) -> Result<(), String> {
-    let nearest_kind = tokenize(line_prefix, FrontmatterAllowed::No)
-        .map(|token| token.kind)
-        .filter(|kind| *kind != TokenKind::Whitespace)
-        .last();
-
-    // TODO: Prefer a placement diagnostic for same-line comment candidates
-    // once typed errors are introduced.
-    // TODO: Classify inner doc comments when invalid-marker diagnostics
-    // are introduced.
-    match nearest_kind {
-        None => Ok(()),
-        Some(TokenKind::BlockComment {
+    match analyze_leading_region(prefix) {
+        Inline(BlockComment {
             doc_style: None, ..
         }) => Err("an ordinary block comment is not a valid outer line doc comment".to_owned()),
-        Some(_) => Err("missing outer line doc comment".to_owned()),
+        Inline(BlockComment {
+            doc_style: Some(Inner),
+            ..
+        }) => Err("missing outer line doc comment".to_owned()),
+        Inline(_) => Err("missing outer line doc comment".to_owned()),
+        PreviousLines { start } => check_previous_lines(&prefix[start..]),
     }
 }
 
-/// Checks complete source lines before an anchor line.
+/// Analyzes the tokens in a complete leading source region.
 ///
-/// 检查锚点所在行之前的完整源代码行。
-fn check_previous_lines(previous_lines: &str) -> Result<(), String> {
-    let comment_region = extract_comment_region(previous_lines);
+/// 分析完整先导源代码区域中的词法单元。
+fn analyze_leading_region(source: &str) -> LeadingRegion {
+    let (_, _, comment_region_start, kind) = tokenize(source, FrontmatterAllowed::No).fold(
+        (0, Leading, 0, None),
+        |(cursor, mut state, mut comment_region_start, kind), token| {
+            let token_end = cursor + token.len as usize;
+            let (newline_offset, kind) = match token.kind {
+                Whitespace => {
+                    let offset = source[cursor..token_end].find('\n');
 
+                    (offset, kind.filter(|_| offset.is_none()))
+                }
+                token_kind => (None, Some(token_kind)),
+            };
+
+            match (&mut state, token.kind) {
+                (state @ Pending, Whitespace) => {
+                    if let Some(newline_offset) = newline_offset {
+                        comment_region_start = cursor + newline_offset + 1;
+                        *state = Leading;
+                    }
+                }
+                (Pending, LineComment { .. } | BlockComment { .. }) => {
+                    comment_region_start = token_end;
+                }
+                (Leading, Whitespace | LineComment { .. } | BlockComment { .. }) => {}
+                _ => {
+                    comment_region_start = token_end;
+                    state = Pending;
+                }
+            }
+
+            (token_end, state, comment_region_start, kind)
+        },
+    );
+
+    match kind {
+        Some(kind) => Inline(kind),
+        None => PreviousLines {
+            start: comment_region_start,
+        },
+    }
+}
+
+/// Checks the leading source region before an anchor line.
+///
+/// 检查锚点所在行之前的先导源代码区域。
+fn check_previous_lines(comment_region: &str) -> Result<(), String> {
     if comment_region.trim().is_empty() {
         return Err("missing outer line doc comment".to_owned());
     }
 
-    // TODO: Split candidate placement, marker, and content failures when
-    // typed diagnostics are introduced.
     Err("invalid outer line doc comment candidate".to_owned())
-}
-
-/// Extracts the comment region, excluding comments trailing code.
-///
-/// 提取注释区域，并排除尾随在代码之后的注释。
-fn extract_comment_region(source: &str) -> &str {
-    let (_, region_start, _) = tokenize(source, FrontmatterAllowed::No).fold(
-        (0, 0, false),
-        |(token_start, mut region_start, mut pending_code_boundary), token| {
-            let token_end = token_start + token.len as usize;
-
-            match token.kind {
-                TokenKind::Whitespace if pending_code_boundary => {
-                    if let Some(newline_offset) = source[token_start..token_end].find('\n') {
-                        region_start = token_start + newline_offset + 1;
-                        pending_code_boundary = false;
-                    }
-                }
-                TokenKind::LineComment { .. } | TokenKind::BlockComment { .. }
-                    if pending_code_boundary =>
-                {
-                    region_start = token_end;
-                }
-                TokenKind::Whitespace
-                | TokenKind::LineComment { .. }
-                | TokenKind::BlockComment { .. } => {}
-                _ => {
-                    region_start = token_end;
-                    pending_code_boundary = true;
-                }
-            }
-
-            (token_end, region_start, pending_code_boundary)
-        },
-    );
-
-    &source[region_start..]
 }
