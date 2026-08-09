@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Exhaust leading-region comment candidates before terminal Missing
+- [ ] Exhaust anchor-line-empty comment candidates before terminal Missing
 
 ## Planned
 
@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Complete non-whitespace anchor-line coverage across Missing and ordinary block-comment Invalid boundaries
 - [x] Formalize Source File Header fixtures and derive misplaced Header coverage from error categories
 - [x] Complete lexer-backed leading-region partitioning for terminal Missing detection
 - [x] Validate Absent target anchors across internal and trailing attribute comment gaps

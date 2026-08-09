@@ -1,4 +1,0 @@
-/// Contains an undocumented structure.
-///
-/// 包含一个缺少文档的结构体。
-mod example { /*! Documents the module. */ struct MissingExample; }

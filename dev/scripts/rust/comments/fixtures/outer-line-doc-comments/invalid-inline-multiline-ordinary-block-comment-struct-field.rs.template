@@ -1,0 +1,8 @@
+/// Represents an example.
+///
+/// 表示一个示例。
+struct Example {
+    /* Stores a value.
+
+    存储一个值。 */ value: usize,
+}

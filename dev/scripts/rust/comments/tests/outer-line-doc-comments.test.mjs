@@ -90,8 +90,10 @@ const validFixtureNames = [
 ];
 
 const missingFixtureNames = [
-  "missing-inline-struct-field",
-  "missing-inline-inner-block-doc-struct",
+  "missing-inline-trait-associated-function",
+  "missing-inline-inner-block-doc-trait-associated-function",
+  "missing-inline-multiline-inner-block-doc-trait-associated-function",
+  "missing-inline-multiline-inner-block-doc-on-opening-line-trait-associated-function",
   "missing-source-start-struct",
   "missing-adjacent-struct",
   "missing-trailing-line-comment-struct",
@@ -115,6 +117,15 @@ const invalidCommentCases = [
   },
   {
     fixtureName: "invalid-inline-ordinary-block-comment-struct-field",
+    errorPattern: /an ordinary block comment is not a valid outer line doc comment/,
+  },
+  {
+    fixtureName: "invalid-inline-multiline-ordinary-block-comment-struct-field",
+    errorPattern: /an ordinary block comment is not a valid outer line doc comment/,
+  },
+  {
+    fixtureName:
+      "invalid-inline-trailing-multiline-block-comment-trait-associated-function",
     errorPattern: /an ordinary block comment is not a valid outer line doc comment/,
   },
 ];

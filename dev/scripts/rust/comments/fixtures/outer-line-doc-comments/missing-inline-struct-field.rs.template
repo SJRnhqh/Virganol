@@ -1,4 +1,0 @@
-/// Represents an example.
-///
-/// 表示一个示例。
-struct Example { value: usize }
