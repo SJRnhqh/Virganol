@@ -15,7 +15,7 @@ pub(crate) fn check_target_outer_line_doc<T: Spanned>(
 ) -> Result<(), String> {
     match DocAttrs::from_attributes(attrs) {
         Absent => {
-            let anchor = target_anchor(attrs, target);
+            let anchor = target_anchor(source, attrs, target)?;
 
             check_leading_region(source, anchor)
         }

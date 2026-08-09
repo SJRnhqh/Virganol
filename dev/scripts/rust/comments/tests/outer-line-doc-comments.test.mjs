@@ -101,6 +101,14 @@ const missingBoundaryFixtureNames = [
 ];
 const invalidCommentCases = [
   {
+    fixtureName: "invalid-comment-after-attributes-struct",
+    errorPattern: /a comment in the target attribute region is not a valid outer line doc comment/,
+  },
+  {
+    fixtureName: "invalid-comment-between-attributes-struct",
+    errorPattern: /a comment in the target attribute region is not a valid outer line doc comment/,
+  },
+  {
     fixtureName: "invalid-inner-line-doc-free-function",
     errorPattern: /an inner doc comment is not a valid outer line doc comment/,
   },

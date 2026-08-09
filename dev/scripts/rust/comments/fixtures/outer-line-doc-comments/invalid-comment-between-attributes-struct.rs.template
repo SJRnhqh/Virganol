@@ -1,0 +1,4 @@
+#[derive(Debug)]
+// Describes an example.
+#[allow(dead_code)]
+struct Example;
