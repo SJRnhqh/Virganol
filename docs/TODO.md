@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Formalize Source File Header fixtures and derive misplaced Header coverage from error categories
 - [x] Complete lexer-backed leading-region partitioning for terminal Missing detection
 - [x] Validate Absent target anchors across internal and trailing attribute comment gaps
 - [x] Model target-owned Doc attribute combinations and reject InnerOnly targets
