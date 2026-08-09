@@ -28,7 +28,7 @@ function checkOuterLineDocCommentsFixture(fixtureName) {
 
 const outerLineDocPattern = /^\s*\/\/\/(?:\s|$)/;
 
-function createMissingDocumentationCases(fixtureName) {
+function deriveMissingCasesFromFixture(fixtureName) {
   const { source } = loadFixture("outer-line-doc-comments", fixtureName);
   const lines = source.split(/\r?\n/);
   const cases = [];
@@ -70,7 +70,7 @@ function createMissingDocumentationCases(fixtureName) {
   return cases;
 }
 
-const documentedTargetFixtureNames = [
+const validFixtureNames = [
   "valid-free-function",
   "valid-struct",
   "valid-enum",
@@ -89,16 +89,17 @@ const documentedTargetFixtureNames = [
   "valid-extern-items",
 ];
 
-const missingDocumentationCases = documentedTargetFixtureNames.flatMap((fixtureName) =>
-  createMissingDocumentationCases(fixtureName)
-);
-const missingBoundaryFixtureNames = [
+const missingFixtureNames = [
   "missing-inline-struct-field",
-  "missing-adjacent-struct",
+  "missing-inline-inner-block-doc-struct",
   "missing-source-start-struct",
+  "missing-adjacent-struct",
   "missing-trailing-line-comment-struct",
   "missing-trailing-multiline-block-comment-struct",
 ];
+const derivedMissingCases = validFixtureNames.flatMap((fixtureName) =>
+  deriveMissingCasesFromFixture(fixtureName)
+);
 const invalidCommentCases = [
   {
     fixtureName: "invalid-comment-after-attributes-struct",
@@ -119,28 +120,28 @@ const invalidCommentCases = [
 ];
 
 describe("Outer Line Doc Comments", () => {
-  describe("documented targets", () => {
-    for (const fixtureName of documentedTargetFixtureNames) {
+  describe("valid", () => {
+    for (const fixtureName of validFixtureNames) {
       test(`accepts ${fixtureName}`, async () => {
         await assert.doesNotReject(() => checkOuterLineDocCommentsFixture(fixtureName));
       });
     }
   });
 
-  describe("missing documentation", () => {
-    for (const { fixtureName, lineNumber, source } of missingDocumentationCases) {
-      test(`reports for ${fixtureName}:${lineNumber} without documentation`, async () => {
+  describe("missing", () => {
+    for (const fixtureName of missingFixtureNames) {
+      test(`reports for ${fixtureName}`, async () => {
         await assert.rejects(
-          () => checkOuterLineDocComments({ adapter, source }),
+          () => checkOuterLineDocCommentsFixture(fixtureName),
           /missing outer line doc comment/
         );
       });
     }
 
-    for (const fixtureName of missingBoundaryFixtureNames) {
-      test(`reports for ${fixtureName}`, async () => {
+    for (const { fixtureName, lineNumber, source } of derivedMissingCases) {
+      test(`reports for ${fixtureName}:${lineNumber} without documentation`, async () => {
         await assert.rejects(
-          () => checkOuterLineDocCommentsFixture(fixtureName),
+          () => checkOuterLineDocComments({ adapter, source }),
           /missing outer line doc comment/
         );
       });
