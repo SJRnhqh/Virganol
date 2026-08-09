@@ -101,6 +101,10 @@ const missingBoundaryFixtureNames = [
 ];
 const invalidCommentCases = [
   {
+    fixtureName: "invalid-inner-line-doc-free-function",
+    errorPattern: /an inner doc comment is not a valid outer line doc comment/,
+  },
+  {
     fixtureName: "invalid-inline-ordinary-block-comment-struct-field",
     errorPattern: /an ordinary block comment is not a valid outer line doc comment/,
   },

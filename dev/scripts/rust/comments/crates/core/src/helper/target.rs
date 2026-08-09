@@ -1,7 +1,8 @@
 // dev/scripts/rust/comments/crates/core/src/helper/target.rs
 use syn::spanned::Spanned;
-use syn::{AttrStyle, Attribute};
+use syn::Attribute;
 
+use super::super::DocAttrs::{self, Absent, InnerOnly, Mixed, OuterOnly};
 use super::{check_leading_region, target_anchor};
 
 /// Checks one target against the Outer Line Doc Comments rule.
@@ -12,14 +13,13 @@ pub(crate) fn check_target_outer_line_doc<T: Spanned>(
     attrs: &[Attribute],
     target: &T,
 ) -> Result<(), String> {
-    if attrs.iter().any(|attribute| {
-        matches!(attribute.style, AttrStyle::Outer | AttrStyle::Inner(_))
-            && attribute.path().is_ident("doc")
-    }) {
-        return Ok(());
+    match DocAttrs::from_attributes(attrs) {
+        Absent => {
+            let anchor = target_anchor(attrs, target);
+
+            check_leading_region(source, anchor)
+        }
+        InnerOnly => Err("an inner doc comment is not a valid outer line doc comment".to_owned()),
+        OuterOnly | Mixed => Ok(()),
     }
-
-    let anchor = target_anchor(attrs, target);
-
-    check_leading_region(source, anchor)
 }

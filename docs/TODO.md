@@ -11,7 +11,7 @@
 
 - [ ] Classify candidate placement, marker, and form across same-line and preceding regions
 - [ ] Audit target-anchor completeness across attributes and source gaps
-- [ ] Classify target-owned Outer and Inner Doc attributes before short-circuiting
+- [ ] Classify target-owned OuterOnly and Mixed Doc attributes before short-circuiting
 - [ ] Keep `syn` parse failures distinct from comment evidence and Missing
 - [ ] Connect the Outer Line Doc Comments rule to repository checks and source audits
 - [ ] Expand representative CLI/NAPI benchmarks and select the production adapter
@@ -19,6 +19,7 @@
 
 ## Completed
 
+- [x] Model target-owned Doc attribute combinations and reject InnerOnly targets
 - [x] Gate leading-region analysis on the absence of target-owned Outer and Inner Doc attributes
 - [x] Propagate the selected CLI/NAPI adapter through the prepared test environment
 - [x] Separate rule conformance tests and repository audit behind the Comments Check entry
