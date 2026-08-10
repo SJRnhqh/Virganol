@@ -35,7 +35,7 @@ impl LeadingRegion {
     ///
     /// 将锚点前缀分类为与目标相关的先导区域。
     pub(crate) fn from_anchor_prefix(prefix: &str) -> Self {
-        use LeadingRegionState::{Leading, Pending};
+        use LeadingRegionScanState::{Leading, Pending};
 
         let (_, _, comment_region_start, kind) = tokenize(prefix, FrontmatterAllowed::No).fold(
             (0, Leading, 0, None),
@@ -80,10 +80,10 @@ impl LeadingRegion {
     }
 }
 
-/// Tracks leading region membership during token analysis.
+/// Tracks the leading-region scan state while partitioning an anchor prefix.
 ///
-/// 跟踪词法单元是否属于目标的先导区域。
-enum LeadingRegionState {
+/// 在划分锚点前缀时跟踪先导区域扫描状态。
+enum LeadingRegionScanState {
     /// Includes tokens in the leading region.
     ///
     /// 将词法单元纳入先导区域。

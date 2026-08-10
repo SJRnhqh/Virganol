@@ -18,7 +18,7 @@
 
 ## Completed
 
-- [x] Encapsulate anchor-prefix classification and transition state within the LeadingRegion model
+- [x] Encapsulate anchor-prefix classification and scan state within the LeadingRegion model
 - [x] Classify anchor-line-empty regions as Missing, NonDoc, Mixed, or Misplaced
 - [x] Cover trailing single-line ordinary block comments before anchor-line-empty Missing targets
 - [x] Complete non-whitespace anchor-line coverage across Missing and ordinary block-comment Invalid boundaries
