@@ -33,22 +33,22 @@ function getFirstLine(source) {
   return source.split(/\r?\n/, 1)[0] ?? "";
 }
 
-const missingFirstLineFixtureNames = ["empty-file", "non-comment-first-line"];
-
-const missingHeaderFixtureNames = [
-  "empty-first-line-without-valid-header",
-  ...missingFirstLineFixtureNames,
-];
-
 const validFixtureGroup = sourceFileHeaderFixtureGroup("valid");
 const invalidHeaderMarkerFixtureGroup = sourceFileHeaderFixtureGroup("invalid-header-marker");
 const invalidSeparatorFixtureGroup = sourceFileHeaderFixtureGroup("invalid-separator");
 const invalidSpacingFixtureGroup = sourceFileHeaderFixtureGroup("invalid-spacing");
+const missingHeaderFixtureGroup = sourceFileHeaderFixtureGroup("missing-header");
+const redundantMisplacedHeaderFixtureNames = new Set(["empty-first-line-without-valid-header"]);
 const groupedInvalidFirstLineFixtures = [
-  invalidHeaderMarkerFixtureGroup,
-  invalidSeparatorFixtureGroup,
-  invalidSpacingFixtureGroup,
-].flatMap(({ fixtures }) => fixtures);
+  ...missingHeaderFixtureGroup.fixtures.filter(
+    ({ fixtureName }) => !redundantMisplacedHeaderFixtureNames.has(fixtureName)
+  ),
+  ...[
+    invalidHeaderMarkerFixtureGroup,
+    invalidSeparatorFixtureGroup,
+    invalidSpacingFixtureGroup,
+  ].flatMap(({ fixtures }) => fixtures),
+];
 const groupedInvalidFirstLineFixturesByName = new Map(
   groupedInvalidFirstLineFixtures.map((fixture) => [fixture.fixtureName, fixture])
 );
@@ -70,7 +70,6 @@ function resolveInvalidFirstLineCase(caseName) {
 }
 
 const invalidFirstLineCaseNames = [
-  ...missingFirstLineFixtureNames,
   ...groupedInvalidFirstLineFixtures.map(({ fixtureName }) => fixtureName),
   ...pathMismatchCaseNames,
 ];
@@ -133,10 +132,10 @@ describe("Source File Header", () => {
     }
   });
 
-  describe("missing-header", () => {
-    for (const fixtureName of missingHeaderFixtureNames) {
-      test(`reports for ${fixtureName}`, () => {
-        const { repositoryRelativePath, source } = loadSourceFileHeaderFixture(fixtureName);
+  describeFixtureGroup(missingHeaderFixtureGroup, (fixtures) => {
+    for (const fixture of fixtures) {
+      test(`reports for ${fixture.fixtureName}`, () => {
+        const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
 
         assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
           code: "missing-header",

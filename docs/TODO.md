@@ -20,6 +20,7 @@
 
 ## Completed
 
+- [x] Migrate Source File Header missing fixtures with explicit misplaced-case exclusion
 - [x] Migrate Source File Header marker, separator, and spacing fixtures into error-code groups
 - [x] Introduce directory-backed fixture groups and migrate the Source File Header valid fixture
 - [x] Model nearest contiguous comment groups with semantic token roles and blank-line separation
