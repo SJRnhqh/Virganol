@@ -10,6 +10,7 @@
 ## Planned
 
 - [ ] Classify candidate placement, marker, and form across same-line and preceding regions
+- [ ] Replace placeholder Invalid diagnostics with typed errors after candidate classification stabilizes
 - [ ] Classify target-owned OuterOnly and Mixed Doc attributes before short-circuiting
 - [ ] Keep `syn` parse failures distinct from comment evidence and Missing
 - [ ] Connect the Outer Line Doc Comments rule to repository checks and source audits
@@ -18,10 +19,11 @@
 
 ## Completed
 
+- [x] Unify inline and preceding-line NonDoc candidates under one diagnostic
 - [x] Encapsulate anchor-prefix classification and scan state within the LeadingRegion model
 - [x] Classify anchor-line-empty regions as Missing, NonDoc, Mixed, or Misplaced
-- [x] Cover trailing single-line ordinary block comments before anchor-line-empty Missing targets
-- [x] Complete non-whitespace anchor-line coverage across Missing and ordinary block-comment Invalid boundaries
+- [x] Cover trailing single-line non-doc block comments before anchor-line-empty Missing targets
+- [x] Complete non-whitespace anchor-line coverage across Missing and NonDoc Invalid boundaries
 - [x] Formalize Source File Header fixtures and derive misplaced Header coverage from error categories
 - [x] Complete lexer-backed leading-region partitioning for terminal Missing detection
 - [x] Validate Absent target anchors across internal and trailing attribute comment gaps
@@ -32,7 +34,7 @@
 - [x] Record deferred 0.0.1 test coverage and quality-gate evaluation in the roadmap
 - [x] Extract preceding-line comment regions from source start or the last code boundary
 - [x] Preserve blank-line evidence while excluding comments trailing code
-- [x] Introduce lexer-backed same-line candidate classification with an ordinary block-comment fixture
+- [x] Introduce lexer-backed same-line candidate classification with a non-doc block-comment fixture
 - [x] Separate same-line gating from reverse blank-line exploration with fail-closed Missing fallback
 - [x] Encapsulate anchor source partitioning into preceding lines and the current line prefix
 - [x] Standardize the strict rule name as Outer Line Doc Comments across docs, paths, fixtures, JavaScript, and Rust

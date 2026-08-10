@@ -117,17 +117,21 @@ const invalidCommentCases = [
     errorPattern: /an inner doc comment is not a valid outer line doc comment/,
   },
   {
-    fixtureName: "invalid-inline-ordinary-block-comment-struct-field",
-    errorPattern: /an ordinary block comment is not a valid outer line doc comment/,
+    fixtureName: "invalid-adjacent-non-doc-line-comment-struct",
+    errorPattern: /non-doc outer line doc comment candidate/,
   },
   {
-    fixtureName: "invalid-inline-multiline-ordinary-block-comment-struct-field",
-    errorPattern: /an ordinary block comment is not a valid outer line doc comment/,
+    fixtureName: "invalid-inline-non-doc-block-comment-struct-field",
+    errorPattern: /non-doc outer line doc comment candidate/,
+  },
+  {
+    fixtureName: "invalid-inline-multiline-non-doc-block-comment-struct-field",
+    errorPattern: /non-doc outer line doc comment candidate/,
   },
   {
     fixtureName:
-      "invalid-inline-trailing-multiline-block-comment-trait-associated-function",
-    errorPattern: /an ordinary block comment is not a valid outer line doc comment/,
+      "invalid-inline-trailing-multiline-non-doc-block-comment-trait-associated-function",
+    errorPattern: /non-doc outer line doc comment candidate/,
   },
 ];
 

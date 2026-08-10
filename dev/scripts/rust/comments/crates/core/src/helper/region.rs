@@ -18,7 +18,7 @@ pub(super) fn check_leading_region(source: &str, anchor: Span) -> Result<(), Str
     match LeadingRegion::from_anchor_prefix(prefix) {
         Inline(BlockComment {
             doc_style: None, ..
-        }) => Err("an ordinary block comment is not a valid outer line doc comment".to_owned()),
+        }) => Err("non-doc outer line doc comment candidate".to_owned()),
         Inline(BlockComment {
             doc_style: Some(Inner),
             ..
