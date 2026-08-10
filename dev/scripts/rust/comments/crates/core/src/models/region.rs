@@ -6,6 +6,13 @@ use ra_ap_rustc_lexer::{
     TokenKind::{self, BlockComment, LineComment, Whitespace},
 };
 
+use self::{
+    CommentGroup::{InnerOnly, Mixed, NonDocOnly},
+    CommentRegion::{Contiguous, Empty, Separated},
+    CommentRegionTokenRole::{Comment, Irrelevant, Separator},
+    LeadingRegionScanState::{Leading, Pending},
+};
+
 /// Represents the relevant part of a leading source region.
 ///
 /// 描述分析后的先导源代码区域中与目标相关的部分。
@@ -35,8 +42,6 @@ impl LeadingRegion {
     ///
     /// 将锚点前缀分类为与目标相关的先导区域。
     pub(crate) fn from_anchor_prefix(prefix: &str) -> Self {
-        use LeadingRegionScanState::{Leading, Pending};
-
         let (_, _, comment_region_start, kind) = tokenize(prefix, FrontmatterAllowed::No).fold(
             (0, Leading, 0, None),
             |(cursor, mut state, mut comment_region_start, kind), token| {
@@ -94,97 +99,120 @@ enum LeadingRegionScanState {
     Pending,
 }
 
-/// Classifies the comments in a source region before a target.
+/// Classifies the contents of a contiguous comment group.
 ///
-/// 对目标之前源代码区域中的注释进行分类。
-pub(crate) enum CommentRegion {
-    /// Contains no comment candidate.
-    ///
-    /// 不包含注释候选。
-    Empty,
+/// 对连续注释组的内容进行分类。
+pub(crate) enum CommentGroup {
     /// Contains only parent-owned inner documentation comments.
     ///
     /// 仅包含归属于父级的内部文档注释。
     InnerOnly,
     /// Contains only non-doc comments.
     ///
-    /// 包含普通注释，不包含内部文档注释。
-    NonDocOnly {
-        /// Whether the nearest comment is adjacent to the target.
-        ///
-        /// 最近注释是否与目标紧邻。
-        adjacent: bool,
-    },
+    /// 包含非文档注释，不包含内部文档注释。
+    NonDocOnly,
     /// Contains both non-doc and inner documentation comments.
     ///
-    /// 同时包含普通注释和内部文档注释。
-    Mixed {
-        /// Whether the nearest comment is adjacent to the target.
+    /// 同时包含非文档注释和内部文档注释。
+    Mixed,
+}
+
+/// Represents the nearest blank-line-delimited comment group before a target.
+///
+/// 表示目标之前由空行分隔的最近注释组。
+pub(crate) enum CommentRegion {
+    /// Contains no comment group.
+    ///
+    /// 不包含注释组。
+    Empty,
+    /// Keeps a comment group contiguous with the scan frontier.
+    ///
+    /// 注释组与扫描边缘保持连续。
+    Contiguous(
+        /// Contents of the contiguous comment group.
         ///
-        /// 最近注释是否与目标紧邻。
-        adjacent: bool,
-    },
+        /// 连续注释组的内容。
+        CommentGroup,
+    ),
+    /// Separates a comment group from the scan frontier with a blank line.
+    ///
+    /// 注释组与扫描边缘之间存在空行。
+    Separated(
+        /// Contents of the separated comment group.
+        ///
+        /// 已分隔注释组的内容。
+        CommentGroup,
+    ),
 }
 
 impl CommentRegion {
-    /// Classifies a complete comment region before a target.
+    /// Classifies the nearest blank-line-delimited group in a comment region.
     ///
-    /// 对目标之前的完整注释区域进行分类。
+    /// 对注释区域中由空行分隔的最近注释组进行分类。
     pub(crate) fn from_source(source: &str) -> Self {
         tokenize(source, FrontmatterAllowed::No)
-            .fold((0, Self::Empty), |(cursor, region), token| {
+            .fold((0, Empty), |(cursor, region), token| {
                 let token_end = cursor + token.len as usize;
-                let region = match token.kind {
-                    LineComment { doc_style: None }
-                    | BlockComment {
-                        doc_style: None, ..
-                    } => region.with_non_doc(),
-                    LineComment {
-                        doc_style: Some(Inner),
-                    }
-                    | BlockComment {
-                        doc_style: Some(Inner),
-                        ..
-                    } => region.with_inner(),
-                    Whitespace => region.with_whitespace(&source[cursor..token_end]),
-                    _ => region,
+                let token_role =
+                    CommentRegionTokenRole::from_token(token.kind, &source[cursor..token_end]);
+                let region = match (region, token_role) {
+                    (Empty | Separated(_), Comment(group)) => Contiguous(group),
+                    (Contiguous(InnerOnly), Comment(NonDocOnly))
+                    | (Contiguous(NonDocOnly), Comment(InnerOnly))
+                    | (Contiguous(Mixed), Comment(_)) => Contiguous(Mixed),
+                    (Contiguous(group), Comment(_)) => Contiguous(group),
+                    (Contiguous(group), Separator) => Separated(group),
+                    (region, Irrelevant | Separator) => region,
                 };
 
                 (token_end, region)
             })
             .1
     }
+}
 
-    /// Adds a non-doc comment to the region.
+/// Classifies a lexer token by its role in comment-region scanning.
+///
+/// 按词法单元在注释区域扫描中的作用进行分类。
+enum CommentRegionTokenRole {
+    /// Contributes a comment to the current group.
     ///
-    /// 将普通注释加入区域。
-    fn with_non_doc(self) -> Self {
-        match self {
-            Self::Empty | Self::NonDocOnly { .. } => Self::NonDocOnly { adjacent: true },
-            Self::InnerOnly | Self::Mixed { .. } => Self::Mixed { adjacent: true },
-        }
-    }
-
-    /// Adds an inner documentation comment to the region.
+    /// 向当前注释组加入一条注释。
+    Comment(
+        /// Classification contributed by the comment token.
+        ///
+        /// 该注释词法单元提供的内容分类。
+        CommentGroup,
+    ),
+    /// Separates the current group from the scan frontier.
     ///
-    /// 将内部文档注释加入区域。
-    fn with_inner(self) -> Self {
-        match self {
-            Self::Empty | Self::InnerOnly => Self::InnerOnly,
-            Self::NonDocOnly { .. } | Self::Mixed { .. } => Self::Mixed { adjacent: true },
-        }
-    }
-
-    /// Updates target adjacency from trailing whitespace.
+    /// 将当前注释组与扫描边缘分隔开。
+    Separator,
+    /// Does not affect comment-region classification.
     ///
-    /// 根据尾随空白更新与目标的紧邻关系。
-    fn with_whitespace(self, whitespace: &str) -> Self {
-        let adjacent = whitespace.matches('\n').count() <= 1;
+    /// 不影响注释区域分类。
+    Irrelevant,
+}
 
-        match self {
-            Self::NonDocOnly { .. } => Self::NonDocOnly { adjacent },
-            Self::Mixed { .. } => Self::Mixed { adjacent },
-            region => region,
+impl CommentRegionTokenRole {
+    /// Classifies a lexer token and its source text by its comment-region role.
+    ///
+    /// 根据词法单元及其源码文本判定其在注释区域中的作用。
+    fn from_token(kind: TokenKind, token_source: &str) -> Self {
+        match kind {
+            LineComment { doc_style: None }
+            | BlockComment {
+                doc_style: None, ..
+            } => Comment(NonDocOnly),
+            LineComment {
+                doc_style: Some(Inner),
+            }
+            | BlockComment {
+                doc_style: Some(Inner),
+                ..
+            } => Comment(InnerOnly),
+            Whitespace if token_source.matches('\n').count() > 1 => Separator,
+            _ => Irrelevant,
         }
     }
 }

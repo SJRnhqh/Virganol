@@ -3,4 +3,4 @@ mod attrs;
 mod region;
 
 pub(super) use attrs::DocAttrs;
-pub(super) use region::{CommentRegion, LeadingRegion};
+pub(super) use region::{CommentGroup, CommentRegion, LeadingRegion};

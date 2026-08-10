@@ -3,7 +3,8 @@ use proc_macro2::Span;
 use ra_ap_rustc_lexer::{DocStyle::Inner, TokenKind::BlockComment};
 
 use super::super::{
-    CommentRegion::{self, Empty, InnerOnly, Mixed, NonDocOnly},
+    CommentGroup::{InnerOnly, Mixed, NonDocOnly},
+    CommentRegion::{self, Contiguous, Empty, Separated},
     LeadingRegion::{self, Inline, PreviousLines},
 };
 
@@ -33,11 +34,11 @@ pub(super) fn check_leading_region(source: &str, anchor: Span) -> Result<(), Str
 /// 检查锚点所在行之前的先导源代码区域。
 fn check_previous_lines(comment_region: &str) -> Result<(), String> {
     match CommentRegion::from_source(comment_region) {
-        Empty | InnerOnly => Err("missing outer line doc comment".to_owned()),
-        NonDocOnly { adjacent: false } | Mixed { adjacent: false } => {
+        Empty | Contiguous(InnerOnly) => Err("missing outer line doc comment".to_owned()),
+        Separated(InnerOnly | Mixed | NonDocOnly) => {
             Err("misplaced outer line doc comment candidate".to_owned())
         }
-        Mixed { adjacent: true } => Err("mixed outer line doc comment candidate".to_owned()),
-        NonDocOnly { adjacent: true } => Err("non-doc outer line doc comment candidate".to_owned()),
+        Contiguous(Mixed) => Err("mixed outer line doc comment candidate".to_owned()),
+        Contiguous(NonDocOnly) => Err("non-doc outer line doc comment candidate".to_owned()),
     }
 }

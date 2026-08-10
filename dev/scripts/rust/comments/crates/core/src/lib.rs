@@ -5,4 +5,4 @@ mod models;
 
 pub use checker::check_source;
 pub(self) use helper::check_target_outer_line_doc;
-pub(self) use models::{CommentRegion, DocAttrs, LeadingRegion};
+pub(self) use models::{CommentGroup, CommentRegion, DocAttrs, LeadingRegion};

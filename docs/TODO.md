@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Refine CommentRegion transitions and cover anchor-line-empty classifications with fixtures
+- [ ] Cover blank-line-delimited CommentRegion classifications with fixtures
 
 ## Planned
 
@@ -19,6 +19,7 @@
 
 ## Completed
 
+- [x] Model nearest contiguous comment groups with semantic token roles and blank-line separation
 - [x] Unify inline and preceding-line NonDoc candidates under one diagnostic
 - [x] Encapsulate anchor-prefix classification and scan state within the LeadingRegion model
 - [x] Classify anchor-line-empty regions as Missing, NonDoc, Mixed, or Misplaced
