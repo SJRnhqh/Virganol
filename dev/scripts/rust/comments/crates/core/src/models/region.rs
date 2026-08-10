@@ -30,10 +30,60 @@ pub(crate) enum LeadingRegion {
     },
 }
 
+impl LeadingRegion {
+    /// Classifies an anchor prefix into its relevant leading region.
+    ///
+    /// 将锚点前缀分类为与目标相关的先导区域。
+    pub(crate) fn from_anchor_prefix(prefix: &str) -> Self {
+        use LeadingRegionState::{Leading, Pending};
+
+        let (_, _, comment_region_start, kind) = tokenize(prefix, FrontmatterAllowed::No).fold(
+            (0, Leading, 0, None),
+            |(cursor, mut state, mut comment_region_start, kind), token| {
+                let token_end = cursor + token.len as usize;
+                let (newline_offset, kind) = match token.kind {
+                    Whitespace => {
+                        let offset = prefix[cursor..token_end].find('\n');
+
+                        (offset, kind.filter(|_| offset.is_none()))
+                    }
+                    token_kind => (None, Some(token_kind)),
+                };
+
+                match (&mut state, token.kind) {
+                    (state @ Pending, Whitespace) => {
+                        if let Some(newline_offset) = newline_offset {
+                            comment_region_start = cursor + newline_offset + 1;
+                            *state = Leading;
+                        }
+                    }
+                    (Pending, LineComment { .. } | BlockComment { .. }) => {
+                        comment_region_start = token_end;
+                    }
+                    (Leading, Whitespace | LineComment { .. } | BlockComment { .. }) => {}
+                    _ => {
+                        comment_region_start = token_end;
+                        state = Pending;
+                    }
+                }
+
+                (token_end, state, comment_region_start, kind)
+            },
+        );
+
+        match kind {
+            Some(kind) => Self::Inline(kind),
+            None => Self::PreviousLines {
+                start: comment_region_start,
+            },
+        }
+    }
+}
+
 /// Tracks leading region membership during token analysis.
 ///
 /// 跟踪词法单元是否属于目标的先导区域。
-pub(crate) enum LeadingRegionState {
+enum LeadingRegionState {
     /// Includes tokens in the leading region.
     ///
     /// 将词法单元纳入先导区域。
