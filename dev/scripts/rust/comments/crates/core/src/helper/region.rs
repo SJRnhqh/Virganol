@@ -8,6 +8,7 @@ use ra_ap_rustc_lexer::{
 };
 
 use super::super::{
+    CommentRegion::{self, Empty, InnerOnly, Mixed, NonDocOnly},
     LeadingRegion::{self, Inline, PreviousLines},
     LeadingRegionState::{Leading, Pending},
 };
@@ -83,9 +84,12 @@ fn analyze_leading_region(source: &str) -> LeadingRegion {
 ///
 /// 检查锚点所在行之前的先导源代码区域。
 fn check_previous_lines(comment_region: &str) -> Result<(), String> {
-    if comment_region.trim().is_empty() {
-        return Err("missing outer line doc comment".to_owned());
+    match CommentRegion::from_source(comment_region) {
+        Empty | InnerOnly => Err("missing outer line doc comment".to_owned()),
+        NonDocOnly { adjacent: false } | Mixed { adjacent: false } => {
+            Err("misplaced outer line doc comment candidate".to_owned())
+        }
+        Mixed { adjacent: true } => Err("mixed outer line doc comment candidate".to_owned()),
+        NonDocOnly { adjacent: true } => Err("non-doc outer line doc comment candidate".to_owned()),
     }
-
-    Err("invalid outer line doc comment candidate".to_owned())
 }

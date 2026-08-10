@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Exhaust anchor-line-empty comment candidates before terminal Missing
+- [ ] Refine CommentRegion transitions and cover anchor-line-empty classifications with fixtures
 
 ## Planned
 
@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Classify anchor-line-empty regions as Missing, NonDoc, Mixed, or Misplaced
 - [x] Cover trailing single-line ordinary block comments before anchor-line-empty Missing targets
 - [x] Complete non-whitespace anchor-line coverage across Missing and ordinary block-comment Invalid boundaries
 - [x] Formalize Source File Header fixtures and derive misplaced Header coverage from error categories
