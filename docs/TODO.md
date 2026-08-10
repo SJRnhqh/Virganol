@@ -5,10 +5,11 @@
 
 ## Current
 
-- [ ] Cover blank-line-delimited CommentRegion classifications with fixtures
+- [ ] Migrate remaining Source File Header fixtures into error-code groups
 
 ## Planned
 
+- [ ] Cover blank-line-delimited CommentRegion classifications with fixtures
 - [ ] Classify candidate placement, marker, and form across same-line and preceding regions
 - [ ] Replace placeholder Invalid diagnostics with typed errors after candidate classification stabilizes
 - [ ] Classify target-owned OuterOnly and Mixed Doc attributes before short-circuiting
@@ -19,6 +20,7 @@
 
 ## Completed
 
+- [x] Introduce directory-backed fixture groups and migrate the Source File Header valid fixture
 - [x] Model nearest contiguous comment groups with semantic token roles and blank-line separation
 - [x] Unify inline and preceding-line NonDoc candidates under one diagnostic
 - [x] Encapsulate anchor-prefix classification and scan state within the LeadingRegion model

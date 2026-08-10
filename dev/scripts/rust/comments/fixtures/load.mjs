@@ -1,5 +1,5 @@
 // dev/scripts/rust/comments/fixtures/load.mjs
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,4 +13,17 @@ export function loadFixture(ruleName, fixtureName) {
     fixtureRelativePath: path.relative(repoRoot, fixturePath).split(path.sep).join("/"),
     source: readFileSync(fixturePath, "utf8"),
   };
+}
+
+export function loadFixtureGroup(ruleName, groupName) {
+  const groupDir = path.resolve(fixtureDir, ruleName, groupName);
+
+  return readdirSync(groupDir, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".rs.template"))
+    .map((entry) => entry.name.replace(/\.rs\.template$/, ""))
+    .sort()
+    .map((fixtureName) => ({
+      fixtureName,
+      ...loadFixture(ruleName, path.join(groupName, fixtureName)),
+    }));
 }

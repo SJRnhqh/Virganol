@@ -2,16 +2,24 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 
-import { loadFixture } from "../fixtures/load.mjs";
+import { loadFixture, loadFixtureGroup } from "../fixtures/load.mjs";
 import { checkSourceFileHeader } from "../rules/source-file-header.mjs";
 
-function loadSourceFileHeaderFixture(fixtureName) {
-  const { fixtureRelativePath, source } = loadFixture("source-file-header", fixtureName);
-
+function sourceFileHeaderInput({ fixtureRelativePath, source }) {
   return {
     repositoryRelativePath: fixtureRelativePath.replace(/\.template$/, ""),
     source,
   };
+}
+
+function loadSourceFileHeaderFixture(fixtureName) {
+  return sourceFileHeaderInput(loadFixture("source-file-header", fixtureName));
+}
+
+function describeFixtureGroup(groupName, defineTests) {
+  describe(groupName, () => {
+    defineTests(loadFixtureGroup("source-file-header", groupName));
+  });
 }
 
 function getFirstLine(source) {
@@ -83,16 +91,16 @@ const derivedMisplacedHeaderCases = invalidFirstLineCaseNames.flatMap(
 );
 
 describe("Source File Header", () => {
-  describe("valid", () => {
+  describeFixtureGroup("valid", ([fixture]) => {
+    const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
+
     test("accepts an LF first line header", () => {
-      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("valid");
       const lfSource = `${source.trimEnd()}\n`;
 
       assert.equal(checkSourceFileHeader(repositoryRelativePath, lfSource), null);
     });
 
     test("accepts a CRLF first line header", () => {
-      const { repositoryRelativePath, source } = loadSourceFileHeaderFixture("valid");
       const crlfSource = `${source.trimEnd()}\r\n`;
 
       assert.equal(checkSourceFileHeader(repositoryRelativePath, crlfSource), null);
