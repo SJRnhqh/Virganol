@@ -16,25 +16,21 @@ function loadSourceFileHeaderFixture(fixtureName) {
   return sourceFileHeaderInput(loadFixture("source-file-header", fixtureName));
 }
 
-function describeFixtureGroup(groupName, defineTests) {
+function sourceFileHeaderFixtureGroup(groupName) {
+  return {
+    groupName,
+    fixtures: loadFixtureGroup("source-file-header", groupName),
+  };
+}
+
+function describeFixtureGroup({ groupName, fixtures }, defineTests) {
   describe(groupName, () => {
-    defineTests(loadFixtureGroup("source-file-header", groupName));
+    defineTests(fixtures);
   });
 }
 
 function getFirstLine(source) {
   return source.split(/\r?\n/, 1)[0] ?? "";
-}
-
-function resolveInvalidFirstLineCase(caseName) {
-  if (caseName === "missing-path") {
-    return {
-      repositoryRelativePath: "example.rs",
-      source: "// ",
-    };
-  }
-
-  return loadSourceFileHeaderFixture(caseName);
 }
 
 const missingFirstLineFixtureNames = ["empty-file", "non-comment-first-line"];
@@ -44,26 +40,38 @@ const missingHeaderFixtureNames = [
   ...missingFirstLineFixtureNames,
 ];
 
-const invalidHeaderMarkerFixtureNames = ["outer-line-doc-comment", "inner-doc-comment"];
-
-const invalidSpacingFixtureNames = [
-  "bare-comment-marker",
-  "missing-space",
-  "tab-instead-of-space",
-  "missing-space-and-mismatched-path",
-  "extra-space",
-  "tab-after-space",
-  "extra-space-and-mismatched-path",
-];
-
-const invalidSeparatorFixtureNames = ["backslash-path"];
+const validFixtureGroup = sourceFileHeaderFixtureGroup("valid");
+const invalidHeaderMarkerFixtureGroup = sourceFileHeaderFixtureGroup("invalid-header-marker");
+const invalidSeparatorFixtureGroup = sourceFileHeaderFixtureGroup("invalid-separator");
+const invalidSpacingFixtureGroup = sourceFileHeaderFixtureGroup("invalid-spacing");
+const groupedInvalidFirstLineFixtures = [
+  invalidHeaderMarkerFixtureGroup,
+  invalidSeparatorFixtureGroup,
+  invalidSpacingFixtureGroup,
+].flatMap(({ fixtures }) => fixtures);
+const groupedInvalidFirstLineFixturesByName = new Map(
+  groupedInvalidFirstLineFixtures.map((fixture) => [fixture.fixtureName, fixture])
+);
 const pathMismatchCaseNames = ["missing-path", "wrong-path"];
+
+function resolveInvalidFirstLineCase(caseName) {
+  if (caseName === "missing-path") {
+    return {
+      repositoryRelativePath: "example.rs",
+      source: "// ",
+    };
+  }
+
+  const groupedFixture = groupedInvalidFirstLineFixturesByName.get(caseName);
+
+  return groupedFixture
+    ? sourceFileHeaderInput(groupedFixture)
+    : loadSourceFileHeaderFixture(caseName);
+}
 
 const invalidFirstLineCaseNames = [
   ...missingFirstLineFixtureNames,
-  ...invalidHeaderMarkerFixtureNames,
-  ...invalidSpacingFixtureNames,
-  ...invalidSeparatorFixtureNames,
+  ...groupedInvalidFirstLineFixtures.map(({ fixtureName }) => fixtureName),
   ...pathMismatchCaseNames,
 ];
 
@@ -91,7 +99,7 @@ const derivedMisplacedHeaderCases = invalidFirstLineCaseNames.flatMap(
 );
 
 describe("Source File Header", () => {
-  describeFixtureGroup("valid", ([fixture]) => {
+  describeFixtureGroup(validFixtureGroup, ([fixture]) => {
     const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
 
     test("accepts an LF first line header", () => {
@@ -138,10 +146,10 @@ describe("Source File Header", () => {
     }
   });
 
-  describe("invalid-header-marker", () => {
-    for (const fixtureName of invalidHeaderMarkerFixtureNames) {
-      test(`reports for ${fixtureName}`, () => {
-        const { repositoryRelativePath, source } = loadSourceFileHeaderFixture(fixtureName);
+  describeFixtureGroup(invalidHeaderMarkerFixtureGroup, (fixtures) => {
+    for (const fixture of fixtures) {
+      test(`reports for ${fixture.fixtureName}`, () => {
+        const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
 
         assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
           code: "invalid-header-marker",
@@ -152,10 +160,10 @@ describe("Source File Header", () => {
     }
   });
 
-  describe("invalid-spacing", () => {
-    for (const fixtureName of invalidSpacingFixtureNames) {
-      test(`reports for ${fixtureName}`, () => {
-        const { repositoryRelativePath, source } = loadSourceFileHeaderFixture(fixtureName);
+  describeFixtureGroup(invalidSpacingFixtureGroup, (fixtures) => {
+    for (const fixture of fixtures) {
+      test(`reports for ${fixture.fixtureName}`, () => {
+        const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
 
         assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
           code: "invalid-spacing",
@@ -166,10 +174,10 @@ describe("Source File Header", () => {
     }
   });
 
-  describe("invalid-separator", () => {
-    for (const fixtureName of invalidSeparatorFixtureNames) {
-      test(`reports for ${fixtureName}`, () => {
-        const { repositoryRelativePath, source } = loadSourceFileHeaderFixture(fixtureName);
+  describeFixtureGroup(invalidSeparatorFixtureGroup, (fixtures) => {
+    for (const fixture of fixtures) {
+      test(`reports for ${fixture.fixtureName}`, () => {
+        const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
 
         assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
           code: "invalid-separator",
