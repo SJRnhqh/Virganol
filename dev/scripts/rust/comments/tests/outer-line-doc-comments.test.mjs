@@ -97,6 +97,7 @@ const missingFixtureNames = [
   "missing-source-start-struct",
   "missing-adjacent-struct",
   "missing-trailing-line-comment-struct",
+  "missing-trailing-single-line-block-comment-struct",
   "missing-trailing-multiline-block-comment-struct",
 ];
 const derivedMissingCases = validFixtureNames.flatMap((fixtureName) =>

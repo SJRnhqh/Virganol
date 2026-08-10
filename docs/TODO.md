@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Cover trailing single-line ordinary block comments before anchor-line-empty Missing targets
 - [x] Complete non-whitespace anchor-line coverage across Missing and ordinary block-comment Invalid boundaries
 - [x] Formalize Source File Header fixtures and derive misplaced Header coverage from error categories
 - [x] Complete lexer-backed leading-region partitioning for terminal Missing detection
