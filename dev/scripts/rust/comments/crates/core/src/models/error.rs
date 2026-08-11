@@ -1,6 +1,4 @@
 // dev/scripts/rust/comments/crates/core/src/models/error.rs
-use std::fmt;
-
 /// Represents an error produced while checking Rust comments.
 ///
 /// 表示检查 Rust 注释时产生的错误。
@@ -87,36 +85,28 @@ impl CommentCheckError {
     }
 }
 
-impl fmt::Display for CommentCheckError {
-    /// Formats this comment check error for adapter diagnostics.
+impl AsRef<str> for CommentCheckError {
+    /// Returns the stable code exposed across adapter boundaries.
     ///
-    /// 为适配器诊断格式化当前注释检查错误。
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let message = match &self.code {
-            CommentCheckErrorCode::Analysis(CommentAnalysisError::Parse) => {
-                "failed to parse Rust source"
-            }
-            CommentCheckErrorCode::Analysis(CommentAnalysisError::Location) => {
-                "invalid source location"
-            }
-            CommentCheckErrorCode::Rule(CommentRuleError::Missing) => {
-                "missing outer line doc comment"
-            }
+    /// 返回跨适配器边界暴露的稳定代码。
+    fn as_ref(&self) -> &str {
+        match &self.code {
+            CommentCheckErrorCode::Analysis(CommentAnalysisError::Parse) => "parse",
+            CommentCheckErrorCode::Analysis(CommentAnalysisError::Location) => "location",
+            CommentCheckErrorCode::Rule(CommentRuleError::Missing) => "missing",
             CommentCheckErrorCode::Rule(CommentRuleError::Invalid(
                 CommentInvalidError::DocStyle,
-            )) => "an inner doc comment is not a valid outer line doc comment",
+            )) => "doc-style",
             CommentCheckErrorCode::Rule(CommentRuleError::Invalid(
                 CommentInvalidError::Misplaced,
-            )) => "misplaced outer line doc comment candidate",
+            )) => "misplaced",
             CommentCheckErrorCode::Rule(CommentRuleError::Invalid(CommentInvalidError::NonDoc)) => {
-                "non-doc outer line doc comment candidate"
+                "non-doc"
             }
             CommentCheckErrorCode::Rule(CommentRuleError::Invalid(CommentInvalidError::Mixed)) => {
-                "mixed outer line doc comment candidate"
+                "mixed"
             }
-        };
-
-        f.write_str(message)
+        }
     }
 }
 

@@ -17,6 +17,7 @@
 
 ## Completed
 
+- [x] Unify typed core, CLI, and NAPI failures behind stable leaf error codes
 - [x] Replace core hard-coded failures with the CommentCheckError contract
 - [x] Define private Analysis, Rule, and Invalid error classifications for current core failures
 - [x] Establish the opaque CommentCheckError model and crate-root re-export

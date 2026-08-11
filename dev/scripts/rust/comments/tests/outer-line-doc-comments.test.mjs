@@ -110,32 +110,32 @@ const derivedMissingCases = validFixtureNames.flatMap((fixtureName) =>
 const invalidCommentCases = [
   {
     fixtureName: "invalid-comment-after-attributes-struct",
-    errorPattern: /misplaced outer line doc comment candidate/,
+    errorCode: "misplaced",
   },
   {
     fixtureName: "invalid-comment-between-attributes-struct",
-    errorPattern: /misplaced outer line doc comment candidate/,
+    errorCode: "misplaced",
   },
   {
     fixtureName: "invalid-inner-line-doc-free-function",
-    errorPattern: /an inner doc comment is not a valid outer line doc comment/,
+    errorCode: "doc-style",
   },
   {
     fixtureName: "invalid-adjacent-non-doc-line-comment-struct",
-    errorPattern: /non-doc outer line doc comment candidate/,
+    errorCode: "non-doc",
   },
   {
     fixtureName: "invalid-inline-non-doc-block-comment-struct-field",
-    errorPattern: /non-doc outer line doc comment candidate/,
+    errorCode: "non-doc",
   },
   {
     fixtureName: "invalid-inline-multiline-non-doc-block-comment-struct-field",
-    errorPattern: /non-doc outer line doc comment candidate/,
+    errorCode: "non-doc",
   },
   {
     fixtureName:
       "invalid-inline-trailing-multiline-non-doc-block-comment-trait-associated-function",
-    errorPattern: /non-doc outer line doc comment candidate/,
+    errorCode: "non-doc",
   },
 ];
 
@@ -153,7 +153,7 @@ describe("Outer Line Doc Comments", () => {
       test(`reports for ${fixtureName}`, async () => {
         await assert.rejects(
           () => checkOuterLineDocCommentsFixture(fixtureName),
-          /missing outer line doc comment/
+          { code: "missing" }
         );
       });
     }
@@ -162,18 +162,18 @@ describe("Outer Line Doc Comments", () => {
       test(`reports for ${fixtureName}:${lineNumber} without documentation`, async () => {
         await assert.rejects(
           () => checkOuterLineDocComments({ adapter, source }),
-          /missing outer line doc comment/
+          { code: "missing" }
         );
       });
     }
   });
 
   describe("invalid comments", () => {
-    for (const { fixtureName, errorPattern } of invalidCommentCases) {
+    for (const { fixtureName, errorCode } of invalidCommentCases) {
       test(`reports for ${fixtureName}`, async () => {
         await assert.rejects(
           () => checkOuterLineDocCommentsFixture(fixtureName),
-          errorPattern
+          { code: errorCode }
         );
       });
     }

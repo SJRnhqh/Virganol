@@ -40,8 +40,10 @@ function checkWithCli(source) {
       }
 
       const detail = stderr.trim() || `exit code ${code ?? "unknown"}`;
+      const error = new Error();
 
-      reject(new Error(`Outer Line Doc Comments CLI failed: ${detail}`));
+      error.code = detail;
+      reject(error);
     });
     child.stdin.end(source);
   });
