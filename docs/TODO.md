@@ -5,53 +5,23 @@
 
 ## Current
 
-- [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
+- [ ] Type core parse and rule failures behind the CommentCheckError contract
 
 ## Planned
 
+- [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
 - [ ] Classify candidate placement, marker, and form across same-line and preceding regions
-- [ ] Replace placeholder Invalid diagnostics with typed errors after candidate classification stabilizes
+- [ ] Expand private rule error codes after candidate classification stabilizes
 - [ ] Classify target-owned OuterOnly and Mixed Doc attributes before short-circuiting
-- [ ] Keep `syn` parse failures distinct from comment evidence and Missing
 - [ ] Connect the Outer Line Doc Comments rule to repository checks and source audits
 - [ ] Expand representative CLI/NAPI benchmarks and select the production adapter
 - [ ] Validate the selected adapter across supported platforms
 
 ## Completed
 
-- [x] Complete Missing fixture coverage for contiguous InnerOnly comment regions
-- [x] Simplify Source File Header tests around shared cases, error groups, and derived header placement
-- [x] Migrate the Source File Header path mismatch fixture while retaining synthetic missing-path coverage
-- [x] Migrate Source File Header missing fixtures with explicit misplaced-case exclusion
-- [x] Migrate Source File Header marker, separator, and spacing fixtures into error-code groups
-- [x] Introduce directory-backed fixture groups and migrate the Source File Header valid fixture
-- [x] Model nearest contiguous comment groups with semantic token roles and blank-line separation
-- [x] Unify inline and preceding-line NonDoc candidates under one diagnostic
-- [x] Encapsulate anchor-prefix classification and scan state within the LeadingRegion model
-- [x] Classify anchor-line-empty regions as Missing, NonDoc, Mixed, or Misplaced
-- [x] Cover trailing single-line non-doc block comments before anchor-line-empty Missing targets
-- [x] Complete non-whitespace anchor-line coverage across Missing and NonDoc Invalid boundaries
-- [x] Formalize Source File Header fixtures and derive misplaced Header coverage from error categories
-- [x] Complete lexer-backed leading-region partitioning for terminal Missing detection
-- [x] Validate Absent target anchors across internal and trailing attribute comment gaps
-- [x] Model target-owned Doc attribute combinations and reject InnerOnly targets
-- [x] Gate leading-region analysis on the absence of target-owned Outer and Inner Doc attributes
-- [x] Propagate the selected CLI/NAPI adapter through the prepared test environment
-- [x] Separate rule conformance tests and repository audit behind the Comments Check entry
-- [x] Record deferred 0.0.1 test coverage and quality-gate evaluation in the roadmap
-- [x] Extract preceding-line comment regions from source start or the last code boundary
-- [x] Preserve blank-line evidence while excluding comments trailing code
-- [x] Introduce lexer-backed same-line candidate classification with a non-doc block-comment fixture
-- [x] Separate same-line gating from reverse blank-line exploration with fail-closed Missing fallback
-- [x] Encapsulate anchor source partitioning into preceding lines and the current line prefix
-- [x] Standardize the strict rule name as Outer Line Doc Comments across docs, paths, fixtures, JavaScript, and Rust
-- [x] Localize leading-region validation and Missing reporting behind the region helper
-- [x] Encapsulate target-level Outer Line Doc validation behind a single core helper interface
-- [x] Extract reusable target-anchor resolution behind the core helper boundary
-- [x] Align Missing fixture expectations and CLI/NAPI correctness
-- [x] Complete Missing coverage with derived target cases and dedicated inline code, inline Inner Doc, source-start, adjacency, and trailing-comment boundaries
-- [x] Implement source-aware missing Outer Line Doc detection
-- [x] Implement broad Outer Doc attribute recognition with `syn`
-- [x] Derive and execute missing-documentation cases from positive fixtures
-- [x] Expand positive fixtures across required targets, attributed declarations, and anonymous constants
-- [x] Standardize fixture identifiers across the shared loader and rule tests
+- [x] Establish the opaque CommentCheckError model and crate-root re-export
+- [x] Standardize the Outer Line Doc Comments rule and directory-backed fixture taxonomy
+- [x] Implement source-aware target discovery and broad Outer Doc attribute recognition
+- [x] Model anchors, leading regions, and blank-line-delimited comment groups with lexer evidence
+- [x] Cover Missing, NonDoc, Mixed, Misplaced, attribute-gap, and source-boundary behavior
+- [x] Prepare shared CLI/NAPI test adapters, repository audit separation, and deferred quality gates
