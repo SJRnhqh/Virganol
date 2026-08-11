@@ -91,7 +91,7 @@ describe("Source File Header", () => {
 
   describe("header-not-first", () => {
     for (const { caseName, input, description, middleLines } of derivedMisplacedHeaderCases) {
-      test(`reports ${description} for ${caseName}`, () => {
+      test(`reports for ${caseName} ${description}`, () => {
         const { repositoryRelativePath, source } = input;
         const expected = `// ${repositoryRelativePath}`;
         const firstLine = getFirstLine(source);
