@@ -2,7 +2,10 @@
 use syn::spanned::Spanned;
 use syn::Attribute;
 
-use super::super::DocAttrs::{self, Absent, InnerOnly, Mixed, OuterOnly};
+use super::super::{
+    CommentCheckError,
+    DocAttrs::{self, Absent, InnerOnly, Mixed, OuterOnly},
+};
 use super::{check_leading_region, target_anchor};
 
 /// Checks one target against the Outer Line Doc Comments rule.
@@ -12,14 +15,14 @@ pub(crate) fn check_target_outer_line_doc<T: Spanned>(
     source: &str,
     attrs: &[Attribute],
     target: &T,
-) -> Result<(), String> {
+) -> Result<(), CommentCheckError> {
     match DocAttrs::from_attributes(attrs) {
         Absent => {
             let anchor = target_anchor(source, attrs, target)?;
 
             check_leading_region(source, anchor)
         }
-        InnerOnly => Err("an inner doc comment is not a valid outer line doc comment".to_owned()),
+        InnerOnly => Err(CommentCheckError::invalid_doc_style()),
         OuterOnly | Mixed => Ok(()),
     }
 }

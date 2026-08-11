@@ -8,5 +8,5 @@ use virganol_rust_comment_checker_core::check_source;
 /// 通过共享注释检查 core 校验 Rust 源代码。
 #[napi]
 pub fn check(source: String) -> napi::Result<()> {
-    check_source(&source).map_err(Error::from_reason)
+    check_source(&source).map_err(|error| Error::from_reason(error.to_string()))
 }

@@ -7,6 +7,8 @@ use ra_ap_rustc_lexer::{
 use syn::spanned::Spanned;
 use syn::Attribute;
 
+use super::super::CommentCheckError;
+
 /// Resolves the earliest source span for a documentation target.
 ///
 /// 解析文档目标最早的源代码位置。
@@ -14,7 +16,7 @@ pub(super) fn target_anchor<T: Spanned>(
     source: &str,
     attrs: &[Attribute],
     target: &T,
-) -> Result<Span, String> {
+) -> Result<Span, CommentCheckError> {
     check_attribute_regions(source, attrs)?;
 
     Ok(attrs
@@ -26,7 +28,7 @@ pub(super) fn target_anchor<T: Spanned>(
 /// Checks source regions after target attributes.
 ///
 /// 检查目标属性之后的源代码区域。
-fn check_attribute_regions(source: &str, attrs: &[Attribute]) -> Result<(), String> {
+fn check_attribute_regions(source: &str, attrs: &[Attribute]) -> Result<(), CommentCheckError> {
     let region_ends = attrs
         .iter()
         .skip(1)
@@ -36,13 +38,10 @@ fn check_attribute_regions(source: &str, attrs: &[Attribute]) -> Result<(), Stri
     for (attribute, region_end) in attrs.iter().zip(region_ends) {
         let region = source
             .get(attribute.span().byte_range().end..region_end)
-            .ok_or_else(|| "invalid source span".to_owned())?;
+            .ok_or_else(CommentCheckError::location)?;
 
         if contains_leading_comment(region) {
-            return Err(
-                "a comment in the target attribute region is not a valid outer line doc comment"
-                    .to_owned(),
-            );
+            return Err(CommentCheckError::misplaced());
         }
     }
 

@@ -5,19 +5,19 @@
 
 ## Current
 
-- [ ] Replace core hard-coded failures with the CommentCheckError contract
+- [ ] Classify target-owned OuterOnly and Mixed Doc attributes before short-circuiting
 
 ## Planned
 
 - [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
 - [ ] Classify candidate placement, marker, and form across same-line and preceding regions
-- [ ] Classify target-owned OuterOnly and Mixed Doc attributes before short-circuiting
 - [ ] Connect the Outer Line Doc Comments rule to repository checks and source audits
 - [ ] Expand representative CLI/NAPI benchmarks and select the production adapter
 - [ ] Validate the selected adapter across supported platforms
 
 ## Completed
 
+- [x] Replace core hard-coded failures with the CommentCheckError contract
 - [x] Define private Analysis, Rule, and Invalid error classifications for current core failures
 - [x] Establish the opaque CommentCheckError model and crate-root re-export
 - [x] Standardize the Outer Line Doc Comments rule and directory-backed fixture taxonomy

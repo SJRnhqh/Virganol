@@ -13,5 +13,5 @@ pub(super) fn run() -> Result<(), String> {
         .read_to_string(&mut source)
         .map_err(|error| error.to_string())?;
 
-    check_source(&source)
+    check_source(&source).map_err(|error| error.to_string())
 }

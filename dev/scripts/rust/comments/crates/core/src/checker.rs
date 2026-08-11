@@ -1,13 +1,13 @@
 // dev/scripts/rust/comments/crates/core/src/checker.rs
 use syn::{parse_file, Fields, ForeignItem, ImplItem, Item, TraitItem};
 
-use super::check_target_outer_line_doc;
+use super::{check_target_outer_line_doc, CommentCheckError};
 
 /// Checks required Rust declarations for outer line documentation.
 ///
 /// 检查必需的声明是否具有外部行文档注释。
-pub fn check_source(source: &str) -> Result<(), String> {
-    let file = parse_file(source).map_err(|error| error.to_string())?;
+pub fn check_source(source: &str) -> Result<(), CommentCheckError> {
+    let file = parse_file(source).map_err(|_| CommentCheckError::parse())?;
 
     check_items(source, &file.items)
 }
@@ -15,7 +15,7 @@ pub fn check_source(source: &str) -> Result<(), String> {
 /// Checks required item declarations and their nested targets.
 ///
 /// 检查必需的项目声明及其嵌套目标。
-fn check_items(source: &str, items: &[Item]) -> Result<(), String> {
+fn check_items(source: &str, items: &[Item]) -> Result<(), CommentCheckError> {
     for item in items {
         match item {
             Item::Const(item) => check_target_outer_line_doc(source, &item.attrs, item)?,
@@ -65,7 +65,7 @@ fn check_items(source: &str, items: &[Item]) -> Result<(), String> {
 /// Checks required struct or enum fields.
 ///
 /// 检查必需的结构体或枚举字段。
-fn check_fields(source: &str, fields: &Fields) -> Result<(), String> {
+fn check_fields(source: &str, fields: &Fields) -> Result<(), CommentCheckError> {
     for field in fields {
         check_target_outer_line_doc(source, &field.attrs, field)?;
     }
@@ -76,7 +76,7 @@ fn check_fields(source: &str, fields: &Fields) -> Result<(), String> {
 /// Checks required trait associated items.
 ///
 /// 检查必需的特征关联项目。
-fn check_trait_items(source: &str, items: &[TraitItem]) -> Result<(), String> {
+fn check_trait_items(source: &str, items: &[TraitItem]) -> Result<(), CommentCheckError> {
     for item in items {
         match item {
             TraitItem::Const(item) => check_target_outer_line_doc(source, &item.attrs, item)?,
@@ -92,7 +92,7 @@ fn check_trait_items(source: &str, items: &[TraitItem]) -> Result<(), String> {
 /// Checks required implementation associated items.
 ///
 /// 检查必需的实现关联项目。
-fn check_impl_items(source: &str, items: &[ImplItem]) -> Result<(), String> {
+fn check_impl_items(source: &str, items: &[ImplItem]) -> Result<(), CommentCheckError> {
     for item in items {
         match item {
             ImplItem::Const(item) => check_target_outer_line_doc(source, &item.attrs, item)?,
@@ -108,7 +108,7 @@ fn check_impl_items(source: &str, items: &[ImplItem]) -> Result<(), String> {
 /// Checks required external block items.
 ///
 /// 检查必需的外部块项目。
-fn check_foreign_items(source: &str, items: &[ForeignItem]) -> Result<(), String> {
+fn check_foreign_items(source: &str, items: &[ForeignItem]) -> Result<(), CommentCheckError> {
     for item in items {
         match item {
             ForeignItem::Fn(item) => check_target_outer_line_doc(source, &item.attrs, item)?,

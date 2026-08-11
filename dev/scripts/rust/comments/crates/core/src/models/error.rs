@@ -1,4 +1,5 @@
 // dev/scripts/rust/comments/crates/core/src/models/error.rs
+use std::fmt;
 
 /// Represents an error produced while checking Rust comments.
 ///
@@ -8,6 +9,115 @@ pub struct CommentCheckError {
     ///
     /// 稳定且可供机器读取的错误分类。
     code: CommentCheckErrorCode,
+}
+
+impl CommentCheckError {
+    /// Creates a source parsing error.
+    ///
+    /// 创建源代码解析错误。
+    pub(crate) fn parse() -> Self {
+        Self::analysis(CommentAnalysisError::Parse)
+    }
+
+    /// Creates a source location error.
+    ///
+    /// 创建源代码定位错误。
+    pub(crate) fn location() -> Self {
+        Self::analysis(CommentAnalysisError::Location)
+    }
+
+    /// Creates a missing documentation comment error.
+    ///
+    /// 创建文档注释缺失错误。
+    pub(crate) fn missing() -> Self {
+        Self::rule(CommentRuleError::Missing)
+    }
+
+    /// Creates an invalid documentation style error.
+    ///
+    /// 创建文档注释样式无效错误。
+    pub(crate) fn invalid_doc_style() -> Self {
+        Self::invalid(CommentInvalidError::DocStyle)
+    }
+
+    /// Creates a misplaced comment error.
+    ///
+    /// 创建注释错位错误。
+    pub(crate) fn misplaced() -> Self {
+        Self::invalid(CommentInvalidError::Misplaced)
+    }
+
+    /// Creates a non-documentation comment error.
+    ///
+    /// 创建非文档注释错误。
+    pub(crate) fn non_doc() -> Self {
+        Self::invalid(CommentInvalidError::NonDoc)
+    }
+
+    /// Creates a mixed comment error.
+    ///
+    /// 创建混杂注释错误。
+    pub(crate) fn mixed() -> Self {
+        Self::invalid(CommentInvalidError::Mixed)
+    }
+
+    /// Creates a source analysis error.
+    ///
+    /// 创建源代码分析错误。
+    fn analysis(error: CommentAnalysisError) -> Self {
+        Self {
+            code: CommentCheckErrorCode::Analysis(error),
+        }
+    }
+
+    /// Creates a comment rule error.
+    ///
+    /// 创建注释规则错误。
+    fn rule(error: CommentRuleError) -> Self {
+        Self {
+            code: CommentCheckErrorCode::Rule(error),
+        }
+    }
+
+    /// Creates an invalid comment error.
+    ///
+    /// 创建无效注释错误。
+    fn invalid(error: CommentInvalidError) -> Self {
+        Self::rule(CommentRuleError::Invalid(error))
+    }
+}
+
+impl fmt::Display for CommentCheckError {
+    /// Formats this comment check error for adapter diagnostics.
+    ///
+    /// 为适配器诊断格式化当前注释检查错误。
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let message = match &self.code {
+            CommentCheckErrorCode::Analysis(CommentAnalysisError::Parse) => {
+                "failed to parse Rust source"
+            }
+            CommentCheckErrorCode::Analysis(CommentAnalysisError::Location) => {
+                "invalid source location"
+            }
+            CommentCheckErrorCode::Rule(CommentRuleError::Missing) => {
+                "missing outer line doc comment"
+            }
+            CommentCheckErrorCode::Rule(CommentRuleError::Invalid(
+                CommentInvalidError::DocStyle,
+            )) => "an inner doc comment is not a valid outer line doc comment",
+            CommentCheckErrorCode::Rule(CommentRuleError::Invalid(
+                CommentInvalidError::Misplaced,
+            )) => "misplaced outer line doc comment candidate",
+            CommentCheckErrorCode::Rule(CommentRuleError::Invalid(CommentInvalidError::NonDoc)) => {
+                "non-doc outer line doc comment candidate"
+            }
+            CommentCheckErrorCode::Rule(CommentRuleError::Invalid(CommentInvalidError::Mixed)) => {
+                "mixed outer line doc comment candidate"
+            }
+        };
+
+        f.write_str(message)
+    }
 }
 
 /// Classifies an error produced while checking Rust comments.

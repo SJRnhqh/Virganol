@@ -110,11 +110,11 @@ const derivedMissingCases = validFixtureNames.flatMap((fixtureName) =>
 const invalidCommentCases = [
   {
     fixtureName: "invalid-comment-after-attributes-struct",
-    errorPattern: /a comment in the target attribute region is not a valid outer line doc comment/,
+    errorPattern: /misplaced outer line doc comment candidate/,
   },
   {
     fixtureName: "invalid-comment-between-attributes-struct",
-    errorPattern: /a comment in the target attribute region is not a valid outer line doc comment/,
+    errorPattern: /misplaced outer line doc comment candidate/,
   },
   {
     fixtureName: "invalid-inner-line-doc-free-function",
