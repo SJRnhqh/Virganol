@@ -2,80 +2,17 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 
-import { loadFixture, loadFixtureGroup } from "../fixtures/load.mjs";
+import { loadFixtureGroup } from "../fixtures/load.mjs";
 import { checkSourceFileHeader } from "../rules/source-file-header.mjs";
 
-function sourceFileHeaderInput({ fixtureRelativePath, source }) {
-  return {
-    repositoryRelativePath: fixtureRelativePath.replace(/\.template$/, ""),
-    source,
-  };
-}
-
-function loadSourceFileHeaderFixture(fixtureName) {
-  return sourceFileHeaderInput(loadFixture("source-file-header", fixtureName));
-}
-
-function sourceFileHeaderFixtureGroup(groupName) {
-  return {
-    groupName,
-    fixtures: loadFixtureGroup("source-file-header", groupName),
-  };
-}
-
-function describeFixtureGroup({ groupName, fixtures }, defineTests) {
-  describe(groupName, () => {
-    defineTests(fixtures);
-  });
-}
-
-function getFirstLine(source) {
-  return source.split(/\r?\n/, 1)[0] ?? "";
-}
-
-const validFixtureGroup = sourceFileHeaderFixtureGroup("valid");
-const invalidHeaderMarkerFixtureGroup = sourceFileHeaderFixtureGroup("invalid-header-marker");
-const invalidSeparatorFixtureGroup = sourceFileHeaderFixtureGroup("invalid-separator");
-const invalidSpacingFixtureGroup = sourceFileHeaderFixtureGroup("invalid-spacing");
-const missingHeaderFixtureGroup = sourceFileHeaderFixtureGroup("missing-header");
-const pathMismatchFixtureGroup = sourceFileHeaderFixtureGroup("path-mismatch");
-const redundantMisplacedHeaderFixtureNames = new Set(["empty-first-line-without-valid-header"]);
-const groupedInvalidFirstLineFixtures = [
-  ...missingHeaderFixtureGroup.fixtures.filter(
-    ({ fixtureName }) => !redundantMisplacedHeaderFixtureNames.has(fixtureName)
-  ),
-  ...[
-    invalidHeaderMarkerFixtureGroup,
-    invalidSeparatorFixtureGroup,
-    invalidSpacingFixtureGroup,
-    pathMismatchFixtureGroup,
-  ].flatMap(({ fixtures }) => fixtures),
-];
-const groupedInvalidFirstLineFixturesByName = new Map(
-  groupedInvalidFirstLineFixtures.map((fixture) => [fixture.fixtureName, fixture])
-);
-const missingPathCaseName = "missing-path";
-
-function resolveInvalidFirstLineCase(caseName) {
-  if (caseName === missingPathCaseName) {
-    return {
-      repositoryRelativePath: "example.rs",
-      source: "// ",
-    };
-  }
-
-  const groupedFixture = groupedInvalidFirstLineFixturesByName.get(caseName);
-
-  return groupedFixture
-    ? sourceFileHeaderInput(groupedFixture)
-    : loadSourceFileHeaderFixture(caseName);
-}
-
-const invalidFirstLineCaseNames = [
-  ...groupedInvalidFirstLineFixtures.map(({ fixtureName }) => fixtureName),
-  missingPathCaseName,
-];
-
+const missingPathCase = {
+  caseName: "missing-path",
+  input: {
+    repositoryRelativePath: "example.rs",
+    source: "// ",
+  },
+};
+const redundantHeaderNotFirstCaseNames = new Set(["empty-first-line-without-valid-header"]);
 const misplacedHeaderLayouts = [
   {
     description: "on line 2",
@@ -87,20 +24,56 @@ const misplacedHeaderLayouts = [
   },
 ];
 
-function deriveMisplacedCasesForFirstLine(caseName) {
+function sourceFileHeaderInput({ fixtureRelativePath, source }) {
+  return {
+    repositoryRelativePath: fixtureRelativePath.replace(/\.template$/, ""),
+    source,
+  };
+}
+
+function getFirstLine(source) {
+  return source.split(/\r?\n/, 1)[0] ?? "";
+}
+
+function fixtureCase(fixture) {
+  return {
+    caseName: fixture.fixtureName,
+    input: sourceFileHeaderInput(fixture),
+  };
+}
+
+function fixtureErrorGroup(code, { additionalCases = [], expectsActual = true } = {}) {
+  return {
+    code,
+    cases: [...loadFixtureGroup("source-file-header", code).map(fixtureCase), ...additionalCases],
+    expectsActual,
+  };
+}
+
+function deriveMisplacedCasesForFirstLine({ caseName, input }) {
   return misplacedHeaderLayouts.map(({ description, middleLines }) => ({
     caseName,
+    input,
     description,
     middleLines,
   }));
 }
 
-const derivedMisplacedHeaderCases = invalidFirstLineCaseNames.flatMap(
-  deriveMisplacedCasesForFirstLine
-);
+const errorGroups = [
+  fixtureErrorGroup("missing-header", { expectsActual: false }),
+  fixtureErrorGroup("invalid-header-marker"),
+  fixtureErrorGroup("invalid-spacing"),
+  fixtureErrorGroup("invalid-separator"),
+  fixtureErrorGroup("path-mismatch", { additionalCases: [missingPathCase] }),
+];
+const invalidFirstLineCases = errorGroups
+  .flatMap(({ cases }) => cases)
+  .filter(({ caseName }) => !redundantHeaderNotFirstCaseNames.has(caseName));
+const derivedMisplacedHeaderCases = invalidFirstLineCases.flatMap(deriveMisplacedCasesForFirstLine);
 
 describe("Source File Header", () => {
-  describeFixtureGroup(validFixtureGroup, ([fixture]) => {
+  describe("valid", () => {
+    const [fixture] = loadFixtureGroup("source-file-header", "valid");
     const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
 
     test("accepts an LF first line header", () => {
@@ -117,9 +90,9 @@ describe("Source File Header", () => {
   });
 
   describe("header-not-first", () => {
-    for (const { caseName, description, middleLines } of derivedMisplacedHeaderCases) {
+    for (const { caseName, input, description, middleLines } of derivedMisplacedHeaderCases) {
       test(`reports ${description} for ${caseName}`, () => {
-        const { repositoryRelativePath, source } = resolveInvalidFirstLineCase(caseName);
+        const { repositoryRelativePath, source } = input;
         const expected = `// ${repositoryRelativePath}`;
         const firstLine = getFirstLine(source);
         const generatedSource = [firstLine, ...middleLines, expected].join("\n");
@@ -134,80 +107,20 @@ describe("Source File Header", () => {
     }
   });
 
-  describeFixtureGroup(missingHeaderFixtureGroup, (fixtures) => {
-    for (const fixture of fixtures) {
-      test(`reports for ${fixture.fixtureName}`, () => {
-        const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
+  for (const { code, cases, expectsActual } of errorGroups) {
+    describe(code, () => {
+      for (const { caseName, input } of cases) {
+        test(`reports for ${caseName}`, () => {
+          const { repositoryRelativePath, source } = input;
+          const expectedError = {
+            code,
+            expected: `// ${repositoryRelativePath}`,
+            ...(expectsActual ? { actual: getFirstLine(source) } : {}),
+          };
 
-        assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
-          code: "missing-header",
-          expected: `// ${repositoryRelativePath}`,
+          assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), expectedError);
         });
-      });
-    }
-  });
-
-  describeFixtureGroup(invalidHeaderMarkerFixtureGroup, (fixtures) => {
-    for (const fixture of fixtures) {
-      test(`reports for ${fixture.fixtureName}`, () => {
-        const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
-
-        assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
-          code: "invalid-header-marker",
-          expected: `// ${repositoryRelativePath}`,
-          actual: getFirstLine(source),
-        });
-      });
-    }
-  });
-
-  describeFixtureGroup(invalidSpacingFixtureGroup, (fixtures) => {
-    for (const fixture of fixtures) {
-      test(`reports for ${fixture.fixtureName}`, () => {
-        const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
-
-        assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
-          code: "invalid-spacing",
-          expected: `// ${repositoryRelativePath}`,
-          actual: getFirstLine(source),
-        });
-      });
-    }
-  });
-
-  describeFixtureGroup(invalidSeparatorFixtureGroup, (fixtures) => {
-    for (const fixture of fixtures) {
-      test(`reports for ${fixture.fixtureName}`, () => {
-        const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
-
-        assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
-          code: "invalid-separator",
-          expected: `// ${repositoryRelativePath}`,
-          actual: getFirstLine(source),
-        });
-      });
-    }
-  });
-
-  describeFixtureGroup(pathMismatchFixtureGroup, ([fixture]) => {
-    test(`reports for ${fixture.fixtureName}`, () => {
-      const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
-
-      assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
-        code: "path-mismatch",
-        expected: `// ${repositoryRelativePath}`,
-        actual: getFirstLine(source),
-      });
+      }
     });
-
-    test(`reports for ${missingPathCaseName}`, () => {
-      const { repositoryRelativePath, source } = resolveInvalidFirstLineCase(missingPathCaseName);
-
-      assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
-        code: "path-mismatch",
-        expected: `// ${repositoryRelativePath}`,
-        actual: getFirstLine(source),
-      });
-    });
-  });
+  }
 });

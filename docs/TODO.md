@@ -5,11 +5,10 @@
 
 ## Current
 
-- [ ] Simplify Source File Header header-not-first fixture derivation
+- [ ] Cover blank-line-delimited CommentRegion classifications with fixtures
 
 ## Planned
 
-- [ ] Cover blank-line-delimited CommentRegion classifications with fixtures
 - [ ] Classify candidate placement, marker, and form across same-line and preceding regions
 - [ ] Replace placeholder Invalid diagnostics with typed errors after candidate classification stabilizes
 - [ ] Classify target-owned OuterOnly and Mixed Doc attributes before short-circuiting
@@ -20,6 +19,7 @@
 
 ## Completed
 
+- [x] Simplify Source File Header tests around shared cases, error groups, and derived header placement
 - [x] Migrate the Source File Header path mismatch fixture while retaining synthetic missing-path coverage
 - [x] Migrate Source File Header missing fixtures with explicit misplaced-case exclusion
 - [x] Migrate Source File Header marker, separator, and spacing fixtures into error-code groups
