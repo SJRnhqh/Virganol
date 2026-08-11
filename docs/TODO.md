@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Cover blank-line-delimited CommentRegion classifications with fixtures
+- [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
 
 ## Planned
 
@@ -19,6 +19,7 @@
 
 ## Completed
 
+- [x] Complete Missing fixture coverage for contiguous InnerOnly comment regions
 - [x] Simplify Source File Header tests around shared cases, error groups, and derived header placement
 - [x] Migrate the Source File Header path mismatch fixture while retaining synthetic missing-path coverage
 - [x] Migrate Source File Header missing fixtures with explicit misplaced-case exclusion

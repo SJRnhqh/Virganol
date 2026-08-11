@@ -1,0 +1,10 @@
+/// Represents an example trait.
+///
+/// 表示一个示例特型。
+trait Example {
+    //! Documents the enclosing trait.
+    /*! Continues documenting the enclosing trait.
+
+    继续记录外围特型。 */
+    fn missing();
+}
