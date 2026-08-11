@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Migrate remaining Source File Header fixtures into error-code groups
+- [ ] Simplify Source File Header header-not-first fixture derivation
 
 ## Planned
 
@@ -20,6 +20,7 @@
 
 ## Completed
 
+- [x] Migrate the Source File Header path mismatch fixture while retaining synthetic missing-path coverage
 - [x] Migrate Source File Header missing fixtures with explicit misplaced-case exclusion
 - [x] Migrate Source File Header marker, separator, and spacing fixtures into error-code groups
 - [x] Introduce directory-backed fixture groups and migrate the Source File Header valid fixture

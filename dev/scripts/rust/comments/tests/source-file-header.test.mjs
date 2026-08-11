@@ -38,6 +38,7 @@ const invalidHeaderMarkerFixtureGroup = sourceFileHeaderFixtureGroup("invalid-he
 const invalidSeparatorFixtureGroup = sourceFileHeaderFixtureGroup("invalid-separator");
 const invalidSpacingFixtureGroup = sourceFileHeaderFixtureGroup("invalid-spacing");
 const missingHeaderFixtureGroup = sourceFileHeaderFixtureGroup("missing-header");
+const pathMismatchFixtureGroup = sourceFileHeaderFixtureGroup("path-mismatch");
 const redundantMisplacedHeaderFixtureNames = new Set(["empty-first-line-without-valid-header"]);
 const groupedInvalidFirstLineFixtures = [
   ...missingHeaderFixtureGroup.fixtures.filter(
@@ -47,15 +48,16 @@ const groupedInvalidFirstLineFixtures = [
     invalidHeaderMarkerFixtureGroup,
     invalidSeparatorFixtureGroup,
     invalidSpacingFixtureGroup,
+    pathMismatchFixtureGroup,
   ].flatMap(({ fixtures }) => fixtures),
 ];
 const groupedInvalidFirstLineFixturesByName = new Map(
   groupedInvalidFirstLineFixtures.map((fixture) => [fixture.fixtureName, fixture])
 );
-const pathMismatchCaseNames = ["missing-path", "wrong-path"];
+const missingPathCaseName = "missing-path";
 
 function resolveInvalidFirstLineCase(caseName) {
-  if (caseName === "missing-path") {
+  if (caseName === missingPathCaseName) {
     return {
       repositoryRelativePath: "example.rs",
       source: "// ",
@@ -71,7 +73,7 @@ function resolveInvalidFirstLineCase(caseName) {
 
 const invalidFirstLineCaseNames = [
   ...groupedInvalidFirstLineFixtures.map(({ fixtureName }) => fixtureName),
-  ...pathMismatchCaseNames,
+  missingPathCaseName,
 ];
 
 const misplacedHeaderLayouts = [
@@ -187,17 +189,25 @@ describe("Source File Header", () => {
     }
   });
 
-  describe("path-mismatch", () => {
-    for (const caseName of pathMismatchCaseNames) {
-      test(`reports for ${caseName}`, () => {
-        const { repositoryRelativePath, source } = resolveInvalidFirstLineCase(caseName);
+  describeFixtureGroup(pathMismatchFixtureGroup, ([fixture]) => {
+    test(`reports for ${fixture.fixtureName}`, () => {
+      const { repositoryRelativePath, source } = sourceFileHeaderInput(fixture);
 
-        assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
-          code: "path-mismatch",
-          expected: `// ${repositoryRelativePath}`,
-          actual: getFirstLine(source),
-        });
+      assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
+        code: "path-mismatch",
+        expected: `// ${repositoryRelativePath}`,
+        actual: getFirstLine(source),
       });
-    }
+    });
+
+    test(`reports for ${missingPathCaseName}`, () => {
+      const { repositoryRelativePath, source } = resolveInvalidFirstLineCase(missingPathCaseName);
+
+      assert.deepEqual(checkSourceFileHeader(repositoryRelativePath, source), {
+        code: "path-mismatch",
+        expected: `// ${repositoryRelativePath}`,
+        actual: getFirstLine(source),
+      });
+    });
   });
 });
