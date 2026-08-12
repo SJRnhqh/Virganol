@@ -91,6 +91,7 @@ const validFixtureNames = [
 
 const missingFixtureNames = [
   "missing-inline-trait-associated-function",
+  "missing-inline-attributed-trait-associated-function",
   "missing-inline-inner-block-doc-trait-associated-function",
   "missing-inline-multiline-inner-block-doc-trait-associated-function",
   "missing-inline-multiline-inner-block-doc-on-opening-line-trait-associated-function",

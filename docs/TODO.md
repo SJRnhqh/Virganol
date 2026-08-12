@@ -17,6 +17,7 @@
 
 ## Completed
 
+- [x] Cover inline Missing behavior through clean outer structural attribute anchors
 - [x] Resolve reusable byte anchors for Absent and OuterOnly while isolating Mixed handling
 - [x] Establish structural anchors from outer non-Doc attributes and bound misplaced scans to targets
 - [x] Unify typed core, CLI, and NAPI failures behind stable leaf error codes
