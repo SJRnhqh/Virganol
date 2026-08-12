@@ -5,4 +5,4 @@ mod region;
 
 pub(super) use attrs::DocAttrs;
 pub use error::CommentCheckError;
-pub(super) use region::{CommentGroup, CommentRegion, LeadingRegion};
+pub(super) use region::{CommentGroup, CommentRegion, LeadingRegion, LeadingRegionLayout};

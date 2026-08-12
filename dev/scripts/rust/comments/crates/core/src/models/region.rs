@@ -10,37 +10,28 @@ use self::{
     CommentGroup::{InnerOnly, Mixed, NonDocOnly},
     CommentRegion::{Contiguous, Empty, Separated},
     CommentRegionTokenRole::{Comment, Irrelevant, Separator},
+    LeadingRegionLayout::{Inline, PreviousLines},
     LeadingRegionScanState::{Leading, Pending},
 };
 
-/// Represents the relevant part of a leading source region.
+/// Represents the location and layout of a comment region leading an anchor.
 ///
-/// 描述分析后的先导源代码区域中与目标相关的部分。
-pub(crate) enum LeadingRegion {
-    /// Uses content on the anchor line.
+/// 描述锚点之前注释区域的位置与布局。
+pub(crate) struct LeadingRegion {
+    /// Byte offset where the comment region begins.
     ///
-    /// 使用锚点同行的内容。
-    Inline(
-        /// Nearest token kind before the anchor.
-        ///
-        /// 锚点前最近的词法单元类型。
-        TokenKind,
-    ),
-    /// Uses content before the anchor line.
+    /// 注释区域开始处的字节位置。
+    comment_region_start: usize,
+    /// Layout of the comment region relative to the anchor.
     ///
-    /// 使用锚点所在行之前的内容。
-    PreviousLines {
-        /// Byte offset where the relevant region begins.
-        ///
-        /// 相关区域开始处的字节位置。
-        start: usize,
-    },
+    /// 注释区域相对于锚点的布局。
+    layout: LeadingRegionLayout,
 }
 
 impl LeadingRegion {
-    /// Classifies an anchor prefix into its relevant leading region.
+    /// Locates the candidate comment region in an anchor prefix.
     ///
-    /// 将锚点前缀分类为与目标相关的先导区域。
+    /// 在锚点前缀中定位候选注释区域。
     pub(crate) fn from_anchor_prefix(prefix: &str) -> Self {
         let (_, _, comment_region_start, kind) = tokenize(prefix, FrontmatterAllowed::No).fold(
             (0, Leading, 0, None),
@@ -62,9 +53,7 @@ impl LeadingRegion {
                             *state = Leading;
                         }
                     }
-                    (Pending, LineComment { .. } | BlockComment { .. }) => {
-                        comment_region_start = token_end;
-                    }
+                    (Pending, LineComment { .. } | BlockComment { .. }) => {}
                     (Leading, Whitespace | LineComment { .. } | BlockComment { .. }) => {}
                     _ => {
                         comment_region_start = token_end;
@@ -76,13 +65,44 @@ impl LeadingRegion {
             },
         );
 
-        match kind {
-            Some(kind) => Self::Inline(kind),
-            None => Self::PreviousLines {
-                start: comment_region_start,
-            },
+        Self {
+            comment_region_start,
+            layout: kind.map(Inline).unwrap_or(PreviousLines),
         }
     }
+
+    /// Returns the byte offset where the comment region begins.
+    ///
+    /// 返回注释区域开始处的字节位置。
+    pub(crate) fn comment_region_start(&self) -> usize {
+        self.comment_region_start
+    }
+
+    /// Returns the layout of the comment region relative to the anchor.
+    ///
+    /// 返回注释区域相对于锚点的布局。
+    pub(crate) fn layout(&self) -> &LeadingRegionLayout {
+        &self.layout
+    }
+}
+
+/// Describes how a comment region reaches its anchor.
+///
+/// 描述注释区域如何连接其锚点。
+pub(crate) enum LeadingRegionLayout {
+    /// Uses content on the anchor line.
+    ///
+    /// 使用锚点同行的内容。
+    Inline(
+        /// Nearest token kind before the anchor.
+        ///
+        /// 锚点前最近的词法单元类型。
+        TokenKind,
+    ),
+    /// Uses content before the anchor line only.
+    ///
+    /// 仅使用锚点所在行之前的内容。
+    PreviousLines,
 }
 
 /// Tracks the leading-region scan state while partitioning an anchor prefix.

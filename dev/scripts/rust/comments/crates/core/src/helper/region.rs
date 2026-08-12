@@ -5,7 +5,8 @@ use super::super::{
     CommentCheckError,
     CommentGroup::{InnerOnly, Mixed, NonDocOnly},
     CommentRegion::{self, Contiguous, Empty, Separated},
-    LeadingRegion::{self, Inline, PreviousLines},
+    LeadingRegion,
+    LeadingRegionLayout::{Inline, PreviousLines},
 };
 
 /// Checks the source region leading a documentation target.
@@ -16,7 +17,9 @@ pub(super) fn check_leading_region(source: &str, anchor: usize) -> Result<(), Co
         .get(..anchor)
         .ok_or_else(CommentCheckError::location)?;
 
-    match LeadingRegion::from_anchor_prefix(prefix) {
+    let region = LeadingRegion::from_anchor_prefix(prefix);
+
+    match region.layout() {
         Inline(BlockComment {
             doc_style: None, ..
         }) => Err(CommentCheckError::non_doc()),
@@ -25,7 +28,7 @@ pub(super) fn check_leading_region(source: &str, anchor: usize) -> Result<(), Co
             ..
         }) => Err(CommentCheckError::missing()),
         Inline(_) => Err(CommentCheckError::missing()),
-        PreviousLines { start } => check_previous_lines(&prefix[start..]),
+        PreviousLines => check_previous_lines(&prefix[region.comment_region_start()..]),
     }
 }
 
