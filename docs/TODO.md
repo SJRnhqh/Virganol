@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Classify target-owned OuterOnly and Mixed Doc attributes before short-circuiting
+- [ ] Design OuterOnly leading-region handling from the shared target anchor
 
 ## Planned
 
@@ -17,6 +17,7 @@
 
 ## Completed
 
+- [x] Resolve reusable byte anchors for Absent and OuterOnly while isolating Mixed handling
 - [x] Establish structural anchors from outer non-Doc attributes and bound misplaced scans to targets
 - [x] Unify typed core, CLI, and NAPI failures behind stable leaf error codes
 - [x] Replace core hard-coded failures with the CommentCheckError contract

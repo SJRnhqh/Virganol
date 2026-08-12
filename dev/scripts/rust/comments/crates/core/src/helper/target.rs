@@ -23,6 +23,11 @@ pub(crate) fn check_target_outer_line_doc<T: Spanned>(
             check_leading_region(source, anchor)
         }
         InnerOnly => Err(CommentCheckError::invalid_doc_style()),
-        OuterOnly | Mixed => Ok(()),
+        OuterOnly => {
+            let _anchor = target_anchor(source, attrs, target)?;
+
+            Ok(())
+        }
+        Mixed => Ok(()),
     }
 }

@@ -1,5 +1,4 @@
 // dev/scripts/rust/comments/crates/core/src/helper/region.rs
-use proc_macro2::Span;
 use ra_ap_rustc_lexer::{DocStyle::Inner, TokenKind::BlockComment};
 
 use super::super::{
@@ -12,9 +11,9 @@ use super::super::{
 /// Checks the source region leading a documentation target.
 ///
 /// 检查文档目标之前的源代码区域。
-pub(super) fn check_leading_region(source: &str, anchor: Span) -> Result<(), CommentCheckError> {
+pub(super) fn check_leading_region(source: &str, anchor: usize) -> Result<(), CommentCheckError> {
     let prefix = source
-        .get(..anchor.byte_range().start)
+        .get(..anchor)
         .ok_or_else(CommentCheckError::location)?;
 
     match LeadingRegion::from_anchor_prefix(prefix) {
