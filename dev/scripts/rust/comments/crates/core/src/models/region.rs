@@ -21,7 +21,7 @@ pub(crate) struct LeadingRegion {
     /// Byte offset where the comment region begins.
     ///
     /// 注释区域开始处的字节位置。
-    comment_region_start: usize,
+    start: usize,
     /// Layout of the comment region relative to the anchor.
     ///
     /// 注释区域相对于锚点的布局。
@@ -66,7 +66,7 @@ impl LeadingRegion {
         );
 
         Self {
-            comment_region_start,
+            start: comment_region_start,
             layout: kind.map(Inline).unwrap_or(PreviousLines),
         }
     }
@@ -74,8 +74,8 @@ impl LeadingRegion {
     /// Returns the byte offset where the comment region begins.
     ///
     /// 返回注释区域开始处的字节位置。
-    pub(crate) fn comment_region_start(&self) -> usize {
-        self.comment_region_start
+    pub(crate) fn start(&self) -> usize {
+        self.start
     }
 
     /// Returns the layout of the comment region relative to the anchor.

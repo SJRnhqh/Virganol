@@ -28,7 +28,7 @@ pub(super) fn check_leading_region(source: &str, anchor: usize) -> Result<(), Co
             ..
         }) => Err(CommentCheckError::missing()),
         Inline(_) => Err(CommentCheckError::missing()),
-        PreviousLines => check_previous_lines(&prefix[region.comment_region_start()..]),
+        PreviousLines => check_previous_lines(&prefix[region.start()..]),
     }
 }
 
