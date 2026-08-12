@@ -4,8 +4,7 @@ use ra_ap_rustc_lexer::{
     tokenize, FrontmatterAllowed,
     TokenKind::{BlockComment, LineComment, Whitespace},
 };
-use syn::spanned::Spanned;
-use syn::Attribute;
+use syn::{spanned::Spanned, AttrStyle::Outer, Attribute};
 
 use super::super::CommentCheckError;
 
@@ -17,25 +16,35 @@ pub(super) fn target_anchor<T: Spanned>(
     attrs: &[Attribute],
     target: &T,
 ) -> Result<Span, CommentCheckError> {
-    check_attribute_regions(source, attrs)?;
+    let target_span = target.span();
+
+    check_attribute_regions(source, attrs, target_span)?;
 
     Ok(attrs
-        .first()
+        .iter()
+        .find(|attribute| is_structural_anchor_attribute(attribute))
         .map(|attribute| attribute.span())
-        .unwrap_or_else(|| target.span()))
+        .unwrap_or(target_span))
 }
 
-/// Checks source regions after target attributes.
+/// Checks source regions after outer non-documentation target attributes.
 ///
-/// 检查目标属性之后的源代码区域。
-fn check_attribute_regions(source: &str, attrs: &[Attribute]) -> Result<(), CommentCheckError> {
-    let region_ends = attrs
+/// 检查目标的外部非文档属性之后的源代码区域。
+fn check_attribute_regions(
+    source: &str,
+    attrs: &[Attribute],
+    target: Span,
+) -> Result<(), CommentCheckError> {
+    let mut structural_attrs = attrs
         .iter()
-        .skip(1)
-        .map(|attribute| attribute.span().byte_range().start)
-        .chain([source.len()]);
+        .filter(|attribute| is_structural_anchor_attribute(attribute))
+        .peekable();
 
-    for (attribute, region_end) in attrs.iter().zip(region_ends) {
+    while let Some(attribute) = structural_attrs.next() {
+        let region_end = structural_attrs
+            .peek()
+            .map(|attribute| attribute.span().byte_range().start)
+            .unwrap_or_else(|| target.byte_range().end);
         let region = source
             .get(attribute.span().byte_range().end..region_end)
             .ok_or_else(CommentCheckError::location)?;
@@ -46,6 +55,13 @@ fn check_attribute_regions(source: &str, attrs: &[Attribute]) -> Result<(), Comm
     }
 
     Ok(())
+}
+
+/// Returns whether an attribute can anchor a target's structure.
+///
+/// 返回属性能否作为目标的结构锚点。
+fn is_structural_anchor_attribute(attribute: &Attribute) -> bool {
+    matches!(&attribute.style, Outer) && !attribute.path().is_ident("doc")
 }
 
 /// Detects a comment before the first code token.
