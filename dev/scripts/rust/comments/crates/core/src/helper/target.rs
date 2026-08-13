@@ -6,7 +6,7 @@ use super::super::{
     CommentCheckError,
     DocAttrs::{self, Absent, InnerOnly, Mixed, OuterOnly},
 };
-use super::{check_leading_region, target_anchor};
+use super::{check_absent_leading_region, check_outer_leading_region, target_anchor};
 
 /// Checks one target against the Outer Line Doc Comments rule.
 ///
@@ -20,13 +20,13 @@ pub(crate) fn check_target_outer_line_doc<T: Spanned>(
         Absent => {
             let anchor = target_anchor(source, attrs, target)?;
 
-            check_leading_region(source, anchor)
+            check_absent_leading_region(source, anchor)
         }
         InnerOnly => Err(CommentCheckError::invalid_doc_style()),
         OuterOnly => {
-            let _anchor = target_anchor(source, attrs, target)?;
+            let anchor = target_anchor(source, attrs, target)?;
 
-            Ok(())
+            check_outer_leading_region(source, anchor, attrs)
         }
         Mixed => Ok(()),
     }

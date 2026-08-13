@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Design OuterOnly error classification from shared comment-region locations and layouts
+- [ ] Complete OuterOnly Inline and PreviousLines error classification from shared leading-region analysis
 
 ## Planned
 
@@ -17,6 +17,7 @@
 
 ## Completed
 
+- [x] Separate Absent and OuterOnly leading checks behind shared neutral prefix analysis
 - [x] Preserve reusable comment-region starts across inline and preceding leading layouts
 - [x] Cover inline Missing behavior through clean outer structural attribute anchors
 - [x] Resolve reusable byte anchors for Absent and OuterOnly while isolating Mixed handling
