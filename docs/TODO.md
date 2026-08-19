@@ -5,10 +5,11 @@
 
 ## Current
 
-- [ ] Complete core OuterOnly Inline error classification from shared leading-region analysis
+- [ ] Define shared Inline classification for Absent and OuterOnly from ordered same-line token evidence
 
 ## Planned
 
+- [ ] Complete core OuterOnly Inline error classification from the shared classification
 - [ ] Complete core OuterOnly PreviousLines error classification from shared leading-region analysis
 - [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
 - [ ] Classify candidate placement, marker, and form across same-line and preceding regions
@@ -18,6 +19,7 @@
 
 ## Completed
 
+- [x] Retain ordered anchor-line token evidence while preserving nearest non-whitespace layout behavior
 - [x] Separate Absent and OuterOnly leading checks behind shared neutral prefix analysis
 - [x] Preserve reusable comment-region starts across inline and preceding leading layouts
 - [x] Cover inline Missing behavior through clean outer structural attribute anchors

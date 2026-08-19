@@ -33,18 +33,19 @@ impl LeadingRegion {
     ///
     /// 在锚点前缀中定位候选注释区域。
     pub(crate) fn from_anchor_prefix(prefix: &str) -> Self {
-        let (_, _, comment_region_start, kind) = tokenize(prefix, FrontmatterAllowed::No).fold(
-            (0, Leading, 0, None),
-            |(cursor, mut state, mut comment_region_start, kind), token| {
+        let (_, _, comment_region_start, kinds) = tokenize(prefix, FrontmatterAllowed::No).fold(
+            (0, Leading, 0, Vec::new()),
+            |(cursor, mut state, mut comment_region_start, mut kinds), token| {
                 let token_end = cursor + token.len as usize;
-                let (newline_offset, kind) = match token.kind {
-                    Whitespace => {
-                        let offset = prefix[cursor..token_end].find('\n');
-
-                        (offset, kind.filter(|_| offset.is_none()))
+                let newline_offset = match prefix[cursor..token_end].find('\n') {
+                    Some(offset) => {
+                        kinds.clear();
+                        Some(offset)
                     }
-                    token_kind => (None, Some(token_kind)),
+                    None => None,
                 };
+
+                kinds.push(token.kind);
 
                 match (&mut state, token.kind) {
                     (state @ Pending, Whitespace) => {
@@ -61,13 +62,17 @@ impl LeadingRegion {
                     }
                 }
 
-                (token_end, state, comment_region_start, kind)
+                (token_end, state, comment_region_start, kinds)
             },
         );
 
         Self {
             start: comment_region_start,
-            layout: kind.map(Inline).unwrap_or(PreviousLines),
+            layout: kinds
+                .into_iter()
+                .rfind(|kind| !matches!(kind, Whitespace))
+                .map(Inline)
+                .unwrap_or(PreviousLines),
         }
     }
 
