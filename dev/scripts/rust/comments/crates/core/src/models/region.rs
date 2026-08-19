@@ -141,7 +141,6 @@ pub(crate) enum CommentGroup {
     /// Contains only outer documentation comments.
     ///
     /// 仅包含外部文档注释。
-    #[allow(dead_code)]
     OuterOnly,
     /// Contains only inner documentation comments.
     ///
@@ -161,7 +160,6 @@ impl CommentGroup {
     /// Classifies comments after the last code token in ordered inline evidence.
     ///
     /// 对有序同行证据中最后一个代码词法单元之后的注释进行分类。
-    #[allow(dead_code)]
     pub(crate) fn classify_inline(kinds: &[TokenKind]) -> Option<Self> {
         let kinds = kinds
             .iter()

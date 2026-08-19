@@ -5,20 +5,20 @@
 
 ## Current
 
-- [ ] Map shared Inline CommentGroup classification to Absent error semantics
+- [ ] Complete core OuterOnly PreviousLines error classification from shared leading-region analysis
 
 ## Planned
 
-- [ ] Map shared Inline CommentGroup classification to OuterOnly error semantics
-- [ ] Complete core OuterOnly PreviousLines error classification from shared leading-region analysis
+- [ ] Validate preceding-line OuterOnly placement, marker, and three-line form
 - [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
-- [ ] Classify candidate placement, marker, and form across same-line and preceding regions
 - [ ] Connect the Outer Line Doc Comments rule to repository checks and source audits
 - [ ] Expand representative CLI/NAPI benchmarks and select the production adapter
 - [ ] Validate the selected adapter across supported platforms
 
 ## Completed
 
+- [x] Map shared Inline CommentGroup classification to Absent error semantics
+- [x] Map shared Inline CommentGroup classification to OuterOnly error semantics
 - [x] Expose ordered non-whitespace token kinds through LeadingRegionLayout::Inline
 - [x] Classify comments after the last Inline code token as OuterOnly, InnerOnly, NonDocOnly, or Mixed
 - [x] Retain ordered anchor-line token evidence while preserving nearest non-whitespace layout behavior

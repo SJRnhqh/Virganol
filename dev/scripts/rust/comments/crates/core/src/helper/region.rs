@@ -1,10 +1,9 @@
 // dev/scripts/rust/comments/crates/core/src/helper/region.rs
-use ra_ap_rustc_lexer::{DocStyle::Inner, TokenKind::BlockComment};
 use syn::Attribute;
 
 use super::super::{
     CommentCheckError,
-    CommentGroup::{InnerOnly, Mixed, NonDocOnly, OuterOnly},
+    CommentGroup::{self, InnerOnly, Mixed, NonDocOnly, OuterOnly},
     CommentRegion::{self, Contiguous, Empty, Separated},
     LeadingRegion,
     LeadingRegionLayout::{Inline, PreviousLines},
@@ -20,16 +19,11 @@ pub(super) fn check_absent_leading_region(
     let (prefix, region) = analyze_leading_region(source, anchor)?;
 
     match region.layout() {
-        Inline(kinds) => match kinds.last() {
-            Some(BlockComment {
-                doc_style: None, ..
-            }) => Err(CommentCheckError::non_doc()),
-            Some(BlockComment {
-                doc_style: Some(Inner),
-                ..
-            }) => Err(CommentCheckError::missing()),
-            Some(_) => Err(CommentCheckError::missing()),
-            None => unreachable!("inline layouts contain non-whitespace token kinds"),
+        Inline(kinds) => match CommentGroup::classify_inline(kinds) {
+            None | Some(InnerOnly) => Err(CommentCheckError::missing()),
+            Some(NonDocOnly) => Err(CommentCheckError::non_doc()),
+            Some(Mixed) => Err(CommentCheckError::mixed()),
+            Some(OuterOnly) => Err(CommentCheckError::mismatch()),
         },
         PreviousLines => check_absent_previous_lines(&prefix[region.start()..]),
     }
@@ -46,13 +40,14 @@ pub(super) fn check_outer_leading_region(
     let (prefix, region) = analyze_leading_region(source, anchor)?;
 
     match region.layout() {
-        Inline(_kinds) => {
+        Inline(kinds) => match CommentGroup::classify_inline(kinds) {
+            Some(OuterOnly) => Err(CommentCheckError::invalid_doc_style()),
+            Some(InnerOnly | NonDocOnly | Mixed) => Err(CommentCheckError::mixed()),
+            None => Err(CommentCheckError::mismatch()),
+        },
+        PreviousLines => {
             let _comment_region = &prefix[region.start()..];
 
-            // TODO: Classify the complete inline outer-only comment region.
-            Ok(())
-        }
-        PreviousLines => {
             // TODO: Classify the outer-only comment region on preceding lines.
             Ok(())
         }
@@ -82,8 +77,6 @@ fn check_absent_previous_lines(comment_region: &str) -> Result<(), CommentCheckE
         Separated(InnerOnly | Mixed | NonDocOnly) => Err(CommentCheckError::misplaced()),
         Contiguous(Mixed) => Err(CommentCheckError::mixed()),
         Contiguous(NonDocOnly) => Err(CommentCheckError::non_doc()),
-        Contiguous(OuterOnly) | Separated(OuterOnly) => {
-            unreachable!("preceding-line regions do not classify outer comments")
-        }
+        Contiguous(OuterOnly) | Separated(OuterOnly) => Err(CommentCheckError::mismatch()),
     }
 }

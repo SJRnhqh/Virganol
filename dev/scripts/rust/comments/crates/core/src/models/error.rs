@@ -24,6 +24,13 @@ impl CommentCheckError {
         Self::analysis(CommentAnalysisError::Location)
     }
 
+    /// Creates a source analysis result mismatch error.
+    ///
+    /// 创建源代码分析结果不匹配错误。
+    pub(crate) fn mismatch() -> Self {
+        Self::analysis(CommentAnalysisError::Mismatch)
+    }
+
     /// Creates a missing documentation comment error.
     ///
     /// 创建文档注释缺失错误。
@@ -93,6 +100,7 @@ impl AsRef<str> for CommentCheckError {
         match &self.code {
             CommentCheckErrorCode::Analysis(CommentAnalysisError::Parse) => "parse",
             CommentCheckErrorCode::Analysis(CommentAnalysisError::Location) => "location",
+            CommentCheckErrorCode::Analysis(CommentAnalysisError::Mismatch) => "mismatch",
             CommentCheckErrorCode::Rule(CommentRuleError::Missing) => "missing",
             CommentCheckErrorCode::Rule(CommentRuleError::Invalid(
                 CommentInvalidError::DocStyle,
@@ -146,6 +154,10 @@ enum CommentAnalysisError {
     ///
     /// 无法在源代码中定位语法树位置。
     Location,
+    /// Independently derived source analysis results do not agree.
+    ///
+    /// 独立得出的源代码分析结果彼此不一致。
+    Mismatch,
 }
 
 /// Represents a concrete comment rule error.
