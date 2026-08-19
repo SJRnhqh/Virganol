@@ -4,7 +4,7 @@ use syn::Attribute;
 
 use super::super::{
     CommentCheckError,
-    CommentGroup::{InnerOnly, Mixed, NonDocOnly},
+    CommentGroup::{InnerOnly, Mixed, NonDocOnly, OuterOnly},
     CommentRegion::{self, Contiguous, Empty, Separated},
     LeadingRegion,
     LeadingRegionLayout::{Inline, PreviousLines},
@@ -79,5 +79,8 @@ fn check_absent_previous_lines(comment_region: &str) -> Result<(), CommentCheckE
         Separated(InnerOnly | Mixed | NonDocOnly) => Err(CommentCheckError::misplaced()),
         Contiguous(Mixed) => Err(CommentCheckError::mixed()),
         Contiguous(NonDocOnly) => Err(CommentCheckError::non_doc()),
+        Contiguous(OuterOnly) | Separated(OuterOnly) => {
+            unreachable!("preceding-line regions do not classify outer comments")
+        }
     }
 }

@@ -1,13 +1,13 @@
 // dev/scripts/rust/comments/crates/core/src/models/region.rs
 use ra_ap_rustc_lexer::{
     tokenize,
-    DocStyle::Inner,
+    DocStyle::{Inner, Outer},
     FrontmatterAllowed,
     TokenKind::{self, BlockComment, LineComment, Whitespace},
 };
 
 use self::{
-    CommentGroup::{InnerOnly, Mixed, NonDocOnly},
+    CommentGroup::{InnerOnly, Mixed, NonDocOnly, OuterOnly},
     CommentRegion::{Contiguous, Empty, Separated},
     CommentRegionTokenRole::{Comment, Irrelevant, Separator},
     LeadingRegionLayout::{Inline, PreviousLines},
@@ -124,22 +124,75 @@ enum LeadingRegionScanState {
     Pending,
 }
 
-/// Classifies the contents of a contiguous comment group.
+/// Classifies the comment kinds contained in a comment group.
 ///
-/// 对连续注释组的内容进行分类。
+/// 对注释组中包含的注释类型进行分类。
 pub(crate) enum CommentGroup {
-    /// Contains only parent-owned inner documentation comments.
+    /// Contains only outer documentation comments.
     ///
-    /// 仅包含归属于父级的内部文档注释。
+    /// 仅包含外部文档注释。
+    #[allow(dead_code)]
+    OuterOnly,
+    /// Contains only inner documentation comments.
+    ///
+    /// 仅包含内部文档注释。
     InnerOnly,
     /// Contains only non-doc comments.
     ///
-    /// 包含非文档注释，不包含内部文档注释。
+    /// 仅包含非文档注释。
     NonDocOnly,
-    /// Contains both non-doc and inner documentation comments.
+    /// Contains two or more different comment kinds.
     ///
-    /// 同时包含非文档注释和内部文档注释。
+    /// 包含两种或更多不同的注释类型。
     Mixed,
+}
+
+impl CommentGroup {
+    /// Classifies comments after the last code token in ordered inline evidence.
+    ///
+    /// 对有序同行证据中最后一个代码词法单元之后的注释进行分类。
+    #[allow(dead_code)]
+    pub(crate) fn classify_inline(kinds: &[TokenKind]) -> Option<Self> {
+        let kinds = kinds
+            .iter()
+            .rposition(|kind| {
+                !matches!(kind, Whitespace | LineComment { .. } | BlockComment { .. })
+            })
+            .map_or(kinds, |index| &kinds[index + 1..]);
+
+        kinds
+            .iter()
+            .filter_map(|kind| match kind {
+                LineComment {
+                    doc_style: Some(Outer),
+                }
+                | BlockComment {
+                    doc_style: Some(Outer),
+                    ..
+                } => Some(OuterOnly),
+                LineComment {
+                    doc_style: Some(Inner),
+                }
+                | BlockComment {
+                    doc_style: Some(Inner),
+                    ..
+                } => Some(InnerOnly),
+                LineComment { doc_style: None }
+                | BlockComment {
+                    doc_style: None, ..
+                } => Some(NonDocOnly),
+                _ => None,
+            })
+            .fold(None, |group, kind| {
+                Some(match (group, kind) {
+                    (None, kind) => kind,
+                    (Some(OuterOnly), OuterOnly) => OuterOnly,
+                    (Some(InnerOnly), InnerOnly) => InnerOnly,
+                    (Some(NonDocOnly), NonDocOnly) => NonDocOnly,
+                    _ => Mixed,
+                })
+            })
+    }
 }
 
 /// Represents the nearest blank-line-delimited comment group before a target.
