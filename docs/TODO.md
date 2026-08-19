@@ -5,11 +5,11 @@
 
 ## Current
 
-- [ ] Finalize how ordered same-line token evidence is exposed through LeadingRegionLayout::Inline
+- [ ] Map shared Inline CommentGroup classification to Absent error semantics
 
 ## Planned
 
-- [ ] Connect shared Inline CommentGroup classification to Absent and OuterOnly error semantics
+- [ ] Map shared Inline CommentGroup classification to OuterOnly error semantics
 - [ ] Complete core OuterOnly PreviousLines error classification from shared leading-region analysis
 - [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
 - [ ] Classify candidate placement, marker, and form across same-line and preceding regions
@@ -19,6 +19,7 @@
 
 ## Completed
 
+- [x] Expose ordered non-whitespace token kinds through LeadingRegionLayout::Inline
 - [x] Classify comments after the last Inline code token as OuterOnly, InnerOnly, NonDocOnly, or Mixed
 - [x] Retain ordered anchor-line token evidence while preserving nearest non-whitespace layout behavior
 - [x] Separate Absent and OuterOnly leading checks behind shared neutral prefix analysis

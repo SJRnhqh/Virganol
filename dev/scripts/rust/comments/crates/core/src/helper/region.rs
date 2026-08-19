@@ -20,14 +20,17 @@ pub(super) fn check_absent_leading_region(
     let (prefix, region) = analyze_leading_region(source, anchor)?;
 
     match region.layout() {
-        Inline(BlockComment {
-            doc_style: None, ..
-        }) => Err(CommentCheckError::non_doc()),
-        Inline(BlockComment {
-            doc_style: Some(Inner),
-            ..
-        }) => Err(CommentCheckError::missing()),
-        Inline(_) => Err(CommentCheckError::missing()),
+        Inline(kinds) => match kinds.last() {
+            Some(BlockComment {
+                doc_style: None, ..
+            }) => Err(CommentCheckError::non_doc()),
+            Some(BlockComment {
+                doc_style: Some(Inner),
+                ..
+            }) => Err(CommentCheckError::missing()),
+            Some(_) => Err(CommentCheckError::missing()),
+            None => unreachable!("inline layouts contain non-whitespace token kinds"),
+        },
         PreviousLines => check_absent_previous_lines(&prefix[region.start()..]),
     }
 }
@@ -43,7 +46,7 @@ pub(super) fn check_outer_leading_region(
     let (prefix, region) = analyze_leading_region(source, anchor)?;
 
     match region.layout() {
-        Inline(_kind) => {
+        Inline(_kinds) => {
             let _comment_region = &prefix[region.start()..];
 
             // TODO: Classify the complete inline outer-only comment region.

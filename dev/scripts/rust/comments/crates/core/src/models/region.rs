@@ -68,11 +68,7 @@ impl LeadingRegion {
 
         Self {
             start: comment_region_start,
-            layout: kinds
-                .into_iter()
-                .rfind(|kind| !matches!(kind, Whitespace))
-                .map(Inline)
-                .unwrap_or(PreviousLines),
+            layout: LeadingRegionLayout::from_kinds(kinds),
         }
     }
 
@@ -99,15 +95,29 @@ pub(crate) enum LeadingRegionLayout {
     ///
     /// 使用锚点同行的内容。
     Inline(
-        /// Nearest token kind before the anchor.
+        /// Ordered non-whitespace token kinds before the anchor.
         ///
-        /// 锚点前最近的词法单元类型。
-        TokenKind,
+        /// 锚点前有序排列的非空白词法单元类型。
+        Vec<TokenKind>,
     ),
     /// Uses content before the anchor line only.
     ///
     /// 仅使用锚点所在行之前的内容。
     PreviousLines,
+}
+
+impl LeadingRegionLayout {
+    /// Constructs a layout from ordered anchor-line token kinds.
+    ///
+    /// 根据锚点同行的有序词法单元类型构造布局。
+    fn from_kinds(mut kinds: Vec<TokenKind>) -> Self {
+        kinds.retain(|kind| !matches!(kind, Whitespace));
+
+        match kinds.len() {
+            0 => PreviousLines,
+            _ => Inline(kinds),
+        }
+    }
 }
 
 /// Tracks the leading-region scan state while partitioning an anchor prefix.
