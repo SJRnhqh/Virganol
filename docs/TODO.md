@@ -5,10 +5,11 @@
 
 ## Current
 
-- [ ] Complete OuterOnly Inline and PreviousLines error classification from shared leading-region analysis
+- [ ] Complete core OuterOnly Inline error classification from shared leading-region analysis
 
 ## Planned
 
+- [ ] Complete core OuterOnly PreviousLines error classification from shared leading-region analysis
 - [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
 - [ ] Classify candidate placement, marker, and form across same-line and preceding regions
 - [ ] Connect the Outer Line Doc Comments rule to repository checks and source audits
