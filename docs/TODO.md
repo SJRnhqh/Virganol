@@ -17,6 +17,7 @@
 
 ## Completed
 
+- [x] Inline the single-use Absent PreviousLines state mapping into its leading-region branch
 - [x] Map shared Inline CommentGroup classification to Absent error semantics
 - [x] Map shared Inline CommentGroup classification to OuterOnly error semantics
 - [x] Expose ordered non-whitespace token kinds through LeadingRegionLayout::Inline

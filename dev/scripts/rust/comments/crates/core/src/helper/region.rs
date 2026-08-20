@@ -25,7 +25,13 @@ pub(super) fn check_absent_leading_region(
             Some(Mixed) => Err(CommentCheckError::mixed()),
             Some(OuterOnly) => Err(CommentCheckError::mismatch()),
         },
-        PreviousLines => check_absent_previous_lines(&prefix[region.start()..]),
+        PreviousLines => match CommentRegion::from_source(&prefix[region.start()..]) {
+            Empty | Contiguous(InnerOnly) => Err(CommentCheckError::missing()),
+            Separated(InnerOnly | Mixed | NonDocOnly) => Err(CommentCheckError::misplaced()),
+            Contiguous(Mixed) => Err(CommentCheckError::mixed()),
+            Contiguous(NonDocOnly) => Err(CommentCheckError::non_doc()),
+            Contiguous(OuterOnly) | Separated(OuterOnly) => Err(CommentCheckError::mismatch()),
+        },
     }
 }
 
@@ -66,17 +72,4 @@ fn analyze_leading_region(
         .ok_or_else(CommentCheckError::location)?;
 
     Ok((prefix, LeadingRegion::from_anchor_prefix(prefix)))
-}
-
-/// Checks the preceding-line comment region of a target without documentation attributes.
-///
-/// 检查不含文档属性的目标之前仅位于前序行的注释区域。
-fn check_absent_previous_lines(comment_region: &str) -> Result<(), CommentCheckError> {
-    match CommentRegion::from_source(comment_region) {
-        Empty | Contiguous(InnerOnly) => Err(CommentCheckError::missing()),
-        Separated(InnerOnly | Mixed | NonDocOnly) => Err(CommentCheckError::misplaced()),
-        Contiguous(Mixed) => Err(CommentCheckError::mixed()),
-        Contiguous(NonDocOnly) => Err(CommentCheckError::non_doc()),
-        Contiguous(OuterOnly) | Separated(OuterOnly) => Err(CommentCheckError::mismatch()),
-    }
 }
