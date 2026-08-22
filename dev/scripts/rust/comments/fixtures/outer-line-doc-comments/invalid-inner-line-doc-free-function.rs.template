@@ -1,0 +1,5 @@
+fn example() {
+    //! Performs an example operation.
+    //!
+    //! 执行示例操作。
+}

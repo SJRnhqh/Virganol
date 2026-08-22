@@ -22,11 +22,7 @@ const RUST_BUILD_STEP_TIMEOUT_MS = 300_000;
 const steps = [
   {
     command: "node",
-    args: [path.resolve(scriptDir, "comments/test.mjs")],
-  },
-  {
-    command: "node",
-    args: [path.resolve(scriptDir, "lint-item-doc-comments.mjs")],
+    args: [path.resolve(scriptDir, "comments/check.mjs")],
   },
   {
     command: "node",

@@ -3840,6 +3840,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
 
 [[package]]
+name = "ra-ap-rustc_lexer"
+version = "0.172.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f69e08932549e2c371840d1cc92bda970111dab4b9d2517d52c1873a449f1f9b"
+dependencies = [
+ "memchr",
+ "unicode-ident",
+ "unicode-properties",
+]
+
+[[package]]
 name = "rand"
 version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5729,6 +5740,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e6e4313cd5fcd3dad5cafa179702e2b244f760991f45397d14d4ebf38247da75"
 
 [[package]]
+name = "unicode-properties"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7df058c713841ad818f1dc5d3fd88063241cc61f49f5fbea4b951e8cf5a8d71d"
+
+[[package]]
 name = "unicode-segmentation"
 version = "1.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5824,6 +5841,9 @@ dependencies = [
 name = "virganol-rust-comment-checker-core"
 version = "0.0.1"
 dependencies = [
+ "proc-macro2",
+ "ra-ap-rustc_lexer",
+ "regex",
  "syn 2.0.117",
 ]
 

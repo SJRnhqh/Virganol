@@ -1,0 +1,4 @@
+/// Names an example value.
+///
+/// 命名示例值。
+type ExampleValue = usize;

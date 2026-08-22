@@ -1,6 +1,7 @@
 # Virganol Architecture
 
-> Project architecture, runtime boundaries, and reliability design
+> Project architecture, runtime boundaries, reliability design, and engineering
+> infrastructure
 
 ---
 
@@ -125,4 +126,37 @@ The intended dependency direction inside a domain is:
 
 #### Tracing
 
-### Testing Strategy
+---
+
+## Engineering Infrastructure
+
+Engineering infrastructure supports Virganol's development, verification,
+build, and delivery workflows without participating in the product runtime.
+
+### Quality Gate System
+
+The quality gate system verifies repository changes at defined stages of the
+development lifecycle.
+
+#### Subsystems
+
+The quality gate system consists of two complementary subsystems:
+
+```txt
+Quality Gate System
+├── Check
+└── Test
+```
+
+- **Check** validates repository conformance to project rules and contracts.
+- **Test** validates implementation behavior against expected outcomes.
+
+#### Organization
+
+Verification is organized by scope:
+
+```txt
+Repository Entry
+└── Technology Stack
+    └── Quality Area
+```

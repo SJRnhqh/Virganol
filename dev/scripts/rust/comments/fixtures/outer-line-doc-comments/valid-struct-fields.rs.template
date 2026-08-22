@@ -1,0 +1,19 @@
+/// Represents a named example.
+///
+/// 表示具名示例。
+struct NamedExample {
+    /// Stores the example value.
+    ///
+    /// 存储示例值。
+    value: usize,
+}
+
+/// Represents a tuple example.
+///
+/// 表示元组示例。
+struct TupleExample(
+    /// Stores the example value.
+    ///
+    /// 存储示例值。
+    usize,
+);

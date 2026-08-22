@@ -1,0 +1,4 @@
+/// Defines an example limit.
+///
+/// 定义示例上限。
+const EXAMPLE_LIMIT: usize = 1;

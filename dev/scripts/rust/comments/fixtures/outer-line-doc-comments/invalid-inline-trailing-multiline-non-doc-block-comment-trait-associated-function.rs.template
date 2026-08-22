@@ -1,0 +1,10 @@
+/// Represents an example trait.
+///
+/// 表示一个示例特型。
+trait Example {
+    /// Performs a documented operation.
+    ///
+    /// 执行一个已记录的操作。
+    fn documented(); /* Keeps a trailing
+    comment. */ fn missing();
+}

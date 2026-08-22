@@ -1,0 +1,4 @@
+/// Represents an example state.
+///
+/// 表示示例状态。
+enum ExampleState {}

@@ -5,6 +5,8 @@ import { buildNapi } from "./napi.mjs";
 export async function prepareAdapterEnvironment({ adapter, profile = "debug" }) {
   const environment = { ...process.env };
 
+  environment.VIRGANOL_RUST_COMMENTS_ADAPTER = adapter;
+
   if (adapter === "cli") {
     console.log("\nrust comments: build cli adapter");
     environment.VIRGANOL_RUST_COMMENTS_CLI_PATH = buildCli({ profile });
@@ -17,5 +19,5 @@ export async function prepareAdapterEnvironment({ adapter, profile = "debug" }) 
     return environment;
   }
 
-  throw new Error(`unsupported Outer Doc Comments adapter: ${adapter}`);
+  throw new Error(`unsupported Outer Line Doc Comments adapter: ${adapter}`);
 }

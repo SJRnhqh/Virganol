@@ -1,0 +1,11 @@
+unsafe extern "C" {
+    /// Reads an external value.
+    ///
+    /// 读取外部值。
+    fn read_example() -> i32;
+
+    /// Stores an external value.
+    ///
+    /// 存储外部值。
+    static EXAMPLE_VALUE: i32;
+}

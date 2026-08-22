@@ -1,0 +1,42 @@
+/// Defines example output behavior.
+///
+/// 定义示例输出行为。
+trait ExampleOutput {
+    /// Defines the example output.
+    ///
+    /// 定义示例输出。
+    type Output;
+}
+
+/// Represents an example.
+///
+/// 表示示例。
+struct Example;
+
+impl ExampleOutput for Example {
+    /// Defines the concrete output.
+    ///
+    /// 定义具体输出。
+    type Output = usize;
+}
+
+impl Example {
+    /// Creates an example.
+    ///
+    /// 创建示例。
+    fn create() -> Self {
+        Self
+    }
+
+    /// Returns the example value.
+    ///
+    /// 返回示例值。
+    fn value(&self) -> usize {
+        Self::EXAMPLE_LIMIT
+    }
+
+    /// Defines the example limit.
+    ///
+    /// 定义示例上限。
+    const EXAMPLE_LIMIT: usize = 1;
+}

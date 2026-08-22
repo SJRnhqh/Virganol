@@ -1,0 +1,13 @@
+/// Represents an example union.
+///
+/// 表示示例联合体。
+union ExampleUnion {
+    /// Stores an integer value.
+    ///
+    /// 存储整数值。
+    integer: usize,
+    /// Stores a floating-point value.
+    ///
+    /// 存储浮点值。
+    float: f64,
+}
