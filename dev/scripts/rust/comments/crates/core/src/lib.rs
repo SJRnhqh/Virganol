@@ -5,5 +5,5 @@ mod models;
 
 pub use checker::check_source;
 pub(self) use helper::check_target_outer_line_doc;
-pub use models::CommentCheckError;
+pub use models::{CommentCheckConfig, CommentCheckError};
 pub(self) use models::{CommentGroup, CommentRegion, DocAttrs, LeadingRegion, LeadingRegionLayout};

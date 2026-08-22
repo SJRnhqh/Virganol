@@ -15,15 +15,17 @@ const { values } = parseArgs({
     },
   },
 });
+const config = loadConfig("outer-line-doc-comments");
 const adapter =
   values.adapter ??
   process.env.VIRGANOL_RUST_COMMENTS_ADAPTER ??
-  loadConfig("outer-line-doc-comments").adapter;
+  config.adapter;
+const { allowedAsciiTerms } = config;
 
 function checkOuterLineDocCommentsFixture(fixtureName) {
   const { source } = loadFixture("outer-line-doc-comments", fixtureName);
 
-  return checkOuterLineDocComments({ adapter, source });
+  return checkOuterLineDocComments({ adapter, source, allowedAsciiTerms });
 }
 
 const outerLineDocPattern = /^\s*\/\/\/(?:\s|$)/;
@@ -162,7 +164,7 @@ describe("Outer Line Doc Comments", () => {
     for (const { fixtureName, lineNumber, source } of derivedMissingCases) {
       test(`reports for ${fixtureName}:${lineNumber} without documentation`, async () => {
         await assert.rejects(
-          () => checkOuterLineDocComments({ adapter, source }),
+          () => checkOuterLineDocComments({ adapter, source, allowedAsciiTerms }),
           { code: "missing" }
         );
       });
@@ -178,5 +180,26 @@ describe("Outer Line Doc Comments", () => {
         );
       });
     }
+  });
+
+  describe("configuration", () => {
+    const source = `/// Returns the VINE identifier.
+///
+/// 返回 VINE 标识符。
+pub struct Identifier;
+`;
+
+    test("accepts an injected ASCII term", async () => {
+      await assert.doesNotReject(() =>
+        checkOuterLineDocComments({ adapter, source, allowedAsciiTerms: ["VINE"] })
+      );
+    });
+
+    test("rejects an ASCII term that was not injected", async () => {
+      await assert.rejects(
+        () => checkOuterLineDocComments({ adapter, source, allowedAsciiTerms: [] }),
+        { code: "doc-style" }
+      );
+    });
   });
 });

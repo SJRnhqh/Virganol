@@ -3,7 +3,7 @@ use syn::spanned::Spanned;
 use syn::Attribute;
 
 use super::super::{
-    CommentCheckError,
+    CommentCheckConfig, CommentCheckError,
     DocAttrs::{self, Absent, InnerOnly, Mixed, OuterOnly},
 };
 use super::{check_absent_leading_region, check_outer_leading_region, target_anchor};
@@ -15,6 +15,7 @@ pub(crate) fn check_target_outer_line_doc<T: Spanned>(
     source: &str,
     attrs: &[Attribute],
     target: &T,
+    config: &CommentCheckConfig,
 ) -> Result<(), CommentCheckError> {
     match DocAttrs::from_attributes(attrs) {
         Absent => {
@@ -26,7 +27,7 @@ pub(crate) fn check_target_outer_line_doc<T: Spanned>(
         OuterOnly => {
             let anchor = target_anchor(source, attrs, target)?;
 
-            check_outer_leading_region(source, anchor, attrs)
+            check_outer_leading_region(source, anchor, config)
         }
         Mixed => Err(CommentCheckError::mixed()),
     }

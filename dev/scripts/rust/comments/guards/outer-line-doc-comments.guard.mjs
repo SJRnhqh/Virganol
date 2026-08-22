@@ -25,7 +25,7 @@ function selectCoverageFiles(rustFiles, coverage) {
 }
 
 export async function runGuard({ repoRoot, rustFiles, config }) {
-  const { tolerance, adapter, coverage } = config;
+  const { tolerance, adapter, coverage, allowedAsciiTerms } = config;
   const selectedFiles = selectCoverageFiles(rustFiles, coverage);
 
   if (selectedFiles.length === 0) {
@@ -43,7 +43,7 @@ export async function runGuard({ repoRoot, rustFiles, config }) {
     checkedCount += 1;
 
     try {
-      await checkOuterLineDocComments({ adapter, source });
+      await checkOuterLineDocComments({ adapter, source, allowedAsciiTerms });
     } catch (error) {
       if (!error || typeof error !== "object" || !("code" in error)) {
         throw error;

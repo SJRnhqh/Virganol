@@ -7,6 +7,10 @@ use virganol_rust_comment_checker_core::CommentCheckError;
 ///
 /// 表示注释检查 CLI 产生的错误。
 pub(super) enum CliError {
+    /// Command-line arguments are invalid.
+    ///
+    /// 命令行参数无效。
+    Arguments,
     /// Standard input could not be read.
     ///
     /// 无法读取标准输入。
@@ -28,6 +32,7 @@ impl AsRef<str> for CliError {
     /// 返回 CLI 暴露的稳定代码。
     fn as_ref(&self) -> &str {
         match self {
+            Self::Arguments => "arguments",
             Self::Stdin => "stdin",
             Self::Check(error) => error.as_ref(),
         }

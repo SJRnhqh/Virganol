@@ -18,7 +18,17 @@ function validateConfig(config) {
     throw new Error(`unsupported Rust comments tolerance: ${config.tolerance}`);
   }
 
-  return config;
+  if (
+    "allowedAsciiTerms" in config &&
+    (!Array.isArray(config.allowedAsciiTerms) ||
+      config.allowedAsciiTerms.some((term) => typeof term !== "string" || term.length === 0))
+  ) {
+    throw new Error("invalid Rust comments allowed ASCII terms");
+  }
+
+  return "allowedAsciiTerms" in config
+    ? { ...config, allowedAsciiTerms: [...new Set(config.allowedAsciiTerms)] }
+    : config;
 }
 
 export function loadConfig(guardName) {

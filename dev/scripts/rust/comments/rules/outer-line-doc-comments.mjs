@@ -8,7 +8,7 @@ const ruleDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(ruleDir, "../../../../..");
 const require = createRequire(import.meta.url);
 
-function checkWithCli(source) {
+function checkWithCli(source, allowedAsciiTerms) {
   const cliBinaryPath = process.env.VIRGANOL_RUST_COMMENTS_CLI_PATH;
 
   if (!cliBinaryPath) {
@@ -16,7 +16,8 @@ function checkWithCli(source) {
   }
 
   return new Promise((resolve, reject) => {
-    const child = spawn(cliBinaryPath, [], {
+    const args = allowedAsciiTerms.flatMap((term) => ["--allowed-ascii-term", term]);
+    const child = spawn(cliBinaryPath, args, {
       cwd: repoRoot,
       stdio: ["pipe", "ignore", "pipe"],
     });
@@ -75,17 +76,17 @@ function loadNapiAdapter() {
   return adapter;
 }
 
-function checkWithNapi(source) {
-  return loadNapiAdapter().check(source);
+function checkWithNapi(source, allowedAsciiTerms) {
+  return loadNapiAdapter().check(source, allowedAsciiTerms);
 }
 
-export async function checkOuterLineDocComments({ adapter, source }) {
+export async function checkOuterLineDocComments({ adapter, source, allowedAsciiTerms }) {
   if (adapter === "cli") {
-    return checkWithCli(source);
+    return checkWithCli(source, allowedAsciiTerms);
   }
 
   if (adapter === "napi") {
-    return checkWithNapi(source);
+    return checkWithNapi(source, allowedAsciiTerms);
   }
 
   throw new Error(`unsupported Outer Line Doc Comments adapter: ${adapter}`);

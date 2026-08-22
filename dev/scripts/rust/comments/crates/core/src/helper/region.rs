@@ -1,8 +1,6 @@
 // dev/scripts/rust/comments/crates/core/src/helper/region.rs
-use syn::Attribute;
-
 use super::super::{
-    CommentCheckError,
+    CommentCheckConfig, CommentCheckError,
     CommentGroup::{self, InnerOnly, Mixed, NonDocOnly, OuterOnly},
     CommentRegion::{self, Contiguous, Empty, Separated},
     LeadingRegion,
@@ -42,7 +40,7 @@ pub(super) fn check_absent_leading_region(
 pub(super) fn check_outer_leading_region(
     source: &str,
     anchor: usize,
-    _attrs: &[Attribute],
+    config: &CommentCheckConfig,
 ) -> Result<(), CommentCheckError> {
     let (prefix, region) = analyze_leading_region(source, anchor)?;
 
@@ -57,7 +55,7 @@ pub(super) fn check_outer_leading_region(
             (Separated(_), _) => Err(CommentCheckError::misplaced()),
             (Contiguous(InnerOnly | NonDocOnly | Mixed), _) => Err(CommentCheckError::mixed()),
             (Contiguous(OuterOnly), Some(outer_doc_source)) => {
-                check_contiguous_outer_doc_region(outer_doc_source)
+                check_contiguous_outer_doc_region(outer_doc_source, config)
             }
             (Contiguous(OuterOnly), None) => Err(CommentCheckError::mismatch()),
         },
