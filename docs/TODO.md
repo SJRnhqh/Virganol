@@ -5,11 +5,12 @@
 
 ## Current
 
-- [ ] Complete core OuterOnly PreviousLines error classification from shared leading-region analysis
+- [ ] Review contiguous OuterOnly PreviousLines format validation and separated-region ownership semantics
 
 ## Planned
 
-- [ ] Validate preceding-line OuterOnly placement, marker, and three-line form
+- [ ] Assess whether Absent and OuterOnly PreviousLines analysis can share normalized evidence
+- [ ] Handle explicit `#[doc]` attributes after outer-line PreviousLines semantics stabilize
 - [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
 - [ ] Connect the Outer Line Doc Comments rule to repository checks and source audits
 - [ ] Expand representative CLI/NAPI benchmarks and select the production adapter
@@ -17,6 +18,8 @@
 
 ## Completed
 
+- [x] Share CommentGroup token classification and merge semantics across Inline and PreviousLines
+- [x] Recognize outer documentation tokens in blank-line-delimited CommentRegion classifications
 - [x] Inline the single-use Absent PreviousLines state mapping into its leading-region branch
 - [x] Map shared Inline CommentGroup classification to Absent error semantics
 - [x] Map shared Inline CommentGroup classification to OuterOnly error semantics

@@ -170,36 +170,52 @@ impl CommentGroup {
 
         kinds
             .iter()
-            .filter_map(|kind| match kind {
-                LineComment {
-                    doc_style: Some(Outer),
-                }
-                | BlockComment {
-                    doc_style: Some(Outer),
-                    ..
-                } => Some(OuterOnly),
-                LineComment {
-                    doc_style: Some(Inner),
-                }
-                | BlockComment {
-                    doc_style: Some(Inner),
-                    ..
-                } => Some(InnerOnly),
-                LineComment { doc_style: None }
-                | BlockComment {
-                    doc_style: None, ..
-                } => Some(NonDocOnly),
-                _ => None,
-            })
+            .filter_map(Self::from_token_kind)
             .fold(None, |group, kind| {
-                Some(match (group, kind) {
-                    (None, kind) => kind,
-                    (Some(OuterOnly), OuterOnly) => OuterOnly,
-                    (Some(InnerOnly), InnerOnly) => InnerOnly,
-                    (Some(NonDocOnly), NonDocOnly) => NonDocOnly,
-                    _ => Mixed,
+                Some(match group {
+                    Some(group) => group.merge(kind),
+                    None => kind,
                 })
             })
+    }
+
+    /// Classifies one lexer token as a comment kind.
+    ///
+    /// 将单个词法单元分类为注释类型。
+    fn from_token_kind(kind: &TokenKind) -> Option<Self> {
+        match kind {
+            LineComment {
+                doc_style: Some(Outer),
+            }
+            | BlockComment {
+                doc_style: Some(Outer),
+                ..
+            } => Some(OuterOnly),
+            LineComment {
+                doc_style: Some(Inner),
+            }
+            | BlockComment {
+                doc_style: Some(Inner),
+                ..
+            } => Some(InnerOnly),
+            LineComment { doc_style: None }
+            | BlockComment {
+                doc_style: None, ..
+            } => Some(NonDocOnly),
+            _ => None,
+        }
+    }
+
+    /// Merges one additional comment kind into this group.
+    ///
+    /// 将另一种注释类型合并到当前注释组。
+    fn merge(self, kind: Self) -> Self {
+        match (self, kind) {
+            (OuterOnly, OuterOnly) => OuterOnly,
+            (InnerOnly, InnerOnly) => InnerOnly,
+            (NonDocOnly, NonDocOnly) => NonDocOnly,
+            _ => Mixed,
+        }
     }
 }
 
@@ -243,10 +259,7 @@ impl CommentRegion {
                     CommentRegionTokenRole::from_token(token.kind, &source[cursor..token_end]);
                 let region = match (region, token_role) {
                     (Empty | Separated(_), Comment(group)) => Contiguous(group),
-                    (Contiguous(InnerOnly), Comment(NonDocOnly))
-                    | (Contiguous(NonDocOnly), Comment(InnerOnly))
-                    | (Contiguous(Mixed), Comment(_)) => Contiguous(Mixed),
-                    (Contiguous(group), Comment(_)) => Contiguous(group),
+                    (Contiguous(group), Comment(kind)) => Contiguous(group.merge(kind)),
                     (Contiguous(group), Separator) => Separated(group),
                     (region, Irrelevant | Separator) => region,
                 };
@@ -285,18 +298,11 @@ impl CommentRegionTokenRole {
     ///
     /// 根据词法单元及其源码文本判定其在注释区域中的作用。
     fn from_token(kind: TokenKind, token_source: &str) -> Self {
+        if let Some(group) = CommentGroup::from_token_kind(&kind) {
+            return Comment(group);
+        }
+
         match kind {
-            LineComment { doc_style: None }
-            | BlockComment {
-                doc_style: None, ..
-            } => Comment(NonDocOnly),
-            LineComment {
-                doc_style: Some(Inner),
-            }
-            | BlockComment {
-                doc_style: Some(Inner),
-                ..
-            } => Comment(InnerOnly),
             Whitespace if token_source.matches('\n').count() > 1 => Separator,
             _ => Irrelevant,
         }
