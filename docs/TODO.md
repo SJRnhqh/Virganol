@@ -1,15 +1,7 @@
 # Branch TODO
 
 - Branch: feat/spirit-rust-outer-doc-experiment
-- Goal: Complete the Outer Line Doc Comments engineering experiment
-
-## Current
-
-- [ ] Use fixture and repository-audit benchmark evidence to select the production adapter
-
-## Planned
-
-- [ ] Validate the selected adapter across supported platforms
+- Goal: Establish the Outer Line Doc Comments quality gate and engineering-experiment baseline
 
 ## Completed
 

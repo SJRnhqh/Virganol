@@ -95,12 +95,10 @@ LLM Provider 接入分为两条主线：
 - [ ] Provider HTTP client 初始化错误收口（避免 `reqwest::Client` 构建失败通过 `expect` panic，纳入 health-check 错误路径）
 - [ ] Provider 持久化边界收口（将 `ProviderKeyTransaction` 隐藏为 store 层实现细节，由组合持久化服务统一处理 config + secret 写入与补偿回滚）
 - [ ] Core 规范化：继续人工校验剩余 Core 的 item docs、实现顺序与可见范围
-- [x] Rust 注释规范实验基础：完成 NAPI addon 构建脚本、配置驱动的默认测试接入、共享适配器环境与 CLI/NAPI release 基线 benchmark
-- [ ] Rust 注释规范实验：验证跨平台构建，统一共享语料、工作负载、结果语义与正确性前置校验
-- [ ] Outer Line Doc Comments：扩展 fixtures 与 `syn` 结构识别，并将选定适配器接入规则测试、仓库检查和源码审计
-- [ ] 适配器选型：完成 CLI/NAPI 正确性对齐与代表性 benchmark，以性能和维护成本确定生产方案
+- [x] Rust Comments 质量门禁与工程实验基线：完成规则实现、CLI/NAPI 正确性对齐、配置注入、仓库 audit 与 benchmark 基础设施
+- [ ] Rust Comments 工程实验收尾：补齐 fixture，完成 fixture/仓库 audit 代表性 benchmark 与跨平台验证，确定生产 adapter
 - [ ] Comments 规则收口：完成 Outer Line Doc、Inner Doc 与 Explanatory Comments 的源码审计和文档定稿
-- [ ] Visibility 规则升级：覆盖模块项、关联项与 re-export 链，补齐 `syn` 结构检查、测试和文档定稿
+- [ ] Visibility 质量门禁子系统：覆盖模块项、关联项与 re-export 链，补齐 `syn` 结构检查、测试、仓库 audit 和文档定稿
 - [ ] 后端锁实现升级（`std::sync::Mutex` → `parking_lot::Mutex`）
 - [ ] 后端锁粒度细化（全局锁 → per-provider 锁）
 - [ ] 功能开发完结
