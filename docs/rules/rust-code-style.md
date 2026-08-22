@@ -20,7 +20,7 @@ implementation and related engineering experiments live under
 
 #### Engineering
 
-```text
+```txt
 Check
 ├── Test
 │   ├── fixture
@@ -70,7 +70,7 @@ Check
 
 #### Engineering
 
-```text
+```txt
 Check
 ├── Test
 │   ├── fixture (TBD)
@@ -81,7 +81,7 @@ Check
         └── rule
 ```
 
-```text
+```txt
 Benchmark (TBD)
 ├── Comparisons
 │   ├── Adapter
