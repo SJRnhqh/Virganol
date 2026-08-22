@@ -1,10 +1,11 @@
 // dev/scripts/rust/comments/audit.mjs
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { checkSourceFileHeader } from "./rules/source-file-header.mjs";
+import { loadConfig } from "./config/load.mjs";
+import { loadGuards } from "./guards/load.mjs";
+import { reportGuardResult } from "./guards/report.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../../..");
@@ -36,41 +37,30 @@ function collectRustFiles() {
   return rustFiles;
 }
 
-let rustFiles;
-let failures;
+async function main() {
+  const rustFiles = collectRustFiles();
+  let failed = false;
+
+  for (const { guardName, runGuard } of await loadGuards()) {
+    const config = loadConfig(guardName);
+    const result = await runGuard({ repoRoot, rustFiles, config });
+    reportGuardResult({ guardName, config, ...result });
+
+    if (result.diagnostics.length > 0) {
+      failed = true;
+    }
+  }
+
+  if (failed) {
+    process.exitCode = 1;
+  }
+}
 
 try {
-  rustFiles = collectRustFiles();
-  failures = rustFiles.flatMap((relativePath) => {
-    const source = readFileSync(path.resolve(repoRoot, relativePath), "utf8");
-    const diagnostic = checkSourceFileHeader(relativePath, source);
-
-    return diagnostic ? [{ relativePath, ...diagnostic }] : [];
-  });
+  await main();
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error);
 
   console.error(`rust comments audit failed: ${message}`);
-  process.exit(1);
+  process.exitCode = 1;
 }
-
-if (failures.length > 0) {
-  console.error(`rust comments audit failed (${failures.length} failure(s))\n`);
-  console.error("rule: source-file-header\n");
-
-  for (const failure of failures) {
-    console.error(`location: ${failure.relativePath}:${failure.line ?? 1}`);
-    console.error(`code:     ${failure.code}`);
-    console.error(`expected: ${failure.expected}`);
-
-    if ("actual" in failure) {
-      console.error(`actual:   ${failure.actual || "<empty>"}`);
-    }
-
-    console.error("");
-  }
-
-  process.exit(1);
-}
-
-console.log(`rust comments audit passed (${rustFiles.length} files)`);

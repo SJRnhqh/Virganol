@@ -26,10 +26,6 @@ const steps = [
   },
   {
     command: "node",
-    args: [path.resolve(scriptDir, "lint-item-doc-comments.mjs")],
-  },
-  {
-    command: "node",
     args: [path.resolve(scriptDir, "contract-reexport-visibility.mjs")],
   },
   {

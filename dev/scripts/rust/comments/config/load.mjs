@@ -1,12 +1,35 @@
 // dev/scripts/rust/comments/config/load.mjs
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const configDir = path.dirname(fileURLToPath(import.meta.url));
+const tolerances = new Set(["deferred", "immediate"]);
+let globalConfig;
 
-export function loadConfig(name) {
+function readConfig(name) {
   const configPath = path.resolve(configDir, `${name}.json`);
 
   return JSON.parse(readFileSync(configPath, "utf8"));
+}
+
+function validateConfig(config) {
+  if (!tolerances.has(config.tolerance)) {
+    throw new Error(`unsupported Rust comments tolerance: ${config.tolerance}`);
+  }
+
+  return config;
+}
+
+export function loadConfig(guardName) {
+  globalConfig ??= validateConfig(readConfig("global"));
+
+  const configPath = path.resolve(configDir, `${guardName}.json`);
+
+  if (!existsSync(configPath)) return globalConfig;
+
+  return validateConfig({
+    ...globalConfig,
+    ...readConfig(guardName),
+  });
 }

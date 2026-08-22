@@ -12,12 +12,12 @@
 - [ ] Assess whether Absent and OuterOnly PreviousLines analysis can share normalized evidence
 - [ ] Handle explicit `#[doc]` attributes after outer-line PreviousLines semantics stabilize
 - [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
-- [ ] Connect the Outer Line Doc Comments rule to repository checks and source audits
 - [ ] Expand representative CLI/NAPI benchmarks and select the production adapter
 - [ ] Validate the selected adapter across supported platforms
 
 ## Completed
 
+- [x] Connect Rust comment rules to config-driven repository guards and audit reporting
 - [x] Record deferred Rust comment and visibility rule boundaries in the style specification
 - [x] Complete the first core validation pass for the currently defined fixture scope
 - [x] Reject targets that mix outer and inner documentation attributes
