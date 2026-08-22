@@ -4,7 +4,13 @@ Project conventions for Rust source code.
 
 ## Comments
 
+The Rust Comments Check is Virganol's Rust comment quality-gate subsystem. Its
+implementation and related engineering experiments live under
+`dev/scripts/rust/comments/`.
+
 ### Source File Header
+
+#### Specification
 
 - Scope: `**/*.rs`
 - Rule:
@@ -12,7 +18,22 @@ Project conventions for Rust source code.
   - Pattern: `// <repository-relative-path>`
   - Separator: `/`
 
+#### Engineering
+
+```text
+Check
+├── Test
+│   ├── fixture
+│   └── rule
+└── Audit
+    ├── file
+    └── guard
+        └── rule
+```
+
 ### Outer Line Doc Comments
+
+#### Specification
 
 - Scope: `**/*.rs`
 - Excludes: `**/mod.rs`
@@ -46,6 +67,36 @@ Project conventions for Rust source code.
     ///
     /// <Chinese with whitelisted ASCII terms>
     ```
+
+#### Engineering
+
+```text
+Check
+├── Test
+│   ├── fixture (TBD)
+│   └── rule
+└── Audit
+    ├── file
+    └── guard
+        └── rule
+```
+
+```text
+Benchmark (TBD)
+├── Comparisons
+│   ├── Adapter
+│   │   ├── CLI
+│   │   └── NAPI
+│   ├── Execution
+│   │   ├── sequential
+│   │   └── concurrent
+│   └── Input
+│       ├── source
+│       └── path
+└── Scenarios
+    ├── Test
+    └── Audit
+```
 
 ### Inner Doc Comments (Specification TBD)
 

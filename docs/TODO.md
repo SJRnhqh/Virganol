@@ -13,6 +13,7 @@
 
 ## Completed
 
+- [x] Document the Rust Comments quality-gate boundary, check structure, and deferred engineering experiments
 - [x] Establish a correctness-gated CLI/NAPI benchmark baseline across fixtures and the real Outer-only repository audit workload
 - [x] Inject the configured ASCII term allowlist through CLI and NAPI into core validation
 - [x] Align shared fixture coverage and CLI/NAPI result semantics for the current experiment scope
