@@ -5,14 +5,15 @@
 
 ## Current
 
-- [ ] Expand representative benchmarks, select the production adapter, and validate it across supported platforms
+- [ ] Use fixture and repository-audit benchmark evidence to select the production adapter
 
 ## Planned
 
-- None.
+- [ ] Validate the selected adapter across supported platforms
 
 ## Completed
 
+- [x] Establish a correctness-gated CLI/NAPI benchmark baseline across fixtures and the real Outer-only repository audit workload
 - [x] Inject the configured ASCII term allowlist through CLI and NAPI into core validation
 - [x] Align shared fixture coverage and CLI/NAPI result semantics for the current experiment scope
 - [x] Complete the Outer Line Doc Comments core model, source analysis, target discovery, and current fixture scope

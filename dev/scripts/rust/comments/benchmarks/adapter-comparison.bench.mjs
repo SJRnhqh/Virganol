@@ -1,10 +1,14 @@
 // dev/scripts/rust/comments/benchmarks/adapter-comparison.bench.mjs
+import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
 import { fileURLToPath } from "node:url";
 
 import { prepareAdapterEnvironment } from "../build/environment.mjs";
+import { loadConfig } from "../config/load.mjs";
+import { collectRustFiles } from "../files.mjs";
+import { runGuardWorkload } from "../guards/outer-line-doc-comments.guard.mjs";
 
 const benchmarkDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(benchmarkDir, "../../../../..");
@@ -58,7 +62,7 @@ function summarize(adapter, samples) {
   };
 }
 
-function benchmarkAdapter(adapter, environment) {
+function benchmarkFixtureAdapter(adapter, environment) {
   for (let run = 0; run < warmupRuns; run += 1) {
     runOuterLineDocTest(adapter, environment);
   }
@@ -75,10 +79,42 @@ function benchmarkAdapter(adapter, environment) {
   return summarize(adapter, samples);
 }
 
+async function runRepositoryAudit(adapter, environment, runGuardWorkload, rustFiles, config) {
+  Object.assign(process.env, environment);
+
+  return runGuardWorkload({
+    repoRoot,
+    rustFiles,
+    config: { ...config, adapter, tolerance: "deferred" },
+  });
+}
+
+async function benchmarkRepositoryAdapter(
+  adapter,
+  environment,
+  runGuardWorkload,
+  rustFiles,
+  config
+) {
+  for (let run = 0; run < warmupRuns; run += 1) {
+    await runRepositoryAudit(adapter, environment, runGuardWorkload, rustFiles, config);
+  }
+
+  const samples = [];
+  let result;
+
+  for (let run = 0; run < sampleRuns; run += 1) {
+    const startedAt = performance.now();
+
+    result = await runRepositoryAudit(adapter, environment, runGuardWorkload, rustFiles, config);
+    samples.push(performance.now() - startedAt);
+  }
+
+  return { files: result.targetCount, ...summarize(adapter, samples) };
+}
+
 console.log("rust comments adapter comparison bench");
-console.log(
-  "note: Outer Line Doc Comments rule semantics are TODO; current results cover fixture parsing"
-);
+console.log("note: build, configuration, Git discovery, and reporting are excluded from samples");
 
 const preparedAdapters = [];
 
@@ -89,10 +125,43 @@ for (const adapter of adapters) {
   });
 }
 
-const results = preparedAdapters.map(({ adapter, environment }) => {
-  console.log(`\nrust comments adapter comparison: ${adapter}`);
+console.log("\nfixture workload");
+console.table(
+  preparedAdapters.map(({ adapter, environment }) =>
+    benchmarkFixtureAdapter(adapter, environment)
+  )
+);
 
-  return benchmarkAdapter(adapter, environment);
-});
+const rustFiles = collectRustFiles(repoRoot);
+const config = loadConfig("outer-line-doc-comments");
 
-console.table(results);
+const correctnessResults = [];
+
+for (const { adapter, environment } of preparedAdapters) {
+  correctnessResults.push(
+    await runRepositoryAudit(adapter, environment, runGuardWorkload, rustFiles, config)
+  );
+}
+
+assert.deepEqual(
+  correctnessResults[1],
+  correctnessResults[0],
+  "CLI and NAPI repository audit results differ"
+);
+
+const repositoryResults = [];
+
+for (const { adapter, environment } of preparedAdapters) {
+  repositoryResults.push(
+    await benchmarkRepositoryAdapter(
+      adapter,
+      environment,
+      runGuardWorkload,
+      rustFiles,
+      config
+    )
+  );
+}
+
+console.log("\nrepository audit workload (Outer guard only)");
+console.table(repositoryResults);

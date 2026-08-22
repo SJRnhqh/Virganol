@@ -25,14 +25,20 @@ function selectCoverageFiles(rustFiles, coverage) {
 }
 
 export async function runGuard({ repoRoot, rustFiles, config }) {
+  const { adapter } = config;
+
+  Object.assign(process.env, await prepareAdapterEnvironment({ adapter, profile: "debug" }));
+
+  return runGuardWorkload({ repoRoot, rustFiles, config });
+}
+
+export async function runGuardWorkload({ repoRoot, rustFiles, config }) {
   const { tolerance, adapter, coverage, allowedAsciiTerms } = config;
   const selectedFiles = selectCoverageFiles(rustFiles, coverage);
 
   if (selectedFiles.length === 0) {
     throw new Error("Outer Line Doc Comments coverage matched no Rust source files");
   }
-
-  Object.assign(process.env, await prepareAdapterEnvironment({ adapter, profile: "debug" }));
 
   const diagnostics = [];
   let checkedCount = 0;
