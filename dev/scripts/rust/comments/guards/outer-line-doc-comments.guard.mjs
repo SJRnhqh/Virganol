@@ -5,6 +5,22 @@ import path from "node:path";
 import { prepareAdapterEnvironment } from "../build/environment.mjs";
 import { checkOuterLineDocComments } from "../rules/outer-line-doc-comments.mjs";
 
+const diagnosticCodes = new Set([
+  "parse",
+  "location",
+  "mismatch",
+  "pattern",
+  "missing",
+  "doc-style",
+  "misplaced",
+  "non-doc",
+  "mixed",
+]);
+
+function isDiagnostic(error) {
+  return Boolean(error && typeof error === "object" && diagnosticCodes.has(error.code));
+}
+
 function selectCoverageFiles(rustFiles, coverage) {
   const { include, exclude } = coverage;
   const isInvalid =
@@ -51,7 +67,7 @@ export async function runGuardWorkload({ repoRoot, rustFiles, config }) {
     try {
       await checkOuterLineDocComments({ adapter, source, allowedAsciiTerms });
     } catch (error) {
-      if (!error || typeof error !== "object" || !("code" in error)) {
+      if (!isDiagnostic(error)) {
         throw error;
       }
 
