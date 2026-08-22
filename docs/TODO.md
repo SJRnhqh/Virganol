@@ -5,10 +5,12 @@
 
 ## Current
 
-- [ ] Review contiguous OuterOnly PreviousLines format validation and separated-region ownership semantics
+- [ ] Align Missing fixtures before finalizing the Mixed branch mapping
 
 ## Planned
 
+- [ ] Finalize the top-level Mixed branch error mapping
+- [ ] Resolve separated-region ownership semantics
 - [ ] Assess whether Absent and OuterOnly PreviousLines analysis can share normalized evidence
 - [ ] Handle explicit `#[doc]` attributes after outer-line PreviousLines semantics stabilize
 - [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
@@ -18,6 +20,8 @@
 
 ## Completed
 
+- [x] Validate contiguous OuterOnly PreviousLines line-doc structure, language content, and ASCII allowlist
+- [x] Return nearest contiguous comment source alongside CommentRegion classification
 - [x] Share CommentGroup token classification and merge semantics across Inline and PreviousLines
 - [x] Recognize outer documentation tokens in blank-line-delimited CommentRegion classifications
 - [x] Inline the single-use Absent PreviousLines state mapping into its leading-region branch

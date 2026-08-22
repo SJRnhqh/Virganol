@@ -248,25 +248,30 @@ pub(crate) enum CommentRegion {
 }
 
 impl CommentRegion {
-    /// Classifies the nearest blank-line-delimited group in a comment region.
+    /// Analyzes the nearest blank-line-delimited group and its contiguous source.
     ///
-    /// 对注释区域中由空行分隔的最近注释组进行分类。
-    pub(crate) fn from_source(source: &str) -> Self {
-        tokenize(source, FrontmatterAllowed::No)
-            .fold((0, Empty), |(cursor, region), token| {
+    /// 分析由空行分隔的最近注释组及其连续源码。
+    pub(crate) fn analyze_source(source: &str) -> (Self, Option<&str>) {
+        let (_, region, contiguous_start) = tokenize(source, FrontmatterAllowed::No).fold(
+            (0, Empty, None),
+            |(cursor, region, start), token| {
                 let token_end = cursor + token.len as usize;
                 let token_role =
                     CommentRegionTokenRole::from_token(token.kind, &source[cursor..token_end]);
-                let region = match (region, token_role) {
-                    (Empty | Separated(_), Comment(group)) => Contiguous(group),
-                    (Contiguous(group), Comment(kind)) => Contiguous(group.merge(kind)),
-                    (Contiguous(group), Separator) => Separated(group),
-                    (region, Irrelevant | Separator) => region,
+                let (region, start) = match (region, token_role) {
+                    (Empty | Separated(_), Comment(group)) => (Contiguous(group), Some(cursor)),
+                    (Contiguous(group), Comment(kind)) => (Contiguous(group.merge(kind)), start),
+                    (Contiguous(group), Separator) => (Separated(group), None),
+                    (region, Irrelevant | Separator) => (region, start),
                 };
 
-                (token_end, region)
-            })
-            .1
+                (token_end, region, start)
+            },
+        );
+        (
+            region,
+            contiguous_start.and_then(|start| source.get(start..)),
+        )
     }
 }
 

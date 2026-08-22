@@ -31,6 +31,13 @@ impl CommentCheckError {
         Self::analysis(CommentAnalysisError::Mismatch)
     }
 
+    /// Creates an analysis pattern error.
+    ///
+    /// 创建分析模式错误。
+    pub(crate) fn pattern() -> Self {
+        Self::analysis(CommentAnalysisError::Pattern)
+    }
+
     /// Creates a missing documentation comment error.
     ///
     /// 创建文档注释缺失错误。
@@ -101,6 +108,7 @@ impl AsRef<str> for CommentCheckError {
             CommentCheckErrorCode::Analysis(CommentAnalysisError::Parse) => "parse",
             CommentCheckErrorCode::Analysis(CommentAnalysisError::Location) => "location",
             CommentCheckErrorCode::Analysis(CommentAnalysisError::Mismatch) => "mismatch",
+            CommentCheckErrorCode::Analysis(CommentAnalysisError::Pattern) => "pattern",
             CommentCheckErrorCode::Rule(CommentRuleError::Missing) => "missing",
             CommentCheckErrorCode::Rule(CommentRuleError::Invalid(
                 CommentInvalidError::DocStyle,
@@ -158,6 +166,10 @@ enum CommentAnalysisError {
     ///
     /// 独立得出的源代码分析结果彼此不一致。
     Mismatch,
+    /// An analysis pattern could not be initialized.
+    ///
+    /// 无法初始化分析模式。
+    Pattern,
 }
 
 /// Represents a concrete comment rule error.

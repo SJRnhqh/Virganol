@@ -8,6 +8,7 @@ use super::super::{
     LeadingRegion,
     LeadingRegionLayout::{Inline, PreviousLines},
 };
+use super::check_contiguous_outer_doc_region;
 
 /// Checks the leading source region of a target without documentation attributes.
 ///
@@ -25,7 +26,7 @@ pub(super) fn check_absent_leading_region(
             Some(Mixed) => Err(CommentCheckError::mixed()),
             Some(OuterOnly) => Err(CommentCheckError::mismatch()),
         },
-        PreviousLines => match CommentRegion::from_source(&prefix[region.start()..]) {
+        PreviousLines => match CommentRegion::analyze_source(&prefix[region.start()..]).0 {
             Empty | Contiguous(InnerOnly) => Err(CommentCheckError::missing()),
             Separated(InnerOnly | Mixed | NonDocOnly) => Err(CommentCheckError::misplaced()),
             Contiguous(Mixed) => Err(CommentCheckError::mixed()),
@@ -51,12 +52,15 @@ pub(super) fn check_outer_leading_region(
             Some(InnerOnly | NonDocOnly | Mixed) => Err(CommentCheckError::mixed()),
             None => Err(CommentCheckError::mismatch()),
         },
-        PreviousLines => {
-            let _comment_region = &prefix[region.start()..];
-
-            // TODO: Classify the outer-only comment region on preceding lines.
-            Ok(())
-        }
+        PreviousLines => match CommentRegion::analyze_source(&prefix[region.start()..]) {
+            (Empty, _) => Err(CommentCheckError::mismatch()),
+            (Separated(_), _) => Err(CommentCheckError::misplaced()),
+            (Contiguous(InnerOnly | NonDocOnly | Mixed), _) => Err(CommentCheckError::mixed()),
+            (Contiguous(OuterOnly), Some(outer_doc_source)) => {
+                check_contiguous_outer_doc_region(outer_doc_source)
+            }
+            (Contiguous(OuterOnly), None) => Err(CommentCheckError::mismatch()),
+        },
     }
 }
 
