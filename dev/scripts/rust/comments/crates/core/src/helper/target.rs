@@ -28,6 +28,6 @@ pub(crate) fn check_target_outer_line_doc<T: Spanned>(
 
             check_outer_leading_region(source, anchor, attrs)
         }
-        Mixed => Ok(()),
+        Mixed => Err(CommentCheckError::mixed()),
     }
 }

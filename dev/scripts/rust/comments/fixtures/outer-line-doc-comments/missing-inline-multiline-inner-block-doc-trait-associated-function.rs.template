@@ -1,8 +1,0 @@
-/// Represents an example trait.
-///
-/// 表示一个示例特型。
-trait Example {
-    /*! Documents the trait.
-
-    记录该特型。 */ fn missing();
-}

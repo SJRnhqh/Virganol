@@ -5,12 +5,10 @@
 
 ## Current
 
-- [ ] Align Missing fixtures before finalizing the Mixed branch mapping
+- [ ] Resolve separated-region ownership semantics and extend CommentRegion fixtures
 
 ## Planned
 
-- [ ] Finalize the top-level Mixed branch error mapping
-- [ ] Resolve separated-region ownership semantics
 - [ ] Assess whether Absent and OuterOnly PreviousLines analysis can share normalized evidence
 - [ ] Handle explicit `#[doc]` attributes after outer-line PreviousLines semantics stabilize
 - [ ] Cover remaining blank-line-delimited CommentRegion classifications with fixtures
@@ -20,6 +18,9 @@
 
 ## Completed
 
+- [x] Complete the first core validation pass for the currently defined fixture scope
+- [x] Reject targets that mix outer and inner documentation attributes
+- [x] Isolate inner-doc Missing fixtures behind unchecked impl containers
 - [x] Validate contiguous OuterOnly PreviousLines line-doc structure, language content, and ASCII allowlist
 - [x] Return nearest contiguous comment source alongside CommentRegion classification
 - [x] Share CommentGroup token classification and merge semantics across Inline and PreviousLines

@@ -1,0 +1,12 @@
+/// Represents an example type.
+///
+/// 表示一个示例类型。
+struct Example;
+
+impl Example {
+    //! Documents the enclosing implementation.
+    /*! Continues documenting the enclosing implementation.
+
+    继续记录外围实现。 */
+    fn missing() {}
+}
