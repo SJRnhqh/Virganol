@@ -18,6 +18,7 @@
 
 ## Completed
 
+- [x] Record deferred Rust comment and visibility rule boundaries in the style specification
 - [x] Complete the first core validation pass for the currently defined fixture scope
 - [x] Reject targets that mix outer and inner documentation attributes
 - [x] Isolate inner-doc Missing fixtures behind unchecked impl containers

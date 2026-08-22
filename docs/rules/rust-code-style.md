@@ -47,8 +47,25 @@ Project conventions for Rust source code.
     /// <Chinese with whitelisted ASCII terms>
     ```
 
-### Inner Doc Comments
+### Inner Doc Comments (Specification TBD)
 
-### Explanatory Comments
+### Explicit Doc Attributes (Policy TBD)
 
-## Visibility
+- Scope: `**/*.rs`
+- Forms:
+  - Outer: `#[doc = "<content>"]`
+  - Inner: `#![doc = "<content>"]`
+- Rule:
+  - Explicit doc attributes are prohibited.
+
+### Ordinary Comments (Specification TBD)
+
+## Visibility (Specification TBD)
+
+### Temporary Re-export Visibility Check
+
+- Runner: `dev/scripts/rust/contract-reexport-visibility.mjs`
+- Configuration: `dev/scripts/rust/config/contract/reexport-visibility.config.mjs`
+- Entry: `dev/scripts/rust/test.mjs`
+- Status: Incomplete; retire this check when the complete Visibility quality
+  gate is implemented.
