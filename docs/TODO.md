@@ -20,3 +20,4 @@
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/constants` structure, comments, and visibility.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/process` comments, visibility, and re-exports.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/common` comments and visibility.
+- [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/config` and `connection` comments, visibility, and method layout.
