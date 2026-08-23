@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Audit comments and visibility in the remaining `apps/desktop/src-tauri/src/core` modules.
+- [ ] Audit comments and visibility in the remaining `apps/desktop/src-tauri/src/core/bot/models/provider` modules and `core/bot/services`.
 
 ## Planned
 
@@ -19,3 +19,4 @@
 - [x] Verified that `apps/desktop/src-tauri/src/core/shared` has compliant comments and minimal visibility.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/constants` structure, comments, and visibility.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/process` comments, visibility, and re-exports.
+- [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/common` comments and visibility.
