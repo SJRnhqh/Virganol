@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Audit comments and visibility in `apps/desktop/src-tauri`.
+- [ ] Audit comments and visibility in the remaining `apps/desktop/src-tauri/src/core` modules.
 
 ## Planned
 
@@ -15,3 +15,5 @@
 ## Completed
 
 - [x] Established the Rust Comments quality gate and repository audit baseline.
+- [x] Verified that `apps/desktop/src-tauri/src/commands` has compliant comments and minimal visibility.
+- [x] Verified that `apps/desktop/src-tauri/src/core/shared` has compliant comments and minimal visibility.

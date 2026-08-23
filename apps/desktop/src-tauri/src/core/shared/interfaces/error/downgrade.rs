@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/shared/interfaces/error/downgrade.rs
 
-/// Error downgrade trait that handles an error as a warning instead of propagating it to the application boundary.
+/// Downgrades errors to warnings instead of propagating them to the application boundary.
 ///
 /// 错误降级特型，将错误按警告处理，而不是传播到应用边界。
 pub(in crate::core) trait Downgrade {
