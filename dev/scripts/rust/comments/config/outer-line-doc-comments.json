@@ -4,9 +4,10 @@
   "coverage": {
     "include": [
       "apps/desktop/src-tauri/src/commands/**/*.rs",
-      "apps/desktop/src-tauri/src/core/shared/**/*.rs"
+      "apps/desktop/src-tauri/src/core/shared/**/*.rs",
+      "apps/desktop/src-tauri/src/core/bot/constants/**/*.rs"
     ],
     "exclude": ["**/mod.rs"]
   },
-  "allowedAsciiTerms": ["API", "JSON"]
+  "allowedAsciiTerms": ["API", "JSON", "Ollama", "DeepSeek"]
 }
