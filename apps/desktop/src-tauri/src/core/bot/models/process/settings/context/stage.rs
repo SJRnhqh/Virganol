@@ -1,11 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/models/process/settings/context/stage.rs
 
-/// Settings process business execution stage.
+/// Settings process execution stage.
 ///
 /// 设置业务过程执行阶段。
 #[derive(Debug, Clone, Copy)]
 pub(super) enum SettingsStage {
-    /// Settings storage path.
+    /// Settings storage stage.
     ///
     /// 设置存储阶段。
     Storage,

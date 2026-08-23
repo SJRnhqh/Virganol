@@ -12,9 +12,9 @@ use super::SettingsFailure;
 /// 设置业务过程内部错误。
 #[derive(Debug)]
 pub(in crate::core::bot) struct SettingsError {
-    /// Settings error attribution snapshot.
+    /// Settings error context snapshot.
     ///
-    /// 设置错误归因快照。
+    /// 设置错误上下文快照。
     context: SettingsErrorContext,
     /// Settings failure fact.
     ///
@@ -105,9 +105,9 @@ impl SettingsError {
 }
 
 impl fmt::Display for SettingsError {
-    /// Formats the attributed settings error.
+    /// Formats the settings error with its context.
     ///
-    /// 格式化已归因的设置错误。
+    /// 格式化包含上下文的设置错误。
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{} for {}", self.failure, self.context)?;
 
