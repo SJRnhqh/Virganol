@@ -6,8 +6,7 @@
       "apps/desktop/src-tauri/src/commands/**/*.rs",
       "apps/desktop/src-tauri/src/core/shared/**/*.rs",
       "apps/desktop/src-tauri/src/core/bot/**/*.rs",
-      "dev/scripts/rust/comments/crates/cli/**/*.rs",
-      "dev/scripts/rust/comments/crates/node/**/*.rs"
+      "dev/scripts/rust/comments/crates/**/*.rs"
     ],
     "exclude": ["**/mod.rs"]
   },

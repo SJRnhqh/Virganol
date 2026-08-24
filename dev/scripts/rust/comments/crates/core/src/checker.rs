@@ -1,5 +1,13 @@
 // dev/scripts/rust/comments/crates/core/src/checker.rs
-use syn::{parse_file, Fields, ForeignItem, ImplItem, Item, TraitItem};
+use syn::{
+    parse_file, Fields,
+    ForeignItem::{self, Fn as ForeignFn, Static as ForeignStatic},
+    ImplItem::{self, Const as ImplConst, Fn as ImplFn, Type as ImplType},
+    Item::{
+        self, Const, Enum, Fn, ForeignMod, Impl, Macro, Mod, Static, Struct, Trait, Type, Union,
+    },
+    TraitItem::{self, Const as TraitConst, Fn as TraitFn, Type as TraitType},
+};
 
 use super::{check_target_outer_line_doc, CommentCheckConfig, CommentCheckError};
 
@@ -9,7 +17,7 @@ use super::{check_target_outer_line_doc, CommentCheckConfig, CommentCheckError};
 pub fn check_source(source: &str, config: &CommentCheckConfig) -> Result<(), CommentCheckError> {
     let file = parse_file(source).map_err(|_| CommentCheckError::parse())?;
 
-    check_items(source, &file.items, config)
+    check_items(source, config, &file.items)
 }
 
 /// Checks required item declarations and their nested targets.
@@ -17,46 +25,46 @@ pub fn check_source(source: &str, config: &CommentCheckConfig) -> Result<(), Com
 /// 检查必需的项目声明及其嵌套目标。
 fn check_items(
     source: &str,
-    items: &[Item],
     config: &CommentCheckConfig,
+    items: &[Item],
 ) -> Result<(), CommentCheckError> {
     for item in items {
         match item {
-            Item::Const(item) => check_target_outer_line_doc(source, &item.attrs, item, config)?,
-            Item::Enum(item) => {
-                check_target_outer_line_doc(source, &item.attrs, item, config)?;
+            Const(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
+            Enum(item) => {
+                check_target_outer_line_doc(source, config, item, &item.attrs)?;
 
                 for variant in &item.variants {
-                    check_target_outer_line_doc(source, &variant.attrs, variant, config)?;
-                    check_fields(source, &variant.fields, config)?;
+                    check_target_outer_line_doc(source, config, variant, &variant.attrs)?;
+                    check_fields(source, config, &variant.fields)?;
                 }
             }
-            Item::Fn(item) => check_target_outer_line_doc(source, &item.attrs, item, config)?,
-            Item::ForeignMod(item) => check_foreign_items(source, &item.items, config)?,
-            Item::Impl(item) => check_impl_items(source, &item.items, config)?,
-            Item::Macro(item) if item.ident.is_some() => {
-                check_target_outer_line_doc(source, &item.attrs, item, config)?;
+            Fn(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
+            ForeignMod(item) => check_foreign_items(source, config, &item.items)?,
+            Impl(item) => check_impl_items(source, config, &item.items)?,
+            Macro(item) if item.ident.is_some() => {
+                check_target_outer_line_doc(source, config, item, &item.attrs)?;
             }
-            Item::Mod(item) => {
+            Mod(item) => {
                 if let Some((_, items)) = &item.content {
-                    check_items(source, items, config)?;
+                    check_items(source, config, items)?;
                 }
             }
-            Item::Static(item) => check_target_outer_line_doc(source, &item.attrs, item, config)?,
-            Item::Struct(item) => {
-                check_target_outer_line_doc(source, &item.attrs, item, config)?;
-                check_fields(source, &item.fields, config)?;
+            Static(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
+            Struct(item) => {
+                check_target_outer_line_doc(source, config, item, &item.attrs)?;
+                check_fields(source, config, &item.fields)?;
             }
-            Item::Trait(item) => {
-                check_target_outer_line_doc(source, &item.attrs, item, config)?;
-                check_trait_items(source, &item.items, config)?;
+            Trait(item) => {
+                check_target_outer_line_doc(source, config, item, &item.attrs)?;
+                check_trait_items(source, config, &item.items)?;
             }
-            Item::Type(item) => check_target_outer_line_doc(source, &item.attrs, item, config)?,
-            Item::Union(item) => {
-                check_target_outer_line_doc(source, &item.attrs, item, config)?;
+            Type(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
+            Union(item) => {
+                check_target_outer_line_doc(source, config, item, &item.attrs)?;
 
                 for field in &item.fields.named {
-                    check_target_outer_line_doc(source, &field.attrs, field, config)?;
+                    check_target_outer_line_doc(source, config, field, &field.attrs)?;
                 }
             }
             _ => {}
@@ -71,11 +79,11 @@ fn check_items(
 /// 检查必需的结构体或枚举字段。
 fn check_fields(
     source: &str,
-    fields: &Fields,
     config: &CommentCheckConfig,
+    fields: &Fields,
 ) -> Result<(), CommentCheckError> {
     for field in fields {
-        check_target_outer_line_doc(source, &field.attrs, field, config)?;
+        check_target_outer_line_doc(source, config, field, &field.attrs)?;
     }
 
     Ok(())
@@ -86,18 +94,14 @@ fn check_fields(
 /// 检查必需的特征关联项目。
 fn check_trait_items(
     source: &str,
-    items: &[TraitItem],
     config: &CommentCheckConfig,
+    items: &[TraitItem],
 ) -> Result<(), CommentCheckError> {
     for item in items {
         match item {
-            TraitItem::Const(item) => {
-                check_target_outer_line_doc(source, &item.attrs, item, config)?
-            }
-            TraitItem::Fn(item) => check_target_outer_line_doc(source, &item.attrs, item, config)?,
-            TraitItem::Type(item) => {
-                check_target_outer_line_doc(source, &item.attrs, item, config)?
-            }
+            TraitConst(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
+            TraitFn(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
+            TraitType(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
             _ => {}
         }
     }
@@ -110,16 +114,14 @@ fn check_trait_items(
 /// 检查必需的实现关联项目。
 fn check_impl_items(
     source: &str,
-    items: &[ImplItem],
     config: &CommentCheckConfig,
+    items: &[ImplItem],
 ) -> Result<(), CommentCheckError> {
     for item in items {
         match item {
-            ImplItem::Const(item) => {
-                check_target_outer_line_doc(source, &item.attrs, item, config)?
-            }
-            ImplItem::Fn(item) => check_target_outer_line_doc(source, &item.attrs, item, config)?,
-            ImplItem::Type(item) => check_target_outer_line_doc(source, &item.attrs, item, config)?,
+            ImplConst(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
+            ImplFn(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
+            ImplType(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
             _ => {}
         }
     }
@@ -132,17 +134,13 @@ fn check_impl_items(
 /// 检查必需的外部块项目。
 fn check_foreign_items(
     source: &str,
-    items: &[ForeignItem],
     config: &CommentCheckConfig,
+    items: &[ForeignItem],
 ) -> Result<(), CommentCheckError> {
     for item in items {
         match item {
-            ForeignItem::Fn(item) => {
-                check_target_outer_line_doc(source, &item.attrs, item, config)?
-            }
-            ForeignItem::Static(item) => {
-                check_target_outer_line_doc(source, &item.attrs, item, config)?
-            }
+            ForeignFn(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
+            ForeignStatic(item) => check_target_outer_line_doc(source, config, item, &item.attrs)?,
             _ => {}
         }
     }

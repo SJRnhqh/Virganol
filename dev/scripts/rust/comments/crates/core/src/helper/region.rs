@@ -39,8 +39,8 @@ pub(super) fn check_absent_leading_region(
 /// 检查含有外部文档属性的目标之前的先导源代码区域。
 pub(super) fn check_outer_leading_region(
     source: &str,
-    anchor: usize,
     config: &CommentCheckConfig,
+    anchor: usize,
 ) -> Result<(), CommentCheckError> {
     let (prefix, region) = analyze_leading_region(source, anchor)?;
 

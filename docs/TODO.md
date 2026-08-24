@@ -5,11 +5,14 @@
 
 ## Current
 
-- [ ] Restore and review the stashed Rust Comments core crate normalization.
+- [x] Restore and review the stashed Rust Comments core crate normalization.
 
 ## Planned
 
-- [ ] Verify formatting, compilation, and repository comment-gate coverage.
-- [ ] Commit the validated core crate normalization without changing branch-level roadmap scope.
+- [x] Verify formatting, compilation, and repository comment-gate coverage.
+- [x] Prepare the validated core crate normalization for an isolated commit.
 
 ## Completed
+
+- [x] Normalized core crate comments, imports, parameter ordering, implementation layout, and minimum visibility boundaries.
+- [x] Extended repository comment-gate coverage to the core crate.

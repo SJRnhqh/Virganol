@@ -2,7 +2,7 @@
 use ra_ap_rustc_lexer::{
     tokenize,
     DocStyle::{Inner, Outer},
-    FrontmatterAllowed,
+    FrontmatterAllowed::No,
     TokenKind::{self, BlockComment, LineComment, Whitespace},
 };
 
@@ -33,7 +33,7 @@ impl LeadingRegion {
     ///
     /// 在锚点前缀中定位候选注释区域。
     pub(crate) fn from_anchor_prefix(prefix: &str) -> Self {
-        let (_, _, comment_region_start, kinds) = tokenize(prefix, FrontmatterAllowed::No).fold(
+        let (_, _, comment_region_start, kinds) = tokenize(prefix, No).fold(
             (0, Leading, 0, Vec::new()),
             |(cursor, mut state, mut comment_region_start, mut kinds), token| {
                 let token_end = cursor + token.len as usize;
@@ -252,9 +252,8 @@ impl CommentRegion {
     ///
     /// 分析由空行分隔的最近注释组及其连续源码。
     pub(crate) fn analyze_source(source: &str) -> (Self, Option<&str>) {
-        let (_, region, contiguous_start) = tokenize(source, FrontmatterAllowed::No).fold(
-            (0, Empty, None),
-            |(cursor, region, start), token| {
+        let (_, region, contiguous_start) =
+            tokenize(source, No).fold((0, Empty, None), |(cursor, region, start), token| {
                 let token_end = cursor + token.len as usize;
                 let token_role =
                     CommentRegionTokenRole::from_token(token.kind, &source[cursor..token_end]);
@@ -266,8 +265,7 @@ impl CommentRegion {
                 };
 
                 (token_end, region, start)
-            },
-        );
+            });
         (
             region,
             contiguous_start.and_then(|start| source.get(start..)),
