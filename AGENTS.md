@@ -13,23 +13,6 @@ templates, belong under `docs/`. Reusable development workflow assets,
 including AI prompts, workflow pipelines, workflow templates, and local helper
 scripts, belong under `dev/`.
 
-## Project Structure
-
-```txt
-Virganol/
-├── apps/
-│   ├── ui/                    # React frontend
-│   ├── desktop/               # Tauri desktop wrapper
-│   └── server/                # Go sidecar service
-├── dev/                       # Developer workflow assets
-│   ├── pipelines/             # AI collaboration workflow pipelines
-│   ├── prompts/               # Reusable AI collaboration prompts
-│   ├── scripts/               # Development maintenance scripts
-│   └── templates/             # Developer workflow templates
-├── docs/                      # Project documentation and branch state
-└── README.md
-```
-
 ## Documentation Responsibilities
 
 ```txt
@@ -39,6 +22,7 @@ docs/
 ├── CHANGELOG.md     # Version-level change history
 ├── ROADMAP.md       # Version-level roadmap and progress
 ├── TODO.md          # Branch-level TODO state
+├── rules/           # Development rules
 └── templates/       # Recurring document templates
 ```
 

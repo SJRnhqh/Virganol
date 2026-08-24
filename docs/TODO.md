@@ -11,6 +11,8 @@
 
 ## Completed
 
+- [x] Separate the project overview from agent development guidance and align
+      session bootstrap with both entry documents.
 - [x] Refine the architecture document positioning and establish a concise framework-oriented runtime architecture overview.
 - [x] Define Reality Driven Design and align Rust command and core module
       organization around feature domains and attributable business realities.

@@ -11,6 +11,7 @@ and reason about development order.
 
 ## Procedure
 
+- Read `README.md` for the project overview and structure.
 - Read `AGENTS.md` for project-level development guidance.
 - Inspect the current git branch, worktree status, latest commit, and diff
   summary.

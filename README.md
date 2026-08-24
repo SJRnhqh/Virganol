@@ -21,6 +21,7 @@ Virganol/
 ├── docs/                      # Project documentation and branch state
 │   ├── rules/                 # Development rules
 │   └── templates/             # Recurring document templates
+├── AGENTS.md                  # Agent development guide
 └── README.md
 ```
 
