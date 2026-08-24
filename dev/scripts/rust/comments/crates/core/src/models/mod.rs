@@ -7,4 +7,4 @@ mod region;
 pub(super) use attrs::DocAttrs;
 pub use config::CommentCheckConfig;
 pub use error::CommentCheckError;
-pub(super) use region::{CommentGroup, CommentRegion, LeadingRegion, LeadingRegionLayout};
+pub(super) use region::{CommentGroup, CommentRegion, LeadingRegion};

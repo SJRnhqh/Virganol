@@ -10,29 +10,34 @@ use self::{
     CommentGroup::{InnerOnly, Mixed, NonDocOnly, OuterOnly},
     CommentRegion::{Contiguous, Empty, Separated},
     CommentRegionTokenRole::{Comment, Irrelevant, Separator},
-    LeadingRegionLayout::{Inline, PreviousLines},
+    LeadingRegion::{Inline, PreviousLines},
     LeadingRegionScanState::{Leading, Pending},
 };
 
-/// Represents the location and layout of a comment region leading an anchor.
+/// Describes how a comment region reaches its anchor.
 ///
-/// 描述锚点之前注释区域的位置与布局。
-pub(crate) struct LeadingRegion {
-    /// Byte offset where the comment region begins.
+/// 描述注释区域如何连接其锚点。
+pub(crate) enum LeadingRegion {
+    /// Uses content on the anchor line.
     ///
-    /// 注释区域开始处的字节位置。
-    start: usize,
-    /// Layout of the comment region relative to the anchor.
+    /// 使用锚点同行的内容。
+    Inline(
+        /// Ordered non-whitespace token kinds before the anchor.
+        ///
+        /// 锚点前有序排列的非空白词法单元类型。
+        Vec<TokenKind>,
+    ),
+    /// Uses content before the anchor line only.
     ///
-    /// 注释区域相对于锚点的布局。
-    layout: LeadingRegionLayout,
+    /// 仅使用锚点所在行之前的内容。
+    PreviousLines,
 }
 
 impl LeadingRegion {
-    /// Locates the candidate comment region in an anchor prefix.
+    /// Locates the candidate comment region and its layout in an anchor prefix.
     ///
-    /// 在锚点前缀中定位候选注释区域。
-    pub(crate) fn from_anchor_prefix(prefix: &str) -> Self {
+    /// 在锚点前缀中定位候选注释区域及其布局。
+    pub(crate) fn from_anchor_prefix(prefix: &str) -> (usize, Self) {
         let (_, _, comment_region_start, kinds) = tokenize(prefix, No).fold(
             (0, Leading, 0, Vec::new()),
             |(cursor, mut state, mut comment_region_start, mut kinds), token| {
@@ -66,47 +71,9 @@ impl LeadingRegion {
             },
         );
 
-        Self {
-            start: comment_region_start,
-            layout: LeadingRegionLayout::from_kinds(kinds),
-        }
+        (comment_region_start, Self::from_kinds(kinds))
     }
 
-    /// Returns the byte offset where the comment region begins.
-    ///
-    /// 返回注释区域开始处的字节位置。
-    pub(crate) fn start(&self) -> usize {
-        self.start
-    }
-
-    /// Returns the layout of the comment region relative to the anchor.
-    ///
-    /// 返回注释区域相对于锚点的布局。
-    pub(crate) fn layout(&self) -> &LeadingRegionLayout {
-        &self.layout
-    }
-}
-
-/// Describes how a comment region reaches its anchor.
-///
-/// 描述注释区域如何连接其锚点。
-pub(crate) enum LeadingRegionLayout {
-    /// Uses content on the anchor line.
-    ///
-    /// 使用锚点同行的内容。
-    Inline(
-        /// Ordered non-whitespace token kinds before the anchor.
-        ///
-        /// 锚点前有序排列的非空白词法单元类型。
-        Vec<TokenKind>,
-    ),
-    /// Uses content before the anchor line only.
-    ///
-    /// 仅使用锚点所在行之前的内容。
-    PreviousLines,
-}
-
-impl LeadingRegionLayout {
     /// Constructs a layout from ordered anchor-line token kinds.
     ///
     /// 根据锚点同行的有序词法单元类型构造布局。

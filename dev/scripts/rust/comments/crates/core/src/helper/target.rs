@@ -8,8 +8,7 @@ use super::super::{
     },
     CommentRegion::{self, Contiguous, Empty, Separated},
     DocAttrs::{self, Absent, InnerOnly, Mixed, OuterOnly as OuterDocAttrs},
-    LeadingRegion,
-    LeadingRegionLayout::{Inline, PreviousLines},
+    LeadingRegion::{self, Inline, PreviousLines},
 };
 use super::{check_contiguous_outer_doc_region, target_anchor};
 
@@ -42,17 +41,21 @@ fn check_leading_region(
     doc_attrs: DocAttrs,
     anchor: usize,
 ) -> Result<(), CommentCheckError> {
-    let (prefix, region) = analyze_leading_region(source, anchor)?;
+    let prefix = source
+        .get(..anchor)
+        .ok_or_else(CommentCheckError::location)?;
+    let (comment_region_start, layout) = LeadingRegion::from_anchor_prefix(prefix);
 
     match doc_attrs {
-        Absent => match region.layout() {
-            Inline(kinds) => match CommentGroup::classify_inline(kinds) {
+        Absent => match layout {
+            Inline(kinds) => match CommentGroup::classify_inline(&kinds) {
                 None | Some(InnerCommentOnly) => Err(CommentCheckError::missing()),
                 Some(NonDocOnly) => Err(CommentCheckError::non_doc()),
                 Some(MixedCommentKinds) => Err(CommentCheckError::mixed()),
                 Some(OuterOnly) => Err(CommentCheckError::mismatch()),
             },
-            PreviousLines => match CommentRegion::analyze_source(&prefix[region.start()..]).0 {
+            PreviousLines => match CommentRegion::analyze_source(&prefix[comment_region_start..]).0
+            {
                 Empty | Contiguous(InnerCommentOnly) => Err(CommentCheckError::missing()),
                 Separated(InnerCommentOnly | MixedCommentKinds | NonDocOnly) => {
                     Err(CommentCheckError::misplaced())
@@ -62,15 +65,15 @@ fn check_leading_region(
                 Contiguous(OuterOnly) | Separated(OuterOnly) => Err(CommentCheckError::mismatch()),
             },
         },
-        OuterDocAttrs => match region.layout() {
-            Inline(kinds) => match CommentGroup::classify_inline(kinds) {
+        OuterDocAttrs => match layout {
+            Inline(kinds) => match CommentGroup::classify_inline(&kinds) {
                 Some(OuterOnly) => Err(CommentCheckError::invalid_doc_style()),
                 Some(InnerCommentOnly | NonDocOnly | MixedCommentKinds) => {
                     Err(CommentCheckError::mixed())
                 }
                 None => Err(CommentCheckError::mismatch()),
             },
-            PreviousLines => match CommentRegion::analyze_source(&prefix[region.start()..]) {
+            PreviousLines => match CommentRegion::analyze_source(&prefix[comment_region_start..]) {
                 (Empty, _) => Err(CommentCheckError::mismatch()),
                 (Separated(_), _) => Err(CommentCheckError::misplaced()),
                 (Contiguous(InnerCommentOnly | NonDocOnly | MixedCommentKinds), _) => {
@@ -84,18 +87,4 @@ fn check_leading_region(
         },
         _ => Err(CommentCheckError::mismatch()),
     }
-}
-
-/// Analyzes the source prefix and candidate comment region leading an anchor.
-///
-/// 分析锚点之前的源码前缀与候选注释区域。
-fn analyze_leading_region(
-    source: &str,
-    anchor: usize,
-) -> Result<(&str, LeadingRegion), CommentCheckError> {
-    let prefix = source
-        .get(..anchor)
-        .ok_or_else(CommentCheckError::location)?;
-
-    Ok((prefix, LeadingRegion::from_anchor_prefix(prefix)))
 }
