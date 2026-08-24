@@ -1,16 +1,21 @@
 # Branch TODO
 
 - Branch: `feat/spirit-reliability-architecture`
-- Goal: Rapidly explore, validate, and document Virganol's reliability architecture, using the Provider implementation as the reference case and the Settings domain as a validation case.
+- Goal: Explore, validate, and document Virganol's initial RDD-guided
+  reliability architecture for contextualization and attributability, using
+  the Provider and Settings implementations as reference cases.
 
 ## Current
 
-- [ ] Complete the remaining reliability architecture for attributability,
-      observability, and representative Provider and Settings flows in
-      `docs/ARCHITECTURE.md`.
+- No active tasks.
 
 ## Completed
 
+- [x] Complete the initial reliability architecture for contextualization and
+      attributability, reserving observability for later implementation-led
+      design.
+- [x] Define the initial attribution model from Failures through Reality
+      Errors and boundary projections.
 - [x] Define reusable contextualization rules for stage transitions, Business
       Context switches, cross reality handoffs, and attribution snapshot
       projections.

@@ -132,23 +132,39 @@ contextualization, attributability, and observability.
 
 ### Contextualization
 
-Reality Contexts carry business meaning through execution.
+Reality Contexts carry business meaning as behavior unfolds.
 
 ```txt
-Business Reality
-       │
-       └─▶ Reality Context
-           ├── Base Context
-           │   └── Stage
-           │       ├── consume ──▶ Next Stage
-           │       └── derive ───▶ Stage View
-           └── Business Context
-               ├── switch ───────▶ Other Business Context
-               ├── handoff ◀────▶ Other Reality Context
-               └── project ──────▶ Attribution Snapshot
+Reality Context ◀── Business Reality
+├── Base Context
+│   └── Stage
+│       ├── consume ──▶ Next Stage
+│       └── derive ───▶ Stage View
+└── Business Context
+    ├── switch ───────▶ Other Business Context
+    ├── handoff ◀────▶ Other Reality Context
+    └── project ──────▶ Attribution Snapshot
 ```
 
 ### Attributability
+
+Reality Errors preserve business attribution across boundaries.
+
+```txt
+Reality Error
+├── Failure ◀── Source
+├── Attribution Snapshot
+│
+│ project
+▼
+Boundary Error
+├── Code
+├── Message
+└── Details
+    ├── Scope
+    ├── Attribution
+    └── Suppression
+```
 
 ### Observability
 
