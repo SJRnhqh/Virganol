@@ -18,3 +18,4 @@
 - [x] Extended repository comment-gate coverage to the core crate.
 - [x] Consolidated target-specific leading-region validation into `helper/target.rs` and removed the redundant helper module.
 - [x] Simplified the leading-region model to `(comment_region_start, LeadingRegion)` and removed the redundant layout suffix.
+- [x] Separated comment classification and grouping models from leading-region layout analysis.
