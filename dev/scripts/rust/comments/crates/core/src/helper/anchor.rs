@@ -1,7 +1,8 @@
 // dev/scripts/rust/comments/crates/core/src/helper/anchor.rs
 use proc_macro2::Span;
 use ra_ap_rustc_lexer::{
-    tokenize, FrontmatterAllowed,
+    tokenize,
+    FrontmatterAllowed::No,
     TokenKind::{BlockComment, LineComment, Whitespace},
 };
 use syn::{spanned::Spanned, AttrStyle::Outer, Attribute};
@@ -13,16 +14,16 @@ use super::super::CommentCheckError;
 /// 解析文档目标的源码字节锚点。
 pub(super) fn target_anchor<T: Spanned>(
     source: &str,
-    attrs: &[Attribute],
     target: &T,
+    attrs: &[Attribute],
 ) -> Result<usize, CommentCheckError> {
     let target_span = target.span();
 
-    if let Some(anchor) = checked_structural_anchor(source, attrs, target_span)? {
+    if let Some(anchor) = checked_structural_anchor(source, target_span, attrs)? {
         return Ok(anchor);
     }
 
-    target_declaration_start(source, attrs, target_span)
+    target_declaration_start(source, target_span, attrs)
 }
 
 /// Resolves a validated anchor from outer non-documentation target attributes.
@@ -30,8 +31,8 @@ pub(super) fn target_anchor<T: Spanned>(
 /// 从目标的外部非文档属性中解析经过验证的锚点。
 fn checked_structural_anchor(
     source: &str,
-    attrs: &[Attribute],
     target: Span,
+    attrs: &[Attribute],
 ) -> Result<Option<usize>, CommentCheckError> {
     let mut structural_attrs = attrs
         .iter()
@@ -70,8 +71,8 @@ fn is_outer_structural_attribute(attribute: &Attribute) -> bool {
 /// 解析目标外部属性之后的首个声明词法单元。
 fn target_declaration_start(
     source: &str,
-    attrs: &[Attribute],
     target: Span,
+    attrs: &[Attribute],
 ) -> Result<usize, CommentCheckError> {
     let search_start = attrs
         .iter()
@@ -83,7 +84,7 @@ fn target_declaration_start(
         .ok_or_else(CommentCheckError::location)?;
     let mut cursor = search_start;
 
-    for token in tokenize(region, FrontmatterAllowed::No) {
+    for token in tokenize(region, No) {
         let token_start = cursor;
 
         cursor += token.len as usize;
@@ -103,7 +104,7 @@ fn target_declaration_start(
 ///
 /// 检测首个代码词法单元之前的注释。
 fn contains_leading_comment(region: &str) -> bool {
-    tokenize(region, FrontmatterAllowed::No)
+    tokenize(region, No)
         .find(|token| !matches!(token.kind, Whitespace))
         .is_some_and(|token| matches!(token.kind, LineComment { .. } | BlockComment { .. }))
 }
