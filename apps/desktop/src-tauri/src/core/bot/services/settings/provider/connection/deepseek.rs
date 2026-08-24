@@ -1,16 +1,21 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/deepseek.rs
 use log::{debug, error, info};
+use serde_json::Value;
+use std::time::Duration;
 
 use super::super::super::super::super::{
     HealthCheckResult, ProviderError, ProviderExecutionContext, DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS,
 };
 use super::get_http_client;
 
+/// Default base URL for DeepSeek requests.
+///
+/// DeepSeek 请求使用的默认基础地址。
 const DEEPSEEK_BASE_URL: &str = "https://api.deepseek.com";
 
 /// Checks DeepSeek by requesting `{base_url}/v1/models` with bearer authentication.
 ///
-/// 通过认证请求 `{base_url}/v1/models` 检查 DeepSeek。
+/// 通过认证请求模型列表接口检查 DeepSeek。
 pub(super) async fn deepseek_check(ctx: &ProviderExecutionContext, key: &str) -> HealthCheckResult {
     if key.is_empty() {
         return HealthCheckResult::fail(ProviderError::health_check_missing_config(ctx));
@@ -22,9 +27,7 @@ pub(super) async fn deepseek_check(ctx: &ProviderExecutionContext, key: &str) ->
     let resp = match get_http_client()
         .get(&endpoint)
         .bearer_auth(key)
-        .timeout(std::time::Duration::from_secs(
-            DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS,
-        ))
+        .timeout(Duration::from_secs(DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS))
         .send()
         .await
     {
@@ -41,7 +44,7 @@ pub(super) async fn deepseek_check(ctx: &ProviderExecutionContext, key: &str) ->
         return HealthCheckResult::fail(ProviderError::health_check_http(ctx));
     }
 
-    let json: serde_json::Value = match resp.json().await {
+    let json: Value = match resp.json().await {
         Ok(v) => v,
         Err(source) => {
             error!("[Tauri][DeepSeek] JSON parse error: {}", source);
