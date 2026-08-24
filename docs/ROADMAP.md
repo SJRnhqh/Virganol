@@ -1,8 +1,8 @@
-# LLM Provider 配置接入路线图
+# Virganol 0.0.1 开发路线图
 
-## 架构概览
+## 版本主线
 
-LLM Provider 接入分为两条主线：
+0.0.1 的 LLM Provider 配置接入分为两条主线：
 
 1. **生命周期链路**：启动/手动触发 → 持久化读取 → 并发健康检查 → 事件推送前端
 2. **CRUD 链路**：Provider 配置的增删改查（connect / reset / update_models）
@@ -25,11 +25,11 @@ LLM Provider 接入分为两条主线：
 **已完成**：
 
 - connect/reset/update_models 主链路、前端调用与组件交互完成审查
-- 持久化、并发、回滚、契约与日志细节完成收口
+- 持久化、并发、回滚与边界契约完成阶段性审查，既有冗余日志完成清理
 
 ### 🚧 Phase 6：可靠性架构与全局收尾
 
-#### 6.1 后端错误系统基础
+#### 6.1 RDD 可靠性架构
 
 **已完成**：
 
@@ -55,11 +55,10 @@ LLM Provider 接入分为两条主线：
 
 - [ ] RDD 可靠性架构文档：在 Provider 参考实现与 Settings 过程适配后，沉淀上下文传播、错误投影、source chain、聚合错误与责任边界
 
-#### 6.3 日志系统
+#### 6.2 日志系统
 
-- [ ] 上下文日志接力：复用 Provider context 字段，trace/correlation 策略留到日志系统设计
+- [ ] 设计结构化日志上下文：从 Reality Context 与 Attribution Snapshot 投影 scope、attribution、correlation 和 error_code，并厘清 trace/correlation/operation 边界
 - [ ] ProviderCheckSnapshot 归入 Span attribute：生命周期日志 Span 携带快照分类结果（supported/skipped/total），不折入上下文字段
-- [ ] 设计日志上下文模型，并在该阶段决定 trace/correlation/operation 标识是否拆分
 - [ ] 设计日志持久化策略（文件轮转 / 结构化格式）
 - [ ] 定义日志埋点（CRUD 入口/出口、健康检查、持久化操作、错误路径）
 - [ ] 标准化日志格式（级别 / 时间戳 / 模块 / 消息 / 上下文）
@@ -68,21 +67,21 @@ LLM Provider 接入分为两条主线：
 - [ ] 实现日志级别策略（info 成功 / warn 可重试 / error 致命）
 - [ ] 前端日志策略（dev 用 console / prod 用上报）
 
-#### 6.4 前端错误系统
+#### 6.3 前端错误系统
 
 - [ ] 同步前端错误类型（镜像后端 `ProviderErrorCode`）
 - [ ] 适配细粒度错误展示（按错误码差异化 UI 反馈）
 - [ ] 设计错误展示组件（Toast / inline 错误消息）
 - [ ] 评估 provider 级操作串行化需求（connect/reset/update 并发冲突）
 
-#### 6.5 集成测试与验证
+#### 6.4 集成测试与验证
 
 - [ ] 5 条命令链路端到端集成测试
 - [ ] 错误传播链路验证（含命令链路错误场景）
 - [ ] 错误响应契约验证（含序列化字段命名）
-- [ ] 日志输出验证（如 Phase 6.3 完成）
+- [ ] 日志输出验证（如 Phase 6.2 完成）
 
-#### 6.6 收尾优化
+#### 6.5 收尾优化
 
 - [ ] 前端状态转换验证（`useProviderCollectionStore` 防御性编程）
 - [ ] 表单输入验证（URL 格式检查 / 必填字段提示 / 错误状态视觉反馈）
@@ -102,9 +101,14 @@ LLM Provider 接入分为两条主线：
 - [ ] Visibility 质量门禁子系统：覆盖模块项、关联项与 re-export 链，补齐 `syn` 结构检查、测试、仓库 audit 和文档定稿
 - [ ] 后端锁实现升级（`std::sync::Mutex` → `parking_lot::Mutex`）
 - [ ] 后端锁粒度细化（全局锁 → per-provider 锁）
-- [ ] 功能开发完结
 
-#### 6.7 测试覆盖与质量门禁
+#### 6.6 测试覆盖与质量门禁
 
-- [ ] 0.0.1 功能开发完成后补齐测试覆盖
+- [ ] 补齐 0.0.1 单元测试与缺口覆盖
 - [ ] 结合测试体系评估 `pnpm test` 与 `pnpm verify` 的职责和入口
+- [ ] Core 规范化：继续人工校验剩余 Core 的 item docs、实现顺序与可见范围
+- [x] Rust Comments 质量门禁与工程实验基线：完成规则实现、CLI/NAPI 正确性对齐、配置注入、仓库 audit 与 benchmark 基础设施
+- [ ] Rust Comments 工程实验收尾：补齐代表性 benchmark 与跨平台验证
+- [ ] Comments 规则扩展：完成 Inner Doc 与 Explanatory Comments 的源码审计、规则实现和文档定稿
+- [x] Re-export visibility contract 基线：完成配置、链路校验与测试入口
+- [ ] Visibility 质量门禁扩展：在现有 re-export contract 基础上覆盖模块项与关联项，并补齐结构检查、测试、仓库 audit 和文档

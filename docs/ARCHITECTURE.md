@@ -1,95 +1,106 @@
 # Virganol Architecture
 
-> Project architecture, runtime boundaries, reliability design, and engineering
-> infrastructure
+> Virganol's system and reliability architecture, supported by engineering
+> infrastructure.
 
 ---
 
 ## System Architecture
 
-### Runtime Topology
+### Runtime Architecture
 
 Virganol is a modern desktop application built with a three-layer architecture:
 
 ```txt
 ┌─────────────────────────────────────────────────────────────┐
-│                      Frontend Layer                         │
-│                  TypeScript + React                         │
-│              (UI rendering, in-memory state)                │
+│                   Frontend Layer (React)                    │
 └─────────────────────────────────────────────────────────────┘
                               │
                         Tauri Commands
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   Desktop Runtime (Landlord)                │
-│                     Rust + Tauri 🦀                         │
-│         (native APIs, disk storage, sidecar lifecycle)      │
+│                   Desktop Runtime (Tauri)                   │
 └─────────────────────────────────────────────────────────────┘
                               │
                          gRPC (protobuf)
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   Agent Sidecar (Tenant)                    │
-│                      Go + Eino 🤖                           │
-│            (scoped file I/O, future AI features)            │
+│                    Agent Sidecar (Eino)                     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Landlord-Tenant Model
+### Reality Driven Design
 
-**Rust (Landlord)**: Controls lifecycle, manages secrets, grants scoped
-access to Go
+Reality Driven Design (RDD) derives technical structure from independently
+attributable business realities.
 
-**Go (Tenant)**: Receives `--app-data-dir` from Rust, file I/O limited to
-that directory
+```txt
+Feature Domain
+└── Business Realities
+    ├── Subject Reality
+    └── Process Reality
+```
 
-### Backend Module Organization
+- **Feature Domain**: A cohesive business perspective centered on a product
+  capability.
+- **Business Reality**: An independently attributable unit of business meaning
+  scoped to one or more feature domains.
+- **Subject Reality**: A business participant or object with persistent
+  identity.
+- **Process Reality**: A business occurrence that unfolds over time and may span
+  multiple subject realities.
 
-Backend modules cover Rust runtime modules and the Go sidecar runtime.
+### Module Organization
 
-#### Rust Runtime Modules
+Virganol modules span the TypeScript frontend, Rust runtime, and Go sidecar
+runtime.
 
-Rust runtime modules currently cover the Tauri command boundary and backend
-core modules, using **domain modules** and **subdomain modules** as their
-primary semantic organization units.
+#### TypeScript Frontend
+
+#### Rust Runtime
+
+The Rust runtime separates the Tauri command boundary from core modules,
+organizing both by feature domain and business reality.
 
 ##### Command Modules
 
-Command modules are organized by domain and subdomain at the Tauri
-boundary, with each command backed by a function exported by Core Modules.
+Command modules mirror feature domains and business realities at the Tauri
+boundary, delegating behavior to Core Modules.
 
 ```txt
 commands/
-└── <domain>/
-    └── <subdomain>/
+└── <feature-domain>/
+    └── <reality>/
         ├── <command>.rs
         └── mod.rs
 ```
 
 ##### Core Modules
 
-Core modules add internal layers under each domain module.
+Core modules organize each feature domain into a foundation and services.
 
 ```txt
 core/
-├── shared/                    # Cross-domain core support
-└── <domain>/                  # Domain module
-    ├── constants/             # Static values local to the domain
-    ├── models/                # Data models, value objects, errors, contracts
-    │   └── <subdomain>/       # Subdomain models
-    ├── interfaces/            # Traits and ports expressed with models
-    │   └── <subdomain>/       # Subdomain interfaces
-    └── services/              # Domain behavior and infrastructure adapters
-        └── <subdomain>/       # Subdomain services
+├── shared/                    # Cross-domain realities and support
+└── <feature-domain>/
+    ├── constants/             # Static values
+    │   └── <reality>/
+    ├── models/                # Models, values, errors, and contracts
+    │   └── <reality>/
+    ├── interfaces/            # Traits and ports
+    │   └── <reality>/
+    └── services/              # Business behavior and adapters
+        └── <process>/
+            └── <subject>/
 ```
 
-The intended dependency direction inside a domain is:
+The intended dependency direction inside a feature domain is:
 
 ```txt
 ┌───────────────────────────────────┐
-│ <domain>                          │
+│ <feature-domain>                  │
 │           ┌───────────┐           │
 │           │ services  │           │
 │           └───────────┘           │
@@ -110,21 +121,52 @@ The intended dependency direction inside a domain is:
 └───────────────────────────────────┘
 ```
 
-#### Go Sidecar Modules
+#### Go Sidecar
 
 ---
 
 ## Reliability Architecture
 
-### Context Propagation
+Reliability in Virganol is organized around business realities through
+contextualization, attributability, and observability.
 
-### Error Architecture
+### Contextualization
+
+Reality Contexts carry business meaning as behavior unfolds.
+
+```txt
+Reality Context ◀── Business Reality
+├── Base Context
+│   └── Stage
+│       ├── consume ──▶ Next Stage
+│       └── derive ───▶ Stage View
+└── Business Context
+    ├── switch ───────▶ Other Business Context
+    ├── handoff ◀────▶ Other Reality Context
+    └── project ──────▶ Attribution Snapshot
+```
+
+### Attributability
+
+Reality Errors preserve business attribution across boundaries.
+
+```txt
+Reality Error
+├── Failure ◀── Source
+├── Attribution Snapshot
+│
+│ project
+▼
+Boundary Error
+├── Code
+├── Message
+└── Details
+    ├── Scope
+    ├── Attribution
+    └── Suppression
+```
 
 ### Observability
-
-#### Structured Logging
-
-#### Tracing
 
 ---
 
