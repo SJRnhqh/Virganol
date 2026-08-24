@@ -1,43 +1,43 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/connection/result.rs
 use super::super::ProviderError;
 
-/// Result of a provider health check.
+/// Provider health check result.
 ///
-/// Provider 健康检查结果。
+/// 供应商健康检查结果。
 pub(in crate::core::bot) enum HealthCheckResult {
-    /// Successful health check with discovered models.
+    /// Successful result with discovered models.
     ///
-    /// 健康检查成功，并携带发现的模型列表。
+    /// 成功结果及发现的模型列表。
     Success {
-        /// Models discovered during a successful health check.
+        /// Models discovered by the health check.
         ///
-        /// 健康检查成功时发现的模型列表。
+        /// 健康检查发现的模型列表。
         available_models: Vec<String>,
     },
-    /// Failed health check with the domain error.
+    /// Failed result with the error.
     ///
-    /// 健康检查失败，并携带领域错误。
+    /// 失败结果及错误。
     Failure {
-        /// Domain error raised during the health check.
+        /// Error raised during the health check.
         ///
-        /// 健康检查期间产生的领域错误。
+        /// 健康检查期间产生的错误。
         error: ProviderError,
     },
 }
 
 impl HealthCheckResult {
-    /// Creates a successful health check result.
+    /// Creates a successful result.
     ///
-    /// 创建健康检查成功结果。
+    /// 创建成功结果。
     pub(in crate::core::bot) fn ok(models: Vec<String>) -> Self {
         Self::Success {
             available_models: models,
         }
     }
 
-    /// Creates a failed health check result.
+    /// Creates a failed result.
     ///
-    /// 创建健康检查失败结果。
+    /// 创建失败结果。
     pub(in crate::core::bot) fn fail(error: ProviderError) -> Self {
         Self::Failure { error }
     }
@@ -49,9 +49,9 @@ impl HealthCheckResult {
         matches!(self, Self::Success { .. })
     }
 
-    /// Returns discovered models without consuming the result.
+    /// Returns discovered models, or an empty slice on failure.
     ///
-    /// 返回健康检查发现的模型列表，且不消费结果。
+    /// 返回发现的模型；失败时返回空切片。
     pub(in crate::core::bot) fn available_models(&self) -> &[String] {
         match self {
             Self::Success { available_models } => available_models,
@@ -59,9 +59,9 @@ impl HealthCheckResult {
         }
     }
 
-    /// Consumes the result and returns either discovered models or the domain error.
+    /// Consumes the result into discovered models or an error.
     ///
-    /// 消费结果，返回发现的模型列表或领域错误。
+    /// 消费结果并返回发现的模型或错误。
     pub(in crate::core::bot) fn into_models(self) -> Result<Vec<String>, ProviderError> {
         match self {
             Self::Success { available_models } => Ok(available_models),

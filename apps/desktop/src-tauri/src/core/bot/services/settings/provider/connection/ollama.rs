@@ -1,5 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/ollama.rs
 use log::{debug, error, info};
+use serde_json::Value;
+use std::time::Duration;
 
 use super::super::super::super::super::{
     HealthCheckResult, ProviderError, ProviderExecutionContext, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS,
@@ -8,7 +10,7 @@ use super::get_http_client;
 
 /// Checks Ollama by requesting `{url}/api/tags` and adding bearer auth only when `key` is present.
 ///
-/// 通过请求 `{url}/api/tags` 检查 Ollama，并在密钥非空时附带认证。
+/// 通过标签接口检查 Ollama，并在密钥非空时附带认证。
 pub(super) async fn ollama_check(
     ctx: &ProviderExecutionContext,
     url: &str,
@@ -24,9 +26,7 @@ pub(super) async fn ollama_check(
 
     let mut request = get_http_client()
         .get(&endpoint)
-        .timeout(std::time::Duration::from_secs(
-            OLLAMA_HEALTH_CHECK_TIMEOUT_SECS,
-        ));
+        .timeout(Duration::from_secs(OLLAMA_HEALTH_CHECK_TIMEOUT_SECS));
     if !key.is_empty() {
         request = request.bearer_auth(key);
     }
@@ -45,7 +45,7 @@ pub(super) async fn ollama_check(
         return HealthCheckResult::fail(ProviderError::health_check_http(ctx));
     }
 
-    let json: serde_json::Value = match resp.json().await {
+    let json: Value = match resp.json().await {
         Ok(v) => v,
         Err(source) => {
             error!("[Tauri][Ollama] JSON parse error: {}", source);

@@ -8,6 +8,32 @@ use super::super::super::super::super::{
 };
 use super::super::save_provider;
 
+/// Finalizes one provider health check result for lifecycle status emission.
+///
+/// 单个供应商健康检查完成后，生成生命周期状态推送前的后处理结果。
+pub(super) fn finalize_provider_check_result(
+    app: &AppHandle,
+    provider_state: &ProviderState,
+    ctx: &ProviderLifecycleContext,
+    provider_id: ProviderId,
+    record: ProviderRecord,
+    health: &HealthCheckResult,
+) -> ProviderCheckFinalization {
+    if health.is_success() {
+        let (status_record, reconciliation_error) = persist_reconciled_enabled_models(
+            app,
+            provider_state,
+            ctx,
+            provider_id,
+            record,
+            health.available_models(),
+        );
+        ProviderCheckFinalization::online(status_record, reconciliation_error)
+    } else {
+        ProviderCheckFinalization::offline(record)
+    }
+}
+
 /// Persists a provider record when enabled models are pruned by available models.
 ///
 /// 当已启用模型被当前可用模型修剪时，持久化已协调的供应商配置。
@@ -43,31 +69,5 @@ fn persist_reconciled_enabled_models(
             (updated, None)
         }
         Err(e) => (record, Some(e)),
-    }
-}
-
-/// Finalizes one provider health check result for lifecycle status emission.
-///
-/// 单个供应商健康检查完成后，生成生命周期状态推送前的后处理结果。
-pub(super) fn finalize_provider_check_result(
-    app: &AppHandle,
-    provider_state: &ProviderState,
-    ctx: &ProviderLifecycleContext,
-    provider_id: ProviderId,
-    record: ProviderRecord,
-    health: &HealthCheckResult,
-) -> ProviderCheckFinalization {
-    if health.is_success() {
-        let (status_record, reconciliation_error) = persist_reconciled_enabled_models(
-            app,
-            provider_state,
-            ctx,
-            provider_id,
-            record,
-            health.available_models(),
-        );
-        ProviderCheckFinalization::online(status_record, reconciliation_error)
-    } else {
-        ProviderCheckFinalization::offline(record)
     }
 }

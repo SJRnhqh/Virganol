@@ -8,10 +8,10 @@ use super::{
 /// Interactive management business context fields.
 ///
 /// 交互式管理业务上下文字段。
-pub(super) struct ManagerExtra {
+struct ManagerExtra {
     /// Provider targeted by the interactive management operation.
     ///
-    /// 当前交互式管理操作目标 Provider。
+    /// 当前交互式管理操作目标供应商。
     provider_id: ProviderId,
     /// Interactive management operation currently being executed.
     ///
@@ -21,20 +21,25 @@ pub(super) struct ManagerExtra {
 
 /// Provider interactive management domain business context.
 ///
-/// Provider 领域交互式管理业务上下文。
-pub(in crate::core::bot) struct ProviderManagerContext(ProviderContext<ManagerExtra>);
+/// 供应商领域交互式管理业务上下文。
+pub(in crate::core::bot) struct ProviderManagerContext(
+    /// Shared context state backing this interactive management view.
+    ///
+    /// 支撑当前交互式管理视图的共享上下文状态。
+    ProviderContext<ManagerExtra>,
+);
 
 impl ProviderManagerContext {
     /// Creates an interactive management context for connecting one provider.
     ///
-    /// 创建用于连接单个 Provider 的交互式管理上下文。
+    /// 创建用于连接单个供应商的交互式管理上下文。
     pub(in crate::core::bot) fn connect(provider_id: ProviderId) -> Self {
         Self::new(provider_id, ProviderManagerOperation::connect())
     }
 
     /// Creates an interactive management context for resetting one provider.
     ///
-    /// 创建用于重置单个 Provider 的交互式管理上下文。
+    /// 创建用于重置单个供应商的交互式管理上下文。
     pub(in crate::core::bot) fn reset(provider_id: ProviderId) -> Self {
         Self::new(provider_id, ProviderManagerOperation::reset())
     }

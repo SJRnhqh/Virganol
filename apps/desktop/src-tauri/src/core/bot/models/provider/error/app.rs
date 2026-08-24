@@ -9,7 +9,12 @@ use super::{ProviderError, ProviderErrorCode, ProviderErrorDetails};
 /// 供应商主体子域的应用边界错误类型。
 #[derive(Serialize)]
 #[serde(transparent)]
-pub(crate) struct ProviderAppError(AppError<ProviderErrorCode, ProviderErrorDetails>);
+pub(crate) struct ProviderAppError(
+    /// Application error projected from a provider failure.
+    ///
+    /// 由供应商失败事实投影而成的应用错误。
+    AppError<ProviderErrorCode, ProviderErrorDetails>,
+);
 
 impl ProviderAppError {
     /// Creates a Provider boundary error with suppressed errors attached.

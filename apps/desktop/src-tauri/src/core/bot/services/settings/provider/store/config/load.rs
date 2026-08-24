@@ -1,34 +1,14 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/config/load.rs
+use serde_json::from_value;
 use std::collections::HashMap;
 use tauri::AppHandle;
 
 use super::super::super::super::super::super::super::Downgrade;
 use super::super::super::super::super::super::{
     ProviderCheckSnapshot, ProviderError, ProviderExecutionContext, ProviderId, ProviderRecord,
-    ProviderSubject, SPIRIT_PROVIDERS_KEY,
+    ProviderSubject::Candidate, SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::load_settings;
-
-/// Loads all saved provider records.
-///
-/// 读取所有已保存的供应商配置。
-pub(super) fn load_all_providers(
-    app: &AppHandle,
-    ctx: &ProviderExecutionContext,
-) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
-    let value = match {
-        let ctx = ctx.for_settings_storage();
-        load_settings(app, &ctx, SPIRIT_PROVIDERS_KEY)
-    } {
-        Ok(Some(v)) => v,
-        Ok(None) => return Ok(HashMap::new()),
-        Err(e) => return Err(ProviderError::config_store(ctx, e)),
-    };
-
-    let providers: HashMap<String, ProviderRecord> = serde_json::from_value(value)
-        .map_err(|source| ProviderError::json_deserialize(ctx, source))?;
-    Ok(providers)
-}
 
 /// Loads the persisted provider check snapshot.
 ///
@@ -43,7 +23,7 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_check_sn
     let mut skipped = Vec::new();
 
     for (raw_id, record) in providers {
-        let ctx = ctx.for_subject(ProviderSubject::Candidate(raw_id.clone()));
+        let ctx = ctx.for_subject(Candidate(raw_id.clone()));
         match ProviderId::parse(raw_id.as_str()) {
             Some(provider_id) => supported.push((provider_id, record)),
             None => {
@@ -66,4 +46,25 @@ pub(in crate::core::bot::services::settings::provider) fn load_provider_record(
 ) -> Result<Option<ProviderRecord>, ProviderError> {
     let mut providers = load_all_providers(app, ctx)?;
     Ok(providers.remove(provider_id.as_str()))
+}
+
+/// Loads all saved provider records.
+///
+/// 读取所有已保存的供应商配置。
+pub(super) fn load_all_providers(
+    app: &AppHandle,
+    ctx: &ProviderExecutionContext,
+) -> Result<HashMap<String, ProviderRecord>, ProviderError> {
+    let value = match {
+        let ctx = ctx.for_settings_storage();
+        load_settings(app, &ctx, SPIRIT_PROVIDERS_KEY)
+    } {
+        Ok(Some(v)) => v,
+        Ok(None) => return Ok(HashMap::new()),
+        Err(e) => return Err(ProviderError::config_store(ctx, e)),
+    };
+
+    let providers: HashMap<String, ProviderRecord> =
+        from_value(value).map_err(|source| ProviderError::json_deserialize(ctx, source))?;
+    Ok(providers)
 }

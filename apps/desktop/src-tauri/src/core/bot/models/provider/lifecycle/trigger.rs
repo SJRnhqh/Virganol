@@ -3,7 +3,7 @@ use serde::Serialize;
 
 /// The source that triggers a provider lifecycle check.
 ///
-/// Provider 生命周期检查的触发来源。
+/// 供应商生命周期检查的触发来源。
 #[derive(Serialize)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum ProviderCheckTrigger {
@@ -20,7 +20,7 @@ pub(crate) enum ProviderCheckTrigger {
 impl ProviderCheckTrigger {
     /// Returns the stable trigger tag used in lifecycle logs and run ids.
     ///
-    /// 返回生命周期日志与 run_id 中使用的稳定触发来源标签。
+    /// 返回生命周期日志与运行标识中使用的稳定触发来源标签。
     pub(in crate::core::bot) fn as_tag(&self) -> &'static str {
         match self {
             Self::Startup => "startup",

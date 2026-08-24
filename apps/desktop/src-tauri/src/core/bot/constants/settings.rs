@@ -5,7 +5,7 @@
 /// 桌面端设置存储文件名。
 pub(in crate::core::bot) const SETTINGS_FILE: &str = "settings.json";
 
-/// Settings key used to store persisted Spirit provider records.
+/// Settings key for persisted provider records.
 ///
-/// settings.json 中用于存储 Spirit Provider 持久化记录的 key。
+/// 桌面端设置文件中用于存储供应商持久化记录的键。
 pub(in crate::core::bot) const SPIRIT_PROVIDERS_KEY: &str = "spirit.providers";

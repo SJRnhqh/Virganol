@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/secret/remove.rs
-use keyring::{Entry, Error as KeyringError};
+use keyring::{Entry, Error::NoEntry};
 
 use super::super::super::super::super::super::{
     ProviderError, ProviderExecutionContext, ProviderId, PROVIDER_KEYRING_SERVICE,
@@ -16,7 +16,7 @@ pub(in crate::core::bot::services::settings::provider) fn remove_provider_key(
         .map_err(|source| ProviderError::secret_store_init(ctx, source))?;
 
     match entry.delete_credential() {
-        Ok(()) | Err(KeyringError::NoEntry) => Ok(()),
+        Ok(()) | Err(NoEntry) => Ok(()),
         Err(source) => Err(ProviderError::secret_store_remove(ctx, source)),
     }
 }

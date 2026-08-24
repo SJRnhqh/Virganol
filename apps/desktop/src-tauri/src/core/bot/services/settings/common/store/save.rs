@@ -1,11 +1,35 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/common/store/save.rs
+use serde_json::Value;
+use std::collections::HashMap;
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Manager, Wry};
+use tauri_plugin_store::Store;
 
 use super::super::super::super::super::{SettingsError, SettingsStorageContext, SETTINGS_FILE};
 use super::open_store;
+
+/// Saves a settings value by key, overwriting existing values.
+///
+/// 按键写入或更新设置文件中的配置值。
+pub(in crate::core::bot::services::settings) fn save_settings(
+    app: &AppHandle,
+    ctx: &SettingsStorageContext,
+    key: &str,
+    value: Value,
+) -> Result<(), SettingsError> {
+    let store = open_store(app, ctx)?;
+
+    store.set(key, value);
+
+    let (store_path, tmp_path) = get_store_paths(app, ctx)?;
+    let json_bytes = serialize_store_to_bytes(ctx, &store)?;
+
+    atomic_write(ctx, &store_path, &tmp_path, &json_bytes)?;
+
+    Ok(())
+}
 
 /// Resolves the settings file and temporary file paths.
 ///
@@ -29,9 +53,9 @@ fn get_store_paths(
 /// 将存储条目序列化为 JSON 字节。
 fn serialize_store_to_bytes(
     ctx: &SettingsStorageContext,
-    store: &tauri_plugin_store::Store<tauri::Wry>,
+    store: &Store<Wry>,
 ) -> Result<Vec<u8>, SettingsError> {
-    let all_data: std::collections::HashMap<String, serde_json::Value> = store
+    let all_data: HashMap<String, Value> = store
         .entries()
         .iter()
         .map(|(k, v)| (k.clone(), v.clone()))
@@ -69,27 +93,6 @@ fn atomic_write(
             let _ = dir.sync_all();
         }
     }
-
-    Ok(())
-}
-
-/// Saves a settings value by key, overwriting existing values.
-///
-/// 按键写入或更新设置文件中的配置值。
-pub(in crate::core::bot::services::settings) fn save_settings(
-    app: &AppHandle,
-    ctx: &SettingsStorageContext,
-    key: &str,
-    value: serde_json::Value,
-) -> Result<(), SettingsError> {
-    let store = open_store(app, ctx)?;
-
-    store.set(key, value);
-
-    let (store_path, tmp_path) = get_store_paths(app, ctx)?;
-    let json_bytes = serialize_store_to_bytes(ctx, &store)?;
-
-    atomic_write(ctx, &store_path, &tmp_path, &json_bytes)?;
 
     Ok(())
 }

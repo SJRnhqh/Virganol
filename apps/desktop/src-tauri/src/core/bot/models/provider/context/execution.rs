@@ -10,18 +10,23 @@ use super::{ProviderContext, ProviderErrorContext, ProviderOperation, ProviderSt
 struct ExecutionExtra {
     /// Provider domain subject targeted by this execution.
     ///
-    /// 当前执行链路归因的 Provider 领域主体。
+    /// 当前执行链路归因的供应商领域主体。
     subject: ProviderSubject,
     /// Provider execution operation currently being executed.
     ///
-    /// 当前正在执行的 Provider 执行操作。
+    /// 当前正在执行的供应商执行操作。
     operation: ProviderOperation,
 }
 
 /// Provider execution domain business context.
 ///
-/// Provider 领域执行业务上下文。
-pub(in crate::core::bot) struct ProviderExecutionContext(ProviderContext<ExecutionExtra>);
+/// 供应商领域执行业务上下文。
+pub(in crate::core::bot) struct ProviderExecutionContext(
+    /// Shared context state backing this execution view.
+    ///
+    /// 支撑当前执行视图的共享上下文状态。
+    ProviderContext<ExecutionExtra>,
+);
 
 impl ProviderExecutionContext {
     /// Consumes this execution context into the config-store stage.
@@ -47,7 +52,7 @@ impl ProviderExecutionContext {
 
     /// Derives a context view for a specific Provider-domain subject.
     ///
-    /// 派生针对指定 Provider 领域主体的上下文视图。
+    /// 派生针对指定供应商领域主体的上下文视图。
     pub(in crate::core::bot) fn for_subject(&self, subject: ProviderSubject) -> Self {
         Self(ProviderContext::new(
             self.0.stage(),
@@ -60,7 +65,7 @@ impl ProviderExecutionContext {
 
     /// Derives a settings storage context from this execution context.
     ///
-    /// 从当前执行上下文派生 settings 存储上下文。
+    /// 从当前执行上下文派生设置存储上下文。
     pub(in crate::core::bot) fn for_settings_storage(&self) -> SettingsStorageContext {
         SettingsStorageContext::storage()
     }

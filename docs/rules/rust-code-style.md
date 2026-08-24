@@ -111,6 +111,8 @@ Benchmark (TBD)
 
 ### Ordinary Comments (Specification TBD)
 
+## Imports and Paths (Specification TBD)
+
 ## Visibility (Specification TBD)
 
 ### Temporary Re-export Visibility Check
@@ -120,3 +122,5 @@ Benchmark (TBD)
 - Entry: `dev/scripts/rust/test.mjs`
 - Status: Incomplete; retire this check when the complete Visibility quality
   gate is implemented.
+
+## Item and Implementation Order (Specification TBD)
