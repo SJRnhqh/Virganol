@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Audit the Rust Comments `core`, `cli`, and `node` crates.
+- [ ] Audit the Rust Comments `core` crate.
 
 ## Planned
 
@@ -29,3 +29,4 @@
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/services` comments and member documentation; verified all function and re-export visibility boundaries.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models` type and enum-variant imports; verified comments, visibility, and implementation ordering.
 - [x] Rechecked `apps/desktop/src-tauri/src/commands` and `core/shared` against stricter import, visibility, and comment conventions.
+- [x] Normalized the Rust Comments `cli` and `node` crates; extended comment-gate coverage to both crates.
