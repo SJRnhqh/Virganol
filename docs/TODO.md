@@ -5,17 +5,13 @@
 
 ## Current
 
-- [ ] Define the reliability architecture scope, shared terminology, decision questions, and documentation boundaries from the existing Provider implementation.
-
-## Planned
-
-- [ ] Validate the proposed concepts against a concrete Settings process without prematurely introducing cross-domain generic abstractions.
-- [ ] Define responsibility boundaries for context propagation, failure facts, internal errors, application-boundary projection, source chains, and aggregated failures.
-- [ ] Document the agreed reliability architecture, contracts, and representative flows in `docs/ARCHITECTURE.md`.
-- [ ] Record unresolved decisions and convert implementation follow-ups into clearly scoped roadmap or working-branch tasks.
-- [ ] Review the resulting documentation against the current code and `docs/ROADMAP.md`, then run the relevant Markdown checks.
+- [ ] Complete the reliability architecture for context propagation, errors,
+      observability, and representative Provider and Settings flows in
+      `docs/ARCHITECTURE.md`.
 
 ## Completed
 
 - [x] Refine the architecture document positioning and establish a concise framework-oriented runtime architecture overview.
+- [x] Define Reality Driven Design and align Rust command and core module
+      organization around feature domains and attributable business realities.
 - [x] Establish the branch execution plan for reliability architecture exploration and documentation delivery.

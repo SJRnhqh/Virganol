@@ -31,51 +31,76 @@ Virganol is a modern desktop application built with a three-layer architecture:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Backend Module Organization
+### Reality Driven Design
 
-Backend modules cover Rust runtime modules and the Go sidecar runtime.
+Reality Driven Design (RDD) derives technical structure from independently
+attributable business realities.
 
-#### Rust Runtime Modules
+```txt
+Feature Domain
+└── Business Realities
+    ├── Subject Reality
+    └── Process Reality
+```
 
-Rust runtime modules currently cover the Tauri command boundary and backend
-core modules, using **domain modules** and **subdomain modules** as their
-primary semantic organization units.
+- **Feature Domain**: A cohesive business perspective centered on a product
+  capability.
+- **Business Reality**: An independently attributable unit of business meaning
+  scoped to one or more feature domains.
+- **Subject Reality**: A business participant or object with persistent
+  identity.
+- **Process Reality**: A business occurrence that unfolds over time and may span
+  multiple subject realities.
+
+### Module Organization
+
+Virganol modules span the TypeScript frontend, Rust runtime, and Go sidecar
+runtime.
+
+#### TypeScript Frontend
+
+#### Rust Runtime
+
+The Rust runtime separates the Tauri command boundary from core modules,
+organizing both by feature domain and business reality.
 
 ##### Command Modules
 
-Command modules are organized by domain and subdomain at the Tauri
-boundary, with each command backed by a function exported by Core Modules.
+Command modules mirror feature domains and business realities at the Tauri
+boundary, delegating behavior to Core Modules.
 
 ```txt
 commands/
-└── <domain>/
-    └── <subdomain>/
+└── <feature-domain>/
+    └── <reality>/
         ├── <command>.rs
         └── mod.rs
 ```
 
 ##### Core Modules
 
-Core modules add internal layers under each domain module.
+Core modules organize each feature domain into a foundation and services.
 
 ```txt
 core/
-├── shared/                    # Cross-domain core support
-└── <domain>/                  # Domain module
-    ├── constants/             # Static values local to the domain
-    ├── models/                # Data models, value objects, errors, contracts
-    │   └── <subdomain>/       # Subdomain models
-    ├── interfaces/            # Traits and ports expressed with models
-    │   └── <subdomain>/       # Subdomain interfaces
-    └── services/              # Domain behavior and infrastructure adapters
-        └── <subdomain>/       # Subdomain services
+├── shared/                    # Cross-domain realities and support
+└── <feature-domain>/
+    ├── constants/             # Static values
+    │   └── <reality>/
+    ├── models/                # Models, values, errors, and contracts
+    │   └── <reality>/
+    ├── interfaces/            # Traits and ports
+    │   └── <reality>/
+    └── services/              # Business behavior and adapters
+        └── <process>/
+            └── <subject>/
 ```
 
-The intended dependency direction inside a domain is:
+The intended dependency direction inside a feature domain is:
 
 ```txt
 ┌───────────────────────────────────┐
-│ <domain>                          │
+│ <feature-domain>                  │
 │           ┌───────────┐           │
 │           │ services  │           │
 │           └───────────┘           │
@@ -96,7 +121,7 @@ The intended dependency direction inside a domain is:
 └───────────────────────────────────┘
 ```
 
-#### Go Sidecar Modules
+#### Go Sidecar
 
 ---
 
