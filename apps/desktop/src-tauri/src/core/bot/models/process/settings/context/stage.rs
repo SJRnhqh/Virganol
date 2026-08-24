@@ -19,9 +19,9 @@ impl SettingsStage {
         Self::Storage
     }
 
-    /// Returns a natural phrase for internal error context messages.
+    /// Returns a natural phrase for internal error attribution messages.
     ///
-    /// 返回用于内部错误上下文消息的自然语言短语。
+    /// 返回用于内部错误归因消息的自然语言短语。
     pub(super) fn as_phrase(self) -> &'static str {
         match self {
             Self::Storage => "the storage stage",

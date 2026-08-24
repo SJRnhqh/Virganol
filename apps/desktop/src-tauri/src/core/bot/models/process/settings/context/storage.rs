@@ -1,29 +1,29 @@
 // apps/desktop/src-tauri/src/core/bot/models/process/settings/context/storage.rs
 use super::{SettingsErrorContext, SettingsStage};
 
-/// Settings storage context.
+/// Settings storage attribution context.
 ///
-/// 设置存储上下文。
+/// 设置存储归因上下文。
 pub(in crate::core::bot) struct SettingsStorageContext {
-    /// Settings process execution stage represented by this context.
+    /// Settings process execution stage attributed by this context.
     ///
-    /// 当前上下文表示的设置业务过程执行阶段。
+    /// 当前上下文归因的设置业务过程执行阶段。
     stage: SettingsStage,
 }
 
 impl SettingsStorageContext {
-    /// Creates a settings storage context.
+    /// Creates a settings storage attribution context.
     ///
-    /// 创建设置存储上下文。
+    /// 创建设置存储归因上下文。
     pub(in crate::core::bot::models) fn storage() -> Self {
         Self {
             stage: SettingsStage::storage(),
         }
     }
 
-    /// Creates an error context snapshot from this storage context.
+    /// Creates an error attribution context snapshot from this storage context.
     ///
-    /// 根据当前存储上下文创建错误上下文快照。
+    /// 根据当前存储上下文创建错误归因上下文快照。
     pub(in crate::core::bot::models::process::settings) fn error_context(
         &self,
     ) -> SettingsErrorContext {

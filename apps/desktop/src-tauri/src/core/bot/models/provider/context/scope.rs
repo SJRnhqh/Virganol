@@ -9,15 +9,20 @@ use super::{ProviderManagerOperation, ProviderOperation, ProviderStage};
 
 /// Stable Provider business scope derived from an execution stage and operation.
 ///
-/// 由执行阶段与业务操作共同派生的稳定 Provider 业务范围。
+/// 由执行阶段与业务操作共同派生的稳定供应商业务范围。
 #[derive(Serialize)]
 #[serde(transparent)]
-pub(in crate::core::bot::models::provider) struct ProviderScope(&'static str);
+pub(in crate::core::bot::models::provider) struct ProviderScope(
+    /// Serialized scope identifier.
+    ///
+    /// 序列化后的范围标识。
+    &'static str,
+);
 
 impl ProviderScope {
     /// Derives a Provider scope from an attributed stage and business operation.
     ///
-    /// 根据已归因的阶段与业务操作派生 Provider 业务范围。
+    /// 根据已归因的阶段与业务操作派生供应商业务范围。
     pub(super) fn from_parts(stage: ProviderStage, operation: ProviderOperation) -> Self {
         let stage_scopes = match stage {
             ProviderStage::Manager => &PROVIDER_MANAGER_SCOPES,

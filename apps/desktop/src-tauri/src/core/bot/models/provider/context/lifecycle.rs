@@ -22,8 +22,13 @@ struct LifecycleExtra<'a> {
 
 /// Provider lifecycle domain business context.
 ///
-/// Provider 领域生命周期业务上下文。
-pub(in crate::core::bot) struct ProviderLifecycleContext<'a>(ProviderContext<LifecycleExtra<'a>>);
+/// 供应商领域生命周期业务上下文。
+pub(in crate::core::bot) struct ProviderLifecycleContext<'a>(
+    /// Shared context state backing this lifecycle view.
+    ///
+    /// 支撑当前生命周期视图的共享上下文状态。
+    ProviderContext<LifecycleExtra<'a>>,
+);
 
 impl<'a> ProviderLifecycleContext<'a> {
     /// Starts a lifecycle business context.
@@ -56,7 +61,7 @@ impl<'a> ProviderLifecycleContext<'a> {
 
     /// Converts this lifecycle context into an execution context with a Provider-domain subject.
     ///
-    /// 将当前生命周期上下文转换为携带指定 Provider 领域主体的执行上下文。
+    /// 将当前生命周期上下文转换为携带指定供应商领域主体的执行上下文。
     pub(in crate::core::bot) fn into_execution_context_with(
         self,
         subject: ProviderSubject,

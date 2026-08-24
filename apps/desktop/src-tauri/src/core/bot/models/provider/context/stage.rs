@@ -3,35 +3,35 @@ use std::fmt;
 
 /// Provider domain business execution stage.
 ///
-/// Provider 领域业务执行阶段。
+/// 供应商领域业务执行阶段。
 #[derive(Debug, Clone, Copy)]
 pub(super) enum ProviderStage {
     /// Provider manager orchestration.
     ///
-    /// Provider manager 编排阶段。
+    /// 供应商管理编排阶段。
     Manager,
     /// Provider lifecycle event emission.
     ///
-    /// Provider 生命周期事件推送阶段。
+    /// 供应商生命周期事件推送阶段。
     LifecycleEmit,
     /// Provider connection path.
     ///
-    /// Provider 连接阶段。
+    /// 供应商连接阶段。
     Connection,
     /// Provider config store path.
     ///
-    /// Provider 配置存储阶段。
+    /// 供应商配置存储阶段。
     ConfigStore,
     /// Provider secret store path.
     ///
-    /// Provider 密钥存储阶段。
+    /// 供应商密钥存储阶段。
     SecretStore,
 }
 
 impl ProviderStage {
     /// Creates the manager orchestration stage.
     ///
-    /// 创建 manager 编排阶段。
+    /// 创建管理编排阶段。
     pub(super) fn manager() -> Self {
         Self::Manager
     }
@@ -68,7 +68,7 @@ impl ProviderStage {
 impl fmt::Display for ProviderStage {
     /// Formats this Provider stage for diagnostic context messages.
     ///
-    /// 将当前 Provider 阶段格式化为诊断上下文消息。
+    /// 将当前供应商阶段格式化为诊断上下文消息。
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Manager => f.write_str("the manager stage"),

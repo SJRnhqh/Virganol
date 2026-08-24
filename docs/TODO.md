@@ -21,3 +21,4 @@
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/process` comments, visibility, and re-exports.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/common` comments and visibility.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/config` and `connection` comments, visibility, and method layout.
+- [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/context` comments, member documentation, and visibility; aligned Settings process contexts with the attribution model.

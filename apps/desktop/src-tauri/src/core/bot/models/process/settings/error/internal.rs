@@ -12,9 +12,9 @@ use super::SettingsFailure;
 /// 设置业务过程内部错误。
 #[derive(Debug)]
 pub(in crate::core::bot) struct SettingsError {
-    /// Settings error context snapshot.
+    /// Settings error attribution context snapshot.
     ///
-    /// 设置错误上下文快照。
+    /// 设置错误归因上下文快照。
     context: SettingsErrorContext,
     /// Settings failure fact.
     ///
@@ -23,9 +23,9 @@ pub(in crate::core::bot) struct SettingsError {
 }
 
 impl SettingsError {
-    /// Creates a settings store open error from the storage context.
+    /// Creates a settings store open error from the storage attribution context.
     ///
-    /// 基于存储上下文创建设置存储打开错误。
+    /// 基于存储归因上下文创建设置存储打开错误。
     pub(in crate::core::bot) fn store_open(
         ctx: &SettingsStorageContext,
         source: StoreError,
@@ -33,9 +33,9 @@ impl SettingsError {
         Self::new(ctx.error_context(), SettingsFailure::StoreOpen { source })
     }
 
-    /// Creates a settings store path resolution error from the storage context.
+    /// Creates a settings store path resolution error from the storage attribution context.
     ///
-    /// 基于存储上下文创建设置存储路径解析错误。
+    /// 基于存储归因上下文创建设置存储路径解析错误。
     pub(in crate::core::bot) fn store_path(
         ctx: &SettingsStorageContext,
         source: TauriError,
@@ -43,9 +43,9 @@ impl SettingsError {
         Self::new(ctx.error_context(), SettingsFailure::StorePath { source })
     }
 
-    /// Creates a settings store serialization error from the storage context.
+    /// Creates a settings store serialization error from the storage attribution context.
     ///
-    /// 基于存储上下文创建设置存储序列化错误。
+    /// 基于存储归因上下文创建设置存储序列化错误。
     pub(in crate::core::bot) fn store_serialize(
         ctx: &SettingsStorageContext,
         source: JsonError,
@@ -56,9 +56,9 @@ impl SettingsError {
         )
     }
 
-    /// Creates a settings store temporary-file creation error from the storage context.
+    /// Creates a settings store temporary-file creation error from the storage attribution context.
     ///
-    /// 基于存储上下文创建设置存储临时文件创建错误。
+    /// 基于存储归因上下文创建设置存储临时文件创建错误。
     pub(in crate::core::bot) fn store_temp_create(
         ctx: &SettingsStorageContext,
         source: IoError,
@@ -69,23 +69,23 @@ impl SettingsError {
         )
     }
 
-    /// Creates a settings store file write error from the storage context.
+    /// Creates a settings store file write error from the storage attribution context.
     ///
-    /// 基于存储上下文创建设置存储文件写入错误。
+    /// 基于存储归因上下文创建设置存储文件写入错误。
     pub(in crate::core::bot) fn store_write(ctx: &SettingsStorageContext, source: IoError) -> Self {
         Self::new(ctx.error_context(), SettingsFailure::StoreWrite { source })
     }
 
-    /// Creates a settings store file sync error from the storage context.
+    /// Creates a settings store file sync error from the storage attribution context.
     ///
-    /// 基于存储上下文创建设置存储文件同步错误。
+    /// 基于存储归因上下文创建设置存储文件同步错误。
     pub(in crate::core::bot) fn store_sync(ctx: &SettingsStorageContext, source: IoError) -> Self {
         Self::new(ctx.error_context(), SettingsFailure::StoreSync { source })
     }
 
-    /// Creates a settings store file replace error from the storage context.
+    /// Creates a settings store file replace error from the storage attribution context.
     ///
-    /// 基于存储上下文创建设置存储文件替换错误。
+    /// 基于存储归因上下文创建设置存储文件替换错误。
     pub(in crate::core::bot) fn store_replace(
         ctx: &SettingsStorageContext,
         source: IoError,
@@ -96,18 +96,18 @@ impl SettingsError {
         )
     }
 
-    /// Creates an internal settings error.
+    /// Creates an internal settings error with its attribution context.
     ///
-    /// 创建设置内部错误。
+    /// 创建携带归因上下文的设置内部错误。
     fn new(context: SettingsErrorContext, failure: SettingsFailure) -> Self {
         Self { context, failure }
     }
 }
 
 impl fmt::Display for SettingsError {
-    /// Formats the settings error with its context.
+    /// Formats the settings error with its attribution context.
     ///
-    /// 格式化包含上下文的设置错误。
+    /// 格式化包含归因上下文的设置错误。
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{} for {}", self.failure, self.context)?;
 
