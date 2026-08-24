@@ -22,3 +22,6 @@
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/common` comments and visibility.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/config` and `connection` comments, visibility, and method layout.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/context` comments, member documentation, and visibility; aligned Settings process contexts with the attribution model.
+- [x] Verified `apps/desktop/src-tauri/src/core/bot/models/provider/contract/base` comments and the shared request/response wrapper visibility boundary.
+- [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/contract/lifecycle` comments and verified its event payload visibility boundaries.
+- [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/contract/manager` comments and transparent wrapper documentation; verified command and service visibility boundaries.
