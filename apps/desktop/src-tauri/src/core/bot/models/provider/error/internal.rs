@@ -141,7 +141,7 @@ impl ProviderError {
 
     /// Creates a health check HTTP status error.
     ///
-    /// 创建健康检查 HTTP 状态码错误。
+    /// 创建健康检查响应状态码错误。
     pub(in crate::core::bot) fn health_check_http(ctx: &ProviderExecutionContext) -> Self {
         Self::new(ctx.error_context(), ProviderFailure::HealthCheckHttp)
     }

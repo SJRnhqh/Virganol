@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Audit comments and visibility in the remaining `apps/desktop/src-tauri/src/core/bot/models/provider` modules and `core/bot/services`.
+- [ ] Audit comments and visibility in the remaining `apps/desktop/src-tauri/src/core/bot/services` modules.
 
 ## Planned
 
@@ -25,3 +25,5 @@
 - [x] Verified `apps/desktop/src-tauri/src/core/bot/models/provider/contract/base` comments and the shared request/response wrapper visibility boundary.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/contract/lifecycle` comments and verified its event payload visibility boundaries.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/contract/manager` comments and transparent wrapper documentation; verified command and service visibility boundaries.
+- [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/error`, `lifecycle`, and `secret` comments, member documentation, and visibility boundaries.
+- [x] Expanded the Rust Comments quality-gate coverage to `core/bot/models` and `core/bot/interfaces`.
