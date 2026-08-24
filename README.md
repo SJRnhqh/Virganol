@@ -19,12 +19,14 @@ Virganol/
 │   ├── scripts/               # Development maintenance scripts
 │   └── templates/             # Developer workflow templates
 ├── docs/                      # Project documentation and branch state
+│   ├── rules/                 # Development rules
+│   └── templates/             # Recurring document templates
 └── README.md
 ```
 
 ## Documentation
 
-- **[ARCHITECTURE](docs/ARCHITECTURE.md)** - System architecture overview
+- **[ARCHITECTURE](docs/ARCHITECTURE.md)** - Project architecture overview
 - **[CONTRIBUTING](docs/CONTRIBUTING.md)** - Contribution guidelines
 - **[CHANGELOG](docs/CHANGELOG.md)** - Version history and changes
 - **[ROADMAP](docs/ROADMAP.md)** - Feature roadmap and milestones
