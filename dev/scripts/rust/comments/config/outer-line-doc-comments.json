@@ -5,9 +5,7 @@
     "include": [
       "apps/desktop/src-tauri/src/commands/**/*.rs",
       "apps/desktop/src-tauri/src/core/shared/**/*.rs",
-      "apps/desktop/src-tauri/src/core/bot/constants/**/*.rs",
-      "apps/desktop/src-tauri/src/core/bot/models/**/*.rs",
-      "apps/desktop/src-tauri/src/core/bot/interfaces/**/*.rs"
+      "apps/desktop/src-tauri/src/core/bot/**/*.rs"
     ],
     "exclude": ["**/mod.rs"]
   },
