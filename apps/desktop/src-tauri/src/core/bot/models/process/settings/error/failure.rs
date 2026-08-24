@@ -9,7 +9,7 @@ use thiserror::Error;
 ///
 /// 设置业务过程定义的失败事实。
 #[derive(Error, Debug)]
-pub(in crate::core::bot) enum SettingsFailure {
+pub(super) enum SettingsFailure {
     /// Settings store could not be opened.
     ///
     /// 设置存储无法打开。

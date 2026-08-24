@@ -1,4 +1,4 @@
-// apps/desktop/src-tauri/src/core/bot/constants/connection.rs
+// apps/desktop/src-tauri/src/core/bot/constants/provider/connection.rs
 
 /// Health check timeout for the local Ollama service, in seconds.
 ///

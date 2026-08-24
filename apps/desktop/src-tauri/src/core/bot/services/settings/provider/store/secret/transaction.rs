@@ -9,7 +9,13 @@ use super::{load_provider_key, remove_provider_key, save_provider_key};
 ///
 /// 供应商密钥写入的补偿事务守卫，未提交时自动回滚。
 pub(in crate::core::bot::services::settings::provider) struct ProviderKeyTransaction {
+    /// Execution context used to attribute rollback failures.
+    ///
+    /// 用于归因回滚失败的执行上下文。
     ctx: ProviderExecutionContext,
+    /// Key change retained until the transaction is committed.
+    ///
+    /// 事务提交前保留的密钥变更快照。
     change: Option<ProviderKeyChange>,
 }
 

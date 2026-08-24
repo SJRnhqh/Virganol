@@ -1,6 +1,5 @@
 // dev/scripts/rust/comments/crates/cli/src/error.rs
 use std::io::Error as IoError;
-
 use virganol_rust_comment_checker_core::CommentCheckError;
 
 /// Represents an error produced by the comment checker CLI.
@@ -21,7 +20,7 @@ pub(super) enum CliError {
     Check(
         /// Core comment check error.
         ///
-        /// Core 注释检查错误。
+        /// 核心注释检查错误。
         CommentCheckError,
     ),
 }

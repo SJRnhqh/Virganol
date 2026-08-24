@@ -4,9 +4,11 @@
   "coverage": {
     "include": [
       "apps/desktop/src-tauri/src/commands/**/*.rs",
-      "apps/desktop/src-tauri/src/core/shared/**/*.rs"
+      "apps/desktop/src-tauri/src/core/shared/**/*.rs",
+      "apps/desktop/src-tauri/src/core/bot/**/*.rs",
+      "dev/scripts/rust/comments/crates/**/*.rs"
     ],
     "exclude": ["**/mod.rs"]
   },
-  "allowedAsciiTerms": ["API", "JSON"]
+  "allowedAsciiTerms": ["Node-API", "API", "ASCII", "CLI", "JSON", "Rust", "Ollama", "DeepSeek"]
 }

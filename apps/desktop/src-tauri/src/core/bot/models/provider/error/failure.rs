@@ -25,7 +25,7 @@ pub(super) enum ProviderFailure {
     CheckStartedEmit {
         /// Underlying Tauri event emission error.
         ///
-        /// 底层 Tauri 事件推送错误。
+        /// 底层桌面框架事件推送错误。
         #[source]
         source: TauriError,
     },
@@ -36,7 +36,7 @@ pub(super) enum ProviderFailure {
     CheckStatusEmit {
         /// Underlying Tauri event emission error.
         ///
-        /// 底层 Tauri 事件推送错误。
+        /// 底层桌面框架事件推送错误。
         #[source]
         source: TauriError,
     },
@@ -47,7 +47,7 @@ pub(super) enum ProviderFailure {
     CheckCompletedEmit {
         /// Underlying Tauri event emission error.
         ///
-        /// 底层 Tauri 事件推送错误。
+        /// 底层桌面框架事件推送错误。
         #[source]
         source: TauriError,
     },
@@ -58,7 +58,7 @@ pub(super) enum ProviderFailure {
     CheckFailedEmit {
         /// Underlying Tauri event emission error.
         ///
-        /// 底层 Tauri 事件推送错误。
+        /// 底层桌面框架事件推送错误。
         #[source]
         source: TauriError,
     },
@@ -69,7 +69,7 @@ pub(super) enum ProviderFailure {
     CheckTaskJoin {
         /// Underlying Tokio task join error.
         ///
-        /// 底层 Tokio 任务汇合错误。
+        /// 底层异步运行时任务汇合错误。
         #[source]
         source: JoinError,
     },
@@ -90,13 +90,13 @@ pub(super) enum ProviderFailure {
     HealthCheckNetwork {
         /// Underlying HTTP client request error.
         ///
-        /// 底层 HTTP 客户端请求错误。
+        /// 底层网络客户端请求错误。
         #[source]
         source: ReqwestError,
     },
     /// Health check HTTP status indicates failure.
     ///
-    /// 健康检查 HTTP 状态码表示失败。
+    /// 健康检查响应状态码表示失败。
     #[error("provider health check HTTP status indicates failure")]
     HealthCheckHttp,
     /// Health check response format is invalid.
@@ -106,7 +106,7 @@ pub(super) enum ProviderFailure {
     HealthCheckResponseFormat {
         /// Underlying HTTP response decoding error.
         ///
-        /// 底层 HTTP 响应解码错误。
+        /// 底层网络响应解码错误。
         #[source]
         source: ReqwestError,
     },
@@ -122,7 +122,7 @@ pub(super) enum ProviderFailure {
     ConfigNotFound,
     /// Provider configuration failed to serialize into JSON.
     ///
-    /// 供应商配置 JSON 序列化失败。
+    /// 供应商配置序列化为 JSON 失败。
     #[error("provider configuration failed to serialize")]
     JsonSerialize {
         /// Underlying JSON serialization error.
@@ -133,7 +133,7 @@ pub(super) enum ProviderFailure {
     },
     /// Provider configuration failed to deserialize from JSON.
     ///
-    /// 供应商配置 JSON 反序列化失败。
+    /// 供应商配置从 JSON 反序列化失败。
     #[error("provider configuration failed to deserialize")]
     JsonDeserialize {
         /// Underlying JSON deserialization error.
@@ -160,7 +160,7 @@ pub(super) enum ProviderFailure {
     SecretStoreInit {
         /// Underlying Keyring initialization error.
         ///
-        /// 底层 Keyring 初始化错误。
+        /// 底层系统密钥库初始化错误。
         #[source]
         source: KeyringError,
     },
@@ -171,7 +171,7 @@ pub(super) enum ProviderFailure {
     SecretStoreWrite {
         /// Underlying Keyring write error.
         ///
-        /// 底层 Keyring 写入错误。
+        /// 底层系统密钥库写入错误。
         #[source]
         source: KeyringError,
     },
@@ -182,7 +182,7 @@ pub(super) enum ProviderFailure {
     SecretStoreRead {
         /// Underlying Keyring read error.
         ///
-        /// 底层 Keyring 读取错误。
+        /// 底层系统密钥库读取错误。
         #[source]
         source: KeyringError,
     },
@@ -193,7 +193,7 @@ pub(super) enum ProviderFailure {
     SecretStoreRemove {
         /// Underlying Keyring remove error.
         ///
-        /// 底层 Keyring 删除错误。
+        /// 底层系统密钥库删除错误。
         #[source]
         source: KeyringError,
     },

@@ -2,15 +2,18 @@
 use ra_ap_rustc_lexer::{
     tokenize,
     DocStyle::Outer,
-    FrontmatterAllowed,
+    FrontmatterAllowed::No,
     TokenKind::{BlockComment, LineComment},
 };
-use regex::Regex;
+use regex::{Error, Regex};
 use std::sync::LazyLock;
 
 use super::super::{CommentCheckConfig, CommentCheckError};
 
-static HAN_PATTERN: LazyLock<Result<Regex, regex::Error>> =
+/// Lazily caches the pattern used to identify Han characters.
+///
+/// 延迟缓存用于识别汉字的模式。
+static HAN_PATTERN: LazyLock<Result<Regex, Error>> =
     LazyLock::new(|| Regex::new(r"\p{Script=Han}"));
 
 /// Checks a contiguous outer-only comment region against the documentation format.
@@ -20,7 +23,7 @@ pub(super) fn check_contiguous_outer_doc_region(
     outer_doc_source: &str,
     config: &CommentCheckConfig,
 ) -> Result<(), CommentCheckError> {
-    let line_contents = tokenize(outer_doc_source, FrontmatterAllowed::No)
+    let line_contents = tokenize(outer_doc_source, No)
         .try_fold((0, Vec::new()), |(cursor, mut line_contents), token| {
             let token_end = cursor + token.len as usize;
             let token_source = &outer_doc_source[cursor..token_end];

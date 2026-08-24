@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/config/update.rs
+use serde_json::to_value;
 use tauri::AppHandle;
 
 use super::super::super::super::super::super::{
@@ -26,8 +27,8 @@ pub(in crate::core::bot::services::settings::provider) fn update_models(
 
     record.replace_enabled_models(enabled_models);
 
-    let value = serde_json::to_value(&providers)
-        .map_err(|source| ProviderError::json_serialize(ctx, source))?;
+    let value =
+        to_value(&providers).map_err(|source| ProviderError::json_serialize(ctx, source))?;
     if let Err(e) = {
         let ctx = ctx.for_settings_storage();
         save_settings(app, &ctx, SPIRIT_PROVIDERS_KEY, value)

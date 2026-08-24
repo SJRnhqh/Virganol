@@ -8,12 +8,24 @@ use super::super::super::super::super::{
     ProviderRecord,
 };
 
-// Provider check lifecycle event names kept aligned with frontend PROVIDER_CHECK_EVENTS.
-//
-// Provider 检查生命周期事件名常量，与前端 PROVIDER_CHECK_EVENTS 保持一致。
+/// Event name for the start of a provider check lifecycle run.
+///
+/// 供应商检查生命周期开始事件名。
 const EVT_CHECK_STARTED: &str = "providers-check-lifecycle-started";
+
+/// Event name for one provider check status update.
+///
+/// 单个供应商检查状态更新事件名。
 const EVT_CHECK_STATUS: &str = "provider-status";
+
+/// Event name for successful completion of a provider check lifecycle run.
+///
+/// 供应商检查生命周期成功完成事件名。
 const EVT_CHECK_COMPLETED: &str = "providers-check-lifecycle-completed";
+
+/// Event name for failure of a provider check lifecycle run.
+///
+/// 供应商检查生命周期失败事件名。
 const EVT_CHECK_FAILED: &str = "providers-check-lifecycle-failed";
 
 /// Emits the lifecycle started event.

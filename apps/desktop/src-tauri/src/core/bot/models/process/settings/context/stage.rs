@@ -1,11 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/models/process/settings/context/stage.rs
 
-/// Settings process business execution stage.
+/// Settings process execution stage.
 ///
 /// 设置业务过程执行阶段。
 #[derive(Debug, Clone, Copy)]
 pub(super) enum SettingsStage {
-    /// Settings storage path.
+    /// Settings storage stage.
     ///
     /// 设置存储阶段。
     Storage,
@@ -19,9 +19,9 @@ impl SettingsStage {
         Self::Storage
     }
 
-    /// Returns a natural phrase for internal error context messages.
+    /// Returns a natural phrase for internal error attribution messages.
     ///
-    /// 返回用于内部错误上下文消息的自然语言短语。
+    /// 返回用于内部错误归因消息的自然语言短语。
     pub(super) fn as_phrase(self) -> &'static str {
         match self {
             Self::Storage => "the storage stage",

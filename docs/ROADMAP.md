@@ -31,18 +31,29 @@
 
 #### 6.1 RDD 可靠性架构
 
-**当前状态**：Provider 与 Settings 已形成 Contextualization 和 Attributability 的参考实现；Observability 留待日志与追踪实现后继续收敛。
+**已完成**：
+
+- `ProviderError` / `ProviderErrorCode` / `ProviderAppError` 分层与边界契约成型
+- CRUD、健康检查、生命周期事件与并发检查错误路径完成分类
+- lifecycle payload、snapshot 与 skipped provider 契约完成收口
+- 旧错误分类、过渡 API、服务可见性与冗余日志完成清理
+
+#### 6.2 Provider 可靠性架构（context / failure / error / boundary）
+
+**当前状态**：Provider 与 Settings 业务过程的上下文传播、内部错误与失败事实建模已经闭环；架构文档沉淀转入后续路线。
 
 **已完成**：
 
-- [x] Provider 以 Reality Context、Failure 与 Reality Error 统一业务错误，并完成安全的应用边界投影
-- [x] Settings 以 Stage、Attribution Snapshot、Failure 与 Reality Error 完成过程错误建模及跨实在 Source 交接
-- [x] 生命周期与边界契约成型，旧错误 API、服务可见性和冗余日志完成清理
-- [x] 架构文档完成 RDD、Contextualization 与 Attributability 的初始沉淀
+- [x] `ProviderContext<T>`、阶段视图与执行上下文贯通 manager、lifecycle、connection、config store 与 secret store
+- [x] `ProviderSubject` 区分具体供应商、原始候选与已配置供应商集合，错误细节仅投影准确的 `providerId`
+- [x] `ProviderFailure` 管理封闭失败事实与底层错误源，`ProviderError` 作为上下文加失败事实的薄层归因契约
+- [x] `ProviderAppError` 从成功响应中拆出，并以 `code`、安全 `message`、`scope`、可选主体与 `suppressedErrors` 完成边界投影
+- [x] 生命周期 emit、join、aggregate 与降级路径接入统一错误归因和边界适配
+- [x] Settings 过程以自身边界建模 `SettingsFailure`、`SettingsErrorContext` 与 `SettingsError`，不抽取跨业务实在的泛型契约
 
 **后续路线**：
 
-- [ ] 基于日志与追踪的实际实现继续沉淀 Observability
+- [ ] RDD 可靠性架构文档：在 Provider 参考实现与 Settings 过程适配后，沉淀上下文传播、错误投影、source chain、聚合错误与责任边界
 
 #### 6.2 日志系统
 
@@ -51,7 +62,8 @@
 - [ ] 设计日志持久化策略（文件轮转 / 结构化格式）
 - [ ] 定义日志埋点（CRUD 入口/出口、健康检查、持久化操作、错误路径）
 - [ ] 标准化日志格式（级别 / 时间戳 / 模块 / 消息 / 上下文）
-- [ ] Context-aware downgrade logging：Contextualization / Observability 实现后重访 `Downgrade`，让降级领域错误记录结构化上下文而不只输出字符串化 warning
+- [ ] 添加结构化上下文（correlation/operation 标识、provider_id、error_code）
+- [ ] Context-aware downgrade logging：在 Observability 设计后重访 `Downgrade`，让降级领域错误记录结构化上下文而不只输出字符串化 warning
 - [ ] 实现日志级别策略（info 成功 / warn 可重试 / error 致命）
 - [ ] 前端日志策略（dev 用 console / prod 用上报）
 
@@ -81,6 +93,12 @@
 - [ ] 后端异步执行架构对齐（同步持久化调用用 `tokio::task::spawn_blocking` 包裹）
 - [ ] Provider HTTP client 初始化错误收口（避免 `reqwest::Client` 构建失败通过 `expect` panic，纳入 health-check 错误路径）
 - [ ] Provider 持久化边界收口（将 `ProviderKeyTransaction` 隐藏为 store 层实现细节，由组合持久化服务统一处理 config + secret 写入与补偿回滚）
+- [x] 后端 Rust 业务代码规范化：完成 `commands`、`core/shared` 与 `core/bot` 的人工校验，统一注释、实现顺序、导入约定与最小可见范围
+- [x] Rust Comments 质量门禁与工程实验基线：完成规则实现、CLI/NAPI 正确性对齐、配置注入、仓库 audit 与 benchmark 基础设施
+- [x] Rust Comments 工程代码规范化：完成 `core`、`cli` 与 `node` crate 的人工校验，并将其纳入仓库注释门禁覆盖
+- [ ] Rust Comments 工程实验收尾：补齐 fixture，完成 fixture/仓库 audit 代表性 benchmark 与跨平台验证，确定生产 adapter
+- [ ] Comments 规则收口：完成 Outer Line Doc、Inner Doc 与 Explanatory Comments 的源码审计和文档定稿
+- [ ] Visibility 质量门禁子系统：覆盖模块项、关联项与 re-export 链，补齐 `syn` 结构检查、测试、仓库 audit 和文档定稿
 - [ ] 后端锁实现升级（`std::sync::Mutex` → `parking_lot::Mutex`）
 - [ ] 后端锁粒度细化（全局锁 → per-provider 锁）
 

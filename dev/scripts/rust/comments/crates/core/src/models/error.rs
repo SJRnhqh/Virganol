@@ -1,4 +1,11 @@
 // dev/scripts/rust/comments/crates/core/src/models/error.rs
+use self::{
+    CommentAnalysisError::{Location, Mismatch, Parse, Pattern},
+    CommentCheckErrorCode::{Analysis, Rule},
+    CommentInvalidError::{DocStyle, Misplaced, Mixed, NonDoc},
+    CommentRuleError::{Invalid, Missing},
+};
+
 /// Represents an error produced while checking Rust comments.
 ///
 /// 表示检查 Rust 注释时产生的错误。
@@ -14,63 +21,63 @@ impl CommentCheckError {
     ///
     /// 创建源代码解析错误。
     pub(crate) fn parse() -> Self {
-        Self::analysis(CommentAnalysisError::Parse)
+        Self::analysis(Parse)
     }
 
     /// Creates a source location error.
     ///
     /// 创建源代码定位错误。
     pub(crate) fn location() -> Self {
-        Self::analysis(CommentAnalysisError::Location)
+        Self::analysis(Location)
     }
 
     /// Creates a source analysis result mismatch error.
     ///
     /// 创建源代码分析结果不匹配错误。
     pub(crate) fn mismatch() -> Self {
-        Self::analysis(CommentAnalysisError::Mismatch)
+        Self::analysis(Mismatch)
     }
 
     /// Creates an analysis pattern error.
     ///
     /// 创建分析模式错误。
     pub(crate) fn pattern() -> Self {
-        Self::analysis(CommentAnalysisError::Pattern)
+        Self::analysis(Pattern)
     }
 
     /// Creates a missing documentation comment error.
     ///
     /// 创建文档注释缺失错误。
     pub(crate) fn missing() -> Self {
-        Self::rule(CommentRuleError::Missing)
+        Self::rule(Missing)
     }
 
     /// Creates an invalid documentation style error.
     ///
     /// 创建文档注释样式无效错误。
     pub(crate) fn invalid_doc_style() -> Self {
-        Self::invalid(CommentInvalidError::DocStyle)
+        Self::invalid(DocStyle)
     }
 
     /// Creates a misplaced comment error.
     ///
     /// 创建注释错位错误。
     pub(crate) fn misplaced() -> Self {
-        Self::invalid(CommentInvalidError::Misplaced)
+        Self::invalid(Misplaced)
     }
 
     /// Creates a non-documentation comment error.
     ///
     /// 创建非文档注释错误。
     pub(crate) fn non_doc() -> Self {
-        Self::invalid(CommentInvalidError::NonDoc)
+        Self::invalid(NonDoc)
     }
 
     /// Creates a mixed comment error.
     ///
     /// 创建混杂注释错误。
     pub(crate) fn mixed() -> Self {
-        Self::invalid(CommentInvalidError::Mixed)
+        Self::invalid(Mixed)
     }
 
     /// Creates a source analysis error.
@@ -78,7 +85,7 @@ impl CommentCheckError {
     /// 创建源代码分析错误。
     fn analysis(error: CommentAnalysisError) -> Self {
         Self {
-            code: CommentCheckErrorCode::Analysis(error),
+            code: Analysis(error),
         }
     }
 
@@ -86,16 +93,14 @@ impl CommentCheckError {
     ///
     /// 创建注释规则错误。
     fn rule(error: CommentRuleError) -> Self {
-        Self {
-            code: CommentCheckErrorCode::Rule(error),
-        }
+        Self { code: Rule(error) }
     }
 
     /// Creates an invalid comment error.
     ///
     /// 创建无效注释错误。
     fn invalid(error: CommentInvalidError) -> Self {
-        Self::rule(CommentRuleError::Invalid(error))
+        Self::rule(Invalid(error))
     }
 }
 
@@ -105,23 +110,15 @@ impl AsRef<str> for CommentCheckError {
     /// 返回跨适配器边界暴露的稳定代码。
     fn as_ref(&self) -> &str {
         match &self.code {
-            CommentCheckErrorCode::Analysis(CommentAnalysisError::Parse) => "parse",
-            CommentCheckErrorCode::Analysis(CommentAnalysisError::Location) => "location",
-            CommentCheckErrorCode::Analysis(CommentAnalysisError::Mismatch) => "mismatch",
-            CommentCheckErrorCode::Analysis(CommentAnalysisError::Pattern) => "pattern",
-            CommentCheckErrorCode::Rule(CommentRuleError::Missing) => "missing",
-            CommentCheckErrorCode::Rule(CommentRuleError::Invalid(
-                CommentInvalidError::DocStyle,
-            )) => "doc-style",
-            CommentCheckErrorCode::Rule(CommentRuleError::Invalid(
-                CommentInvalidError::Misplaced,
-            )) => "misplaced",
-            CommentCheckErrorCode::Rule(CommentRuleError::Invalid(CommentInvalidError::NonDoc)) => {
-                "non-doc"
-            }
-            CommentCheckErrorCode::Rule(CommentRuleError::Invalid(CommentInvalidError::Mixed)) => {
-                "mixed"
-            }
+            Analysis(Parse) => "parse",
+            Analysis(Location) => "location",
+            Analysis(Mismatch) => "mismatch",
+            Analysis(Pattern) => "pattern",
+            Rule(Missing) => "missing",
+            Rule(Invalid(DocStyle)) => "doc-style",
+            Rule(Invalid(Misplaced)) => "misplaced",
+            Rule(Invalid(NonDoc)) => "non-doc",
+            Rule(Invalid(Mixed)) => "mixed",
         }
     }
 }

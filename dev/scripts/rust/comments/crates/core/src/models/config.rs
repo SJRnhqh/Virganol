@@ -11,6 +11,13 @@ pub struct CommentCheckConfig {
 }
 
 impl CommentCheckConfig {
+    /// Returns the ASCII terms allowed in Chinese documentation content.
+    ///
+    /// 返回中文文档内容中允许使用的 ASCII 术语。
+    pub(crate) fn allowed_ascii_terms(&self) -> &[String] {
+        &self.allowed_ascii_terms
+    }
+
     /// Creates a comment check configuration.
     ///
     /// 创建注释检查配置。
@@ -18,12 +25,5 @@ impl CommentCheckConfig {
         Self {
             allowed_ascii_terms,
         }
-    }
-
-    /// Returns the ASCII terms allowed in Chinese documentation content.
-    ///
-    /// 返回中文文档内容中允许使用的 ASCII 术语。
-    pub(crate) fn allowed_ascii_terms(&self) -> &[String] {
-        &self.allowed_ascii_terms
     }
 }

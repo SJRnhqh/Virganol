@@ -1,5 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/secret/load.rs
-use keyring::{Entry, Error as KeyringError};
+use keyring::{Entry, Error::NoEntry};
+use std::env::var;
 use zeroize::Zeroize;
 
 use super::super::super::super::super::super::super::Downgrade;
@@ -24,7 +25,7 @@ pub(super) fn load_provider_key(
 
     let raw_key = match entry.get_password() {
         Ok(raw_key) => raw_key,
-        Err(KeyringError::NoEntry) => return None,
+        Err(NoEntry) => return None,
         Err(source) => {
             ProviderError::secret_store_read(ctx, source).downgrade();
             return None;
@@ -37,14 +38,11 @@ pub(super) fn load_provider_key(
 /// Loads a provider API key from environment variables.
 ///
 /// 从环境变量读取供应商 API 密钥。
-pub(super) fn load_provider_env(
-    _ctx: &ProviderExecutionContext,
-    provider_id: ProviderId,
-) -> Option<ProviderKey> {
+pub(super) fn load_provider_env(provider_id: ProviderId) -> Option<ProviderKey> {
     provider_id
         .env_key_names()
         .iter()
-        .find_map(|env_name| normalize_and_wrap_key(std::env::var(env_name).ok()?))
+        .find_map(|env_name| normalize_and_wrap_key(var(env_name).ok()?))
 }
 
 /// Normalizes a raw API key and clears discarded buffer content.

@@ -1,9 +1,8 @@
 // dev/scripts/rust/comments/crates/cli/src/runner.rs
 use std::{
-    env,
-    io::{self, Read},
+    env::args,
+    io::{stdin, Read},
 };
-
 use virganol_rust_comment_checker_core::{check_source, CommentCheckConfig};
 
 use super::CliError;
@@ -15,7 +14,7 @@ pub(super) fn run() -> Result<(), CliError> {
     let config = CommentCheckConfig::new(parse_allowed_ascii_terms()?);
     let mut source = String::new();
 
-    io::stdin().read_to_string(&mut source)?;
+    stdin().read_to_string(&mut source)?;
 
     check_source(&source, &config)?;
 
@@ -26,7 +25,7 @@ pub(super) fn run() -> Result<(), CliError> {
 ///
 /// 解析重复提供的允许 ASCII 术语参数。
 fn parse_allowed_ascii_terms() -> Result<Vec<String>, CliError> {
-    let mut args = env::args().skip(1);
+    let mut args = args().skip(1);
     let mut allowed_ascii_terms = Vec::new();
 
     while let Some(argument) = args.next() {

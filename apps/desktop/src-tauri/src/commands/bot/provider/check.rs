@@ -2,6 +2,7 @@
 use tauri::{AppHandle, State};
 
 use crate::core::{check_providers_lifecycle, AppState, ProviderCheckTrigger};
+use ProviderCheckTrigger::{ManualRefresh, Startup};
 
 /// Triggers provider lifecycle checks after application startup.
 ///
@@ -11,7 +12,7 @@ pub(crate) async fn trigger_provider_startup_check(
     app: AppHandle,
     state: State<'_, AppState>,
 ) -> Result<(), ()> {
-    check_providers_lifecycle(app, state.inner(), ProviderCheckTrigger::Startup).await;
+    check_providers_lifecycle(app, state.inner(), Startup).await;
     Ok(())
 }
 
@@ -23,6 +24,6 @@ pub(crate) async fn trigger_provider_manual_refresh(
     app: AppHandle,
     state: State<'_, AppState>,
 ) -> Result<(), ()> {
-    check_providers_lifecycle(app, state.inner(), ProviderCheckTrigger::ManualRefresh).await;
+    check_providers_lifecycle(app, state.inner(), ManualRefresh).await;
     Ok(())
 }
