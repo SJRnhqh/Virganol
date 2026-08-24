@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/common/element/subject.rs
-use std::fmt;
+use std::fmt::{Display, Formatter, Result};
 
 use super::ProviderId;
 
@@ -60,11 +60,11 @@ impl From<ProviderId> for ProviderSubject {
     }
 }
 
-impl fmt::Display for ProviderSubject {
+impl Display for ProviderSubject {
     /// Formats the subject for diagnostic messages.
     ///
     /// 将主体格式化为诊断消息。
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             Self::Provider(provider_id) => write!(f, "provider {provider_id}"),
             Self::ConfiguredProviders => f.write_str("the configured providers"),

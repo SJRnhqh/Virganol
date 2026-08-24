@@ -1,6 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/contract/lifecycle/status.rs
 use serde::Serialize;
 
+use self::ProviderConnectionStatus::{Connected, Failed};
 use super::super::super::{HealthCheckResult, ProviderAppError, ProviderKeyMeta, ProviderRecord};
 
 /// Provider runtime status projected for lifecycle status events.
@@ -32,8 +33,8 @@ impl ProviderRuntimeStatus {
         health: HealthCheckResult,
     ) -> Self {
         let connection = match health.into_models() {
-            Ok(available_models) => ProviderConnectionStatus::Connected { available_models },
-            Err(error) => ProviderConnectionStatus::Failed {
+            Ok(available_models) => Connected { available_models },
+            Err(error) => Failed {
                 error: ProviderAppError::from(&error),
             },
         };

@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/stage.rs
-use std::fmt;
+use std::fmt::{Display, Formatter, Result};
 
 /// Provider domain business execution stage.
 ///
@@ -65,11 +65,11 @@ impl ProviderStage {
     }
 }
 
-impl fmt::Display for ProviderStage {
+impl Display for ProviderStage {
     /// Formats this Provider stage for diagnostic context messages.
     ///
     /// 将当前供应商阶段格式化为诊断上下文消息。
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             Self::Manager => f.write_str("the manager stage"),
             Self::LifecycleEmit => f.write_str("the lifecycle event stage"),

@@ -1,7 +1,16 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/error/code.rs
 use serde::Serialize;
 
-use super::{ProviderError, ProviderFailure};
+use super::{
+    ProviderError,
+    ProviderFailure::{
+        CheckAggregate, CheckCompletedEmit, CheckFailedEmit, CheckStartedEmit, CheckStatusEmit,
+        CheckTaskJoin, ConfigNotFound, ConfigStore, HealthCheckHttp, HealthCheckMissingConfig,
+        HealthCheckNetwork, HealthCheckResponseFormat, JsonDeserialize, JsonSerialize,
+        ManagerRequestPayloadAbsent, SecretStoreInit, SecretStoreRead, SecretStoreRemove,
+        SecretStoreWrite, UnsupportedProvider,
+    },
+};
 
 /// Application boundary error codes for the Provider subject subdomain.
 ///
@@ -68,26 +77,26 @@ impl From<&ProviderError> for ProviderErrorCode {
     /// 将供应商内部错误投影为边界错误码。
     fn from(error: &ProviderError) -> Self {
         match error.failure() {
-            ProviderFailure::ManagerRequestPayloadAbsent => Self::MissingRequestData,
-            ProviderFailure::CheckStartedEmit { .. }
-            | ProviderFailure::CheckStatusEmit { .. }
-            | ProviderFailure::CheckCompletedEmit { .. }
-            | ProviderFailure::CheckFailedEmit { .. }
-            | ProviderFailure::CheckTaskJoin { .. }
-            | ProviderFailure::CheckAggregate => Self::CheckLifecycleFailed,
-            ProviderFailure::HealthCheckMissingConfig
-            | ProviderFailure::HealthCheckNetwork { .. }
-            | ProviderFailure::HealthCheckHttp
-            | ProviderFailure::HealthCheckResponseFormat { .. } => Self::HealthCheckFailed,
-            ProviderFailure::UnsupportedProvider => Self::UnsupportedProvider,
-            ProviderFailure::ConfigNotFound => Self::ProviderNotFound,
-            ProviderFailure::JsonSerialize { .. }
-            | ProviderFailure::JsonDeserialize { .. }
-            | ProviderFailure::ConfigStore { .. } => Self::ConfigStoreFailed,
-            ProviderFailure::SecretStoreInit { .. }
-            | ProviderFailure::SecretStoreWrite { .. }
-            | ProviderFailure::SecretStoreRead { .. }
-            | ProviderFailure::SecretStoreRemove { .. } => Self::SecretStoreFailed,
+            ManagerRequestPayloadAbsent => Self::MissingRequestData,
+            CheckStartedEmit { .. }
+            | CheckStatusEmit { .. }
+            | CheckCompletedEmit { .. }
+            | CheckFailedEmit { .. }
+            | CheckTaskJoin { .. }
+            | CheckAggregate => Self::CheckLifecycleFailed,
+            HealthCheckMissingConfig
+            | HealthCheckNetwork { .. }
+            | HealthCheckHttp
+            | HealthCheckResponseFormat { .. } => Self::HealthCheckFailed,
+            UnsupportedProvider => Self::UnsupportedProvider,
+            ConfigNotFound => Self::ProviderNotFound,
+            JsonSerialize { .. } | JsonDeserialize { .. } | ConfigStore { .. } => {
+                Self::ConfigStoreFailed
+            }
+            SecretStoreInit { .. }
+            | SecretStoreWrite { .. }
+            | SecretStoreRead { .. }
+            | SecretStoreRemove { .. } => Self::SecretStoreFailed,
         }
     }
 }

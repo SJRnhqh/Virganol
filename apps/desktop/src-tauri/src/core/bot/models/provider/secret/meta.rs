@@ -1,16 +1,18 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/secret/meta.rs
 use serde::Serialize;
 
+use self::ProviderKeySource::Absent;
+
 /// Source from which a provider API key was resolved.
 ///
 /// 供应商 API 密钥的解析来源。
 #[derive(Clone, Copy, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub(in crate::core::bot) enum ProviderKeySource {
-    /// No usable provider API key was resolved.
+    /// No usable provider API key source was resolved.
     ///
     /// 未解析到可用的供应商 API 密钥。
-    None,
+    Absent,
     /// Provider API key was resolved from an environment variable.
     ///
     /// 供应商 API 密钥来自环境变量。
@@ -43,7 +45,7 @@ impl ProviderKeyMeta {
     pub(super) fn none() -> Self {
         Self {
             has_key: false,
-            key_source: ProviderKeySource::None,
+            key_source: Absent,
         }
     }
 
@@ -52,7 +54,7 @@ impl ProviderKeyMeta {
     /// 根据密钥来源创建脱敏元信息，并自动推导是否存在可用密钥。
     pub(super) fn with_source(key_source: ProviderKeySource) -> Self {
         Self {
-            has_key: !matches!(key_source, ProviderKeySource::None),
+            has_key: !matches!(key_source, Absent),
             key_source,
         }
     }

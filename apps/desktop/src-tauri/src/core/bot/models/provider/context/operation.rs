@@ -1,5 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/operation.rs
-use std::fmt;
+use std::fmt::{Display, Formatter, Result};
+
+use self::ProviderManagerOperation::{Connect, Reset, UpdateModels};
 
 /// Interactive management operation carried by the interactive management context.
 ///
@@ -81,19 +83,15 @@ impl From<ProviderManagerOperation> for ProviderOperation {
     }
 }
 
-impl fmt::Display for ProviderOperation {
+impl Display for ProviderOperation {
     /// Formats this Provider operation for diagnostic context messages.
     ///
     /// 将当前供应商操作格式化为诊断上下文消息。
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            Self::Manager(ProviderManagerOperation::Connect) => {
-                f.write_str("the connect operation")
-            }
-            Self::Manager(ProviderManagerOperation::Reset) => f.write_str("the reset operation"),
-            Self::Manager(ProviderManagerOperation::UpdateModels) => {
-                f.write_str("the update models operation")
-            }
+            Self::Manager(Connect) => f.write_str("the connect operation"),
+            Self::Manager(Reset) => f.write_str("the reset operation"),
+            Self::Manager(UpdateModels) => f.write_str("the update models operation"),
             Self::LifecycleCheck => f.write_str("the lifecycle check operation"),
         }
     }

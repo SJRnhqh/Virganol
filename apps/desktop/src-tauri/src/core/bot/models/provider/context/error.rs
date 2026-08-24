@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/error.rs
-use std::fmt;
+use std::fmt::{Display, Formatter, Result};
 
 use super::super::ProviderSubject;
 use super::{ProviderOperation, ProviderScope, ProviderStage};
@@ -54,11 +54,11 @@ impl ProviderErrorContext {
     }
 }
 
-impl fmt::Display for ProviderErrorContext {
+impl Display for ProviderErrorContext {
     /// Formats this error context snapshot for internal error messages.
     ///
     /// 将此错误上下文快照格式化为内部错误消息。
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         write!(
             f,
             "{} during {} at {}",

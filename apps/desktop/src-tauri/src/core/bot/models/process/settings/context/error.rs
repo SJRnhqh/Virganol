@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/process/settings/context/error.rs
-use std::fmt;
+use std::fmt::{Display, Formatter, Result};
 
 use super::SettingsStage;
 
@@ -23,11 +23,11 @@ impl SettingsErrorContext {
     }
 }
 
-impl fmt::Display for SettingsErrorContext {
+impl Display for SettingsErrorContext {
     /// Formats the attribution context for internal error messages.
     ///
     /// 将归因上下文格式化为内部错误消息。
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         write!(f, "the settings process at {}", self.stage.as_phrase())
     }
 }

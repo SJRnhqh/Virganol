@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/common/element/id.rs
 use serde::{Deserialize, Serialize};
-use std::fmt;
+use std::fmt::{Display, Formatter, Result};
 
 /// Provider identifier shared by commands, storage, and events.
 ///
@@ -52,11 +52,11 @@ impl ProviderId {
     }
 }
 
-impl fmt::Display for ProviderId {
+impl Display for ProviderId {
     /// Formats the provider identifier as its stable string value.
     ///
     /// 将供应商标识格式化为稳定字符串值。
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         f.write_str(self.as_str())
     }
 }

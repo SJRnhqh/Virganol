@@ -27,3 +27,4 @@
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/models/provider/error`, `lifecycle`, and `secret` comments, member documentation, and visibility boundaries.
 - [x] Consolidated Rust Comments quality-gate coverage under `core/shared` and `core/bot`.
 - [x] Normalized `apps/desktop/src-tauri/src/core/bot/services` comments and member documentation; verified all function and re-export visibility boundaries.
+- [x] Normalized `apps/desktop/src-tauri/src/core/bot/models` type and enum-variant imports; verified comments, visibility, and implementation ordering.
