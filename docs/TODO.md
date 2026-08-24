@@ -17,4 +17,5 @@
 
 ## Completed
 
+- [x] Refine the architecture document positioning and establish a concise framework-oriented runtime architecture overview.
 - [x] Establish the branch execution plan for reliability architecture exploration and documentation delivery.

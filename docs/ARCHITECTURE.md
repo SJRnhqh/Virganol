@@ -1,49 +1,35 @@
 # Virganol Architecture
 
-> Project architecture, runtime boundaries, reliability design, and engineering
-> infrastructure
+> Virganol's system and reliability architecture, supported by engineering
+> infrastructure.
 
 ---
 
 ## System Architecture
 
-### Runtime Topology
+### Runtime Architecture
 
 Virganol is a modern desktop application built with a three-layer architecture:
 
 ```txt
 ┌─────────────────────────────────────────────────────────────┐
-│                      Frontend Layer                         │
-│                  TypeScript + React                         │
-│              (UI rendering, in-memory state)                │
+│                   Frontend Layer (React)                    │
 └─────────────────────────────────────────────────────────────┘
                               │
                         Tauri Commands
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   Desktop Runtime (Landlord)                │
-│                     Rust + Tauri 🦀                         │
-│         (native APIs, disk storage, sidecar lifecycle)      │
+│                   Desktop Runtime (Tauri)                   │
 └─────────────────────────────────────────────────────────────┘
                               │
                          gRPC (protobuf)
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   Agent Sidecar (Tenant)                    │
-│                      Go + Eino 🤖                           │
-│            (scoped file I/O, future AI features)            │
+│                    Agent Sidecar (Eino)                     │
 └─────────────────────────────────────────────────────────────┘
 ```
-
-### Landlord-Tenant Model
-
-**Rust (Landlord)**: Controls lifecycle, manages secrets, grants scoped
-access to Go
-
-**Go (Tenant)**: Receives `--app-data-dir` from Rust, file I/O limited to
-that directory
 
 ### Backend Module Organization
 
