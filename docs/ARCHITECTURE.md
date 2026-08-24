@@ -127,15 +127,30 @@ The intended dependency direction inside a feature domain is:
 
 ## Reliability Architecture
 
-### Context Propagation
+Reliability in Virganol is organized around business realities through
+contextualization, attributability, and observability.
 
-### Error Architecture
+### Contextualization
+
+Reality Contexts carry business meaning through execution.
+
+```txt
+Business Reality
+       │
+       └─▶ Reality Context
+           ├── Base Context
+           │   └── Stage
+           │       ├── consume ──▶ Next Stage
+           │       └── derive ───▶ Stage View
+           └── Business Context
+               ├── switch ───────▶ Other Business Context
+               ├── handoff ◀────▶ Other Reality Context
+               └── project ──────▶ Attribution Snapshot
+```
+
+### Attributability
 
 ### Observability
-
-#### Structured Logging
-
-#### Tracing
 
 ---
 

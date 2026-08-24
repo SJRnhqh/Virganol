@@ -5,12 +5,15 @@
 
 ## Current
 
-- [ ] Complete the reliability architecture for context propagation, errors,
+- [ ] Complete the remaining reliability architecture for attributability,
       observability, and representative Provider and Settings flows in
       `docs/ARCHITECTURE.md`.
 
 ## Completed
 
+- [x] Define reusable contextualization rules for stage transitions, Business
+      Context switches, cross reality handoffs, and attribution snapshot
+      projections.
 - [x] Separate the project overview from agent development guidance and align
       session bootstrap with both entry documents.
 - [x] Refine the architecture document positioning and establish a concise framework-oriented runtime architecture overview.
