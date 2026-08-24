@@ -16,3 +16,4 @@
 
 - [x] Normalized core crate comments, imports, parameter ordering, implementation layout, and minimum visibility boundaries.
 - [x] Extended repository comment-gate coverage to the core crate.
+- [x] Consolidated target-specific leading-region validation into `helper/target.rs` and removed the redundant helper module.
