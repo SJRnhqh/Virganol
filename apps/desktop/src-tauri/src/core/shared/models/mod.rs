@@ -4,4 +4,5 @@ mod log;
 mod state;
 
 pub(in crate::core) use error::AppError;
+pub(in crate::core) use log::LogEntry;
 pub(crate) use state::AppState;

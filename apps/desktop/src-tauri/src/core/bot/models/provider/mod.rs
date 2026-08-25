@@ -6,6 +6,7 @@ mod context;
 mod contract;
 mod error;
 mod lifecycle;
+mod log;
 mod secret;
 
 pub(in crate::core) use common::ProviderState;
