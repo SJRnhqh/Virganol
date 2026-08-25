@@ -46,7 +46,20 @@ impl<E> ProviderContext<E> {
         subject: ProviderSubject,
         operation: ProviderOperation,
     ) -> ProviderErrorContext {
-        ProviderErrorContext::from_parts(self.stage, subject, operation)
+        let (stage, subject, operation) = self.attribution_parts_for(subject, operation);
+
+        ProviderErrorContext::from_parts(stage, subject, operation)
+    }
+
+    /// Returns stable attribution parts for a subject and operation at the current stage.
+    ///
+    /// 返回指定主体与操作在当前阶段的稳定归因组成部分。
+    pub(super) fn attribution_parts_for(
+        &self,
+        subject: ProviderSubject,
+        operation: ProviderOperation,
+    ) -> (ProviderStage, ProviderSubject, ProviderOperation) {
+        (self.stage, subject, operation)
     }
 
     /// Consumes this context and returns the subject reality business context fields.

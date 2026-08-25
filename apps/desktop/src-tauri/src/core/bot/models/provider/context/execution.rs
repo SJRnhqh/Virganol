@@ -78,6 +78,14 @@ impl ProviderExecutionContext {
             .error_context_for(self.0.extra().subject.clone(), self.0.extra().operation)
     }
 
+    /// Returns the stable attribution parts carried by this execution context.
+    ///
+    /// 返回当前执行上下文携带的稳定归因组成部分。
+    pub(super) fn attribution_parts(&self) -> (ProviderStage, ProviderSubject, ProviderOperation) {
+        self.0
+            .attribution_parts_for(self.0.extra().subject.clone(), self.0.extra().operation)
+    }
+
     /// Creates an execution context from its constituent parts.
     ///
     /// 基于组成部分创建执行上下文。

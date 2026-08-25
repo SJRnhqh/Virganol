@@ -22,3 +22,4 @@
 - [x] Align Provider context documentation with subject reality terminology.
 - [x] Complete reality terminology alignment for Provider contexts and Settings process models.
 - [x] Establish the Provider logging projection skeleton and visibility boundaries.
+- [x] Implement Provider business context observation into structured logging context.

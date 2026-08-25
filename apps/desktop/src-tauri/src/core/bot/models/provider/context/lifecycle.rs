@@ -83,6 +83,16 @@ impl<'a> ProviderLifecycleContext<'a> {
         )
     }
 
+    /// Returns the stable attribution parts carried by this lifecycle context.
+    ///
+    /// 返回当前生命周期上下文携带的稳定归因组成部分。
+    pub(super) fn attribution_parts(&self) -> (ProviderStage, ProviderSubject, ProviderOperation) {
+        self.0.attribution_parts_for(
+            ProviderSubject::configured_providers(),
+            ProviderOperation::lifecycle_check(),
+        )
+    }
+
     /// Returns the stable correlation id for this lifecycle run.
     ///
     /// 返回本次生命周期运行的稳定关联标识。
