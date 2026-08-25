@@ -5,14 +5,15 @@
 
 ## Current
 
-- [ ] Explore and define the roles of logging and tracing within the observability system.
+- [ ] Implement the structured logging adapter layer.
 
 ## Planned
 
-- [ ] Implement the structured logging system.
+- [ ] Implement the structured logging application integration layer.
+- [ ] Implement the structured logging persistence layer.
 - [ ] Implement the execution tracing system.
 - [ ] Incorporate the completed observability design into the architecture documentation.
 
 ## Completed
 
-- None.
+- [x] Explore and define the roles of logging and tracing within the observability system.
