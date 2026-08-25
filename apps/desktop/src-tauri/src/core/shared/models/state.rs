@@ -5,16 +5,16 @@ use super::super::super::ProviderState;
 ///
 /// 由桌面运行时管理的共享应用状态。
 pub(crate) struct AppState {
-    /// Provider subject subdomain runtime coordination state.
+    /// Runtime coordination state for the Provider subject reality.
     ///
-    /// 供应商主体子域运行时协调状态。
+    /// 供应商主体实在运行时协调状态。
     provider: ProviderState,
 }
 
 impl AppState {
-    /// Returns provider subject subdomain runtime coordination state.
+    /// Returns runtime coordination state for the Provider subject reality.
     ///
-    /// 返回供应商主体子域运行时协调状态。
+    /// 返回供应商主体实在运行时协调状态。
     pub(in crate::core) fn provider(&self) -> &ProviderState {
         &self.provider
     }

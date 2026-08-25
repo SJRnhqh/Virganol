@@ -4,9 +4,9 @@ use serde::Serialize;
 use super::super::super::super::super::AppError;
 use super::{ProviderError, ProviderErrorCode, ProviderErrorDetails};
 
-/// Application boundary error for the Provider subject subdomain.
+/// Application boundary error for the Provider subject reality.
 ///
-/// 供应商主体子域的应用边界错误类型。
+/// 供应商主体实在的应用边界错误类型。
 #[derive(Serialize)]
 #[serde(transparent)]
 pub(crate) struct ProviderAppError(

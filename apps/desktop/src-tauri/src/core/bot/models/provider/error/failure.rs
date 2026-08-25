@@ -8,9 +8,9 @@ use tokio::task::JoinError;
 
 use super::super::super::SettingsError;
 
-/// Failure facts defined by the Provider subject subdomain.
+/// Failure facts defined by the Provider subject reality.
 ///
-/// 供应商主体子域定义的失败事实。
+/// 供应商主体实在定义的失败事实。
 #[derive(Error, Debug)]
 pub(super) enum ProviderFailure {
     /// Provider manager command payload is missing required data.

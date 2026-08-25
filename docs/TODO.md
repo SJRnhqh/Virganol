@@ -18,3 +18,4 @@
 
 - [x] Explore and define the roles of logging and tracing within the observability system.
 - [x] Establish the private shared logging skeleton with `AppLogger` and `LogEntry` placeholders.
+- [x] Standardize Provider subject reality terminology in Rust documentation comments.

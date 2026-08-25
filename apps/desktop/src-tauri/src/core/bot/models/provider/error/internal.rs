@@ -26,9 +26,9 @@ use super::{
     },
 };
 
-/// Internal error for the Provider subject subdomain.
+/// Internal error for the Provider subject reality.
 ///
-/// 供应商主体子域的内部错误。
+/// 供应商主体实在的内部错误。
 #[derive(Debug)]
 pub(in crate::core::bot) struct ProviderError {
     /// Provider error attribution snapshot.
