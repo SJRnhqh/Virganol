@@ -40,7 +40,7 @@ impl ProviderErrorContext {
 
     /// Creates an error context snapshot from stage, subject, and operation.
     ///
-    /// 基于执行阶段、领域主体与业务操作创建错误上下文快照。
+    /// 基于执行阶段、供应商主体实在中的主体与业务操作创建错误上下文快照。
     pub(super) fn from_parts(
         stage: ProviderStage,
         subject: ProviderSubject,

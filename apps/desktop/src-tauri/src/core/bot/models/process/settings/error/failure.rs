@@ -5,9 +5,9 @@ use tauri::Error as TauriError;
 use tauri_plugin_store::Error as StoreError;
 use thiserror::Error;
 
-/// Failure facts defined by the settings process.
+/// Failure facts defined by the Settings process reality.
 ///
-/// 设置业务过程定义的失败事实。
+/// 设置过程实在定义的失败事实。
 #[derive(Error, Debug)]
 pub(super) enum SettingsFailure {
     /// Settings store could not be opened.

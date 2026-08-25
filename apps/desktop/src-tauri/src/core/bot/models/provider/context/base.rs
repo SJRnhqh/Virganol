@@ -10,9 +10,9 @@ pub(super) struct ProviderContext<E = ()> {
     ///
     /// 当前上下文视图表示的供应商主体实在业务执行阶段。
     stage: ProviderStage,
-    /// Domain business context fields shared across derived stage views.
+    /// Subject reality business context fields shared across derived stage views.
     ///
-    /// 跨派生阶段视图共享的领域业务上下文字段。
+    /// 跨派生阶段视图共享的主体实在业务上下文字段。
     extra: E,
 }
 
@@ -49,9 +49,9 @@ impl<E> ProviderContext<E> {
         ProviderErrorContext::from_parts(self.stage, subject, operation)
     }
 
-    /// Consumes this context and returns the domain business context fields.
+    /// Consumes this context and returns the subject reality business context fields.
     ///
-    /// 消费当前上下文并返回领域业务上下文字段。
+    /// 消费当前上下文并返回主体实在业务上下文字段。
     pub(super) fn into_extra(self) -> E {
         self.extra
     }
@@ -63,9 +63,9 @@ impl<E> ProviderContext<E> {
         self.stage
     }
 
-    /// Returns the domain business context fields.
+    /// Returns the subject reality business context fields.
     ///
-    /// 返回领域业务上下文字段。
+    /// 返回主体实在业务上下文字段。
     pub(super) fn extra(&self) -> &E {
         &self.extra
     }

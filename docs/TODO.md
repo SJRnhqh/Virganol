@@ -20,3 +20,4 @@
 - [x] Establish the private shared logging skeleton with `AppLogger` and `LogEntry` placeholders.
 - [x] Standardize Provider subject reality terminology in Rust documentation comments.
 - [x] Align Provider context documentation with subject reality terminology.
+- [x] Complete reality terminology alignment for Provider contexts and Settings process models.

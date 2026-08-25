@@ -16,9 +16,9 @@ use super::{
     },
 };
 
-/// Internal error for the settings process.
+/// Internal error for the Settings process reality.
 ///
-/// 设置业务过程内部错误。
+/// 设置过程实在内部错误。
 #[derive(Debug)]
 pub(in crate::core::bot) struct SettingsError {
     /// Settings error attribution context snapshot.

@@ -45,9 +45,9 @@ impl ProviderManagerOperation {
     }
 }
 
-/// Provider business operation carried across domain context views.
+/// Provider business operation carried across subject reality context views.
 ///
-/// 跨领域上下文视图传播的供应商业务操作意图。
+/// 跨主体实在上下文视图传播的供应商业务操作意图。
 #[derive(Debug, Clone, Copy)]
 pub(super) enum ProviderOperation {
     /// Interactive management operation.
