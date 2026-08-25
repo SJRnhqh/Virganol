@@ -5,7 +5,7 @@ use super::ProviderOccurrence;
 /// Structured log entry for the Provider subject reality.
 ///
 /// 供应商主体实在的结构化日志条目。
-pub(super) struct ProviderLogEntry {
+pub(in crate::core::bot) struct ProviderLogEntry {
     /// Logging observation context captured from the originating business context.
     ///
     /// 从来源业务上下文固化的日志观测上下文。
@@ -20,7 +20,7 @@ impl ProviderLogEntry {
     /// Observes a business context failure as a Provider log entry.
     ///
     /// 将业务上下文中的失败观测为供应商日志条目。
-    pub(super) fn observe_failure<C>(context: &C, error: &ProviderError) -> Self
+    pub(in crate::core::bot) fn observe_failure<C>(context: &C, error: &ProviderError) -> Self
     where
         for<'a> &'a C: Into<ProviderLogContext>,
     {

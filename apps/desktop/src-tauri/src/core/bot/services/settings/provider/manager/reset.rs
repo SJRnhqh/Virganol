@@ -3,7 +3,8 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::AppState;
 use super::super::super::super::super::{
-    ProviderAppError, ProviderManagerContext, ResetProviderRequest, ResetProviderResponse,
+    ProviderAppError, ProviderLogEntry, ProviderManagerContext, ResetProviderRequest,
+    ResetProviderResponse,
 };
 use super::super::{remove_provider, remove_provider_key, save_provider};
 
@@ -23,7 +24,13 @@ pub(crate) fn reset_provider_config(
 
     let previous = match remove_provider(app, provider_state, &ctx, provider_id) {
         Ok(removed) => removed,
-        Err(e) => return Err(ProviderAppError::from(&e)),
+        Err(e) => {
+            // Observes the failure before returning it to the application boundary.
+            //
+            // 在返回应用边界错误前观测失败；条目暂未发出。
+            let _entry = ProviderLogEntry::observe_failure(&ctx, &e);
+            return Err(ProviderAppError::from(&e));
+        }
     };
 
     let ctx = ctx.into_secret_store();

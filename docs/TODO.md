@@ -24,3 +24,4 @@
 - [x] Establish the Provider logging projection skeleton and visibility boundaries.
 - [x] Implement Provider business context observation into structured logging context.
 - [x] Implement Provider failure log entry observation with lightweight failure kinds.
+- [x] Wire Provider failure observation into the application manager boundary.
