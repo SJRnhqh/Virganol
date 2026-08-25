@@ -6,11 +6,10 @@ use super::super::super::super::{
     PROVIDER_MANAGER_SCOPES, PROVIDER_SECRET_STORE_SCOPES,
 };
 use super::ProviderManagerOperation::{Connect, Reset, UpdateModels};
-use super::ProviderOperation::{LifecycleCheck, Manager};
+use super::ProviderOperation::{self, LifecycleCheck, Manager};
 use super::ProviderStage::{
-    ConfigStore, Connection, LifecycleEmit, Manager as ManagerStage, SecretStore,
+    self, ConfigStore, Connection, LifecycleEmit, Manager as ManagerStage, SecretStore,
 };
-use super::{ProviderOperation, ProviderStage};
 
 /// Stable Provider business scope derived from an execution stage and operation.
 ///

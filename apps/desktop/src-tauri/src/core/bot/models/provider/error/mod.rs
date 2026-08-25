@@ -9,4 +9,5 @@ pub(crate) use app::ProviderAppError;
 pub(self) use code::ProviderErrorCode;
 pub(self) use details::ProviderErrorDetails;
 pub(self) use failure::ProviderFailure;
+pub(super) use failure::ProviderFailureKind;
 pub(in crate::core::bot) use internal::ProviderError;

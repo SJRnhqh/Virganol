@@ -2,6 +2,7 @@
 use keyring::Error as KeyringError;
 use reqwest::Error as ReqwestError;
 use serde_json::Error as JsonError;
+use strum::EnumDiscriminants;
 use tauri::Error as TauriError;
 use thiserror::Error;
 use tokio::task::JoinError;
@@ -11,7 +12,9 @@ use super::super::super::SettingsError;
 /// Failure facts defined by the Provider subject reality.
 ///
 /// 供应商主体实在定义的失败事实。
-#[derive(Error, Debug)]
+#[derive(Error, Debug, EnumDiscriminants)]
+#[strum_discriminants(vis(pub(in crate::core::bot::models::provider)))]
+#[strum_discriminants(name(ProviderFailureKind))]
 pub(super) enum ProviderFailure {
     /// Provider manager command payload is missing required data.
     ///

@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Define the Provider business logging projection and adapter API.
+- [ ] Define the Provider logging adapter to the shared `LogEntry` and sink.
 
 ## Planned
 
@@ -23,3 +23,4 @@
 - [x] Complete reality terminology alignment for Provider contexts and Settings process models.
 - [x] Establish the Provider logging projection skeleton and visibility boundaries.
 - [x] Implement Provider business context observation into structured logging context.
+- [x] Implement Provider failure log entry observation with lightweight failure kinds.

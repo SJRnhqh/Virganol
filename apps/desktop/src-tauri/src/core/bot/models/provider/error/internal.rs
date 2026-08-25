@@ -16,14 +16,14 @@ use super::super::{
     ProviderManagerContext,
 };
 use super::{
-    ProviderFailure,
     ProviderFailure::{
-        CheckAggregate, CheckCompletedEmit, CheckFailedEmit, CheckStartedEmit, CheckStatusEmit,
-        CheckTaskJoin, ConfigNotFound, ConfigStore, HealthCheckHttp, HealthCheckMissingConfig,
-        HealthCheckNetwork, HealthCheckResponseFormat, JsonDeserialize, JsonSerialize,
-        ManagerRequestPayloadAbsent, SecretStoreInit, SecretStoreRead, SecretStoreRemove,
-        SecretStoreWrite, UnsupportedProvider,
+        self, CheckAggregate, CheckCompletedEmit, CheckFailedEmit, CheckStartedEmit,
+        CheckStatusEmit, CheckTaskJoin, ConfigNotFound, ConfigStore, HealthCheckHttp,
+        HealthCheckMissingConfig, HealthCheckNetwork, HealthCheckResponseFormat, JsonDeserialize,
+        JsonSerialize, ManagerRequestPayloadAbsent, SecretStoreInit, SecretStoreRead,
+        SecretStoreRemove, SecretStoreWrite, UnsupportedProvider,
     },
+    ProviderFailureKind,
 };
 
 /// Internal error for the Provider subject reality.
@@ -226,6 +226,13 @@ impl ProviderError {
         source: KeyringError,
     ) -> Self {
         Self::new(ctx.error_context(), SecretStoreRemove { source })
+    }
+
+    /// Returns the lightweight Provider failure kind.
+    ///
+    /// 返回轻量供应商失败种类。
+    pub(in crate::core::bot::models::provider) fn failure_kind(&self) -> ProviderFailureKind {
+        (&self.failure).into()
     }
 
     /// Returns the error attribution snapshot.

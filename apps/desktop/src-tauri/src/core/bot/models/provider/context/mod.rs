@@ -13,7 +13,7 @@ pub(self) use base::ProviderContext;
 pub(super) use error::ProviderErrorContext;
 pub(in crate::core::bot) use execution::ProviderExecutionContext;
 pub(in crate::core::bot) use lifecycle::ProviderLifecycleContext;
-pub(self) use log::ProviderLogContext;
+pub(super) use log::ProviderLogContext;
 pub(in crate::core::bot) use manager::ProviderManagerContext;
 pub(self) use operation::{ProviderManagerOperation, ProviderOperation};
 pub(super) use scope::ProviderScope;

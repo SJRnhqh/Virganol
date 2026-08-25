@@ -8,7 +8,7 @@ use super::{
 /// Provider subject reality logging observation context that captures stable attribution facts.
 ///
 /// 固化稳定归因事实的供应商主体实在日志观测上下文。
-pub(super) struct ProviderLogContext {
+pub(in crate::core::bot::models::provider) struct ProviderLogContext {
     /// Provider subject reality execution stage where the event was observed.
     ///
     /// 观察到事件时所在的供应商主体实在执行阶段。

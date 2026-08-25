@@ -9,11 +9,9 @@ use tauri::Error as TauriError;
 use tauri_plugin_store::Error as StoreError;
 
 use super::super::{SettingsErrorContext, SettingsStorageContext};
-use super::{
-    SettingsFailure,
-    SettingsFailure::{
-        StoreOpen, StorePath, StoreReplace, StoreSerialize, StoreSync, StoreTempCreate, StoreWrite,
-    },
+use super::SettingsFailure::{
+    self, StoreOpen, StorePath, StoreReplace, StoreSerialize, StoreSync, StoreTempCreate,
+    StoreWrite,
 };
 
 /// Internal error for the Settings process reality.
