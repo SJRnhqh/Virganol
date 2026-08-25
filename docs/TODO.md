@@ -5,10 +5,11 @@
 
 ## Current
 
-- [ ] Define the Provider logging adapter to the shared `LogEntry` and sink.
+- [ ] Define the remaining shared `LogEntry` observation fields and Provider generalization.
 
 ## Planned
 
+- [ ] Define the structured logging sink boundary.
 - [ ] Implement the structured logging application integration layer.
 - [ ] Implement the structured logging persistence layer.
 - [ ] Implement the execution tracing system.
@@ -25,3 +26,5 @@
 - [x] Implement Provider business context observation into structured logging context.
 - [x] Implement Provider failure log entry observation with lightweight failure kinds.
 - [x] Wire Provider failure observation into the application manager boundary.
+- [x] Establish shared log observation construction with timestamp and severity.
+- [x] Generalize Provider failure observations into the shared `LogEntry` boundary.
