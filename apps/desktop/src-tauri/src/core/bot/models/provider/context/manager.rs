@@ -19,9 +19,9 @@ struct ManagerExtra {
     operation: ProviderManagerOperation,
 }
 
-/// Provider interactive management domain business context.
+/// Provider subject reality interactive management business context.
 ///
-/// 供应商领域交互式管理业务上下文。
+/// 供应商主体实在交互式管理业务上下文。
 pub(in crate::core::bot) struct ProviderManagerContext(
     /// Shared context state backing this interactive management view.
     ///

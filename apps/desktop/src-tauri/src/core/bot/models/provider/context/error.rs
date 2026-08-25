@@ -9,13 +9,13 @@ use super::{ProviderOperation, ProviderScope, ProviderStage};
 /// 供应商错误归因上下文快照。
 #[derive(Debug, Clone)]
 pub(in crate::core::bot::models::provider) struct ProviderErrorContext {
-    /// Provider domain execution stage where the failure was observed.
+    /// Provider subject reality execution stage where the failure was observed.
     ///
-    /// 观察到失败时所在的供应商领域执行阶段。
+    /// 观察到失败时所在的供应商主体实在执行阶段。
     stage: ProviderStage,
-    /// Provider-domain subject targeted by the failure.
+    /// Subject within the Provider subject reality targeted by the failure.
     ///
-    /// 当前失败归因的供应商领域主体。
+    /// 当前失败归因的供应商主体实在中的主体。
     subject: ProviderSubject,
     /// Provider business operation being performed when the failure was observed.
     ///
@@ -31,9 +31,9 @@ impl ProviderErrorContext {
         ProviderScope::from_parts(self.stage, self.operation)
     }
 
-    /// Returns the provider-domain subject carried by this error context.
+    /// Returns the subject carried by this error context within the Provider subject reality.
     ///
-    /// 返回当前错误上下文携带的供应商领域主体。
+    /// 返回当前错误上下文携带的供应商主体实在中的主体。
     pub(in crate::core::bot::models::provider) fn subject(&self) -> &ProviderSubject {
         &self.subject
     }

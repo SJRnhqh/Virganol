@@ -20,9 +20,9 @@ struct LifecycleExtra<'a> {
     trigger: &'a ProviderCheckTrigger,
 }
 
-/// Provider lifecycle domain business context.
+/// Provider subject reality lifecycle business context.
 ///
-/// 供应商领域生命周期业务上下文。
+/// 供应商主体实在生命周期业务上下文。
 pub(in crate::core::bot) struct ProviderLifecycleContext<'a>(
     /// Shared context state backing this lifecycle view.
     ///
@@ -59,9 +59,9 @@ impl<'a> ProviderLifecycleContext<'a> {
         Self(self.0.for_config_store())
     }
 
-    /// Converts this lifecycle context into an execution context with a Provider-domain subject.
+    /// Converts this lifecycle context into an execution context targeting a subject within the Provider subject reality.
     ///
-    /// 将当前生命周期上下文转换为携带指定供应商领域主体的执行上下文。
+    /// 将当前生命周期上下文转换为携带供应商主体实在中指定主体的执行上下文。
     pub(in crate::core::bot) fn into_execution_context_with(
         self,
         subject: ProviderSubject,

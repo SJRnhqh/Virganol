@@ -8,9 +8,9 @@ use super::{ProviderContext, ProviderErrorContext, ProviderOperation, ProviderSt
 /// 执行业务上下文字段。
 #[derive(Clone)]
 struct ExecutionExtra {
-    /// Provider domain subject targeted by this execution.
+    /// Subject within the Provider subject reality targeted by this execution.
     ///
-    /// 当前执行链路归因的供应商领域主体。
+    /// 当前执行链路归因的供应商主体实在中的主体。
     subject: ProviderSubject,
     /// Provider execution operation currently being executed.
     ///
@@ -18,9 +18,9 @@ struct ExecutionExtra {
     operation: ProviderOperation,
 }
 
-/// Provider execution domain business context.
+/// Provider subject reality execution business context.
 ///
-/// 供应商领域执行业务上下文。
+/// 供应商主体实在执行业务上下文。
 pub(in crate::core::bot) struct ProviderExecutionContext(
     /// Shared context state backing this execution view.
     ///
@@ -50,9 +50,9 @@ impl ProviderExecutionContext {
         Self(self.0.for_secret_store())
     }
 
-    /// Derives a context view for a specific Provider-domain subject.
+    /// Derives a context view for a specific subject within the Provider subject reality.
     ///
-    /// 派生针对指定供应商领域主体的上下文视图。
+    /// 派生针对供应商主体实在中指定主体的上下文视图。
     pub(in crate::core::bot) fn for_subject(&self, subject: ProviderSubject) -> Self {
         Self(ProviderContext::new(
             self.0.stage(),

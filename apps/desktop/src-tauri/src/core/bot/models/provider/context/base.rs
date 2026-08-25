@@ -2,13 +2,13 @@
 use super::super::ProviderSubject;
 use super::{ProviderErrorContext, ProviderOperation, ProviderStage};
 
-/// Provider domain base context.
+/// Provider subject reality base context.
 ///
-/// 供应商领域基础上下文。
+/// 供应商主体实在基础上下文。
 pub(super) struct ProviderContext<E = ()> {
-    /// Provider domain business execution stage represented by this context view.
+    /// Provider subject reality business execution stage represented by this context view.
     ///
-    /// 当前上下文视图表示的供应商领域业务执行阶段。
+    /// 当前上下文视图表示的供应商主体实在业务执行阶段。
     stage: ProviderStage,
     /// Domain business context fields shared across derived stage views.
     ///
@@ -56,9 +56,9 @@ impl<E> ProviderContext<E> {
         self.extra
     }
 
-    /// Returns the current Provider domain stage.
+    /// Returns the current Provider subject reality stage.
     ///
-    /// 返回当前供应商领域阶段。
+    /// 返回当前供应商主体实在阶段。
     pub(super) fn stage(&self) -> ProviderStage {
         self.stage
     }
@@ -70,9 +70,9 @@ impl<E> ProviderContext<E> {
         &self.extra
     }
 
-    /// Creates a Provider domain base context at the given execution stage.
+    /// Creates a Provider subject reality base context at the given execution stage.
     ///
-    /// 使用指定执行阶段创建供应商领域基础上下文。
+    /// 使用指定执行阶段创建供应商主体实在基础上下文。
     pub(super) fn new(stage: ProviderStage, extra: E) -> Self {
         Self { stage, extra }
     }
