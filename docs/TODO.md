@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Implement the structured logging adapter layer.
+- [ ] Define the Provider business logging projection and adapter API.
 
 ## Planned
 
@@ -17,3 +17,4 @@
 ## Completed
 
 - [x] Explore and define the roles of logging and tracing within the observability system.
+- [x] Establish the private shared logging skeleton with `AppLogger` and `LogEntry` placeholders.
