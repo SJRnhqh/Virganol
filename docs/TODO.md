@@ -5,11 +5,11 @@
 
 ## Current
 
-- [ ] Integrate `AppLogger` into the Tauri-managed application lifecycle and Provider observation boundary.
+- [ ] Record the first Provider manager failure through `AppLogger` on the update-enabled-models path.
 
 ## Planned
 
-- [ ] Integrate `AppLogger` into the Tauri-managed application lifecycle and Provider observation boundary.
+- [ ] Integrate structured Provider failure records across the remaining manager and lifecycle paths.
 - [ ] Define the structured logging sink boundary.
 - [ ] Implement the structured logging application integration layer, revisiting attribution ownership at the emission boundary.
 - [ ] Implement the structured logging persistence layer, revisiting `ProviderAttribution` clone semantics and cost for durable writes.
@@ -30,3 +30,4 @@
 - [x] Establish explicit Provider log entry generalization into the shared `LogEntry` boundary.
 - [x] Preserve domain occurrence facts in the generic shared `LogEntry` boundary.
 - [x] Establish structured log text projection and log-facade emission through `AppLogger`.
+- [x] Register `AppLogger` as Tauri-managed state and establish the Provider failure recording boundary.

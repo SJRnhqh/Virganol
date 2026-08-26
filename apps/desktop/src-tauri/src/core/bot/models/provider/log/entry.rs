@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/log/entry.rs
 use super::super::super::super::super::{
-    LogEntry,
+    AppLogger, LogEntry,
     LogLevel::{self, Error},
 };
 use super::super::{
@@ -23,13 +23,14 @@ pub(in crate::core::bot) struct ProviderLogEntry {
 }
 
 impl ProviderLogEntry {
-    /// Observes a business context failure as a Provider log entry.
+    /// Records a structured log entry for a Provider failure.
     ///
-    /// 将业务上下文中的失败观测为供应商日志条目。
-    pub(in crate::core::bot::models::provider) fn observe_failure(
+    /// 为供应商失败记录结构化日志条目。
+    pub(in crate::core::bot::models::provider) fn record_failure(
+        logger: &AppLogger,
         error: &ProviderError,
-    ) -> LogEntry<ProviderOccurrence, ProviderStage, ProviderSubject, ProviderOperation> {
-        Self::new(error.into(), error.attribution().clone()).generalize(Error)
+    ) {
+        logger.record(Self::new(error.into(), error.attribution().clone()).generalize(Error));
     }
 
     /// Generalizes this Provider log entry into a shared structured log entry.

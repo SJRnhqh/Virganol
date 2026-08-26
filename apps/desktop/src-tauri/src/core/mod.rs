@@ -9,8 +9,8 @@ pub(super) use bot::{
     ProviderAppError, ProviderCheckTrigger, ResetProviderRequest, ResetProviderResponse,
     UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
-pub(super) use shared::AppState;
 pub(self) use shared::{impl_downgrade, AppAttribution, AppError, Downgrade, LogEntry, LogLevel};
+pub(super) use shared::{AppLogger, AppState};
 
 // TODO: standardize
 mod init;

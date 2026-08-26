@@ -12,7 +12,7 @@ use commands::{
     connect_and_save_provider, reset_provider, trigger_provider_manual_refresh,
     trigger_provider_startup_check, update_enabled_models,
 };
-use core::{AppState, SidecarManager, SidecarState};
+use core::{AppLogger, AppState, SidecarManager, SidecarState};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -30,6 +30,7 @@ pub fn run() {
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_store::Builder::new().build()) // 持久化存储
+        .manage(AppLogger)
         // 注册 AppState
         .manage(AppState::default())
         // 注册 terminal 状态

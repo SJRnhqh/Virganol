@@ -7,13 +7,13 @@ use super::LogEntry;
 /// Application-scoped structured logging write facade.
 ///
 /// 应用级结构化日志写入门面。
-pub(super) struct AppLogger;
+pub(crate) struct AppLogger;
 
 impl AppLogger {
-    /// Emits a structured log entry through the application logger.
+    /// Records a structured log entry through the application logger.
     ///
-    /// 通过应用日志记录器发出结构化日志条目。
-    pub(super) fn emit<Occurrence, Stage, Subject, Operation>(
+    /// 通过应用日志记录器记录结构化日志条目。
+    pub(in crate::core) fn record<Occurrence, Stage, Subject, Operation>(
         &self,
         entry: LogEntry<Occurrence, Stage, Subject, Operation>,
     ) where
