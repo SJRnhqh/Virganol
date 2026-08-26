@@ -5,7 +5,7 @@ use std::fmt::{Display, Formatter, Result};
 ///
 /// 供应商主体实在业务执行阶段。
 #[derive(Debug, Clone, Copy)]
-pub(super) enum ProviderStage {
+pub(in crate::core::bot::models::provider) enum ProviderStage {
     /// Provider manager orchestration.
     ///
     /// 供应商管理编排阶段。

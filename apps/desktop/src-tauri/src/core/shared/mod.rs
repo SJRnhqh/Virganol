@@ -4,4 +4,4 @@ mod models;
 
 pub(super) use interfaces::{impl_downgrade, Downgrade};
 pub(crate) use models::AppState;
-pub(super) use models::{AppError, LogEntry, LogLevel};
+pub(super) use models::{AppAttribution, AppError, LogEntry, LogLevel};

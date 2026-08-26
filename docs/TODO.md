@@ -5,13 +5,13 @@
 
 ## Current
 
-- [ ] Define the remaining shared `LogEntry` observation fields and Provider generalization.
+- [ ] Define the remaining shared `LogEntry` occurrence field.
 
 ## Planned
 
 - [ ] Define the structured logging sink boundary.
-- [ ] Implement the structured logging application integration layer.
-- [ ] Implement the structured logging persistence layer.
+- [ ] Implement the structured logging application integration layer, revisiting attribution ownership at the emission boundary.
+- [ ] Implement the structured logging persistence layer, revisiting `ProviderAttribution` clone semantics and cost for durable writes.
 - [ ] Implement the execution tracing system.
 - [ ] Incorporate the completed observability design into the architecture documentation.
 

@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/execution.rs
 use super::super::super::SettingsStorageContext;
 use super::super::ProviderSubject;
-use super::{ProviderContext, ProviderErrorContext, ProviderOperation, ProviderStage};
+use super::{ProviderContext, ProviderOperation, ProviderStage};
 
 /// Execution business context fields.
 ///
@@ -54,7 +54,7 @@ impl ProviderExecutionContext {
     ///
     /// 派生针对供应商主体实在中指定主体的上下文视图。
     pub(in crate::core::bot) fn for_subject(&self, subject: ProviderSubject) -> Self {
-        Self(ProviderContext::new(
+        Self(ProviderContext::from_parts(
             self.0.stage(),
             ExecutionExtra {
                 subject,
@@ -68,14 +68,6 @@ impl ProviderExecutionContext {
     /// 从当前执行上下文派生设置存储上下文。
     pub(in crate::core::bot) fn for_settings_storage(&self) -> SettingsStorageContext {
         SettingsStorageContext::storage()
-    }
-
-    /// Projects this execution context into an error attribution snapshot.
-    ///
-    /// 将当前执行上下文投影为错误归因快照。
-    pub(in crate::core::bot::models::provider) fn error_context(&self) -> ProviderErrorContext {
-        self.0
-            .error_context_for(self.0.extra().subject.clone(), self.0.extra().operation)
     }
 
     /// Returns the stable attribution parts carried by this execution context.
@@ -101,7 +93,7 @@ impl ProviderExecutionContext {
     ///
     /// 集中创建执行上下文。
     fn new(stage: ProviderStage, subject: ProviderSubject, operation: ProviderOperation) -> Self {
-        Self(ProviderContext::new(
+        Self(ProviderContext::from_parts(
             stage,
             ExecutionExtra { subject, operation },
         ))

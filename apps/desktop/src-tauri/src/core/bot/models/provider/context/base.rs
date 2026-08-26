@@ -1,6 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/base.rs
 use super::super::ProviderSubject;
-use super::{ProviderErrorContext, ProviderOperation, ProviderStage};
+use super::{ProviderOperation, ProviderStage};
 
 /// Provider subject reality base context.
 ///
@@ -38,19 +38,6 @@ impl<E> ProviderContext<E> {
         self.to_stage(ProviderStage::secret_store())
     }
 
-    /// Projects this context into an error attribution snapshot for a subject.
-    ///
-    /// 为指定主体将当前上下文投影为错误归因快照。
-    pub(super) fn error_context_for(
-        &self,
-        subject: ProviderSubject,
-        operation: ProviderOperation,
-    ) -> ProviderErrorContext {
-        let (stage, subject, operation) = self.attribution_parts_for(subject, operation);
-
-        ProviderErrorContext::from_parts(stage, subject, operation)
-    }
-
     /// Returns stable attribution parts for a subject and operation at the current stage.
     ///
     /// 返回指定主体与操作在当前阶段的稳定归因组成部分。
@@ -83,10 +70,10 @@ impl<E> ProviderContext<E> {
         &self.extra
     }
 
-    /// Creates a Provider subject reality base context at the given execution stage.
+    /// Assembles a Provider subject reality base context from its parts.
     ///
-    /// 使用指定执行阶段创建供应商主体实在基础上下文。
-    pub(super) fn new(stage: ProviderStage, extra: E) -> Self {
+    /// 由组成部分组装供应商主体实在基础上下文。
+    pub(super) fn from_parts(stage: ProviderStage, extra: E) -> Self {
         Self { stage, extra }
     }
 

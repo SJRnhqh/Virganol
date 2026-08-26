@@ -10,7 +10,7 @@ pub(super) use bot::{
     UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
 pub(super) use shared::AppState;
-pub(self) use shared::{impl_downgrade, AppError, Downgrade, LogEntry, LogLevel};
+pub(self) use shared::{impl_downgrade, AppAttribution, AppError, Downgrade, LogEntry, LogLevel};
 
 // TODO: standardize
 mod init;

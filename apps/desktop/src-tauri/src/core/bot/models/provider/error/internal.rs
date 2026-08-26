@@ -12,8 +12,7 @@ use tokio::task::JoinError;
 use super::super::super::super::super::impl_downgrade;
 use super::super::super::SettingsError;
 use super::super::{
-    ProviderErrorContext, ProviderExecutionContext, ProviderLifecycleContext,
-    ProviderManagerContext,
+    ProviderAttribution, ProviderExecutionContext, ProviderLifecycleContext, ProviderManagerContext,
 };
 use super::{
     ProviderFailure::{
@@ -31,14 +30,14 @@ use super::{
 /// 供应商主体实在的内部错误。
 #[derive(Debug)]
 pub(in crate::core::bot) struct ProviderError {
-    /// Provider error attribution snapshot.
-    ///
-    /// 供应商错误归因快照。
-    context: ProviderErrorContext,
     /// Provider failure fact.
     ///
     /// 供应商失败事实。
     failure: ProviderFailure,
+    /// Provider attribution.
+    ///
+    /// 供应商归因。
+    attribution: ProviderAttribution,
 }
 
 impl ProviderError {
@@ -48,7 +47,7 @@ impl ProviderError {
     pub(in crate::core::bot) fn manager_request_payload_absent(
         ctx: &ProviderManagerContext,
     ) -> Self {
-        Self::new(ctx.error_context(), ManagerRequestPayloadAbsent)
+        Self::new(ManagerRequestPayloadAbsent, ctx.into())
     }
 
     /// Creates a check started event emission error.
@@ -58,7 +57,7 @@ impl ProviderError {
         ctx: &ProviderLifecycleContext,
         source: TauriError,
     ) -> Self {
-        Self::new(ctx.error_context(), CheckStartedEmit { source })
+        Self::new(CheckStartedEmit { source }, ctx.into())
     }
 
     /// Creates a check status event emission error.
@@ -68,7 +67,7 @@ impl ProviderError {
         ctx: &ProviderExecutionContext,
         source: TauriError,
     ) -> Self {
-        Self::new(ctx.error_context(), CheckStatusEmit { source })
+        Self::new(CheckStatusEmit { source }, ctx.into())
     }
 
     /// Creates a check completed event emission error.
@@ -78,7 +77,7 @@ impl ProviderError {
         ctx: &ProviderLifecycleContext,
         source: TauriError,
     ) -> Self {
-        Self::new(ctx.error_context(), CheckCompletedEmit { source })
+        Self::new(CheckCompletedEmit { source }, ctx.into())
     }
 
     /// Creates a check failed event emission error.
@@ -88,7 +87,7 @@ impl ProviderError {
         ctx: &ProviderLifecycleContext,
         source: TauriError,
     ) -> Self {
-        Self::new(ctx.error_context(), CheckFailedEmit { source })
+        Self::new(CheckFailedEmit { source }, ctx.into())
     }
 
     /// Creates a health check task join error.
@@ -98,14 +97,14 @@ impl ProviderError {
         ctx: &ProviderLifecycleContext,
         source: JoinError,
     ) -> Self {
-        Self::new(ctx.error_context(), CheckTaskJoin { source })
+        Self::new(CheckTaskJoin { source }, ctx.into())
     }
 
     /// Creates a check aggregate error.
     ///
     /// 创建检查聚合错误。
     pub(in crate::core::bot) fn check_aggregate(ctx: &ProviderLifecycleContext) -> Self {
-        Self::new(ctx.error_context(), CheckAggregate)
+        Self::new(CheckAggregate, ctx.into())
     }
 
     /// Creates an error for missing health check configuration.
@@ -114,7 +113,7 @@ impl ProviderError {
     pub(in crate::core::bot) fn health_check_missing_config(
         ctx: &ProviderExecutionContext,
     ) -> Self {
-        Self::new(ctx.error_context(), HealthCheckMissingConfig)
+        Self::new(HealthCheckMissingConfig, ctx.into())
     }
 
     /// Creates a health check network error.
@@ -124,14 +123,14 @@ impl ProviderError {
         ctx: &ProviderExecutionContext,
         source: ReqwestError,
     ) -> Self {
-        Self::new(ctx.error_context(), HealthCheckNetwork { source })
+        Self::new(HealthCheckNetwork { source }, ctx.into())
     }
 
     /// Creates a health check HTTP status error.
     ///
     /// 创建健康检查响应状态码错误。
     pub(in crate::core::bot) fn health_check_http(ctx: &ProviderExecutionContext) -> Self {
-        Self::new(ctx.error_context(), HealthCheckHttp)
+        Self::new(HealthCheckHttp, ctx.into())
     }
 
     /// Creates a health check response format error.
@@ -141,21 +140,21 @@ impl ProviderError {
         ctx: &ProviderExecutionContext,
         source: ReqwestError,
     ) -> Self {
-        Self::new(ctx.error_context(), HealthCheckResponseFormat { source })
+        Self::new(HealthCheckResponseFormat { source }, ctx.into())
     }
 
     /// Creates an unsupported Provider error.
     ///
     /// 创建不受支持的供应商错误。
     pub(in crate::core::bot) fn unsupported_provider(ctx: &ProviderExecutionContext) -> Self {
-        Self::new(ctx.error_context(), UnsupportedProvider)
+        Self::new(UnsupportedProvider, ctx.into())
     }
 
     /// Creates a configuration not found error.
     ///
     /// 创建配置缺失错误。
     pub(in crate::core::bot) fn config_not_found(ctx: &ProviderExecutionContext) -> Self {
-        Self::new(ctx.error_context(), ConfigNotFound)
+        Self::new(ConfigNotFound, ctx.into())
     }
 
     /// Creates a Provider configuration serialization error.
@@ -165,7 +164,7 @@ impl ProviderError {
         ctx: &ProviderExecutionContext,
         source: JsonError,
     ) -> Self {
-        Self::new(ctx.error_context(), JsonSerialize { source })
+        Self::new(JsonSerialize { source }, ctx.into())
     }
 
     /// Creates a Provider configuration deserialization error.
@@ -175,7 +174,7 @@ impl ProviderError {
         ctx: &ProviderExecutionContext,
         source: JsonError,
     ) -> Self {
-        Self::new(ctx.error_context(), JsonDeserialize { source })
+        Self::new(JsonDeserialize { source }, ctx.into())
     }
 
     /// Creates a Provider configuration storage error from a settings error.
@@ -185,7 +184,7 @@ impl ProviderError {
         ctx: &ProviderExecutionContext,
         source: SettingsError,
     ) -> Self {
-        Self::new(ctx.error_context(), ConfigStore { source })
+        Self::new(ConfigStore { source }, ctx.into())
     }
 
     /// Creates a secret store initialization error.
@@ -195,7 +194,7 @@ impl ProviderError {
         ctx: &ProviderExecutionContext,
         source: KeyringError,
     ) -> Self {
-        Self::new(ctx.error_context(), SecretStoreInit { source })
+        Self::new(SecretStoreInit { source }, ctx.into())
     }
 
     /// Creates a secret store write error.
@@ -205,7 +204,7 @@ impl ProviderError {
         ctx: &ProviderExecutionContext,
         source: KeyringError,
     ) -> Self {
-        Self::new(ctx.error_context(), SecretStoreWrite { source })
+        Self::new(SecretStoreWrite { source }, ctx.into())
     }
 
     /// Creates a secret store read error.
@@ -215,7 +214,7 @@ impl ProviderError {
         ctx: &ProviderExecutionContext,
         source: KeyringError,
     ) -> Self {
-        Self::new(ctx.error_context(), SecretStoreRead { source })
+        Self::new(SecretStoreRead { source }, ctx.into())
     }
 
     /// Creates a secret store removal error.
@@ -225,7 +224,7 @@ impl ProviderError {
         ctx: &ProviderExecutionContext,
         source: KeyringError,
     ) -> Self {
-        Self::new(ctx.error_context(), SecretStoreRemove { source })
+        Self::new(SecretStoreRemove { source }, ctx.into())
     }
 
     /// Returns the lightweight Provider failure kind.
@@ -235,13 +234,6 @@ impl ProviderError {
         (&self.failure).into()
     }
 
-    /// Returns the error attribution snapshot.
-    ///
-    /// 返回错误归因快照。
-    pub(super) fn context(&self) -> &ProviderErrorContext {
-        &self.context
-    }
-
     /// Returns the Provider failure fact.
     ///
     /// 返回供应商失败事实。
@@ -249,11 +241,21 @@ impl ProviderError {
         &self.failure
     }
 
+    /// Returns Provider attribution.
+    ///
+    /// 返回供应商归因。
+    pub(in crate::core::bot::models::provider) fn attribution(&self) -> &ProviderAttribution {
+        &self.attribution
+    }
+
     /// Creates an internal Provider error.
     ///
     /// 创建供应商内部错误。
-    fn new(context: ProviderErrorContext, failure: ProviderFailure) -> Self {
-        Self { context, failure }
+    fn new(failure: ProviderFailure, attribution: ProviderAttribution) -> Self {
+        Self {
+            failure,
+            attribution,
+        }
     }
 }
 
@@ -262,7 +264,7 @@ impl Display for ProviderError {
     ///
     /// 格式化已归因的供应商错误。
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        write!(f, "{} for {}", self.failure, self.context)?;
+        write!(f, "{} for {}", self.failure, self.attribution)?;
 
         if let Some(source) = self.failure.source() {
             write!(f, ": {source}")?;

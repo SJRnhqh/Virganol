@@ -1,8 +1,8 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/manager.rs
 use super::super::{ProviderId, ProviderSubject};
 use super::{
-    ProviderContext, ProviderErrorContext, ProviderExecutionContext, ProviderManagerOperation,
-    ProviderOperation, ProviderStage,
+    ProviderContext, ProviderExecutionContext, ProviderManagerOperation, ProviderOperation,
+    ProviderStage,
 };
 
 /// Interactive management business context fields.
@@ -79,16 +79,6 @@ impl ProviderManagerContext {
         )
     }
 
-    /// Projects this interactive management context into an error attribution snapshot.
-    ///
-    /// 将当前交互式管理上下文投影为错误归因快照。
-    pub(in crate::core::bot::models::provider) fn error_context(&self) -> ProviderErrorContext {
-        self.0.error_context_for(
-            self.0.extra().provider_id.into(),
-            self.0.extra().operation.into(),
-        )
-    }
-
     /// Returns the stable attribution parts carried by this interactive management context.
     ///
     /// 返回当前交互式管理上下文携带的稳定归因组成部分。
@@ -103,7 +93,7 @@ impl ProviderManagerContext {
     ///
     /// 集中创建交互式管理上下文。
     fn new(provider_id: ProviderId, operation: ProviderManagerOperation) -> Self {
-        Self(ProviderContext::new(
+        Self(ProviderContext::from_parts(
             ProviderStage::manager(),
             ManagerExtra {
                 provider_id,

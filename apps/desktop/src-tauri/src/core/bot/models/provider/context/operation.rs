@@ -49,7 +49,7 @@ impl ProviderManagerOperation {
 ///
 /// 跨主体实在上下文视图传播的供应商业务操作意图。
 #[derive(Debug, Clone, Copy)]
-pub(super) enum ProviderOperation {
+pub(in crate::core::bot::models::provider) enum ProviderOperation {
     /// Interactive management operation.
     ///
     /// 交互式管理操作。

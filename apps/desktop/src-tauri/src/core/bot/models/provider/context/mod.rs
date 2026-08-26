@@ -1,20 +1,19 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/mod.rs
+mod attribution;
 mod base;
-mod error;
 mod execution;
 mod lifecycle;
-mod log;
 mod manager;
 mod operation;
 mod scope;
 mod stage;
 
+pub(super) use attribution::ProviderAttribution;
 pub(self) use base::ProviderContext;
-pub(super) use error::ProviderErrorContext;
 pub(in crate::core::bot) use execution::ProviderExecutionContext;
 pub(in crate::core::bot) use lifecycle::ProviderLifecycleContext;
-pub(super) use log::ProviderLogContext;
 pub(in crate::core::bot) use manager::ProviderManagerContext;
-pub(self) use operation::{ProviderManagerOperation, ProviderOperation};
+pub(self) use operation::ProviderManagerOperation;
+pub(super) use operation::ProviderOperation;
 pub(super) use scope::ProviderScope;
-pub(self) use stage::ProviderStage;
+pub(super) use stage::ProviderStage;
