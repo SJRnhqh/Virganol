@@ -5,10 +5,11 @@
 
 ## Current
 
-- [ ] Define the structured logging sink boundary.
+- [ ] Integrate `AppLogger` into the Tauri-managed application lifecycle and Provider observation boundary.
 
 ## Planned
 
+- [ ] Integrate `AppLogger` into the Tauri-managed application lifecycle and Provider observation boundary.
 - [ ] Define the structured logging sink boundary.
 - [ ] Implement the structured logging application integration layer, revisiting attribution ownership at the emission boundary.
 - [ ] Implement the structured logging persistence layer, revisiting `ProviderAttribution` clone semantics and cost for durable writes.
@@ -25,7 +26,7 @@
 - [x] Establish the Provider logging projection skeleton and visibility boundaries.
 - [x] Implement Provider business context observation into structured logging context.
 - [x] Implement Provider failure log entry observation with lightweight failure kinds.
-- [x] Wire Provider failure observation into the application manager boundary.
 - [x] Establish shared log observation construction with timestamp and severity.
 - [x] Establish explicit Provider log entry generalization into the shared `LogEntry` boundary.
 - [x] Preserve domain occurrence facts in the generic shared `LogEntry` boundary.
+- [x] Establish structured log text projection and log-facade emission through `AppLogger`.

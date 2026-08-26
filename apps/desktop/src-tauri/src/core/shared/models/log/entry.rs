@@ -1,5 +1,8 @@
 // apps/desktop/src-tauri/src/core/shared/models/log/entry.rs
-use std::time::SystemTime;
+use std::{
+    fmt::{Display, Formatter, Result},
+    time::SystemTime,
+};
 
 use super::super::AppAttribution;
 use super::LogLevel;
@@ -38,6 +41,13 @@ impl<Occurrence, Stage, Subject, Operation> LogEntry<Occurrence, Stage, Subject,
         Self::new(SystemTime::now(), level, occurrence, attribution)
     }
 
+    /// Returns this structured log entry's severity level.
+    ///
+    /// 返回当前结构化日志条目的严重级别。
+    pub(super) fn level(&self) -> &LogLevel {
+        &self.level
+    }
+
     /// Creates a structured log entry.
     ///
     /// 创建结构化日志条目。
@@ -53,5 +63,23 @@ impl<Occurrence, Stage, Subject, Operation> LogEntry<Occurrence, Stage, Subject,
             occurrence,
             attribution,
         }
+    }
+}
+
+impl<Occurrence, Stage, Subject, Operation> Display
+    for LogEntry<Occurrence, Stage, Subject, Operation>
+where
+    Occurrence: Display,
+    AppAttribution<Stage, Subject, Operation>: Display,
+{
+    /// Formats this structured log entry for text output.
+    ///
+    /// 格式化当前结构化日志条目以用于文本输出。
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(
+            f,
+            "occurrence={}; attribution={}",
+            self.occurrence, self.attribution
+        )
     }
 }
