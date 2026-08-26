@@ -28,13 +28,13 @@ impl ProviderLogEntry {
     where
         for<'a> &'a C: Into<ProviderLogContext>,
     {
-        Self::new(context.into(), error.into()).into_log_entry(Error)
+        Self::new(context.into(), error.into()).generalize(Error)
     }
 
     /// Generalizes this Provider log entry into a shared structured log entry.
     ///
     /// 将当前供应商日志条目通用化为共享结构化日志条目。
-    fn into_log_entry(self, level: LogLevel) -> LogEntry {
+    fn generalize(self, level: LogLevel) -> LogEntry {
         // TODO: Normalize the Provider observation into the shared log fields.
         LogEntry::from_observation(level)
     }

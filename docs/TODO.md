@@ -27,4 +27,4 @@
 - [x] Implement Provider failure log entry observation with lightweight failure kinds.
 - [x] Wire Provider failure observation into the application manager boundary.
 - [x] Establish shared log observation construction with timestamp and severity.
-- [x] Generalize Provider failure observations into the shared `LogEntry` boundary.
+- [x] Establish explicit Provider log entry generalization into the shared `LogEntry` boundary.
