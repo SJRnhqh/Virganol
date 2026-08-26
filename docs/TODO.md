@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Define the remaining shared `LogEntry` occurrence field.
+- [ ] Define the structured logging sink boundary.
 
 ## Planned
 
@@ -28,3 +28,4 @@
 - [x] Wire Provider failure observation into the application manager boundary.
 - [x] Establish shared log observation construction with timestamp and severity.
 - [x] Establish explicit Provider log entry generalization into the shared `LogEntry` boundary.
+- [x] Preserve domain occurrence facts in the generic shared `LogEntry` boundary.

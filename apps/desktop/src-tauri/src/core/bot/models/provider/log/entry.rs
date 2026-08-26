@@ -28,7 +28,7 @@ impl ProviderLogEntry {
     /// 将业务上下文中的失败观测为供应商日志条目。
     pub(in crate::core::bot::models::provider) fn observe_failure(
         error: &ProviderError,
-    ) -> LogEntry<ProviderStage, ProviderSubject, ProviderOperation> {
+    ) -> LogEntry<ProviderOccurrence, ProviderStage, ProviderSubject, ProviderOperation> {
         Self::new(error.into(), error.attribution().clone()).generalize(Error)
     }
 
@@ -38,8 +38,8 @@ impl ProviderLogEntry {
     fn generalize(
         self,
         level: LogLevel,
-    ) -> LogEntry<ProviderStage, ProviderSubject, ProviderOperation> {
-        LogEntry::from_observation(level, self.attribution.generalize())
+    ) -> LogEntry<ProviderOccurrence, ProviderStage, ProviderSubject, ProviderOperation> {
+        LogEntry::from_observation(level, self.occurrence, self.attribution.generalize())
     }
 
     /// Creates a Provider structured log entry.
