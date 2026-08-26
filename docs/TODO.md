@@ -9,6 +9,7 @@
 
 ## Planned
 
+- [ ] Move Tauri invoke-handler registration out of the crate root without relying on generated macro internals.
 - [ ] Integrate structured Provider failure records across the remaining manager and lifecycle paths.
 - [ ] Define the structured logging sink boundary.
 - [ ] Implement the structured logging application integration layer, revisiting attribution ownership at the emission boundary.
@@ -31,3 +32,4 @@
 - [x] Preserve domain occurrence facts in the generic shared `LogEntry` boundary.
 - [x] Establish structured log text projection and log-facade emission through `AppLogger`.
 - [x] Register `AppLogger` as Tauri-managed state and establish the Provider failure recording boundary.
+- [x] Move the desktop application run lifecycle into the `container` module.
