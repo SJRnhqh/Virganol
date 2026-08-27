@@ -33,7 +33,7 @@ impl Display for ProviderOccurrence {
     /// 格式化当前供应商发生事实以用于文本输出。
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            Self::Failure(failure_kind) => write!(f, "failure={failure_kind:?}"),
+            Self::Failure(failure_kind) => write!(f, "{failure_kind}"),
         }
     }
 }

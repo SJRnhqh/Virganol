@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Integrate structured Provider failure records across the remaining manager and lifecycle paths.
+- [ ] Propagate `AppLogger` through the remaining Provider downgrade call paths.
 
 ## Planned
 
@@ -36,3 +36,6 @@
 - [x] Separate Tauri command handler management into a root-scope invoke include without generated macro internals.
 - [x] Establish explicit `AppLogger` injection from Provider commands through manager and lifecycle services.
 - [x] Record the first Provider manager failures through `AppLogger` on the update-enabled-models path.
+- [x] Record reset manager failures through `AppLogger`, including rollback failure suppression.
+- [x] Establish generic downgrade observation through `ProviderFailureKind` and shared `LogEntry` construction.
+- [x] Standardize Provider failure occurrence formatting as snake-case failure kinds.

@@ -1,8 +1,10 @@
 // apps/desktop/src-tauri/src/commands/bot/provider/check.rs
 use tauri::{command, AppHandle, State};
 
-use crate::core::{check_providers_lifecycle, AppLogger, AppState, ProviderCheckTrigger};
-use ProviderCheckTrigger::{ManualRefresh, Startup};
+use crate::core::{
+    check_providers_lifecycle, AppLogger, AppState,
+    ProviderCheckTrigger::{ManualRefresh, Startup},
+};
 
 /// Triggers provider lifecycle checks after application startup.
 ///

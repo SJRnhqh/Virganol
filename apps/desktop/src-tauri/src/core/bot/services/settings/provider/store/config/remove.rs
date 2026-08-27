@@ -2,7 +2,7 @@
 use serde_json::to_value;
 use tauri::AppHandle;
 
-use super::super::super::super::super::super::super::Downgrade;
+use super::super::super::super::super::super::super::{AppLogger, Downgrade};
 use super::super::super::super::super::super::{
     ProviderError, ProviderExecutionContext, ProviderId, ProviderRecord, ProviderState,
     SPIRIT_PROVIDERS_KEY,
@@ -15,6 +15,7 @@ use super::load_all_providers;
 /// 删除指定供应商的持久化配置，并返回已删除记录。
 pub(in crate::core::bot::services::settings::provider) fn remove_provider(
     app: &AppHandle,
+    logger: &AppLogger,
     provider_state: &ProviderState,
     ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
@@ -24,7 +25,7 @@ pub(in crate::core::bot::services::settings::provider) fn remove_provider(
     let previous = match providers.remove(provider_id.as_str()) {
         Some(record) => record,
         None => {
-            ProviderError::config_not_found(ctx).downgrade();
+            ProviderError::config_not_found(ctx).downgrade(logger);
             return Ok(None);
         }
     };

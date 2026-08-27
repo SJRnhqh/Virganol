@@ -7,7 +7,7 @@ use self::ProviderManagerOperation::{Connect, Reset, UpdateModels};
 ///
 /// 交互式管理上下文携带的交互式供应商操作意图。
 #[derive(Debug, Clone, Copy)]
-pub(super) enum ProviderManagerOperation {
+pub(in crate::core::bot::models::provider) enum ProviderManagerOperation {
     /// Connect a provider and persist its configuration after a successful probe.
     ///
     /// 连接供应商，并在探测成功后持久化配置。

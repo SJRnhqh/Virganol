@@ -23,9 +23,21 @@ pub(in crate::core::bot) struct ProviderLogEntry {
 }
 
 impl ProviderLogEntry {
-    /// Records a structured log entry for a Provider failure.
+    /// Records structured log entries for multiple Provider failures.
     ///
-    /// 为供应商失败记录结构化日志条目。
+    /// 为多个供应商失败记录结构化日志条目。
+    pub(in crate::core::bot) fn record_failures<'a>(
+        logger: &AppLogger,
+        errors: impl IntoIterator<Item = &'a ProviderError>,
+    ) {
+        for error in errors {
+            Self::record_failure(logger, error);
+        }
+    }
+
+    /// Records a structured log entry for a single Provider failure.
+    ///
+    /// 为单个供应商失败记录结构化日志条目。
     pub(in crate::core::bot) fn record_failure(logger: &AppLogger, error: &ProviderError) {
         logger.record(Self::new(error.into(), error.attribution().clone()).generalize(Error));
     }
