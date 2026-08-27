@@ -2,7 +2,8 @@
 use tauri::{AppHandle, State};
 
 use crate::core::{
-    reset_provider_config, AppState, ProviderAppError, ResetProviderRequest, ResetProviderResponse,
+    reset_provider_config, AppLogger, AppState, ProviderAppError, ResetProviderRequest,
+    ResetProviderResponse,
 };
 
 /// Handles provider reset at the command boundary.
@@ -11,8 +12,9 @@ use crate::core::{
 #[tauri::command]
 pub(crate) async fn reset_provider(
     app: AppHandle,
+    logger: State<'_, AppLogger>,
     state: State<'_, AppState>,
     payload: ResetProviderRequest,
 ) -> Result<ResetProviderResponse, ProviderAppError> {
-    reset_provider_config(&app, state.inner(), payload)
+    reset_provider_config(&app, logger.inner(), state.inner(), payload)
 }

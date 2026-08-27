@@ -3,7 +3,7 @@ use log::{info, warn};
 use std::time::Instant;
 use tauri::AppHandle;
 
-use super::super::super::super::super::super::AppState;
+use super::super::super::super::super::super::{AppLogger, AppState};
 use super::super::super::super::super::{
     ProviderCheckTrigger, ProviderError, ProviderLifecycleContext, ProviderSubject,
 };
@@ -18,6 +18,7 @@ use super::{
 /// 编排一轮供应商生命周期检查。
 pub(crate) async fn check_providers_lifecycle(
     app: AppHandle,
+    _logger: &AppLogger,
     state: &AppState,
     trigger: ProviderCheckTrigger,
 ) {

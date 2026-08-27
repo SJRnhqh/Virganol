@@ -35,3 +35,4 @@
 - [x] Separate desktop container logging, registration, sidecar, and lifecycle responsibilities.
 - [x] Consolidate desktop command registration and Windows window appearance under the container boundary.
 - [x] Separate Tauri command handler management into a root-scope invoke include without generated macro internals.
+- [x] Establish explicit `AppLogger` injection from Provider commands through manager and lifecycle services.

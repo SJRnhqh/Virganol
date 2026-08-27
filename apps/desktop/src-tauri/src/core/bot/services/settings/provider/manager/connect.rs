@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/connect.rs
 use tauri::AppHandle;
 
-use super::super::super::super::super::super::AppState;
+use super::super::super::super::super::super::{AppLogger, AppState};
 use super::super::super::super::super::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderAppError, ProviderError,
     ProviderManagerContext, ProviderRecord,
@@ -15,6 +15,7 @@ use super::super::{
 /// 连接供应商，并在探测成功后保存配置。
 pub(crate) async fn connect_and_save(
     app: &AppHandle,
+    _logger: &AppLogger,
     state: &AppState,
     request: ConnectAndSaveProviderRequest,
 ) -> Result<ConnectAndSaveProviderResponse, ProviderAppError> {
