@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/shared/models/log/entry.rs
 use std::{
     fmt::{Display, Formatter, Result},
-    time::SystemTime,
+    time::{SystemTime, UNIX_EPOCH},
 };
 
 use super::super::AppAttribution;
@@ -78,8 +78,13 @@ where
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         write!(
             f,
-            "occurrence={}; attribution={}",
-            self.occurrence, self.attribution
+            "timestamp={}; occurrence={}; attribution={}",
+            self.timestamp
+                .duration_since(UNIX_EPOCH)
+                .map(|duration| duration.as_millis())
+                .unwrap_or(0),
+            self.occurrence,
+            self.attribution
         )
     }
 }
