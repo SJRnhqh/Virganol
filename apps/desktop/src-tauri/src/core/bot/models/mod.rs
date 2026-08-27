@@ -15,5 +15,5 @@ pub(super) use provider::{
     ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError,
     ProviderExecutionContext, ProviderId, ProviderKey, ProviderKeyChange, ProviderKeyMeta,
     ProviderKeySource, ProviderLifecycleContext, ProviderLogEntry, ProviderManagerContext,
-    ProviderRecord, ProviderResolvedKey, ProviderSubject,
+    ProviderOccurrence, ProviderRecord, ProviderResolvedKey, ProviderSubject,
 };

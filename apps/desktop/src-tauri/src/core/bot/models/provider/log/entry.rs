@@ -23,6 +23,18 @@ pub(in crate::core::bot) struct ProviderLogEntry {
 }
 
 impl ProviderLogEntry {
+    /// Records a structured Provider observation at the specified log level.
+    ///
+    /// 按指定日志级别记录供应商结构化观察条目。
+    pub(in crate::core::bot) fn record_observation(
+        logger: &AppLogger,
+        level: LogLevel,
+        occurrence: ProviderOccurrence,
+        attribution: impl Into<ProviderAttribution>,
+    ) {
+        logger.record(Self::new(occurrence, attribution.into()).generalize(level));
+    }
+
     /// Records structured log entries for multiple Provider failures.
     ///
     /// 为多个供应商失败记录结构化日志条目。

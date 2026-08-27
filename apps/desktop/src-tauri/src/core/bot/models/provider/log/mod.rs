@@ -3,4 +3,4 @@ mod entry;
 mod occurrence;
 
 pub(in crate::core::bot) use entry::ProviderLogEntry;
-pub(self) use occurrence::ProviderOccurrence;
+pub(in crate::core::bot) use occurrence::ProviderOccurrence;

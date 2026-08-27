@@ -23,7 +23,8 @@ pub(self) use models::{
     ProviderCheckStartedPayload, ProviderCheckStatusPayload, ProviderError,
     ProviderExecutionContext, ProviderId, ProviderKey, ProviderKeyChange, ProviderKeyMeta,
     ProviderKeySource, ProviderLifecycleContext, ProviderLogEntry, ProviderManagerContext,
-    ProviderRecord, ProviderResolvedKey, ProviderSubject, SettingsError, SettingsStorageContext,
+    ProviderOccurrence, ProviderRecord, ProviderResolvedKey, ProviderSubject, SettingsError,
+    SettingsStorageContext,
 };
 pub(crate) use services::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,

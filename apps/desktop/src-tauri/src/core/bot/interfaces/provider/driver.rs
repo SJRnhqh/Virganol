@@ -1,6 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/interfaces/provider/driver.rs
-use std::future::Future;
-use std::pin::Pin;
+use std::{future::Future, pin::Pin};
 
 use super::super::super::{HealthCheckResult, ProviderExecutionContext};
 

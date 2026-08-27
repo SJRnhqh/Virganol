@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Propagate `AppLogger` through the remaining Provider downgrade call paths.
+- [ ] Propagate `AppLogger` through Provider lifecycle and remaining downgrade call paths.
 
 ## Planned
 
@@ -39,3 +39,4 @@
 - [x] Record reset manager failures through `AppLogger`, including rollback failure suppression.
 - [x] Establish generic downgrade observation through `ProviderFailureKind` and shared `LogEntry` construction.
 - [x] Standardize Provider failure occurrence formatting as snake-case failure kinds.
+- [x] Complete structured logging application integration for Provider manager flows, including connection fallback and compensation observations.

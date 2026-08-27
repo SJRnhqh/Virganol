@@ -3,7 +3,7 @@ use keyring::{Entry, Error::NoEntry};
 use std::env::var;
 use zeroize::Zeroize;
 
-use super::super::super::super::super::super::super::Downgrade;
+use super::super::super::super::super::super::super::{AppLogger, Downgrade};
 use super::super::super::super::super::super::{
     ProviderError, ProviderExecutionContext, ProviderId, ProviderKey, PROVIDER_KEYRING_SERVICE,
 };
@@ -12,13 +12,14 @@ use super::super::super::super::super::super::{
 ///
 /// 从系统密钥库读取供应商 API 密钥。
 pub(super) fn load_provider_key(
+    logger: &AppLogger,
     ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
 ) -> Option<ProviderKey> {
     let entry = match Entry::new(PROVIDER_KEYRING_SERVICE, provider_id.as_str()) {
         Ok(entry) => entry,
         Err(source) => {
-            ProviderError::secret_store_init(ctx, source).downgrade();
+            ProviderError::secret_store_init(ctx, source).downgrade(logger);
             return None;
         }
     };
@@ -27,7 +28,7 @@ pub(super) fn load_provider_key(
         Ok(raw_key) => raw_key,
         Err(NoEntry) => return None,
         Err(source) => {
-            ProviderError::secret_store_read(ctx, source).downgrade();
+            ProviderError::secret_store_read(ctx, source).downgrade(logger);
             return None;
         }
     };
