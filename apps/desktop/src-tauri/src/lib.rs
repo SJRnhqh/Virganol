@@ -3,7 +3,6 @@
 mod commands;
 mod container;
 mod core;
-mod platform;
 mod tmp;
 
 use commands::{

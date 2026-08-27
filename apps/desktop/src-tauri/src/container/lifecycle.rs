@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/container/lifecycle.rs
 use tauri::{Builder, RunEvent, Wry};
 
-use super::shutdown_sidecar;
+use super::{apply_window_appearance, shutdown_sidecar};
 use crate::core::{self, SidecarState};
 
 /// Registers startup initialization for the Tauri desktop application.
@@ -9,11 +9,7 @@ use crate::core::{self, SidecarState};
 /// 注册 Tauri 桌面应用启动初始化。
 pub(super) fn setup(builder: Builder<Wry>) -> Builder<Wry> {
     builder.setup(|app| {
-        #[cfg(target_os = "windows")]
-        {
-            crate::platform::windows::apply_window_tweaks(app);
-        }
-
+        apply_window_appearance(app);
         core::init(app.handle());
         Ok(())
     })

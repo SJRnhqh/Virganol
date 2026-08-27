@@ -34,3 +34,4 @@
 - [x] Register `AppLogger` as Tauri-managed state and establish the Provider failure recording boundary.
 - [x] Move the desktop application run lifecycle into the `container` module.
 - [x] Separate desktop container logging, registration, sidecar, and lifecycle responsibilities.
+- [x] Consolidate desktop command registration and Windows window appearance under the container boundary.
