@@ -10,7 +10,6 @@ use commands::{
     connect_and_save_provider, reset_provider, trigger_provider_manual_refresh,
     trigger_provider_startup_check, update_enabled_models,
 };
-
 pub use container::run;
 
 fn register_invoke_handler(builder: tauri::Builder<tauri::Wry>) -> tauri::Builder<tauri::Wry> {

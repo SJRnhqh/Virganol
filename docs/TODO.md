@@ -33,3 +33,4 @@
 - [x] Establish structured log text projection and log-facade emission through `AppLogger`.
 - [x] Register `AppLogger` as Tauri-managed state and establish the Provider failure recording boundary.
 - [x] Move the desktop application run lifecycle into the `container` module.
+- [x] Separate desktop container logging, registration, sidecar, and lifecycle responsibilities.
