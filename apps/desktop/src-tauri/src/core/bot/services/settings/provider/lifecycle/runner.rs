@@ -1,9 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/runner.rs
-use log::{error, info};
+use log::info;
 use tauri::AppHandle;
 use tokio::task::JoinSet;
 
-use super::super::super::super::super::super::Downgrade;
+use super::super::super::super::super::super::{AppLogger, Downgrade};
 use super::super::super::super::super::{
     ProviderCheckRunResult, ProviderError, ProviderId, ProviderLifecycleContext, ProviderRecord,
     ProviderState,
@@ -21,6 +21,7 @@ const CHECK_CONCURRENCY_LIMIT: usize = 4;
 /// 使用有限并发执行供应商健康检查，并收集失败数量、被抑制错误与首个任务汇合错误。
 pub(super) async fn run_provider_checks(
     app: &AppHandle,
+    logger: &AppLogger,
     provider_state: &ProviderState,
     ctx: &ProviderLifecycleContext<'_>,
     run_id: &str,
@@ -41,10 +42,11 @@ pub(super) async fn run_provider_checks(
             let ctx = ctx
                 .for_connection()
                 .into_execution_context_with(provider_id.into());
+            let logger = logger.clone();
             in_flight.spawn(async move {
                 let url = record.url().unwrap_or("").to_string();
                 let (result, key_meta) =
-                    health_check_with_resolved_key(&ctx, provider_id, &url).await;
+                    health_check_with_resolved_key(&logger, &ctx, provider_id, &url).await;
                 (provider_id, record, result, key_meta)
             });
         }
@@ -97,10 +99,9 @@ pub(super) async fn run_provider_checks(
                 let e = ProviderError::check_task_join(ctx, source);
 
                 if join_error.is_none() {
-                    error!("[Tauri] ❌ concurrent check error: {}", e);
                     join_error = Some(e);
                 } else {
-                    e.downgrade();
+                    e.downgrade(logger);
                 }
             }
             None => break,

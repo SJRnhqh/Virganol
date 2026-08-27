@@ -5,11 +5,12 @@
 
 ## Current
 
-- [ ] Complete `AppLogger` propagation and structured logging for Provider lifecycle batch checks and remaining downgrade paths.
+- [ ] Complete structured logging for Provider lifecycle `join_next` result handling and remaining downgrade paths.
 
 ## Planned
 
 - [ ] Define the structured logging sink boundary.
+- [ ] Revisit `AppLogger::clone` sharing and persistence concurrency semantics with the sink design.
 - [ ] Implement the structured logging application integration layer, revisiting attribution ownership at the emission boundary.
 - [ ] Implement the structured logging persistence layer, revisiting `ProviderAttribution` clone semantics and cost for durable writes.
 - [ ] Implement the execution tracing system.
@@ -41,3 +42,4 @@
 - [x] Standardize Provider failure occurrence formatting as snake-case failure kinds.
 - [x] Complete structured logging application integration for Provider manager flows, including connection fallback and compensation observations.
 - [x] Complete structured logging for Provider lifecycle setup, supported-provider loading, and terminal failure reporting.
+- [x] Propagate cloneable `AppLogger` through concurrent Provider checks and key resolution.

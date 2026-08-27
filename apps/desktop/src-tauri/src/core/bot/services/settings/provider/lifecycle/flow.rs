@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/flow.rs
-use std::num::NonZeroUsize;
 use tauri::AppHandle;
 
 use super::super::super::super::super::super::{AppLogger, AppState};
@@ -24,12 +23,9 @@ pub(crate) async fn check_providers_lifecycle(
     let run_id = next_run_id(&trigger);
     let ctx = ProviderLifecycleContext::start(run_id.as_str(), &trigger);
 
-    match emit_check_started(&app, &ctx, run_id.as_str(), &trigger) {
-        Ok(()) => {}
-        Err(e) => {
-            report_lifecycle_failure(&app, logger, &ctx, run_id.as_str(), &e, &[]);
-            return;
-        }
+    if let Some(e) = emit_check_started(&app, &ctx, run_id.as_str(), &trigger).err() {
+        report_lifecycle_failure(&app, logger, &ctx, run_id.as_str(), &e, &[]);
+        return;
     }
 
     let providers = match {
@@ -44,21 +40,27 @@ pub(crate) async fn check_providers_lifecycle(
             return;
         }
     };
-    match NonZeroUsize::new(providers.len()) {
-        None => {
-            match emit_check_completed(&app, &ctx, run_id.as_str(), providers.len()) {
-                Ok(()) => {}
-                Err(e) => {
-                    report_lifecycle_failure(&app, logger, &ctx, run_id.as_str(), &e, &[]);
-                }
+    match providers.as_slice() {
+        [] => {
+            if let Some(e) =
+                emit_check_completed(&app, &ctx, run_id.as_str(), providers.len()).err()
+            {
+                report_lifecycle_failure(&app, logger, &ctx, run_id.as_str(), &e, &[]);
             }
             return;
         }
-        Some(_) => {}
+        _ => {}
     }
 
-    let check_result =
-        run_provider_checks(&app, state.provider(), &ctx, run_id.as_str(), providers).await;
+    let check_result = run_provider_checks(
+        &app,
+        logger,
+        state.provider(),
+        &ctx,
+        run_id.as_str(),
+        providers,
+    )
+    .await;
 
     let (failed_count, join_error, suppressed_errors) = check_result.into_parts();
 

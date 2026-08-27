@@ -7,6 +7,7 @@ use super::LogEntry;
 /// Application-scoped structured logging write facade.
 ///
 /// 应用级结构化日志写入门面。
+#[derive(Clone)]
 pub(crate) struct AppLogger;
 
 impl AppLogger {
