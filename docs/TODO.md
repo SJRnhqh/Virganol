@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Propagate `AppLogger` through Provider lifecycle and remaining downgrade call paths.
+- [ ] Complete `AppLogger` propagation and structured logging for Provider lifecycle batch checks and remaining downgrade paths.
 
 ## Planned
 
@@ -40,3 +40,4 @@
 - [x] Establish generic downgrade observation through `ProviderFailureKind` and shared `LogEntry` construction.
 - [x] Standardize Provider failure occurrence formatting as snake-case failure kinds.
 - [x] Complete structured logging application integration for Provider manager flows, including connection fallback and compensation observations.
+- [x] Complete structured logging for Provider lifecycle setup, supported-provider loading, and terminal failure reporting.
