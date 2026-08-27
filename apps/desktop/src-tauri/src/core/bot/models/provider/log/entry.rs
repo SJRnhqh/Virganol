@@ -26,10 +26,7 @@ impl ProviderLogEntry {
     /// Records a structured log entry for a Provider failure.
     ///
     /// 为供应商失败记录结构化日志条目。
-    pub(in crate::core::bot::models::provider) fn record_failure(
-        logger: &AppLogger,
-        error: &ProviderError,
-    ) {
+    pub(in crate::core::bot) fn record_failure(logger: &AppLogger, error: &ProviderError) {
         logger.record(Self::new(error.into(), error.attribution().clone()).generalize(Error));
     }
 

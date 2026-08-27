@@ -5,11 +5,10 @@
 
 ## Current
 
-- [ ] Record the first Provider manager failure through `AppLogger` on the update-enabled-models path.
+- [ ] Integrate structured Provider failure records across the remaining manager and lifecycle paths.
 
 ## Planned
 
-- [ ] Integrate structured Provider failure records across the remaining manager and lifecycle paths.
 - [ ] Define the structured logging sink boundary.
 - [ ] Implement the structured logging application integration layer, revisiting attribution ownership at the emission boundary.
 - [ ] Implement the structured logging persistence layer, revisiting `ProviderAttribution` clone semantics and cost for durable writes.
@@ -36,3 +35,4 @@
 - [x] Consolidate desktop command registration and Windows window appearance under the container boundary.
 - [x] Separate Tauri command handler management into a root-scope invoke include without generated macro internals.
 - [x] Establish explicit `AppLogger` injection from Provider commands through manager and lifecycle services.
+- [x] Record the first Provider manager failures through `AppLogger` on the update-enabled-models path.
