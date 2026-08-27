@@ -18,14 +18,17 @@ pub(in crate::core) enum LogLevel {
     /// Informational progress during normal operation.
     ///
     /// 正常运行期间的信息性进展。
+    #[allow(dead_code)]
     Info,
     /// Diagnostic information for development and troubleshooting.
     ///
     /// 用于开发与排障的诊断信息。
+    #[allow(dead_code)]
     Debug,
     /// Fine-grained execution details for deep troubleshooting.
     ///
     /// 用于深度排障的细粒度执行详情。
+    #[allow(dead_code)]
     Trace,
 }
 
