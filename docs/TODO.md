@@ -9,7 +9,6 @@
 
 ## Planned
 
-- [ ] Move Tauri invoke-handler registration out of the crate root without relying on generated macro internals.
 - [ ] Integrate structured Provider failure records across the remaining manager and lifecycle paths.
 - [ ] Define the structured logging sink boundary.
 - [ ] Implement the structured logging application integration layer, revisiting attribution ownership at the emission boundary.
@@ -35,3 +34,4 @@
 - [x] Move the desktop application run lifecycle into the `container` module.
 - [x] Separate desktop container logging, registration, sidecar, and lifecycle responsibilities.
 - [x] Consolidate desktop command registration and Windows window appearance under the container boundary.
+- [x] Separate Tauri command handler management into a root-scope invoke include without generated macro internals.

@@ -2,16 +2,14 @@
 use tauri::{Builder, Wry};
 
 use crate::core::{AppLogger, AppState, SidecarState};
+use crate::register_invoke_handler;
 use crate::tmp;
 
 /// Registers the Tauri desktop application extensions, managed states, and commands.
 ///
 /// 注册 Tauri 桌面应用扩展、托管状态和命令。
 pub(super) fn register(builder: Builder<Wry>, sidecar_manager: SidecarState) -> Builder<Wry> {
-    let builder = register_plugins(builder);
-    let builder = manage_states(builder, sidecar_manager);
-
-    crate::register_invoke_handler(builder)
+    register_invoke_handler(manage_states(register_plugins(builder), sidecar_manager))
 }
 
 /// Registers the Tauri desktop application plugins.
