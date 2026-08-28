@@ -2,12 +2,13 @@
 
 ## 版本主线
 
-0.0.1 的 LLM Provider 配置接入分为两条主线：
+0.0.1 的 LLM Provider 配置接入分为三条主线：
 
 1. **生命周期链路**：启动/手动触发 → 持久化读取 → 并发健康检查 → 事件推送前端
 2. **CRUD 链路**：Provider 配置的增删改查（connect / reset / update_models）
+3. **可靠性与可观测性**：RDD 错误体系、结构化日志门面、日志后端与执行追踪
 
-两条链路共享 `ProviderError` 错误体系和 `store` 持久化层。
+三条主线共享 `ProviderError` 错误体系和 `store` 持久化层。
 
 ---
 
@@ -38,34 +39,26 @@
 - lifecycle payload、snapshot 与 skipped provider 契约完成收口
 - 旧错误分类、过渡 API、服务可见性与冗余日志完成清理
 
-#### 6.2 Provider 可靠性架构（context / failure / error / boundary）
+#### 6.2 Provider 可靠性架构与可观测性（context / failure / error / boundary / logging / tracing）
 
-**当前状态**：Provider 与 Settings 业务过程的上下文传播、内部错误与失败事实建模已经闭环；架构文档沉淀转入后续路线。
+**当前状态**：Provider 与 Settings 的上下文传播、内部错误、边界投影和结构化日志门面已经闭环；下一阶段转入复用日志后端、持久化与执行追踪，不自研通用日志后端。
 
 **已完成**：
 
-- [x] `ProviderContext<T>`、阶段视图与执行上下文贯通 manager、lifecycle、connection、config store 与 secret store
-- [x] `ProviderSubject` 区分具体供应商、原始候选与已配置供应商集合，错误细节仅投影准确的 `providerId`
-- [x] `ProviderFailure` 管理封闭失败事实与底层错误源，`ProviderError` 作为上下文加失败事实的薄层归因契约
-- [x] `ProviderAppError` 从成功响应中拆出，并以 `code`、安全 `message`、`scope`、可选主体与 `suppressedErrors` 完成边界投影
-- [x] 生命周期 emit、join、aggregate 与降级路径接入统一错误归因和边界适配
-- [x] Settings 过程以自身边界建模 `SettingsFailure`、`SettingsErrorContext` 与 `SettingsError`，不抽取跨业务实在的泛型契约
+- [x] 完成 Provider 与 Settings 的 RDD 上下文、失败事实和归因边界建模
+- [x] 完成 Provider 内部错误、生命周期聚合与 `ProviderAppError` 安全边界投影
+- [x] 建立 `LogEntry`、`AppLogger` 与 `ProviderLogEntry` 的结构化日志契约和领域投影
+- [x] 完成 Provider manager、lifecycle 与 `Downgrade` 的应用层结构化日志接入及调用点审计
 
 **后续路线**：
 
-- [ ] RDD 可靠性架构文档：在 Provider 参考实现与 Settings 过程适配后，沉淀上下文传播、错误投影、source chain、聚合错误与责任边界
-
-#### 6.2 日志系统
-
-- [ ] 设计结构化日志上下文：从 Reality Context 与 Attribution Snapshot 投影 scope、attribution、correlation 和 error_code，并厘清 trace/correlation/operation 边界
-- [ ] ProviderCheckSnapshot 归入 Span attribute：生命周期日志 Span 携带快照分类结果（supported/skipped/total），不折入上下文字段
-- [ ] 设计日志持久化策略（文件轮转 / 结构化格式）
-- [ ] 定义日志埋点（CRUD 入口/出口、健康检查、持久化操作、错误路径）
-- [ ] 标准化日志格式（级别 / 时间戳 / 模块 / 消息 / 上下文）
-- [ ] 添加结构化上下文（correlation/operation 标识、provider_id、error_code）
-- [ ] Context-aware downgrade logging：在 Observability 设计后重访 `Downgrade`，让降级领域错误记录结构化上下文而不只输出字符串化 warning
-- [ ] 实现日志级别策略（info 成功 / warn 可重试 / error 致命）
-- [ ] 前端日志策略（dev 用 console / prod 用上报）
+- [ ] RDD 可靠性架构文档：在 Provider 参考实现与 Settings 过程适配后，统一沉淀上下文传播、错误投影、source chain、聚合错误、责任边界、结构化日志与执行追踪
+- [ ] 调研并接入结构化日志后端，定义后端路由、格式化与日志输出端（sink）边界
+- [ ] 结合 sink 设计重访 `AppLogger::clone` 的共享、并发、flush 与退出语义
+- [ ] 实现结构化日志持久化层，并评估 durable write 下 `ProviderAttribution` 的拥有与 clone 成本
+- [ ] 演进 `LogEntry` 对非失败业务事实与局部业务上下文的表达；待日志后端与 tracing 设计定型后，评估归因之外的关联/触发元数据泛型
+- [ ] 实现执行追踪系统，并厘清 trace、correlation 与 operation 的边界
+- [ ] 定义前端日志策略（开发环境 console / 生产环境上报）
 
 #### 6.3 前端错误系统
 

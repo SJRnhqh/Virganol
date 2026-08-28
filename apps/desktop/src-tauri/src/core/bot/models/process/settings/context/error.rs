@@ -8,9 +8,9 @@ use super::SettingsStage;
 /// 设置错误归因上下文快照。
 #[derive(Debug)]
 pub(in crate::core::bot::models::process::settings) struct SettingsErrorContext {
-    /// Settings process execution stage where the failure was observed.
+    /// Settings process reality execution stage where the failure was observed.
     ///
-    /// 观察到失败时所在的设置业务过程执行阶段。
+    /// 观察到失败时所在的设置过程实在执行阶段。
     stage: SettingsStage,
 }
 

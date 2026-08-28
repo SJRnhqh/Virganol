@@ -1,16 +1,16 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/execution.rs
 use super::super::super::SettingsStorageContext;
 use super::super::ProviderSubject;
-use super::{ProviderContext, ProviderErrorContext, ProviderOperation, ProviderStage};
+use super::{ProviderContext, ProviderOperation, ProviderStage};
 
 /// Execution business context fields.
 ///
 /// 执行业务上下文字段。
 #[derive(Clone)]
 struct ExecutionExtra {
-    /// Provider domain subject targeted by this execution.
+    /// Subject within the Provider subject reality targeted by this execution.
     ///
-    /// 当前执行链路归因的供应商领域主体。
+    /// 当前执行链路归因的供应商主体实在中的主体。
     subject: ProviderSubject,
     /// Provider execution operation currently being executed.
     ///
@@ -18,9 +18,9 @@ struct ExecutionExtra {
     operation: ProviderOperation,
 }
 
-/// Provider execution domain business context.
+/// Provider subject reality execution business context.
 ///
-/// 供应商领域执行业务上下文。
+/// 供应商主体实在执行业务上下文。
 pub(in crate::core::bot) struct ProviderExecutionContext(
     /// Shared context state backing this execution view.
     ///
@@ -50,11 +50,11 @@ impl ProviderExecutionContext {
         Self(self.0.for_secret_store())
     }
 
-    /// Derives a context view for a specific Provider-domain subject.
+    /// Derives a context view for a specific subject within the Provider subject reality.
     ///
-    /// 派生针对指定供应商领域主体的上下文视图。
+    /// 派生针对供应商主体实在中指定主体的上下文视图。
     pub(in crate::core::bot) fn for_subject(&self, subject: ProviderSubject) -> Self {
-        Self(ProviderContext::new(
+        Self(ProviderContext::from_parts(
             self.0.stage(),
             ExecutionExtra {
                 subject,
@@ -70,12 +70,12 @@ impl ProviderExecutionContext {
         SettingsStorageContext::storage()
     }
 
-    /// Projects this execution context into an error attribution snapshot.
+    /// Returns the stable attribution parts carried by this execution context.
     ///
-    /// 将当前执行上下文投影为错误归因快照。
-    pub(in crate::core::bot::models::provider) fn error_context(&self) -> ProviderErrorContext {
+    /// 返回当前执行上下文携带的稳定归因组成部分。
+    pub(super) fn attribution_parts(&self) -> (ProviderStage, ProviderSubject, ProviderOperation) {
         self.0
-            .error_context_for(self.0.extra().subject.clone(), self.0.extra().operation)
+            .attribution_parts_for(self.0.extra().subject.clone(), self.0.extra().operation)
     }
 
     /// Creates an execution context from its constituent parts.
@@ -93,7 +93,7 @@ impl ProviderExecutionContext {
     ///
     /// 集中创建执行上下文。
     fn new(stage: ProviderStage, subject: ProviderSubject, operation: ProviderOperation) -> Self {
-        Self(ProviderContext::new(
+        Self(ProviderContext::from_parts(
             stage,
             ExecutionExtra { subject, operation },
         ))

@@ -1,10 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/finalize.rs
-use log::info;
 use tauri::AppHandle;
 
+use super::super::super::super::super::super::AppLogger;
 use super::super::super::super::super::{
-    HealthCheckResult, ProviderCheckFinalization, ProviderError, ProviderId,
-    ProviderLifecycleContext, ProviderRecord, ProviderState,
+    HealthCheckResult::{self, Failure, Success},
+    ProviderCheckFinalization, ProviderError, ProviderId, ProviderLifecycleContext,
+    ProviderLogEntry, ProviderRecord, ProviderState,
 };
 use super::super::save_provider;
 
@@ -13,24 +14,29 @@ use super::super::save_provider;
 /// 单个供应商健康检查完成后，生成生命周期状态推送前的后处理结果。
 pub(super) fn finalize_provider_check_result(
     app: &AppHandle,
+    logger: &AppLogger,
     provider_state: &ProviderState,
     ctx: &ProviderLifecycleContext,
     provider_id: ProviderId,
     record: ProviderRecord,
     health: &HealthCheckResult,
 ) -> ProviderCheckFinalization {
-    if health.is_success() {
-        let (status_record, reconciliation_error) = persist_reconciled_enabled_models(
-            app,
-            provider_state,
-            ctx,
-            provider_id,
-            record,
-            health.available_models(),
-        );
-        ProviderCheckFinalization::online(status_record, reconciliation_error)
-    } else {
-        ProviderCheckFinalization::offline(record)
+    match health {
+        Success { available_models } => {
+            let (status_record, reconciliation_error) = persist_reconciled_enabled_models(
+                app,
+                provider_state,
+                ctx,
+                provider_id,
+                record,
+                available_models,
+            );
+            ProviderCheckFinalization::online(status_record, reconciliation_error)
+        }
+        Failure { error } => {
+            ProviderLogEntry::record_failure(logger, error);
+            ProviderCheckFinalization::offline(record)
+        }
     }
 }
 
@@ -49,8 +55,6 @@ fn persist_reconciled_enabled_models(
         return (record, None);
     };
 
-    let previous_enabled_model_count = record.enabled_models().len();
-
     let save_result = {
         let ctx = ctx
             .for_config_store()
@@ -59,15 +63,7 @@ fn persist_reconciled_enabled_models(
     };
 
     match save_result {
-        Ok(()) => {
-            info!(
-                "[Tauri] 🔄 {} enabled_models reconciled: {} → {}",
-                provider_id,
-                previous_enabled_model_count,
-                updated.enabled_models().len()
-            );
-            (updated, None)
-        }
+        Ok(()) => (updated, None),
         Err(e) => (record, Some(e)),
     }
 }

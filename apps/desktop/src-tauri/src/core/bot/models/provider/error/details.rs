@@ -4,9 +4,9 @@ use serde::Serialize;
 use super::super::{ProviderId, ProviderScope};
 use super::{ProviderAppError, ProviderError};
 
-/// Structured application boundary error details for the Provider subject subdomain.
+/// Structured application boundary error details for the Provider subject reality.
 ///
-/// 供应商主体子域的结构化应用边界错误细节。
+/// 供应商主体实在的结构化应用边界错误细节。
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub(super) struct ProviderErrorDetails {
@@ -47,8 +47,8 @@ impl From<&ProviderError> for ProviderErrorDetails {
     /// 将内部供应商错误投影为结构化边界细节。
     fn from(error: &ProviderError) -> Self {
         Self {
-            scope: error.context().scope(),
-            provider_id: error.context().subject().provider_id(),
+            scope: error.attribution().scope(),
+            provider_id: error.attribution().subject().provider_id(),
             suppressed_errors: None,
         }
     }

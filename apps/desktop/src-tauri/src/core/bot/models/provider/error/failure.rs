@@ -2,16 +2,21 @@
 use keyring::Error as KeyringError;
 use reqwest::Error as ReqwestError;
 use serde_json::Error as JsonError;
+use strum::{Display, EnumDiscriminants};
 use tauri::Error as TauriError;
 use thiserror::Error;
 use tokio::task::JoinError;
 
 use super::super::super::SettingsError;
 
-/// Failure facts defined by the Provider subject subdomain.
+/// Failure facts defined by the Provider subject reality.
 ///
-/// 供应商主体子域定义的失败事实。
-#[derive(Error, Debug)]
+/// 供应商主体实在定义的失败事实。
+#[derive(Error, Debug, EnumDiscriminants)]
+#[strum_discriminants(vis(pub(in crate::core::bot::models::provider)))]
+#[strum_discriminants(name(ProviderFailureKind))]
+#[strum_discriminants(strum(serialize_all = "snake_case"))]
+#[strum_discriminants(derive(Display))]
 pub(super) enum ProviderFailure {
     /// Provider manager command payload is missing required data.
     ///

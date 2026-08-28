@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/ollama.rs
-use log::{debug, error, info};
 use serde_json::Value;
 use std::time::Duration;
 
@@ -22,8 +21,6 @@ pub(super) async fn ollama_check(
 
     let base = url.trim_end_matches('/');
     let endpoint = format!("{}/api/tags", base);
-    info!("[Tauri][Ollama] → {}", endpoint);
-
     let mut request = get_http_client()
         .get(&endpoint)
         .timeout(Duration::from_secs(OLLAMA_HEALTH_CHECK_TIMEOUT_SECS));
@@ -34,28 +31,22 @@ pub(super) async fn ollama_check(
     let resp = match request.send().await {
         Ok(resp) => resp,
         Err(source) => {
-            error!("[Tauri][Ollama] request failed: {}", source);
-            return HealthCheckResult::fail(ProviderError::health_check_network(ctx, source));
+            return HealthCheckResult::fail(ProviderError::health_check_network(ctx, source))
         }
     };
 
     if !resp.status().is_success() {
-        let status = resp.status();
-        error!("[Tauri][Ollama] HTTP {}", status);
         return HealthCheckResult::fail(ProviderError::health_check_http(ctx));
     }
 
     let json: Value = match resp.json().await {
         Ok(v) => v,
         Err(source) => {
-            error!("[Tauri][Ollama] JSON parse error: {}", source);
             return HealthCheckResult::fail(ProviderError::health_check_response_format(
                 ctx, source,
             ));
         }
     };
-
-    debug!("[Tauri][Ollama] response: {}", json);
 
     let models: Vec<String> = json
         .get("models")
@@ -70,10 +61,8 @@ pub(super) async fn ollama_check(
         .unwrap_or_default();
 
     if models.is_empty() {
-        info!("[Tauri][Ollama] ⚠️ no models returned");
         return HealthCheckResult::ok(vec![]);
     }
 
-    info!("[Tauri][Ollama] ✅ {} models found", models.len());
     HealthCheckResult::ok(models)
 }

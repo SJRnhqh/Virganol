@@ -12,9 +12,9 @@ use super::{
     },
 };
 
-/// Application boundary error codes for the Provider subject subdomain.
+/// Application boundary error codes for the Provider subject reality.
 ///
-/// 供应商主体子域的应用边界错误码。
+/// 供应商主体实在的应用边界错误码。
 #[derive(Serialize)]
 pub(super) enum ProviderErrorCode {
     /// Required data is missing from a Provider manager command payload.

@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/resolved.rs
+use super::super::super::super::super::super::AppLogger;
 use super::super::super::super::super::{
     HealthCheckResult, ProviderExecutionContext, ProviderId, ProviderKeyMeta,
 };
@@ -9,13 +10,14 @@ use super::health_check;
 ///
 /// 使用已解析的供应商密钥执行健康检查，并返回密钥来源元信息。
 pub(in crate::core::bot::services::settings::provider) async fn health_check_with_resolved_key(
+    logger: &AppLogger,
     ctx: &ProviderExecutionContext,
     provider_id: ProviderId,
     url: &str,
 ) -> (HealthCheckResult, ProviderKeyMeta) {
     let key_resolution = {
         let ctx = ctx.for_secret_store();
-        resolve_provider_key(&ctx, provider_id)
+        resolve_provider_key(logger, &ctx, provider_id)
     };
 
     let response = {

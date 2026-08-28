@@ -1,18 +1,18 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/base.rs
 use super::super::ProviderSubject;
-use super::{ProviderErrorContext, ProviderOperation, ProviderStage};
+use super::{ProviderOperation, ProviderStage};
 
-/// Provider domain base context.
+/// Provider subject reality base context.
 ///
-/// 供应商领域基础上下文。
+/// 供应商主体实在基础上下文。
 pub(super) struct ProviderContext<E = ()> {
-    /// Provider domain business execution stage represented by this context view.
+    /// Provider subject reality business execution stage represented by this context view.
     ///
-    /// 当前上下文视图表示的供应商领域业务执行阶段。
+    /// 当前上下文视图表示的供应商主体实在业务执行阶段。
     stage: ProviderStage,
-    /// Domain business context fields shared across derived stage views.
+    /// Subject reality business context fields shared across derived stage views.
     ///
-    /// 跨派生阶段视图共享的领域业务上下文字段。
+    /// 跨派生阶段视图共享的主体实在业务上下文字段。
     extra: E,
 }
 
@@ -38,42 +38,42 @@ impl<E> ProviderContext<E> {
         self.to_stage(ProviderStage::secret_store())
     }
 
-    /// Projects this context into an error attribution snapshot for a subject.
+    /// Returns stable attribution parts for a subject and operation at the current stage.
     ///
-    /// 为指定主体将当前上下文投影为错误归因快照。
-    pub(super) fn error_context_for(
+    /// 返回指定主体与操作在当前阶段的稳定归因组成部分。
+    pub(super) fn attribution_parts_for(
         &self,
         subject: ProviderSubject,
         operation: ProviderOperation,
-    ) -> ProviderErrorContext {
-        ProviderErrorContext::from_parts(self.stage, subject, operation)
+    ) -> (ProviderStage, ProviderSubject, ProviderOperation) {
+        (self.stage, subject, operation)
     }
 
-    /// Consumes this context and returns the domain business context fields.
+    /// Consumes this context and returns the subject reality business context fields.
     ///
-    /// 消费当前上下文并返回领域业务上下文字段。
+    /// 消费当前上下文并返回主体实在业务上下文字段。
     pub(super) fn into_extra(self) -> E {
         self.extra
     }
 
-    /// Returns the current Provider domain stage.
+    /// Returns the current Provider subject reality stage.
     ///
-    /// 返回当前供应商领域阶段。
+    /// 返回当前供应商主体实在阶段。
     pub(super) fn stage(&self) -> ProviderStage {
         self.stage
     }
 
-    /// Returns the domain business context fields.
+    /// Returns the subject reality business context fields.
     ///
-    /// 返回领域业务上下文字段。
+    /// 返回主体实在业务上下文字段。
     pub(super) fn extra(&self) -> &E {
         &self.extra
     }
 
-    /// Creates a Provider domain base context at the given execution stage.
+    /// Assembles a Provider subject reality base context from its parts.
     ///
-    /// 使用指定执行阶段创建供应商领域基础上下文。
-    pub(super) fn new(stage: ProviderStage, extra: E) -> Self {
+    /// 由组成部分组装供应商主体实在基础上下文。
+    pub(super) fn from_parts(stage: ProviderStage, extra: E) -> Self {
         Self { stage, extra }
     }
 

@@ -1,10 +1,10 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/update.rs
 use tauri::AppHandle;
 
-use super::super::super::super::super::super::AppState;
+use super::super::super::super::super::super::{AppLogger, AppState};
 use super::super::super::super::super::{
-    ProviderAppError, ProviderError, ProviderManagerContext, UpdateEnabledModelsRequest,
-    UpdateEnabledModelsResponse,
+    ProviderAppError, ProviderError, ProviderLogEntry, ProviderManagerContext,
+    UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
 use super::super::update_models;
 
@@ -13,6 +13,7 @@ use super::super::update_models;
 /// 更新指定供应商的启用模型列表。
 pub(crate) fn update_provider_enabled_models(
     app: &AppHandle,
+    logger: &AppLogger,
     state: &AppState,
     request: UpdateEnabledModelsRequest,
 ) -> Result<UpdateEnabledModelsResponse, ProviderAppError> {
@@ -24,6 +25,7 @@ pub(crate) fn update_provider_enabled_models(
         Some(data) => data,
         None => {
             let e = ProviderError::manager_request_payload_absent(&ctx);
+            ProviderLogEntry::record_failure(logger, &e);
             return Err(ProviderAppError::from(&e));
         }
     };
@@ -38,6 +40,9 @@ pub(crate) fn update_provider_enabled_models(
         data.into_enabled_models(),
     ) {
         Ok(()) => Ok(UpdateEnabledModelsResponse::success()),
-        Err(e) => Err(ProviderAppError::from(&e)),
+        Err(e) => {
+            ProviderLogEntry::record_failure(logger, &e);
+            Err(ProviderAppError::from(&e))
+        }
     }
 }

@@ -9,16 +9,14 @@ use tauri::Error as TauriError;
 use tauri_plugin_store::Error as StoreError;
 
 use super::super::{SettingsErrorContext, SettingsStorageContext};
-use super::{
-    SettingsFailure,
-    SettingsFailure::{
-        StoreOpen, StorePath, StoreReplace, StoreSerialize, StoreSync, StoreTempCreate, StoreWrite,
-    },
+use super::SettingsFailure::{
+    self, StoreOpen, StorePath, StoreReplace, StoreSerialize, StoreSync, StoreTempCreate,
+    StoreWrite,
 };
 
-/// Internal error for the settings process.
+/// Internal error for the Settings process reality.
 ///
-/// 设置业务过程内部错误。
+/// 设置过程实在内部错误。
 #[derive(Debug)]
 pub(in crate::core::bot) struct SettingsError {
     /// Settings error attribution context snapshot.

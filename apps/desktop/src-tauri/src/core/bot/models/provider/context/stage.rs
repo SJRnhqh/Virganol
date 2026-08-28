@@ -1,11 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/stage.rs
 use std::fmt::{Display, Formatter, Result};
 
-/// Provider domain business execution stage.
+/// Provider subject reality business execution stage.
 ///
-/// 供应商领域业务执行阶段。
+/// 供应商主体实在业务执行阶段。
 #[derive(Debug, Clone, Copy)]
-pub(super) enum ProviderStage {
+pub(in crate::core::bot::models::provider) enum ProviderStage {
     /// Provider manager orchestration.
     ///
     /// 供应商管理编排阶段。

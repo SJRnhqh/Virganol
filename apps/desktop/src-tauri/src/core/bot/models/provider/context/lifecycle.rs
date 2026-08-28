@@ -1,9 +1,6 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/lifecycle.rs
 use super::super::{ProviderCheckTrigger, ProviderSubject};
-use super::{
-    ProviderContext, ProviderErrorContext, ProviderExecutionContext, ProviderOperation,
-    ProviderStage,
-};
+use super::{ProviderContext, ProviderExecutionContext, ProviderOperation, ProviderStage};
 
 /// Lifecycle business context fields.
 ///
@@ -13,16 +10,18 @@ struct LifecycleExtra<'a> {
     /// Stable correlation id for this lifecycle run.
     ///
     /// 本次生命周期运行的稳定关联标识。
+    #[allow(dead_code)]
     run_id: &'a str,
     /// Source trigger for this lifecycle check.
     ///
     /// 触发本次生命周期检查的来源。
+    #[allow(dead_code)]
     trigger: &'a ProviderCheckTrigger,
 }
 
-/// Provider lifecycle domain business context.
+/// Provider subject reality lifecycle business context.
 ///
-/// 供应商领域生命周期业务上下文。
+/// 供应商主体实在生命周期业务上下文。
 pub(in crate::core::bot) struct ProviderLifecycleContext<'a>(
     /// Shared context state backing this lifecycle view.
     ///
@@ -59,9 +58,9 @@ impl<'a> ProviderLifecycleContext<'a> {
         Self(self.0.for_config_store())
     }
 
-    /// Converts this lifecycle context into an execution context with a Provider-domain subject.
+    /// Converts this lifecycle context into an execution context targeting a subject within the Provider subject reality.
     ///
-    /// 将当前生命周期上下文转换为携带指定供应商领域主体的执行上下文。
+    /// 将当前生命周期上下文转换为携带供应商主体实在中指定主体的执行上下文。
     pub(in crate::core::bot) fn into_execution_context_with(
         self,
         subject: ProviderSubject,
@@ -73,11 +72,11 @@ impl<'a> ProviderLifecycleContext<'a> {
         )
     }
 
-    /// Projects this lifecycle context into an error attribution snapshot.
+    /// Returns the stable attribution parts carried by this lifecycle context.
     ///
-    /// 将当前生命周期上下文投影为错误归因快照。
-    pub(in crate::core::bot::models::provider) fn error_context(&self) -> ProviderErrorContext {
-        self.0.error_context_for(
+    /// 返回当前生命周期上下文携带的稳定归因组成部分。
+    pub(super) fn attribution_parts(&self) -> (ProviderStage, ProviderSubject, ProviderOperation) {
+        self.0.attribution_parts_for(
             ProviderSubject::configured_providers(),
             ProviderOperation::lifecycle_check(),
         )
@@ -86,6 +85,7 @@ impl<'a> ProviderLifecycleContext<'a> {
     /// Returns the stable correlation id for this lifecycle run.
     ///
     /// 返回本次生命周期运行的稳定关联标识。
+    #[allow(dead_code)]
     pub(in crate::core::bot) fn run_id(&self) -> &str {
         self.0.extra().run_id
     }
@@ -93,6 +93,7 @@ impl<'a> ProviderLifecycleContext<'a> {
     /// Returns the source trigger for this lifecycle check.
     ///
     /// 返回触发本次生命周期检查的来源。
+    #[allow(dead_code)]
     pub(in crate::core::bot) fn trigger(&self) -> &ProviderCheckTrigger {
         self.0.extra().trigger
     }
@@ -101,7 +102,7 @@ impl<'a> ProviderLifecycleContext<'a> {
     ///
     /// 创建生命周期业务上下文。
     fn new(run_id: &'a str, trigger: &'a ProviderCheckTrigger) -> Self {
-        Self(ProviderContext::new(
+        Self(ProviderContext::from_parts(
             ProviderStage::lifecycle_emit(),
             LifecycleExtra { run_id, trigger },
         ))

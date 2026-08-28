@@ -20,6 +20,7 @@ reqwest = { version = "0.11", features = ["json"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 ssh2 = { version = "0.9", features = ["vendored-openssl"] }
+strum = { version = "0.28", features = ["derive"] }
 tauri = { version = "2", features = ["macos-private-api"] }
 tauri-plugin-opener = "2"
 tauri-plugin-os = "2.3.2"

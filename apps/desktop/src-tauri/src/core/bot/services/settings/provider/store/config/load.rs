@@ -3,37 +3,33 @@ use serde_json::from_value;
 use std::collections::HashMap;
 use tauri::AppHandle;
 
-use super::super::super::super::super::super::super::Downgrade;
+use super::super::super::super::super::super::super::{AppLogger, Downgrade};
 use super::super::super::super::super::super::{
-    ProviderCheckSnapshot, ProviderError, ProviderExecutionContext, ProviderId, ProviderRecord,
+    ProviderError, ProviderExecutionContext, ProviderId, ProviderRecord,
     ProviderSubject::Candidate, SPIRIT_PROVIDERS_KEY,
 };
 use super::super::super::super::load_settings;
 
-/// Loads the persisted provider check snapshot.
+/// Loads persisted providers that support health checks.
 ///
-/// 读取持久化的供应商检查快照。
-pub(in crate::core::bot::services::settings::provider) fn load_provider_check_snapshot(
+/// 读取支持健康检查的持久化供应商。
+pub(in crate::core::bot::services::settings::provider) fn load_checkable_providers(
     app: &AppHandle,
+    logger: &AppLogger,
     ctx: &ProviderExecutionContext,
-) -> Result<ProviderCheckSnapshot, ProviderError> {
+) -> Result<Vec<(ProviderId, ProviderRecord)>, ProviderError> {
     let providers = load_all_providers(app, ctx)?;
-    let total = providers.len();
     let mut supported = Vec::new();
-    let mut skipped = Vec::new();
 
     for (raw_id, record) in providers {
         let ctx = ctx.for_subject(Candidate(raw_id.clone()));
         match ProviderId::parse(raw_id.as_str()) {
             Some(provider_id) => supported.push((provider_id, record)),
-            None => {
-                ProviderError::unsupported_provider(&ctx).downgrade();
-                skipped.push(raw_id);
-            }
+            None => ProviderError::unsupported_provider(&ctx).downgrade(logger),
         }
     }
 
-    Ok(ProviderCheckSnapshot::new(total, supported, skipped))
+    Ok(supported)
 }
 
 /// Loads one saved provider record.

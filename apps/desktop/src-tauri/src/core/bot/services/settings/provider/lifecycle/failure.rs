@@ -1,10 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/failure.rs
-use log::error;
 use tauri::AppHandle;
 
-use super::super::super::super::super::super::Downgrade;
+use super::super::super::super::super::super::{AppLogger, Downgrade};
 use super::super::super::super::super::{
-    ProviderAppError, ProviderError, ProviderLifecycleContext,
+    ProviderAppError, ProviderError, ProviderLifecycleContext, ProviderLogEntry,
 };
 use super::emit_check_failed;
 
@@ -13,11 +12,14 @@ use super::emit_check_failed;
 /// 上报生命周期失败，日志兜底。
 pub(super) fn report_lifecycle_failure(
     app: &AppHandle,
+    logger: &AppLogger,
     ctx: &ProviderLifecycleContext,
     run_id: &str,
     error: &ProviderError,
     suppressed_errors: &[ProviderError],
 ) {
+    ProviderLogEntry::record_failures(logger, [error].into_iter().chain(suppressed_errors));
+
     let app_error = match suppressed_errors {
         [] => ProviderAppError::from(error),
         suppressed_errors => ProviderAppError::with_suppressed_errors(
@@ -30,15 +32,6 @@ pub(super) fn report_lifecycle_failure(
     };
 
     if let Err(e) = emit_check_failed(app, ctx, run_id, app_error) {
-        e.downgrade();
-        error.downgrade();
-        for se in suppressed_errors {
-            se.downgrade();
-        }
-        error!(
-            "[Tauri] ❌ lifecycle failed event emit fallback: run_id={}, trigger={}",
-            ctx.run_id(),
-            ctx.trigger().as_tag(),
-        );
+        e.downgrade(logger);
     }
 }

@@ -5,9 +5,9 @@ use super::{SettingsErrorContext, SettingsStage};
 ///
 /// 设置存储归因上下文。
 pub(in crate::core::bot) struct SettingsStorageContext {
-    /// Settings process execution stage attributed by this context.
+    /// Settings process reality execution stage attributed by this context.
     ///
-    /// 当前上下文归因的设置业务过程执行阶段。
+    /// 当前上下文归因的设置过程实在执行阶段。
     stage: SettingsStage,
 }
 

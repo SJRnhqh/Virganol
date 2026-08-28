@@ -1,9 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/common/store/save.rs
-use serde_json::Value;
-use std::collections::HashMap;
-use std::fs::{self, File};
-use std::io::Write;
-use std::path::{Path, PathBuf};
+use serde_json::{to_vec_pretty, Value};
+use std::{
+    collections::HashMap,
+    fs::{remove_file, rename, File},
+    io::Write,
+    path::{Path, PathBuf},
+};
 use tauri::{AppHandle, Manager, Wry};
 use tauri_plugin_store::Store;
 
@@ -61,8 +63,7 @@ fn serialize_store_to_bytes(
         .map(|(k, v)| (k.clone(), v.clone()))
         .collect();
 
-    serde_json::to_vec_pretty(&all_data)
-        .map_err(|source| SettingsError::store_serialize(ctx, source))
+    to_vec_pretty(&all_data).map_err(|source| SettingsError::store_serialize(ctx, source))
 }
 
 /// Writes bytes atomically via a temporary file and rename.
@@ -83,8 +84,8 @@ fn atomic_write(
             .map_err(|source| SettingsError::store_sync(ctx, source))?;
     }
 
-    if let Err(source) = fs::rename(tmp_path, store_path) {
-        let _ = fs::remove_file(tmp_path);
+    if let Err(source) = rename(tmp_path, store_path) {
+        let _ = remove_file(tmp_path);
         return Err(SettingsError::store_replace(ctx, source));
     }
 

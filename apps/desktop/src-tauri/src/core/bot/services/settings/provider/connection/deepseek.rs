@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/connection/deepseek.rs
-use log::{debug, error, info};
 use serde_json::Value;
 use std::time::Duration;
 
@@ -22,8 +21,6 @@ pub(super) async fn deepseek_check(ctx: &ProviderExecutionContext, key: &str) ->
     }
 
     let endpoint = format!("{}/v1/models", DEEPSEEK_BASE_URL);
-    info!("[Tauri][DeepSeek] → {}", endpoint);
-
     let resp = match get_http_client()
         .get(&endpoint)
         .bearer_auth(key)
@@ -33,28 +30,22 @@ pub(super) async fn deepseek_check(ctx: &ProviderExecutionContext, key: &str) ->
     {
         Ok(resp) => resp,
         Err(source) => {
-            error!("[Tauri][DeepSeek] request failed: {}", source);
             return HealthCheckResult::fail(ProviderError::health_check_network(ctx, source));
         }
     };
 
     if !resp.status().is_success() {
-        let status = resp.status();
-        error!("[Tauri][DeepSeek] HTTP {}", status);
         return HealthCheckResult::fail(ProviderError::health_check_http(ctx));
     }
 
     let json: Value = match resp.json().await {
         Ok(v) => v,
         Err(source) => {
-            error!("[Tauri][DeepSeek] JSON parse error: {}", source);
             return HealthCheckResult::fail(ProviderError::health_check_response_format(
                 ctx, source,
             ));
         }
     };
-
-    debug!("[Tauri][DeepSeek] response: {}", json);
 
     let models: Vec<String> = json
         .get("data")
@@ -69,10 +60,8 @@ pub(super) async fn deepseek_check(ctx: &ProviderExecutionContext, key: &str) ->
         .unwrap_or_default();
 
     if models.is_empty() {
-        info!("[Tauri][DeepSeek] ⚠️ no models returned");
         return HealthCheckResult::ok(vec![]);
     }
 
-    info!("[Tauri][DeepSeek] ✅ {} models found", models.len());
     HealthCheckResult::ok(models)
 }
