@@ -56,7 +56,7 @@
 - [ ] 调研并接入结构化日志后端，定义后端路由、格式化与日志输出端（sink）边界
 - [ ] 结合 sink 设计重访 `AppLogger::clone` 的共享、并发、flush 与退出语义
 - [ ] 实现结构化日志持久化层，并评估 durable write 下 `ProviderAttribution` 的拥有与 clone 成本
-- [ ] 演进 `LogEntry` 对非失败业务事实的表达，使关键状态变化与观察不退回为散落的 `info!` 文本日志
+- [ ] 演进 `LogEntry` 对非失败业务事实与局部业务上下文的表达；待日志后端与 tracing 设计定型后，评估归因之外的关联/触发元数据泛型
 - [ ] 实现执行追踪系统，并厘清 trace、correlation 与 operation 的边界
 - [ ] 定义前端日志策略（开发环境 console / 生产环境上报）
 

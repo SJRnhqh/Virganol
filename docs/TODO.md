@@ -34,3 +34,4 @@
 - [x] Implement the structured logging application integration layer, revisiting attribution ownership at the emission boundary.
 - [x] Audit and complete structured logging for Provider downgrade paths.
 - [x] Encapsulate non-failure Provider observations behind semantic logging methods and remove visibility leaks.
+- [x] Preserve lifecycle correlation and trigger context for future observability without premature `LogEntry` generalization.
