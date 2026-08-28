@@ -42,23 +42,6 @@ impl HealthCheckResult {
         Self::Failure { error }
     }
 
-    /// Returns whether the health check succeeded.
-    ///
-    /// 返回健康检查是否成功。
-    pub(in crate::core::bot) fn is_success(&self) -> bool {
-        matches!(self, Self::Success { .. })
-    }
-
-    /// Returns discovered models, or an empty slice on failure.
-    ///
-    /// 返回发现的模型；失败时返回空切片。
-    pub(in crate::core::bot) fn available_models(&self) -> &[String] {
-        match self {
-            Self::Success { available_models } => available_models,
-            Self::Failure { .. } => &[],
-        }
-    }
-
     /// Consumes the result into discovered models or an error.
     ///
     /// 消费结果并返回发现的模型或错误。

@@ -49,17 +49,4 @@ impl ProviderCheckFinalization {
     pub(in crate::core::bot) fn offline(status_record: ProviderRecord) -> Self {
         Self::Offline { status_record }
     }
-
-    /// Consumes the finalization into status emission data.
-    ///
-    /// 消费后处理结果并返回状态推送所需数据。
-    pub(in crate::core::bot) fn into_parts(self) -> (ProviderRecord, bool, Option<ProviderError>) {
-        match self {
-            Self::Online {
-                status_record,
-                reconciliation_error,
-            } => (status_record, true, reconciliation_error),
-            Self::Offline { status_record } => (status_record, false, None),
-        }
-    }
 }

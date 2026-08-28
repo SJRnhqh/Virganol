@@ -5,7 +5,7 @@
 
 ## Current
 
-- [ ] Complete structured logging for Provider lifecycle `join_next` result handling and remaining downgrade paths.
+- [ ] Audit and complete structured logging for remaining Provider downgrade paths.
 
 ## Planned
 
@@ -43,3 +43,4 @@
 - [x] Complete structured logging application integration for Provider manager flows, including connection fallback and compensation observations.
 - [x] Complete structured logging for Provider lifecycle setup, supported-provider loading, and terminal failure reporting.
 - [x] Propagate cloneable `AppLogger` through concurrent Provider checks and key resolution.
+- [x] Complete structured logging for Provider lifecycle batch result handling, including health failures, reconciliation failures, status emission, and task joins.

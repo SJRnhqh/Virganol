@@ -1,10 +1,10 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/runner.rs
-use log::info;
 use tauri::AppHandle;
 use tokio::task::JoinSet;
 
 use super::super::super::super::super::super::{AppLogger, Downgrade};
 use super::super::super::super::super::{
+    ProviderCheckFinalization::{Offline, Online},
     ProviderCheckRunResult, ProviderError, ProviderId, ProviderLifecycleContext, ProviderRecord,
     ProviderState,
 };
@@ -53,30 +53,29 @@ pub(super) async fn run_provider_checks(
 
         match in_flight.join_next().await {
             Some(Ok((provider_id, record, result, key_meta))) => {
-                let (status_record, online, reconciliation_error) = finalize_provider_check_result(
+                let status_record = match finalize_provider_check_result(
                     app,
+                    logger,
                     provider_state,
                     ctx,
                     provider_id,
                     record,
                     &result,
-                )
-                .into_parts();
-
-                if let Some(se) = reconciliation_error {
-                    suppressed_errors.push(se);
-                }
-
-                if !online {
-                    failed_count += 1;
-                }
-
-                info!(
-                    "[Tauri] {} {} → online: {}",
-                    if online { "✅" } else { "⚠️" },
-                    provider_id,
-                    online
-                );
+                ) {
+                    Online {
+                        status_record,
+                        reconciliation_error,
+                    } => {
+                        if let Some(e) = reconciliation_error {
+                            suppressed_errors.push(e);
+                        }
+                        status_record
+                    }
+                    Offline { status_record } => {
+                        failed_count += 1;
+                        status_record
+                    }
+                };
 
                 if let Err(se) = {
                     let ctx = ctx
