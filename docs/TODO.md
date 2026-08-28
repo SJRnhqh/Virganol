@@ -3,19 +3,6 @@
 - Branch: `feat/spirit-log-and-trace`
 - Goal: Implement the observability system for the reliability architecture.
 
-## Current
-
-- [ ] Audit and complete structured logging for remaining Provider downgrade paths.
-
-## Planned
-
-- [ ] Define the structured logging sink boundary.
-- [ ] Revisit `AppLogger::clone` sharing and persistence concurrency semantics with the sink design.
-- [ ] Implement the structured logging application integration layer, revisiting attribution ownership at the emission boundary.
-- [ ] Implement the structured logging persistence layer, revisiting `ProviderAttribution` clone semantics and cost for durable writes.
-- [ ] Implement the execution tracing system.
-- [ ] Incorporate the completed observability design into the architecture documentation.
-
 ## Completed
 
 - [x] Explore and define the roles of logging and tracing within the observability system.
@@ -44,3 +31,5 @@
 - [x] Complete structured logging for Provider lifecycle setup, supported-provider loading, and terminal failure reporting.
 - [x] Propagate cloneable `AppLogger` through concurrent Provider checks and key resolution.
 - [x] Complete structured logging for Provider lifecycle batch result handling, including health failures, reconciliation failures, status emission, and task joins.
+- [x] Implement the structured logging application integration layer, revisiting attribution ownership at the emission boundary.
+- [x] Audit and complete structured logging for Provider downgrade paths.
