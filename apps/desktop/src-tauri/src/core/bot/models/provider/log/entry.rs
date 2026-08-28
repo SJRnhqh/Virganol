@@ -4,9 +4,10 @@ use super::super::super::super::super::{
     LogLevel::{self, Error},
 };
 use super::super::{
-    ProviderAttribution, ProviderError, ProviderOperation, ProviderStage, ProviderSubject,
+    ProviderAttribution, ProviderError, ProviderExecutionContext, ProviderOperation, ProviderStage,
+    ProviderSubject,
 };
-use super::ProviderOccurrence;
+use super::{ProviderOccurrence, ProviderOccurrence::SecretRollbackSkipped};
 
 /// Structured log entry for the Provider subject reality.
 ///
@@ -23,18 +24,6 @@ pub(in crate::core::bot) struct ProviderLogEntry {
 }
 
 impl ProviderLogEntry {
-    /// Records a structured Provider observation at the specified log level.
-    ///
-    /// 按指定日志级别记录供应商结构化观察条目。
-    pub(in crate::core::bot) fn record_observation(
-        logger: &AppLogger,
-        level: LogLevel,
-        occurrence: ProviderOccurrence,
-        attribution: impl Into<ProviderAttribution>,
-    ) {
-        logger.record(Self::new(occurrence, attribution.into()).generalize(level));
-    }
-
     /// Records structured log entries for multiple Provider failures.
     ///
     /// 为多个供应商失败记录结构化日志条目。
@@ -52,6 +41,29 @@ impl ProviderLogEntry {
     /// 为单个供应商失败记录结构化日志条目。
     pub(in crate::core::bot) fn record_failure(logger: &AppLogger, error: &ProviderError) {
         logger.record(Self::new(error.into(), error.attribution().clone()).generalize(Error));
+    }
+
+    /// Records a skipped secret rollback to preserve a newer key value.
+    ///
+    /// 记录为保留较新密钥值而跳过的密钥回滚。
+    pub(in crate::core::bot) fn record_secret_rollback_skipped(
+        logger: &AppLogger,
+        level: LogLevel,
+        ctx: &ProviderExecutionContext,
+    ) {
+        Self::record_observation(logger, level, SecretRollbackSkipped, ctx);
+    }
+
+    /// Records a structured Provider observation at the specified log level.
+    ///
+    /// 按指定日志级别记录供应商结构化观察条目。
+    fn record_observation(
+        logger: &AppLogger,
+        level: LogLevel,
+        occurrence: ProviderOccurrence,
+        attribution: impl Into<ProviderAttribution>,
+    ) {
+        logger.record(Self::new(occurrence, attribution.into()).generalize(level));
     }
 
     /// Generalizes this Provider log entry into a shared structured log entry.

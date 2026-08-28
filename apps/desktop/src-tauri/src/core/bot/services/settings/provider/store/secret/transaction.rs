@@ -2,7 +2,7 @@
 use super::super::super::super::super::super::super::{AppLogger, Downgrade, LogLevel::Warn};
 use super::super::super::super::super::super::{
     ProviderError, ProviderExecutionContext, ProviderId, ProviderKey, ProviderKeyChange,
-    ProviderLogEntry, ProviderOccurrence::SecretRollbackSkipped,
+    ProviderLogEntry,
 };
 use super::{load_provider_key, remove_provider_key, save_provider_key};
 
@@ -74,12 +74,7 @@ impl Drop for ProviderKeyTransaction<'_> {
             == Some(expected_current);
 
         if !current_matches {
-            ProviderLogEntry::record_observation(
-                self.logger,
-                Warn,
-                SecretRollbackSkipped,
-                &self.ctx,
-            );
+            ProviderLogEntry::record_secret_rollback_skipped(self.logger, Warn, &self.ctx);
             return;
         }
 

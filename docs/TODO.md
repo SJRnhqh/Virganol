@@ -33,3 +33,4 @@
 - [x] Complete structured logging for Provider lifecycle batch result handling, including health failures, reconciliation failures, status emission, and task joins.
 - [x] Implement the structured logging application integration layer, revisiting attribution ownership at the emission boundary.
 - [x] Audit and complete structured logging for Provider downgrade paths.
+- [x] Encapsulate non-failure Provider observations behind semantic logging methods and remove visibility leaks.
