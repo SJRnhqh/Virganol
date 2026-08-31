@@ -84,15 +84,15 @@ impl From<ProviderManagerOperation> for ProviderOperation {
 }
 
 impl Display for ProviderOperation {
-    /// Formats this Provider operation for diagnostic context messages.
+    /// Formats this Provider operation as a stable token.
     ///
-    /// 将当前供应商操作格式化为诊断上下文消息。
+    /// 将当前供应商操作格式化为稳定令牌。
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            Self::Manager(Connect) => f.write_str("the connect operation"),
-            Self::Manager(Reset) => f.write_str("the reset operation"),
-            Self::Manager(UpdateModels) => f.write_str("the update models operation"),
-            Self::LifecycleCheck => f.write_str("the lifecycle check operation"),
+            Self::Manager(Connect) => f.write_str("connect"),
+            Self::Manager(Reset) => f.write_str("reset"),
+            Self::Manager(UpdateModels) => f.write_str("update_models"),
+            Self::LifecycleCheck => f.write_str("lifecycle_check"),
         }
     }
 }

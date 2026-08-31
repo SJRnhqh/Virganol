@@ -1,5 +1,4 @@
 // apps/desktop/src-tauri/src/core/shared/models/context/attribution.rs
-use std::fmt::{Display, Formatter, Result};
 
 /// Application attribution projected from runtime context.
 ///
@@ -40,23 +39,5 @@ impl<Stage, Subject, Operation> AppAttribution<Stage, Subject, Operation> {
             subject,
             operation,
         }
-    }
-}
-
-impl<Stage, Subject, Operation> Display for AppAttribution<Stage, Subject, Operation>
-where
-    Stage: Display,
-    Subject: Display,
-    Operation: Display,
-{
-    /// Formats this application attribution for text output.
-    ///
-    /// 格式化当前应用归因以用于文本输出。
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        write!(
-            f,
-            "subject={}; operation={}; stage={}",
-            self.subject, self.operation, self.stage
-        )
     }
 }

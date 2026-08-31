@@ -36,9 +36,9 @@ impl From<&ProviderError> for ProviderOccurrence {
 }
 
 impl Display for ProviderOccurrence {
-    /// Formats this Provider occurrence for text output.
+    /// Formats this Provider occurrence as a stable token.
     ///
-    /// 格式化当前供应商发生事实以用于文本输出。
+    /// 将当前供应商发生事实格式化为稳定令牌。
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             Self::Failure(failure_kind) => write!(f, "{failure_kind}"),

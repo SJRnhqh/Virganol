@@ -61,14 +61,14 @@ impl From<ProviderId> for ProviderSubject {
 }
 
 impl Display for ProviderSubject {
-    /// Formats the subject for diagnostic messages.
+    /// Formats the subject as a stable token.
     ///
-    /// 将主体格式化为诊断消息。
+    /// 将主体格式化为稳定令牌。
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            Self::Provider(provider_id) => write!(f, "provider {provider_id}"),
-            Self::ConfiguredProviders => f.write_str("the configured providers"),
-            Self::Candidate(raw) => write!(f, "candidate {raw}"),
+            Self::Provider(provider_id) => write!(f, "provider:{provider_id}"),
+            Self::ConfiguredProviders => f.write_str("configured_providers"),
+            Self::Candidate(raw) => write!(f, "candidate:{raw}"),
         }
     }
 }

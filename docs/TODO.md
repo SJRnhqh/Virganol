@@ -22,6 +22,7 @@
 
 ## Completed
 
+- [x] Tokenized attribution stage, subject, and operation field values and removed the dead shared attribution Display
 - [x] Added the first high-value Provider lifecycle event at Info level using the stable native event fields
 - [x] Defined occurrence and flattened attribution stage, subject, and operation as stable native Event fields
 - [x] Connected AppLogger directly to tracing with occurrence and attribution as native Event fields

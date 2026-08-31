@@ -66,16 +66,16 @@ impl ProviderStage {
 }
 
 impl Display for ProviderStage {
-    /// Formats this Provider stage for diagnostic context messages.
+    /// Formats this Provider stage as a stable token.
     ///
-    /// 将当前供应商阶段格式化为诊断上下文消息。
+    /// 将当前供应商阶段格式化为稳定令牌。
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            Self::Manager => f.write_str("the manager stage"),
-            Self::LifecycleEmit => f.write_str("the lifecycle event stage"),
-            Self::Connection => f.write_str("the connection stage"),
-            Self::ConfigStore => f.write_str("the config store stage"),
-            Self::SecretStore => f.write_str("the secret store stage"),
+            Self::Manager => f.write_str("manager"),
+            Self::LifecycleEmit => f.write_str("lifecycle_emit"),
+            Self::Connection => f.write_str("connection"),
+            Self::ConfigStore => f.write_str("config_store"),
+            Self::SecretStore => f.write_str("secret_store"),
         }
     }
 }
