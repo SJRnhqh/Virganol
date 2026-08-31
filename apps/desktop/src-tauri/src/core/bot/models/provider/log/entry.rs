@@ -1,11 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/log/entry.rs
 use super::super::super::super::super::{
     AppLogger, LogEntry,
-    LogLevel::{self, Error},
+    LogLevel::{self, Error, Info},
 };
 use super::super::{
-    ProviderAttribution, ProviderError, ProviderExecutionContext, ProviderOperation, ProviderStage,
-    ProviderSubject,
+    ProviderAttribution, ProviderError, ProviderExecutionContext, ProviderLifecycleContext,
+    ProviderOperation, ProviderStage, ProviderSubject,
 };
 use super::{ProviderOccurrence, ProviderOccurrence::SecretRollbackSkipped};
 
@@ -52,6 +52,16 @@ impl ProviderLogEntry {
         ctx: &ProviderExecutionContext,
     ) {
         Self::record_observation(logger, level, SecretRollbackSkipped, ctx);
+    }
+
+    /// Records the start of one provider check lifecycle run at Info level.
+    ///
+    /// 以信息级别记录一轮供应商检查生命周期的开始。
+    pub(in crate::core::bot) fn record_check_started(
+        logger: &AppLogger,
+        ctx: &ProviderLifecycleContext<'_>,
+    ) {
+        Self::record_observation(logger, Info, ProviderOccurrence::CheckStarted, ctx);
     }
 
     /// Records a structured Provider observation at the specified log level.

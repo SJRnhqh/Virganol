@@ -3,7 +3,8 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::{AppLogger, AppState};
 use super::super::super::super::super::{
-    ProviderCheckTrigger, ProviderError, ProviderLifecycleContext, ProviderSubject,
+    ProviderCheckTrigger, ProviderError, ProviderLifecycleContext, ProviderLogEntry,
+    ProviderSubject,
 };
 use super::super::load_checkable_providers;
 use super::{
@@ -22,6 +23,8 @@ pub(crate) async fn check_providers_lifecycle(
 ) {
     let run_id = next_run_id(&trigger);
     let ctx = ProviderLifecycleContext::start(run_id.as_str(), &trigger);
+
+    ProviderLogEntry::record_check_started(logger, &ctx);
 
     if let Some(e) = emit_check_started(&app, &ctx, run_id.as_str(), &trigger).err() {
         report_lifecycle_failure(&app, logger, &ctx, run_id.as_str(), &e, &[]);

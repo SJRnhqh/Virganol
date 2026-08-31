@@ -20,6 +20,10 @@ pub(in crate::core::bot::models::provider) enum ProviderOccurrence {
     ///
     /// 为保留较新的密钥值而跳过供应商密钥回滚。
     SecretRollbackSkipped,
+    /// One provider check lifecycle run started.
+    ///
+    /// 一轮供应商检查生命周期开始运行。
+    CheckStarted,
 }
 
 impl From<&ProviderError> for ProviderOccurrence {
@@ -39,6 +43,7 @@ impl Display for ProviderOccurrence {
         match self {
             Self::Failure(failure_kind) => write!(f, "{failure_kind}"),
             Self::SecretRollbackSkipped => f.write_str("secret_rollback_skipped"),
+            Self::CheckStarted => f.write_str("check_started"),
         }
     }
 }

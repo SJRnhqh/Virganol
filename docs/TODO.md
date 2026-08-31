@@ -6,11 +6,10 @@
 
 ## Current
 
-- [ ] Add the first high-value Provider lifecycle event at Info level using the stable native event fields
+- [ ] Define the operational questions and sensitive-field allowlist for Provider observability
 
 ## Planned
 
-- [ ] Define the operational questions and sensitive-field allowlist for Provider observability
 - [ ] Define Provider lifecycle span boundaries and correlation semantics for run_id and trigger
 - [ ] Instrument Provider lifecycle and operations with spans and propagate run_id across Rust async task boundaries
 - [ ] Add high-value Provider lifecycle and manager events at stable log levels
@@ -23,6 +22,7 @@
 
 ## Completed
 
+- [x] Added the first high-value Provider lifecycle event at Info level using the stable native event fields
 - [x] Defined occurrence and flattened attribution stage, subject, and operation as stable native Event fields
 - [x] Connected AppLogger directly to tracing with occurrence and attribution as native Event fields
 - [x] Assigned record timestamps to subscriber and sink formatting and removed the redundant LogEntry timestamp
