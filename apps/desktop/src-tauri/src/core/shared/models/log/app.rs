@@ -1,8 +1,12 @@
 // apps/desktop/src-tauri/src/core/shared/models/log/app.rs
-use log::log;
 use std::fmt::Display;
+use tracing::{debug, error, info, trace, warn};
 
-use super::LogEntry;
+use super::super::AppAttribution;
+use super::{
+    LogEntry,
+    LogLevel::{Debug, Error, Info, Trace, Warn},
+};
 
 /// Application-scoped structured logging write facade.
 ///
@@ -18,8 +22,17 @@ impl AppLogger {
         &self,
         entry: LogEntry<Occurrence, Stage, Subject, Operation>,
     ) where
-        LogEntry<Occurrence, Stage, Subject, Operation>: Display,
+        Occurrence: Display,
+        AppAttribution<Stage, Subject, Operation>: Display,
     {
-        log!(entry.level().into(), "{entry}");
+        let (level, occurrence, attribution) = entry.into_parts();
+
+        match level {
+            Error => error!(%occurrence, %attribution),
+            Warn => warn!(%occurrence, %attribution),
+            Info => info!(%occurrence, %attribution),
+            Debug => debug!(%occurrence, %attribution),
+            Trace => trace!(%occurrence, %attribution),
+        }
     }
 }

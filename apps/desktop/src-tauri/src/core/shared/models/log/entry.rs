@@ -1,9 +1,4 @@
 // apps/desktop/src-tauri/src/core/shared/models/log/entry.rs
-use std::{
-    fmt::{Display, Formatter, Result},
-    time::{SystemTime, UNIX_EPOCH},
-};
-
 use super::super::AppAttribution;
 use super::LogLevel;
 
@@ -11,10 +6,6 @@ use super::LogLevel;
 ///
 /// 通用结构化日志条目。
 pub(in crate::core) struct LogEntry<Occurrence, Stage, Subject, Operation> {
-    /// Time when this structured observation was recorded.
-    ///
-    /// 当前结构化观测被记录的时间。
-    timestamp: SystemTime,
     /// Severity of the observed occurrence.
     ///
     /// 所观测发生事实的严重级别。
@@ -38,53 +29,34 @@ impl<Occurrence, Stage, Subject, Operation> LogEntry<Occurrence, Stage, Subject,
         occurrence: Occurrence,
         attribution: AppAttribution<Stage, Subject, Operation>,
     ) -> Self {
-        Self::new(SystemTime::now(), level, occurrence, attribution)
+        Self::new(level, occurrence, attribution)
     }
 
-    /// Returns this structured log entry's severity level.
+    /// Consumes this entry into the fields written by the application logger.
     ///
-    /// 返回当前结构化日志条目的严重级别。
-    pub(super) fn level(&self) -> &LogLevel {
-        &self.level
+    /// 消费当前条目并返回应用日志器写入的字段。
+    pub(super) fn into_parts(
+        self,
+    ) -> (
+        LogLevel,
+        Occurrence,
+        AppAttribution<Stage, Subject, Operation>,
+    ) {
+        (self.level, self.occurrence, self.attribution)
     }
 
     /// Creates a structured log entry.
     ///
     /// 创建结构化日志条目。
     fn new(
-        timestamp: SystemTime,
         level: LogLevel,
         occurrence: Occurrence,
         attribution: AppAttribution<Stage, Subject, Operation>,
     ) -> Self {
         Self {
-            timestamp,
             level,
             occurrence,
             attribution,
         }
-    }
-}
-
-impl<Occurrence, Stage, Subject, Operation> Display
-    for LogEntry<Occurrence, Stage, Subject, Operation>
-where
-    Occurrence: Display,
-    AppAttribution<Stage, Subject, Operation>: Display,
-{
-    /// Formats this structured log entry for text output.
-    ///
-    /// 格式化当前结构化日志条目以用于文本输出。
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        write!(
-            f,
-            "timestamp={}; occurrence={}; attribution={}",
-            self.timestamp
-                .duration_since(UNIX_EPOCH)
-                .map(|duration| duration.as_millis())
-                .unwrap_or(0),
-            self.occurrence,
-            self.attribution
-        )
     }
 }

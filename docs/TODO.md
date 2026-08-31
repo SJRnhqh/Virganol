@@ -6,12 +6,13 @@
 
 ## Current
 
-- [ ] Define the operational questions, stable event fields, span boundaries, correlation semantics, and sensitive-field allowlist
+- [ ] Define the operational questions, stable native event fields, and sensitive-field allowlist, starting with the occurrence and attribution field shapes
 
 ## Planned
 
-- [ ] Emit native tracing events from AppLogger without flattening LogEntry into one message field
+- [ ] Define Provider lifecycle span boundaries and correlation semantics for run_id and trigger
 - [ ] Instrument Provider lifecycle and operations with spans and propagate run_id across Rust async task boundaries
+- [ ] Add high-value Provider lifecycle and manager events at stable log levels
 - [ ] Compose console and rolling local-file Layers under one subscriber with independent filters and structured persistent output
 - [ ] Define the application log location, rotation, retention, cleanup, and sink-failure fallback behavior
 - [ ] Add non-blocking file writing with explicit worker-guard ownership, flush, and orderly shutdown semantics
@@ -21,6 +22,8 @@
 
 ## Completed
 
+- [x] Connected AppLogger directly to tracing with occurrence and attribution as native Event fields
+- [x] Assigned record timestamps to subscriber and sink formatting and removed the redundant LogEntry timestamp
 - [x] Backend selection settled on tracing-subscriber sharing one pipeline between logs and future tracing
 - [x] Replaced env_logger with a tracing-subscriber stderr sink without facade or call-site changes
 - [x] Preserved RUST_LOG filtering with an Info default and validated the console backend through pnpm dev

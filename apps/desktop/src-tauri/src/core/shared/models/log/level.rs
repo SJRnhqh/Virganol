@@ -1,7 +1,4 @@
 // apps/desktop/src-tauri/src/core/shared/models/log/level.rs
-use log::Level;
-
-use self::LogLevel::{Debug, Error, Info, Trace, Warn};
 
 /// Severity level of a structured log entry.
 ///
@@ -30,19 +27,4 @@ pub(in crate::core) enum LogLevel {
     /// 用于深度排障的细粒度执行详情。
     #[allow(dead_code)]
     Trace,
-}
-
-impl From<&LogLevel> for Level {
-    /// Converts a structured log severity into a facade log level.
-    ///
-    /// 将结构化日志严重级别转换为日志门面级别。
-    fn from(level: &LogLevel) -> Self {
-        match level {
-            Error => Self::Error,
-            Warn => Self::Warn,
-            Info => Self::Info,
-            Debug => Self::Debug,
-            Trace => Self::Trace,
-        }
-    }
 }
