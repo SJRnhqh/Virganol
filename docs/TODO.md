@@ -1,15 +1,11 @@
 # Branch TODO
 
 - Branch: feat/spirit-log-backend
-- Goal: Integrate tracing-subscriber as the unified logging backend, replacing env_logger with zero facade or call-site changes
+- Goal: Evolve tracing-subscriber into a structured observability backend, starting at the AppLogger boundary
 
 ## Current
 
-- [ ] Prepare branch closeout and PR
-
-## Planned
-
-- [ ] Check off the ROADMAP 6.2 backend item at PR stage
+- [ ] Define the structured event fields and span boundary at the AppLogger seam
 
 ## Completed
 
