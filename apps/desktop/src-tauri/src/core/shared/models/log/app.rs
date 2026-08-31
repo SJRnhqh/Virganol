@@ -2,7 +2,6 @@
 use std::fmt::Display;
 use tracing::{debug, error, info, trace, warn};
 
-use super::super::AppAttribution;
 use super::{
     LogEntry,
     LogLevel::{Debug, Error, Info, Trace, Warn},
@@ -23,16 +22,30 @@ impl AppLogger {
         entry: LogEntry<Occurrence, Stage, Subject, Operation>,
     ) where
         Occurrence: Display,
-        AppAttribution<Stage, Subject, Operation>: Display,
+        Stage: Display,
+        Subject: Display,
+        Operation: Display,
     {
         let (level, occurrence, attribution) = entry.into_parts();
+        let (attribution_stage, attribution_subject, attribution_operation) =
+            attribution.into_parts();
 
         match level {
-            Error => error!(%occurrence, %attribution),
-            Warn => warn!(%occurrence, %attribution),
-            Info => info!(%occurrence, %attribution),
-            Debug => debug!(%occurrence, %attribution),
-            Trace => trace!(%occurrence, %attribution),
+            Error => {
+                error!(%occurrence, %attribution_stage, %attribution_subject, %attribution_operation)
+            }
+            Warn => {
+                warn!(%occurrence, %attribution_stage, %attribution_subject, %attribution_operation)
+            }
+            Info => {
+                info!(%occurrence, %attribution_stage, %attribution_subject, %attribution_operation)
+            }
+            Debug => {
+                debug!(%occurrence, %attribution_stage, %attribution_subject, %attribution_operation)
+            }
+            Trace => {
+                trace!(%occurrence, %attribution_stage, %attribution_subject, %attribution_operation)
+            }
         }
     }
 }
