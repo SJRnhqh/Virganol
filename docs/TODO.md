@@ -22,6 +22,7 @@
 
 ## Completed
 
+- [x] Moved subscriber initialization to the start of Tauri setup before core and sidecar startup
 - [x] Standardized the desktop application identifier and Provider keyring namespace on com.virganol
 - [x] Refactored the logging backend into a subscriber registration module and an independently composed console Layer without changing console behavior
 - [x] Tokenized attribution stage, subject, and operation field values and removed the dead shared attribution Display
