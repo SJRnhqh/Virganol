@@ -4,11 +4,12 @@
   "coverage": {
     "include": [
       "apps/desktop/src-tauri/src/commands/**/*.rs",
+      "apps/desktop/src-tauri/src/container/**/*.rs",
       "apps/desktop/src-tauri/src/core/shared/**/*.rs",
       "apps/desktop/src-tauri/src/core/bot/**/*.rs",
       "dev/scripts/rust/comments/crates/**/*.rs"
     ],
     "exclude": ["**/mod.rs"]
   },
-  "allowedAsciiTerms": ["Node-API", "API", "ASCII", "CLI", "JSON", "Rust", "Tauri", "Windows", "Ollama", "DeepSeek"]
+  "allowedAsciiTerms": ["Node-API", "API", "ASCII", "CLI", "JSONL", "JSON", "Rust", "Tauri", "Windows", "Ollama", "DeepSeek"]
 }
