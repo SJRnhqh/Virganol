@@ -17,13 +17,6 @@ pub(super) struct ProviderContext<E = ()> {
 }
 
 impl<E> ProviderContext<E> {
-    /// Consumes this context into the connection stage.
-    ///
-    /// 消费当前上下文，并将其转换为连接阶段。
-    pub(super) fn into_connection(self) -> Self {
-        self.to_stage(ProviderStage::connection())
-    }
-
     /// Consumes this context into the config-store stage.
     ///
     /// 消费当前上下文，并将其转换为配置存储阶段。

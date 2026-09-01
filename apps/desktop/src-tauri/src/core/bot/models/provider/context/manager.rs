@@ -52,11 +52,11 @@ impl ProviderManagerContext {
         Self::new(provider_id, ProviderManagerOperation::update_models())
     }
 
-    /// Consumes this interactive management context into the connection stage.
+    /// Derives an owned connection stage view from this manager context.
     ///
-    /// 消费当前交互式管理上下文，并将其转换为连接阶段。
-    pub(in crate::core::bot) fn into_connection(self) -> Self {
-        Self(self.0.into_connection())
+    /// 从当前管理上下文派生一个拥有所有权的连接阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_connection(&self) -> Self {
+        Self(self.0.for_connection())
     }
 
     /// Derives an owned config-store stage view from this manager context.

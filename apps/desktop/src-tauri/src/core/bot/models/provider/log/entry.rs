@@ -74,7 +74,7 @@ impl ProviderLogEntry {
     pub(in crate::core::bot) fn record_provider_connected(
         logger: &AppLogger,
         level: LogLevel,
-        ctx: &ProviderExecutionContext,
+        ctx: &ProviderManagerContext,
     ) {
         Self::record_observation(logger, level, ProviderConnected, ctx);
     }
