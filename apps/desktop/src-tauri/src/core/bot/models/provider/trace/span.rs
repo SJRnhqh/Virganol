@@ -1,7 +1,9 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/trace/span.rs
 use tracing::{info_span, Span};
 
-use super::super::super::super::PROVIDER_REALITY;
+use super::super::super::super::{
+    PROVIDER_EXECUTION_SPAN, PROVIDER_LIFECYCLE_SPAN, PROVIDER_MANAGER_SPAN,
+};
 use super::super::{
     ProviderAttribution, ProviderCheckTrigger, ProviderExecutionContext, ProviderManagerContext,
 };
@@ -12,24 +14,24 @@ use super::super::{
 pub(in crate::core::bot) struct ProviderSpan;
 
 impl ProviderSpan {
-    /// Creates a span for an interactive Provider management execution.
+    /// Creates a span for interactive provider management business.
     ///
-    /// 创建一次交互式供应商管理执行的 Span。
+    /// 创建交互式供应商管理业务的 Span。
     pub(in crate::core::bot) fn manager(ctx: &ProviderManagerContext) -> Span {
         let attribution = ProviderAttribution::from(ctx);
         let (stage, subject, operation) = attribution.as_parts();
 
         info_span!(
-            PROVIDER_REALITY,
+            PROVIDER_MANAGER_SPAN,
             attribution_stage = %stage,
             attribution_subject = %subject,
             attribution_operation = %operation,
         )
     }
 
-    /// Creates a span for one Provider lifecycle check run.
+    /// Creates a span for provider lifecycle check business.
     ///
-    /// 创建一轮供应商生命周期检查的 Span。
+    /// 创建供应商生命周期检查业务的 Span。
     #[allow(dead_code)]
     pub(in crate::core::bot::models::provider) fn lifecycle(
         attribution: &ProviderAttribution,
@@ -39,7 +41,7 @@ impl ProviderSpan {
         let (stage, subject, operation) = attribution.as_parts();
 
         info_span!(
-            PROVIDER_REALITY,
+            PROVIDER_LIFECYCLE_SPAN,
             attribution_stage = %stage,
             attribution_subject = %subject,
             attribution_operation = %operation,
@@ -48,15 +50,15 @@ impl ProviderSpan {
         )
     }
 
-    /// Creates a span for one Provider execution stage.
+    /// Creates a span for provider execution business.
     ///
-    /// 创建一个供应商执行阶段的 Span。
+    /// 创建供应商执行业务的 Span。
     pub(in crate::core::bot) fn execution(ctx: &ProviderExecutionContext) -> Span {
         let attribution = ProviderAttribution::from(ctx);
         let (stage, subject, operation) = attribution.as_parts();
 
         info_span!(
-            PROVIDER_REALITY,
+            PROVIDER_EXECUTION_SPAN,
             attribution_stage = %stage,
             attribution_subject = %subject,
             attribution_operation = %operation,
