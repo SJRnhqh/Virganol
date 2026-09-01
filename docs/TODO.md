@@ -14,7 +14,7 @@
 
 - [ ] Define the application log location, rotation, retention, cleanup, and sink-failure fallback behavior
 - [ ] Add non-blocking file writing with explicit worker-guard ownership, flush, and orderly shutdown semantics
-- [ ] Verify JSONL field stability, persistence, rotation, retention, shutdown, sink failure, and secret redaction across success and failure paths
+- [ ] Verify JSONL field stability, active-span correlation (`run_id`, `trigger`, and Provider attribution), persistence, rotation, retention, shutdown, sink failure, and secret redaction across success and failure paths
 
 ### Console output
 
