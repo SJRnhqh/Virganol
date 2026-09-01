@@ -13,7 +13,6 @@
 - [ ] Define Provider lifecycle span boundaries and correlation semantics for run_id and trigger
 - [ ] Instrument Provider lifecycle and operations with spans and propagate run_id across Rust async task boundaries
 - [ ] Add high-value Provider lifecycle and manager events at stable log levels
-- [ ] Compose console and rolling local-file Layers under one subscriber with independent filters and structured persistent output
 - [ ] Define the application log location, rotation, retention, cleanup, and sink-failure fallback behavior
 - [ ] Add non-blocking file writing with explicit worker-guard ownership, flush, and orderly shutdown semantics
 - [ ] Route direct Rust output and forwarded Go sidecar stdout and stderr through normalized tracing events with source targets
@@ -22,6 +21,7 @@
 
 ## Completed
 
+- [x] Composed console and daily rolling JSONL Layers under one subscriber with independent filters and structured persistent output
 - [x] Moved subscriber initialization to the start of Tauri setup before core and sidecar startup
 - [x] Standardized the desktop application identifier and Provider keyring namespace on com.virganol
 - [x] Refactored the logging backend into a subscriber registration module and an independently composed console Layer without changing console behavior
