@@ -35,6 +35,7 @@
 
 ## Completed
 
+- [x] Recorded single Provider reset failures through the singular failure recorder
 - [x] Instrumented the Provider connect manager with an attributed async root span, a connection-probe child span, and a successful connection event
 - [x] Instrumented the Provider reset manager with an attributed root span and a successful reset event
 - [x] Instrumented the Provider enabled-model update manager with an attributed root span and a successful update event

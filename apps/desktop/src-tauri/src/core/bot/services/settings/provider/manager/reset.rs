@@ -27,7 +27,7 @@ pub(crate) fn reset_provider_config(
     let previous = match remove_provider(app, logger, provider_state, &ctx, provider_id) {
         Ok(removed) => removed,
         Err(e) => {
-            ProviderLogEntry::record_failures(logger, [&e]);
+            ProviderLogEntry::record_failure(logger, &e);
             return Err(ProviderAppError::from(&e));
         }
     };
@@ -46,7 +46,7 @@ pub(crate) fn reset_provider_config(
                 ));
             }
         }
-        ProviderLogEntry::record_failures(logger, [&e]);
+        ProviderLogEntry::record_failure(logger, &e);
         return Err(ProviderAppError::from(&e));
     }
 
