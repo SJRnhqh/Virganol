@@ -8,8 +8,8 @@ use super::super::{
     ProviderManagerContext, ProviderOperation, ProviderStage, ProviderSubject,
 };
 use super::ProviderOccurrence::{
-    self, CheckStarted, EnabledModelsUpdated, ProviderConnected, ProviderReset,
-    SecretRollbackSkipped,
+    self, CheckStarted, EnabledModelsUpdated, ProviderConfigRestored, ProviderConnected,
+    ProviderReset, SecretRollbackSkipped,
 };
 
 /// Structured log entry for the Provider subject reality.
@@ -88,6 +88,17 @@ impl ProviderLogEntry {
         ctx: &ProviderManagerContext,
     ) {
         Self::record_observation(logger, level, ProviderReset, ctx);
+    }
+
+    /// Records a successful Provider configuration restoration after reset failure.
+    ///
+    /// 记录供应商重置失败后成功恢复配置。
+    pub(in crate::core::bot) fn record_provider_config_restored(
+        logger: &AppLogger,
+        level: LogLevel,
+        ctx: &ProviderExecutionContext,
+    ) {
+        Self::record_observation(logger, level, ProviderConfigRestored, ctx);
     }
 
     /// Records a successful enabled-model update.

@@ -49,6 +49,8 @@ pub(crate) fn reset_provider_config(
                     vec![ProviderAppError::from(&se)],
                 ));
             }
+
+            ProviderLogEntry::record_provider_config_restored(logger, Info, &ctx);
         }
         ProviderLogEntry::record_failure(logger, &e);
         return Err(ProviderAppError::from(&e));

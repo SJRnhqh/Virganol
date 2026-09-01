@@ -32,6 +32,10 @@ pub(in crate::core::bot::models::provider) enum ProviderOccurrence {
     ///
     /// 已重置一个供应商的持久化配置与密钥材料。
     ProviderReset,
+    /// Persisted configuration was restored after one provider reset failed.
+    ///
+    /// 一次供应商重置失败后，已恢复持久化配置。
+    ProviderConfigRestored,
     /// Enabled models were updated successfully for one provider.
     ///
     /// 已成功更新一个供应商的启用模型列表。
@@ -58,6 +62,7 @@ impl Display for ProviderOccurrence {
             Self::CheckStarted => f.write_str("check_started"),
             Self::ProviderConnected => f.write_str("provider_connected"),
             Self::ProviderReset => f.write_str("provider_reset"),
+            Self::ProviderConfigRestored => f.write_str("provider_config_restored"),
             Self::EnabledModelsUpdated => f.write_str("enabled_models_updated"),
         }
     }
