@@ -2,7 +2,7 @@
 
 - Branch: feat/spirit-log-backend
 - Goal: Complete the Rust/Tauri Provider observability v1 with native structured events, correlated execution spans, and durable local logs
-- Scope: Backend logging and tracing from Rust/Tauri plus forwarded sidecar output; excludes frontend observability, metrics, remote export, and alerting
+- Scope: Rust/Tauri backend logging and tracing; excludes forwarded Go sidecar output, frontend observability, metrics, remote export, and alerting
 
 ## Current
 
@@ -10,27 +10,33 @@
 
 ## Planned
 
+### Tracing
+
 - [ ] Define Provider lifecycle span boundaries and correlation semantics for run_id and trigger
 - [ ] Instrument Provider lifecycle and operations with spans and propagate run_id across Rust async task boundaries
 - [ ] Add high-value Provider lifecycle and manager events at stable log levels
+
+### JSONL persistence
+
 - [ ] Define the application log location, rotation, retention, cleanup, and sink-failure fallback behavior
 - [ ] Add non-blocking file writing with explicit worker-guard ownership, flush, and orderly shutdown semantics
-- [ ] Route direct Rust output and forwarded Go sidecar stdout and stderr through normalized tracing events with source targets
-- [ ] Verify field stability, filtering, correlation, persistence, rotation, shutdown, and secret redaction across success and failure paths
-- [ ] Document the backend observability contract and update the matching ROADMAP 6.2 progress
+- [ ] Verify JSONL field stability, persistence, rotation, retention, shutdown, sink failure, and secret redaction across success and failure paths
+
+### Console output
+
+- [ ] Define a compact human-readable console format with deliberate color, target visibility, and field selection
+- [ ] Verify console filtering and readability independently from the complete JSONL representation
+
+### Observability contract
+
+- [ ] Normalize remaining direct Rust output through tracing without coupling this branch to forwarded Go sidecar output
+- [ ] Document the Rust/Tauri backend observability contract, completion boundary, and deferred Go sidecar integration
+- [ ] Update the matching ROADMAP 6.2 progress when the backend observability contract is complete
 
 ## Completed
 
-- [x] Composed console and daily rolling JSONL Layers under one subscriber with independent filters and structured persistent output
-- [x] Moved subscriber initialization to the start of Tauri setup before core and sidecar startup
+- [x] Established stable native Provider event fields and connected the semantic AppLogger facade directly to tracing
+- [x] Assigned timestamps and formatting to subscribers and sinks instead of domain log entries
+- [x] Registered tracing-subscriber at the start of Tauri setup with an independently composed, RUST_LOG-filtered console Layer
+- [x] Added a daily rolling JSONL Layer in the Tauri application log directory and validated file creation through pnpm dev
 - [x] Standardized the desktop application identifier and Provider keyring namespace on com.virganol
-- [x] Refactored the logging backend into a subscriber registration module and an independently composed console Layer without changing console behavior
-- [x] Tokenized attribution stage, subject, and operation field values and removed the dead shared attribution Display
-- [x] Added the first high-value Provider lifecycle event at Info level using the stable native event fields
-- [x] Defined occurrence and flattened attribution stage, subject, and operation as stable native Event fields
-- [x] Connected AppLogger directly to tracing with occurrence and attribution as native Event fields
-- [x] Assigned record timestamps to subscriber and sink formatting and removed the redundant LogEntry timestamp
-- [x] Backend selection settled on tracing-subscriber sharing one pipeline between logs and future tracing
-- [x] Replaced env_logger with a tracing-subscriber stderr sink without facade or call-site changes
-- [x] Preserved RUST_LOG filtering with an Info default and validated the console backend through pnpm dev
-- [x] Scoped this branch to terminal output while leaving persistence and non-terminal sink formats open
