@@ -8,6 +8,8 @@ use tracing_subscriber::{
     Layer,
 };
 
+use super::ColoredFields;
+
 /// Builds the console logging layer.
 ///
 /// 构建控制台日志层。
@@ -17,6 +19,7 @@ where
 {
     layer()
         .compact()
+        .fmt_fields(ColoredFields)
         .with_timer(ChronoLocal::new("%H:%M:%S%.3f".to_string()))
         .with_target(false)
         .with_writer(stderr)

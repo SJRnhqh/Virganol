@@ -8,6 +8,7 @@ version = "0.0.1"
 dependencies = [
  "directories",
  "keyring",
+ "nu-ansi-term",
  "parking_lot",
  "portable-pty",
  "prost",

@@ -6,13 +6,12 @@
 
 ## Current
 
-- [ ] Finalize console field selection and colored field-key rendering
+- [ ] Define Provider lifecycle span boundaries and correlation semantics for run_id and trigger
 
 ## Planned
 
 ### Tracing
 
-- [ ] Define Provider lifecycle span boundaries and correlation semantics for run_id and trigger
 - [ ] Instrument Provider lifecycle and operations with spans and propagate run_id across Rust async task boundaries
 - [ ] Add high-value Provider lifecycle and manager events at stable log levels
 
@@ -25,6 +24,7 @@
 
 ### Console output
 
+- [ ] Emit a structured run-start event to delimit each run in console and JSONL output
 - [ ] Verify console filtering and readability independently from the complete JSONL representation
 
 ### Observability contract
@@ -41,3 +41,4 @@
 - [x] Added a daily rolling JSONL Layer in the Tauri application log directory and validated file creation through pnpm dev
 - [x] Standardized the desktop application identifier and Provider keyring namespace on com.virganol
 - [x] Adopted the compact console format with hidden targets, framework level colors, and local short timestamps via ChronoLocal
+- [x] Colored console field keys cyan through a dedicated logging color module, rendering all fields as the v1 field policy
