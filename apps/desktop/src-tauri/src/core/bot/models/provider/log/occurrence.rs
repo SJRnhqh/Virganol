@@ -20,14 +20,14 @@ pub(in crate::core::bot::models::provider) enum ProviderOccurrence {
     ///
     /// 为保留较新的密钥值而跳过供应商密钥回滚。
     SecretRollbackSkipped,
-    /// One provider check lifecycle run started.
-    ///
-    /// 一轮供应商检查生命周期开始运行。
-    CheckStarted,
     /// One provider was connected and persisted successfully.
     ///
     /// 已成功连接并持久化一个供应商。
     ProviderConnected,
+    /// Provider key change was rolled back successfully.
+    ///
+    /// 已成功回滚供应商密钥变更。
+    ProviderKeyRolledBack,
     /// Persisted configuration and secret material were reset for one provider.
     ///
     /// 已重置一个供应商的持久化配置与密钥材料。
@@ -40,6 +40,10 @@ pub(in crate::core::bot::models::provider) enum ProviderOccurrence {
     ///
     /// 已成功更新一个供应商的启用模型列表。
     EnabledModelsUpdated,
+    /// One provider check lifecycle run started.
+    ///
+    /// 一轮供应商检查生命周期开始运行。
+    CheckStarted,
 }
 
 impl From<&ProviderError> for ProviderOccurrence {
@@ -59,11 +63,12 @@ impl Display for ProviderOccurrence {
         match self {
             Self::Failure(failure_kind) => write!(f, "{failure_kind}"),
             Self::SecretRollbackSkipped => f.write_str("secret_rollback_skipped"),
-            Self::CheckStarted => f.write_str("check_started"),
             Self::ProviderConnected => f.write_str("provider_connected"),
+            Self::ProviderKeyRolledBack => f.write_str("provider_key_rolled_back"),
             Self::ProviderReset => f.write_str("provider_reset"),
             Self::ProviderConfigRestored => f.write_str("provider_config_restored"),
             Self::EnabledModelsUpdated => f.write_str("enabled_models_updated"),
+            Self::CheckStarted => f.write_str("check_started"),
         }
     }
 }

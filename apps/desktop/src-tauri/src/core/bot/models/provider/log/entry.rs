@@ -9,7 +9,7 @@ use super::super::{
 };
 use super::ProviderOccurrence::{
     self, CheckStarted, EnabledModelsUpdated, ProviderConfigRestored, ProviderConnected,
-    ProviderReset, SecretRollbackSkipped,
+    ProviderKeyRolledBack, ProviderReset, SecretRollbackSkipped,
 };
 
 /// Structured log entry for the Provider subject reality.
@@ -57,17 +57,6 @@ impl ProviderLogEntry {
         Self::record_observation(logger, level, SecretRollbackSkipped, ctx);
     }
 
-    /// Records the start of one provider check lifecycle run.
-    ///
-    /// 记录一轮供应商检查生命周期的开始。
-    pub(in crate::core::bot) fn record_check_started(
-        logger: &AppLogger,
-        level: LogLevel,
-        ctx: &ProviderLifecycleContext<'_>,
-    ) {
-        Self::record_observation(logger, level, CheckStarted, ctx);
-    }
-
     /// Records a successful Provider connection.
     ///
     /// 记录供应商连接成功。
@@ -77,6 +66,17 @@ impl ProviderLogEntry {
         ctx: &ProviderManagerContext,
     ) {
         Self::record_observation(logger, level, ProviderConnected, ctx);
+    }
+
+    /// Records a successful Provider key change rollback.
+    ///
+    /// 记录供应商密钥变更回滚成功。
+    pub(in crate::core::bot) fn record_provider_key_rolled_back(
+        logger: &AppLogger,
+        level: LogLevel,
+        ctx: &ProviderExecutionContext,
+    ) {
+        Self::record_observation(logger, level, ProviderKeyRolledBack, ctx);
     }
 
     /// Records a successful Provider reset.
@@ -110,6 +110,17 @@ impl ProviderLogEntry {
         ctx: &ProviderManagerContext,
     ) {
         Self::record_observation(logger, level, EnabledModelsUpdated, ctx);
+    }
+
+    /// Records the start of one provider check lifecycle run.
+    ///
+    /// 记录一轮供应商检查生命周期的开始。
+    pub(in crate::core::bot) fn record_check_started(
+        logger: &AppLogger,
+        level: LogLevel,
+        ctx: &ProviderLifecycleContext<'_>,
+    ) {
+        Self::record_observation(logger, level, CheckStarted, ctx);
     }
 
     /// Records a structured Provider observation at the specified log level.
