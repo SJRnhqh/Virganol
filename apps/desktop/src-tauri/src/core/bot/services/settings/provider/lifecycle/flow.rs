@@ -29,7 +29,7 @@ pub(crate) async fn check_providers_lifecycle(
     async {
         ProviderLogEntry::record_check_started(logger, Info, &ctx);
 
-        if let Some(e) = emit_check_started(&app, &ctx, run_id.as_str(), &trigger).err() {
+        if let Err(e) = emit_check_started(&app, &ctx, run_id.as_str(), &trigger) {
             report_lifecycle_failure(&app, logger, &ctx, run_id.as_str(), &e, &[]);
             return;
         }
@@ -48,10 +48,10 @@ pub(crate) async fn check_providers_lifecycle(
         };
         match providers.as_slice() {
             [] => {
-                if let Some(e) =
-                    emit_check_completed(&app, &ctx, run_id.as_str(), providers.len()).err()
-                {
+                if let Err(e) = emit_check_completed(&app, &ctx, run_id.as_str(), providers.len()) {
                     report_lifecycle_failure(&app, logger, &ctx, run_id.as_str(), &e, &[]);
+                } else {
+                    ProviderLogEntry::record_check_completed(logger, Info, &ctx);
                 }
                 return;
             }
@@ -80,6 +80,8 @@ pub(crate) async fn check_providers_lifecycle(
 
         if let Err(e) = emit_check_completed(&app, &ctx, run_id.as_str(), failed_count) {
             report_lifecycle_failure(&app, logger, &ctx, run_id.as_str(), &e, &[]);
+        } else {
+            ProviderLogEntry::record_check_completed(logger, Info, &ctx);
         }
     }
     .instrument(span)

@@ -44,6 +44,10 @@ pub(in crate::core::bot::models::provider) enum ProviderOccurrence {
     ///
     /// 一轮供应商检查生命周期开始运行。
     CheckStarted,
+    /// One provider check lifecycle run completed.
+    ///
+    /// 一轮供应商检查生命周期完成运行。
+    CheckCompleted,
 }
 
 impl From<&ProviderError> for ProviderOccurrence {
@@ -69,6 +73,7 @@ impl Display for ProviderOccurrence {
             Self::ProviderConfigRestored => f.write_str("provider_config_restored"),
             Self::EnabledModelsUpdated => f.write_str("enabled_models_updated"),
             Self::CheckStarted => f.write_str("check_started"),
+            Self::CheckCompleted => f.write_str("check_completed"),
         }
     }
 }

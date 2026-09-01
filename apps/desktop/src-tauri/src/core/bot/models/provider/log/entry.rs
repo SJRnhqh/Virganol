@@ -8,8 +8,8 @@ use super::super::{
     ProviderManagerContext, ProviderOperation, ProviderStage, ProviderSubject,
 };
 use super::ProviderOccurrence::{
-    self, CheckStarted, EnabledModelsUpdated, ProviderConfigRestored, ProviderConnected,
-    ProviderKeyRolledBack, ProviderReset, SecretRollbackSkipped,
+    self, CheckCompleted, CheckStarted, EnabledModelsUpdated, ProviderConfigRestored,
+    ProviderConnected, ProviderKeyRolledBack, ProviderReset, SecretRollbackSkipped,
 };
 
 /// Structured log entry for the Provider subject reality.
@@ -121,6 +121,17 @@ impl ProviderLogEntry {
         ctx: &ProviderLifecycleContext<'_>,
     ) {
         Self::record_observation(logger, level, CheckStarted, ctx);
+    }
+
+    /// Records the successful completion of one provider check lifecycle run.
+    ///
+    /// 记录一轮供应商检查生命周期成功完成。
+    pub(in crate::core::bot) fn record_check_completed(
+        logger: &AppLogger,
+        level: LogLevel,
+        ctx: &ProviderLifecycleContext<'_>,
+    ) {
+        Self::record_observation(logger, level, CheckCompleted, ctx);
     }
 
     /// Records a structured Provider observation at the specified log level.

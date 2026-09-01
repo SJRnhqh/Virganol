@@ -6,15 +6,13 @@
 
 ## Current
 
-- [ ] Add high-value Provider lifecycle events at stable log levels
+- [ ] Define the operational questions and sensitive-field allowlist for Provider observability
 
 ## Planned
 
 ### Tracing
 
 ### JSONL persistence
-
-- [ ] Define the operational questions and sensitive-field allowlist for Provider observability
 - [ ] Define the application log location, rotation, retention, cleanup, and sink-failure fallback behavior
 - [ ] Add non-blocking file writing with explicit worker-guard ownership, flush, and orderly shutdown semantics
 - [ ] Verify JSONL field stability, persistence, rotation, retention, shutdown, sink failure, and secret redaction across success and failure paths
@@ -32,6 +30,7 @@
 
 ## Completed
 
+- [x] Recorded one stable lifecycle completion event after the completed event is emitted successfully
 - [x] Instrumented each Provider lifecycle run with an attributed root span and each concurrent health check with an execution child span, preserving run_id and trigger across task boundaries
 - [x] Emitted the enabled-model update success from the surviving manager root with the config-store stage derived as an unconsumed view
 - [x] Emitted the connection success from the surviving manager root with scoped connection, config-store, and secret-store stage views
