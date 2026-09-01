@@ -10,16 +10,14 @@
 
 ## Planned
 
-### Tracing
-
 ### JSONL persistence
+
 - [ ] Define the application log location, rotation, retention, cleanup, and sink-failure fallback behavior
 - [ ] Add non-blocking file writing with explicit worker-guard ownership, flush, and orderly shutdown semantics
 - [ ] Verify JSONL field stability, persistence, rotation, retention, shutdown, sink failure, and secret redaction across success and failure paths
 
 ### Console output
 
-- [ ] Emit a structured run-start event to delimit each run in console and JSONL output
 - [ ] Verify console filtering and readability independently from the complete JSONL representation
 
 ### Observability contract
@@ -30,6 +28,7 @@
 
 ## Completed
 
+- [x] Emitted stable lifecycle start and completion events to delimit each run in console and JSONL output
 - [x] Recorded one stable lifecycle completion event after the completed event is emitted successfully
 - [x] Instrumented each Provider lifecycle run with an attributed root span and each concurrent health check with an execution child span, preserving run_id and trigger across task boundaries
 - [x] Emitted the enabled-model update success from the surviving manager root with the config-store stage derived as an unconsumed view

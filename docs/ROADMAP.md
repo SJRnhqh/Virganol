@@ -41,7 +41,7 @@
 
 #### 6.2 Provider 可靠性架构与可观测性（context / failure / error / boundary / logging / tracing）
 
-**当前状态**：Provider 与 Settings 的上下文传播、内部错误、边界投影和结构化日志门面已经闭环；Rust/Tauri 日志后端已完成 `tracing-subscriber` 注册、独立 Console Layer 与每日轮转 JSONL Layer 的最小链路，下一阶段聚焦执行追踪、JSONL 成熟化、Console 精简美化和观测契约落档。
+**当前状态**：Provider 与 Settings 的上下文传播、内部错误、边界投影和结构化日志门面已经闭环；Provider manager 与 lifecycle span、`run_id`、`trigger`、并发健康检查子 span 和生命周期起止事件均已完成。Rust/Tauri 日志后端已完成 `tracing-subscriber` 注册、独立 Console Layer 与每日轮转 JSONL Layer 的最小链路，下一阶段聚焦 JSONL 成熟化、Console 验证与观测契约落档。
 
 **本阶段边界**：完成 Rust/Tauri 后端可观测性 v1 后即可转入前端工作；Go Sidecar stdout/stderr 归一化与跨进程关联作为后续独立集成，不阻塞本阶段完成。
 
@@ -51,14 +51,15 @@
 - [x] 完成 Provider 内部错误、生命周期聚合与 `ProviderAppError` 安全边界投影
 - [x] 建立 `LogEntry`、`AppLogger` 与 `ProviderLogEntry` 的结构化日志契约和领域投影
 - [x] 完成 Provider manager、lifecycle 与 `Downgrade` 的应用层结构化日志接入及调用点审计
+- [x] 完成 Provider manager 与 lifecycle 业务 span、`run_id` / `trigger` 关联，以及并发健康检查任务的子 span 传播
+- [x] 完成生命周期稳定起止事件与交互式成功、失败、补偿事件的应用层埋点
 - [x] 以 `tracing-subscriber` 完成日志后端注册，并将 Console Layer 独立装配
 - [x] 以 Tauri 应用日志目录接入每日轮转 JSONL Layer，打通结构化日志持久化最小链路
 
 **后续路线**：
 
-- [ ] 执行追踪：定义 Provider lifecycle span、`run_id`、`trigger` 与异步上下文传播，厘清 trace、correlation 与 operation 的边界
 - [ ] JSONL 成熟化：完善非阻塞写入、worker guard、flush、退出、保留、清理、sink 失败和敏感字段策略
-- [ ] Console 收口：建立独立于 JSONL 的紧凑、彩色、人类可读格式与字段选择策略
+- [ ] Console 收口：验证独立于 JSONL 的紧凑、彩色、人类可读格式、字段选择与过滤策略
 - [ ] 观测契约落档：统一沉淀 facade、Event、Span、Subscriber、Layer、sink、过滤、字段稳定性与生命周期边界
 - [ ] 验证 Rust/Tauri 日志与追踪在成功、失败、并发、轮转和退出路径下的关联与持久化行为
 - [ ] 后续独立集成 Go Sidecar stdout/stderr、source target 与跨进程 correlation，不作为 Rust/Tauri 后端 v1 完成门槛
