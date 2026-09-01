@@ -5,7 +5,7 @@ use super::super::super::super::super::{
 };
 use super::super::{
     ProviderAttribution, ProviderError, ProviderExecutionContext, ProviderLifecycleContext,
-    ProviderOperation, ProviderStage, ProviderSubject,
+    ProviderManagerContext, ProviderOperation, ProviderStage, ProviderSubject,
 };
 use super::ProviderOccurrence::{
     self, CheckStarted, EnabledModelsUpdated, ProviderConnected, ProviderReset,
@@ -96,7 +96,7 @@ impl ProviderLogEntry {
     pub(in crate::core::bot) fn record_enabled_models_updated(
         logger: &AppLogger,
         level: LogLevel,
-        ctx: &ProviderExecutionContext,
+        ctx: &ProviderManagerContext,
     ) {
         Self::record_observation(logger, level, EnabledModelsUpdated, ctx);
     }

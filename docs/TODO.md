@@ -12,6 +12,7 @@
 
 ### Tracing
 
+- [ ] Migrate reset and connect manager chains to for-view stage derivation with manager-root success recorders
 - [ ] Instrument Provider lifecycle with spans and propagate run_id across Rust async task boundaries
 - [ ] Add high-value Provider lifecycle events at stable log levels
 
@@ -35,6 +36,7 @@
 
 ## Completed
 
+- [x] Emitted the enabled-model update success from the surviving manager root with the config-store stage derived as an unconsumed view
 - [x] Recorded single Provider reset failures through the singular failure recorder
 - [x] Instrumented the Provider connect manager with an attributed async root span, a connection-probe child span, and a successful connection event
 - [x] Instrumented the Provider reset manager with an attributed root span and a successful reset event

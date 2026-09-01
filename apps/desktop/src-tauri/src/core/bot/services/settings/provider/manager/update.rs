@@ -31,15 +31,19 @@ pub(crate) fn update_provider_enabled_models(
         }
     };
 
-    let ctx = ctx.into_config_store().into_execution_context();
+    let update_result = {
+        let ctx = ctx.for_config_store().into_execution_context();
 
-    match update_models(
-        app,
-        provider_state,
-        &ctx,
-        provider_id,
-        data.into_enabled_models(),
-    ) {
+        update_models(
+            app,
+            provider_state,
+            &ctx,
+            provider_id,
+            data.into_enabled_models(),
+        )
+    };
+
+    match update_result {
         Ok(()) => {
             ProviderLogEntry::record_enabled_models_updated(logger, Info, &ctx);
             Ok(UpdateEnabledModelsResponse::success())
