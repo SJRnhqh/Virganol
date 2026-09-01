@@ -35,6 +35,15 @@ impl ProviderAttribution {
         AppAttribution::from_parts(self.stage, self.subject, self.operation)
     }
 
+    /// Returns the stable Provider attribution parts.
+    ///
+    /// 返回稳定的供应商归因组成部分。
+    pub(in crate::core::bot::models::provider) fn as_parts(
+        &self,
+    ) -> (ProviderStage, &ProviderSubject, ProviderOperation) {
+        (self.stage, &self.subject, self.operation)
+    }
+
     /// Derives the stable Provider business scope.
     ///
     /// 派生稳定的供应商业务范围。

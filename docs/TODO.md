@@ -35,6 +35,8 @@
 
 ## Completed
 
+- [x] Established the Provider Span factory with shared attribution fields, lifecycle correlation fields, and a stable subject-reality name
+- [x] Simplified Provider scope derivation to use stable stage and operation tokens instead of a duplicated constant matrix
 - [x] Established stable native Provider event fields and connected the semantic AppLogger facade directly to tracing
 - [x] Assigned timestamps and formatting to subscribers and sinks instead of domain log entries
 - [x] Registered tracing-subscriber at the start of Tauri setup with an independently composed, RUST_LOG-filtered console Layer

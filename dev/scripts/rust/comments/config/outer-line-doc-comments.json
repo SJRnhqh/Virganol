@@ -11,5 +11,5 @@
     ],
     "exclude": ["**/mod.rs"]
   },
-  "allowedAsciiTerms": ["Node-API", "API", "ASCII", "CLI", "JSONL", "JSON", "Rust", "Tauri", "Windows", "Ollama", "DeepSeek"]
+  "allowedAsciiTerms": ["Node-API", "API", "ASCII", "CLI", "JSONL", "JSON", "Rust", "Span", "Tauri", "Windows", "Ollama", "DeepSeek"]
 }

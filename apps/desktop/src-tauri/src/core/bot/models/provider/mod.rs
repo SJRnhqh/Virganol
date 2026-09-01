@@ -8,6 +8,7 @@ mod error;
 mod lifecycle;
 mod log;
 mod secret;
+mod trace;
 
 pub(in crate::core) use common::ProviderState;
 pub(in crate::core::bot) use common::{ProviderId, ProviderSubject};
@@ -34,3 +35,5 @@ pub(in crate::core::bot) use log::ProviderLogEntry;
 pub(in crate::core::bot) use secret::{
     ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderKeySource, ProviderResolvedKey,
 };
+#[allow(unused_imports)]
+pub(self) use trace::ProviderSpan;
