@@ -6,7 +6,7 @@
 
 ## Current
 
-- [ ] Define the operational questions and sensitive-field allowlist for Provider observability
+- [ ] Finalize console field selection and colored field-key rendering
 
 ## Planned
 
@@ -18,13 +18,13 @@
 
 ### JSONL persistence
 
+- [ ] Define the operational questions and sensitive-field allowlist for Provider observability
 - [ ] Define the application log location, rotation, retention, cleanup, and sink-failure fallback behavior
 - [ ] Add non-blocking file writing with explicit worker-guard ownership, flush, and orderly shutdown semantics
 - [ ] Verify JSONL field stability, persistence, rotation, retention, shutdown, sink failure, and secret redaction across success and failure paths
 
 ### Console output
 
-- [ ] Define a compact human-readable console format with deliberate color, target visibility, and field selection
 - [ ] Verify console filtering and readability independently from the complete JSONL representation
 
 ### Observability contract
@@ -40,3 +40,4 @@
 - [x] Registered tracing-subscriber at the start of Tauri setup with an independently composed, RUST_LOG-filtered console Layer
 - [x] Added a daily rolling JSONL Layer in the Tauri application log directory and validated file creation through pnpm dev
 - [x] Standardized the desktop application identifier and Provider keyring namespace on com.virganol
+- [x] Adopted the compact console format with hidden targets, framework level colors, and local short timestamps via ChronoLocal
