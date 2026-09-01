@@ -8,7 +8,8 @@ use super::super::{
     ProviderOperation, ProviderStage, ProviderSubject,
 };
 use super::ProviderOccurrence::{
-    self, CheckStarted, EnabledModelsUpdated, ProviderReset, SecretRollbackSkipped,
+    self, CheckStarted, EnabledModelsUpdated, ProviderConnected, ProviderReset,
+    SecretRollbackSkipped,
 };
 
 /// Structured log entry for the Provider subject reality.
@@ -65,6 +66,17 @@ impl ProviderLogEntry {
         ctx: &ProviderLifecycleContext<'_>,
     ) {
         Self::record_observation(logger, level, CheckStarted, ctx);
+    }
+
+    /// Records a successful Provider connection.
+    ///
+    /// 记录供应商连接成功。
+    pub(in crate::core::bot) fn record_provider_connected(
+        logger: &AppLogger,
+        level: LogLevel,
+        ctx: &ProviderExecutionContext,
+    ) {
+        Self::record_observation(logger, level, ProviderConnected, ctx);
     }
 
     /// Records a successful Provider reset.

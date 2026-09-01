@@ -12,8 +12,8 @@
 
 ### Tracing
 
-- [ ] Instrument Provider lifecycle and operations with spans and propagate run_id across Rust async task boundaries
-- [ ] Add high-value Provider lifecycle and manager events at stable log levels
+- [ ] Instrument Provider lifecycle with spans and propagate run_id across Rust async task boundaries
+- [ ] Add high-value Provider lifecycle events at stable log levels
 
 ### JSONL persistence
 
@@ -35,6 +35,7 @@
 
 ## Completed
 
+- [x] Instrumented the Provider connect manager with an attributed async root span, a connection-probe child span, and a successful connection event
 - [x] Instrumented the Provider reset manager with an attributed root span and a successful reset event
 - [x] Instrumented the Provider enabled-model update manager with an attributed root span and a successful update event
 - [x] Established the Provider Span factory with shared attribution fields, lifecycle correlation fields, and a stable subject-reality name

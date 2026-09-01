@@ -2,7 +2,9 @@
 use tracing::{info_span, Span};
 
 use super::super::super::super::PROVIDER_REALITY;
-use super::super::{ProviderAttribution, ProviderCheckTrigger, ProviderManagerContext};
+use super::super::{
+    ProviderAttribution, ProviderCheckTrigger, ProviderExecutionContext, ProviderManagerContext,
+};
 
 /// Structured tracing span factory for Provider business executions.
 ///
@@ -43,6 +45,21 @@ impl ProviderSpan {
             attribution_operation = %operation,
             run_id,
             trigger = trigger.as_tag(),
+        )
+    }
+
+    /// Creates a span for one Provider execution stage.
+    ///
+    /// 创建一个供应商执行阶段的 Span。
+    pub(in crate::core::bot) fn execution(ctx: &ProviderExecutionContext) -> Span {
+        let attribution = ProviderAttribution::from(ctx);
+        let (stage, subject, operation) = attribution.as_parts();
+
+        info_span!(
+            PROVIDER_REALITY,
+            attribution_stage = %stage,
+            attribution_subject = %subject,
+            attribution_operation = %operation,
         )
     }
 }
