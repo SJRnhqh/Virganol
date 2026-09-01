@@ -22,21 +22,25 @@ pub(crate) fn reset_provider_config(
     let _entered = ProviderSpan::manager(&ctx).entered();
     let provider_state = state.provider();
 
-    let ctx = ctx.into_config_store().into_execution_context();
+    let previous = {
+        let ctx = ctx.for_config_store().into_execution_context();
 
-    let previous = match remove_provider(app, logger, provider_state, &ctx, provider_id) {
-        Ok(removed) => removed,
-        Err(e) => {
-            ProviderLogEntry::record_failure(logger, &e);
-            return Err(ProviderAppError::from(&e));
+        match remove_provider(app, logger, provider_state, &ctx, provider_id) {
+            Ok(removed) => removed,
+            Err(e) => {
+                ProviderLogEntry::record_failure(logger, &e);
+                return Err(ProviderAppError::from(&e));
+            }
         }
     };
 
-    let ctx = ctx.into_secret_store();
+    if let Err(e) = {
+        let ctx = ctx.for_secret_store().into_execution_context();
 
-    if let Err(e) = remove_provider_key(&ctx, provider_id) {
+        remove_provider_key(&ctx, provider_id)
+    } {
         if let Some(record) = previous {
-            let ctx = ctx.into_config_store();
+            let ctx = ctx.for_config_store().into_execution_context();
 
             if let Err(se) = save_provider(app, provider_state, &ctx, provider_id, record) {
                 ProviderLogEntry::record_failures(logger, [&e, &se]);

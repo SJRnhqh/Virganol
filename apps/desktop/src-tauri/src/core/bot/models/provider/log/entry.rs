@@ -85,7 +85,7 @@ impl ProviderLogEntry {
     pub(in crate::core::bot) fn record_provider_reset(
         logger: &AppLogger,
         level: LogLevel,
-        ctx: &ProviderExecutionContext,
+        ctx: &ProviderManagerContext,
     ) {
         Self::record_observation(logger, level, ProviderReset, ctx);
     }

@@ -59,18 +59,18 @@ impl ProviderManagerContext {
         Self(self.0.into_connection())
     }
 
-    /// Consumes this interactive management context into the config-store stage.
-    ///
-    /// 消费当前交互式管理上下文，并将其转换为配置存储阶段。
-    pub(in crate::core::bot) fn into_config_store(self) -> Self {
-        Self(self.0.into_config_store())
-    }
-
     /// Derives an owned config-store stage view from this manager context.
     ///
     /// 从当前管理上下文派生一个拥有所有权的配置存储阶段视图，不改变来源上下文。
     pub(in crate::core::bot) fn for_config_store(&self) -> Self {
         Self(self.0.for_config_store())
+    }
+
+    /// Derives an owned secret-store stage view from this manager context.
+    ///
+    /// 从当前管理上下文派生一个拥有所有权的密钥存储阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_secret_store(&self) -> Self {
+        Self(self.0.for_secret_store())
     }
 
     /// Converts this interactive management context into an execution context.

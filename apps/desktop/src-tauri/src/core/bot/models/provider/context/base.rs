@@ -31,13 +31,6 @@ impl<E> ProviderContext<E> {
         self.to_stage(ProviderStage::config_store())
     }
 
-    /// Consumes this context into the secret-store stage.
-    ///
-    /// 消费当前上下文，并将其转换为密钥存储阶段。
-    pub(super) fn into_secret_store(self) -> Self {
-        self.to_stage(ProviderStage::secret_store())
-    }
-
     /// Returns stable attribution parts for a subject and operation at the current stage.
     ///
     /// 返回指定主体与操作在当前阶段的稳定归因组成部分。
