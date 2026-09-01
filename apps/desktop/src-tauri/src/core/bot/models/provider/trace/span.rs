@@ -5,7 +5,7 @@ use super::super::super::super::{
     PROVIDER_EXECUTION_SPAN, PROVIDER_LIFECYCLE_SPAN, PROVIDER_MANAGER_SPAN,
 };
 use super::super::{
-    ProviderAttribution, ProviderCheckTrigger, ProviderExecutionContext, ProviderManagerContext,
+    ProviderAttribution, ProviderExecutionContext, ProviderLifecycleContext, ProviderManagerContext,
 };
 
 /// Structured tracing span factory for Provider business executions.
@@ -32,12 +32,8 @@ impl ProviderSpan {
     /// Creates a span for provider lifecycle check business.
     ///
     /// 创建供应商生命周期检查业务的 Span。
-    #[allow(dead_code)]
-    pub(in crate::core::bot::models::provider) fn lifecycle(
-        attribution: &ProviderAttribution,
-        run_id: &str,
-        trigger: &ProviderCheckTrigger,
-    ) -> Span {
+    pub(in crate::core::bot) fn lifecycle(ctx: &ProviderLifecycleContext<'_>) -> Span {
+        let attribution = ProviderAttribution::from(ctx);
         let (stage, subject, operation) = attribution.as_parts();
 
         info_span!(
@@ -45,8 +41,8 @@ impl ProviderSpan {
             attribution_stage = %stage,
             attribution_subject = %subject,
             attribution_operation = %operation,
-            run_id,
-            trigger = trigger.as_tag(),
+            run_id = ctx.run_id(),
+            trigger = ctx.trigger().as_tag(),
         )
     }
 

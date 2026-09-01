@@ -6,14 +6,11 @@
 
 ## Current
 
-- [ ] Define Provider lifecycle span boundaries and correlation semantics for run_id and trigger
+- [ ] Add high-value Provider lifecycle events at stable log levels
 
 ## Planned
 
 ### Tracing
-
-- [ ] Instrument Provider lifecycle with spans and propagate run_id across Rust async task boundaries
-- [ ] Add high-value Provider lifecycle events at stable log levels
 
 ### JSONL persistence
 
@@ -35,6 +32,7 @@
 
 ## Completed
 
+- [x] Instrumented each Provider lifecycle run with an attributed root span and each concurrent health check with an execution child span, preserving run_id and trigger across task boundaries
 - [x] Emitted the enabled-model update success from the surviving manager root with the config-store stage derived as an unconsumed view
 - [x] Emitted the connection success from the surviving manager root with scoped connection, config-store, and secret-store stage views
 - [x] Emitted the reset success from the surviving manager root with scoped config-store and secret-store stage views
