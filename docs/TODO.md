@@ -22,6 +22,7 @@
 
 ## Completed
 
+- [x] Refactored the logging backend into a subscriber registration module and an independently composed console Layer without changing console behavior
 - [x] Tokenized attribution stage, subject, and operation field values and removed the dead shared attribution Display
 - [x] Added the first high-value Provider lifecycle event at Info level using the stable native event fields
 - [x] Defined occurrence and flattened attribution stage, subject, and operation as stable native Event fields
