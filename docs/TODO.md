@@ -35,6 +35,7 @@
 
 ## Completed
 
+- [x] Instrumented the Provider enabled-model update manager with an attributed root span and a successful update event
 - [x] Established the Provider Span factory with shared attribution fields, lifecycle correlation fields, and a stable subject-reality name
 - [x] Simplified Provider scope derivation to use stable stage and operation tokens instead of a duplicated constant matrix
 - [x] Established stable native Provider event fields and connected the semantic AppLogger facade directly to tracing

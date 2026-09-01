@@ -1,13 +1,13 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/log/entry.rs
 use super::super::super::super::super::{
     AppLogger, LogEntry,
-    LogLevel::{self, Error, Info},
+    LogLevel::{self, Error},
 };
 use super::super::{
     ProviderAttribution, ProviderError, ProviderExecutionContext, ProviderLifecycleContext,
     ProviderOperation, ProviderStage, ProviderSubject,
 };
-use super::{ProviderOccurrence, ProviderOccurrence::SecretRollbackSkipped};
+use super::ProviderOccurrence::{self, CheckStarted, EnabledModelsUpdated, SecretRollbackSkipped};
 
 /// Structured log entry for the Provider subject reality.
 ///
@@ -54,14 +54,26 @@ impl ProviderLogEntry {
         Self::record_observation(logger, level, SecretRollbackSkipped, ctx);
     }
 
-    /// Records the start of one provider check lifecycle run at Info level.
+    /// Records the start of one provider check lifecycle run.
     ///
-    /// 以信息级别记录一轮供应商检查生命周期的开始。
+    /// 记录一轮供应商检查生命周期的开始。
     pub(in crate::core::bot) fn record_check_started(
         logger: &AppLogger,
+        level: LogLevel,
         ctx: &ProviderLifecycleContext<'_>,
     ) {
-        Self::record_observation(logger, Info, ProviderOccurrence::CheckStarted, ctx);
+        Self::record_observation(logger, level, CheckStarted, ctx);
+    }
+
+    /// Records a successful enabled-model update.
+    ///
+    /// 记录启用模型列表更新成功。
+    pub(in crate::core::bot) fn record_enabled_models_updated(
+        logger: &AppLogger,
+        level: LogLevel,
+        ctx: &ProviderExecutionContext,
+    ) {
+        Self::record_observation(logger, level, EnabledModelsUpdated, ctx);
     }
 
     /// Records a structured Provider observation at the specified log level.

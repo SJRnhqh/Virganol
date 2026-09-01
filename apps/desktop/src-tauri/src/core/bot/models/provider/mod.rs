@@ -35,5 +35,4 @@ pub(in crate::core::bot) use log::ProviderLogEntry;
 pub(in crate::core::bot) use secret::{
     ProviderKey, ProviderKeyChange, ProviderKeyMeta, ProviderKeySource, ProviderResolvedKey,
 };
-#[allow(unused_imports)]
-pub(self) use trace::ProviderSpan;
+pub(in crate::core::bot) use trace::ProviderSpan;

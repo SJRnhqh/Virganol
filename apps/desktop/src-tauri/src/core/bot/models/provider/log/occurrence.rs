@@ -24,6 +24,10 @@ pub(in crate::core::bot::models::provider) enum ProviderOccurrence {
     ///
     /// 一轮供应商检查生命周期开始运行。
     CheckStarted,
+    /// Enabled models were updated successfully for one provider.
+    ///
+    /// 已成功更新一个供应商的启用模型列表。
+    EnabledModelsUpdated,
 }
 
 impl From<&ProviderError> for ProviderOccurrence {
@@ -44,6 +48,7 @@ impl Display for ProviderOccurrence {
             Self::Failure(failure_kind) => write!(f, "{failure_kind}"),
             Self::SecretRollbackSkipped => f.write_str("secret_rollback_skipped"),
             Self::CheckStarted => f.write_str("check_started"),
+            Self::EnabledModelsUpdated => f.write_str("enabled_models_updated"),
         }
     }
 }

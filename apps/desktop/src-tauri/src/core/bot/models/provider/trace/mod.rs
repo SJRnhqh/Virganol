@@ -1,4 +1,4 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/trace/mod.rs
 mod span;
 
-pub(super) use span::ProviderSpan;
+pub(in crate::core::bot) use span::ProviderSpan;
