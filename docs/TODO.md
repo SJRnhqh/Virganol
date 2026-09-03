@@ -8,10 +8,6 @@
 
 ## Planned
 
-### JSONL persistence
-
-- [ ] Verify JSONL field stability, active-span correlation (`run_id`, `trigger`, and Provider attribution), persistence, rotation, retention, shutdown, sink failure, and secret redaction across success and failure paths
-
 ### Console output
 
 - [ ] Emit a startup banner as a stable tracing event carrying branding, version, and resolved logging facts (log directory, effective log level), sequenced after JSONL persistence maturation so the displayed facts stay stable and the banner doubles as a JSONL run delimiter
