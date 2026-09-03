@@ -6,8 +6,6 @@
 
 ## Current
 
-- [ ] Add non-blocking file writing with explicit worker-guard ownership, flush, and orderly shutdown semantics
-
 ## Planned
 
 ### JSONL persistence
@@ -27,6 +25,8 @@
 - [ ] Update the matching ROADMAP 6.2 progress when the backend observability contract is complete
 
 ## Completed
+
+- [x] Added non-blocking JSONL file writing with the worker guard owned by managed Tauri state, flushing pending lines on app exit
 
 - [x] Recorded per-span close timing (`time.busy` / `time.idle`) on the JSONL layer through native span close events, keeping console output free of span records
 - [x] Emitted stable lifecycle start and completion events to delimit each run in console and JSONL output
