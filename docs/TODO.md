@@ -18,6 +18,7 @@
 
 ### Console output
 
+- [ ] Emit a startup banner as a stable tracing event carrying branding, version, and resolved logging facts (log directory, effective log level), sequenced after JSONL persistence maturation so the displayed facts stay stable and the banner doubles as a JSONL run delimiter
 - [ ] Verify console filtering and readability independently from the complete JSONL representation
 
 ### Observability contract
