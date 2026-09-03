@@ -11,7 +11,6 @@
 ### Console output
 
 - [ ] Emit a startup banner as a stable tracing event carrying branding, version, and resolved logging facts (log directory, effective log level), sequenced after JSONL persistence maturation so the displayed facts stay stable and the banner doubles as a JSONL run delimiter
-- [ ] Verify console filtering and readability independently from the complete JSONL representation
 
 ### Observability contract
 
@@ -21,6 +20,7 @@
 
 ## Completed
 
+- [x] Verified console filtering and readability through a live RUST_LOG downgrade run, accepting duplicated span attribution fields as the compact v1 presentation
 - [x] Centralized the rolled JSONL file naming constants shared by the file layer and retention cleanup
 - [x] Added first-failure stderr reporting for JSONL writes by wrapping the file appender, keeping later failures silent and errors transparent
 - [x] Added startup cleanup of expired daily JSONL log files with a fourteen-day retention window, matching only rolled log naming
