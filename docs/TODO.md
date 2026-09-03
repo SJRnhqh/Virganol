@@ -29,6 +29,7 @@
 
 ## Completed
 
+- [x] Recorded per-span close timing (`time.busy` / `time.idle`) on the JSONL layer through native span close events, keeping console output free of span records
 - [x] Emitted stable lifecycle start and completion events to delimit each run in console and JSONL output
 - [x] Recorded one stable lifecycle completion event after the completed event is emitted successfully
 - [x] Instrumented each Provider lifecycle run with an attributed root span and each concurrent health check with an execution child span, preserving run_id and trigger across task boundaries

@@ -4,14 +4,14 @@ use tracing::Subscriber;
 use tracing_appender::rolling::{InitError, RollingFileAppender, Rotation};
 use tracing_subscriber::{
     filter::{EnvFilter, LevelFilter},
-    fmt::layer,
+    fmt::{format::FmtSpan, layer},
     registry::LookupSpan,
     Layer,
 };
 
-/// Builds the daily JSONL file logging layer.
+/// Builds the daily rolling JSONL file logging layer with span close records.
 ///
-/// 构建每日轮转的 JSONL 文件日志层。
+/// 构建每日轮转并记录 Span 关闭的 JSONL 文件日志层。
 pub(super) fn jsonl_layer<S>(log_dir: impl AsRef<Path>) -> Result<impl Layer<S>, InitError>
 where
     S: Subscriber + for<'span> LookupSpan<'span>,
@@ -22,9 +22,13 @@ where
         .filename_suffix("jsonl")
         .build(log_dir)?;
 
-    Ok(layer().json().with_writer(writer).with_filter(
-        EnvFilter::builder()
-            .with_default_directive(LevelFilter::INFO.into())
-            .from_env_lossy(),
-    ))
+    Ok(layer()
+        .json()
+        .with_span_events(FmtSpan::CLOSE)
+        .with_writer(writer)
+        .with_filter(
+            EnvFilter::builder()
+                .with_default_directive(LevelFilter::INFO.into())
+                .from_env_lossy(),
+        ))
 }
