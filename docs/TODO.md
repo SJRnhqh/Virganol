@@ -14,7 +14,6 @@
 
 ### Observability contract
 
-- [ ] Normalize remaining direct Rust output through tracing without coupling this branch to forwarded Go sidecar output
 - [ ] Document the Rust/Tauri backend observability contract, completion boundary, and deferred Go sidecar integration
 - [ ] Update the matching ROADMAP 6.2 progress when the backend observability contract is complete
 
