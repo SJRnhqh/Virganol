@@ -7,13 +7,13 @@ use tracing_appender::{
     rolling::{InitError, RollingFileAppender, Rotation},
 };
 use tracing_subscriber::{
-    filter::{EnvFilter, LevelFilter},
+    filter::EnvFilter,
     fmt::{format::FmtSpan, layer},
     registry::LookupSpan,
     Layer,
 };
 
-use super::{ReportingWriter, LOG_FILE_EXT, LOG_FILE_STEM};
+use super::{ReportingWriter, DEFAULT_LOG_LEVEL, LOG_FILE_EXT, LOG_FILE_STEM};
 
 /// Builds the non-blocking daily rolling JSONL layer and its worker guard.
 ///
@@ -39,7 +39,7 @@ where
             .with_writer(writer)
             .with_filter(
                 EnvFilter::builder()
-                    .with_default_directive(LevelFilter::INFO.into())
+                    .with_default_directive(DEFAULT_LOG_LEVEL.into())
                     .from_env_lossy(),
             ),
         guard,

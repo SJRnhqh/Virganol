@@ -8,16 +8,18 @@
 
 ## Planned
 
-### Console output
-
-- [ ] Emit a startup banner as a stable tracing event carrying branding, version, and resolved logging facts (log directory, effective log level), sequenced after JSONL persistence maturation so the displayed facts stay stable and the banner doubles as a JSONL run delimiter
-
 ### Observability contract
 
 - [ ] Document the Rust/Tauri backend observability contract, completion boundary, and deferred Go sidecar integration
 - [ ] Update the matching ROADMAP 6.2 progress when the backend observability contract is complete
 
 ## Completed
+
+- [x] Emitted the console-only startup banner: a double-layer 3D frame with green ANSI Shadow brand art and tiered ❯/· facts for version, log directory, and effective level, validated by a version-matched replica harness with per-row width checks
+- [x] Scoped the startup banner to console-only output, replacing the planned stable tracing event and dropping the JSONL run delimiter by explicit decision
+- [x] Centralized the default log level as one typed constant shared by the console layer, the JSONL layer, and the banner
+- [x] Moved the brand art constant into the logging constants module for single-file maintenance
+- [x] Extended the comment ASCII whitelist with the RUST_LOG and ANSI standard terms
 
 - [x] Verified the observability backend through a full review pass, confirming stable layering, naming, and code organization ready for the startup banner
 - [x] Merged the run-id generator's split std imports into the nested shared-root import form

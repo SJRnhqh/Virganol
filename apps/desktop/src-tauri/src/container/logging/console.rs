@@ -2,13 +2,13 @@
 use std::io::stderr;
 use tracing::Subscriber;
 use tracing_subscriber::{
-    filter::{EnvFilter, LevelFilter},
+    filter::EnvFilter,
     fmt::{layer, time::ChronoLocal},
     registry::LookupSpan,
     Layer,
 };
 
-use super::ColoredFields;
+use super::{ColoredFields, DEFAULT_LOG_LEVEL};
 
 /// Builds the console logging layer.
 ///
@@ -25,7 +25,7 @@ where
         .with_writer(stderr)
         .with_filter(
             EnvFilter::builder()
-                .with_default_directive(LevelFilter::INFO.into())
+                .with_default_directive(DEFAULT_LOG_LEVEL.into())
                 .from_env_lossy(),
         )
 }
