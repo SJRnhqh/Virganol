@@ -10,7 +10,7 @@
 
 ### JSONL persistence
 
-- [ ] Define the application log location, rotation, retention, cleanup, and sink-failure fallback behavior
+- [ ] Define the sink-failure fallback behavior for the JSONL writer
 - [ ] Verify JSONL field stability, active-span correlation (`run_id`, `trigger`, and Provider attribution), persistence, rotation, retention, shutdown, sink failure, and secret redaction across success and failure paths
 
 ### Console output
@@ -26,6 +26,7 @@
 
 ## Completed
 
+- [x] Added startup cleanup of expired daily JSONL log files with a fourteen-day retention window, matching only rolled log naming
 - [x] Added non-blocking JSONL file writing with the worker guard owned by managed Tauri state, flushing pending lines on app exit
 
 - [x] Recorded per-span close timing (`time.busy` / `time.idle`) on the JSONL layer through native span close events, keeping console output free of span records
