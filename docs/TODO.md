@@ -10,7 +10,6 @@
 
 ### JSONL persistence
 
-- [ ] Define the sink-failure fallback behavior for the JSONL writer
 - [ ] Verify JSONL field stability, active-span correlation (`run_id`, `trigger`, and Provider attribution), persistence, rotation, retention, shutdown, sink failure, and secret redaction across success and failure paths
 
 ### Console output
@@ -26,6 +25,7 @@
 
 ## Completed
 
+- [x] Added first-failure stderr reporting for JSONL writes by wrapping the file appender, keeping later failures silent and errors transparent
 - [x] Added startup cleanup of expired daily JSONL log files with a fourteen-day retention window, matching only rolled log naming
 - [x] Added non-blocking JSONL file writing with the worker guard owned by managed Tauri state, flushing pending lines on app exit
 
