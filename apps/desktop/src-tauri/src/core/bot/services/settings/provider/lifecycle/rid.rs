@@ -1,6 +1,8 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/rid.rs
-use std::sync::atomic::{AtomicU64, Ordering::Relaxed};
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::{
+    sync::atomic::{AtomicU64, Ordering::Relaxed},
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 use super::super::super::super::super::ProviderCheckTrigger;
 

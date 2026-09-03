@@ -19,6 +19,8 @@
 
 ## Completed
 
+- [x] Verified the observability backend through a full review pass, confirming stable layering, naming, and code organization ready for the startup banner
+- [x] Merged the run-id generator's split std imports into the nested shared-root import form
 - [x] Verified console filtering and readability through a live RUST_LOG downgrade run, accepting duplicated span attribution fields as the compact v1 presentation
 - [x] Centralized the rolled JSONL file naming constants shared by the file layer and retention cleanup
 - [x] Added first-failure stderr reporting for JSONL writes by wrapping the file appender, keeping later failures silent and errors transparent
