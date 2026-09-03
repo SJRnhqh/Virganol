@@ -25,10 +25,10 @@
 
 ## Completed
 
+- [x] Centralized the rolled JSONL file naming constants shared by the file layer and retention cleanup
 - [x] Added first-failure stderr reporting for JSONL writes by wrapping the file appender, keeping later failures silent and errors transparent
 - [x] Added startup cleanup of expired daily JSONL log files with a fourteen-day retention window, matching only rolled log naming
 - [x] Added non-blocking JSONL file writing with the worker guard owned by managed Tauri state, flushing pending lines on app exit
-
 - [x] Recorded per-span close timing (`time.busy` / `time.idle`) on the JSONL layer through native span close events, keeping console output free of span records
 - [x] Emitted stable lifecycle start and completion events to delimit each run in console and JSONL output
 - [x] Recorded one stable lifecycle completion event after the completed event is emitted successfully

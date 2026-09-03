@@ -13,7 +13,7 @@ use tracing_subscriber::{
     Layer,
 };
 
-use super::ReportingWriter;
+use super::{ReportingWriter, LOG_FILE_EXT, LOG_FILE_STEM};
 
 /// Builds the non-blocking daily rolling JSONL layer and its worker guard.
 ///
@@ -26,8 +26,8 @@ where
 {
     let appender = RollingFileAppender::builder()
         .rotation(Rotation::DAILY)
-        .filename_prefix("virganol")
-        .filename_suffix("jsonl")
+        .filename_prefix(LOG_FILE_STEM)
+        .filename_suffix(LOG_FILE_EXT)
         .build(log_dir)?;
 
     let (writer, guard) = non_blocking(ReportingWriter::new(appender));

@@ -5,6 +5,8 @@ use std::{
     time::{Duration, SystemTime},
 };
 
+use super::{LOG_FILE_EXT, LOG_FILE_STEM};
+
 /// Number of days that daily JSONL log files are kept before cleanup.
 ///
 /// 每日 JSONL 日志文件的保留天数,超期即清理。
@@ -22,8 +24,10 @@ pub(super) fn clean_expired_logs(log_dir: &Path) {
             continue;
         };
         let Some(date) = name
-            .strip_prefix("virganol.")
-            .and_then(|stem| stem.strip_suffix(".jsonl"))
+            .strip_prefix(LOG_FILE_STEM)
+            .and_then(|rest| rest.strip_prefix('.'))
+            .and_then(|rest| rest.strip_suffix(LOG_FILE_EXT))
+            .and_then(|rest| rest.strip_suffix('.'))
         else {
             continue;
         };
