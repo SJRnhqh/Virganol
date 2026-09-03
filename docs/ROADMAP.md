@@ -41,7 +41,7 @@
 
 #### 6.2 Provider 可靠性架构与可观测性（context / failure / error / boundary / logging / tracing）
 
-**当前状态**：Provider 与 Settings 的上下文传播、内部错误、边界投影和结构化日志门面已经闭环；Provider manager 与 lifecycle span、`run_id`、`trigger`、并发健康检查子 span 和生命周期起止事件均已完成。Rust/Tauri 日志后端已完成 `tracing-subscriber` 注册、独立 Console Layer 与每日轮转 JSONL Layer 的最小链路，下一阶段聚焦 JSONL 成熟化、Console 验证与观测契约落档。
+**当前状态**：Provider 与 Settings 的上下文传播、内部错误、边界投影和结构化日志门面已经闭环；Provider manager 与 lifecycle span、`run_id`、`trigger`、并发健康检查子 span 和生命周期起止事件均已完成。Rust/Tauri 日志后端已完成 `tracing-subscriber` 注册、独立 Console Layer 与每日轮转 JSONL Layer 的成熟链路（非阻塞写入、退出冲刷、保留清理、首错报警、默认级别常量统一），Console 已通过 `RUST_LOG` 降级实机验证，启动 banner 以 console-only 形态落地；剩余观测契约落档与持久化行为验证后即可转入前端工作。
 
 **本阶段边界**：完成 Rust/Tauri 后端可观测性 v1 后即可转入前端工作；Go Sidecar stdout/stderr 归一化与跨进程关联作为后续独立集成，不阻塞本阶段完成。
 
@@ -55,11 +55,12 @@
 - [x] 完成生命周期稳定起止事件与交互式成功、失败、补偿事件的应用层埋点
 - [x] 以 `tracing-subscriber` 完成日志后端注册，并将 Console Layer 独立装配
 - [x] 以 Tauri 应用日志目录接入每日轮转 JSONL Layer，打通结构化日志持久化最小链路
+- [x] 完成 JSONL 成熟化：非阻塞写入、worker guard 托管与退出冲刷、十四天保留清理、首写失败报警与命名常量集中
+- [x] 完成 Console 收口：紧凑彩色格式、字段染色策略与 `RUST_LOG` 降级实机过滤验证
+- [x] 以 console-only 直写形态落地启动 banner：双层立体框、绿色品牌艺术字与分级事实行，默认级别收敛为单一类型化常量，并按决策放弃 JSONL run 分隔符
 
 **后续路线**：
 
-- [ ] JSONL 成熟化：完善非阻塞写入、worker guard、flush、退出、保留、清理、sink 失败和敏感字段策略
-- [ ] Console 收口：验证独立于 JSONL 的紧凑、彩色、人类可读格式、字段选择与过滤策略
 - [ ] 观测契约落档：统一沉淀 facade、Event、Span、Subscriber、Layer、sink、过滤、字段稳定性与生命周期边界
 - [ ] 验证 Rust/Tauri 日志与追踪在成功、失败、并发、轮转和退出路径下的关联与持久化行为
 - [ ] 后续独立集成 Go Sidecar stdout/stderr、source target 与跨进程 correlation，不作为 Rust/Tauri 后端 v1 完成门槛

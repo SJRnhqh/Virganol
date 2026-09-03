@@ -6,12 +6,9 @@
 
 ## Current
 
+- [ ] Document the Rust/Tauri backend observability contract (facade, events, spans, subscriber, layers, sinks, filtering, field stability, lifecycle boundaries), recording the console-only banner, unified default level, and dropped JSONL run delimiter decisions, and update the matching ROADMAP 6.2 progress to close the phase
+
 ## Planned
-
-### Observability contract
-
-- [ ] Document the Rust/Tauri backend observability contract, completion boundary, and deferred Go sidecar integration
-- [ ] Update the matching ROADMAP 6.2 progress when the backend observability contract is complete
 
 ## Completed
 
