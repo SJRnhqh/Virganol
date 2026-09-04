@@ -10,10 +10,11 @@
 
 ## Planned
 
-- [ ] Resolve remaining review points: shared default EnvFilter construction, ProviderSpan preamble dedup, banner ascii lowercase
+- [ ] Resolve remaining review points: ProviderSpan preamble dedup, banner ascii lowercase
 
 ## Completed
 
+- [x] Centralized the default EnvFilter construction in a shared filter helper, keeping per-layer filter instances independently composed
 - [x] Centralized manager failure handling in a shared `fail` helper, pairing failure logging with boundary projection at one definition point while keeping the compound suppressed-error arm explicit
 - [x] Sunk log severity into a typed observation vocabulary: strum-derived tokens with exhaustive severity on `ProviderObservation`, a `Failure | Observation` bridge occurrence, and a level-blind `ProviderLogEntry`, removing the level argument from every business recorder
 - [x] Deduplicated the lifecycle completion tail into one shared helper behind an explicit empty-providers short-circuit, replacing the behavior-equivalent slice match
