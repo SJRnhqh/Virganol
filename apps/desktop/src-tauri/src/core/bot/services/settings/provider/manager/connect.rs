@@ -10,6 +10,7 @@ use super::super::super::super::super::{
 use super::super::{
     load_provider_record, probe_provider_connection, save_provider, ProviderKeyTransaction,
 };
+use super::fail;
 
 /// Connects a provider and saves its configuration after a successful probe.
 ///
@@ -31,8 +32,7 @@ pub(crate) async fn connect_and_save(
             Some(data) => data,
             None => {
                 let e = ProviderError::manager_request_payload_absent(&ctx);
-                ProviderLogEntry::record_failure(logger, &e);
-                return Err(ProviderAppError::from(&e));
+                return Err(fail(logger, &e));
             }
         };
 
@@ -53,20 +53,14 @@ pub(crate) async fn connect_and_save(
             .into_models()
             {
                 Ok(models) => models,
-                Err(e) => {
-                    ProviderLogEntry::record_failure(logger, &e);
-                    return Err(ProviderAppError::from(&e));
-                }
+                Err(e) => return Err(fail(logger, &e)),
             };
 
             let ctx = ctx.into_config_store();
 
             let previous_record = match load_provider_record(app, &ctx, provider_id) {
                 Ok(record) => record,
-                Err(e) => {
-                    ProviderLogEntry::record_failure(logger, &e);
-                    return Err(ProviderAppError::from(&e));
-                }
+                Err(e) => return Err(fail(logger, &e)),
             };
 
             let record = ProviderRecord::from_connection(
@@ -82,16 +76,12 @@ pub(crate) async fn connect_and_save(
 
                 match ProviderKeyTransaction::begin(logger, ctx, provider_id, normalized_key) {
                     Ok(transaction) => transaction,
-                    Err(e) => {
-                        ProviderLogEntry::record_failure(logger, &e);
-                        return Err(ProviderAppError::from(&e));
-                    }
+                    Err(e) => return Err(fail(logger, &e)),
                 }
             };
 
             if let Err(e) = save_provider(app, provider_state, &ctx, provider_id, record) {
-                ProviderLogEntry::record_failure(logger, &e);
-                return Err(ProviderAppError::from(&e));
+                return Err(fail(logger, &e));
             }
 
             if let Some(transaction) = key_transaction {

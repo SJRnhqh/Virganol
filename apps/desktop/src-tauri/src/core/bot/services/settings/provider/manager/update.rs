@@ -7,6 +7,7 @@ use super::super::super::super::super::{
     UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
 };
 use super::super::update_models;
+use super::fail;
 
 /// Updates enabled models for a provider.
 ///
@@ -26,8 +27,7 @@ pub(crate) fn update_provider_enabled_models(
         Some(data) => data,
         None => {
             let e = ProviderError::manager_request_payload_absent(&ctx);
-            ProviderLogEntry::record_failure(logger, &e);
-            return Err(ProviderAppError::from(&e));
+            return Err(fail(logger, &e));
         }
     };
 
@@ -48,9 +48,6 @@ pub(crate) fn update_provider_enabled_models(
             ProviderLogEntry::record_enabled_models_updated(logger, &ctx);
             Ok(UpdateEnabledModelsResponse::success())
         }
-        Err(e) => {
-            ProviderLogEntry::record_failure(logger, &e);
-            Err(ProviderAppError::from(&e))
-        }
+        Err(e) => Err(fail(logger, &e)),
     }
 }

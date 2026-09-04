@@ -7,6 +7,7 @@ use super::super::super::super::super::{
     ResetProviderResponse,
 };
 use super::super::{remove_provider, remove_provider_key, save_provider};
+use super::fail;
 
 /// Resets persisted configuration for a provider.
 ///
@@ -27,10 +28,7 @@ pub(crate) fn reset_provider_config(
 
         match remove_provider(app, logger, provider_state, &ctx, provider_id) {
             Ok(removed) => removed,
-            Err(e) => {
-                ProviderLogEntry::record_failure(logger, &e);
-                return Err(ProviderAppError::from(&e));
-            }
+            Err(e) => return Err(fail(logger, &e)),
         }
     };
 
@@ -52,8 +50,7 @@ pub(crate) fn reset_provider_config(
 
             ProviderLogEntry::record_provider_config_restored(logger, &ctx);
         }
-        ProviderLogEntry::record_failure(logger, &e);
-        return Err(ProviderAppError::from(&e));
+        return Err(fail(logger, &e));
     }
 
     ProviderLogEntry::record_provider_reset(logger, &ctx);
