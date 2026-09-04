@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/reset.rs
 use tauri::AppHandle;
 
-use super::super::super::super::super::super::{AppLogger, AppState, LogLevel::Info};
+use super::super::super::super::super::super::{AppLogger, AppState};
 use super::super::super::super::super::{
     ProviderAppError, ProviderLogEntry, ProviderManagerContext, ProviderSpan, ResetProviderRequest,
     ResetProviderResponse,
@@ -50,12 +50,12 @@ pub(crate) fn reset_provider_config(
                 ));
             }
 
-            ProviderLogEntry::record_provider_config_restored(logger, Info, &ctx);
+            ProviderLogEntry::record_provider_config_restored(logger, &ctx);
         }
         ProviderLogEntry::record_failure(logger, &e);
         return Err(ProviderAppError::from(&e));
     }
 
-    ProviderLogEntry::record_provider_reset(logger, Info, &ctx);
+    ProviderLogEntry::record_provider_reset(logger, &ctx);
     Ok(ResetProviderResponse::success())
 }

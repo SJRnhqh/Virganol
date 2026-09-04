@@ -124,3 +124,31 @@ Benchmark (TBD)
   gate is implemented.
 
 ## Item and Implementation Order (Specification TBD)
+
+### Type Implementation Order (Policy TBD)
+
+#### Specification
+
+- Scope: `**/*.rs` (manual `impl` blocks; derive-generated implementations are
+  out of scope)
+- Rule:
+  - A type declaration is immediately followed by its inherent impl, when one
+    exists.
+  - Trait impls follow the inherent impl, ordered by tier:
+    1. Conversion traits (`From`, `TryFrom`, `FromStr`, `AsRef`)
+    2. Presentation traits (`Display`, `Debug`)
+    3. Error traits (`StdError`)
+    4. External protocol traits (`Write`, `Visit`, `FormatFields`)
+    5. Lifecycle traits (`Drop`, `Default`, `Downgrade`)
+  - Unlisted trait impls follow the listed tiers.
+  - Pattern:
+
+    ```txt
+    type declaration
+    → inherent impl
+    → conversion trait impls    # From / TryFrom / FromStr / AsRef
+    → presentation trait impls  # Display / Debug
+    → error trait impls         # StdError
+    → protocol trait impls      # Write / Visit / FormatFields
+    → lifecycle trait impls     # Drop / Default / Downgrade
+    ```

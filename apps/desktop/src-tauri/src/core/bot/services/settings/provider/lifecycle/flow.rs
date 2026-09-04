@@ -2,7 +2,7 @@
 use tauri::AppHandle;
 use tracing::Instrument;
 
-use super::super::super::super::super::super::{AppLogger, AppState, LogLevel::Info};
+use super::super::super::super::super::super::{AppLogger, AppState};
 use super::super::super::super::super::{
     ProviderCheckTrigger, ProviderError, ProviderLifecycleContext, ProviderLogEntry, ProviderSpan,
     ProviderSubject,
@@ -27,7 +27,7 @@ pub(crate) async fn check_providers_lifecycle(
     let span = ProviderSpan::lifecycle(&ctx);
 
     async {
-        ProviderLogEntry::record_check_started(logger, Info, &ctx);
+        ProviderLogEntry::record_check_started(logger, &ctx);
 
         if let Err(e) = emit_check_started(&app, &ctx, run_id.as_str(), &trigger) {
             report_lifecycle_failure(&app, logger, &ctx, run_id.as_str(), &e, &[]);
@@ -46,16 +46,9 @@ pub(crate) async fn check_providers_lifecycle(
                 return;
             }
         };
-        match providers.as_slice() {
-            [] => {
-                if let Err(e) = emit_check_completed(&app, &ctx, run_id.as_str(), providers.len()) {
-                    report_lifecycle_failure(&app, logger, &ctx, run_id.as_str(), &e, &[]);
-                } else {
-                    ProviderLogEntry::record_check_completed(logger, Info, &ctx);
-                }
-                return;
-            }
-            _ => {}
+        if providers.is_empty() {
+            complete_provider_check(&app, logger, &ctx, run_id.as_str(), 0);
+            return;
         }
 
         let check_result = run_provider_checks(
@@ -78,12 +71,24 @@ pub(crate) async fn check_providers_lifecycle(
             return;
         }
 
-        if let Err(e) = emit_check_completed(&app, &ctx, run_id.as_str(), failed_count) {
-            report_lifecycle_failure(&app, logger, &ctx, run_id.as_str(), &e, &[]);
-        } else {
-            ProviderLogEntry::record_check_completed(logger, Info, &ctx);
-        }
+        complete_provider_check(&app, logger, &ctx, run_id.as_str(), failed_count);
     }
     .instrument(span)
     .await;
+}
+
+/// Emits the lifecycle completion event and records or reports the outcome.
+///
+/// 推送生命周期完成事件，并记录成功或上报失败。
+fn complete_provider_check(
+    app: &AppHandle,
+    logger: &AppLogger,
+    ctx: &ProviderLifecycleContext<'_>,
+    run_id: &str,
+    count: usize,
+) {
+    match emit_check_completed(app, ctx, run_id, count) {
+        Ok(()) => ProviderLogEntry::record_check_completed(logger, ctx),
+        Err(e) => report_lifecycle_failure(app, logger, ctx, run_id, &e, &[]),
+    }
 }

@@ -1,15 +1,15 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/log/entry.rs
-use super::super::super::super::super::{
-    AppLogger, LogEntry,
-    LogLevel::{self, Error},
-};
+use super::super::super::super::super::{AppLogger, LogEntry};
 use super::super::{
     ProviderAttribution, ProviderError, ProviderExecutionContext, ProviderLifecycleContext,
     ProviderManagerContext, ProviderOperation, ProviderStage, ProviderSubject,
 };
-use super::ProviderOccurrence::{
-    self, CheckCompleted, CheckStarted, EnabledModelsUpdated, ProviderConfigRestored,
-    ProviderConnected, ProviderKeyRolledBack, ProviderReset, SecretRollbackSkipped,
+use super::{
+    ProviderObservation::{
+        self, CheckCompleted, CheckStarted, EnabledModelsUpdated, ProviderConfigRestored,
+        ProviderConnected, ProviderKeyRolledBack, ProviderReset, SecretRollbackSkipped,
+    },
+    ProviderOccurrence,
 };
 
 /// Structured log entry for the Provider subject reality.
@@ -43,7 +43,7 @@ impl ProviderLogEntry {
     ///
     /// 为单个供应商失败记录结构化日志条目。
     pub(in crate::core::bot) fn record_failure(logger: &AppLogger, error: &ProviderError) {
-        logger.record(Self::new(error.into(), error.attribution().clone()).generalize(Error));
+        logger.record(Self::new(error.into(), error.attribution().clone()).generalize());
     }
 
     /// Records a skipped secret rollback to preserve a newer key value.
@@ -51,10 +51,9 @@ impl ProviderLogEntry {
     /// 记录为保留较新密钥值而跳过的密钥回滚。
     pub(in crate::core::bot) fn record_secret_rollback_skipped(
         logger: &AppLogger,
-        level: LogLevel,
         ctx: &ProviderExecutionContext,
     ) {
-        Self::record_observation(logger, level, SecretRollbackSkipped, ctx);
+        Self::record_observation(logger, SecretRollbackSkipped, ctx);
     }
 
     /// Records a successful Provider connection.
@@ -62,10 +61,9 @@ impl ProviderLogEntry {
     /// 记录供应商连接成功。
     pub(in crate::core::bot) fn record_provider_connected(
         logger: &AppLogger,
-        level: LogLevel,
         ctx: &ProviderManagerContext,
     ) {
-        Self::record_observation(logger, level, ProviderConnected, ctx);
+        Self::record_observation(logger, ProviderConnected, ctx);
     }
 
     /// Records a successful Provider key change rollback.
@@ -73,10 +71,9 @@ impl ProviderLogEntry {
     /// 记录供应商密钥变更回滚成功。
     pub(in crate::core::bot) fn record_provider_key_rolled_back(
         logger: &AppLogger,
-        level: LogLevel,
         ctx: &ProviderExecutionContext,
     ) {
-        Self::record_observation(logger, level, ProviderKeyRolledBack, ctx);
+        Self::record_observation(logger, ProviderKeyRolledBack, ctx);
     }
 
     /// Records a successful Provider reset.
@@ -84,10 +81,9 @@ impl ProviderLogEntry {
     /// 记录供应商重置成功。
     pub(in crate::core::bot) fn record_provider_reset(
         logger: &AppLogger,
-        level: LogLevel,
         ctx: &ProviderManagerContext,
     ) {
-        Self::record_observation(logger, level, ProviderReset, ctx);
+        Self::record_observation(logger, ProviderReset, ctx);
     }
 
     /// Records a successful Provider configuration restoration after reset failure.
@@ -95,10 +91,9 @@ impl ProviderLogEntry {
     /// 记录供应商重置失败后成功恢复配置。
     pub(in crate::core::bot) fn record_provider_config_restored(
         logger: &AppLogger,
-        level: LogLevel,
         ctx: &ProviderExecutionContext,
     ) {
-        Self::record_observation(logger, level, ProviderConfigRestored, ctx);
+        Self::record_observation(logger, ProviderConfigRestored, ctx);
     }
 
     /// Records a successful enabled-model update.
@@ -106,10 +101,9 @@ impl ProviderLogEntry {
     /// 记录启用模型列表更新成功。
     pub(in crate::core::bot) fn record_enabled_models_updated(
         logger: &AppLogger,
-        level: LogLevel,
         ctx: &ProviderManagerContext,
     ) {
-        Self::record_observation(logger, level, EnabledModelsUpdated, ctx);
+        Self::record_observation(logger, EnabledModelsUpdated, ctx);
     }
 
     /// Records the start of one provider check lifecycle run.
@@ -117,10 +111,9 @@ impl ProviderLogEntry {
     /// 记录一轮供应商检查生命周期的开始。
     pub(in crate::core::bot) fn record_check_started(
         logger: &AppLogger,
-        level: LogLevel,
         ctx: &ProviderLifecycleContext<'_>,
     ) {
-        Self::record_observation(logger, level, CheckStarted, ctx);
+        Self::record_observation(logger, CheckStarted, ctx);
     }
 
     /// Records the successful completion of one provider check lifecycle run.
@@ -128,22 +121,20 @@ impl ProviderLogEntry {
     /// 记录一轮供应商检查生命周期成功完成。
     pub(in crate::core::bot) fn record_check_completed(
         logger: &AppLogger,
-        level: LogLevel,
         ctx: &ProviderLifecycleContext<'_>,
     ) {
-        Self::record_observation(logger, level, CheckCompleted, ctx);
+        Self::record_observation(logger, CheckCompleted, ctx);
     }
 
-    /// Records a structured Provider observation at the specified log level.
+    /// Records a structured Provider observation at its contract severity.
     ///
-    /// 按指定日志级别记录供应商结构化观察条目。
+    /// 按契约严重级别记录供应商结构化观测事实。
     fn record_observation(
         logger: &AppLogger,
-        level: LogLevel,
-        occurrence: ProviderOccurrence,
+        observation: ProviderObservation,
         attribution: impl Into<ProviderAttribution>,
     ) {
-        logger.record(Self::new(occurrence, attribution.into()).generalize(level));
+        logger.record(Self::new(observation.into(), attribution.into()).generalize());
     }
 
     /// Generalizes this Provider log entry into a shared structured log entry.
@@ -151,8 +142,9 @@ impl ProviderLogEntry {
     /// 将当前供应商日志条目通用化为共享结构化日志条目。
     fn generalize(
         self,
-        level: LogLevel,
     ) -> LogEntry<ProviderOccurrence, ProviderStage, ProviderSubject, ProviderOperation> {
+        let level = self.occurrence.severity();
+
         LogEntry::from_observation(level, self.occurrence, self.attribution.generalize())
     }
 

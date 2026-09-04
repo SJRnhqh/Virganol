@@ -1,7 +1,7 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/update.rs
 use tauri::AppHandle;
 
-use super::super::super::super::super::super::{AppLogger, AppState, LogLevel::Info};
+use super::super::super::super::super::super::{AppLogger, AppState};
 use super::super::super::super::super::{
     ProviderAppError, ProviderError, ProviderLogEntry, ProviderManagerContext, ProviderSpan,
     UpdateEnabledModelsRequest, UpdateEnabledModelsResponse,
@@ -45,7 +45,7 @@ pub(crate) fn update_provider_enabled_models(
 
     match update_result {
         Ok(()) => {
-            ProviderLogEntry::record_enabled_models_updated(logger, Info, &ctx);
+            ProviderLogEntry::record_enabled_models_updated(logger, &ctx);
             Ok(UpdateEnabledModelsResponse::success())
         }
         Err(e) => {

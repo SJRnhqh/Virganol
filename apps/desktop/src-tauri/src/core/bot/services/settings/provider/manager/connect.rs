@@ -2,7 +2,7 @@
 use tauri::AppHandle;
 use tracing::Instrument;
 
-use super::super::super::super::super::super::{AppLogger, AppState, LogLevel::Info};
+use super::super::super::super::super::super::{AppLogger, AppState};
 use super::super::super::super::super::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderAppError, ProviderError,
     ProviderLogEntry, ProviderManagerContext, ProviderRecord, ProviderSpan,
@@ -101,7 +101,7 @@ pub(crate) async fn connect_and_save(
             (available_models, enabled_models)
         };
 
-        ProviderLogEntry::record_provider_connected(logger, Info, &ctx);
+        ProviderLogEntry::record_provider_connected(logger, &ctx);
         Ok(ConnectAndSaveProviderResponse::success(
             available_models,
             enabled_models,

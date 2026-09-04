@@ -70,19 +70,6 @@ impl ProviderAttribution {
     }
 }
 
-impl Display for ProviderAttribution {
-    /// Formats Provider attribution for internal messages.
-    ///
-    /// 格式化供应商归因以供内部消息使用。
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        write!(
-            f,
-            "{} during {} at {}",
-            self.subject, self.operation, self.stage
-        )
-    }
-}
-
 impl From<&ProviderManagerContext> for ProviderAttribution {
     /// Projects an interactive management context into Provider attribution.
     ///
@@ -113,5 +100,18 @@ impl From<&ProviderExecutionContext> for ProviderAttribution {
         let (stage, subject, operation) = context.attribution_parts();
 
         Self::new(stage, subject, operation)
+    }
+}
+
+impl Display for ProviderAttribution {
+    /// Formats Provider attribution for internal messages.
+    ///
+    /// 格式化供应商归因以供内部消息使用。
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(
+            f,
+            "{} during {} at {}",
+            self.subject, self.operation, self.stage
+        )
     }
 }
