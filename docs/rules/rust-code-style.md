@@ -113,7 +113,33 @@ Benchmark (TBD)
 
 ## Imports and Paths (Specification TBD)
 
+### Relative Path Discipline (Policy TBD)
+
+#### Specification
+
+- Scope: `apps/desktop/src-tauri/src/**/*.rs`
+- Rule:
+  - External crates are consumed through explicit imports only; inline
+    fully-qualified external paths in expressions are prohibited.
+  - Modules under `core/` never import through absolute `crate::` paths;
+    they reach sibling and ancestor items through `super::` chains resolved
+    by per-module re-export hubs.
+  - Modules under `container/` may import through absolute `crate::` paths.
+
 ## Visibility (Specification TBD)
+
+### Re-export Visibility Boundaries (Policy TBD)
+
+#### Specification
+
+- Scope: `apps/desktop/src-tauri/src/**/*.rs`
+- Rule:
+  - A re-export may not widen visibility beyond the item's declared
+    visibility (`E0364`).
+  - An item's declared visibility must cover the widest hop of its re-export
+    chain; intermediate hops re-export with `pub(super)` or `pub(self)`.
+  - A variant payload type must not be less visible than the enum carrying
+    it (`private_interfaces`).
 
 ### Temporary Re-export Visibility Check
 
@@ -152,3 +178,19 @@ Benchmark (TBD)
     → protocol trait impls      # Write / Visit / FormatFields
     → lifecycle trait impls     # Drop / Default / Downgrade
     ```
+
+## Token Display Derivation (Policy TBD)
+
+### Specification
+
+- Scope: `apps/desktop/src-tauri/src/**/*.rs` (enum Display impls)
+- Rule:
+  - Token-valued enum Display is always derived through `strum`; handwritten
+    Display impls are not written for token output.
+  - Variant-name tokens use `#[strum(serialize_all = "snake_case")]`.
+  - Single-field wrapper variants delegate with `#[strum(transparent)]`.
+  - Composed tokens interpolate fields with
+    `#[strum(to_string = "prefix:{0}")]`.
+  - Handwritten Display remains only where strum cannot apply: structs, and
+    single-token-source delegation sharing one token producer with
+    serialization or storage.
