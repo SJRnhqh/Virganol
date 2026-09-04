@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/log/occurrence.rs
-use std::fmt::{Display, Formatter, Result};
+use strum::Display;
 
 use super::super::super::super::super::LogLevel::{self, Error};
 use super::super::{ProviderError, ProviderFailureKind};
@@ -8,10 +8,12 @@ use super::ProviderObservation;
 /// Business occurrence facts observed by the Provider subject reality logging branch.
 ///
 /// 供应商主体实在日志分支观测到的业务发生事实。
+#[derive(Display)]
 pub(in crate::core::bot::models::provider) enum ProviderOccurrence {
     /// Provider internal error observed as a failure occurrence.
     ///
     /// 将供应商内部错误观测为失败发生事实。
+    #[strum(transparent)]
     Failure(
         /// Provider failure kind observed from the internal error.
         ///
@@ -21,6 +23,7 @@ pub(in crate::core::bot::models::provider) enum ProviderOccurrence {
     /// Provider observation fact observed by the logging branch.
     ///
     /// 日志分支观测到的供应商观测事实。
+    #[strum(transparent)]
     Observation(
         /// Observed Provider business fact.
         ///
@@ -56,17 +59,5 @@ impl From<ProviderObservation> for ProviderOccurrence {
     /// 将供应商观测事实包装为发生事实。
     fn from(observation: ProviderObservation) -> Self {
         Self::Observation(observation)
-    }
-}
-
-impl Display for ProviderOccurrence {
-    /// Formats this Provider occurrence as a stable token.
-    ///
-    /// 将当前供应商发生事实格式化为稳定令牌。
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        match self {
-            Self::Failure(failure_kind) => write!(f, "{failure_kind}"),
-            Self::Observation(observation) => write!(f, "{observation}"),
-        }
     }
 }

@@ -1,10 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/stage.rs
-use std::fmt::{Display, Formatter, Result};
+use strum::Display;
 
 /// Provider subject reality business execution stage.
 ///
 /// 供应商主体实在业务执行阶段。
-#[derive(Debug, Clone, Copy)]
+#[derive(Display, Debug, Clone, Copy)]
+#[strum(serialize_all = "snake_case")]
 pub(in crate::core::bot::models::provider) enum ProviderStage {
     /// Provider manager orchestration.
     ///
@@ -62,20 +63,5 @@ impl ProviderStage {
     /// 创建密钥存储阶段。
     pub(super) fn secret_store() -> Self {
         Self::SecretStore
-    }
-}
-
-impl Display for ProviderStage {
-    /// Formats this Provider stage as a stable token.
-    ///
-    /// 将当前供应商阶段格式化为稳定令牌。
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        match self {
-            Self::Manager => f.write_str("manager"),
-            Self::LifecycleEmit => f.write_str("lifecycle_emit"),
-            Self::Connection => f.write_str("connection"),
-            Self::ConfigStore => f.write_str("config_store"),
-            Self::SecretStore => f.write_str("secret_store"),
-        }
     }
 }

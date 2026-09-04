@@ -1,16 +1,18 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/common/element/subject.rs
-use std::fmt::{Display, Formatter, Result};
+use strum::Display;
 
 use super::ProviderId;
 
 /// Subject used for provider context and error attribution.
 ///
 /// 用于供应商上下文和错误归因的主体。
-#[derive(Debug, Clone)]
+#[derive(Display, Debug, Clone)]
+#[strum(serialize_all = "snake_case")]
 pub(in crate::core::bot) enum ProviderSubject {
     /// A concrete provider identified by a stable provider identifier.
     ///
     /// 由稳定供应商标识表示的具体供应商。
+    #[strum(to_string = "provider:{0}")]
     Provider(
         /// Stable provider identifier.
         ///
@@ -24,6 +26,7 @@ pub(in crate::core::bot) enum ProviderSubject {
     /// An unvalidated raw identifier loaded from storage.
     ///
     /// 从存储中读取的未校验原始标识。
+    #[strum(to_string = "candidate:{0}")]
     Candidate(
         /// Raw provider identifier loaded from storage.
         ///
@@ -57,18 +60,5 @@ impl From<ProviderId> for ProviderSubject {
     /// 根据具体供应商标识创建供应商主体。
     fn from(provider_id: ProviderId) -> Self {
         Self::Provider(provider_id)
-    }
-}
-
-impl Display for ProviderSubject {
-    /// Formats the subject as a stable token.
-    ///
-    /// 将主体格式化为稳定令牌。
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        match self {
-            Self::Provider(provider_id) => write!(f, "provider:{provider_id}"),
-            Self::ConfiguredProviders => f.write_str("configured_providers"),
-            Self::Candidate(raw) => write!(f, "candidate:{raw}"),
-        }
     }
 }

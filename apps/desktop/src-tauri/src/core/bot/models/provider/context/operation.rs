@@ -1,12 +1,11 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/operation.rs
-use std::fmt::{Display, Formatter, Result};
-
-use self::ProviderManagerOperation::{Connect, Reset, UpdateModels};
+use strum::Display;
 
 /// Interactive management operation carried by the interactive management context.
 ///
 /// 交互式管理上下文携带的交互式供应商操作意图。
-#[derive(Debug, Clone, Copy)]
+#[derive(Display, Debug, Clone, Copy)]
+#[strum(serialize_all = "snake_case")]
 pub(in crate::core::bot::models::provider) enum ProviderManagerOperation {
     /// Connect a provider and persist its configuration after a successful probe.
     ///
@@ -48,11 +47,13 @@ impl ProviderManagerOperation {
 /// Provider business operation carried across subject reality context views.
 ///
 /// 跨主体实在上下文视图传播的供应商业务操作意图。
-#[derive(Debug, Clone, Copy)]
+#[derive(Display, Debug, Clone, Copy)]
+#[strum(serialize_all = "snake_case")]
 pub(in crate::core::bot::models::provider) enum ProviderOperation {
     /// Interactive management operation.
     ///
     /// 交互式管理操作。
+    #[strum(transparent)]
     Manager(
         /// Interactive management operation details.
         ///
@@ -80,19 +81,5 @@ impl From<ProviderManagerOperation> for ProviderOperation {
     /// 将交互式管理操作包装为供应商操作。
     fn from(operation: ProviderManagerOperation) -> Self {
         Self::Manager(operation)
-    }
-}
-
-impl Display for ProviderOperation {
-    /// Formats this Provider operation as a stable token.
-    ///
-    /// 将当前供应商操作格式化为稳定令牌。
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        match self {
-            Self::Manager(Connect) => f.write_str("connect"),
-            Self::Manager(Reset) => f.write_str("reset"),
-            Self::Manager(UpdateModels) => f.write_str("update_models"),
-            Self::LifecycleCheck => f.write_str("lifecycle_check"),
-        }
     }
 }
