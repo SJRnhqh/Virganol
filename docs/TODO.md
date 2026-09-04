@@ -12,6 +12,7 @@
 
 ## Completed
 
+- [x] Moved the JSONL persistence verification out of the Rust backend observability gate in ROADMAP 6.2, recording the frontend-aligned deferral decision and the token Display review closeout
 - [x] Derived the Provider token Displays through strum across the stage, manager-operation, operation, occurrence, and subject enums, mixing snake_case, transparent, and to_string captures, and removing every handwritten token match arm while keeping Attribution (struct) and ProviderId (single token source) as the closed manual exceptions
 - [x] Tightened the banner fallback level rendering to ascii lowercase
 - [x] Deferred the ProviderSpan preamble dedup by explicit decision, keeping the explicit per-span field tables as the field-stability contract
