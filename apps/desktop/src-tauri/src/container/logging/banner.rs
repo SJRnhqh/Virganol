@@ -10,7 +10,7 @@ use super::{BANNER_ART, DEFAULT_LOG_LEVEL};
 pub(super) fn emit_startup_banner(log_dir: &Path) {
     let version = env!("CARGO_PKG_VERSION");
     let log_level =
-        var("RUST_LOG").unwrap_or_else(|_| DEFAULT_LOG_LEVEL.to_string().to_lowercase());
+        var("RUST_LOG").unwrap_or_else(|_| DEFAULT_LOG_LEVEL.to_string().to_ascii_lowercase());
 
     let primary = [format!("❯ version {version}"), "❯ logs".to_string()];
     let secondary = [
