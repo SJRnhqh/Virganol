@@ -42,7 +42,7 @@ impl ProviderSpan {
             attribution_subject = %subject,
             attribution_operation = %operation,
             run_id = ctx.run_id(),
-            trigger = ctx.trigger().as_tag(),
+            trigger = %ctx.trigger(),
         )
     }
 

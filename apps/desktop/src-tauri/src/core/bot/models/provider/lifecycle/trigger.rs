@@ -1,11 +1,13 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/lifecycle/trigger.rs
 use serde::Serialize;
+use strum::Display;
 
 /// The source that triggers a provider lifecycle check.
 ///
 /// 供应商生命周期检查的触发来源。
-#[derive(Serialize)]
+#[derive(Display, Serialize)]
 #[serde(rename_all = "snake_case")]
+#[strum(serialize_all = "snake_case")]
 pub(crate) enum ProviderCheckTrigger {
     /// Triggered automatically after application startup.
     ///
@@ -15,16 +17,4 @@ pub(crate) enum ProviderCheckTrigger {
     ///
     /// 用户手动发起的全量刷新检查。
     ManualRefresh,
-}
-
-impl ProviderCheckTrigger {
-    /// Returns the stable trigger tag used in lifecycle logs and run ids.
-    ///
-    /// 返回生命周期日志与运行标识中使用的稳定触发来源标签。
-    pub(in crate::core::bot) fn as_tag(&self) -> &'static str {
-        match self {
-            Self::Startup => "startup",
-            Self::ManualRefresh => "manual_refresh",
-        }
-    }
 }

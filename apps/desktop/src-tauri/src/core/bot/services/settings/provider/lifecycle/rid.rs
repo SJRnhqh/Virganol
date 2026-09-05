@@ -21,10 +21,5 @@ pub(super) fn next_run_id(trigger: &ProviderCheckTrigger) -> String {
         .unwrap_or(0);
     let seq = RUN_SEQ.fetch_add(1, Relaxed);
 
-    format!(
-        "provider-check-{}-{}-{}",
-        trigger.as_tag(),
-        timestamp_ms,
-        seq
-    )
+    format!("provider-check-{trigger}-{timestamp_ms}-{seq}")
 }

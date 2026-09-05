@@ -12,6 +12,7 @@
 
 ## Completed
 
+- [x] Derived the Provider check trigger token through strum Display alongside serde snake_case, removing the handwritten as_tag match and its dual-source spelling risk
 - [x] Codified the relative path discipline, re-export visibility boundaries, and token display derivation policies in rust-code-style.md
 - [x] Moved the JSONL persistence verification out of the Rust backend observability gate in ROADMAP 6.2, recording the frontend-aligned deferral decision and the token Display review closeout
 - [x] Derived the Provider token Displays through strum across the stage, manager-operation, operation, occurrence, and subject enums, mixing snake_case, transparent, and to_string captures, and removing every handwritten token match arm while keeping Attribution (struct) and ProviderId (single token source) as the closed manual exceptions
