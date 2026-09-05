@@ -9,7 +9,7 @@ use super::ProviderObservation;
 ///
 /// 供应商主体实在日志分支观测到的业务发生事实。
 #[derive(Display)]
-pub(in crate::core::bot::models::provider) enum ProviderOccurrence {
+pub(super) enum ProviderOccurrence {
     /// Provider internal error observed as a failure occurrence.
     ///
     /// 将供应商内部错误观测为失败发生事实。

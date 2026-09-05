@@ -5,7 +5,7 @@ use super::{ProviderOperation, ProviderStage};
 /// Provider subject reality base context.
 ///
 /// 供应商主体实在基础上下文。
-pub(super) struct ProviderContext<E = ()> {
+pub(super) struct ProviderContext<E> {
     /// Provider subject reality business execution stage represented by this context view.
     ///
     /// 当前上下文视图表示的供应商主体实在业务执行阶段。

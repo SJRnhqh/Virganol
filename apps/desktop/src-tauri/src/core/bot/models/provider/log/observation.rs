@@ -8,7 +8,7 @@ use super::super::super::super::super::LogLevel::{self, Info, Warn};
 /// 供应商主体实在日志分支观测到的观测事实。
 #[derive(Display)]
 #[strum(serialize_all = "snake_case")]
-pub(in crate::core::bot::models::provider) enum ProviderObservation {
+pub(super) enum ProviderObservation {
     /// Provider key rollback skipped to preserve a newer key value.
     ///
     /// 为保留较新的密钥值而跳过供应商密钥回滚。
