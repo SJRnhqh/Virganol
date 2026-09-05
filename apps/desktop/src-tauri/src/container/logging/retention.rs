@@ -1,4 +1,5 @@
 // apps/desktop/src-tauri/src/container/logging/retention.rs
+use chrono::NaiveDate;
 use std::{
     fs::{read_dir, remove_file},
     path::Path,
@@ -32,14 +33,7 @@ pub(super) fn clean_expired_logs(log_dir: &Path) {
             continue;
         };
 
-        let bytes = date.as_bytes();
-        let rolled = bytes.len() == 10
-            && bytes[4] == b'-'
-            && bytes[7] == b'-'
-            && bytes
-                .iter()
-                .enumerate()
-                .all(|(index, byte)| index == 4 || index == 7 || byte.is_ascii_digit());
+        let rolled = NaiveDate::parse_from_str(date, "%Y-%m-%d").is_ok();
 
         let expired = rolled
             && entry
