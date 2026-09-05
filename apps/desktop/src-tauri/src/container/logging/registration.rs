@@ -3,7 +3,7 @@ use std::error::Error;
 use tauri::{App, Manager};
 use tracing_subscriber::{layer::SubscriberExt, registry, util::SubscriberInitExt};
 
-use super::{clean_expired_logs, console_layer, emit_startup_banner, jsonl_layer};
+use super::{banner_level, clean_expired_logs, console_layer, emit_startup_banner, jsonl_layer};
 
 /// Initializes the desktop logging backend, cleans expired logs, and manages the JSONL flush guard.
 ///
@@ -17,7 +17,7 @@ pub(in crate::container) fn init_logging(app: &mut App) -> Result<(), Box<dyn Er
 
     registry().with(console_layer()).with(jsonl).init();
 
-    emit_startup_banner(&log_dir);
+    emit_startup_banner(&log_dir, &banner_level());
 
     app.manage(guard);
 

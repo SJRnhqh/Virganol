@@ -1,16 +1,14 @@
 // apps/desktop/src-tauri/src/container/logging/banner.rs
 use nu_ansi_term::Color;
-use std::{env::var, path::Path};
+use std::path::Path;
 
-use super::{BANNER_ART, DEFAULT_LOG_LEVEL};
+use super::BANNER_ART;
 
 /// Emits the console-only startup banner with branding and resolved logging facts.
 ///
 /// 输出仅控制台可见的启动横幅，携带品牌信息与已解析日志事实。
-pub(super) fn emit_startup_banner(log_dir: &Path) {
+pub(super) fn emit_startup_banner(log_dir: &Path, log_level: &str) {
     let version = env!("CARGO_PKG_VERSION");
-    let log_level =
-        var("RUST_LOG").unwrap_or_else(|_| DEFAULT_LOG_LEVEL.to_string().to_ascii_lowercase());
 
     let primary = [format!("❯ version {version}"), "❯ logs".to_string()];
     let secondary = [
