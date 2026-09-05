@@ -30,22 +30,26 @@ impl AppLogger {
         let (attribution_stage, attribution_subject, attribution_operation) =
             attribution.into_parts();
 
+        /// Records the entry fields through one severity macro.
+        ///
+        /// 通过单个严重级别宏记录条目字段。
+        macro_rules! record_at {
+            ($record:ident) => {
+                $record!(
+                    %occurrence,
+                    %attribution_stage,
+                    %attribution_subject,
+                    %attribution_operation
+                )
+            };
+        }
+
         match level {
-            Error => {
-                error!(%occurrence, %attribution_stage, %attribution_subject, %attribution_operation)
-            }
-            Warn => {
-                warn!(%occurrence, %attribution_stage, %attribution_subject, %attribution_operation)
-            }
-            Info => {
-                info!(%occurrence, %attribution_stage, %attribution_subject, %attribution_operation)
-            }
-            Debug => {
-                debug!(%occurrence, %attribution_stage, %attribution_subject, %attribution_operation)
-            }
-            Trace => {
-                trace!(%occurrence, %attribution_stage, %attribution_subject, %attribution_operation)
-            }
+            Error => record_at!(error),
+            Warn => record_at!(warn),
+            Info => record_at!(info),
+            Debug => record_at!(debug),
+            Trace => record_at!(trace),
         }
     }
 }

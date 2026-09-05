@@ -12,6 +12,7 @@
 
 ## Completed
 
+- [x] Converged the AppLogger severity field table into one function-local `record_at!` macro, keeping the per-level arms as five static event callsites while collapsing the duplicated field lists into a single compile-time definition point
 - [x] Resolved the banner RUST_LOG fork by routing the level display through filter-module parsing: banner-level keeps only directives that pass the same per-directive validity check the layers use, echoes the valid remainder verbatim, and falls back to the default level when unset or fully invalid, reducing banner to a pure display consumer of a filter-resolved fact
 - [x] Unified the Chinese doc comment punctuation in the logging backend to full-width commas, closing the half-width/full-width split against the core-side baseline
 - [x] Guarded the colored field separator write so a failed separator preserves the first error instead of being overwritten by a later successful field write
