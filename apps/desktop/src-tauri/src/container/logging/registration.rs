@@ -7,7 +7,7 @@ use super::{clean_expired_logs, console_layer, emit_startup_banner, jsonl_layer}
 
 /// Initializes the desktop logging backend, cleans expired logs, and manages the JSONL flush guard.
 ///
-/// 初始化桌面日志后端,清理过期日志,并托管 JSONL 冲刷守卫。
+/// 初始化桌面日志后端，清理过期日志，并托管 JSONL 冲刷守卫。
 pub(in crate::container) fn init_logging(app: &mut App) -> Result<(), Box<dyn Error>> {
     let log_dir = app.path().app_log_dir()?;
 

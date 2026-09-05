@@ -9,7 +9,7 @@ use super::{LOG_FILE_EXT, LOG_FILE_STEM};
 
 /// Number of days that daily JSONL log files are kept before cleanup.
 ///
-/// 每日 JSONL 日志文件的保留天数,超期即清理。
+/// 每日 JSONL 日志文件的保留天数，超期即清理。
 const RETENTION_DAYS: u64 = 14;
 
 /// Removes expired daily JSONL log files from the log directory.
