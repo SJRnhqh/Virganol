@@ -1,9 +1,8 @@
 // apps/desktop/src-tauri/src/container/logging/retention.rs
-use chrono::NaiveDate;
+use chrono::{Duration, NaiveDate, Utc};
 use std::{
     fs::{read_dir, remove_file},
     path::Path,
-    time::{Duration, SystemTime},
 };
 
 use super::{LOG_FILE_EXT, LOG_FILE_STEM};
@@ -11,13 +10,13 @@ use super::{LOG_FILE_EXT, LOG_FILE_STEM};
 /// Number of days that daily JSONL log files are kept before cleanup.
 ///
 /// 每日 JSONL 日志文件的保留天数，超期即清理。
-const RETENTION_DAYS: u64 = 14;
+const RETENTION_DAYS: i64 = 14;
 
 /// Removes expired daily JSONL log files from the log directory.
 ///
-/// 从日志目录清除已过期的每日 JSONL 日志文件。
+/// 从日志目录清除已过期的每日 JSONL 日志文件，按文件名中的 UTC 轮转日期判定过期。
 pub(super) fn clean_expired_logs(log_dir: &Path) {
-    let cutoff = SystemTime::now() - Duration::from_secs(RETENTION_DAYS * 86_400);
+    let cutoff = Utc::now().date_naive() - Duration::days(RETENTION_DAYS);
 
     for entry in read_dir(log_dir).into_iter().flatten().flatten() {
         let file_name = entry.file_name();
@@ -33,14 +32,7 @@ pub(super) fn clean_expired_logs(log_dir: &Path) {
             continue;
         };
 
-        let rolled = NaiveDate::parse_from_str(date, "%Y-%m-%d").is_ok();
-
-        let expired = rolled
-            && entry
-                .metadata()
-                .and_then(|meta| meta.modified())
-                .is_ok_and(|modified| modified < cutoff);
-        if expired {
+        if NaiveDate::parse_from_str(date, "%Y-%m-%d").is_ok_and(|rolled| rolled < cutoff) {
             let _ = remove_file(entry.path());
         }
     }

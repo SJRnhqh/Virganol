@@ -12,6 +12,8 @@
 
 ## Completed
 
+- [x] Extended the comment ASCII whitelist with the UTC term for the retention timezone-anchoring doc comment
+- [x] Anchored the JSONL retention expiry on the rolled filename's UTC date through `NaiveDate` comparison instead of file mtime, aligning with the appender's UTC midnight rotation, deleting touch-refreshed stale files, and dropping the metadata stat from the cleanup
 - [x] Narrowed the chrono dependency to calendar parsing only by disabling default features, dropping the pulled-in iana-time-zone consumers' wasm companions (js-sys, wasm-bindgen) from the lock tree while keeping NaiveDate parsing behavior unchanged
 - [x] Replaced the handwritten rolled-date shape check in the JSONL retention cleanup with chrono's `NaiveDate::parse_from_str`, declaring chrono as an explicit dependency for stricter calendar validity at fewer lines
 - [x] Converged the AppLogger severity field table into one function-local `record_at!` macro, keeping the per-level arms as five static event callsites while collapsing the duplicated field lists into a single compile-time definition point
