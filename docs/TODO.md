@@ -12,6 +12,7 @@
 
 ## Completed
 
+- [x] Guarded the colored field separator write so a failed separator preserves the first error instead of being overwritten by a later successful field write
 - [x] Reversed the ProviderSpan preamble dedup deferral by converging the shared attribution triplet into one local `attributed_span!` macro, keeping per-span extras at the call sites and anchoring the attribution type once in the macro body so call sites convert through `into`
 - [x] Derived the Provider check trigger token through strum Display alongside serde snake_case, removing the handwritten as_tag match and its dual-source spelling risk
 - [x] Codified the relative path discipline, re-export visibility boundaries, and token display derivation policies in rust-code-style.md
