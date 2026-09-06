@@ -27,14 +27,15 @@ pub(in crate::core::bot) struct ProviderLogEntry {
 }
 
 impl ProviderLogEntry {
-    /// Records structured log entries for multiple Provider failures.
+    /// Records structured log entries for one primary failure plus its suppressed companions.
     ///
-    /// 为多个供应商失败记录结构化日志条目。
-    pub(in crate::core::bot) fn record_failures<'a>(
+    /// 为一个主失败及其被抑制的伴随失败记录结构化日志条目。
+    pub(in crate::core::bot) fn record_failure_with_suppressed<'a>(
         logger: &AppLogger,
-        errors: impl IntoIterator<Item = &'a ProviderError>,
+        error: &'a ProviderError,
+        suppressed_errors: impl IntoIterator<Item = &'a ProviderError>,
     ) {
-        for error in errors {
+        for error in [error].into_iter().chain(suppressed_errors) {
             Self::record_failure(logger, error);
         }
     }

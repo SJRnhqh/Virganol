@@ -41,7 +41,7 @@ pub(crate) fn reset_provider_config(
             let ctx = ctx.for_config_store().into_execution_context();
 
             if let Err(se) = save_provider(app, provider_state, &ctx, provider_id, record) {
-                ProviderLogEntry::record_failures(logger, [&e, &se]);
+                ProviderLogEntry::record_failure_with_suppressed(logger, &e, [&se]);
                 return Err(ProviderAppError::with_suppressed_errors(
                     &e,
                     vec![ProviderAppError::from(&se)],

@@ -12,6 +12,7 @@
 
 ## Completed
 
+- [x] Converged multi-failure recording into `record_failure_with_suppressed`, moving the primary-first suppressed-after ordering into the facade and collapsing both call sites to single-expression forms
 - [x] Declared chrono's `clock` feature explicitly for the retention `Utc::now()` cutoff, ending the silent reliance on tracing-subscriber feature unification with zero lock-tree change
 - [x] Tightened the Provider log vocabulary visibility to the `log` submodule boundary: `ProviderObservation` and `ProviderOccurrence` enum declarations and their `log` hub re-exports now stop at `pub(super)`/`pub(self)`, matching their module-internal-only consumers
 - [x] Dropped the unused `E = ()` default type parameter from the Provider base context, keeping every construction site explicit about its context-extra type
