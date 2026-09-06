@@ -2,29 +2,20 @@
 use super::super::super::super::super::{AppLogger, LogEntry};
 use super::super::{
     ProviderAttribution, ProviderError, ProviderExecutionContext, ProviderLifecycleContext,
-    ProviderManagerContext, ProviderOperation, ProviderStage, ProviderSubject,
+    ProviderManagerContext,
 };
 use super::{
     ProviderObservation::{
-        self, CheckCompleted, CheckStarted, EnabledModelsUpdated, ProviderConfigRestored,
+        CheckCompleted, CheckStarted, EnabledModelsUpdated, ProviderConfigRestored,
         ProviderConnected, ProviderKeyRolledBack, ProviderReset, SecretRollbackSkipped,
     },
     ProviderOccurrence,
 };
 
-/// Structured log entry for the Provider subject reality.
+/// Structured logging facade for the Provider subject reality.
 ///
-/// 供应商主体实在的结构化日志条目。
-pub(in crate::core::bot) struct ProviderLogEntry {
-    /// Business occurrence fact observed by this entry.
-    ///
-    /// 当前条目观测到的业务发生事实。
-    occurrence: ProviderOccurrence,
-    /// Attribution projected from the originating business context.
-    ///
-    /// 从来源业务上下文投影出的归因。
-    attribution: ProviderAttribution,
-}
+/// 供应商主体实在的结构化日志门面。
+pub(in crate::core::bot) struct ProviderLogEntry;
 
 impl ProviderLogEntry {
     /// Records structured log entries for one primary failure plus its suppressed companions.
@@ -44,7 +35,7 @@ impl ProviderLogEntry {
     ///
     /// 为单个供应商失败记录结构化日志条目。
     pub(in crate::core::bot) fn record_failure(logger: &AppLogger, error: &ProviderError) {
-        logger.record(Self::new(error.into(), error.attribution().clone()).generalize());
+        Self::record_entry(logger, error.into(), error.attribution().clone());
     }
 
     /// Records a skipped secret rollback to preserve a newer key value.
@@ -54,7 +45,7 @@ impl ProviderLogEntry {
         logger: &AppLogger,
         ctx: &ProviderExecutionContext,
     ) {
-        Self::record_observation(logger, SecretRollbackSkipped, ctx);
+        Self::record_entry(logger, SecretRollbackSkipped.into(), ctx.into());
     }
 
     /// Records a successful Provider connection.
@@ -64,7 +55,7 @@ impl ProviderLogEntry {
         logger: &AppLogger,
         ctx: &ProviderManagerContext,
     ) {
-        Self::record_observation(logger, ProviderConnected, ctx);
+        Self::record_entry(logger, ProviderConnected.into(), ctx.into());
     }
 
     /// Records a successful Provider key change rollback.
@@ -74,7 +65,7 @@ impl ProviderLogEntry {
         logger: &AppLogger,
         ctx: &ProviderExecutionContext,
     ) {
-        Self::record_observation(logger, ProviderKeyRolledBack, ctx);
+        Self::record_entry(logger, ProviderKeyRolledBack.into(), ctx.into());
     }
 
     /// Records a successful Provider reset.
@@ -84,7 +75,7 @@ impl ProviderLogEntry {
         logger: &AppLogger,
         ctx: &ProviderManagerContext,
     ) {
-        Self::record_observation(logger, ProviderReset, ctx);
+        Self::record_entry(logger, ProviderReset.into(), ctx.into());
     }
 
     /// Records a successful Provider configuration restoration after reset failure.
@@ -94,7 +85,7 @@ impl ProviderLogEntry {
         logger: &AppLogger,
         ctx: &ProviderExecutionContext,
     ) {
-        Self::record_observation(logger, ProviderConfigRestored, ctx);
+        Self::record_entry(logger, ProviderConfigRestored.into(), ctx.into());
     }
 
     /// Records a successful enabled-model update.
@@ -104,7 +95,7 @@ impl ProviderLogEntry {
         logger: &AppLogger,
         ctx: &ProviderManagerContext,
     ) {
-        Self::record_observation(logger, EnabledModelsUpdated, ctx);
+        Self::record_entry(logger, EnabledModelsUpdated.into(), ctx.into());
     }
 
     /// Records the start of one provider check lifecycle run.
@@ -114,7 +105,7 @@ impl ProviderLogEntry {
         logger: &AppLogger,
         ctx: &ProviderLifecycleContext<'_>,
     ) {
-        Self::record_observation(logger, CheckStarted, ctx);
+        Self::record_entry(logger, CheckStarted.into(), ctx.into());
     }
 
     /// Records the successful completion of one provider check lifecycle run.
@@ -124,38 +115,21 @@ impl ProviderLogEntry {
         logger: &AppLogger,
         ctx: &ProviderLifecycleContext<'_>,
     ) {
-        Self::record_observation(logger, CheckCompleted, ctx);
+        Self::record_entry(logger, CheckCompleted.into(), ctx.into());
     }
 
-    /// Records a structured Provider observation at its contract severity.
+    /// Records a structured Provider entry at its contract severity.
     ///
-    /// 按契约严重级别记录供应商结构化观测事实。
-    fn record_observation(
+    /// 按契约严重级别记录供应商结构化条目。
+    fn record_entry(
         logger: &AppLogger,
-        observation: ProviderObservation,
-        attribution: impl Into<ProviderAttribution>,
+        occurrence: ProviderOccurrence,
+        attribution: ProviderAttribution,
     ) {
-        logger.record(Self::new(observation.into(), attribution.into()).generalize());
-    }
-
-    /// Generalizes this Provider log entry into a shared structured log entry.
-    ///
-    /// 将当前供应商日志条目通用化为共享结构化日志条目。
-    fn generalize(
-        self,
-    ) -> LogEntry<ProviderOccurrence, ProviderStage, ProviderSubject, ProviderOperation> {
-        let level = self.occurrence.severity();
-
-        LogEntry::from_observation(level, self.occurrence, self.attribution.generalize())
-    }
-
-    /// Creates a Provider structured log entry.
-    ///
-    /// 创建供应商结构化日志条目。
-    fn new(occurrence: ProviderOccurrence, attribution: ProviderAttribution) -> Self {
-        Self {
+        logger.record(LogEntry::from_observation(
+            occurrence.severity(),
             occurrence,
-            attribution,
-        }
+            attribution.generalize(),
+        ));
     }
 }
