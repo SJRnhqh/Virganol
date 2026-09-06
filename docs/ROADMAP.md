@@ -41,7 +41,7 @@
 
 #### 6.2 Provider 可靠性架构与可观测性（context / failure / error / boundary / logging / tracing）
 
-**当前状态**：Provider 与 Settings 的上下文传播、内部错误、边界投影和结构化日志门面已经闭环；Provider manager 与 lifecycle span、`run_id`、`trigger`、并发健康检查子 span 和生命周期起止事件均已完成。Rust/Tauri 日志后端已完成 `tracing-subscriber` 注册、独立 Console Layer 与每日轮转 JSONL Layer 的成熟链路（非阻塞写入、退出冲刷、保留清理、首错报警、默认级别常量统一），Console 已通过 `RUST_LOG` 降级实机验证，启动 banner 以 console-only 形态落地；可观测性代码已通过系统性审查并将枚举令牌 Display 收敛为 strum derive。剩余观测契约落档即可转入前端工作；持久化行为验证已决策推迟至前端日志消费对齐后进行，移出后端 v1 完成门槛。
+**当前状态**：Provider 与 Settings 的上下文传播、内部错误、边界投影和结构化日志门面已经闭环；Provider manager 与 lifecycle span、`run_id`、`trigger`、并发健康检查子 span 和生命周期起止事件均已完成。Rust/Tauri 日志后端已完成 `tracing-subscriber` 注册、独立 Console Layer 与每日轮转 JSONL Layer 的 best-effort 诊断链路（非阻塞、有界且允许丢失；非严格 durable persistence；初始化失败当前 fail-closed；含退出冲刷、保留清理、首错报警和默认级别常量统一），Console 已通过 `RUST_LOG` 降级实机验证，启动 banner 以 console-only 形态落地；可观测性代码已通过系统性审查并将枚举令牌 Display 收敛为 strum derive。观测契约落档仍是下一步，完成后可转入前端工作；持久化行为验证已决策推迟至前端日志消费对齐后进行，移出后端 v1 完成门槛。
 
 **本阶段边界**：完成 Rust/Tauri 后端可观测性 v1 后即可转入前端工作；Go Sidecar stdout/stderr 归一化与跨进程关联作为后续独立集成，不阻塞本阶段完成。
 
@@ -64,6 +64,8 @@
 
 - [ ] 观测契约落档：统一沉淀 facade、Event、Span、Subscriber、Layer、sink、过滤、字段稳定性与生命周期边界
 - [ ] 前端日志消费对齐后补验 Rust/Tauri 日志与追踪在成功、失败、并发、轮转和退出路径下的关联与持久化行为（已决策移出后端 v1 完成门槛）
+- [ ] 后续评估 Provider Span 关联增强（例如失败事件显式携带 `run_id` / `trigger` 或采用独立过滤策略）；不作为 0.0.1-dev 后端 v1 完成门槛
+- [ ] 后续将 best-effort JSONL 诊断 sink 演进为 SQLite 持久化层；不作为当前 0.0.1-dev 后端 v1 完成门槛
 - [ ] 后续独立集成 Go Sidecar stdout/stderr、source target 与跨进程 correlation，不作为 Rust/Tauri 后端 v1 完成门槛
 - [ ] 定义前端日志策略（开发环境 console / 生产环境上报）
 
@@ -79,7 +81,7 @@
 - [ ] 5 条命令链路端到端集成测试
 - [ ] 错误传播链路验证（含命令链路错误场景）
 - [ ] 错误响应契约验证（含序列化字段命名）
-- [ ] 日志输出验证（如 Phase 6.2 完成）
+- [ ] 前端日志消费对齐后的日志输出与持久化补验（不作为后端 v1 完成门槛）
 
 #### 6.5 收尾优化
 
@@ -87,6 +89,7 @@
 - [ ] 表单输入验证（URL 格式检查 / 必填字段提示 / 错误状态视觉反馈）
 - [ ] 请求取消机制（AbortController 防止内存泄漏）
 - [ ] 安全审计（`secret_meta` 前端消费 / Provider 支持范围收敛 / invoke 暴露面审计）
+- [ ] Console 输出控制字符转义硬化（低优先级，不阻塞 MVP）
 - [ ] 生命周期收口（orphan failed 认领 / 事件名契约自动化）
 - [ ] 契约序列化命名收口（lifecycle payload camelCase）
 - [ ] 前端并发锁架构对齐（`useToggleModels` 迁至 store 层 `isPending`）

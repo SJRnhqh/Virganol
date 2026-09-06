@@ -1,14 +1,16 @@
 # Branch TODO
 
 - Branch: feat/spirit-log-backend
-- Goal: Complete the Rust/Tauri Provider observability v1 with native structured events, correlated execution spans, and durable local logs
-- Scope: Rust/Tauri backend logging and tracing; excludes forwarded Go sidecar output, frontend observability, metrics, remote export, and alerting
+- Goal: Complete the Rust/Tauri Provider observability v1 with native structured events, correlated execution spans, and best-effort local diagnostics
+- Scope: Rust/Tauri backend logging/tracing and best-effort local diagnostics; excludes forwarded Go sidecar output, frontend observability, metrics, remote export, and alerting
 
 ## Current
 
-- [ ] Document the Rust/Tauri backend observability contract (facade, events, spans, subscriber, layers, sinks, filtering, field stability, lifecycle boundaries), recording the console-only banner, unified default level, and dropped JSONL run delimiter decisions, and update the matching ROADMAP 6.2 progress to close the phase
+- [ ] Document the Rust/Tauri observability architecture contract
 
 ## Planned
+
+- [ ] Run branch-level verification and prepare the closeout commit and PR
 
 ## Completed
 
