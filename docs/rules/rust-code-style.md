@@ -115,7 +115,7 @@ Benchmark (TBD)
 
 ### Relative Path Discipline (Policy TBD)
 
-#### Specification
+#### Specification (Verification TBD)
 
 - Scope: `apps/desktop/src-tauri/src/**/*.rs`
 - Rule:
@@ -130,7 +130,7 @@ Benchmark (TBD)
 
 ### Re-export Visibility Boundaries (Policy TBD)
 
-#### Specification
+#### Specification (Verification TBD)
 
 - Scope: `apps/desktop/src-tauri/src/**/*.rs`
 - Rule:
@@ -153,7 +153,7 @@ Benchmark (TBD)
 
 ### Type Implementation Order (Policy TBD)
 
-#### Specification
+#### Specification (Verification TBD)
 
 - Scope: `**/*.rs` (manual `impl` blocks; derive-generated implementations are
   out of scope)
@@ -178,19 +178,3 @@ Benchmark (TBD)
     → protocol trait impls      # Write / Visit / FormatFields
     → lifecycle trait impls     # Drop / Default / Downgrade
     ```
-
-## Token Display Derivation (Policy TBD)
-
-### Specification
-
-- Scope: `apps/desktop/src-tauri/src/**/*.rs` (enum Display impls)
-- Rule:
-  - Token-valued enum Display is always derived through `strum`; handwritten
-    Display impls are not written for token output.
-  - Variant-name tokens use `#[strum(serialize_all = "snake_case")]`.
-  - Single-field wrapper variants delegate with `#[strum(transparent)]`.
-  - Composed tokens interpolate fields with
-    `#[strum(to_string = "prefix:{0}")]`.
-  - Handwritten Display remains only where strum cannot apply: structs, and
-    single-token-source delegation sharing one token producer with
-    serialization or storage.

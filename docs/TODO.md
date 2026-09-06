@@ -12,6 +12,7 @@
 
 ## Completed
 
+- [x] Marked the relative path, re-export visibility, and type implementation order specifications as Verification TBD, and dropped the token display derivation section from rust-code-style.md pending its final policy shape
 - [x] Flattened the retention directory walk through `filter_map(Result::ok)`, replacing the double-flatten form with a single error-skipping step that reads as one intent
 - [x] Converged multi-failure recording into `record_failure_with_suppressed`, moving the primary-first suppressed-after ordering into the facade and collapsing both call sites to single-expression forms
 - [x] Declared chrono's `clock` feature explicitly for the retention `Utc::now()` cutoff, ending the silent reliance on tracing-subscriber feature unification with zero lock-tree change
