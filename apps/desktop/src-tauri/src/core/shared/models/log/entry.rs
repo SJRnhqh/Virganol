@@ -29,7 +29,11 @@ impl<Occurrence, Stage, Subject, Operation> LogEntry<Occurrence, Stage, Subject,
         occurrence: Occurrence,
         attribution: AppAttribution<Stage, Subject, Operation>,
     ) -> Self {
-        Self::new(level, occurrence, attribution)
+        Self {
+            level,
+            occurrence,
+            attribution,
+        }
     }
 
     /// Consumes this entry into the fields written by the application logger.
@@ -43,20 +47,5 @@ impl<Occurrence, Stage, Subject, Operation> LogEntry<Occurrence, Stage, Subject,
         AppAttribution<Stage, Subject, Operation>,
     ) {
         (self.level, self.occurrence, self.attribution)
-    }
-
-    /// Creates a structured log entry.
-    ///
-    /// 创建结构化日志条目。
-    fn new(
-        level: LogLevel,
-        occurrence: Occurrence,
-        attribution: AppAttribution<Stage, Subject, Operation>,
-    ) -> Self {
-        Self {
-            level,
-            occurrence,
-            attribution,
-        }
     }
 }
