@@ -91,7 +91,8 @@ impl ProviderManagerContext {
     ///
     /// 返回当前交互式管理上下文携带的稳定归因组成部分。
     pub(super) fn attribution_parts(&self) -> (ProviderStage, ProviderSubject, ProviderOperation) {
-        self.0.attribution_parts_for(
+        (
+            self.0.stage(),
             self.0.extra().provider_id.into(),
             self.0.extra().operation.into(),
         )

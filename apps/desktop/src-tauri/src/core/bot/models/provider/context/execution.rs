@@ -67,8 +67,11 @@ impl ProviderExecutionContext {
     ///
     /// 返回当前执行上下文携带的稳定归因组成部分。
     pub(super) fn attribution_parts(&self) -> (ProviderStage, ProviderSubject, ProviderOperation) {
-        self.0
-            .attribution_parts_for(self.0.extra().subject.clone(), self.0.extra().operation)
+        (
+            self.0.stage(),
+            self.0.extra().subject.clone(),
+            self.0.extra().operation,
+        )
     }
 
     /// Creates an execution context from its constituent parts.

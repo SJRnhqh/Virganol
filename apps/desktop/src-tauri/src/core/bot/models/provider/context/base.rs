@@ -1,6 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/context/base.rs
-use super::super::ProviderSubject;
-use super::{ProviderOperation, ProviderStage};
+use super::ProviderStage;
 
 /// Provider subject reality base context.
 ///
@@ -22,17 +21,6 @@ impl<E> ProviderContext<E> {
     /// 消费当前上下文，并将其转换为配置存储阶段。
     pub(super) fn into_config_store(self) -> Self {
         self.to_stage(ProviderStage::config_store())
-    }
-
-    /// Returns stable attribution parts for a subject and operation at the current stage.
-    ///
-    /// 返回指定主体与操作在当前阶段的稳定归因组成部分。
-    pub(super) fn attribution_parts_for(
-        &self,
-        subject: ProviderSubject,
-        operation: ProviderOperation,
-    ) -> (ProviderStage, ProviderSubject, ProviderOperation) {
-        (self.stage, subject, operation)
     }
 
     /// Consumes this context and returns the subject reality business context fields.

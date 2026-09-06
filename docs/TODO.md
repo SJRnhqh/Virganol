@@ -12,6 +12,7 @@
 
 ## Completed
 
+- [x] Removed the fake `attribution_parts_for` indirection from the Provider base context: the generic container knew nothing about subjects or operations and merely re-paired its callers' own data, so the three business contexts now assemble their attribution triples in place while the base sheds its last attribution imports and narrows to stage plus opaque extra
 - [x] Inlined the LogEntry construction by deleting the private synonym `new` and building the entry directly in `from_observation`, leaving the two callers (Provider facade and `impl_downgrade!`) untouched
 - [x] Verified branch code quality through a systematic review of the full diff against the parent branch, confirming style-rule compliance (path headers, bilingual docs, explicit imports, tight visibility, impl order) and leaving the remaining findings as documented design decisions
 - [x] Collapsed the Provider observation severity table into distributed strum props: only the `SecretRollbackSkipped` exception declares `warn`, every other observation falls back to the `Info` default at the single `get_str` query, erasing the handwritten per-variant match and its seven redundant `info` arms
