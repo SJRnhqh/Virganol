@@ -1,17 +1,18 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/log/observation.rs
-use strum::Display;
+use strum::{Display, EnumProperty};
 
 use super::super::super::super::super::LogLevel::{self, Info, Warn};
 
 /// Observation facts observed by the Provider subject reality logging branch.
 ///
 /// 供应商主体实在日志分支观测到的观测事实。
-#[derive(Display)]
+#[derive(Display, EnumProperty)]
 #[strum(serialize_all = "snake_case")]
 pub(super) enum ProviderObservation {
     /// Provider key rollback skipped to preserve a newer key value.
     ///
     /// 为保留较新的密钥值而跳过供应商密钥回滚。
+    #[strum(props(severity = "warn"))]
     SecretRollbackSkipped,
     /// One provider was connected and persisted successfully.
     ///
@@ -46,17 +47,11 @@ pub(super) enum ProviderObservation {
 impl ProviderObservation {
     /// Severity assigned to each Provider observation by the logging contract.
     ///
-    /// 日志契约为每个供应商观测事实指定的严重级别。
+    /// 日志契约为每个供应商观测事实指定的严重级别，未声明时默认为信息级。
     pub(super) fn severity(&self) -> LogLevel {
-        match self {
-            Self::SecretRollbackSkipped => Warn,
-            Self::ProviderConnected => Info,
-            Self::ProviderKeyRolledBack => Info,
-            Self::ProviderReset => Info,
-            Self::ProviderConfigRestored => Info,
-            Self::EnabledModelsUpdated => Info,
-            Self::CheckStarted => Info,
-            Self::CheckCompleted => Info,
+        match self.get_str("severity") {
+            Some("warn") => Warn,
+            _ => Info,
         }
     }
 }

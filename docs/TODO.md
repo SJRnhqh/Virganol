@@ -12,6 +12,7 @@
 
 ## Completed
 
+- [x] Collapsed the Provider observation severity table into distributed strum props: only the `SecretRollbackSkipped` exception declares `warn`, every other observation falls back to the `Info` default at the single `get_str` query, erasing the handwritten per-variant match and its seven redundant `info` arms
 - [x] Collapsed the Provider log entry into a stateless logging facade mirroring `ProviderSpan`: deleted the transient `new`/`generalize` envelope and its two fields, converged the private entry point into `record_entry` building the shared `LogEntry` directly, and dropped the identity `.into()` after the failure attribution clone
 - [x] Tightened the Provider context re-export chain after the envelope removal: `ProviderOperation` and `ProviderStage` hub re-exports lost their last outside consumer and now stop at `pub(self)` inside `context`, merged into one operation re-export line, while their declared widths stay provider-wide to match the `generalize` signature
 - [x] Extracted the reset manager's inline secret-removal block into a named `removal_result` binding matched by the if-let, keeping scope, stage derivation, and semantics unchanged while making the match target readable first
