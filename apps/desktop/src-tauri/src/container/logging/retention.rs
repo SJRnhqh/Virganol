@@ -18,7 +18,11 @@ const RETENTION_DAYS: i64 = 14;
 pub(super) fn clean_expired_logs(log_dir: &Path) {
     let cutoff = Utc::now().date_naive() - Duration::days(RETENTION_DAYS);
 
-    for entry in read_dir(log_dir).into_iter().flatten().flatten() {
+    for entry in read_dir(log_dir)
+        .into_iter()
+        .flatten()
+        .filter_map(Result::ok)
+    {
         let file_name = entry.file_name();
         let Some(name) = file_name.to_str() else {
             continue;
