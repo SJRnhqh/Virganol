@@ -32,11 +32,13 @@ pub(crate) fn reset_provider_config(
         }
     };
 
-    if let Err(e) = {
+    let removal_result = {
         let ctx = ctx.for_secret_store().into_execution_context();
 
         remove_provider_key(&ctx, provider_id)
-    } {
+    };
+
+    if let Err(e) = removal_result {
         if let Some(record) = previous {
             let ctx = ctx.for_config_store().into_execution_context();
 
