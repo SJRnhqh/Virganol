@@ -6,6 +6,7 @@
 
 ## Current
 
+- [ ] Resolve the review finding at container/logging/registration.rs:22: explicitly release the managed WorkerGuard on the Tauri exit path so queued logs receive a shutdown flush
 - [ ] Run branch-level verification
 
 ## Planned
@@ -14,6 +15,7 @@
 
 ## Completed
 
+- [x] Simplified branch review routing and prompt while preserving template sections; explicitly routed differential-review, ponytail-review, and spartan for findings and report style
 - [x] Added the branch review development workflow: a `review` pipeline routing the `differential-review` and `ponytail-review` skills over the working-branch diff against its parent, backed by a `branch-review` prompt and registered in the AGENTS pipeline tree and routines
 - [x] Documented the reliability architecture contract from business context and attribution through attributed diagnostic signals, semantic reality and application facades, and the independently layered Console and JSONL observability backend
 - [x] Removed the fake `attribution_parts_for` indirection from the Provider base context: the generic container knew nothing about subjects or operations and merely re-paired its callers' own data, so the three business contexts now assemble their attribution triples in place while the base sheds its last attribution imports and narrows to stage plus opaque extra
