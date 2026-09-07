@@ -143,30 +143,82 @@ Reality Context ◀── Business Reality
 └── Business Context
     ├── switch ───────▶ Other Business Context
     ├── handoff ◀────▶ Other Reality Context
-    └── project ──────▶ Attribution Snapshot
+    └── compose ──────▶ Attribution
 ```
 
 ### Attributability
+
+Attribution describes where a fact occurred within a business reality.
+
+```txt
+Attribution
+├── Stage
+├── Subject
+└── Operation
+```
 
 Reality Errors preserve business attribution across boundaries.
 
 ```txt
 Reality Error
 ├── Failure ◀── Source
-├── Attribution Snapshot
-│
-│ project
-▼
-Boundary Error
-├── Code
-├── Message
-└── Details
-    ├── Scope
-    ├── Attribution
-    └── Suppression
+├── Attribution
+└── project ──▶ Boundary Error
+                ├── Code
+                ├── Message
+                └── Details
+                    ├── Attribution Projection
+                    └── Suppression
 ```
 
 ### Observability
+
+The observability system exposes business behavior through diagnostic signals.
+
+```txt
+Observability System
+├── Facade ── produce ─────┐
+│                          ▼
+│                 Diagnostic Signals
+│                          │
+└── Backend ◀──── ingest ──┘
+```
+
+#### Diagnostic Signals
+
+Diagnostic signals represent business behavior with attribution.
+
+```txt
+┌────────────── Diagnostic Signals ───────────────┐
+│  Event                     Span                 │
+│  ├── Severity                                   │
+│  └── Occurrence                                 │
+│      ├── Failure                                │
+│      └── Observation                            │
+├─────────────────────────────────────────────────┤
+│                   Attribution                   │
+└─────────────────────────────────────────────────┘
+```
+
+#### Semantic Facade
+
+The semantic facade expresses behavior within business realities as diagnostic signals.
+
+```txt
+Semantic Facade
+├── Reality Log Facade ──▶ Log Entry ──▶ App Logger ──▶ Event
+└── Reality Span Facade ───────────────────────────────▶ Span
+```
+
+#### Layered Backend
+
+The layered backend routes diagnostic signals through independent output layers.
+
+```txt
+Layered Backend
+├── Console Layer
+└── JSONL Layer
+```
 
 ---
 
