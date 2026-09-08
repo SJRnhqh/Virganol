@@ -54,7 +54,7 @@ impl Visit for ColoredVisitor<'_> {
             return;
         }
         let name = field.name();
-        if name != "message" && !self.is_empty {
+        if !self.is_empty {
             self.result = self.writer.write_str(" ");
             if self.result.is_err() {
                 return;
