@@ -3,10 +3,11 @@ use tauri::AppHandle;
 
 use super::super::super::super::super::super::{AppLogger, AppState};
 use super::super::super::super::super::{
-    ProviderAppError, ProviderLogEntry, ProviderManagerContext, ResetProviderRequest,
+    ProviderAppError, ProviderLogEntry, ProviderManagerContext, ProviderSpan, ResetProviderRequest,
     ResetProviderResponse,
 };
 use super::super::{remove_provider, remove_provider_key, save_provider};
+use super::fail;
 
 /// Resets persisted configuration for a provider.
 ///
@@ -19,35 +20,41 @@ pub(crate) fn reset_provider_config(
 ) -> Result<ResetProviderResponse, ProviderAppError> {
     let provider_id = request.into_provider_id();
     let ctx = ProviderManagerContext::reset(provider_id);
+    let _entered = ProviderSpan::manager(&ctx).entered();
     let provider_state = state.provider();
 
-    let ctx = ctx.into_config_store().into_execution_context();
+    let previous = {
+        let ctx = ctx.for_config_store().into_execution_context();
 
-    let previous = match remove_provider(app, logger, provider_state, &ctx, provider_id) {
-        Ok(removed) => removed,
-        Err(e) => {
-            ProviderLogEntry::record_failures(logger, [&e]);
-            return Err(ProviderAppError::from(&e));
+        match remove_provider(app, logger, provider_state, &ctx, provider_id) {
+            Ok(removed) => removed,
+            Err(e) => return Err(fail(logger, &e)),
         }
     };
 
-    let ctx = ctx.into_secret_store();
+    let removal_result = {
+        let ctx = ctx.for_secret_store().into_execution_context();
 
-    if let Err(e) = remove_provider_key(&ctx, provider_id) {
+        remove_provider_key(&ctx, provider_id)
+    };
+
+    if let Err(e) = removal_result {
         if let Some(record) = previous {
-            let ctx = ctx.into_config_store();
+            let ctx = ctx.for_config_store().into_execution_context();
 
             if let Err(se) = save_provider(app, provider_state, &ctx, provider_id, record) {
-                ProviderLogEntry::record_failures(logger, [&e, &se]);
+                ProviderLogEntry::record_failure_with_suppressed(logger, &e, [&se]);
                 return Err(ProviderAppError::with_suppressed_errors(
                     &e,
                     vec![ProviderAppError::from(&se)],
                 ));
             }
+
+            ProviderLogEntry::record_provider_config_restored(logger, &ctx);
         }
-        ProviderLogEntry::record_failures(logger, [&e]);
-        return Err(ProviderAppError::from(&e));
+        return Err(fail(logger, &e));
     }
 
+    ProviderLogEntry::record_provider_reset(logger, &ctx);
     Ok(ResetProviderResponse::success())
 }

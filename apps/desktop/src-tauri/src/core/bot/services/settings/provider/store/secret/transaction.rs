@@ -1,5 +1,5 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/store/secret/transaction.rs
-use super::super::super::super::super::super::super::{AppLogger, Downgrade, LogLevel::Warn};
+use super::super::super::super::super::super::super::{AppLogger, Downgrade};
 use super::super::super::super::super::super::{
     ProviderError, ProviderExecutionContext, ProviderId, ProviderKey, ProviderKeyChange,
     ProviderLogEntry,
@@ -74,7 +74,7 @@ impl Drop for ProviderKeyTransaction<'_> {
             == Some(expected_current);
 
         if !current_matches {
-            ProviderLogEntry::record_secret_rollback_skipped(self.logger, Warn, &self.ctx);
+            ProviderLogEntry::record_secret_rollback_skipped(self.logger, &self.ctx);
             return;
         }
 
@@ -84,8 +84,9 @@ impl Drop for ProviderKeyTransaction<'_> {
             remove_provider_key(&self.ctx, provider_id)
         };
 
-        if let Err(e) = result {
-            e.downgrade(self.logger);
+        match result {
+            Ok(()) => ProviderLogEntry::record_provider_key_rolled_back(self.logger, &self.ctx),
+            Err(e) => e.downgrade(self.logger),
         }
     }
 }

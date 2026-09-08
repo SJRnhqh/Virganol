@@ -1,6 +1,8 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/rid.rs
-use std::sync::atomic::{AtomicU64, Ordering::Relaxed};
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::{
+    sync::atomic::{AtomicU64, Ordering::Relaxed},
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 use super::super::super::super::super::ProviderCheckTrigger;
 
@@ -19,10 +21,5 @@ pub(super) fn next_run_id(trigger: &ProviderCheckTrigger) -> String {
         .unwrap_or(0);
     let seq = RUN_SEQ.fetch_add(1, Relaxed);
 
-    format!(
-        "provider-check-{}-{}-{}",
-        trigger.as_tag(),
-        timestamp_ms,
-        seq
-    )
+    format!("provider-check-{trigger}-{timestamp_ms}-{seq}")
 }

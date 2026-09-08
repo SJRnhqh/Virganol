@@ -27,6 +27,8 @@ bin/
 
 # AI
 .claude/
+.agents/
+.zcode/
 
 # Python
 .venv/

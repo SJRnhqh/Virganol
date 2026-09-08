@@ -10,12 +10,10 @@ struct LifecycleExtra<'a> {
     /// Stable correlation id for this lifecycle run.
     ///
     /// 本次生命周期运行的稳定关联标识。
-    #[allow(dead_code)]
     run_id: &'a str,
     /// Source trigger for this lifecycle check.
     ///
     /// 触发本次生命周期检查的来源。
-    #[allow(dead_code)]
     trigger: &'a ProviderCheckTrigger,
 }
 
@@ -76,7 +74,8 @@ impl<'a> ProviderLifecycleContext<'a> {
     ///
     /// 返回当前生命周期上下文携带的稳定归因组成部分。
     pub(super) fn attribution_parts(&self) -> (ProviderStage, ProviderSubject, ProviderOperation) {
-        self.0.attribution_parts_for(
+        (
+            self.0.stage(),
             ProviderSubject::configured_providers(),
             ProviderOperation::lifecycle_check(),
         )
@@ -85,7 +84,6 @@ impl<'a> ProviderLifecycleContext<'a> {
     /// Returns the stable correlation id for this lifecycle run.
     ///
     /// 返回本次生命周期运行的稳定关联标识。
-    #[allow(dead_code)]
     pub(in crate::core::bot) fn run_id(&self) -> &str {
         self.0.extra().run_id
     }
@@ -93,7 +91,6 @@ impl<'a> ProviderLifecycleContext<'a> {
     /// Returns the source trigger for this lifecycle check.
     ///
     /// 返回触发本次生命周期检查的来源。
-    #[allow(dead_code)]
     pub(in crate::core::bot) fn trigger(&self) -> &ProviderCheckTrigger {
         self.0.extra().trigger
     }

@@ -1,12 +1,13 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/lifecycle/runner.rs
 use tauri::AppHandle;
 use tokio::task::JoinSet;
+use tracing::Instrument;
 
 use super::super::super::super::super::super::{AppLogger, Downgrade};
 use super::super::super::super::super::{
     ProviderCheckFinalization::{Offline, Online},
     ProviderCheckRunResult, ProviderError, ProviderId, ProviderLifecycleContext, ProviderRecord,
-    ProviderState,
+    ProviderSpan, ProviderState,
 };
 use super::super::health_check_with_resolved_key;
 use super::{emit_check_status, finalize_provider_check_result};
@@ -43,12 +44,16 @@ pub(super) async fn run_provider_checks(
                 .for_connection()
                 .into_execution_context_with(provider_id.into());
             let logger = logger.clone();
-            in_flight.spawn(async move {
-                let url = record.url().unwrap_or("").to_string();
-                let (result, key_meta) =
-                    health_check_with_resolved_key(&logger, &ctx, provider_id, &url).await;
-                (provider_id, record, result, key_meta)
-            });
+            let span = ProviderSpan::execution(&ctx);
+            in_flight.spawn(
+                async move {
+                    let url = record.url().unwrap_or("").to_string();
+                    let (result, key_meta) =
+                        health_check_with_resolved_key(&logger, &ctx, provider_id, &url).await;
+                    (provider_id, record, result, key_meta)
+                }
+                .instrument(span),
+            );
         }
 
         match in_flight.join_next().await {

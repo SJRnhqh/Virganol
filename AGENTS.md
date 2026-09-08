@@ -144,6 +144,7 @@ dev/pipelines/
 ├── commit-prep.md    # Update branch TODO and prepare a commit message
 ├── commit.md         # Stage and commit confirmed local changes
 ├── push.md           # Push existing local commits
+├── review.md         # Review the working branch diff against its parent
 ├── closeout-prep.md  # Remove branch TODO and prepare a closeout commit message
 ├── pr-prep.md        # Generate PR title and summary
 └── pr.md             # Push branch and create a GitHub PR
@@ -157,5 +158,6 @@ development routines
 ├── session start: bootstrap.md
 ├── commit cycle: commit-prep.md → commit.md
 ├── publish cycle: commit-prep.md → commit.md → push.md
+├── branch review: review.md
 └── branch PR: closeout-prep.md → commit.md → pr-prep.md → pr.md
 ```

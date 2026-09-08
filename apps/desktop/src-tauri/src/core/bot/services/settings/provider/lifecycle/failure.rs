@@ -18,7 +18,7 @@ pub(super) fn report_lifecycle_failure(
     error: &ProviderError,
     suppressed_errors: &[ProviderError],
 ) {
-    ProviderLogEntry::record_failures(logger, [error].into_iter().chain(suppressed_errors));
+    ProviderLogEntry::record_failure_with_suppressed(logger, error, suppressed_errors);
 
     let app_error = match suppressed_errors {
         [] => ProviderAppError::from(error),

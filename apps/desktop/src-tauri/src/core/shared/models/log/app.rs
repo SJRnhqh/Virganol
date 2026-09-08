@@ -1,8 +1,11 @@
 // apps/desktop/src-tauri/src/core/shared/models/log/app.rs
-use log::log;
 use std::fmt::Display;
+use tracing::{debug, error, info, trace, warn};
 
-use super::LogEntry;
+use super::{
+    LogEntry,
+    LogLevel::{Debug, Error, Info, Trace, Warn},
+};
 
 /// Application-scoped structured logging write facade.
 ///
@@ -18,8 +21,35 @@ impl AppLogger {
         &self,
         entry: LogEntry<Occurrence, Stage, Subject, Operation>,
     ) where
-        LogEntry<Occurrence, Stage, Subject, Operation>: Display,
+        Occurrence: Display,
+        Stage: Display,
+        Subject: Display,
+        Operation: Display,
     {
-        log!(entry.level().into(), "{entry}");
+        let (level, occurrence, attribution) = entry.into_parts();
+        let (attribution_stage, attribution_subject, attribution_operation) =
+            attribution.into_parts();
+
+        /// Records the entry fields through one severity macro.
+        ///
+        /// 通过单个严重级别宏记录条目字段。
+        macro_rules! record_at {
+            ($record:ident) => {
+                $record!(
+                    %occurrence,
+                    %attribution_stage,
+                    %attribution_subject,
+                    %attribution_operation
+                )
+            };
+        }
+
+        match level {
+            Error => record_at!(error),
+            Warn => record_at!(warn),
+            Info => record_at!(info),
+            Debug => record_at!(debug),
+            Trace => record_at!(trace),
+        }
     }
 }

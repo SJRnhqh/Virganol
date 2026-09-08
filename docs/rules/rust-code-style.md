@@ -113,7 +113,33 @@ Benchmark (TBD)
 
 ## Imports and Paths (Specification TBD)
 
+### Relative Path Discipline (Policy TBD)
+
+#### Specification (Verification TBD)
+
+- Scope: `apps/desktop/src-tauri/src/**/*.rs`
+- Rule:
+  - External crates are consumed through explicit imports only; inline
+    fully-qualified external paths in expressions are prohibited.
+  - Modules under `core/` never import through absolute `crate::` paths;
+    they reach sibling and ancestor items through `super::` chains resolved
+    by per-module re-export hubs.
+  - Modules under `container/` may import through absolute `crate::` paths.
+
 ## Visibility (Specification TBD)
+
+### Re-export Visibility Boundaries (Policy TBD)
+
+#### Specification (Verification TBD)
+
+- Scope: `apps/desktop/src-tauri/src/**/*.rs`
+- Rule:
+  - A re-export may not widen visibility beyond the item's declared
+    visibility (`E0364`).
+  - An item's declared visibility must cover the widest hop of its re-export
+    chain; intermediate hops re-export with `pub(super)` or `pub(self)`.
+  - A variant payload type must not be less visible than the enum carrying
+    it (`private_interfaces`).
 
 ### Temporary Re-export Visibility Check
 
@@ -124,3 +150,31 @@ Benchmark (TBD)
   gate is implemented.
 
 ## Item and Implementation Order (Specification TBD)
+
+### Type Implementation Order (Policy TBD)
+
+#### Specification (Verification TBD)
+
+- Scope: `**/*.rs` (manual `impl` blocks; derive-generated implementations are
+  out of scope)
+- Rule:
+  - A type declaration is immediately followed by its inherent impl, when one
+    exists.
+  - Trait impls follow the inherent impl, ordered by tier:
+    1. Conversion traits (`From`, `TryFrom`, `FromStr`, `AsRef`)
+    2. Presentation traits (`Display`, `Debug`)
+    3. Error traits (`StdError`)
+    4. External protocol traits (`Write`, `Visit`, `FormatFields`)
+    5. Lifecycle traits (`Drop`, `Default`, `Downgrade`)
+  - Unlisted trait impls follow the listed tiers.
+  - Pattern:
+
+    ```txt
+    type declaration
+    → inherent impl
+    → conversion trait impls    # From / TryFrom / FromStr / AsRef
+    → presentation trait impls  # Display / Debug
+    → error trait impls         # StdError
+    → protocol trait impls      # Write / Visit / FormatFields
+    → lifecycle trait impls     # Drop / Default / Downgrade
+    ```

@@ -8,6 +8,7 @@ use super::{
 /// Interactive management business context fields.
 ///
 /// 交互式管理业务上下文字段。
+#[derive(Clone)]
 struct ManagerExtra {
     /// Provider targeted by the interactive management operation.
     ///
@@ -51,18 +52,25 @@ impl ProviderManagerContext {
         Self::new(provider_id, ProviderManagerOperation::update_models())
     }
 
-    /// Consumes this interactive management context into the connection stage.
+    /// Derives an owned connection stage view from this manager context.
     ///
-    /// 消费当前交互式管理上下文，并将其转换为连接阶段。
-    pub(in crate::core::bot) fn into_connection(self) -> Self {
-        Self(self.0.into_connection())
+    /// 从当前管理上下文派生一个拥有所有权的连接阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_connection(&self) -> Self {
+        Self(self.0.for_connection())
     }
 
-    /// Consumes this interactive management context into the config-store stage.
+    /// Derives an owned config-store stage view from this manager context.
     ///
-    /// 消费当前交互式管理上下文，并将其转换为配置存储阶段。
-    pub(in crate::core::bot) fn into_config_store(self) -> Self {
-        Self(self.0.into_config_store())
+    /// 从当前管理上下文派生一个拥有所有权的配置存储阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_config_store(&self) -> Self {
+        Self(self.0.for_config_store())
+    }
+
+    /// Derives an owned secret-store stage view from this manager context.
+    ///
+    /// 从当前管理上下文派生一个拥有所有权的密钥存储阶段视图，不改变来源上下文。
+    pub(in crate::core::bot) fn for_secret_store(&self) -> Self {
+        Self(self.0.for_secret_store())
     }
 
     /// Converts this interactive management context into an execution context.
@@ -83,7 +91,8 @@ impl ProviderManagerContext {
     ///
     /// 返回当前交互式管理上下文携带的稳定归因组成部分。
     pub(super) fn attribution_parts(&self) -> (ProviderStage, ProviderSubject, ProviderOperation) {
-        self.0.attribution_parts_for(
+        (
+            self.0.stage(),
             self.0.extra().provider_id.into(),
             self.0.extra().operation.into(),
         )

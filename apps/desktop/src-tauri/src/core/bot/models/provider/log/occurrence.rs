@@ -1,25 +1,47 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/log/occurrence.rs
-use std::fmt::{Display, Formatter, Result};
+use strum::Display;
 
+use super::super::super::super::super::LogLevel::{self, Error};
 use super::super::{ProviderError, ProviderFailureKind};
+use super::ProviderObservation;
 
 /// Business occurrence facts observed by the Provider subject reality logging branch.
 ///
 /// 供应商主体实在日志分支观测到的业务发生事实。
-pub(in crate::core::bot::models::provider) enum ProviderOccurrence {
+#[derive(Display)]
+pub(super) enum ProviderOccurrence {
     /// Provider internal error observed as a failure occurrence.
     ///
     /// 将供应商内部错误观测为失败发生事实。
+    #[strum(transparent)]
     Failure(
         /// Provider failure kind observed from the internal error.
         ///
         /// 从内部错误中观测到的供应商失败种类。
         ProviderFailureKind,
     ),
-    /// Provider key rollback skipped to preserve a newer key value.
+    /// Provider observation fact observed by the logging branch.
     ///
-    /// 为保留较新的密钥值而跳过供应商密钥回滚。
-    SecretRollbackSkipped,
+    /// 日志分支观测到的供应商观测事实。
+    #[strum(transparent)]
+    Observation(
+        /// Observed Provider business fact.
+        ///
+        /// 被观测的供应商业务事实。
+        ProviderObservation,
+    ),
+}
+
+impl ProviderOccurrence {
+    /// Returns the severity assigned to this Provider occurrence by the logging contract.
+    ///
+    /// 返回日志契约为当前供应商发生事实指定的严重级别。
+    pub(super) fn severity(&self) -> LogLevel {
+        match self {
+            Self::Failure(_) => Error,
+            Self::Observation(observation) => observation.severity(),
+        }
+    }
 }
 
 impl From<&ProviderError> for ProviderOccurrence {
@@ -31,14 +53,11 @@ impl From<&ProviderError> for ProviderOccurrence {
     }
 }
 
-impl Display for ProviderOccurrence {
-    /// Formats this Provider occurrence for text output.
+impl From<ProviderObservation> for ProviderOccurrence {
+    /// Wraps a Provider observation as an occurrence.
     ///
-    /// 格式化当前供应商发生事实以用于文本输出。
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        match self {
-            Self::Failure(failure_kind) => write!(f, "{failure_kind}"),
-            Self::SecretRollbackSkipped => f.write_str("secret_rollback_skipped"),
-        }
+    /// 将供应商观测事实包装为发生事实。
+    fn from(observation: ProviderObservation) -> Self {
+        Self::Observation(observation)
     }
 }

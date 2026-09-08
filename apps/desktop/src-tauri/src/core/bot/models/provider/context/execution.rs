@@ -36,13 +36,6 @@ impl ProviderExecutionContext {
         Self(self.0.into_config_store())
     }
 
-    /// Consumes this execution context into the secret-store stage.
-    ///
-    /// 消费当前执行上下文，并将其转换为密钥存储阶段。
-    pub(in crate::core::bot) fn into_secret_store(self) -> Self {
-        Self(self.0.into_secret_store())
-    }
-
     /// Derives an owned secret-store stage view from this execution context.
     ///
     /// 从当前执行上下文派生一个拥有所有权的密钥存储阶段视图，不改变来源上下文。
@@ -74,8 +67,11 @@ impl ProviderExecutionContext {
     ///
     /// 返回当前执行上下文携带的稳定归因组成部分。
     pub(super) fn attribution_parts(&self) -> (ProviderStage, ProviderSubject, ProviderOperation) {
-        self.0
-            .attribution_parts_for(self.0.extra().subject.clone(), self.0.extra().operation)
+        (
+            self.0.stage(),
+            self.0.extra().subject.clone(),
+            self.0.extra().operation,
+        )
     }
 
     /// Creates an execution context from its constituent parts.

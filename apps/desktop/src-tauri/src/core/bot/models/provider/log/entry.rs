@@ -1,37 +1,32 @@
 // apps/desktop/src-tauri/src/core/bot/models/provider/log/entry.rs
-use super::super::super::super::super::{
-    AppLogger, LogEntry,
-    LogLevel::{self, Error},
-};
+use super::super::super::super::super::{AppLogger, LogEntry};
 use super::super::{
-    ProviderAttribution, ProviderError, ProviderExecutionContext, ProviderOperation, ProviderStage,
-    ProviderSubject,
+    ProviderAttribution, ProviderError, ProviderExecutionContext, ProviderLifecycleContext,
+    ProviderManagerContext,
 };
-use super::{ProviderOccurrence, ProviderOccurrence::SecretRollbackSkipped};
+use super::{
+    ProviderObservation::{
+        CheckCompleted, CheckStarted, EnabledModelsUpdated, ProviderConfigRestored,
+        ProviderConnected, ProviderKeyRolledBack, ProviderReset, SecretRollbackSkipped,
+    },
+    ProviderOccurrence,
+};
 
-/// Structured log entry for the Provider subject reality.
+/// Structured logging facade for the Provider subject reality.
 ///
-/// 供应商主体实在的结构化日志条目。
-pub(in crate::core::bot) struct ProviderLogEntry {
-    /// Business occurrence fact observed by this entry.
-    ///
-    /// 当前条目观测到的业务发生事实。
-    occurrence: ProviderOccurrence,
-    /// Attribution projected from the originating business context.
-    ///
-    /// 从来源业务上下文投影出的归因。
-    attribution: ProviderAttribution,
-}
+/// 供应商主体实在的结构化日志门面。
+pub(in crate::core::bot) struct ProviderLogEntry;
 
 impl ProviderLogEntry {
-    /// Records structured log entries for multiple Provider failures.
+    /// Records structured log entries for one primary failure plus its suppressed companions.
     ///
-    /// 为多个供应商失败记录结构化日志条目。
-    pub(in crate::core::bot) fn record_failures<'a>(
+    /// 为一个主失败及其被抑制的伴随失败记录结构化日志条目。
+    pub(in crate::core::bot) fn record_failure_with_suppressed<'a>(
         logger: &AppLogger,
-        errors: impl IntoIterator<Item = &'a ProviderError>,
+        error: &'a ProviderError,
+        suppressed_errors: impl IntoIterator<Item = &'a ProviderError>,
     ) {
-        for error in errors {
+        for error in [error].into_iter().chain(suppressed_errors) {
             Self::record_failure(logger, error);
         }
     }
@@ -40,7 +35,7 @@ impl ProviderLogEntry {
     ///
     /// 为单个供应商失败记录结构化日志条目。
     pub(in crate::core::bot) fn record_failure(logger: &AppLogger, error: &ProviderError) {
-        logger.record(Self::new(error.into(), error.attribution().clone()).generalize(Error));
+        Self::record_entry(logger, error.into(), error.attribution().clone());
     }
 
     /// Records a skipped secret rollback to preserve a newer key value.
@@ -48,41 +43,93 @@ impl ProviderLogEntry {
     /// 记录为保留较新密钥值而跳过的密钥回滚。
     pub(in crate::core::bot) fn record_secret_rollback_skipped(
         logger: &AppLogger,
-        level: LogLevel,
         ctx: &ProviderExecutionContext,
     ) {
-        Self::record_observation(logger, level, SecretRollbackSkipped, ctx);
+        Self::record_entry(logger, SecretRollbackSkipped.into(), ctx.into());
     }
 
-    /// Records a structured Provider observation at the specified log level.
+    /// Records a successful Provider connection.
     ///
-    /// 按指定日志级别记录供应商结构化观察条目。
-    fn record_observation(
+    /// 记录供应商连接成功。
+    pub(in crate::core::bot) fn record_provider_connected(
         logger: &AppLogger,
-        level: LogLevel,
-        occurrence: ProviderOccurrence,
-        attribution: impl Into<ProviderAttribution>,
+        ctx: &ProviderManagerContext,
     ) {
-        logger.record(Self::new(occurrence, attribution.into()).generalize(level));
+        Self::record_entry(logger, ProviderConnected.into(), ctx.into());
     }
 
-    /// Generalizes this Provider log entry into a shared structured log entry.
+    /// Records a successful Provider key change rollback.
     ///
-    /// 将当前供应商日志条目通用化为共享结构化日志条目。
-    fn generalize(
-        self,
-        level: LogLevel,
-    ) -> LogEntry<ProviderOccurrence, ProviderStage, ProviderSubject, ProviderOperation> {
-        LogEntry::from_observation(level, self.occurrence, self.attribution.generalize())
+    /// 记录供应商密钥变更回滚成功。
+    pub(in crate::core::bot) fn record_provider_key_rolled_back(
+        logger: &AppLogger,
+        ctx: &ProviderExecutionContext,
+    ) {
+        Self::record_entry(logger, ProviderKeyRolledBack.into(), ctx.into());
     }
 
-    /// Creates a Provider structured log entry.
+    /// Records a successful Provider reset.
     ///
-    /// 创建供应商结构化日志条目。
-    fn new(occurrence: ProviderOccurrence, attribution: ProviderAttribution) -> Self {
-        Self {
+    /// 记录供应商重置成功。
+    pub(in crate::core::bot) fn record_provider_reset(
+        logger: &AppLogger,
+        ctx: &ProviderManagerContext,
+    ) {
+        Self::record_entry(logger, ProviderReset.into(), ctx.into());
+    }
+
+    /// Records a successful Provider configuration restoration after reset failure.
+    ///
+    /// 记录供应商重置失败后成功恢复配置。
+    pub(in crate::core::bot) fn record_provider_config_restored(
+        logger: &AppLogger,
+        ctx: &ProviderExecutionContext,
+    ) {
+        Self::record_entry(logger, ProviderConfigRestored.into(), ctx.into());
+    }
+
+    /// Records a successful enabled-model update.
+    ///
+    /// 记录启用模型列表更新成功。
+    pub(in crate::core::bot) fn record_enabled_models_updated(
+        logger: &AppLogger,
+        ctx: &ProviderManagerContext,
+    ) {
+        Self::record_entry(logger, EnabledModelsUpdated.into(), ctx.into());
+    }
+
+    /// Records the start of one provider check lifecycle run.
+    ///
+    /// 记录一轮供应商检查生命周期的开始。
+    pub(in crate::core::bot) fn record_check_started(
+        logger: &AppLogger,
+        ctx: &ProviderLifecycleContext<'_>,
+    ) {
+        Self::record_entry(logger, CheckStarted.into(), ctx.into());
+    }
+
+    /// Records the successful completion of one provider check lifecycle run.
+    ///
+    /// 记录一轮供应商检查生命周期成功完成。
+    pub(in crate::core::bot) fn record_check_completed(
+        logger: &AppLogger,
+        ctx: &ProviderLifecycleContext<'_>,
+    ) {
+        Self::record_entry(logger, CheckCompleted.into(), ctx.into());
+    }
+
+    /// Records a structured Provider entry at its contract severity.
+    ///
+    /// 按契约严重级别记录供应商结构化条目。
+    fn record_entry(
+        logger: &AppLogger,
+        occurrence: ProviderOccurrence,
+        attribution: ProviderAttribution,
+    ) {
+        logger.record(LogEntry::from_observation(
+            occurrence.severity(),
             occurrence,
-            attribution,
-        }
+            attribution.generalize(),
+        ));
     }
 }

@@ -35,6 +35,15 @@ impl ProviderAttribution {
         AppAttribution::from_parts(self.stage, self.subject, self.operation)
     }
 
+    /// Returns the stable Provider attribution parts.
+    ///
+    /// 返回稳定的供应商归因组成部分。
+    pub(in crate::core::bot::models::provider) fn as_parts(
+        &self,
+    ) -> (ProviderStage, &ProviderSubject, ProviderOperation) {
+        (self.stage, &self.subject, self.operation)
+    }
+
     /// Derives the stable Provider business scope.
     ///
     /// 派生稳定的供应商业务范围。
@@ -58,19 +67,6 @@ impl ProviderAttribution {
             subject,
             operation,
         }
-    }
-}
-
-impl Display for ProviderAttribution {
-    /// Formats Provider attribution for internal messages.
-    ///
-    /// 格式化供应商归因以供内部消息使用。
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        write!(
-            f,
-            "{} during {} at {}",
-            self.subject, self.operation, self.stage
-        )
     }
 }
 
@@ -104,5 +100,18 @@ impl From<&ProviderExecutionContext> for ProviderAttribution {
         let (stage, subject, operation) = context.attribution_parts();
 
         Self::new(stage, subject, operation)
+    }
+}
+
+impl Display for ProviderAttribution {
+    /// Formats Provider attribution for internal messages.
+    ///
+    /// 格式化供应商归因以供内部消息使用。
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(
+            f,
+            "{} during {} at {}",
+            self.subject, self.operation, self.stage
+        )
     }
 }

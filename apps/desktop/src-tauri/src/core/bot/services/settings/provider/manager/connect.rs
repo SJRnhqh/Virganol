@@ -1,14 +1,16 @@
 // apps/desktop/src-tauri/src/core/bot/services/settings/provider/manager/connect.rs
 use tauri::AppHandle;
+use tracing::Instrument;
 
 use super::super::super::super::super::super::{AppLogger, AppState};
 use super::super::super::super::super::{
     ConnectAndSaveProviderRequest, ConnectAndSaveProviderResponse, ProviderAppError, ProviderError,
-    ProviderLogEntry, ProviderManagerContext, ProviderRecord,
+    ProviderLogEntry, ProviderManagerContext, ProviderRecord, ProviderSpan,
 };
 use super::super::{
     load_provider_record, probe_provider_connection, save_provider, ProviderKeyTransaction,
 };
+use super::fail;
 
 /// Connects a provider and saves its configuration after a successful probe.
 ///
@@ -21,74 +23,80 @@ pub(crate) async fn connect_and_save(
 ) -> Result<ConnectAndSaveProviderResponse, ProviderAppError> {
     let (provider_id, data) = request.into_parts();
     let ctx = ProviderManagerContext::connect(provider_id);
-    let provider_state = state.provider();
+    let span = ProviderSpan::manager(&ctx);
 
-    let data = match data {
-        Some(data) => data,
-        None => {
-            let e = ProviderError::manager_request_payload_absent(&ctx);
-            ProviderLogEntry::record_failure(logger, &e);
-            return Err(ProviderAppError::from(&e));
-        }
-    };
+    async move {
+        let provider_state = state.provider();
 
-    let normalized_key = data.normalized_api_key();
-    let normalized_url = data.normalized_base_url();
-    let ctx = ctx.into_connection().into_execution_context();
-
-    let available_models =
-        match probe_provider_connection(logger, &ctx, provider_id, normalized_url, normalized_key)
-            .await
-            .into_models()
-        {
-            Ok(models) => models,
-            Err(e) => {
-                ProviderLogEntry::record_failure(logger, &e);
-                return Err(ProviderAppError::from(&e));
+        let data = match data {
+            Some(data) => data,
+            None => {
+                let e = ProviderError::manager_request_payload_absent(&ctx);
+                return Err(fail(logger, &e));
             }
         };
 
-    let ctx = ctx.into_config_store();
+        let normalized_key = data.normalized_api_key();
+        let normalized_url = data.normalized_base_url();
+        let (available_models, enabled_models) = {
+            let ctx = ctx.for_connection().into_execution_context();
 
-    let previous_record = match load_provider_record(app, &ctx, provider_id) {
-        Ok(record) => record,
-        Err(e) => {
-            ProviderLogEntry::record_failure(logger, &e);
-            return Err(ProviderAppError::from(&e));
-        }
-    };
+            let available_models = match probe_provider_connection(
+                logger,
+                &ctx,
+                provider_id,
+                normalized_url,
+                normalized_key,
+            )
+            .instrument(ProviderSpan::execution(&ctx))
+            .await
+            .into_models()
+            {
+                Ok(models) => models,
+                Err(e) => return Err(fail(logger, &e)),
+            };
 
-    let record = ProviderRecord::from_connection(
-        normalized_url,
-        &available_models,
-        previous_record.as_ref(),
-    );
+            let ctx = ctx.into_config_store();
 
-    let enabled_models = record.enabled_models().to_vec();
+            let previous_record = match load_provider_record(app, &ctx, provider_id) {
+                Ok(record) => record,
+                Err(e) => return Err(fail(logger, &e)),
+            };
 
-    let key_transaction = {
-        let ctx = ctx.for_secret_store();
+            let record = ProviderRecord::from_connection(
+                normalized_url,
+                &available_models,
+                previous_record.as_ref(),
+            );
 
-        match ProviderKeyTransaction::begin(logger, ctx, provider_id, normalized_key) {
-            Ok(transaction) => transaction,
-            Err(e) => {
-                ProviderLogEntry::record_failure(logger, &e);
-                return Err(ProviderAppError::from(&e));
+            let enabled_models = record.enabled_models().to_vec();
+
+            let key_transaction = {
+                let ctx = ctx.for_secret_store();
+
+                match ProviderKeyTransaction::begin(logger, ctx, provider_id, normalized_key) {
+                    Ok(transaction) => transaction,
+                    Err(e) => return Err(fail(logger, &e)),
+                }
+            };
+
+            if let Err(e) = save_provider(app, provider_state, &ctx, provider_id, record) {
+                return Err(fail(logger, &e));
             }
-        }
-    };
 
-    if let Err(e) = save_provider(app, provider_state, &ctx, provider_id, record) {
-        ProviderLogEntry::record_failure(logger, &e);
-        return Err(ProviderAppError::from(&e));
+            if let Some(transaction) = key_transaction {
+                transaction.commit();
+            }
+
+            (available_models, enabled_models)
+        };
+
+        ProviderLogEntry::record_provider_connected(logger, &ctx);
+        Ok(ConnectAndSaveProviderResponse::success(
+            available_models,
+            enabled_models,
+        ))
     }
-
-    if let Some(transaction) = key_transaction {
-        transaction.commit();
-    }
-
-    Ok(ConnectAndSaveProviderResponse::success(
-        available_models,
-        enabled_models,
-    ))
+    .instrument(span)
+    .await
 }

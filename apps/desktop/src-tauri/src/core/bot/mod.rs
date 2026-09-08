@@ -5,9 +5,8 @@ mod models;
 mod services;
 
 pub(self) use constants::{
-    DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS,
-    PROVIDER_CONFIG_STORE_SCOPES, PROVIDER_CONNECTION_SCOPES, PROVIDER_KEYRING_SERVICE,
-    PROVIDER_LIFECYCLE_EMIT_SCOPES, PROVIDER_MANAGER_SCOPES, PROVIDER_SECRET_STORE_SCOPES,
+    DEEPSEEK_HEALTH_CHECK_TIMEOUT_SECS, OLLAMA_HEALTH_CHECK_TIMEOUT_SECS, PROVIDER_EXECUTION_SPAN,
+    PROVIDER_KEYRING_SERVICE, PROVIDER_LIFECYCLE_SPAN, PROVIDER_MANAGER_SPAN, PROVIDER_REALITY,
     SETTINGS_FILE, SPIRIT_PROVIDERS_KEY,
 };
 pub(self) use interfaces::{DriverFuture, ProviderDriver};
@@ -22,8 +21,8 @@ pub(self) use models::{
     ProviderCheckFinalization, ProviderCheckRunResult, ProviderCheckStartedPayload,
     ProviderCheckStatusPayload, ProviderError, ProviderExecutionContext, ProviderId, ProviderKey,
     ProviderKeyChange, ProviderKeyMeta, ProviderKeySource, ProviderLifecycleContext,
-    ProviderLogEntry, ProviderManagerContext, ProviderRecord, ProviderResolvedKey, ProviderSubject,
-    SettingsError, SettingsStorageContext,
+    ProviderLogEntry, ProviderManagerContext, ProviderRecord, ProviderResolvedKey, ProviderSpan,
+    ProviderSubject, SettingsError, SettingsStorageContext,
 };
 pub(crate) use services::{
     check_providers_lifecycle, connect_and_save, reset_provider_config,
