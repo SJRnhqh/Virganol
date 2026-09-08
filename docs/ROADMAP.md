@@ -41,9 +41,11 @@
 
 #### 6.2 Provider 可靠性架构与可观测性（context / failure / error / boundary / logging / tracing）
 
-**当前状态**：Provider 与 Settings 的上下文传播、内部错误、边界投影和结构化日志门面已经闭环；Provider manager 与 lifecycle span、`run_id`、`trigger`、并发健康检查子 span 和生命周期起止事件均已完成。Rust/Tauri 日志后端已完成 `tracing-subscriber` 注册、独立 Console Layer 与每日轮转 JSONL Layer 的 best-effort 诊断链路（非阻塞、有界且允许丢失；非严格 durable persistence；初始化失败当前 fail-closed；含退出冲刷、保留清理、首错报警和默认级别常量统一），Console 已通过 `RUST_LOG` 降级实机验证，启动 banner 以 console-only 形态落地；可观测性代码已通过系统性审查并将枚举令牌 Display 收敛为 strum derive。观测契约落档仍是下一步，完成后可转入前端工作；持久化行为验证已决策推迟至前端日志消费对齐后进行，移出后端 v1 完成门槛。
+**当前状态**：Provider 与 Settings 的上下文传播、内部错误、边界投影和结构化日志门面已经闭环；Provider manager 与 lifecycle span、`run_id`、`trigger`、并发健康检查子 span 和生命周期起止事件均已完成。Rust/Tauri 日志后端已完成 `tracing-subscriber` 注册、独立 Console Layer 与每日轮转 JSONL Layer 的 best-effort 诊断链路（非阻塞、有界且允许丢失；非严格 durable persistence；初始化失败当前 fail-closed；含 worker guard 托管、保留清理、首错报警和默认级别常量统一），Console 已通过 `RUST_LOG` 降级实机验证，启动 banner 以 console-only 形态落地；可观测性代码已通过系统性审查并将枚举令牌 Display 收敛为 strum derive。语义门面与分层后端架构已落档，详细观测契约继续作为后续工作。工作分支已于 2026-09-08 通过 `pnpm test` 校验，可进入分支收尾；持久化行为验证已决策推迟至前端日志消费对齐后进行，移出后端 v1 完成门槛。
 
 **本阶段边界**：完成 Rust/Tauri 后端可观测性 v1 后即可转入前端工作；Go Sidecar stdout/stderr 归一化与跨进程关联作为后续独立集成，不阻塞本阶段完成。
+
+**已接受的延期（2026-09-08）**：JSONL 作为临时 best-effort 诊断 sink，当前接受正常退出时可能丢失尚未写出的尾部日志。Tauri 最终退出路径尚未显式释放 `WorkerGuard`，退出冲刷未实现闭环、未通过实机验证；该项转入后续持久化工作，不阻塞 `feat/spirit-log-backend` 合入 `feat/spirit`。SQLite 演进仍需单独定义写入、保留和退出语义，不能仅靠替换存储消除该风险。
 
 **已完成**：
 
@@ -55,7 +57,7 @@
 - [x] 完成生命周期稳定起止事件与交互式成功、失败、补偿事件的应用层埋点
 - [x] 以 `tracing-subscriber` 完成日志后端注册，并将 Console Layer 独立装配
 - [x] 以 Tauri 应用日志目录接入每日轮转 JSONL Layer，打通结构化日志持久化最小链路
-- [x] 完成 JSONL 成熟化：非阻塞写入、worker guard 托管与退出冲刷、十四天保留清理、首写失败报警与命名常量集中
+- [x] 完成 JSONL 基础诊断能力：非阻塞写入、worker guard 托管、启动时按十四天阈值清理过期文件、首写失败报警与命名常量集中（退出冲刷另列待办）
 - [x] 完成 Console 收口：紧凑彩色格式、字段染色策略与 `RUST_LOG` 降级实机过滤验证
 - [x] 以 console-only 直写形态落地启动 banner：双层立体框、绿色品牌艺术字与分级事实行，默认级别收敛为单一类型化常量，并按决策放弃 JSONL run 分隔符
 - [x] 完成可观测性代码系统性审查，并将枚举令牌 Display 收敛为 strum derive（snake_case / transparent / to_string 插值），手写仅保留 struct 归因与单令牌源供应商标识两处闭合例外
@@ -63,7 +65,9 @@
 **后续路线**：
 
 - [ ] 观测契约落档：统一沉淀 facade、Event、Span、Subscriber、Layer、sink、过滤、字段稳定性与生命周期边界
-- [ ] 前端日志消费对齐后补验 Rust/Tauri 日志与追踪在成功、失败、并发、轮转和退出路径下的关联与持久化行为（已决策移出后端 v1 完成门槛）
+- [ ] 前端日志消费对齐后补验 Rust/Tauri 日志与追踪在成功、失败、并发、过滤、轮转、写入失败和退出路径下的关联与持久化行为，并沉淀最小自动回归测试（已决策移出后端 v1 完成门槛）
+- [ ] 持久化退出语义收口：在 Tauri 最终退出路径显式释放 JSONL `WorkerGuard`，执行有界冲刷并补充退出验证；若先替换为 SQLite，则在新持久化层落实相应退出契约（已接受延期，不阻塞当前分支合并）
+- [ ] 诊断存储容量约束：评估总容量上限与运行期清理，覆盖长时间运行和高频日志；当前 JSONL 仅在启动时按日期清理，无总容量上限，不阻塞当前分支
 - [ ] 后续评估 Provider Span 关联增强（例如失败事件显式携带 `run_id` / `trigger` 或采用独立过滤策略）；不作为 0.0.1-dev 后端 v1 完成门槛
 - [ ] 后续将 best-effort JSONL 诊断 sink 演进为 SQLite 持久化层；不作为当前 0.0.1-dev 后端 v1 完成门槛
 - [ ] 后续独立集成 Go Sidecar stdout/stderr、source target 与跨进程 correlation，不作为 Rust/Tauri 后端 v1 完成门槛
@@ -85,6 +89,7 @@
 
 #### 6.5 收尾优化
 
+- [ ] 首次正式发布前明确应用 identifier 与 keyring namespace 变更后的配置、密钥迁移或重置策略（`com.virganol.app` → `com.virganol`，`com.virganol.app.provider` → `com.virganol.provider`）；当前不要求已有开发安装自动迁移
 - [ ] 前端状态转换验证（`useProviderCollectionStore` 防御性编程）
 - [ ] 表单输入验证（URL 格式检查 / 必填字段提示 / 错误状态视觉反馈）
 - [ ] 请求取消机制（AbortController 防止内存泄漏）

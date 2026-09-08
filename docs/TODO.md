@@ -6,15 +6,17 @@
 
 ## Current
 
-- [ ] Resolve the review finding at container/logging/registration.rs:22: explicitly release the managed WorkerGuard on the Tauri exit path so queued logs receive a shutdown flush
-- [ ] Run branch-level verification
+- [ ] Prepare branch closeout and a PR into feat/spirit
 
 ## Planned
 
-- [ ] Prepare the closeout commit and PR
+- No additional implementation or verification tasks remain within the accepted branch scope.
 
 ## Completed
 
+- [x] Accepted and deferred the WorkerGuard exit-flush finding to ROADMAP 6.2: the temporary best-effort JSONL sink may lose queued tail logs on normal exit; explicit guard release and exit verification remain unimplemented and do not block this branch
+- [x] Passed branch-level verification through the pnpm test commit hook for 860ea5e9 on 2026-09-08 (Go checks, Rust build/tests and style gates, UI checks); JSONL persistence and real exit behavior remain deferred, not verified
+- [x] Clarified branch-review merge target resolution, confirmation evidence, session reuse, and ambiguity handling
 - [x] Simplified branch review routing and prompt while preserving template sections; explicitly routed differential-review, ponytail-review, and spartan for findings and report style
 - [x] Added the branch review development workflow: a `review` pipeline routing the `differential-review` and `ponytail-review` skills over the working-branch diff against its parent, backed by a `branch-review` prompt and registered in the AGENTS pipeline tree and routines
 - [x] Documented the reliability architecture contract from business context and attribution through attributed diagnostic signals, semantic reality and application facades, and the independently layered Console and JSONL observability backend
