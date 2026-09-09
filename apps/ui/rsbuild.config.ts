@@ -9,5 +9,5 @@ export default defineConfig({
     tsconfigPath: "./tsconfig.app.json",
   },
   html: { template: "./index.html" },
-  server: { port: 5173, strictPort: true },
+  server: { strictPort: true },
 });
