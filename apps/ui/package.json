@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "rsbuild dev",
     "build": "tsc -b && rsbuild build",
-    "lint": "eslint .",
-    "preview": "rsbuild preview"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@lobehub/icons": "^4.0.3",

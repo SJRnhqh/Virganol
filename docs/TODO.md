@@ -20,6 +20,7 @@
 ## Completed
 
 - [x] Establish the branch direction; leave implementation details for later discussion.
+- [x] Remove the unused `preview` script from `apps/ui`: no references anywhere, and it serves dist without Tauri CSP/IPC so it cannot faithfully preview the packaged app; re-add only when a caller exists (`rsbuild preview` stays available via `pnpm -F @virganol/ui exec`). Keep the bare HTML favicon/title absent: invisible in the packaged app, revisit only when a brand icon lands at release packaging.
 - [x] Assess Rstack and commit the evaluation plan as `41298029` (`📝 docs: plan frontend build tool evaluation`); pre-commit repository checks passed.
 - [x] Compare Vite 8 and Rsbuild with aligned dependencies and browser targets: Rsbuild improved startup and slightly reduced build time/JS size; HMR results varied by scenario. Retain Rsbuild for continued development; small-project measurements do not establish future scaling advantages.
 - [x] Replace Vite with Rsbuild and React/Tailwind plugins; migrate scripts, HTML entry, client types, config type checking, and lint preset. Preserve `@/*`, port 5173, strict port handling, `apps/ui/dist`, and Tauri CSP. Remove obsolete Vite dependencies/configuration and esbuild permission; update cache cleanup.
