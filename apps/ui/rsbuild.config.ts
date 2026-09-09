@@ -14,5 +14,5 @@ export default defineConfig({
     overrideBrowserslist: ["Chrome >= 107", "Edge >= 107", "Firefox >= 104", "Safari >= 16"],
     polyfill: "off",
   },
-  server: { host: "localhost", port: 5173, strictPort: true },
+  server: { port: 5173, strictPort: true },
 });
