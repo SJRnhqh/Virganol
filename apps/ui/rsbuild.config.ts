@@ -9,10 +9,5 @@ export default defineConfig({
     tsconfigPath: "./tsconfig.app.json",
   },
   html: { template: "./index.html" },
-  output: {
-    // Preserve the previous compiler targets.
-    overrideBrowserslist: ["Chrome >= 107", "Edge >= 107", "Firefox >= 104", "Safari >= 16"],
-    polyfill: "off",
-  },
   server: { port: 5173, strictPort: true },
 });
