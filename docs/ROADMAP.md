@@ -90,6 +90,7 @@
 #### 6.5 收尾优化
 
 - [ ] 首次正式发布前明确应用 identifier 与 keyring namespace 变更后的配置、密钥迁移或重置策略（`com.virganol.app` → `com.virganol`，`com.virganol.app.provider` → `com.virganol.provider`）；当前不要求已有开发安装自动迁移
+- [ ] 首次正式发布前明确支持的 OS/WebView 版本范围，并验证 Windows/Linux、较旧 WebView 与签名发布打包；当前原生打包检查仅覆盖 macOS arm64 debug
 - [ ] 前端状态转换验证（`useProviderCollectionStore` 防御性编程）
 - [ ] 表单输入验证（URL 格式检查 / 必填字段提示 / 错误状态视觉反馈）
 - [ ] 请求取消机制（AbortController 防止内存泄漏）
