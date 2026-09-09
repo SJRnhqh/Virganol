@@ -5,20 +5,25 @@
 
 ## Current
 
-- [ ] Evaluate Vite 8 versus Rsbuild for the React/Tauri frontend before selecting a replacement; current evidence supports a trial, not a migration decision.
+- [ ] Continue using the migrated Rsbuild frontend during contract-alignment work; reassess if normal development exposes regressions.
 - [ ] Explore frontend alignment with backend boundary errors and contracts.
 
 ## Planned
 
-- [ ] Compare an isolated Rsbuild trial with Vite 8 on the same application and browser targets: cold start through first usable render, React/CSS HMR, production build time, and emitted JS/CSS size; record exact versions and repeated measurements with cache state controlled.
-- [ ] Validate the Rsbuild trial with React and Tailwind CSS plugins, the HTML entry, `@/*` aliases, environment types, and the existing TypeScript/lint checks; preserve Tauri port `5173`, strict port handling, and `apps/ui/dist` output.
-- [ ] Verify Tauri development and packaged application behavior: asset/chunk loading, CSP, WebView compatibility, and Provider command/event flows. Adopt Rsbuild only if compatibility passes and measured or concrete maintenance benefits justify migration; otherwise retain Vite.
-- [ ] If adopting Rsbuild, remove obsolete Vite dependencies/configuration/cache cleanup entries and update development documentation. Evaluate Rstest separately when adding frontend behavior tests; defer Rslib, Rspress, Rsdoctor, and Rslint until a concrete need exists.
+- [ ] Complete full Provider command/event regression coverage (connect/reset/update, startup and lifecycle errors) with the migrated frontend; current mocked browser and real WebView smoke checks do not prove those contracts.
+- [ ] Before release, define supported OS/WebView versions and validate Windows/Linux, older supported WebViews, and signed release packaging. Current native packaging check is macOS arm64 debug only.
+- [ ] If build performance becomes a bottleneck, extend the comparison to representative larger workloads; do not extrapolate the three-run cold-start results.
+- [ ] Evaluate Rstest separately when adding frontend behavior tests; defer Rslib, Rspress, Rsdoctor, and Rslint until a concrete need exists.
 - [ ] Implement the agreed frontend contract alignment.
 - [ ] Develop frontend coding conventions and testing practices through the changes.
 
 ## Completed
 
-- [x] Assess Rstack against the current frontend (2026-09-09): Rsbuild is the application-level alternative; Vite 8 also uses a Rust bundler, so Rust implementation alone does not justify switching. References: [Vite 8](https://vite.dev/blog/announcing-vite8), [Rsbuild comparison](https://rsbuild.rs/guide/start/), [migration guide](https://rsbuild.rs/guide/migration/vite).
-- [x] Verify the existing baseline with `pnpm -F @virganol/ui build`: TypeScript and Vite 7.3.1 build passed; one run reported 6.70 s bundling, 579.58 kB JS (164.04 kB gzip), and 85.59 kB CSS (13.14 kB gzip). The >500 kB chunk warning remains; this is not a Vite 8/Rsbuild benchmark or a full desktop build.
 - [x] Establish the branch direction; leave implementation details for later discussion.
+- [x] Assess Rstack and commit the evaluation plan as `41298029` (`📝 docs: plan frontend build tool evaluation`); pre-commit repository checks passed.
+- [x] Compare Vite 8 and Rsbuild with aligned dependencies and browser targets: Rsbuild improved startup and slightly reduced build time/JS size; HMR results varied by scenario. Retain Rsbuild for continued development; small-project measurements do not establish future scaling advantages.
+- [x] Replace Vite with Rsbuild and React/Tailwind plugins; migrate scripts, HTML entry, client types, config type checking, and lint preset. Preserve `@/*`, port 5173, strict port handling, `apps/ui/dist`, and Tauri CSP. Remove obsolete Vite dependencies/configuration and esbuild permission; update cache cleanup.
+- [x] Fix the Provider constant barrel cycle exposed by Rsbuild development loading: import card states directly from the leaf module. Recheck both candidates with identical fixed source.
+- [x] Pass TypeScript, frontend lint, production build, Chrome production asset/CSP smoke checks, and macOS debug `.app` packaging. Inspect the packaged real WebView homepage, Settings, and expanded Provider form. Verify occupied port 5173 fails instead of selecting another port.
+- [x] Start `pnpm dev` with Rsbuild; Rust/Tauri and Go sidecar start and gRPC ping succeeds. Stop the test development process after verification; full native development UI/HMR coverage remains outside this smoke check.
+- [x] Re-run the final repository quality gate after aligning Tailwind to 4.3.3: `pnpm test` passed all three stack checks (Go, Rust, TS); `git diff --check` passed.

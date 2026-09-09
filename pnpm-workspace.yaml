@@ -1,5 +1,7 @@
 packages:
   - apps/*
 
-allowBuilds:
-  esbuild: true
+# pnpm 11 verifies the lockfile against minimumReleaseAge (default 1440m) on
+# every install; exempt @rsbuild/core until a release has aged past the window.
+minimumReleaseAgeExclude:
+  - "@rsbuild/core"
