@@ -5,10 +5,11 @@
 
 ## Current
 
-- [ ] Frontend contract alignment with backend boundary errors and contracts: explore, then implement the agreed alignment; keep working on the migrated Rsbuild frontend and reassess it if normal development exposes regressions.
+- [ ] Continue cleaning and normalizing the frontend shell outside `features/`; stabilize shared layout, state, component, and utility boundaries before feature-level alignment.
 
 ## Planned
 
+- [ ] Frontend contract alignment with backend boundary errors and contracts: explore, then implement the agreed alignment; keep working on the migrated Rsbuild frontend and reassess it if normal development exposes regressions.
 - [ ] Complete full Provider command/event regression coverage (connect/reset/update, startup and lifecycle errors) with the migrated frontend; current mocked browser and real WebView smoke checks do not prove those contracts.
 - [ ] Write `docs/rules/frontend-code-style.md` mirroring `rust-code-style.md`: bilingual one-liner JSDoc on exported symbols (English sentence, blank line, Chinese sentence), details only for project-specific counter-intuitive facts, `//` for inline why-comments, path headers on TS/TSX, config files covered by the sweep, HTML/JSON out of scope; keep the HTML favicon/title absent until a brand icon lands at release packaging.
 - [ ] Build the TS comments checker under `dev/scripts/ts/comments/` (comment-parser based, wired into `dev/scripts/ts/test.mjs`): report mode on the existing 52 Chinese-only docs first, mandatory with the conventions sweep.
@@ -30,3 +31,4 @@
 - [x] Establish the initial frontend source style example in `src/main.tsx` and `src/App.tsx`: path headers, grouped imports, CSS side-effect ordering, concise bilingual JSDoc, and direct default component export; enable scoped `import/order` checking for `src/*.{ts,tsx}`.
 - [x] Align `src/layouts/MainLayout.tsx` with the initial frontend style example; retain business-context comments until the frontend and backend domain boundaries are understood well enough to simplify them safely.
 - [x] Use `src/store/index.ts` as the public Store import boundary, migrate existing Store consumers to `@/store`, extend import ordering to Store sources, and enforce sorted re-exports for Store/layout barrel `index.ts` files.
+- [x] Remove the unreachable legacy Node deployment UI chain: delete the placeholder `useServerStore`, unused `AddServerCard`, and its now-unreferenced `BaseActionCard`; keep the active Provider implementation unchanged.
