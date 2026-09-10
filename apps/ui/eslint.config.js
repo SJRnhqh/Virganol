@@ -22,7 +22,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/*.{ts,tsx}"],
+    files: ["src/*.{ts,tsx}", "src/layouts/**/*.{ts,tsx}"],
     plugins: {
       import: importPlugin,
     },
