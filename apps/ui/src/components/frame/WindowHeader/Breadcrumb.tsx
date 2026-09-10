@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Milestone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSidebarStore } from "@/store/SidebarStore";
+import { useSidebarStore } from "@/store";
 import { NAV_ITEMS } from "@/constants/navigation";
 // import { ModuleMenu } from "./ModuleMenu";
 import { cn } from "@/lib/utils";
@@ -10,7 +10,7 @@ export function Breadcrumb() {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  
+
   const { activeId } = useSidebarStore();
   const currentItem = NAV_ITEMS.find(i => i.id === activeId);
 
@@ -38,8 +38,8 @@ export function Breadcrumb() {
   }, []);
 
   return (
-    <div 
-      className="flex items-end h-full px-1 group/nav relative" 
+    <div
+      className="flex items-end h-full px-1 group/nav relative"
       ref={containerRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -80,7 +80,7 @@ export function Breadcrumb() {
 
       <AnimatePresence>
         {isOpen && (
-          <div 
+          <div
             className={cn(
               "absolute top-full z-50 pt-4 px-32 -mx-32", // 🛡️ 全域感应盾牌
             )}

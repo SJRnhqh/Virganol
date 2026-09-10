@@ -11,7 +11,7 @@ import { NAV_ITEMS } from "@/constants/navigation";
 import { BotDashboard } from "@/features/bot/BotDashboard";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { cn } from "@/lib/utils";
-import { useSidebarStore } from "@/store/SidebarStore";
+import { useSidebarStore } from "@/store";
 
 /** Defines optional content rendered inside the main layout.
  *

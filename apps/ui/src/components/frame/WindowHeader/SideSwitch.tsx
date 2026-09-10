@@ -1,6 +1,6 @@
 // apps/ui/src/components/frame/WindowHeader/SideSwitch.tsx
 import { ArrowLeftRight } from "lucide-react";
-import { useSidebarStore } from "@/store/SidebarStore";
+import { useSidebarStore } from "@/store";
 import { cn } from "@/lib/utils";
 
 export function SideSwitch() {

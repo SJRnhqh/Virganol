@@ -1,5 +1,5 @@
 // apps/ui/src/hooks/useSidebarStyles.ts
-import { useSidebarStore } from "@/store/SidebarStore";
+import { useSidebarStore } from "@/store";
 
 export const useSidebarStyles = () => {
   const { isOpen, side, isSwitching } = useSidebarStore();

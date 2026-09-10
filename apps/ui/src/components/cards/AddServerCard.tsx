@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Server, Plus } from "lucide-react";
-import { useServerStore } from "@/store/useServerStore";
+import { useServerStore } from "@/store";
 import { BaseActionCard } from "@/components/base/BaseActionCard";
 
 export const AddServerCard = memo(() => {
