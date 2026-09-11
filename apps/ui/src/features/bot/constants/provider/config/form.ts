@@ -6,7 +6,7 @@ import type {
   ProviderFormProps,
   ProviderFormVariantConfig,
 } from "@/features/bot/types";
-import { PROVIDER_CARD_STATES } from "@/features/bot/constants";
+import { PROVIDER_CARD_STATES } from "../state/card";
 
 /** Provider 表单字段初始值（用于 store 初始化） */
 export const PROVIDER_INITIAL_FORMS: Record<ProviderId, ProviderFormData> = {

@@ -5,7 +5,7 @@
   "identifier": "com.virganol",
   "build": {
     "beforeDevCommand": "pnpm --filter @virganol/ui dev",
-    "devUrl": "http://localhost:5173",
+    "devUrl": "http://localhost:3000",
     "beforeBuildCommand": "pnpm --filter @virganol/ui build",
     "frontendDist": "../../ui/dist"
   },

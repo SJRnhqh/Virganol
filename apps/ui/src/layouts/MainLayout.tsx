@@ -1,21 +1,22 @@
-import { type ReactNode } from "react";
-import { Rocket, Construction } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion"; // 🟢 引入动画增强隔离感
+// apps/ui/src/layouts/MainLayout.tsx
+import { AnimatePresence, motion } from "framer-motion";
+import { Construction, Rocket } from "lucide-react";
+
+import { DevelopingView } from "@/components/frame/DevelopingView";
 import { Sidebar } from "@/components/frame/Sidebar";
 import { WindowHeader } from "@/components/frame/WindowHeader/WindowHeader";
+import { SettingsModal } from "@/components/settings/SettingsModal";
 import { NAV_ITEMS } from "@/constants/navigation";
-import { DevelopingView } from "@/components/frame/DevelopingView";
 import { BotDashboard } from "@/features/bot/BotDashboard";
-import { useSidebarStore } from "@/store/SidebarStore";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { SettingsModal } from "../components/settings/SettingsModal";
 import { cn } from "@/lib/utils";
+import { useSidebarStore } from "@/store";
 
-interface MainLayoutProps {
-  children?: ReactNode;
-}
-
-export function MainLayout({ children }: MainLayoutProps) {
+/** Provides the application frame and active feature workspace.
+ *
+ * 提供应用框架和当前功能工作区。
+ */
+export function MainLayout() {
   useKeyboardShortcuts();
 
   // 🟢 统一使用 Store 状态，删除之前的本地 activeDeck
@@ -88,8 +89,6 @@ export function MainLayout({ children }: MainLayoutProps) {
               {renderContent()}
             </motion.div>
           </AnimatePresence>
-
-          {children}
         </main>
       </div>
     </div>

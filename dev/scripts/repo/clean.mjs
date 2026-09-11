@@ -17,7 +17,7 @@ const buildTargets = [
   "apps/desktop/src-tauri/gen/schemas",
 ];
 
-const devCacheTargets = ["apps/ui/node_modules/.vite", "apps/ui/node_modules/.vite-temp"];
+const devCacheTargets = ["apps/ui/node_modules/.cache"];
 
 const dependencyTargets = ["node_modules", "apps/ui/node_modules", "apps/desktop/node_modules"];
 
