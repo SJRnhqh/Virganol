@@ -1,6 +1,5 @@
 import js from "@eslint/js";
 import globals from "globals";
-import importPlugin from "eslint-plugin-import";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
@@ -25,27 +24,19 @@ export default defineConfig([
   {
     files: ["src/*.{ts,tsx}", "src/layouts/**/*.{ts,tsx}", "src/store/**/*.{ts,tsx}"],
     plugins: {
-      import: importPlugin,
+      "simple-import-sort": simpleImportSort,
     },
     rules: {
-      "import/order": [
+      "simple-import-sort/imports": [
         "error",
         {
-          groups: ["builtin", "external", "internal", "parent", "sibling", "index"],
-          pathGroups: [
-            {
-              pattern: "**/*.css",
-              group: "sibling",
-              position: "after",
-            },
+          groups: [
+            ["^node:"],
+            ["^@?\\w"],
+            ["^@/"],
+            ["^\\.\\./"],
+            ["^\\./", "^\\u0000.*\\.css$"],
           ],
-          pathGroupsExcludedImportTypes: [],
-          warnOnUnassignedImports: true,
-          "newlines-between": "always",
-          alphabetize: {
-            order: "asc",
-            caseInsensitive: true,
-          },
         },
       ],
     },
