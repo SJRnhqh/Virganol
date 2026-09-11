@@ -1,2 +1,2 @@
 // apps/ui/src/types/index.ts
-export { type SettingsTab } from "./settings";
+export { DEFAULT_SETTINGS_TAB, type SettingsTab } from "./settings";

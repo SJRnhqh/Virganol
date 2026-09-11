@@ -42,7 +42,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/{layouts,store,lib}/**/index.ts"],
+    files: ["src/{layouts,store,lib,types,constants}/**/index.ts"],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },

@@ -1,7 +1,7 @@
 // apps/ui/src/store/SettingsStore.ts
 import { create } from "zustand";
 
-import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "@/types/settings";
+import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "@/types";
 
 // Settings 运行时状态：只管理打开/关闭与当前激活的 Tab
 interface SettingsState {

@@ -12,6 +12,8 @@
 
 ## Planned
 
+- [ ] Normalize `components/` boundaries and barrel exports.
+- [ ] Normalize `hooks/` boundaries and imports.
 - [ ] Align `features/` (only if diff budget remains; scope TBD).
 
 ## Completed
@@ -20,3 +22,5 @@
   path matching.
 - [x] Normalize shell imports through public aliases and organize library barrel
   exports.
+- [x] Expose settings values through the types barrel and extend export sorting
+  to `types/` and `constants/` indexes.

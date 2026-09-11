@@ -1,3 +1,2 @@
 // apps/ui/src/constants/index.ts
-// 导出内容
-export { SETTINGS_TABS, type PanelType} from "./settings";
+export { type PanelType, SETTINGS_TABS } from "./settings";
