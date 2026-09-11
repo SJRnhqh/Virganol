@@ -1,6 +1,7 @@
 # Branch TODO
 
 - Branch: `feat/spirit-ui-cleanup`
+- Parent: `feat/spirit`
 - Goal: Normalize and clean the frontend shell layer (`apps/ui/src` outside
   `features/`).
 
