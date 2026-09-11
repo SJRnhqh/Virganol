@@ -32,3 +32,4 @@
 - [x] Align `src/layouts/MainLayout.tsx` with the initial frontend style example; retain business-context comments until the frontend and backend domain boundaries are understood well enough to simplify them safely.
 - [x] Use `src/store/index.ts` as the public Store import boundary, migrate existing Store consumers to `@/store`, extend import ordering to Store sources, and enforce sorted re-exports for Store/layout barrel `index.ts` files.
 - [x] Remove the unreachable legacy Node deployment UI chain: delete the placeholder `useServerStore`, unused `AddServerCard`, and its now-unreferenced `BaseActionCard`; keep the active Provider implementation unchanged.
+- [x] Remove the temporary `@rsbuild/core` minimum-release-age exemption after the package aged past pnpm's protection window.
