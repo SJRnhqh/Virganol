@@ -1,19 +1,11 @@
 # Branch TODO
 
 - Branch: `feat/spirit-react-align`
-- Goal: Align the frontend with the existing reliability architecture and gradually establish frontend engineering practices.
+- Goal: Migrate the frontend build to Rsbuild and establish the initial application-shell engineering baseline.
 
 ## Current
 
-- [ ] Continue cleaning and normalizing the frontend shell outside `features/`; stabilize shared layout, state, component, and utility boundaries before feature-level alignment.
-
-## Planned
-
-- [ ] Frontend contract alignment with backend boundary errors and contracts: explore, then implement the agreed alignment; keep working on the migrated Rsbuild frontend and reassess it if normal development exposes regressions.
-- [ ] Complete full Provider command/event regression coverage (connect/reset/update, startup and lifecycle errors) with the migrated frontend; current mocked browser and real WebView smoke checks do not prove those contracts.
-- [ ] Write `docs/rules/frontend-code-style.md` mirroring `rust-code-style.md`: bilingual one-liner JSDoc on exported symbols (English sentence, blank line, Chinese sentence), details only for project-specific counter-intuitive facts, `//` for inline why-comments, path headers on TS/TSX, config files covered by the sweep, HTML/JSON out of scope; keep the HTML favicon/title absent until a brand icon lands at release packaging.
-- [ ] Build the TS comments checker under `dev/scripts/ts/comments/` (comment-parser based, wired into `dev/scripts/ts/test.mjs`): report mode on the existing 52 Chinese-only docs first, mandatory with the conventions sweep.
-- [ ] Evaluate Rstest when frontend behavior tests arrive; keep Rslib/Rspress/Rsdoctor/Rslint deferred until a concrete need exists.
+- [x] Complete the scoped Rsbuild migration and initial frontend shell alignment; move broader follow-up work to `docs/ROADMAP.md` and prepare the branch for final verification and closeout.
 
 ## Completed
 

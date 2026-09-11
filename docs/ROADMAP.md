@@ -75,6 +75,7 @@
 
 #### 6.3 前端错误系统
 
+- [ ] 先调研再对齐前端与后端边界错误及契约，在明确映射后实施；继续基于已迁移的 Rsbuild 前端开发，正常开发暴露回归时重新评估构建方案
 - [ ] 同步前端错误类型（镜像后端 `ProviderErrorCode`）
 - [ ] 适配细粒度错误展示（按错误码差异化 UI 反馈）
 - [ ] 设计错误展示组件（Toast / inline 错误消息）
@@ -82,6 +83,7 @@
 
 #### 6.4 集成测试与验证
 
+- [ ] 在已迁移前端上补齐 Provider connect/reset/update、启动错误与生命周期错误的完整命令/事件回归；当前 mocked browser 与真实 WebView 冒烟检查尚不能证明这些契约
 - [ ] 5 条命令链路端到端集成测试
 - [ ] 错误传播链路验证（含命令链路错误场景）
 - [ ] 错误响应契约验证（含序列化字段命名）
@@ -89,6 +91,8 @@
 
 #### 6.5 收尾优化
 
+- [ ] 继续清理并规范化 `features/` 外的前端壳层，先稳定共享 layout、state、component 与 utility 边界，再进入功能级对齐
+- [ ] 编写 `docs/rules/frontend-code-style.md`：导出符号使用中英双语单行 JSDoc（英文句、空行、中文句），仅为项目特有且反直觉的事实补充细节，行内 why-comment 使用 `//`，TS/TSX 使用路径头，config 文件纳入规范扫描，HTML/JSON 不纳入；正式发布品牌图标落地前不保留占位 favicon/title
 - [ ] 首次正式发布前明确应用 identifier 与 keyring namespace 变更后的配置、密钥迁移或重置策略（`com.virganol.app` → `com.virganol`，`com.virganol.app.provider` → `com.virganol.provider`）；当前不要求已有开发安装自动迁移
 - [ ] 首次正式发布前明确支持的 OS/WebView 版本范围，并验证 Windows/Linux、较旧 WebView 与签名发布打包；当前原生打包检查仅覆盖 macOS arm64 debug
 - [ ] 前端状态转换验证（`useProviderCollectionStore` 防御性编程）
@@ -113,6 +117,8 @@
 
 #### 6.6 测试覆盖与质量门禁
 
+- [ ] 在 `dev/scripts/ts/comments/` 建立基于 comment-parser 的 TS 注释检查器并接入 `dev/scripts/ts/test.mjs`；先对现有 52 个仅中文文档注释启用报告模式，随前端规范扫描转为强制门禁
+- [ ] 前端行为测试出现时评估 Rstest；Rslib、Rspress、Rsdoctor 与 Rslint 继续延后到明确需求出现
 - [ ] 补齐 0.0.1 单元测试与缺口覆盖
 - [ ] 结合测试体系评估 `pnpm test` 与 `pnpm verify` 的职责和入口
 - [ ] Core 规范化：继续人工校验剩余 Core 的 item docs、实现顺序与可见范围
