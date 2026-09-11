@@ -1,7 +1,7 @@
 // apps/ui/src/components/frame/WindowHeader/SidebarToggle.tsx
 import { PanelLeft, PanelRight } from "lucide-react";
 import { useSidebarStore } from "@/store";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 
 export function SidebarToggle() {
   const { isOpen, side, toggle } = useSidebarStore(); // 使用全局侧边栏状态

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 
 interface BaseTooltipProps {
   children: React.ReactNode;
@@ -14,15 +14,15 @@ interface BaseTooltipProps {
   delay?: number;
 }
 
-export function BaseTooltip({ 
-  children, 
-  content, 
-  side = "right", 
+export function BaseTooltip({
+  children,
+  content,
+  side = "right",
   className,
-  delay = 300 
+  delay = 300
 }: BaseTooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
-  
+
   // ✅ 使用 useRef 代替 useState 管理定时器 ID
   // 这样可以保证在任何闭包中都能访问到最新的 ID，避免竞态问题
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -41,7 +41,7 @@ export function BaseTooltip({
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    
+
     // 2. 设置新的延迟显示
     timeoutRef.current = setTimeout(() => {
       setIsVisible(true);
@@ -62,7 +62,7 @@ export function BaseTooltip({
   const xOffset = side === "left" ? 8 : -8;
 
   return (
-    <div 
+    <div
       className="relative flex items-center justify-center" // 移除 w-full h-full，避免破坏子元素布局
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -80,10 +80,10 @@ export function BaseTooltip({
               // 🎨 基础外观：这里不再写死颜色，而是引用 CSS 变量或基础类
               "px-3 py-1.5 rounded text-xs font-medium",
               "bg-popover text-popover-foreground shadow-md border border-border", // 使用 shadcn/ui 或标准语义类名
-              
+
               // 📍 基础定位
               side === "left" ? "right-full mr-2" : "left-full ml-2",
-              
+
               // 允许外部传入 className 覆盖
               className
             )}

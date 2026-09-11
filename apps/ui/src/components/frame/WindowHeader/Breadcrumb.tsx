@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSidebarStore } from "@/store";
 import { NAV_ITEMS } from "@/constants/navigation";
 // import { ModuleMenu } from "./ModuleMenu";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 
 export function Breadcrumb() {
   const [isOpen, setIsOpen] = useState(false);

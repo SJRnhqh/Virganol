@@ -3,9 +3,9 @@ import { memo } from "react";
 import { useMotionValue } from "framer-motion";
 import { NAV_ITEMS } from "@/constants/navigation";
 import { DockItem } from "./DockItem";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 // 引入刚才创建的 Hook
-import { useSidebarStyles } from "@/hooks/useSidebarStyles"; 
+import { useSidebarStyles } from "@/hooks/useSidebarStyles";
 
 interface SidebarProps {
   activeId: string;
@@ -14,14 +14,14 @@ interface SidebarProps {
 
 export const Sidebar = memo(({ activeId, onActiveIdChange }: SidebarProps) => {
   const mouseY = useMotionValue(Infinity);
-  
+
   // ✨ 使用 Hook 获取样式逻辑，不再直接调用 useSidebarStore
   // 这里解构出的变量全是语义化的，没有复杂的 ternary operator (? :)
-  const { 
-    isOpen, 
-    side, 
-    dockAnimationClass, 
-    dockBorderClass 
+  const {
+    isOpen,
+    side,
+    dockAnimationClass,
+    dockBorderClass
   } = useSidebarStyles();
 
   return (
@@ -37,7 +37,7 @@ export const Sidebar = memo(({ activeId, onActiveIdChange }: SidebarProps) => {
       onMouseMove={(e) => mouseY.set(e.pageY)}
       onMouseLeave={() => mouseY.set(Infinity)}
     >
-      <div 
+      <div
         className={cn(
           "w-18 h-full flex flex-col items-center justify-center shrink-0",
           "transition-all ease-in-out transform-gpu will-change-transform",

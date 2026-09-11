@@ -18,3 +18,5 @@
 
 - [x] Add root UI lint and auto-fix commands; consolidate ESLint shell-layer
   path matching.
+- [x] Normalize shell imports through public aliases and organize library barrel
+  exports.

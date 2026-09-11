@@ -9,7 +9,7 @@ import { SettingsModal } from "@/components/settings/SettingsModal";
 import { NAV_ITEMS } from "@/constants/navigation";
 import { BotDashboard } from "@/features/bot/BotDashboard";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 import { useSidebarStore } from "@/store";
 
 /** Provides the application frame and active feature workspace.

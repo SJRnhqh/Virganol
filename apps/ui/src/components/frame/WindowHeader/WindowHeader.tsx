@@ -3,13 +3,13 @@ import { useState } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { type } from "@tauri-apps/plugin-os";
 import { Breadcrumb } from "./Breadcrumb";
-import { SidebarToggle } from "./SidebarToggle"; 
+import { SidebarToggle } from "./SidebarToggle";
 import { SideSwitch } from "./SideSwitch";
 import { SettingsButton } from "./SettingsButton";
 import { MacTrafficLightSpacer } from "./MacTrafficLightSpacer";
 import { WindowsWindowControls } from "./WindowsWindowControls";
 import { useWindowState } from "@/hooks/useWindowState";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 
 export function WindowHeader() {
   const [osType] = useState(() => {

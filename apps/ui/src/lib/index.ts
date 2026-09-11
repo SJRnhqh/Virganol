@@ -1,6 +1,4 @@
 // apps/ui/src/lib/index.ts
-
-export { cn } from "./utils";
 export {
   modalBackdrop,
   panelSwitchVariants,
@@ -14,3 +12,4 @@ export {
   refreshButtonVariants,
   rotatingIconVariants,
 } from "./animations";
+export { cn } from "./utils";

@@ -1,7 +1,7 @@
 import { motion, type Variants } from "framer-motion";
 import { NAV_ITEMS } from "@/constants/navigation";
 import { useSidebarStore } from "@/store";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 
 interface ModuleMenuProps {
   onClose: () => void;
