@@ -9,6 +9,8 @@
     "diff:budget": "node dev/scripts/repo/diff-budget.mjs",
     "test": "node dev/scripts/repo/test.mjs",
     "bench": "node dev/scripts/repo/bench.mjs",
+    "lint:ui": "pnpm -F @virganol/ui lint",
+    "lint:ui:fix": "pnpm -F @virganol/ui exec eslint . --fix",
     "dev:ui": "pnpm -F @virganol/ui dev",
     "dev": "pnpm -F @virganol/desktop dev",
     "build": "pnpm -F @virganol/desktop build",

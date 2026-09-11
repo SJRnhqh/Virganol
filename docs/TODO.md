@@ -15,3 +15,6 @@
 - [ ] Align `features/` (only if diff budget remains; scope TBD).
 
 ## Completed
+
+- [x] Add root UI lint and auto-fix commands; consolidate ESLint shell-layer
+  path matching.
