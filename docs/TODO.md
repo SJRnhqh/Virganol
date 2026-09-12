@@ -24,3 +24,7 @@
   exports.
 - [x] Expose settings values through the types barrel and extend export sorting
   to `types/` and `constants/` indexes.
+- [x] Add Stylelint to the UI quality gate and normalize the frontend package
+  development version.
+- [x] Split global styles into theme, token, base, canvas, and scrollbar
+  responsibilities behind a single stylesheet entry point.

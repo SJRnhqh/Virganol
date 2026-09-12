@@ -1,7 +1,7 @@
 {
   "name": "virganol",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.1-dev",
   "description": "Virganol Monorepo Root",
   "scripts": {
     "clean": "node dev/scripts/repo/clean.mjs clean",
@@ -9,10 +9,14 @@
     "diff:budget": "node dev/scripts/repo/diff-budget.mjs",
     "test": "node dev/scripts/repo/test.mjs",
     "bench": "node dev/scripts/repo/bench.mjs",
+    "lint": "pnpm lint:ui",
+    "lint:fix": "pnpm lint:ui:fix",
     "lint:ui": "pnpm -F @virganol/ui lint",
-    "lint:ui:fix": "pnpm -F @virganol/ui exec eslint . --fix",
-    "dev:ui": "pnpm -F @virganol/ui dev",
+    "lint:ui:fix": "pnpm -F @virganol/ui lint:fix",
+    "lint:ui:css": "pnpm -F @virganol/ui lint:css",
+    "lint:ui:css:fix": "pnpm -F @virganol/ui lint:css:fix",
     "dev": "pnpm -F @virganol/desktop dev",
+    "dev:ui": "pnpm -F @virganol/ui dev",
     "build": "pnpm -F @virganol/desktop build",
     "prepare": "husky"
   },

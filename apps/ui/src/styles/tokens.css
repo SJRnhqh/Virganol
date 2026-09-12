@@ -1,0 +1,121 @@
+/* apps/ui/src/styles/tokens.css */
+
+@theme {
+    /* === 1. 侧边栏 === */
+    --color-sidebar-bg: var(--sidebar-bg);
+    --color-sidebar-fg: var(--sidebar-fg);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-active-bg: var(--sidebar-active-bg);
+    --color-sidebar-active-fg: var(--sidebar-active-fg);
+
+    /* === 2. 顶部栏 === */
+
+    /* 顶部栏背景色 */
+    --color-header-bg: var(--header-bg);
+
+    /* 面包屑字体颜色 */
+    --color-header-fg: var(--header-fg);
+
+    /* 面包屑图标高亮颜色 */
+    --color-header-milestone: var(--header-milestone);
+
+    /* 面包屑背景颜色 */
+    --color-header-breadcrumb-bg: var(--header-breadcrumb-bg);
+
+    /* 面包屑光标颜色 */
+    --color-header-breadcrumb-accent: var(--header-breadcrumb-accent);
+
+    /* 顶部栏图标和背景颜色 */
+    --color-header-icon: var(--header-icon);
+    --color-header-icon-muted: var(--header-icon-muted);
+    --color-header-icon-bg: var(--header-icon-bg);
+
+    /* 窗口控制 */
+    --color-window-control-minimize: var(--window-control-minimize);
+    --color-window-control-toggle-maximize: var(
+        --window-control-toggle-maximize
+    );
+    --color-window-control-close: var(--window-control-close);
+
+    /* === 3. 主体背景 === */
+
+    /* 主体区域背景色 */
+    --color-main-bg: var(--main-bg);
+    --color-main-fg: var(--main-fg);
+
+    /* 设置窗口 */
+    --color-settings-outlay: var(--settings-outlay);
+    --color-settings-sidebar: var(--settings-sidebar);
+    --color-settings-sidebar-fg: var(--settings-sidebar-fg);
+    --color-settings-sidebar-fg-active: var(--settings-sidebar-fg-active);
+    --color-settings-sidebar-icon-bg: var(--settings-sidebar-icon-bg);
+    --color-settings-sidebar-icon-indicator: var(
+        --settings-sidebar-icon-indicator
+    );
+
+    /* SciSpirit设置 */
+    --color-settings-panel-bg: var(--settings-panel-bg);
+    --color-settings-panel-border: var(--settings-panel-border);
+    --color-settings-panel-outer-bg: var(--settings-panel-outer-bg);
+    --color-settings-panel-inner-bg: var(--settings-panel-inner-bg);
+    --color-settings-panel-fg: var(--settings-panel-fg);
+    --color-settings-panel-check: var(--settings-panel-check);
+    --color-settings-panel-error: var(--settings-panel-error);
+
+    /* === 4. SciSpirit === */
+    --color-spirit-welcome-atomsphere: var(--spirit-welcome-atomsphere);
+
+    /* === 4.1 WelcomeBoard === */
+
+    /* Bot */
+    --color-spirit-welcome-bot-bg: var(--spirit-welcome-bot-bg);
+    --color-spirit-welcome-bot-border: var(--spirit-welcome-bot-border);
+
+    /* Sparkles */
+    --color-spirit-welcome-sparkles-bg: var(--spirit-welcome-sparkles-bg);
+    --color-spirit-welcome-sparkles-border: var(
+        --spirit-welcome-sparkles-border
+    );
+    --color-spirit-welcome-sparkles-fill: var(--spirit-welcome-sparkles-fill);
+
+    /* FlaskConical */
+    --color-spirit-welcome-flaskconical-bg: var(
+        --spirit-welcome-flaskconical-bg
+    );
+    --color-spirit-welcome-flaskconical-border: var(
+        --spirit-welcome-flaskconical-border
+    );
+    --color-spirit-welcome-flaskconical-fill: var(
+        --spirit-welcome-flaskconical-fill
+    );
+
+    /* === 4.2 BotInput === */
+
+    /* 默认边框和背景 */
+    --color-spirit-botinput-box-border: var(--spirit-botinput-box-border);
+    --color-spirit-botinput-box-bg: var(--spirit-botinput-box-bg);
+    --color-spirit-botinput-capsule: var(--spirit-botinput-capsule);
+    --color-spirit-botinput-icon-bg: var(--spirit-botinput-icon-bg);
+
+    /* Ester */
+    --color-spirit-botinput-ester: var(--spirit-botinput-ester);
+
+    /* Kiral */
+    --color-spirit-botinput-kiral: var(--spirit-botinput-kiral);
+
+    /* TODO: 有待重构规整 */
+
+    /* 画布 */
+    --color-canvas-grid: var(--canvas-grid);
+    --color-canvas-edge: var(--canvas-edge);
+
+    /* 操作卡片 */
+    --color-action-bg: var(--action-bg);
+    --color-action-fg: var(--action-fg);
+
+    /* 节点 */
+    --color-node-bg: var(--node-bg);
+    --color-node-border: var(--node-border);
+    --color-node-fg-title: var(--node-fg-title);
+    --color-node-fg-desc: var(--node-fg-desc);
+}

@@ -2,7 +2,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-import App from "./App.tsx";
+import App from "./App";
 import "./styles/index.css";
 
 /** Mounts the React application into the document root.
