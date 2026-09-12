@@ -13,8 +13,6 @@
     "lint:fix": "pnpm lint:ui:fix",
     "lint:ui": "pnpm -F @virganol/ui lint",
     "lint:ui:fix": "pnpm -F @virganol/ui lint:fix",
-    "lint:ui:css": "pnpm -F @virganol/ui lint:css",
-    "lint:ui:css:fix": "pnpm -F @virganol/ui lint:css:fix",
     "dev": "pnpm -F @virganol/desktop dev",
     "dev:ui": "pnpm -F @virganol/ui dev",
     "build": "pnpm -F @virganol/desktop build",

@@ -28,3 +28,6 @@
   development version.
 - [x] Split global styles into theme, token, base, canvas, and scrollbar
   responsibilities behind a single stylesheet entry point.
+- [x] Normalize base style comments and body layering, deduplicate the
+  Stylelint Tailwind at-rule allowlist, and trim zero-reference root lint
+  passthrough scripts.

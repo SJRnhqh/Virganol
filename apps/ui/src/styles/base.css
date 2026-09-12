@@ -1,23 +1,42 @@
 /* apps/ui/src/styles/base.css */
 
 @layer base {
+    /*
+     * Responsive document foundation.
+     *
+     * 响应式文档基础样式。
+     */
     html {
-        /* clamp(最小值, 动态值, 最大值)
-       1. 最小值 12px：防止在极小窗口下文字小到无法阅读。
-       2. 动态值 0.85vw：核心魔法。视口宽度 1920px 时字号约 16px；1366px(笔记本)时自动缩放到约 11.6px。
-       3. 最大值 16px：限制上限，防止在 4K 屏上 UI 变得大而无当。
-    */
+        /*
+         * Minimum: 12px preserves readability in narrow windows.
+         * Preferred: 0.85vw scales with the viewport width.
+         * Maximum: 16px prevents oversized text on wide displays.
+         *
+         * 最小值：12px，保证窄窗口中的可读性。
+         * 首选值：0.85vw，随视口宽度缩放。
+         * 最大值：16px，避免宽屏中的文字过大。
+         */
         font-size: clamp(12px, 0.85vw, 16px);
     }
-}
 
-body {
-    /* 1. 确保背景色填满 */
-    @apply bg-main-bg text-main-fg; /* 使用 Tailwind 类名，更简洁 */
+    /*
+     * Establish the document body baseline.
+     *
+     * 建立文档主体基础样式。
+     */
+    body {
+        /*
+         * Apply the global theme colors, typography, and text rendering.
+         *
+         * 应用全局主题色、字体与文本渲染样式。
+         */
+        @apply bg-main-bg text-main-fg font-sans antialiased;
 
-    /* 2. 兜底逻辑 */
-    margin: 0;
-
-    /* 3. 字体栈 (Tailwind 默认 font-sans 已经包含了这套优秀的字体栈，可以简化) */
-    @apply font-sans antialiased;
+        /*
+         * Remove the browser's default body margin.
+         *
+         * 清除浏览器为页面主体提供的默认外边距。
+         */
+        margin: 0;
+    }
 }
