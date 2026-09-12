@@ -8,8 +8,8 @@
     "build": "tsc -b && rsbuild build",
     "lint": "eslint . && pnpm lint:css",
     "lint:fix": "eslint . --fix && pnpm lint:css:fix",
-    "lint:css": "stylelint \"src/styles/**/*.css\"",
-    "lint:css:fix": "stylelint \"src/styles/**/*.css\" --fix"
+    "lint:css": "stylelint .",
+    "lint:css:fix": "stylelint . --fix"
   },
   "dependencies": {
     "@lobehub/icons": "^4.0.3",

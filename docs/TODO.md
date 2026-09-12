@@ -14,6 +14,9 @@
 
 - [ ] Normalize `components/` boundaries and barrel exports.
 - [ ] Normalize `hooks/` boundaries and imports.
+- [ ] Deep-normalize the pending styles files: `canvas.css`, `tokens.css`,
+  `scrollbars.css`, `themes/_palette.css`, and `themes/light.css`. Only
+  `index.css`, `themes/index.css`, and `base.css` are normalized so far.
 - [ ] Align `features/` (only if diff budget remains; scope TBD).
 
 ## Completed
@@ -31,3 +34,6 @@
 - [x] Normalize base style comments and body layering, deduplicate the
   Stylelint Tailwind at-rule allowlist, and trim zero-reference root lint
   passthrough scripts.
+- [x] Switch Stylelint to package-wide coverage through a `.stylelintignore`
+  whitelist (ignore non-CSS files, exempt `dist/`) and simplify the lint
+  scripts to `stylelint .`.
