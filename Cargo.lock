@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "Virganol"
-version = "0.0.1"
+version = "0.0.1-dev"
 dependencies = [
  "chrono",
  "directories",
@@ -5826,14 +5826,14 @@ checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
 
 [[package]]
 name = "virganol-rust-comment-checker-cli"
-version = "0.0.1"
+version = "0.0.1-dev"
 dependencies = [
  "virganol-rust-comment-checker-core",
 ]
 
 [[package]]
 name = "virganol-rust-comment-checker-core"
-version = "0.0.1"
+version = "0.0.1-dev"
 dependencies = [
  "proc-macro2",
  "ra-ap-rustc_lexer",
@@ -5843,7 +5843,7 @@ dependencies = [
 
 [[package]]
 name = "virganol-rust-comment-checker-node"
-version = "0.0.1"
+version = "0.0.1-dev"
 dependencies = [
  "napi",
  "napi-build",

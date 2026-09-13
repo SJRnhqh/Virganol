@@ -6,3 +6,6 @@ members = [
   "dev/scripts/rust/comments/crates/node",
 ]
 resolver = "2"
+
+[workspace.package]
+version = "0.0.1-dev"

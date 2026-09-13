@@ -39,3 +39,5 @@
   scripts to `stylelint .`.
 - [x] Seed CSS code-style guidance for source headers, bilingual block comments,
   and index stylesheet imports; align Rust rule maturity labels.
+- [x] Centralize the product version in the Cargo workspace, inherit it across
+  Rust crates, and remove duplicate frontend, desktop, and Tauri versions.

@@ -1,7 +1,6 @@
 {
   "name": "@virganol/ui",
   "private": true,
-  "version": "0.0.1-dev",
   "type": "module",
   "scripts": {
     "dev": "rsbuild dev",

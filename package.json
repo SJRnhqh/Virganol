@@ -1,7 +1,6 @@
 {
   "name": "virganol",
   "private": true,
-  "version": "0.0.1-dev",
   "description": "Virganol Monorepo Root",
   "scripts": {
     "clean": "node dev/scripts/repo/clean.mjs clean",

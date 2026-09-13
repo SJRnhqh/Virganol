@@ -1,6 +1,6 @@
 [package]
 name = "virganol-rust-comment-checker-node"
-version = "0.0.1"
+version.workspace = true
 description = "Node-API adapter for the Virganol Rust comment checker."
 edition = "2021"
 publish = false
