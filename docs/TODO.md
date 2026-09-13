@@ -37,3 +37,5 @@
 - [x] Switch Stylelint to package-wide coverage through a `.stylelintignore`
   whitelist (ignore non-CSS files, exempt `dist/`) and simplify the lint
   scripts to `stylelint .`.
+- [x] Seed CSS code-style guidance for source headers, bilingual block comments,
+  and index stylesheet imports; align Rust rule maturity labels.
