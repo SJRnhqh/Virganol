@@ -1,5 +1,6 @@
-import { useId, useState } from "react";
+// apps/ui/src/components/base/BaseExpandableMenu.tsx
 import { ChevronDown } from "lucide-react";
+import { useId, useState } from "react";
 
 interface BaseExpandableMenuProps {
   title: React.ReactNode;

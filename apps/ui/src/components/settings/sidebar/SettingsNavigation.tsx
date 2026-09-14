@@ -1,13 +1,8 @@
 // apps/ui/src/components/settings/sidebar/SettingsNavigation.tsx
-// 外部依赖
-import type { LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
 
-// 内部引用
-import { useSettingsStore } from "@/store";
-import type { SettingsTab } from "@/types";
 import { SETTINGS_TABS } from "@/constants";
-
+import { useSettingsStore } from "@/store";
 import { SettingsNavItem } from "./SettingsNavItem";
 
 export const SettingsNavigation = () => {
@@ -19,9 +14,9 @@ export const SettingsNavigation = () => {
         <SettingsNavItem
           key={tab.id}
           label={tab.label}
-          icon={tab.icon as LucideIcon}
+          icon={tab.icon}
           isActive={activeTab === tab.id}
-          onClick={() => setTab(tab.id as SettingsTab)}
+          onClick={() => setTab(tab.id)}
         />
       ))}
     </motion.nav>

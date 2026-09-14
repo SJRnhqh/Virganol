@@ -1,10 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+// apps/ui/src/components/frame/WindowHeader/Breadcrumb.tsx
+import { AnimatePresence, motion } from "framer-motion";
 import { Milestone } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useSidebarStore } from "@/store";
+import { useEffect, useRef, useState } from "react";
+
 import { NAV_ITEMS } from "@/constants";
 // import { ModuleMenu } from "./ModuleMenu";
 import { cn } from "@/lib";
+import { useSidebarStore } from "@/store";
 
 export function Breadcrumb() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +14,7 @@ export function Breadcrumb() {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { activeId } = useSidebarStore();
-  const currentItem = NAV_ITEMS.find(i => i.id === activeId);
+  const currentItem = NAV_ITEMS.find((i) => i.id === activeId);
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) {
@@ -59,7 +61,11 @@ export function Breadcrumb() {
         )}
       >
         <div className="relative flex items-center justify-center mr-2.5">
-          <Milestone size={14} strokeWidth={2.5} className="text-header-icon transition-all group-hover/nav:text-header-milestone group-hover/nav:scale-110" />
+          <Milestone
+            size={14}
+            strokeWidth={2.5}
+            className="text-header-icon transition-all group-hover/nav:text-header-milestone group-hover/nav:scale-110"
+          />
         </div>
 
         <div className="overflow-hidden h-4 flex flex-col justify-center">
@@ -82,7 +88,7 @@ export function Breadcrumb() {
         {isOpen && (
           <div
             className={cn(
-              "absolute top-full z-50 pt-4 px-32 -mx-32", // 🛡️ 全域感应盾牌
+              "absolute top-full z-50 pt-4 px-32 -mx-32" // 🛡️ 全域感应盾牌
             )}
             onMouseDown={(e) => e.stopPropagation()}
             onMouseEnter={() => {

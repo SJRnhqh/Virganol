@@ -9,7 +9,7 @@ interface SettingsButtonProps {
 
 export function SettingsButton({ onClick }: SettingsButtonProps) {
   // 1. 引入业务逻辑 Hook
-    const { openContextAwareSettings } = useSmartSettings();
+  const { openContextAwareSettings } = useSmartSettings();
 
   const handleClick = () => {
     // 如果外部传入了 onClick，优先执行外部逻辑（通常不需要）
@@ -38,6 +38,6 @@ export function SettingsButton({ onClick }: SettingsButtonProps) {
         strokeWidth={2}
         className="transition-transform duration-700 ease-in-out group-hover:rotate-90"
       />
-      </button>
+    </button>
   );
 }

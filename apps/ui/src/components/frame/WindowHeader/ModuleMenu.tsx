@@ -1,7 +1,9 @@
+// apps/ui/src/components/frame/WindowHeader/ModuleMenu.tsx
 import { motion, type Variants } from "framer-motion";
+
 import { NAV_ITEMS } from "@/constants";
-import { useSidebarStore } from "@/store";
 import { cn } from "@/lib";
+import { useSidebarStore } from "@/store";
 
 interface ModuleMenuProps {
   onClose: () => void;
@@ -14,15 +16,17 @@ export function ModuleMenu({ onClose }: ModuleMenuProps) {
   const containerVariants: Variants = {
     hidden: { opacity: 0, scale: 0.9, filter: "blur(10px)" },
     visible: {
-      opacity: 1, scale: 1, filter: "blur(0px)",
-      transition: { type: "spring", stiffness: 300, damping: 25, staggerChildren: 0.04 }
+      opacity: 1,
+      scale: 1,
+      filter: "blur(0px)",
+      transition: { type: "spring", stiffness: 300, damping: 25, staggerChildren: 0.04 },
     },
-    exit: { opacity: 0, scale: 0.9, filter: "blur(5px)", transition: { duration: 0.15 } }
+    exit: { opacity: 0, scale: 0.9, filter: "blur(5px)", transition: { duration: 0.15 } },
   };
 
   const itemVariants: Variants = {
     hidden: { opacity: 0, scale: 0.5, x: -10 },
-    visible: { opacity: 1, scale: 1, x: 0 }
+    visible: { opacity: 1, scale: 1, x: 0 },
   };
 
   return (
@@ -36,8 +40,8 @@ export function ModuleMenu({ onClose }: ModuleMenuProps) {
         // 2. 容器：极简胶囊 (Pill)，单行排列，去掉厚重阴影，改用精致的内发光
         "flex items-center gap-1 p-1.5",
         "bg-header-breadcrumb-bg backdrop-blur-xl", // 极淡的背景
-        "shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)]",       // 轻飘飘的浮起感
-        "rounded-full pointer-events-auto",               // 完全圆角
+        "shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)]", // 轻飘飘的浮起感
+        "rounded-full pointer-events-auto", // 完全圆角
         "origin-top-left"
       )}
     >

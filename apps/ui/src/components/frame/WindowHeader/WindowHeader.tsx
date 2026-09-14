@@ -1,15 +1,16 @@
 // apps/ui/src/components/frame/WindowHeader/WindowHeader.tsx
-import { useState } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { type } from "@tauri-apps/plugin-os";
-import { Breadcrumb } from "./Breadcrumb";
-import { SidebarToggle } from "./SidebarToggle";
-import { SideSwitch } from "./SideSwitch";
-import { SettingsButton } from "./SettingsButton";
-import { MacTrafficLightSpacer } from "./MacTrafficLightSpacer";
-import { WindowsWindowControls } from "./WindowsWindowControls";
+import { useState } from "react";
+
 import { useWindowState } from "@/hooks";
 import { cn } from "@/lib";
+import { Breadcrumb } from "./Breadcrumb";
+import { MacTrafficLightSpacer } from "./MacTrafficLightSpacer";
+import { SettingsButton } from "./SettingsButton";
+import { SidebarToggle } from "./SidebarToggle";
+import { SideSwitch } from "./SideSwitch";
+import { WindowsWindowControls } from "./WindowsWindowControls";
 
 export function WindowHeader() {
   const [osType] = useState(() => {
@@ -48,10 +49,7 @@ export function WindowHeader() {
         <Breadcrumb />
       </div>
 
-      <div className={cn(
-        "flex items-center h-full ml-auto mb-0.5",
-        isWindows ? "mr-26" : "mr-1"
-      )}>
+      <div className={cn("flex items-center h-full ml-auto mb-0.5", isWindows ? "mr-26" : "mr-1")}>
         <div className="flex items-center gap-1">
           <SideSwitch />
           <SidebarToggle />

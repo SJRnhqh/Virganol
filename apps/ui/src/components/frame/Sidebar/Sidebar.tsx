@@ -1,10 +1,11 @@
 // apps/ui/src/components/frame/Sidebar/Sidebar.tsx
-import { memo } from "react";
 import { useMotionValue } from "framer-motion";
+import { memo } from "react";
+
 import { NAV_ITEMS } from "@/constants";
-import { DockItem } from "./DockItem";
-import { cn } from "@/lib";
 import { useSidebarStyles } from "@/hooks";
+import { cn } from "@/lib";
+import { DockItem } from "./DockItem";
 
 interface SidebarProps {
   activeId: string;
@@ -16,12 +17,7 @@ export const Sidebar = memo(({ activeId, onActiveIdChange }: SidebarProps) => {
 
   // ✨ 使用 Hook 获取样式逻辑，不再直接调用 useSidebarStore
   // 这里解构出的变量全是语义化的，没有复杂的 ternary operator (? :)
-  const {
-    isOpen,
-    side,
-    dockAnimationClass,
-    dockBorderClass
-  } = useSidebarStyles();
+  const { isOpen, side, dockAnimationClass, dockBorderClass } = useSidebarStyles();
 
   return (
     <aside

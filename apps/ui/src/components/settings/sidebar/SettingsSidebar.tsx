@@ -1,10 +1,7 @@
 // apps/ui/src/components/settings/sidebar/SettingsSidebar.tsx
-// 外部依赖
 import { motion } from "framer-motion";
 
-// 内部引用
 import { cn } from "@/lib";
-
 import { SettingsNavigation } from "./SettingsNavigation";
 
 export const SettingsSidebar = () => {

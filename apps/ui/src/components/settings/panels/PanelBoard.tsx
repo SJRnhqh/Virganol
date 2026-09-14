@@ -1,12 +1,9 @@
 // apps/ui/src/components/settings/panels/PanelBoard.tsx
-// 外部依赖
-import { Monitor, type LucideIcon } from "lucide-react";
+import { type LucideIcon, Monitor } from "lucide-react";
 import type { ReactElement } from "react";
 
-// 内部引用
-import { SETTINGS_TABS, type PanelType } from "@/constants";
+import { type PanelType, SETTINGS_TABS } from "@/constants";
 import { useSettingsStore } from "@/store";
-
 import { ComingSoonPanel } from "./ComingSoonPanel";
 import { SpiritPanel } from "./SpiritPanel";
 

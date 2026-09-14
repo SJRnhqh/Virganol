@@ -1,9 +1,9 @@
-import { useEffect, useRef, useImperativeHandle, forwardRef } from "react";
-import { Terminal, type ITerminalOptions } from "@xterm/xterm";
+// apps/ui/src/components/base/BaseTerminal.tsx
+import "@xterm/xterm/css/xterm.css";
 import { FitAddon } from "@xterm/addon-fit";
 import { WebLinksAddon } from "@xterm/addon-web-links";
-// 引入 xterm 核心样式（必须）
-import "@xterm/xterm/css/xterm.css";
+import { type ITerminalOptions, Terminal } from "@xterm/xterm";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
 // 🎮 父组件控制器接口
 export interface TerminalRef {
@@ -18,7 +18,7 @@ export interface TerminalRef {
 }
 
 // 📦 组件 Props 定义
-export interface BaseTerminalProps {
+interface BaseTerminalProps {
   className?: string;
   /**
    * 🌟 核心交互：当用户在终端敲击键盘时触发
@@ -123,7 +123,7 @@ export const BaseTerminal = forwardRef<TerminalRef, BaseTerminalProps>(
     // 📏 响应式布局监听
     useEffect(() => {
       if (!containerRef.current) return;
-      
+
       const observer = new ResizeObserver(() => {
         // 使用 requestAnimationFrame 避免高频触发报错
         requestAnimationFrame(() => {

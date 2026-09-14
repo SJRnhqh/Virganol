@@ -7,21 +7,27 @@
 
 ## Current
 
-- [ ] Audit and normalize the shell layer: boundaries, dead code, and
-  conventions.
+- [ ] Review `layouts/` composition and align content ownership with a
+  one-way dependency model across layouts, components, and features.
 
 ## Planned
 
-- [ ] Normalize `components/` boundaries and barrel exports.
-- [ ] Finish normalizing `hooks/` implementation and comments; resolve the
-  remaining import-order diagnostic.
+- [ ] Decide whether feature-only base components should move into their
+  owning features or into a future shared UI layer.
 - [ ] Deep-normalize the pending styles files: `canvas.css`, `tokens.css`,
   `scrollbars.css`, `themes/_palette.css`, and `themes/light.css`. Only
   `index.css`, `themes/index.css`, and `base.css` are normalized so far.
-- [ ] Align `features/` (only if diff budget remains; scope TBD).
+- [ ] Align feature internals after the outer dependency boundaries are
+  settled.
 
 ## Completed
 
+- [x] Normalize `components/` source headers, imports, explicit barrel exports,
+  and root consumers; remove unused base UI components.
+- [x] Expose the bot settings provider UI through the feature root without
+  changing feature internals.
+- [x] Extend UI import linting to `components/`, distinguish external and
+  internal side-effect imports, and prohibit Node built-ins in UI source.
 - [x] Extend lint import and barrel-export boundaries to `types/`, remove
   obsolete ownership notes, and keep its ID list private.
 - [x] Expose `constants/` through its public entry, migrate `NAV_ITEMS`

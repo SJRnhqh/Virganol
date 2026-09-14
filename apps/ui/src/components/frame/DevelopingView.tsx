@@ -1,3 +1,4 @@
+// apps/ui/src/components/frame/DevelopingView.tsx
 import { type LucideIcon, Rocket } from "lucide-react";
 
 interface DevelopingViewProps {
@@ -12,15 +13,10 @@ export const DevelopingView = ({ title, icon: Icon }: DevelopingViewProps) => {
         {/* 背景大图标 */}
         <Icon size={80} className="text-primary/10" strokeWidth={1} />
         {/* 动画小火箭 */}
-        <Rocket
-          size={24}
-          className="absolute -top-2 -right-2 text-rose-400 animate-bounce"
-        />
+        <Rocket size={24} className="absolute -top-2 -right-2 text-rose-400 animate-bounce" />
       </div>
 
-      <h2 className="text-xl font-medium text-primary/60 tracking-tight">
-        {title}
-      </h2>
+      <h2 className="text-xl font-medium text-primary/60 tracking-tight">{title}</h2>
 
       {/* 🔴 更新后的文案，契合 V.I.N.E. 的酿造哲学 */}
       <p className="mt-2 text-sm text-primary/30 font-light italic">

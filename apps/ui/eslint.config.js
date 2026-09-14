@@ -22,7 +22,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/*.{ts,tsx}", "src/{layouts,store,lib,hooks,constants,types}/**/*.{ts,tsx}"],
+    files: ["src/*.{ts,tsx}", "src/{types,constants,lib,store,hooks,components,layouts}/**/*.{ts,tsx}"],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },
@@ -31,9 +31,8 @@ export default defineConfig([
         "error",
         {
           groups: [
-            ["^node:"],
-            ["^@?\\w"],
-            ["^@/", "^\\./", "^\\u0000.*\\.css$"],
+            ["^\\u0000@?\\w", "^@?\\w"],
+            ["^\\u0000(?:@/|\\./)", "^@/", "^\\./"],
           ],
         },
       ],
@@ -41,6 +40,10 @@ export default defineConfig([
         "error",
         {
           patterns: [
+            {
+              regex: "^node:",
+              message: "Node.js built-in modules are not allowed in UI source.",
+            },
             {
               regex: "^\\.\\./",
               message: "Use @/ public entries for cross-directory imports.",
@@ -51,7 +54,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/{layouts,store,lib,hooks,constants,types}/**/index.ts"],
+    files: ["src/{types,constants,lib,store,hooks,components,layouts}/**/index.ts"],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },

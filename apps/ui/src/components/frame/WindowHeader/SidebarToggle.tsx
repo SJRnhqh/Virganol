@@ -1,7 +1,8 @@
 // apps/ui/src/components/frame/WindowHeader/SidebarToggle.tsx
 import { PanelLeft, PanelRight } from "lucide-react";
-import { useSidebarStore } from "@/store";
+
 import { cn } from "@/lib";
+import { useSidebarStore } from "@/store";
 
 export function SidebarToggle() {
   const { isOpen, side, toggle } = useSidebarStore(); // 使用全局侧边栏状态
@@ -22,7 +23,7 @@ export function SidebarToggle() {
         "text-header-icon-muted hover:text-header-icon hover:bg-header-icon-bg",
 
         // 3. 交互反馈：点击时轻微缩放
-        "active:scale-90",
+        "active:scale-90"
       )}
     >
       <Icon
@@ -41,9 +42,7 @@ export function SidebarToggle() {
            * - 位于左侧：向右轻微移动
            * - 位于右侧：向左轻微移动
            */
-          side === "left"
-            ? "group-hover:translate-x-0.5"
-            : "group-hover:-translate-x-0.5",
+          side === "left" ? "group-hover:translate-x-0.5" : "group-hover:-translate-x-0.5"
         )}
       />
     </button>

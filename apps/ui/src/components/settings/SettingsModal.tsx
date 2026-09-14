@@ -1,13 +1,10 @@
 // apps/ui/src/components/settings/SettingsModal.tsx
-// 外部依赖
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-// 内部引用
 import { cn, modalBackdrop, paperUnfoldVariants } from "@/lib";
 import { useSettingsStore } from "@/store";
-
-import { SettingsSidebar } from "./sidebar";
 import { PanelBoard } from "./panels";
+import { SettingsSidebar } from "./sidebar";
 
 export const SettingsModal = () => {
   const { isOpen, closeSettings } = useSettingsStore();
