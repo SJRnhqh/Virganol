@@ -22,7 +22,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/*.{ts,tsx}", "src/{layouts,store}/**/*.{ts,tsx}"],
+    files: ["src/*.{ts,tsx}", "src/{layouts,store,lib}/**/*.{ts,tsx}"],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },

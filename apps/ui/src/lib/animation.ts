@@ -1,4 +1,4 @@
-// apps/ui/src/lib/animations.ts
+// apps/ui/src/lib/animation.ts
 import type { Variants } from "framer-motion";
 
 {

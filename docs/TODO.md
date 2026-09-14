@@ -21,6 +21,8 @@
 
 ## Completed
 
+- [x] Normalize `lib/` source headers and import regions; extend lint path
+  boundaries and document the shared `cn` utility.
 - [x] Prohibit parent-relative imports in the root UI shell, `layouts/`, and
   `store/`; document the `@/` public-entry convention.
 - [x] Add root UI lint and auto-fix commands; consolidate ESLint shell-layer
