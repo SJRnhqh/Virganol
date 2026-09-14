@@ -1,10 +1,7 @@
 // apps/ui/src/types/settings.ts
-// 说明：
-// - 这里是 Settings 的“类型与基础常量”来源，供 store/constants 共用
-// - 避免 store 反向成为常量来源，减少依赖倒置
 
 // Settings Tab 的唯一 ID 列表（单一事实来源）
-export const SETTINGS_TAB_IDS = [
+const SETTINGS_TAB_IDS = [
   "general",
   "scispirit",
   "sciscript",
