@@ -32,9 +32,9 @@ Project conventions for CSS source code.
    */
   ```
 
-## Imports
+## Paths
 
-### Index Stylesheets (Policy TBD)
+### Index (Policy TBD)
 
 - Scope: `apps/ui/**/index.css`
 - Rule:

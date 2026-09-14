@@ -39,5 +39,7 @@
   scripts to `stylelint .`.
 - [x] Seed CSS code-style guidance for source headers, bilingual block comments,
   and index stylesheet imports; align Rust rule maturity labels.
+- [x] Seed the TypeScript code-style framework for source headers, JSDoc, and
+  paths; align CSS path terminology and the code-style listing order.
 - [x] Centralize the product version in the Cargo workspace, inherit it across
   Rust crates, and remove duplicate frontend, desktop, and Tauri versions.
