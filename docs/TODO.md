@@ -15,7 +15,7 @@
 - [ ] Normalize `components/` boundaries and barrel exports.
 - [ ] Finish normalizing `hooks/` implementation and comments; resolve the
   remaining import-order diagnostic.
-- [ ] Normalize `types/` and `constants/` boundaries and exports.
+- [ ] Normalize `types/` boundaries and exports.
 - [ ] Deep-normalize the pending styles files: `canvas.css`, `tokens.css`,
   `scrollbars.css`, `themes/_palette.css`, and `themes/light.css`. Only
   `index.css`, `themes/index.css`, and `base.css` are normalized so far.
@@ -23,6 +23,8 @@
 
 ## Completed
 
+- [x] Expose `constants/` through its public entry, migrate `NAV_ITEMS`
+  consumers, and extend its lint import boundaries.
 - [x] Add the `hooks/` public entry, source headers, alias-based consumers, and
   ESLint import and export boundaries.
 - [x] Normalize `lib/` source headers and import regions; extend lint path

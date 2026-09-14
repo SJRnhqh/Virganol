@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Milestone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSidebarStore } from "@/store";
-import { NAV_ITEMS } from "@/constants/navigation";
+import { NAV_ITEMS } from "@/constants";
 // import { ModuleMenu } from "./ModuleMenu";
 import { cn } from "@/lib";
 

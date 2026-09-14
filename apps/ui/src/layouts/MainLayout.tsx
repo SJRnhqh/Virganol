@@ -6,7 +6,7 @@ import { DevelopingView } from "@/components/frame/DevelopingView";
 import { Sidebar } from "@/components/frame/Sidebar";
 import { WindowHeader } from "@/components/frame/WindowHeader/WindowHeader";
 import { SettingsModal } from "@/components/settings/SettingsModal";
-import { NAV_ITEMS } from "@/constants/navigation";
+import { NAV_ITEMS } from "@/constants";
 import { BotDashboard } from "@/features";
 import { useKeyboardShortcuts } from "@/hooks";
 import { cn } from "@/lib";

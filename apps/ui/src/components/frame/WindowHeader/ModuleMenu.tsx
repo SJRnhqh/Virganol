@@ -1,5 +1,5 @@
 import { motion, type Variants } from "framer-motion";
-import { NAV_ITEMS } from "@/constants/navigation";
+import { NAV_ITEMS } from "@/constants";
 import { useSidebarStore } from "@/store";
 import { cn } from "@/lib";
 

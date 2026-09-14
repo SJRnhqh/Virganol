@@ -1,5 +1,5 @@
 // apps/ui/src/hooks/useSmartSettings.ts
-import { NAV_ITEMS } from "@/constants/navigation";
+import { NAV_ITEMS } from "@/constants";
 import { useSettingsStore, useSidebarStore } from "@/store";
 import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "@/types";
 

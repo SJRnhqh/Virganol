@@ -1,7 +1,7 @@
 // apps/ui/src/components/frame/Sidebar/Sidebar.tsx
 import { memo } from "react";
 import { useMotionValue } from "framer-motion";
-import { NAV_ITEMS } from "@/constants/navigation";
+import { NAV_ITEMS } from "@/constants";
 import { DockItem } from "./DockItem";
 import { cn } from "@/lib";
 import { useSidebarStyles } from "@/hooks";

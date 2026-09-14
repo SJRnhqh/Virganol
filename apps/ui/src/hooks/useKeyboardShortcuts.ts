@@ -1,7 +1,7 @@
 // apps/ui/src/hooks/useKeyboardShortcuts.ts
 import { useEffect } from "react";
 
-import { NAV_ITEMS } from "@/constants/navigation";
+import { NAV_ITEMS } from "@/constants";
 import { useSettingsStore,useSidebarStore } from "@/store";
 
 /**

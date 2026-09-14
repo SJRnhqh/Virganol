@@ -22,7 +22,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/*.{ts,tsx}", "src/{layouts,store,lib,hooks}/**/*.{ts,tsx}"],
+    files: ["src/*.{ts,tsx}", "src/{layouts,store,lib,hooks,constants}/**/*.{ts,tsx}"],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },
@@ -33,9 +33,7 @@ export default defineConfig([
           groups: [
             ["^node:"],
             ["^@?\\w"],
-            ["^@/"],
-            ["^\\.\\./"],
-            ["^\\./", "^\\u0000.*\\.css$"],
+            ["^@/", "^\\./", "^\\u0000.*\\.css$"],
           ],
         },
       ],
@@ -53,7 +51,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/{layouts,store,lib,hooks}/**/index.ts"],
+    files: ["src/{layouts,store,lib,hooks,constants}/**/index.ts"],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },
