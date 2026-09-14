@@ -14,6 +14,7 @@
 
 - [ ] Normalize `components/` boundaries and barrel exports.
 - [ ] Normalize `hooks/` boundaries and imports.
+- [ ] Normalize `types/` and `constants/` boundaries and exports.
 - [ ] Deep-normalize the pending styles files: `canvas.css`, `tokens.css`,
   `scrollbars.css`, `themes/_palette.css`, and `themes/light.css`. Only
   `index.css`, `themes/index.css`, and `base.css` are normalized so far.
@@ -29,8 +30,7 @@
   path matching.
 - [x] Normalize shell imports through public aliases and organize library barrel
   exports.
-- [x] Expose settings values through the types barrel and extend export sorting
-  to `types/` and `constants/` indexes.
+- [x] Expose settings values through the types barrel.
 - [x] Add Stylelint to the UI quality gate and normalize the frontend package
   development version.
 - [x] Split global styles into theme, token, base, canvas, and scrollbar
