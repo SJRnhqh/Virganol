@@ -50,3 +50,4 @@ Project conventions for TypeScript source code.
 - Rule:
   - Import a different directory through its `index.ts` public entry point.
   - Use direct relative imports only within the same directory.
+  - Parent-relative imports (`../`) are prohibited; use `@/` public entries instead.

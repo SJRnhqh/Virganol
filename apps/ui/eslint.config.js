@@ -39,6 +39,17 @@ export default defineConfig([
           ],
         },
       ],
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: "^\\.\\./",
+              message: "Use @/ public entries for cross-directory imports.",
+            },
+          ],
+        },
+      ],
     },
   },
   {
