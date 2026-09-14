@@ -1,3 +1,3 @@
 // apps/ui/src/features/bot/index.ts
-// 导出内容
+export { BotDashboard } from "./BotDashboard";
 export { useProviderStartup } from "./hooks";

@@ -7,7 +7,7 @@ import { Sidebar } from "@/components/frame/Sidebar";
 import { WindowHeader } from "@/components/frame/WindowHeader/WindowHeader";
 import { SettingsModal } from "@/components/settings/SettingsModal";
 import { NAV_ITEMS } from "@/constants/navigation";
-import { BotDashboard } from "@/features/bot/BotDashboard";
+import { BotDashboard } from "@/features";
 import { useKeyboardShortcuts } from "@/hooks";
 import { cn } from "@/lib";
 import { useSidebarStore } from "@/store";
