@@ -1,7 +1,7 @@
-import { useSettingsStore } from "../store/SettingsStore";
-import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "../types/settings";
-import { useSidebarStore } from "../store/SidebarStore";
-import { NAV_ITEMS } from "../constants/navigation"; // 👈 直接引入导航配置
+// apps/ui/src/hooks/useSmartSettings.ts
+import { NAV_ITEMS } from "@/constants/navigation";
+import { useSettingsStore, useSidebarStore } from "@/store";
+import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "@/types";
 
 export function useSmartSettings() {
   const openSettings = useSettingsStore((state) => state.openSettings);

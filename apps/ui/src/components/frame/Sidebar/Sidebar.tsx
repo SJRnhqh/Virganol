@@ -4,8 +4,7 @@ import { useMotionValue } from "framer-motion";
 import { NAV_ITEMS } from "@/constants/navigation";
 import { DockItem } from "./DockItem";
 import { cn } from "@/lib";
-// 引入刚才创建的 Hook
-import { useSidebarStyles } from "@/hooks/useSidebarStyles";
+import { useSidebarStyles } from "@/hooks";
 
 interface SidebarProps {
   activeId: string;

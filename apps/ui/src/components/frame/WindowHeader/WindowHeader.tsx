@@ -8,7 +8,7 @@ import { SideSwitch } from "./SideSwitch";
 import { SettingsButton } from "./SettingsButton";
 import { MacTrafficLightSpacer } from "./MacTrafficLightSpacer";
 import { WindowsWindowControls } from "./WindowsWindowControls";
-import { useWindowState } from "@/hooks/useWindowState";
+import { useWindowState } from "@/hooks";
 import { cn } from "@/lib";
 
 export function WindowHeader() {

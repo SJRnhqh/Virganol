@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+// apps/ui/src/hooks/useWindowState.ts
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { useEffect, useState } from "react";
 
 export function useWindowState() {
   const [isMaximized, setIsMaximized] = useState(false);

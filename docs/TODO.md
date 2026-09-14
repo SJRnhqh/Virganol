@@ -13,7 +13,8 @@
 ## Planned
 
 - [ ] Normalize `components/` boundaries and barrel exports.
-- [ ] Normalize `hooks/` boundaries and imports.
+- [ ] Finish normalizing `hooks/` implementation and comments; resolve the
+  remaining import-order diagnostic.
 - [ ] Normalize `types/` and `constants/` boundaries and exports.
 - [ ] Deep-normalize the pending styles files: `canvas.css`, `tokens.css`,
   `scrollbars.css`, `themes/_palette.css`, and `themes/light.css`. Only
@@ -22,6 +23,8 @@
 
 ## Completed
 
+- [x] Add the `hooks/` public entry, source headers, alias-based consumers, and
+  ESLint import and export boundaries.
 - [x] Normalize `lib/` source headers and import regions; extend lint path
   boundaries and document the shared `cn` utility.
 - [x] Prohibit parent-relative imports in the root UI shell, `layouts/`, and

@@ -1,6 +1,8 @@
+// apps/ui/src/hooks/useKeyboardShortcuts.ts
 import { useEffect } from "react";
-import { useSidebarStore, useSettingsStore } from "@/store";
+
 import { NAV_ITEMS } from "@/constants/navigation";
+import { useSettingsStore,useSidebarStore } from "@/store";
 
 /**
  * ⌨️ Virganol 全局快捷键调度中心

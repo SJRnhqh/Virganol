@@ -22,7 +22,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/*.{ts,tsx}", "src/{layouts,store,lib}/**/*.{ts,tsx}"],
+    files: ["src/*.{ts,tsx}", "src/{layouts,store,lib,hooks}/**/*.{ts,tsx}"],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },
@@ -53,7 +53,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/{layouts,store,lib}/**/index.ts"],
+    files: ["src/{layouts,store,lib,hooks}/**/index.ts"],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },
