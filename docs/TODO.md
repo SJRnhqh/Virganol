@@ -7,8 +7,9 @@
 
 ## Current
 
-- [ ] Review `layouts/` composition and align content ownership with a
-  one-way dependency model across layouts, components, and features.
+- [ ] Use `layouts/` as the entry point to map ownership of each rendered
+  content region, then align layouts, components, and features around a
+  one-way dependency model.
 
 ## Planned
 
@@ -19,6 +20,9 @@
   `index.css`, `themes/index.css`, and `base.css` are normalized so far.
 - [ ] Align feature internals after the outer dependency boundaries are
   settled.
+- [ ] Complete the UI Node built-in import guard: reject both `node:*`
+  specifiers and bare built-in names or subpaths, and add an ESLint config
+  probe.
 
 ## Completed
 
@@ -27,7 +31,7 @@
 - [x] Expose the bot settings provider UI through the feature root without
   changing feature internals.
 - [x] Extend UI import linting to `components/`, distinguish external and
-  internal side-effect imports, and prohibit Node built-ins in UI source.
+  internal side-effect imports, and prohibit `node:*` imports in UI source.
 - [x] Extend lint import and barrel-export boundaries to `types/`, remove
   obsolete ownership notes, and keep its ID list private.
 - [x] Expose `constants/` through its public entry, migrate `NAV_ITEMS`
