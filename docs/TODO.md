@@ -26,6 +26,9 @@
 
 ## Completed
 
+- [x] Replace the fixed response character limit with concise, conclusion-first
+  Chinese guidance that preserves key reasoning and risks and allows detail
+  when needed.
 - [x] Add the comma-spacing style rule to the shared UI lint block and fix the
   one existing violation.
 - [x] Normalize `components/` source headers, imports, explicit barrel exports,

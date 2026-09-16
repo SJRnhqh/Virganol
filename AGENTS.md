@@ -33,10 +33,10 @@ Use `docs/templates/branch-todo.md` when creating or refreshing branch-level
 
 ### Response Style
 
-- Answer in terse Chinese fragments; keep ordinary answers within 50–150
-  characters. One load-bearing fact per line.
-- Exempt deliverables (reports, plans, code, docs) from the length cap;
-  they run as long as the work needs.
+- Default to concise Chinese: lead with the conclusion, one point per line.
+- Avoid padding; preserve key reasoning, risks, and necessary qualifications.
+- Expand explanations and deliverables as needed for the task; use no fixed
+  character limit.
 
 ### Context Budget Management
 
