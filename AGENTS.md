@@ -31,6 +31,13 @@ Use `docs/templates/branch-todo.md` when creating or refreshing branch-level
 
 ## Agent Operating Guidelines
 
+### Response Style
+
+- Answer in terse Chinese fragments; keep ordinary answers within 50–150
+  characters. One load-bearing fact per line.
+- Exempt deliverables (reports, plans, code, docs) from the length cap;
+  they run as long as the work needs.
+
 ### Context Budget Management
 
 When the `headroom` MCP tools are available, treat them as optional context
