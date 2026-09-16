@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 
 import { NAV_ITEMS } from "@/constants";
-import { useSettingsStore,useSidebarStore } from "@/store";
+import { useSettingsStore, useSidebarStore } from "@/store";
 
 /**
  * ⌨️ Virganol 全局快捷键调度中心

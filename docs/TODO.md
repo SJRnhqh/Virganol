@@ -26,6 +26,8 @@
 
 ## Completed
 
+- [x] Add the comma-spacing style rule to the shared UI lint block and fix the
+  one existing violation.
 - [x] Normalize `components/` source headers, imports, explicit barrel exports,
   and root consumers; remove unused base UI components.
 - [x] Expose the bot settings provider UI through the feature root without

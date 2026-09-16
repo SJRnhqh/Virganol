@@ -20,6 +20,9 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      "comma-spacing": ["error", { before: false, after: true }],
+    },
   },
   {
     files: ["src/*.{ts,tsx}", "src/{types,constants,lib,store,hooks,components,layouts}/**/*.{ts,tsx}"],
