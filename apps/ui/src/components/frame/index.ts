@@ -1,4 +1,4 @@
 // apps/ui/src/components/frame/index.ts
-export { DevelopingView } from "./DevelopingView";
+export { MainStage } from "./MainStage";
 export { Sidebar } from "./Sidebar";
 export { WindowHeader } from "./WindowHeader";

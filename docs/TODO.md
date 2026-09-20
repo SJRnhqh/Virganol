@@ -26,6 +26,12 @@
 
 ## Completed
 
+- [x] Extract the main-stage region from `MainLayout` into `MainStage` with its
+  deck assembly and shutter transition, and privatize `DevelopingView` under
+  the stage directory.
+- [x] Normalize the layout shell: bilingual three-line JSDoc, export-first
+  ordering with private types and helpers sunk below, and the settings overlay
+  placed last in the composition.
 - [x] Replace the fixed response character limit with concise, conclusion-first
   Chinese guidance that preserves key reasoning and risks and allows detail
   when needed.
