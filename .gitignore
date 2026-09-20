@@ -30,6 +30,7 @@ bin/
 .claude/
 .agents/
 .zcode/
+.zcodeignore
 
 # Python
 .venv/

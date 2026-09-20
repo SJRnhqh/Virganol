@@ -26,6 +26,7 @@
 
 ## Completed
 
+- [x] Ignore the ZCode-generated `.zcodeignore` artifact in git.
 - [x] Extract the main-stage region from `MainLayout` into `MainStage` with its
   deck assembly and shutter transition, and privatize `DevelopingView` under
   the stage directory.
