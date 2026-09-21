@@ -1,10 +1,34 @@
 import js from "@eslint/js";
+import boundaries from "eslint-plugin-boundaries";
 import globals from "globals";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
+
+const srcFiles = [
+  "src/{types,constants,lib,store,hooks,components,layouts}/**/*.{ts,tsx}",
+  "src/*.{ts,tsx}",
+];
+
+const dependencyAllows = {
+  types: [],
+  constants: ["types"],
+  lib: [],
+  store: ["types"],
+  hooks: ["types", "constants", "store"],
+  components: ["constants", "lib", "store", "hooks", "features"],
+  layouts: ["lib", "store", "hooks", "components"],
+  app: ["features", "layouts", "styles"],
+};
+
+const dependencyPolicies = Object.entries(dependencyAllows).map(
+  ([from, allow]) => ({
+    from: { element: { type: from } },
+    allow: [{ to: { element: { type: [...allow, from] } } }],
+  }),
+);
 
 export default defineConfig([
   globalIgnores(["dist"]),
@@ -25,9 +49,30 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/*.{ts,tsx}", "src/{types,constants,lib,store,hooks,components,layouts}/**/*.{ts,tsx}"],
+    files: srcFiles,
+    settings: {
+      "import/resolver": {
+        typescript: {
+          alwaysTryTypes: true,
+          project: "tsconfig.app.json",
+        },
+      },
+      "boundaries/elements": [
+        { type: "types", pattern: "src/types/**" },
+        { type: "constants", pattern: "src/constants/**" },
+        { type: "lib", pattern: "src/lib/**" },
+        { type: "store", pattern: "src/store/**" },
+        { type: "hooks", pattern: "src/hooks/**" },
+        { type: "features", pattern: "src/features/**" },
+        { type: "components", pattern: "src/components/**" },
+        { type: "layouts", pattern: "src/layouts/**" },
+        { type: "styles", pattern: "src/styles/**" },
+        { type: "app", pattern: "src" },
+      ],
+    },
     plugins: {
       "simple-import-sort": simpleImportSort,
+      boundaries,
     },
     rules: {
       "simple-import-sort/imports": [
@@ -47,17 +92,19 @@ export default defineConfig([
               regex: "^node:",
               message: "Node.js built-in modules are not allowed in UI source.",
             },
-            {
-              regex: "^\\.\\./",
-              message: "Use @/ public entries for cross-directory imports.",
-            },
           ],
         },
+      ],
+      "boundaries/dependencies": [
+        "error",
+        { default: "disallow", policies: dependencyPolicies },
       ],
     },
   },
   {
-    files: ["src/{types,constants,lib,store,hooks,components,layouts}/**/index.ts"],
+    files: [
+      "src/{types,constants,lib,store,hooks,components,layouts}/**/index.ts",
+    ],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },

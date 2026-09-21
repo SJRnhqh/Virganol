@@ -8,25 +8,24 @@
 
 ## Current
 
-- [ ] Restore the stashed boundaries wiring (eslint-plugin-boundaries config,
-  deps, and the `types/state` relative import) onto the post-#42 base and
-  adapt it to the merged shell layout.
+- [ ] Clear the inherited review findings: fix the `osType` Promise bug in
+  `WindowHeader` and delete the dead `ModuleMenu` component plus the commented
+  scaffolding in `Breadcrumb`.
 
 ## Planned
 
-- [ ] Wire the shell dependency-direction gate: an element matrix enforcing
-  one-way shell ↔ feature dependencies, plus the reverse-waterfall strategy
-  for absorbing `features/` and a verdict on codifying `../` vs `@/` range
-  layering.
-- [ ] Resolve the `types/state/settings.ts` barrel self-import cycle from #42
-  (same-package `../` exemption or a deep `@/types/settings` link).
-- [ ] Fix the inherited `osType` Promise bug in `WindowHeader`
-  (`useState(() => type())` never resolves; Mac spacer and Windows controls
-  never render).
-- [ ] Delete the dead `ModuleMenu` component and the commented scaffolding in
-  `Breadcrumb`.
+- [ ] Decide the reverse-waterfall strategy for absorbing `features/` into the
+  boundaries gate and codify the `../` vs `@/` range-layering verdict once a
+  rule shape is found (currently manual: cross-directory shell imports use
+  `@/`, same-package relatives are tolerated).
 
 ## Completed
 
 - [x] Seed the branch from `feat/spirit` at `ce368be9` (post #42 squash
   merge).
+- [x] Land the shell dependency-direction gate: restored the stashed
+  boundaries wiring, tightened the policy matrix to actual per-layer usage in
+  canonical layer order, generated policies from an explicit allows table, and
+  approved the `unrs-resolver` build script in `pnpm-workspace.yaml`.
+- [x] Resolve the `types/state/settings.ts` barrel self-import cycle by
+  switching to a same-package relative import.

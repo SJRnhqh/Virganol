@@ -1,5 +1,5 @@
 // apps/ui/src/types/state/settings.ts
-import type { SettingsTab } from "@/types";
+import type { SettingsTab } from "../settings";
 
 /** Shape of the settings store.
  *
