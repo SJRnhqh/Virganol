@@ -1,9 +1,9 @@
 // apps/ui/src/types/state/settings.ts
 import type { SettingsTab } from "../settings";
 
-/** Shape of the settings store.
+/** Settings state.
  *
- * 设置状态容器的形态。
+ * 设置状态。
  */
 export interface SettingsState {
   // ---- State ----

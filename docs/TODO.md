@@ -2,24 +2,30 @@
 
 - Branch: `feat/spirit-ui-polish`
 - Parent: `feat/spirit`
-- Goal: Land the deferred shell dependency-direction gate (the stashed
-  boundaries wiring) and continue the frontend shell polish queued in
-  `ROADMAP.md` 6.5.
+- Goal: Continue the frontend shell polish queued in `ROADMAP.md` 6.5, with
+  the store layer as the branch's main focus after the boundaries gate.
 
 ## Current
 
-- [ ] Polish the stores: remove the dead `setOpen`/`setSide` actions, govern
-  the `toggleSide` UI choreography timing, narrow `activeId` to the navigation
-  id union, extract a shared open/close slice composed into both store shapes
-  (composition over one-to-one component mapping), and then tighten the
-  `handleKeyDown` dependency injection through picked slice types.
+- [ ] Wire the settings store into the disclosure slice: extend
+  `SettingsState`, rename `openSettings`/`closeSettings` to `open`/`close`,
+  and migrate the hotkeys, settings modal, and smart-settings consumers.
 
 ## Planned
 
+- [ ] Extract a `createDisclosure` implementation factory once the second
+  hand-written disclosure exists.
+- [ ] Migrate navigation out of the sidebar: define the `NavId` union and
+  `DEFAULT_NAV_ID` in the types layer as the source of truth, add a
+  `NavigationState` interface with its own store, drop `activeId` and
+  `setActiveId` from the sidebar, and rewire MainStage, Breadcrumb,
+  useSmartSettings, and MainLayout.
+- [ ] Move whole-store destructuring consumers to fine-grained selectors,
+  including `useSidebarStyles`.
+- [ ] Tighten `handleKeyDown` dependency injection with picked slice types.
 - [ ] Clear the inherited review findings: fix the `osType` Promise bug in
   `WindowHeader` and delete the dead `ModuleMenu` component plus the commented
   scaffolding in `Breadcrumb`.
-
 - [ ] Decide the reverse-waterfall strategy for absorbing `features/` into the
   boundaries gate and codify the `../` vs `@/` range-layering verdict once a
   rule shape is found (currently manual: cross-directory shell imports use
@@ -33,5 +39,6 @@
   boundaries wiring, tightened the policy matrix to actual per-layer usage in
   canonical layer order, generated policies from an explicit allows table, and
   approved the `unrs-resolver` build script in `pnpm-workspace.yaml`.
-- [x] Resolve the `types/state/settings.ts` barrel self-import cycle by
-  switching to a same-package relative import.
+- [x] Extract `DisclosureState` and compose it into `SidebarState`,
+  mirror the interface order in the store with paired state/action members
+  and bilingual member JSDoc, and drop the dead `setOpen`/`setSide` actions.
