@@ -9,9 +9,9 @@ import { useSidebarStore } from "@/store";
  * 组合应用外壳并承载当前功能工作区。
  */
 export function MainLayout() {
-  useKeyboardShortcuts();
-
   const { side, activeId, setActiveId } = useSidebarStore();
+
+  useKeyboardShortcuts();
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-main-bg text-primary">

@@ -13,6 +13,8 @@
 
 ## Planned
 
+- [ ] Revisit `handleKeyDown` dependency parameters once the involved stores
+  are normalized one by one; the file header marks it as the work point.
 - [ ] Decide whether feature-only base components should move into their
   owning features or into a future shared UI layer.
 - [ ] Deep-normalize the pending styles files: `canvas.css`, `tokens.css`,
@@ -26,6 +28,13 @@
 
 ## Completed
 
+- [x] Restructure the global shortcuts hook into `hooks/hotkeys/`: slim
+  wiring-only entry, private pure `handleKeyDown`, barrel exposing only the
+  hook.
+- [x] Remove the `Cmd/Ctrl` + `1-7` module-switching shortcut together with
+  its dead import and dependency entries.
+- [x] Unify wiring order: store subscriptions before behavior hooks, and store
+  subscription order matching the store barrel exports.
 - [x] Ignore the ZCode-generated `.zcodeignore` artifact in git.
 - [x] Extract the main-stage region from `MainLayout` into `MainStage` with its
   deck assembly and shutter transition, and privatize `DevelopingView` under
