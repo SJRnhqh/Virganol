@@ -1,4 +1,4 @@
-// apps/ui/src/components/frame/WindowHeader/WindowsWindowControls.tsx
+// apps/ui/src/components/workbench/WindowHeader/WindowsWindowControls.tsx
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { AnimatePresence, motion } from "framer-motion";
 import { Maximize2, Minimize2, Minus, X } from "lucide-react";

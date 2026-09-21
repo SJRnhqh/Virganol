@@ -1,4 +1,4 @@
-// apps/ui/src/components/frame/Sidebar/DockItem.tsx
+// apps/ui/src/components/workbench/Sidebar/DockItem.tsx
 import { motion, type MotionValue, useSpring, useTransform } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import { useRef } from "react";

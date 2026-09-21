@@ -1,4 +1,4 @@
-// apps/ui/src/components/frame/WindowHeader/ModuleMenu.tsx
+// apps/ui/src/components/workbench/WindowHeader/ModuleMenu.tsx
 import { motion, type Variants } from "framer-motion";
 
 import { NAV_ITEMS } from "@/constants";

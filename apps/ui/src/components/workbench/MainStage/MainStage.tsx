@@ -1,4 +1,4 @@
-// apps/ui/src/components/frame/MainStage/MainStage.tsx
+// apps/ui/src/components/workbench/MainStage/MainStage.tsx
 import { AnimatePresence, motion } from "framer-motion";
 import { Construction, Rocket } from "lucide-react";
 

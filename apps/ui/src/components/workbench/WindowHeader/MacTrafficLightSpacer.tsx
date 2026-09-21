@@ -1,4 +1,4 @@
-// apps/ui/src/components/frame/WindowHeader/MacTrafficLightSpacer.tsx
+// apps/ui/src/components/workbench/WindowHeader/MacTrafficLightSpacer.tsx
 import { motion } from "framer-motion";
 
 interface Props {

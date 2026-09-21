@@ -1,4 +1,4 @@
-// apps/ui/src/components/frame/WindowHeader/SettingsButton.tsx
+// apps/ui/src/components/workbench/WindowHeader/SettingsButton.tsx
 import { Settings } from "lucide-react";
 
 import { useSmartSettings } from "@/hooks";

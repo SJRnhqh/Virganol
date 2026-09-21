@@ -1,4 +1,4 @@
-// apps/ui/src/components/frame/WindowHeader/Breadcrumb.tsx
+// apps/ui/src/components/workbench/WindowHeader/Breadcrumb.tsx
 import { AnimatePresence, motion } from "framer-motion";
 import { Milestone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";

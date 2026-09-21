@@ -1,4 +1,4 @@
-// apps/ui/src/components/frame/MainStage/DevelopingView.tsx
+// apps/ui/src/components/workbench/MainStage/DevelopingView.tsx
 import { type LucideIcon, Rocket } from "lucide-react";
 
 /** Placeholder view shown for decks that are still under development.

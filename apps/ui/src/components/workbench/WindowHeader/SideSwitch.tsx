@@ -1,4 +1,4 @@
-// apps/ui/src/components/frame/WindowHeader/SideSwitch.tsx
+// apps/ui/src/components/workbench/WindowHeader/SideSwitch.tsx
 import { ArrowLeftRight } from "lucide-react";
 
 import { cn } from "@/lib";

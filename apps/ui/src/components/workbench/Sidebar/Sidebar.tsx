@@ -1,4 +1,4 @@
-// apps/ui/src/components/frame/Sidebar/Sidebar.tsx
+// apps/ui/src/components/workbench/Sidebar/Sidebar.tsx
 import { useMotionValue } from "framer-motion";
 import { memo } from "react";
 
