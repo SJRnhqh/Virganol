@@ -8,11 +8,17 @@
 
 ## Current
 
+- [ ] Polish the stores: remove the dead `setOpen`/`setSide` actions, govern
+  the `toggleSide` UI choreography timing, narrow `activeId` to the navigation
+  id union, extract a shared open/close slice composed into both store shapes
+  (composition over one-to-one component mapping), and then tighten the
+  `handleKeyDown` dependency injection through picked slice types.
+
+## Planned
+
 - [ ] Clear the inherited review findings: fix the `osType` Promise bug in
   `WindowHeader` and delete the dead `ModuleMenu` component plus the commented
   scaffolding in `Breadcrumb`.
-
-## Planned
 
 - [ ] Decide the reverse-waterfall strategy for absorbing `features/` into the
   boundaries gate and codify the `../` vs `@/` range-layering verdict once a
