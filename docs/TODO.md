@@ -28,6 +28,8 @@
 
 ## Completed
 
+- [x] Centralize store state shapes under `types/state/` with per-domain files
+  and a barrel; both stores now import their shapes from `@/types`.
 - [x] Rename `components/frame` to `components/workbench`, aligning the domain
   name with the shell/workbench vocabulary and domain-peer organization.
 - [x] Restructure the global shortcuts hook into `hooks/hotkeys/`: slim

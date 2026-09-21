@@ -1,26 +1,13 @@
 // apps/ui/src/store/SidebarStore.ts
 import { create } from "zustand";
 
-interface SidebarState {
-  // 状态
-  isOpen: boolean;
-  side: "left" | "right";
-  activeId: string; // 🟢 修正：定义为 string 类型
-  isSwitching: boolean;
-
-  // 动作
-  toggle: () => void;
-  setOpen: (isOpen: boolean) => void;
-  setActiveId: (id: string) => void; // 🟢 新增：切换模块的动作
-  toggleSide: () => Promise<void>;
-  setSide: (side: "left" | "right") => void;
-}
+import { type SidebarState } from "@/types";
 
 export const useSidebarStore = create<SidebarState>((set, get) => ({
   // --- 初始状态 ---
   isOpen: true,
   side: "left",
-  activeId: "scispirit", // 🟢 初始化默认模块
+  activeId: "scispirit",
   isSwitching: false,
 
   // --- 基础动作 ---
