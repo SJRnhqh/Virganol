@@ -4,7 +4,8 @@ import { useSettingsStore, useSidebarStore } from "@/store";
 import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "@/types";
 
 export function useSmartSettings() {
-  const openSettings = useSettingsStore((state) => state.openSettings);
+  const open = useSettingsStore((state) => state.open);
+  const setTab = useSettingsStore((state) => state.setTab);
   const activeNavId = useSidebarStore((state) => state.activeId);
 
   /**
@@ -24,8 +25,9 @@ export function useSmartSettings() {
       targetTab = activeNavId as SettingsTab;
     }
 
-    // 3. 打开设置
-    openSettings(targetTab);
+    // 3. 定位页签并打开
+    setTab(targetTab);
+    open();
   };
 
   return {

@@ -9,24 +9,20 @@ import { handleKeyDown } from "./handleKeyDown";
  * 注册全局键盘快捷键。
  */
 export function useKeyboardShortcuts() {
-  const {
-    isOpen: isSettingsOpen,
-    closeSettings,
-    openSettings,
-  } = useSettingsStore();
+  const { isOpen, close, open } = useSettingsStore();
   const { toggle, toggleSide } = useSidebarStore();
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) =>
       handleKeyDown(event, {
-        isSettingsOpen,
-        closeSettings,
-        openSettings,
+        isOpen,
+        close,
+        open,
         toggle,
         toggleSide,
       });
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [toggle, toggleSide, isSettingsOpen, closeSettings, openSettings]);
+  }, [toggle, toggleSide, isOpen, close, open]);
 }

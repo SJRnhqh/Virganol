@@ -1,5 +1,15 @@
 // apps/ui/src/types/state/disclosure.ts
 
+/** Updater of the disclosure state.
+ *
+ * 开合状态的更新器。
+ */
+export type DisclosureUpdater = (
+  updater:
+    | Partial<DisclosureState>
+    | ((state: DisclosureState) => Partial<DisclosureState>),
+) => void;
+
 /** Disclosure state.
  *
  * 开合状态。

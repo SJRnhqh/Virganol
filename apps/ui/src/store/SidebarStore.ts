@@ -2,6 +2,7 @@
 import { create } from "zustand";
 
 import { type SidebarState } from "@/types";
+import { createDisclosure } from "./createDisclosure";
 
 /** State container of the sidebar.
  *
@@ -9,9 +10,7 @@ import { type SidebarState } from "@/types";
  */
 export const useSidebarStore = create<SidebarState>((set, get) => ({
   isOpen: true,
-  open: () => set({ isOpen: true }),
-  close: () => set({ isOpen: false }),
-  toggle: () => set((state) => ({ isOpen: !state.isOpen })),
+  ...createDisclosure(set),
 
   activeId: "scispirit",
   setActiveId: (id: string) => set({ activeId: id }),

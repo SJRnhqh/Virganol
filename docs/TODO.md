@@ -7,22 +7,21 @@
 
 ## Current
 
-- [ ] Wire the settings store into the disclosure slice: extend
-  `SettingsState`, rename `openSettings`/`closeSettings` to `open`/`close`,
-  and migrate the hotkeys, settings modal, and smart-settings consumers.
-
-## Planned
-
-- [ ] Extract a `createDisclosure` implementation factory once the second
-  hand-written disclosure exists.
 - [ ] Migrate navigation out of the sidebar: define the `NavId` union and
   `DEFAULT_NAV_ID` in the types layer as the source of truth, add a
   `NavigationState` interface with its own store, drop `activeId` and
   `setActiveId` from the sidebar, and rewire MainStage, Breadcrumb,
   useSmartSettings, and MainLayout.
+
+## Planned
+
 - [ ] Move whole-store destructuring consumers to fine-grained selectors,
-  including `useSidebarStyles`.
-- [ ] Tighten `handleKeyDown` dependency injection with picked slice types.
+  including `useSidebarStyles`; consider `useShallow` as used in the bot
+  feature hooks.
+- [ ] Tighten `handleKeyDown` dependency injection: move `ShortcutDeps` to
+  `types/hotkeys.ts` and compose it with `Pick` over the store states.
+- [ ] Name the `toggleSide` choreography delay constant (80ms) during the
+  navigation migration.
 - [ ] Clear the inherited review findings: fix the `osType` Promise bug in
   `WindowHeader` and delete the dead `ModuleMenu` component plus the commented
   scaffolding in `Breadcrumb`.
@@ -42,3 +41,10 @@
 - [x] Extract `DisclosureState` and compose it into `SidebarState`,
   mirror the interface order in the store with paired state/action members
   and bilingual member JSDoc, and drop the dead `setOpen`/`setSide` actions.
+- [x] Wire the settings store into the disclosure slice: extend
+  `SettingsState`, rename the actions to `open`/`close`, migrate the hotkeys,
+  settings modal, and smart-settings consumers; a bare open now keeps the
+  last tab instead of resetting to general.
+- [x] Extract the `createDisclosure` factory backed by a `DisclosureUpdater`
+  contract in the types layer, unify the `isOpen` vocabulary across hotkeys,
+  and merge parent and sibling imports into one sorted group.

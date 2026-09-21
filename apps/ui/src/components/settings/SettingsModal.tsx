@@ -7,7 +7,7 @@ import { PanelBoard } from "./panels";
 import { SettingsSidebar } from "./sidebar";
 
 export const SettingsModal = () => {
-  const { isOpen, closeSettings } = useSettingsStore();
+  const { isOpen, close } = useSettingsStore();
 
   return (
     <AnimatePresence>
@@ -20,7 +20,7 @@ export const SettingsModal = () => {
             animate="visible"
             exit="exit"
             className="absolute inset-0 bg-settings-outlay"
-            onClick={closeSettings}
+            onClick={close}
           />
 
           {/* 纸张容器：3D 展开 */}

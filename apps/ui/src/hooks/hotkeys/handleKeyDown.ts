@@ -21,20 +21,20 @@ export function handleKeyDown(event: KeyboardEvent, deps: ShortcutDeps) {
   const key = event.key.toLowerCase();
 
   // ESC：优先关闭已打开的设置面板
-  if (key === "escape" && deps.isSettingsOpen) {
+  if (key === "escape" && deps.isOpen) {
     event.preventDefault();
     event.stopPropagation();
-    deps.closeSettings();
+    deps.close();
     return;
   }
 
   // [Cmd/Ctrl] + [,]：开关设置面板（业界惯例，同 VS Code）
   if (mainKey && key === ",") {
     event.preventDefault();
-    if (deps.isSettingsOpen) {
-      deps.closeSettings();
+    if (deps.isOpen) {
+      deps.close();
     } else {
-      deps.openSettings();
+      deps.open();
     }
     return;
   }
@@ -57,9 +57,9 @@ export function handleKeyDown(event: KeyboardEvent, deps: ShortcutDeps) {
  * 全局快捷键处理器依赖的动作与状态。
  */
 interface ShortcutDeps {
-  isSettingsOpen: boolean;
-  closeSettings: () => void;
-  openSettings: () => void;
+  isOpen: boolean;
+  close: () => void;
+  open: () => void;
   toggle: () => void;
   toggleSide: () => void;
 }
