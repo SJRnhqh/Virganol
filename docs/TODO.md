@@ -7,24 +7,15 @@
 
 ## Current
 
-- [ ] Use `layouts/` as the entry point to map ownership of each rendered
-  content region, then align layouts, components, and features around a
-  one-way dependency model.
+- [ ] Close out the branch: the shell normalization work is handed over to
+  `ROADMAP.md` (6.5), and the uncommitted boundaries wiring stays in the
+  worktree for a follow-up branch.
 
 ## Planned
 
-- [ ] Revisit `handleKeyDown` dependency parameters once the involved stores
-  are normalized one by one; the file header marks it as the work point.
-- [ ] Decide whether feature-only base components should move into their
-  owning features or into a future shared UI layer.
-- [ ] Deep-normalize the pending styles files: `canvas.css`, `tokens.css`,
-  `scrollbars.css`, `themes/_palette.css`, and `themes/light.css`. Only
-  `index.css`, `themes/index.css`, and `base.css` are normalized so far.
-- [ ] Align feature internals after the outer dependency boundaries are
-  settled.
-- [ ] Complete the UI Node built-in import guard: reject both `node:*`
-  specifiers and bare built-in names or subpaths, and add an ESLint config
-  probe.
+- [ ] Nothing pending on this branch; see `ROADMAP.md` 6.5 for the follow-up
+  queue (boundaries integration, feature governance, store normalization,
+  styles deep-normalization).
 
 ## Completed
 
