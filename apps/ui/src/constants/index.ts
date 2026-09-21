@@ -1,3 +1,3 @@
 // apps/ui/src/constants/index.ts
-// 导出内容
-export { SETTINGS_TABS, type PanelType} from "./settings";
+export { NAV_ITEMS } from "./navigation";
+export { type PanelType, SETTINGS_TABS } from "./settings";

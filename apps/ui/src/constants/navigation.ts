@@ -1,13 +1,13 @@
-// apps/ui/src/config/navigation.ts
+// apps/ui/src/constants/navigation.ts
 import {
   Bot, // 🤖 Spirit: AI 灵魂
-  ScrollText, // 👨‍💻 Formula: 代码配方 (IDE)
   Hexagon, // ⬡ Comb: 蜂巢数据
-  // FlaskConical, // ⚗️ Mead: 酿造模型
-  Warehouse, // 🛖 Cellar: 资产地窖
   // Network, // 🌐 Apiary: 蜂场拓扑
   // Beer, // 🍺 Bar: 插件酒馆 (社区集市)
   type LucideIcon,
+  ScrollText, // 👨‍💻 Formula: 代码配方 (IDE)
+  // FlaskConical, // ⚗️ Mead: 酿造模型
+  Warehouse, // 🛖 Cellar: 资产地窖
 } from "lucide-react";
 
 export interface NavItemConfig {

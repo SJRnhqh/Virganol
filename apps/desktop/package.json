@@ -1,7 +1,6 @@
 {
   "name": "@virganol/desktop",
   "private": true,
-  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "pnpm build:sidecar && tauri dev",

@@ -4,7 +4,7 @@
 .react-flow__background-pattern circle {
     fill: var(--canvas-grid);
     opacity: 0.9;
-    r: 0.8;
+    r: 0.8px;
 }
 
 /* --- 2. 连线样式定制 --- */
@@ -26,6 +26,7 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
+
     /* 外部整体阴影，让整组按钮浮起来 */
     filter: drop-shadow(0 2px 4px var(--color-black-fade));
 }
@@ -55,6 +56,7 @@
 
 .react-flow__controls-button:hover {
     background: var(--color-white) !important;
+
     /* 悬停时四边同步变亮 */
     border-color: var(--color-forest) !important;
     transform: translateY(-1px);
@@ -68,6 +70,7 @@
         var(--main-bg),
         var(--color-black-fade) 100%
     ) !important;
+
     /* 点击时消除阴影，模拟按下的物理反馈 */
     box-shadow: none !important;
 }
@@ -83,6 +86,7 @@
 }
 
 /* --- 4. 节点全局样式重置 (Nodes) --- */
+
 /* 隐藏 React Flow 默认的节点容器样式，因为我们在 ServerNode/HomeNode 内部自定义了 UI */
 .react-flow__node {
     border: none !important;
@@ -97,7 +101,9 @@
 }
 
 /* --- 5. 交互穿透修正 (The Pass-Through Magic) --- */
+
 /* 🌟 新增：当按住空格键进入平移模式时，强制禁用所有节点和连线的鼠标事件 */
+
 /* 这让鼠标点击可以直接穿透节点，作用于底层的画布上，实现丝滑移动 */
 .space-panning-mode .react-flow__node,
 .space-panning-mode .react-flow__edge {

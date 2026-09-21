@@ -1,5 +1,4 @@
 // apps/ui/src/lib/animations/providerLifecycle.ts
-// 外部依赖
 import type { Variants } from "framer-motion";
 
 /* === Provider 生命周期动画 === */

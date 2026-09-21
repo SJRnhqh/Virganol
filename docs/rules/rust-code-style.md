@@ -111,11 +111,9 @@ Benchmark (TBD)
 
 ### Ordinary Comments (Specification TBD)
 
-## Imports and Paths (Specification TBD)
+## Paths (Specification TBD)
 
 ### Relative Path Discipline (Policy TBD)
-
-#### Specification (Verification TBD)
 
 - Scope: `apps/desktop/src-tauri/src/**/*.rs`
 - Rule:
@@ -130,8 +128,6 @@ Benchmark (TBD)
 
 ### Re-export Visibility Boundaries (Policy TBD)
 
-#### Specification (Verification TBD)
-
 - Scope: `apps/desktop/src-tauri/src/**/*.rs`
 - Rule:
   - A re-export may not widen visibility beyond the item's declared
@@ -141,19 +137,17 @@ Benchmark (TBD)
   - A variant payload type must not be less visible than the enum carrying
     it (`private_interfaces`).
 
-### Temporary Re-export Visibility Check
+### Temporary Re-export Visibility Check (Deprecated)
 
 - Runner: `dev/scripts/rust/contract-reexport-visibility.mjs`
 - Configuration: `dev/scripts/rust/config/contract/reexport-visibility.config.mjs`
 - Entry: `dev/scripts/rust/test.mjs`
-- Status: Incomplete; retire this check when the complete Visibility quality
-  gate is implemented.
+- Status: Deprecated; retain this incomplete check until the complete Visibility
+  quality gate is implemented, then remove it.
 
-## Item and Implementation Order (Specification TBD)
+## Ordering (Specification TBD)
 
 ### Type Implementation Order (Policy TBD)
-
-#### Specification (Verification TBD)
 
 - Scope: `**/*.rs` (manual `impl` blocks; derive-generated implementations are
   out of scope)

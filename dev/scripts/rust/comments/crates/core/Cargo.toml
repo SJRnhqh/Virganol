@@ -1,6 +1,6 @@
 [package]
 name = "virganol-rust-comment-checker-core"
-version = "0.0.1"
+version.workspace = true
 description = "Core syntax analysis library for Virganol Rust comment checks."
 edition = "2021"
 publish = false

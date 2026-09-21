@@ -1,13 +1,15 @@
-import { Settings2, type LucideIcon } from "lucide-react";
+// apps/ui/src/constants/settings.ts
+import { type LucideIcon, Settings2 } from "lucide-react";
+
+import type { SettingsTab } from "@/types";
 import { NAV_ITEMS } from "./navigation";
-import { type SettingsTab } from "../types/settings";
 
 // Settings UI 的静态配置：侧边栏条目、图标、与面板类型映射
 // 定义面板类型
 export type PanelType = "general" | "spirit" | "comingSoon";
 
 // 设置菜单项结构（用于渲染 SettingsSidebar）
-export interface SettingsTabItem {
+interface SettingsTabItem {
   id: SettingsTab;
   label: string;
   icon: LucideIcon;

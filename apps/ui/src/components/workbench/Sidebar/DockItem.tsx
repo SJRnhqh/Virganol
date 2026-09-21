@@ -1,12 +1,10 @@
-// apps/ui/src/components/frame/Sidebar/DockItem.tsx
+// apps/ui/src/components/workbench/Sidebar/DockItem.tsx
+import { motion, type MotionValue, useSpring, useTransform } from "framer-motion";
+import type { LucideIcon } from "lucide-react";
 import { useRef } from "react";
-import { motion, useSpring, useTransform, MotionValue } from "framer-motion";
-import { type LucideIcon } from "lucide-react";
-import { NavIndicator } from "./NavIndicator";
 
-function cn(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
+import { cn } from "@/lib";
+import { NavIndicator } from "./NavIndicator";
 
 interface DockItemProps {
   mouseY: MotionValue;
@@ -16,13 +14,7 @@ interface DockItemProps {
   side: "left" | "right";
 }
 
-export function DockItem({
-  mouseY,
-  icon: Icon,
-  isActive,
-  onClick,
-  side,
-}: DockItemProps) {
+export function DockItem({ mouseY, icon: Icon, isActive, onClick, side }: DockItemProps) {
   const ref = useRef<HTMLButtonElement>(null);
 
   // 1. 物理反馈计算 (严格保留你的原始参数)

@@ -8,6 +8,8 @@
 
 Code style rules for each technology stack:
 
+- [TypeScript Code Style](rules/typescript-code-style.md)
+- [CSS Code Style](rules/css-code-style.md)
 - [Rust Code Style](rules/rust-code-style.md)
 
 ## Local Validation

@@ -1,5 +1,4 @@
 // apps/ui/src/lib/animations/common.ts
-// 外部依赖
 import type { Variants } from "framer-motion";
 
 /* === 通用动画 === */

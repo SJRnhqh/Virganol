@@ -2,24 +2,30 @@
 
 :root {
     /* === 1. 侧边栏 (Sidebar) === */
+
     /* 侧边栏背景色 */
     --sidebar-bg: var(--color-songshuanglv);
-    /* 图标默认颜色、激活背景颜色、激活颜色*/
+
+    /* 图标默认颜色、激活背景颜色、激活颜色 */
     --sidebar-fg: var(--color-danmifen);
     --sidebar-active-bg: var(--color-danmifen);
     --sidebar-active-fg: var(--color-qinghui);
+
     /* 边框颜色 */
     --sidebar-border: color-mix(
         in srgb,
         var(--color-songshuanglv),
         transparent 80%
     );
+
     /* === 2. 顶部栏 (Header) === */
+
     /* 顶部栏背景色 */
     --header-bg: var(--color-songshuanglv);
 
     /* 面包屑文字颜色 */
     --header-fg: var(--color-qinghui);
+
     /* 面包屑交互体系 */
     --header-milestone: var(--color-zheshi);
     --header-breadcrumb-bg: var(--color-jizong);
@@ -40,6 +46,7 @@
     --window-control-minimize: var(--color-danhuilv); /* 最小化 -> 淡灰绿 */
 
     /* === 3. 主体背景  === */
+
     /* 主体区域背景色 */
     --main-bg: var(--color-danmifen);
     --main-fg: var(--color-qinghui);
@@ -65,6 +72,7 @@
     --spirit-welcome-atomsphere: var(--color-mihuang);
 
     /* === 4.1 WelcomeBoard === */
+
     /* Bot */
     --spirit-welcome-bot-bg: var(--color-white);
     --spirit-welcome-bot-border: var(--color-white);
@@ -80,6 +88,7 @@
     --spirit-welcome-flaskconical-fill: var(--color-yuqing);
 
     /* === 4.2 BotInput === */
+
     /* 默认边框和背景 */
     --spirit-botinput-box-border: var(--color-qinghui);
     --spirit-botinput-box-bg: var(--color-white);

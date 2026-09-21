@@ -1,20 +1,7 @@
 // apps/ui/src/store/SettingsStore.ts
 import { create } from "zustand";
 
-import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "../types/settings";
-
-// Settings 运行时状态：只管理打开/关闭与当前激活的 Tab
-interface SettingsState {
-  // ---- State ----
-  isOpen: boolean;
-  activeTab: SettingsTab;
-
-  // ---- Actions ----
-  // 打开设置 (可传入目标 Tab 实现自动跳转)
-  openSettings: (tab?: SettingsTab) => void;
-  closeSettings: () => void;
-  setTab: (tab: SettingsTab) => void;
-}
+import { DEFAULT_SETTINGS_TAB, type SettingsState } from "@/types";
 
 export const useSettingsStore = create<SettingsState>((set) => ({
   isOpen: false,

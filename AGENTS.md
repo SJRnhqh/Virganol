@@ -31,6 +31,13 @@ Use `docs/templates/branch-todo.md` when creating or refreshing branch-level
 
 ## Agent Operating Guidelines
 
+### Response Style
+
+- Default to concise Chinese: lead with the conclusion, one point per line.
+- Avoid padding; preserve key reasoning, risks, and necessary qualifications.
+- Expand explanations and deliverables as needed for the task; use no fixed
+  character limit.
+
 ### Context Budget Management
 
 When the `headroom` MCP tools are available, treat them as optional context

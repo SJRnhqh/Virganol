@@ -1,12 +1,13 @@
-import {
-  ReactFlow,
-  Background,
-  Controls,
-  BackgroundVariant,
-  SelectionMode,
-  type ReactFlowProps,
-} from "@xyflow/react";
+// apps/ui/src/components/base/BaseCanvas.tsx
 import "@xyflow/react/dist/style.css";
+import {
+  Background,
+  BackgroundVariant,
+  Controls,
+  ReactFlow,
+  type ReactFlowProps,
+  SelectionMode,
+} from "@xyflow/react";
 
 // --- 1. 配置常量 (基础设施配置) ---
 

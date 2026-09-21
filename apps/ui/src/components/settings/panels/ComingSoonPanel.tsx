@@ -1,5 +1,4 @@
 // apps/ui/src/components/settings/panels/ComingSoonPanel.tsx
-// 外部依赖
 import { type LucideIcon, Rocket } from "lucide-react";
 
 interface ComingSoonPanelProps {

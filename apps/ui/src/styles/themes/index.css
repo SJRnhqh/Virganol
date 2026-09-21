@@ -1,0 +1,3 @@
+/* apps/ui/src/styles/themes/index.css */
+@import "./_palette.css";
+@import "./light.css";

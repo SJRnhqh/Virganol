@@ -92,6 +92,11 @@
 #### 6.5 收尾优化
 
 - [ ] 继续清理并规范化 `features/` 外的前端壳层，先稳定共享 layout、state、component 与 utility 边界，再进入功能级对齐
+- [ ] 前端壳层依赖方向门禁（`eslint-plugin-boundaries`）：以元素矩阵约束 shell 层与 feature 域的单向依赖，收编 `features/` 时按倒序瀑布扩展策略，并回看路线纪律（`../` 与 `@/` 量程分层）是否需要立法规化
+- [ ] 前端 feature 域治理：收敛 bot 内部 82 处 `@/features/bot/...` 域内别名为相对引用，清理 45 处 `@/lib/utils` 等深钻引用并引入桶纪律，届时一并确定 feature 启动钩子的最终挂载形态（聚合钩子或根级例外）
+- [ ] 逐个优雅化 `store/`：清理死代码（`setOpen` / `setSide`）、治理 `toggleSide` 内 UI 编舞时序、收窄 `activeId` 类型，随后回头收紧 `handleKeyDown` 的依赖注入参数（文件头已标记动工点）
+- [ ] 深度规范化剩余样式文件：`canvas.css`、`tokens.css`、`scrollbars.css`、`themes/_palette.css` 与 `themes/light.css`（当前仅 `index.css`、`themes/index.css` 与 `base.css` 完成）
+- [ ] 决策 feature 专属 base 组件的去向：归入所属 feature 或未来的共享 UI 层
 - [ ] 编写 `docs/rules/frontend-code-style.md`：导出符号使用中英双语单行 JSDoc（英文句、空行、中文句），仅为项目特有且反直觉的事实补充细节，行内 why-comment 使用 `//`，TS/TSX 使用路径头，config 文件纳入规范扫描，HTML/JSON 不纳入；正式发布品牌图标落地前不保留占位 favicon/title
 - [ ] 首次正式发布前明确应用 identifier 与 keyring namespace 变更后的配置、密钥迁移或重置策略（`com.virganol.app` → `com.virganol`，`com.virganol.app.provider` → `com.virganol.provider`）；当前不要求已有开发安装自动迁移
 - [ ] 首次正式发布前明确支持的 OS/WebView 版本范围，并验证 Windows/Linux、较旧 WebView 与签名发布打包；当前原生打包检查仅覆盖 macOS arm64 debug

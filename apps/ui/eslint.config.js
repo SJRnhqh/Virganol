@@ -20,9 +20,12 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      "comma-spacing": ["error", { before: false, after: true }],
+    },
   },
   {
-    files: ["src/*.{ts,tsx}", "src/layouts/**/*.{ts,tsx}", "src/store/**/*.{ts,tsx}"],
+    files: ["src/*.{ts,tsx}", "src/{types,constants,lib,store,hooks,components,layouts}/**/*.{ts,tsx}"],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },
@@ -31,18 +34,30 @@ export default defineConfig([
         "error",
         {
           groups: [
-            ["^node:"],
-            ["^@?\\w"],
-            ["^@/"],
-            ["^\\.\\./"],
-            ["^\\./", "^\\u0000.*\\.css$"],
+            ["^\\u0000@?\\w", "^@?\\w"],
+            ["^\\u0000(?:@/|\\./)", "^@/", "^\\./"],
+          ],
+        },
+      ],
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: "^node:",
+              message: "Node.js built-in modules are not allowed in UI source.",
+            },
+            {
+              regex: "^\\.\\./",
+              message: "Use @/ public entries for cross-directory imports.",
+            },
           ],
         },
       ],
     },
   },
   {
-    files: ["src/{layouts,store}/**/index.ts"],
+    files: ["src/{types,constants,lib,store,hooks,components,layouts}/**/index.ts"],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },
