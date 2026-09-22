@@ -3,14 +3,14 @@ import { motion, type Variants } from "framer-motion";
 
 import { NAV_ITEMS } from "@/constants";
 import { cn } from "@/lib";
-import { useSidebarStore } from "@/store";
+import { useNavigationStore } from "@/store";
 
 interface ModuleMenuProps {
   onClose: () => void;
 }
 
 export function ModuleMenu({ onClose }: ModuleMenuProps) {
-  const { activeId, setActiveId } = useSidebarStore();
+  const { activeNavId, setActiveNavId } = useNavigationStore();
 
   // 1. 动效升级：像卷轴一样从左向右展开，而不是简单的淡入
   const containerVariants: Variants = {
@@ -47,7 +47,7 @@ export function ModuleMenu({ onClose }: ModuleMenuProps) {
     >
       {/* 3. 直接平铺所有图标，单行显示 */}
       {NAV_ITEMS.map((item) => {
-        const isActive = activeId === item.id;
+        const isActive = activeNavId === item.id;
         return (
           <motion.div key={item.id} variants={itemVariants}>
             <button
@@ -55,7 +55,7 @@ export function ModuleMenu({ onClose }: ModuleMenuProps) {
               onPointerDown={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                setActiveId(item.id);
+                setActiveNavId(item.id);
                 onClose();
               }}
               className={cn(

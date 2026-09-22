@@ -7,30 +7,45 @@
 
 ## Current
 
-- [ ] Migrate navigation out of the sidebar: define the `NavId` union and
-  `DEFAULT_NAV_ID` in the types layer as the source of truth, add a
-  `NavigationState` interface with its own store, drop `activeId` and
-  `setActiveId` from the sidebar, and rewire MainStage, Breadcrumb,
-  useSmartSettings, and MainLayout.
+- [ ] None in flight; pick the next task from Planned.
 
 ## Planned
 
+- [ ] Decide and align `MainStage` with the navigation vocabulary: replace the
+  local `activeId: string` props with the derived-props pattern under
+  `types/props/` (same shape as `SidebarProps`).
+- [ ] Consider unifying the nav id sources: derive `NavId` from an
+  `NAV_IDS as const` list instead of the hand-written union, so
+  `constants/navigation.ts` and `types/navigation.ts` share one fact source.
 - [ ] Move whole-store destructuring consumers to fine-grained selectors,
   including `useSidebarStyles`; consider `useShallow` as used in the bot
   feature hooks.
 - [ ] Tighten `handleKeyDown` dependency injection: move `ShortcutDeps` to
   `types/hotkeys.ts` and compose it with `Pick` over the store states.
-- [ ] Name the `toggleSide` choreography delay constant (80ms) during the
-  navigation migration.
-- [ ] Clear the inherited review findings: fix the `osType` Promise bug in
-  `WindowHeader` and delete the dead `ModuleMenu` component plus the commented
-  scaffolding in `Breadcrumb`.
+- [ ] Name the `toggleSide` choreography delay constant (80ms).
+- [ ] Clear the inherited review finding: fix the `osType` Promise bug in
+  `WindowHeader`. Keep the parked `ModuleMenu` component and its commented
+  `Breadcrumb` scaffolding unless decided otherwise.
 - [ ] Decide the reverse-waterfall strategy for absorbing `features/` into the
   boundaries gate and codify the `../` vs `@/` range-layering verdict once a
   rule shape is found (currently manual: cross-directory shell imports use
   `@/`, same-package relatives are tolerated).
 
 ## Completed
+
+- [x] Migrate the navigation state out of the sidebar: land the `NavId` union
+  and `NavItemConfig` in the types layer, add a `NavigationState` contract
+  with its own `NavigationStore` container, rewire Breadcrumb, MainLayout,
+  useSmartSettings, Sidebar (via the derived `SidebarProps`), and the parked
+  ModuleMenu, and drop `activeId`/`setActiveId` from the sidebar store and
+  contract. The default nav id reads `NAV_ITEMS[0].id` inline; a standalone
+  `DEFAULT_NAV_ID` constant was tried and dropped as unnecessary.
+- [x] Establish the derived-props convention: `types/props/` holds component
+  props derived from state contracts via `Pick` (type alias form); hand-written
+  shapes stay `interface`.
+- [x] Open two boundaries edges with consumers to justify them:
+  `store -> constants` (default nav id reads `NAV_ITEMS`) and
+  `components -> types` (derived props and vocabulary imports).
 
 - [x] Seed the branch from `feat/spirit` at `ce368be9` (post #42 squash
   merge).

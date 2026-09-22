@@ -5,14 +5,10 @@ import { memo } from "react";
 import { NAV_ITEMS } from "@/constants";
 import { useSidebarStyles } from "@/hooks";
 import { cn } from "@/lib";
+import type { SidebarProps } from "@/types";
 import { DockItem } from "./DockItem";
 
-interface SidebarProps {
-  activeId: string;
-  onActiveIdChange: (id: string) => void;
-}
-
-export const Sidebar = memo(({ activeId, onActiveIdChange }: SidebarProps) => {
+export const Sidebar = memo(({ activeNavId, setActiveNavId }: SidebarProps) => {
   const mouseY = useMotionValue(Infinity);
 
   // ✨ 使用 Hook 获取样式逻辑，不再直接调用 useSidebarStore
@@ -52,8 +48,8 @@ export const Sidebar = memo(({ activeId, onActiveIdChange }: SidebarProps) => {
             <DockItem
               key={item.id}
               mouseY={mouseY}
-              isActive={activeId === item.id}
-              onClick={() => onActiveIdChange(item.id)}
+              isActive={activeNavId === item.id}
+              onClick={() => setActiveNavId(item.id)}
               icon={item.icon}
               side={side}
             />

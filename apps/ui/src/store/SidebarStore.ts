@@ -12,9 +12,6 @@ export const useSidebarStore = create<SidebarState>((set, get) => ({
   isOpen: true,
   ...createDisclosure(set),
 
-  activeId: "scispirit",
-  setActiveId: (id: string) => set({ activeId: id }),
-
   side: "left",
   toggleSide: async () => {
     if (get().isSwitching) return;

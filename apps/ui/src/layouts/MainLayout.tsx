@@ -2,14 +2,16 @@
 import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
 import { useKeyboardShortcuts } from "@/hooks";
 import { cn } from "@/lib";
-import { useSidebarStore } from "@/store";
+import { useNavigationStore, useSidebarStore } from "@/store";
 
 /** Composes the application shell and hosts the active feature workspace.
  *
  * 组合应用外壳并承载当前功能工作区。
  */
 export function MainLayout() {
-  const { side, activeId, setActiveId } = useSidebarStore();
+  const { side } = useSidebarStore();
+  const activeNavId = useNavigationStore((state) => state.activeNavId);
+  const setActiveNavId = useNavigationStore((state) => state.setActiveNavId);
 
   useKeyboardShortcuts();
 
@@ -23,9 +25,9 @@ export function MainLayout() {
           side === "left" ? "flex-row" : "flex-row-reverse",
         )}
       >
-        <Sidebar activeId={activeId} onActiveIdChange={setActiveId} />
+        <Sidebar activeNavId={activeNavId} setActiveNavId={setActiveNavId} />
 
-        <MainStage activeId={activeId} />
+        <MainStage activeId={activeNavId} />
       </div>
 
       <SettingsModal />

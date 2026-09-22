@@ -4,19 +4,12 @@ import {
   Hexagon, // ⬡ Comb: 蜂巢数据
   // Network, // 🌐 Apiary: 蜂场拓扑
   // Beer, // 🍺 Bar: 插件酒馆 (社区集市)
-  type LucideIcon,
   ScrollText, // 👨‍💻 Formula: 代码配方 (IDE)
   // FlaskConical, // ⚗️ Mead: 酿造模型
   Warehouse, // 🛖 Cellar: 资产地窖
 } from "lucide-react";
 
-export interface NavItemConfig {
-  id: string;
-  label: string; // UI显示名 (简短有力)
-  fullName?: string; // Tooltip全名 (V.I.N.E. 家族名)
-  icon: LucideIcon;
-  description?: string;
-}
+import type { NavItemConfig } from "@/types";
 
 export const NAV_ITEMS: NavItemConfig[] = [
   // --- High Frequency: Interaction & Creation (高频区：交互与创造) ---

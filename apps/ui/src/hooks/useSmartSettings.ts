@@ -1,12 +1,12 @@
 // apps/ui/src/hooks/useSmartSettings.ts
 import { NAV_ITEMS } from "@/constants";
-import { useSettingsStore, useSidebarStore } from "@/store";
+import { useNavigationStore, useSettingsStore } from "@/store";
 import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "@/types";
 
 export function useSmartSettings() {
   const open = useSettingsStore((state) => state.open);
   const setTab = useSettingsStore((state) => state.setTab);
-  const activeNavId = useSidebarStore((state) => state.activeId);
+  const activeNavId = useNavigationStore((state) => state.activeNavId);
 
   /**
    * 智能打开设置：自动根据当前上下文定位到对应 Tab

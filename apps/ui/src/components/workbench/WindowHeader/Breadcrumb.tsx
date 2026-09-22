@@ -6,15 +6,15 @@ import { useEffect, useRef, useState } from "react";
 import { NAV_ITEMS } from "@/constants";
 // import { ModuleMenu } from "./ModuleMenu";
 import { cn } from "@/lib";
-import { useSidebarStore } from "@/store";
+import { useNavigationStore } from "@/store";
 
 export function Breadcrumb() {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { activeId } = useSidebarStore();
-  const currentItem = NAV_ITEMS.find((i) => i.id === activeId);
+  const activeNavId = useNavigationStore((state) => state.activeNavId);
+  const currentItem = NAV_ITEMS.find((i) => i.id === activeNavId);
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) {
@@ -71,7 +71,7 @@ export function Breadcrumb() {
         <div className="overflow-hidden h-4 flex flex-col justify-center">
           <AnimatePresence mode="wait">
             <motion.span
-              key={activeId}
+              key={activeNavId}
               initial={{ y: 8, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -8, opacity: 0 }}

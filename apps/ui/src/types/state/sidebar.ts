@@ -6,16 +6,6 @@ import type { DisclosureState } from "./disclosure";
  * 侧边栏状态。
  */
 export interface SidebarState extends DisclosureState {
-  /** The id of the active navigation item.
-   *
-   * 当前激活的导航项标识。
-   */
-  activeId: string;
-  /** Sets the active navigation id.
-   *
-   * 设置激活的导航项标识。
-   */
-  setActiveId: (id: string) => void;
   /** The docking side of the sidebar.
    *
    * 侧边栏的停靠侧。
