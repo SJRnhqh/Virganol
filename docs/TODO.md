@@ -35,6 +35,11 @@
 
 ## Completed
 
+- [x] Polish the entry-layer comments: state the mount causality in
+  `main.tsx` (render the root component to mount the app) and the identity in
+  `App.tsx` (root component of the application); seed comment conventions for
+  the future code-style rule: identity over behavior, Chinese text avoids
+  English words, `of` phrasing.
 - [x] Surface the three planned module decks in `NAV_ITEMS`: uncomment the
   Mead, Apiary, and Bar entries with their lucide imports (alphabetized), so
   every `NavId` member has an active entry; drop the icon inline comments as

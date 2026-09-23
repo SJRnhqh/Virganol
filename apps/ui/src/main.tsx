@@ -5,9 +5,9 @@ import { createRoot } from "react-dom/client";
 import "./styles/index.css";
 import App from "./App";
 
-/** Mounts the React application into the document root.
+/** Mounts the application by rendering its root component.
  *
- * 将 React 应用挂载到文档根节点。
+ * 渲染根组件以挂载应用。
  */
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
