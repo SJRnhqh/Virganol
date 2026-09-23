@@ -7,7 +7,10 @@
 
 ## Current
 
-- [ ] None in flight; pick the next task from Planned.
+- [ ] Sidebar store slice: move whole-store destructuring consumers to
+  fine-grained selectors (`useSidebarStyles`, `SidebarToggle`, `SideSwitch`,
+  `MainLayout`, `useKeyboardShortcuts`), using `useShallow` object picks as in
+  the bot feature hooks, and name the `toggleSide` 80ms choreography constant.
 
 ## Planned
 
@@ -17,12 +20,11 @@
 - [ ] Consider unifying the nav id sources: derive `NavId` from an
   `NAV_IDS as const` list instead of the hand-written union, so
   `constants/navigation.ts` and `types/navigation.ts` share one fact source.
-- [ ] Move whole-store destructuring consumers to fine-grained selectors,
-  including `useSidebarStyles`; consider `useShallow` as used in the bot
-  feature hooks.
 - [ ] Tighten `handleKeyDown` dependency injection: move `ShortcutDeps` to
   `types/hotkeys.ts` and compose it with `Pick` over the store states.
-- [ ] Name the `toggleSide` choreography delay constant (80ms).
+- [ ] After the sidebar slice, settle the settings follow-ups: decide
+  `settings.toggle` (give the Cmd+, hotkey `deps.toggle` vs narrowing the
+  slice with `Pick`) and confirm the bare-open-keeps-last-tab semantics.
 - [ ] Clear the inherited review finding: fix the `osType` Promise bug in
   `WindowHeader`. Keep the parked `ModuleMenu` component and its commented
   `Breadcrumb` scaffolding unless decided otherwise.
@@ -33,6 +35,10 @@
 
 ## Completed
 
+- [x] Surface the three planned module decks in `NAV_ITEMS`: uncomment the
+  Mead, Apiary, and Bar entries with their lucide imports (alphabetized), so
+  every `NavId` member has an active entry; drop the icon inline comments as
+  what-comments.
 - [x] Migrate the navigation state out of the sidebar: land the `NavId` union
   and `NavItemConfig` in the types layer, add a `NavigationState` contract
   with its own `NavigationStore` container, rewire Breadcrumb, MainLayout,

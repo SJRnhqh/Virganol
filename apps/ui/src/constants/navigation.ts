@@ -1,12 +1,12 @@
 // apps/ui/src/constants/navigation.ts
 import {
-  Bot, // 🤖 Spirit: AI 灵魂
-  Hexagon, // ⬡ Comb: 蜂巢数据
-  // Network, // 🌐 Apiary: 蜂场拓扑
-  // Beer, // 🍺 Bar: 插件酒馆 (社区集市)
-  ScrollText, // 👨‍💻 Formula: 代码配方 (IDE)
-  // FlaskConical, // ⚗️ Mead: 酿造模型
-  Warehouse, // 🛖 Cellar: 资产地窖
+  Beer,
+  Bot,
+  FlaskConical,
+  Hexagon,
+  Network,
+  ScrollText,
+  Warehouse,
 } from "lucide-react";
 
 import type { NavItemConfig } from "@/types";
@@ -36,13 +36,13 @@ export const NAV_ITEMS: NavItemConfig[] = [
     icon: Hexagon,
     description: "Data Refinery & Processing Workflow",
   },
-  // {
-  //   id: "scimead",
-  //   label: "Mead",
-  //   fullName: "SciMead",
-  //   icon: FlaskConical,
-  //   description: "Model Training & Evaluation Workflow",
-  // },
+  {
+    id: "scimead",
+    label: "Mead",
+    fullName: "SciMead",
+    icon: FlaskConical,
+    description: "Model Training & Evaluation Workflow",
+  },
 
   // --- Support: Storage & Infra (支撑区：存储与基建) ---
   {
@@ -52,20 +52,21 @@ export const NAV_ITEMS: NavItemConfig[] = [
     icon: Warehouse,
     description: "Asset Vault & Storage",
   },
-  // {
-  //   id: "sciapiary",
-  //   label: "Apiary",
-  //   fullName: "SciApiary",
-  //   icon: Network,
-  //   description: "Computing Cluster & Nodes",
-  // },
+
+  {
+    id: "sciapiary",
+    label: "Apiary",
+    fullName: "SciApiary",
+    icon: Network,
+    description: "Computing Cluster & Nodes",
+  },
 
   // --- External: Community (外部区：社区) ---
-  // {
-  //   id: "scibar",
-  //   label: "Bar",
-  //   fullName: "SciBar",
-  //   icon: Beer,
-  //   description: "Plugin, Dataset, Model, Agent Marketplace",
-  // },
+  {
+    id: "scibar",
+    label: "Bar",
+    fullName: "SciBar",
+    icon: Beer,
+    description: "Plugin, Dataset, Model, Agent Marketplace",
+  },
 ];
