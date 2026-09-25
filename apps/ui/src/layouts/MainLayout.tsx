@@ -4,9 +4,9 @@ import { useKeyboardShortcuts } from "@/hooks";
 import { cn } from "@/lib";
 import { useNavigationStore, useSidebarStore } from "@/store";
 
-/** Composes the application shell and hosts the active feature workspace.
+/** Shell layout of the application.
  *
- * 组合应用外壳并承载当前功能工作区。
+ * 应用的外壳布局。
  */
 export function MainLayout() {
   const { side } = useSidebarStore();

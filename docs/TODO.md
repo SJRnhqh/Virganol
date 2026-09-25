@@ -35,6 +35,10 @@
 
 ## Completed
 
+- [x] Polish the layouts comment: state the identity in `MainLayout`
+  (`shell layout of the application`), dropping the child-responsibility
+  leakage; the wiring zone (sidebar selectors) stays queued in Current and
+  the JSX zone reduces to composition plus the className question.
 - [x] Polish the entry-layer comments: state the mount causality in
   `main.tsx` (render the root component to mount the app) and the identity in
   `App.tsx` (root component of the application); seed comment conventions for
