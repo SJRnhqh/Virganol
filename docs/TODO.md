@@ -14,8 +14,6 @@
 
 ## Planned
 
-- [ ] Discuss and define CSS property ordering constraints before adding
-  normalized layout comments.
 - [ ] Decide and align `MainStage` with the navigation vocabulary: replace the
   local `activeId: string` props with the derived-props pattern under
   `types/props/` (same shape as `SidebarProps`).
@@ -37,6 +35,13 @@
 
 ## Completed
 
+- [x] Land the CSS ordering and comment discipline for the shell styles: add
+  `stylelint-config-recess-order` + `stylelint-order`, scope the ordering
+  override to `base.css` and `layouts.css`, move the body `@apply` after its
+  declarations to satisfy the at-rules-last order, and annotate both layout
+  rules with per-field bilingual intent comments (one block per intent group,
+  field-per-line with clamp-style Chinese labels; the `data-side` modifier
+  comment states its own vocabulary without child leakage).
 - [x] Extract MainLayout container styles into `styles/layouts.css`, express
   sidebar direction through `data-side`, and load styles centrally through
   `styles/index.css` without direct layout-to-styles imports.

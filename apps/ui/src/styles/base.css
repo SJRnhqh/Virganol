@@ -26,17 +26,17 @@
      */
     body {
         /*
-         * Apply the global theme colors, typography, and text rendering.
-         *
-         * 应用全局主题色、字体与文本渲染样式。
-         */
-        @apply bg-main-bg text-main-fg font-sans antialiased;
-
-        /*
          * Remove the browser's default body margin.
          *
          * 清除浏览器为页面主体提供的默认外边距。
          */
         margin: 0;
+
+        /*
+         * Apply the global theme colors, typography, and text rendering.
+         *
+         * 应用全局主题色、字体与文本渲染样式。
+         */
+        @apply bg-main-bg text-main-fg font-sans antialiased;
     }
 }
