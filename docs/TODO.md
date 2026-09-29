@@ -7,6 +7,15 @@
 
 ## Current
 
+- [ ] CSS style-pipeline evaluation (PandaCSS vs vanilla-extract vs StyleX):
+  prototype the `layouts.css` semantics as typed recipes/patterns, keep the
+  token and base layers as plain CSS for the transition, weigh Panda's
+  authoring DX, vanilla-extract's theme contracts (relevant if the workbench
+  grows light/dark themes), and StyleX's scale-proven atomic output (least
+  relevant for a desktop app), and decide whether the pure-TS end state
+  (typed authoring, static CSS output) beats the current lint-disciplined
+  plain-CSS approach before adopting a second styling pipeline. Runs
+  alongside the store slice without touching it.
 - [ ] Sidebar store slice: move whole-store destructuring consumers to
   fine-grained selectors (`useSidebarStyles`, `SidebarToggle`, `SideSwitch`,
   `MainLayout`, `useKeyboardShortcuts`), using `useShallow` object picks as in
@@ -14,6 +23,11 @@
 
 ## Planned
 
+- [ ] Revisit native `@scope` when component-level structure emerges (sidebar
+  internals, module decks): evaluate scoping selectors with the donut form
+  (`@scope (...) to (...)`) as the BEM-prefix alternative, keeping the global
+  `@layer` shell styles as they are, and settle the split between layer and
+  scope in the CSS discipline.
 - [ ] Decide and align `MainStage` with the navigation vocabulary: replace the
   local `activeId: string` props with the derived-props pattern under
   `types/props/` (same shape as `SidebarProps`).
