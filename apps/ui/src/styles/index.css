@@ -4,5 +4,6 @@
 @import "./themes/index.css";
 @import "./tokens.css";
 @import "./base.css";
+@import "./layouts.css";
 @import "./canvas.css";
 @import "./scrollbars.css";

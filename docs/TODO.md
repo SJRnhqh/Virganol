@@ -14,6 +14,8 @@
 
 ## Planned
 
+- [ ] Discuss and define CSS property ordering constraints before adding
+  normalized layout comments.
 - [ ] Decide and align `MainStage` with the navigation vocabulary: replace the
   local `activeId: string` props with the derived-props pattern under
   `types/props/` (same shape as `SidebarProps`).
@@ -35,6 +37,11 @@
 
 ## Completed
 
+- [x] Extract MainLayout container styles into `styles/layouts.css`, express
+  sidebar direction through `data-side`, and load styles centrally through
+  `styles/index.css` without direct layout-to-styles imports.
+  Name the work area `main-layout__workspace`, nest its direction condition,
+  and remove the redundant shell background and default row declaration.
 - [x] Polish the layouts comment: state the identity in `MainLayout`
   (`shell layout of the application`), dropping the child-responsibility
   leakage; the wiring zone (sidebar selectors) stays queued in Current and

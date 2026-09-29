@@ -1,7 +1,6 @@
 // apps/ui/src/layouts/MainLayout.tsx
 import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
 import { useKeyboardShortcuts } from "@/hooks";
-import { cn } from "@/lib";
 import { useNavigationStore, useSidebarStore } from "@/store";
 
 /** Shell layout of the application.
@@ -16,15 +15,10 @@ export function MainLayout() {
   useKeyboardShortcuts();
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-main-bg text-primary">
+    <div className="main-layout">
       <WindowHeader />
 
-      <div
-        className={cn(
-          "relative flex-1 w-full h-full overflow-hidden flex",
-          side === "left" ? "flex-row" : "flex-row-reverse",
-        )}
-      >
+      <div className="main-layout__workspace" data-side={side}>
         <Sidebar activeNavId={activeNavId} setActiveNavId={setActiveNavId} />
 
         <MainStage activeId={activeNavId} />
