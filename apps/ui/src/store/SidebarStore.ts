@@ -1,7 +1,7 @@
 // apps/ui/src/store/SidebarStore.ts
 import { create } from "zustand";
 
-import { type SidebarState } from "@/types";
+import type { SidebarState } from "@/types";
 import { createDisclosure } from "./createDisclosure";
 
 /** State container of the sidebar.

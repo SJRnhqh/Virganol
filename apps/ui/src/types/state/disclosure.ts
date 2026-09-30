@@ -6,20 +6,15 @@
  */
 export type DisclosureUpdater = (
   updater:
-    | Partial<DisclosureState>
-    | ((state: DisclosureState) => Partial<DisclosureState>),
+    | Partial<DisclosureValue>
+    | ((value: DisclosureValue) => Partial<DisclosureValue>),
 ) => void;
 
 /** Disclosure state.
  *
  * 开合状态。
  */
-export interface DisclosureState {
-  /** Whether it is currently open.
-   *
-   * 当前是否展开。
-   */
-  isOpen: boolean;
+export interface DisclosureState extends DisclosureValue {
   /** Opens.
    *
    * 展开。
@@ -35,4 +30,16 @@ export interface DisclosureState {
    * 切换展开与收起。
    */
   toggle: () => void;
+}
+
+/** Value of the disclosure state.
+ *
+ * 开合状态的值。
+ */
+interface DisclosureValue {
+  /** Whether it is currently open.
+   *
+   * 当前是否展开。
+   */
+  isOpen: boolean;
 }

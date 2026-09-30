@@ -5,10 +5,10 @@ import type { DisclosureUpdater } from "@/types";
  *
  * 开合状态的工厂。
  */
-export function createDisclosure(set: DisclosureUpdater) {
+export function createDisclosure(updater: DisclosureUpdater) {
   return {
-    open: () => set({ isOpen: true }),
-    close: () => set({ isOpen: false }),
-    toggle: () => set((state) => ({ isOpen: !state.isOpen })),
+    open: () => updater({ isOpen: true }),
+    close: () => updater({ isOpen: false }),
+    toggle: () => updater((value) => ({ isOpen: !value.isOpen })),
   };
 }

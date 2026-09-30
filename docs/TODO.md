@@ -16,7 +16,9 @@
   (typed authoring, static CSS output) beats the current lint-disciplined
   plain-CSS approach before adopting a second styling pipeline. Runs
   alongside the store slice without touching it.
-- [ ] Sidebar store slice: move whole-store destructuring consumers to
+- [ ] Sidebar store slice: review the remaining `side`, `toggleSide`, and
+  `isSwitching` fields, settle the ownership of the 80ms switch choreography,
+  then move whole-store destructuring consumers to
   fine-grained selectors (`useSidebarStyles`, `SidebarToggle`, `SideSwitch`,
   `MainLayout`, `useKeyboardShortcuts`), using `useShallow` object picks as in
   the bot feature hooks, and name the `toggleSide` 80ms choreography constant.
@@ -49,6 +51,13 @@
 
 ## Completed
 
+- [x] Refine the disclosure contract and factory boundary: make
+  `DisclosureState` extend a private `DisclosureValue` interface containing
+  only `isOpen`, keep the value interface at the file end with bilingual
+  JSDoc, and narrow `DisclosureUpdater` to value-only reads and updates.
+  Name the factory parameter `updater` and its callback parameter `value`,
+  retain container-owned initial values, and use a whole-import `type` in
+  `SidebarStore`. TypeScript and targeted ESLint checks passed.
 - [x] Land the CSS ordering and comment discipline for the shell styles: add
   `stylelint-config-recess-order` + `stylelint-order`, scope the ordering
   override to `base.css` and `layouts.css`, move the body `@apply` after its
