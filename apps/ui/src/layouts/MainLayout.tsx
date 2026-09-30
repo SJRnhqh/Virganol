@@ -1,9 +1,9 @@
 // apps/ui/src/layouts/MainLayout.tsx
 import { useShallow } from "zustand/react/shallow";
 
-import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
-import { useKeyboardShortcuts } from "@/hooks";
 import { useNavigationStore, useSidebarStore } from "@/store";
+import { useKeyboardShortcuts } from "@/hooks";
+import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
 
 /** Shell layout of the application.
  *

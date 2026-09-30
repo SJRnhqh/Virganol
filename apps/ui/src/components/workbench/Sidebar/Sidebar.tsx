@@ -2,10 +2,10 @@
 import { useMotionValue } from "framer-motion";
 import { memo } from "react";
 
-import { NAV_ITEMS } from "@/constants";
-import { useSidebarStyles } from "@/hooks";
-import { cn } from "@/lib";
 import type { SidebarProps } from "@/types";
+import { NAV_ITEMS } from "@/constants";
+import { cn } from "@/lib";
+import { useSidebarStyles } from "@/hooks";
 import { DockItem } from "./DockItem";
 
 export const Sidebar = memo(({ activeNavId, setActiveNavId }: SidebarProps) => {

@@ -3,10 +3,15 @@
 - Branch: `feat/spirit-ui-polish`
 - Parent: `feat/spirit`
 - Goal: Continue the frontend shell polish queued in `ROADMAP.md` 6.5, with
-  the store layer as the branch's main focus after the boundaries gate.
+  the MainLayout-facing store review complete and keyboard hooks plus the
+  CSS style-pipeline evaluation as the next focus.
 
 ## Current
 
+- [ ] Review MainLayout's `useKeyboardShortcuts` hook and `handleKeyDown`:
+  narrow store subscriptions, inspect event registration and cleanup, and
+  tighten the injected dependency contract by moving `ShortcutDeps` to
+  `types/hotkeys.ts` and composing it with `Pick` over the store states.
 - [ ] CSS style-pipeline evaluation (PandaCSS vs vanilla-extract vs StyleX):
   prototype the `layouts.css` semantics as typed recipes/patterns, keep the
   token and base layers as plain CSS for the transition, weigh Panda's
@@ -15,14 +20,13 @@
   relevant for a desktop app), and decide whether the pure-TS end state
   (typed authoring, static CSS output) beats the current lint-disciplined
   plain-CSS approach before adopting a second styling pipeline. Runs
-  alongside the store slice without touching it.
-- [ ] Sidebar store consumers: move whole-store destructuring consumers to
-  fine-grained selectors (`useSidebarStyles`, `SidebarToggle`, `SideSwitch`,
-  `useKeyboardShortcuts`), using `useShallow` object picks as in
-  the bot feature hooks.
+  alongside the keyboard hook review.
 
 ## Planned
 
+- [ ] Remaining sidebar store consumers: move whole-store destructuring in
+  `useSidebarStyles`, `SidebarToggle`, and `SideSwitch` to fine-grained
+  selectors, using `useShallow` object picks as in the bot feature hooks.
 - [ ] Revisit native `@scope` when component-level structure emerges (sidebar
   internals, module decks): evaluate scoping selectors with the donut form
   (`@scope (...) to (...)`) as the BEM-prefix alternative, keeping the global
@@ -34,8 +38,6 @@
 - [ ] Consider unifying the nav id sources: derive `NavId` from an
   `NAV_IDS as const` list instead of the hand-written union, so
   `constants/navigation.ts` and `types/navigation.ts` share one fact source.
-- [ ] Tighten `handleKeyDown` dependency injection: move `ShortcutDeps` to
-  `types/hotkeys.ts` and compose it with `Pick` over the store states.
 - [ ] After the sidebar slice, settle the settings follow-ups: decide
   `settings.toggle` (give the Cmd+, hotkey `deps.toggle` vs narrowing the
   slice with `Pick`) and confirm the bare-open-keeps-last-tab semantics.
@@ -49,16 +51,25 @@
 
 ## Completed
 
+- [x] Close the current MainLayout-facing store review: SidebarStore owns
+  disclosure and docking, NavigationStore owns the active navigation item,
+  and MainLayout selects the required fields. Keep NavId representation
+  decisions for the types review; other consumer subscriptions remain planned.
+- [x] Enforce semantic shell import ordering with `simple-import-sort`:
+  order internal aliases as `types -> constants -> lib -> store -> hooks ->
+  features -> components -> layouts`, keep external dependencies, internal
+  side-effect imports, relative-path rules, and blank-line grouping as before,
+  and align the affected imports without changing dependency policies.
 - [x] Refine MainLayout store subscriptions: select only `side` from
   `SidebarStore` and combine `activeNavId` / `setActiveNavId` from
   `NavigationStore` in one `useShallow` object pick. TypeScript and targeted
-  ESLint checks passed; other sidebar consumers remain in Current.
+  ESLint checks passed; other sidebar consumers remain planned.
 - [x] Complete the current SidebarStore container polish: keep `side` as the
   sidebar-owned docking value, make `toggleSide` a synchronous left/right
   update, and remove `isSwitching`, the 80ms wait, the re-entry guard, and the
   unused `get` parameter. Align `SidebarState.toggleSide` with `void` and
   remove switch-only fading from `useSidebarStyles` while retaining the
-  open/close animation. Consumer selector cleanup remains in Current.
+  open/close animation. Consumer selector cleanup remains pending.
 - [x] Refine the disclosure contract and factory boundary: make
   `DisclosureState` extend a private `DisclosureValue` interface containing
   only `isOpen`, keep the value interface at the file end with bilingual

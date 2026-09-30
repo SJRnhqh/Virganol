@@ -1,8 +1,8 @@
 // apps/ui/src/store/NavigationStore.ts
 import { create } from "zustand";
 
-import { NAV_ITEMS } from "@/constants";
 import type { NavigationState } from "@/types";
+import { NAV_ITEMS } from "@/constants";
 
 /** State container of the workbench navigation.
  *

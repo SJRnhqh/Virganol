@@ -3,8 +3,8 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { type } from "@tauri-apps/plugin-os";
 import { useState } from "react";
 
-import { useWindowState } from "@/hooks";
 import { cn } from "@/lib";
+import { useWindowState } from "@/hooks";
 import { Breadcrumb } from "./Breadcrumb";
 import { MacTrafficLightSpacer } from "./MacTrafficLightSpacer";
 import { SettingsButton } from "./SettingsButton";

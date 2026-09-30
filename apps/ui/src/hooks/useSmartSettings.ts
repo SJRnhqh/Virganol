@@ -1,7 +1,7 @@
 // apps/ui/src/hooks/useSmartSettings.ts
+import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "@/types";
 import { NAV_ITEMS } from "@/constants";
 import { useNavigationStore, useSettingsStore } from "@/store";
-import { DEFAULT_SETTINGS_TAB, type SettingsTab } from "@/types";
 
 export function useSmartSettings() {
   const open = useSettingsStore((state) => state.open);
