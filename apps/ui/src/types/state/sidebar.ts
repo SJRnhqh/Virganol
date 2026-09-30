@@ -15,10 +15,5 @@ export interface SidebarState extends DisclosureState {
    *
    * 切换停靠侧。
    */
-  toggleSide: () => Promise<void>;
-  /** Whether a side switch is in progress.
-   *
-   * 停靠侧切换是否进行中。
-   */
-  isSwitching: boolean;
+  toggleSide: () => void;
 }

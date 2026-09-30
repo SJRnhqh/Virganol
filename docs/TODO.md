@@ -16,12 +16,10 @@
   (typed authoring, static CSS output) beats the current lint-disciplined
   plain-CSS approach before adopting a second styling pipeline. Runs
   alongside the store slice without touching it.
-- [ ] Sidebar store slice: review the remaining `side`, `toggleSide`, and
-  `isSwitching` fields, settle the ownership of the 80ms switch choreography,
-  then move whole-store destructuring consumers to
+- [ ] Sidebar store consumers: move whole-store destructuring consumers to
   fine-grained selectors (`useSidebarStyles`, `SidebarToggle`, `SideSwitch`,
   `MainLayout`, `useKeyboardShortcuts`), using `useShallow` object picks as in
-  the bot feature hooks, and name the `toggleSide` 80ms choreography constant.
+  the bot feature hooks.
 
 ## Planned
 
@@ -51,6 +49,12 @@
 
 ## Completed
 
+- [x] Complete the current SidebarStore container polish: keep `side` as the
+  sidebar-owned docking value, make `toggleSide` a synchronous left/right
+  update, and remove `isSwitching`, the 80ms wait, the re-entry guard, and the
+  unused `get` parameter. Align `SidebarState.toggleSide` with `void` and
+  remove switch-only fading from `useSidebarStyles` while retaining the
+  open/close animation. Consumer selector cleanup remains in Current.
 - [x] Refine the disclosure contract and factory boundary: make
   `DisclosureState` extend a private `DisclosureValue` interface containing
   only `isOpen`, keep the value interface at the file end with bilingual

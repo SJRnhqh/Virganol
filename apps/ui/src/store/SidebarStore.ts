@@ -8,23 +8,13 @@ import { createDisclosure } from "./createDisclosure";
  *
  * 侧边栏的状态容器。
  */
-export const useSidebarStore = create<SidebarState>((set, get) => ({
+export const useSidebarStore = create<SidebarState>((set) => ({
   isOpen: true,
   ...createDisclosure(set),
 
   side: "left",
-  toggleSide: async () => {
-    if (get().isSwitching) return;
-
-    set({ isSwitching: true });
-
-    await new Promise((resolve) => setTimeout(resolve, 80));
-
+  toggleSide: () =>
     set((state) => ({
       side: state.side === "left" ? "right" : "left",
-      isSwitching: false,
-    }));
-  },
-
-  isSwitching: false,
+    })),
 }));

@@ -2,18 +2,16 @@
 import { useSidebarStore } from "@/store";
 
 export const useSidebarStyles = () => {
-  const { isOpen, side, isSwitching } = useSidebarStore();
+  const { isOpen, side } = useSidebarStore();
 
   // 1. 动态计算透明度
-  // 切换中或关闭时隐藏，打开时显示
-  const dockOpacityClass = (isSwitching || !isOpen) ? "opacity-0" : "opacity-100";
+  // 关闭时隐藏，打开时显示
+  const dockOpacityClass = isOpen ? "opacity-100" : "opacity-0";
 
   // 2. 动态计算动画时长和延迟
-  const dockTimingClass = isSwitching
-    ? "duration-200 ease-in-out delay-0"
-    : isOpen
-      ? "duration-500 ease-out delay-200"
-      : "duration-200 ease-in delay-0";
+  const dockTimingClass = isOpen
+    ? "duration-500 ease-out delay-200"
+    : "duration-200 ease-in delay-0";
 
   // 3. 动态计算位移
   // 关闭时向左或向右偏移，产生“缩进去”的效果
