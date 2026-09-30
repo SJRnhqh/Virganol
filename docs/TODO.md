@@ -18,7 +18,7 @@
   alongside the store slice without touching it.
 - [ ] Sidebar store consumers: move whole-store destructuring consumers to
   fine-grained selectors (`useSidebarStyles`, `SidebarToggle`, `SideSwitch`,
-  `MainLayout`, `useKeyboardShortcuts`), using `useShallow` object picks as in
+  `useKeyboardShortcuts`), using `useShallow` object picks as in
   the bot feature hooks.
 
 ## Planned
@@ -49,6 +49,10 @@
 
 ## Completed
 
+- [x] Refine MainLayout store subscriptions: select only `side` from
+  `SidebarStore` and combine `activeNavId` / `setActiveNavId` from
+  `NavigationStore` in one `useShallow` object pick. TypeScript and targeted
+  ESLint checks passed; other sidebar consumers remain in Current.
 - [x] Complete the current SidebarStore container polish: keep `side` as the
   sidebar-owned docking value, make `toggleSide` a synchronous left/right
   update, and remove `isSwitching`, the 80ms wait, the re-entry guard, and the
@@ -76,7 +80,7 @@
   and remove the redundant shell background and default row declaration.
 - [x] Polish the layouts comment: state the identity in `MainLayout`
   (`shell layout of the application`), dropping the child-responsibility
-  leakage; the wiring zone (sidebar selectors) stays queued in Current and
+  leakage; the wiring zone (sidebar selectors) is now completed above and
   the JSX zone reduces to composition plus the className question.
 - [x] Polish the entry-layer comments: state the mount causality in
   `main.tsx` (render the root component to mount the app) and the identity in

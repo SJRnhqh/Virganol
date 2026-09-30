@@ -1,4 +1,6 @@
 // apps/ui/src/layouts/MainLayout.tsx
+import { useShallow } from "zustand/react/shallow";
+
 import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
 import { useKeyboardShortcuts } from "@/hooks";
 import { useNavigationStore, useSidebarStore } from "@/store";
@@ -8,9 +10,13 @@ import { useNavigationStore, useSidebarStore } from "@/store";
  * 应用的外壳布局。
  */
 export function MainLayout() {
-  const { side } = useSidebarStore();
-  const activeNavId = useNavigationStore((state) => state.activeNavId);
-  const setActiveNavId = useNavigationStore((state) => state.setActiveNavId);
+  const side = useSidebarStore((state) => state.side);
+  const { activeNavId, setActiveNavId } = useNavigationStore(
+    useShallow((state) => ({
+      activeNavId: state.activeNavId,
+      setActiveNavId: state.setActiveNavId,
+    })),
+  );
 
   useKeyboardShortcuts();
 
