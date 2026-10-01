@@ -1,28 +1,37 @@
 // apps/ui/src/hooks/hotkeys/useKeyboardShortcuts.ts
 import { useEffect } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import { useSettingsStore, useSidebarStore } from "@/store";
 import { handleKeyDown } from "./handleKeyDown";
 
-/** Registers the global keyboard shortcuts.
+/** Manages the global keyboard shortcut listener.
  *
- * 注册全局键盘快捷键。
+ * 管理全局键盘快捷键监听。
  */
 export function useKeyboardShortcuts() {
-  const { isOpen, close, open } = useSettingsStore();
-  const { toggle, toggleSide } = useSidebarStore();
+  const { isOpen, open, close } = useSettingsStore(
+    useShallow((state) => ({
+      isOpen: state.isOpen,
+      open: state.open,
+      close: state.close,
+    })),
+  );
+  const { toggle, toggleSide } = useSidebarStore(
+    useShallow((state) => ({
+      toggle: state.toggle,
+      toggleSide: state.toggleSide,
+    })),
+  );
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) =>
       handleKeyDown(event, {
-        isOpen,
-        close,
-        open,
-        toggle,
-        toggleSide,
+        settings: { isOpen, open, close },
+        sidebar: { toggle, toggleSide },
       });
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [toggle, toggleSide, isOpen, close, open]);
+  }, [isOpen, open, close, toggle, toggleSide]);
 }
