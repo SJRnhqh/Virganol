@@ -46,8 +46,15 @@ const boundaryPolicies = [
   {
     from: { element: { type: moduleTypes } },
     dependency: { relationship: { from: "internal" } },
-    disallow: { dependency: { source: "!+([.]/|[.][.]/)**" } },
-    message: "Use relative paths within modules.",
+    disallow: {
+      dependency: {
+        source: [
+          "!+([.]/|[.][.]/)**",
+          "+([.]/|[.][.]/)?(**/)*.{ts,tsx}",
+        ],
+      },
+    },
+    message: "Use relative paths without script extensions within modules.",
   },
 ];
 
@@ -96,6 +103,7 @@ export default defineConfig([
       boundaries,
     },
     rules: {
+      "no-duplicate-imports": "error",
       "no-restricted-syntax": [
         "error",
         {

@@ -8,8 +8,8 @@
 
 ## Current
 
-- [ ] Review worthwhile additional ESLint constraints, starting with omitted
-  script extensions; assess redundant relative paths and import formatting.
+- [ ] Review worthwhile additional ESLint constraints: assess redundant
+  relative paths and import formatting.
   Prefer existing rules/plugins and mature solutions where justified; retain
   useful import aliases and defer feature/stylesheet path gates.
 - [ ] Evaluate PandaCSS, vanilla-extract, and StyleX against the current
@@ -39,6 +39,13 @@
 
 ## Completed
 
+- [x] Reject mergeable split imports in the current shell/root lint scope with
+  core `no-duplicate-imports`, including separate type/value declarations.
+  Full UI ESLint, six split/merged checks, and repository `pnpm test` passed;
+  feature source coverage remains deferred.
+- [x] Require omitted `.ts`/`.tsx` extensions within managed modules using the
+  existing boundaries policy; preserve deferred feature/stylesheet targets.
+  Full UI ESLint and in-memory extension/scope checks passed.
 - [x] Require double quotes only in static import sources within the current
   shell/root lint scope using `no-restricted-syntax`; leave other strings
   unchanged. Full UI ESLint, import/body scope checks, and repository
