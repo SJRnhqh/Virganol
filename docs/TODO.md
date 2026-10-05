@@ -3,10 +3,15 @@
 - Branch: `feat/spirit-ui-polish`
 - Parent: `feat/spirit`
 - Goal: Polish the frontend shell under `ROADMAP.md` 6.5. MainLayout-facing
-  store and hotkeys reviews are complete; evaluate CSS next.
+  store and hotkeys reviews are complete; review remaining ESLint conventions
+  and evaluate CSS next.
 
 ## Current
 
+- [ ] Review worthwhile additional ESLint constraints, starting with omitted
+  script extensions; assess redundant relative paths and import formatting.
+  Prefer existing rules/plugins and mature solutions where justified; retain
+  useful import aliases and defer feature/stylesheet path gates.
 - [ ] Evaluate PandaCSS, vanilla-extract, and StyleX against the current
   lint-disciplined CSS. Prototype typed `layouts.css` recipes/patterns,
   retain plain-CSS tokens/base during transition, and assess authoring DX,
@@ -27,11 +32,40 @@
 - [ ] Fix the inherited `WindowHeader` `osType` Promise bug. Keep parked
   `ModuleMenu` and commented `Breadcrumb` scaffolding pending a decision.
 - [ ] Extend the boundaries gate into `features/` via reverse-waterfall
-  review; decide enforceable `../` vs `@/` rules (currently cross-directory
-  shell imports use `@/`, same-package relatives are tolerated).
+  review.
+- [ ] Align TypeScript style documentation with the enforced ESLint policies
+  after rule coverage reaches the full frontend; defer `docs/rules/` edits
+  meanwhile and document the finalized project conventions together.
 
 ## Completed
 
+- [x] Require double quotes only in static import sources within the current
+  shell/root lint scope using `no-restricted-syntax`; leave other strings
+  unchanged. Full UI ESLint, import/body scope checks, and repository
+  `pnpm test` passed.
+- [x] Reject explicit `/index` and `/index.*` in cross-shell alias imports,
+  preserving stylesheet resource entries and the deferred feature scope.
+  Full UI ESLint and in-memory entry spelling checks passed.
+- [x] Require relative paths within the root app element using the existing
+  boundaries policy: main's `./App` passes and `@/App` is rejected. Full UI
+  ESLint and in-memory root import checks passed.
+- [x] Verify remaining root import alternatives with eight in-memory ESLint
+  checks: script extensions/redundant relatives, stylesheet paths, namespace
+  and aliased imports, and import formatting still pass. Track these for
+  subsequent policy review; current gates do not imply unique import text.
+- [x] Enforce shell import paths through existing boundaries policies, deriving
+  module types from the direction matrix: cross-module aliases resolve to
+  root `index.ts`; internal imports and
+  re-exports use relative paths. Normalize App's layouts import; full UI
+  ESLint, TypeScript, and boundary behavior checks passed.
+- [x] Enforce shell module public entries through `boundaries/dependencies`:
+  cross-module imports/re-exports resolve to root `index.ts`, while internal
+  dependencies remain direct. Full UI ESLint and 22 boundary behavior checks
+  passed.
+- [x] Enforce shell type imports with `consistent-type-imports` and
+  `no-import-type-side-effects`: use top-level `import type` for type-only
+  declarations and keep mixed declarations inline, reusing existing plugins.
+  Full UI source ESLint and in-memory autofix/sort checks passed.
 - [x] Complete the `useKeyboardShortcuts` review: select only required
   settings/sidebar members with `useShallow`, pair listener registration
   with cleanup, and delegate shortcut logic to the dispatcher and handlers.

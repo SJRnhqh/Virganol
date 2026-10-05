@@ -23,12 +23,33 @@ const dependencyAllows = {
   app: ["features", "layouts", "styles"],
 };
 
-const dependencyPolicies = Object.entries(dependencyAllows).map(
-  ([from, allow]) => ({
+const moduleTypes = Object.keys(dependencyAllows);
+
+const boundaryPolicies = [
+  ...Object.entries(dependencyAllows).map(([from, allow]) => ({
     from: { element: { type: from } },
     allow: [{ to: { element: { type: [...allow, from] } } }],
-  }),
-);
+  })),
+  ...moduleTypes.map((from) => ({
+    from: { element: { type: from } },
+    to: {
+      element: {
+        type: moduleTypes.filter((type) => type !== "app" && type !== from),
+      },
+    },
+    disallow: [
+      { dependency: { source: ["!@/**", "@/**/index{,.*}"] } },
+      { to: { element: { fileInternalPath: "!index.ts" } } },
+    ],
+    message: "Use @/ public entries without /index.",
+  })),
+  {
+    from: { element: { type: moduleTypes } },
+    dependency: { relationship: { from: "internal" } },
+    disallow: { dependency: { source: "!+([.]/|[.][.]/)**" } },
+    message: "Use relative paths within modules.",
+  },
+];
 
 export default defineConfig([
   globalIgnores(["dist"]),
@@ -75,6 +96,21 @@ export default defineConfig([
       boundaries,
     },
     rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "ImportDeclaration > Literal.source[raw=/^'/]",
+          message: "Use double quotes in imports.",
+        },
+      ],
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+          prefer: "type-imports",
+          fixStyle: "inline-type-imports",
+        },
+      ],
+      "@typescript-eslint/no-import-type-side-effects": "error",
       "simple-import-sort/imports": [
         "error",
         {
@@ -110,7 +146,11 @@ export default defineConfig([
       ],
       "boundaries/dependencies": [
         "error",
-        { default: "disallow", policies: dependencyPolicies },
+        {
+          default: "disallow",
+          checkInternals: true,
+          policies: boundaryPolicies,
+        },
       ],
     },
   },

@@ -1,6 +1,6 @@
 // apps/ui/src/App.tsx
-import { useProviderStartup } from "./features";
-import { MainLayout } from "./layouts";
+import { useProviderStartup } from "@/features";
+import { MainLayout } from "@/layouts";
 
 /** Root component of the application.
  *
