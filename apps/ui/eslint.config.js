@@ -1,5 +1,6 @@
 import js from "@eslint/js";
 import boundaries from "eslint-plugin-boundaries";
+import importX from "eslint-plugin-import-x";
 import globals from "globals";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -58,6 +59,13 @@ const boundaryPolicies = [
   },
 ];
 
+const tsResolver = {
+  typescript: {
+    alwaysTryTypes: true,
+    project: "tsconfig.app.json",
+  },
+};
+
 export default defineConfig([
   globalIgnores(["dist"]),
   {
@@ -79,12 +87,8 @@ export default defineConfig([
   {
     files: srcFiles,
     settings: {
-      "import/resolver": {
-        typescript: {
-          alwaysTryTypes: true,
-          project: "tsconfig.app.json",
-        },
-      },
+      "import/resolver": tsResolver,
+      "import-x/resolver": tsResolver,
       "boundaries/elements": [
         { type: "types", pattern: "src/types/**" },
         { type: "constants", pattern: "src/constants/**" },
@@ -99,10 +103,12 @@ export default defineConfig([
       ],
     },
     plugins: {
+      "import-x": importX,
       "simple-import-sort": simpleImportSort,
       boundaries,
     },
     rules: {
+      "import-x/no-useless-path-segments": "error",
       "no-duplicate-imports": "error",
       "no-restricted-syntax": [
         "error",

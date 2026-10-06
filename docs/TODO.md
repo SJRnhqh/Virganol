@@ -3,22 +3,20 @@
 - Branch: `feat/spirit-ui-polish`
 - Parent: `feat/spirit`
 - Goal: Polish the frontend shell under `ROADMAP.md` 6.5. MainLayout-facing
-  store and hotkeys reviews are complete; review remaining ESLint conventions
-  and evaluate CSS next.
+  store and hotkeys reviews are complete; settle root imports, then review
+  layouts and CSS.
 
 ## Current
 
-- [ ] Review worthwhile additional ESLint constraints: assess redundant
-  relative paths and import formatting.
-  Prefer existing rules/plugins and mature solutions where justified; retain
-  useful import aliases and defer feature/stylesheet path gates.
-- [ ] Evaluate PandaCSS, vanilla-extract, and StyleX against the current
-  lint-disciplined CSS. Prototype typed `layouts.css` recipes/patterns,
-  retain plain-CSS tokens/base during transition, and assess authoring DX,
-  theme contracts, and static output before adopting another pipeline.
+- [ ] Further unify imports in `src/main.tsx` and `src/App.tsx`: assess trailing
+  slashes, named default imports, and formatting with existing rules/tools.
+  Defer feature and stylesheet conventions.
 
 ## Planned
 
+- [ ] After root import paths/forms and formatting policy are settled, review
+  layouts/CSS, then lower layers. Evaluate PandaCSS, vanilla-extract, and
+  StyleX for typed `layouts.css`.
 - [ ] Use fine-grained selectors / `useShallow` picks in `useSidebarStyles`,
   `SidebarToggle`, and `SideSwitch`.
 - [ ] Evaluate native `@scope (...) to (...)` for sidebar/module internals
@@ -39,6 +37,9 @@
 
 ## Completed
 
+- [x] Normalize redundant shell/root relative imports and re-exports with
+  `import-x/no-useless-path-segments`; share TypeScript resolver settings with
+  boundaries and preserve explicit index entries.
 - [x] Reject mergeable split imports in the current shell/root lint scope with
   core `no-duplicate-imports`, including separate type/value declarations.
   Full UI ESLint, six split/merged checks, and repository `pnpm test` passed;
