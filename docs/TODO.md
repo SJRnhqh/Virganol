@@ -3,20 +3,22 @@
 - Branch: `feat/spirit-ui-polish`
 - Parent: `feat/spirit`
 - Goal: Polish the frontend shell under `ROADMAP.md` 6.5. MainLayout-facing
-  store and hotkeys reviews are complete; settle root imports, then review
-  layouts and CSS.
+  store and hotkeys reviews are complete; incrementally unify imports alongside
+  layouts review and CSS experiments.
 
 ## Current
 
 - [ ] Further unify imports in `src/main.tsx` and `src/App.tsx`: assess trailing
   slashes, named default imports, and formatting with existing rules/tools.
-  Defer feature and stylesheet conventions.
+  Defer feature coverage and stylesheet import gates.
+- [ ] Review the layouts layer: structure, logic, types, comments, and styling;
+  continue down the shell as each layer is reviewed.
+- [ ] Evaluate CSS beyond direct Tailwind classes with a small layout prototype:
+  PandaCSS, vanilla-extract, and StyleX; compare authoring, type/theme contracts,
+  generated output, and migration effort.
 
 ## Planned
 
-- [ ] After root import paths/forms and formatting policy are settled, review
-  layouts/CSS, then lower layers. Evaluate PandaCSS, vanilla-extract, and
-  StyleX for typed `layouts.css`.
 - [ ] Use fine-grained selectors / `useShallow` picks in `useSidebarStyles`,
   `SidebarToggle`, and `SideSwitch`.
 - [ ] Evaluate native `@scope (...) to (...)` for sidebar/module internals
