@@ -110,6 +110,7 @@ export default defineConfig([
     rules: {
       "import-x/first": "error",
       "import-x/no-named-default": "error",
+      "import-x/no-namespace": "error",
       "import-x/no-useless-path-segments": "error",
       "no-duplicate-imports": "error",
       "no-restricted-syntax": [

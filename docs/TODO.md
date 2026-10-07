@@ -39,6 +39,10 @@
 
 ## Completed
 
+- [x] Reject namespace imports with existing `import-x/no-namespace` within
+  the current shell/root lint scope. Keep named import aliases available for
+  naming conflicts. Full UI ESLint, four in-memory namespace/alias checks,
+  and repository `pnpm test` passed; feature source coverage remains deferred.
 - [x] Keep static imports before other statements using `import-x/first` and
   reject `EmptyStatement` through existing `no-restricted-syntax` within the
   current shell/root lint scope, preventing empty-statement sort-block splits.
