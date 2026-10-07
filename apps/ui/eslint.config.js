@@ -152,6 +152,10 @@ export default defineConfig([
         {
           patterns: [
             {
+              regex: "/$",
+              message: "Omit trailing slashes in import sources.",
+            },
+            {
               regex: "^node:",
               message: "Node.js built-in modules are not allowed in UI source.",
             },
