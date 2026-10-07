@@ -39,6 +39,13 @@
 
 ## Completed
 
+- [x] Keep static imports before other statements using `import-x/first` and
+  reject `EmptyStatement` through existing `no-restricted-syntax` within the
+  current shell/root lint scope, preventing empty-statement sort-block splits.
+  Preserve directive prologues and ordinary statement terminators; empty loop
+  bodies written as `;` are also rejected. Full UI ESLint, eleven in-memory
+  rule/scope checks, and repository `pnpm test` passed; feature source coverage
+  remains deferred.
 - [x] Require conventional default import syntax instead of `{ default as X }`
   within the current shell/root lint scope using `import-x/no-named-default`.
   Full UI ESLint, eight in-memory rule/scope checks, and repository `pnpm test`

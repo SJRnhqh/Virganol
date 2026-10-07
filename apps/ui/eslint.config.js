@@ -108,11 +108,16 @@ export default defineConfig([
       boundaries,
     },
     rules: {
+      "import-x/first": "error",
       "import-x/no-named-default": "error",
       "import-x/no-useless-path-segments": "error",
       "no-duplicate-imports": "error",
       "no-restricted-syntax": [
         "error",
+        {
+          selector: "EmptyStatement",
+          message: "Remove empty statements; keep imports in one sortable block.",
+        },
         {
           selector: "ImportDeclaration > Literal.source[raw=/^'/]",
           message: "Use double quotes in imports.",
