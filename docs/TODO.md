@@ -8,8 +8,8 @@
 
 ## Current
 
-- [ ] Further unify imports in `src/main.tsx` and `src/App.tsx`: assess named
-  default imports and formatting with existing rules/tools.
+- [ ] Further unify imports in `src/main.tsx` and `src/App.tsx`: assess
+  formatting with existing rules/tools.
   Defer feature coverage and stylesheet import gates.
 - [ ] Review the layouts layer: structure, logic, types, comments, and styling;
   continue down the shell as each layer is reviewed.
@@ -39,6 +39,10 @@
 
 ## Completed
 
+- [x] Require conventional default import syntax instead of `{ default as X }`
+  within the current shell/root lint scope using `import-x/no-named-default`.
+  Full UI ESLint, eight in-memory rule/scope checks, and repository `pnpm test`
+  passed; feature source coverage remains deferred.
 - [x] Reject trailing slashes in import/re-export sources within the current
   shell/root lint scope using existing `no-restricted-imports`; cover aliases,
   relative paths, packages, side-effect imports, and type imports. Full UI

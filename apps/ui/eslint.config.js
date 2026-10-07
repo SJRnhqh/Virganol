@@ -108,6 +108,7 @@ export default defineConfig([
       boundaries,
     },
     rules: {
+      "import-x/no-named-default": "error",
       "import-x/no-useless-path-segments": "error",
       "no-duplicate-imports": "error",
       "no-restricted-syntax": [
