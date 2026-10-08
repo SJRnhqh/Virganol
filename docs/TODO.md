@@ -8,8 +8,10 @@
 
 ## Current
 
-- [ ] Further unify imports in `src/main.tsx` and `src/App.tsx`: assess
-  formatting with existing rules/tools.
+- [ ] Review Oxfmt formatting options and decide the initial check scope
+  for `src/main.tsx` and `src/App.tsx`; resolve import spacing, semicolons,
+  and line wrapping alongside the existing ESLint import policies.
+  Tool migration is complete; formatting enforcement remains pending.
   Defer feature coverage and stylesheet import gates.
 - [ ] Review the layouts layer: structure, logic, types, comments, and styling;
   continue down the shell as each layer is reviewed.
@@ -39,6 +41,12 @@
 
 ## Completed
 
+- [x] Replace Prettier with Oxfmt 0.72.0, preserving the six formatting
+  options and 22 ignore patterns in `.oxfmtrc.json`. Disable import and
+  package.json sorting to retain existing behavior; formatting remains
+  opt-in, with no new lint/commit gate or source reformatting. Ten output
+  comparisons against Prettier 3.8.3, eleven ignored-path checks, CLI
+  acceptance/rejection checks, and repository `pnpm test` passed.
 - [x] Reject namespace imports with existing `import-x/no-namespace` within
   the current shell/root lint scope. Keep named import aliases available for
   naming conflicts. Full UI ESLint, four in-memory namespace/alias checks,
