@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "rsbuild dev",
     "build": "tsc -b && rsbuild build",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
     "lint": "eslint . && pnpm lint:css",
     "lint:fix": "eslint . --fix && pnpm lint:css:fix",
     "lint:css": "stylelint .",

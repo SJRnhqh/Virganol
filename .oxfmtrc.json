@@ -9,6 +9,10 @@
   "sortImports": false,
   "sortPackageJson": false,
   "ignorePatterns": [
+    "**/*",
+    "!**/",
+    "!apps/ui/src/main.tsx",
+    "!apps/ui/src/App.tsx",
     "node_modules",
     "**/node_modules",
     "dist",

@@ -8,6 +8,8 @@
     "diff:budget": "node dev/scripts/repo/diff-budget.mjs",
     "test": "node dev/scripts/repo/test.mjs",
     "bench": "node dev/scripts/repo/bench.mjs",
+    "format": "pnpm -F @virganol/ui format",
+    "format:check": "pnpm -F @virganol/ui format:check",
     "lint": "pnpm lint:ui",
     "lint:fix": "pnpm lint:ui:fix",
     "lint:ui": "pnpm -F @virganol/ui lint",

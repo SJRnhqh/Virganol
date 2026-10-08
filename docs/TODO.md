@@ -8,10 +8,7 @@
 
 ## Current
 
-- [ ] Review Oxfmt formatting options and decide the initial check scope
-  for `src/main.tsx` and `src/App.tsx`; resolve import spacing, semicolons,
-  and line wrapping alongside the existing ESLint import policies.
-  Tool migration is complete; formatting enforcement remains pending.
+- [ ] Finalize entry-file formatting conventions and verify Zed format-on-save.
   Defer feature coverage and stylesheet import gates.
 - [ ] Review the layouts layer: structure, logic, types, comments, and styling;
   continue down the shell as each layer is reviewed.
@@ -41,6 +38,12 @@
 
 ## Completed
 
+- [x] Limit Oxfmt to `apps/ui/src/main.tsx` and `apps/ui/src/App.tsx`;
+  retain the root configuration and existing formatting options.
+- [x] Add UI/root `format` and `format:check`; include the read-only check
+  in `pnpm test` for pre-commit and CI. Scope/failure checks and tests passed.
+- [x] Configure local Zed TSX format-on-save with Oxfmt and retain `vtsls`;
+  workspace settings stay ignored and JSON validation passed.
 - [x] Replace Prettier with Oxfmt 0.72.0, preserving the six formatting
   options and 22 ignore patterns in `.oxfmtrc.json`. Disable import and
   package.json sorting to retain existing behavior; formatting remains

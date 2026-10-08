@@ -10,6 +10,7 @@ const repoRoot = path.resolve(scriptDir, "../../..");
 
 // Quality gates / 质量门
 const steps = [
+  { name: "format:check", command: "pnpm", args: ["-F", "@virganol/ui", "format:check"] },
   { name: "lint", command: "pnpm", args: ["-F", "@virganol/ui", "lint"] },
   // TODO: test — vitest / jest when a test framework is added
 ];
