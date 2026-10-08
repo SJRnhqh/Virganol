@@ -80,9 +80,6 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
-    rules: {
-      "comma-spacing": ["error", { before: false, after: true }],
-    },
   },
   {
     files: srcFiles,

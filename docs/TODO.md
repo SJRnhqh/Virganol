@@ -38,6 +38,8 @@
 
 ## Completed
 
+- [x] Remove ESLint's `comma-spacing` gate; retain Oxfmt's two-entry scope.
+  Repository tests passed.
 - [x] Limit Oxfmt to `apps/ui/src/main.tsx` and `apps/ui/src/App.tsx`;
   retain the root configuration and existing formatting options.
 - [x] Add UI/root `format` and `format:check`; include the read-only check
