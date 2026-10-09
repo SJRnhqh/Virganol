@@ -17,6 +17,8 @@
 ## Planned
 
 - [ ] Verify Zed format-on-save; defer further entry import conventions.
+  Known follow-ups: source-string line continuations and duplicate-import
+  autofix coverage; features/CSS remain deferred.
 - [ ] Use fine-grained selectors / `useShallow` picks in `useSidebarStyles`,
   `SidebarToggle`, and `SideSwitch`.
 - [ ] Evaluate native `@scope (...) to (...)` for sidebar/module internals
@@ -37,6 +39,10 @@
 
 ## Completed
 
+- [x] Require exactly one empty line after the import block in `main.tsx`
+  and `App.tsx`, including following comments, with existing
+  `import-x/newline-after-import`; autofix missing separators and let Oxfmt
+  collapse extras. Scope/fix/stability checks and repository tests passed.
 - [x] Reject Unicode/hex escapes in `main.tsx` and `App.tsx` import sources;
   defer features/CSS. Scope checks and repository tests passed.
 - [x] Reject redundant import aliases in `main.tsx` and `App.tsx`;

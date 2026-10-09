@@ -181,6 +181,10 @@ export default defineConfig([
   {
     files: ["src/main.tsx", "src/App.tsx"],
     rules: {
+      "import-x/newline-after-import": [
+        "error",
+        { count: 1, exactCount: true, considerComments: true },
+      ],
       "no-restricted-syntax": [
         ...restrictedSyntax,
         {
