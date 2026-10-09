@@ -63,7 +63,7 @@ const boundaryPolicies = [
       dependency: {
         source: [
           "!+([.]/|[.][.]/)**",
-          "+([.]/|[.][.]/)?(**/)*.{ts,tsx}",
+          "+([.]/|[.][.]/)?(**/)*.{js,jsx,ts,tsx}",
         ],
       },
     },

@@ -39,6 +39,10 @@
 
 ## Completed
 
+- [x] Extend the existing internal shell/root script-extension gate to reject
+  `.js` / `.jsx` in imports and re-exports; retain extensionless paths and
+  deferred feature/CSS targets. Scope/error checks and repository `pnpm test`
+  passed; the boundaries rule reports errors without autofix.
 - [x] Require exactly one empty line after the import block in `main.tsx`
   and `App.tsx`, including following comments, with existing
   `import-x/newline-after-import`; autofix missing separators and let Oxfmt
