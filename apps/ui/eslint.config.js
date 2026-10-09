@@ -13,6 +13,18 @@ const srcFiles = [
   "src/*.{ts,tsx}",
 ];
 
+const restrictedSyntax = [
+  "error",
+  {
+    selector: "EmptyStatement",
+    message: "Remove empty statements; keep imports in one sortable block.",
+  },
+  {
+    selector: "ImportDeclaration > Literal.source[raw=/^'/]",
+    message: "Use double quotes in imports.",
+  },
+];
+
 const dependencyAllows = {
   types: [],
   constants: ["types"],
@@ -110,17 +122,7 @@ export default defineConfig([
       "import-x/no-namespace": "error",
       "import-x/no-useless-path-segments": "error",
       "no-duplicate-imports": "error",
-      "no-restricted-syntax": [
-        "error",
-        {
-          selector: "EmptyStatement",
-          message: "Remove empty statements; keep imports in one sortable block.",
-        },
-        {
-          selector: "ImportDeclaration > Literal.source[raw=/^'/]",
-          message: "Use double quotes in imports.",
-        },
-      ],
+      "no-restricted-syntax": restrictedSyntax,
       "@typescript-eslint/consistent-type-imports": [
         "error",
         {
@@ -173,6 +175,25 @@ export default defineConfig([
           checkInternals: true,
           policies: boundaryPolicies,
         },
+      ],
+    },
+  },
+  {
+    files: ["src/main.tsx", "src/App.tsx"],
+    rules: {
+      "no-restricted-syntax": [
+        ...restrictedSyntax,
+        {
+          selector:
+            String.raw`ImportDeclaration > Literal.source[raw=/(?:^|[^\\])(?:\\\\)*\\[ux]/]` +
+            String.raw`:not([value=/^(?:@|\.)\u002Ffeatures(?:\u002F|$)/])` +
+            String.raw`:not([value=/\.css(?:[?#].*)?$/i])`,
+          message: "Write import sources directly without Unicode or hexadecimal escapes.",
+        },
+      ],
+      "no-useless-rename": [
+        "error",
+        { ignoreExport: true, ignoreDestructuring: true },
       ],
     },
   },

@@ -3,21 +3,20 @@
 - Branch: `feat/spirit-ui-polish`
 - Parent: `feat/spirit`
 - Goal: Polish the frontend shell under `ROADMAP.md` 6.5. MainLayout-facing
-  store and hotkeys reviews are complete; incrementally unify imports alongside
-  layouts review and CSS experiments.
+  store and hotkeys reviews are complete. Entry import checks are in place;
+  continue layouts review and CSS experiments.
 
 ## Current
 
-- [ ] Finalize entry-file formatting conventions and verify Zed format-on-save.
-  Defer feature coverage and stylesheet import gates.
-- [ ] Review the layouts layer: structure, logic, types, comments, and styling;
-  continue down the shell as each layer is reviewed.
 - [ ] Evaluate CSS beyond direct Tailwind classes with a small layout prototype:
   PandaCSS, vanilla-extract, and StyleX; compare authoring, type/theme contracts,
   generated output, and migration effort.
+- [ ] Review the layouts layer: structure, logic, types, comments, and styling;
+  continue down the shell as each layer is reviewed.
 
 ## Planned
 
+- [ ] Verify Zed format-on-save; defer further entry import conventions.
 - [ ] Use fine-grained selectors / `useShallow` picks in `useSidebarStyles`,
   `SidebarToggle`, and `SideSwitch`.
 - [ ] Evaluate native `@scope (...) to (...)` for sidebar/module internals
@@ -38,6 +37,10 @@
 
 ## Completed
 
+- [x] Reject Unicode/hex escapes in `main.tsx` and `App.tsx` import sources;
+  defer features/CSS. Scope checks and repository tests passed.
+- [x] Reject redundant import aliases in `main.tsx` and `App.tsx`;
+  keep meaningful aliases. Scope/autofix checks and repository tests passed.
 - [x] Remove ESLint's `comma-spacing` gate; retain Oxfmt's two-entry scope.
   Repository tests passed.
 - [x] Limit Oxfmt to `apps/ui/src/main.tsx` and `apps/ui/src/App.tsx`;
