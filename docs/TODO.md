@@ -19,9 +19,6 @@
 - [ ] Decide whether to gate plain entry re-exports (`export ... from`)
   beyond the now-rejected attribute variants, or drop it as theoretical;
   entry import uniqueness is otherwise saturated.
-- [ ] Promote `import-x/newline-after-import` from entries to the shell
-  scope once the parked `Breadcrumb` commented import is resolved; other
-  parked scaffolding (`ModuleMenu`) stays pending its decision.
 - [ ] Verify Zed format-on-save; defer further entry import conventions.
   Known follow-up: duplicate-import autofix coverage; features/CSS remain
   deferred.
@@ -36,7 +33,7 @@
 - [ ] After the sidebar slice, decide whether settings needs `toggle` instead
   of the current open/close composition; confirm bare open keeps the last tab.
 - [ ] Fix the inherited `WindowHeader` `osType` Promise bug. Keep parked
-  `ModuleMenu` and commented `Breadcrumb` scaffolding pending a decision.
+  `ModuleMenu` and `Breadcrumb` scaffolding pending a decision.
 - [ ] Extend the boundaries gate into `features/` via reverse-waterfall
   review.
 - [ ] Align TypeScript style documentation with the enforced ESLint policies
@@ -45,6 +42,11 @@
 
 ## Completed
 
+- [x] Drop the parked `Breadcrumb` commented `ModuleMenu` import, promote
+  `import-x/newline-after-import` from entries to the shell scope, and
+  dissolve the now-empty entry config block; the entry files keep every
+  check through the shared shell scope. Store/entry probe checks, the
+  Breadcrumb file check, and repository tests passed.
 - [x] Promote `no-useless-rename` and the import-source escape/continuation
   selector from the entry block into the shared shell scope without touching
   parked sources; keep `newline-after-import` entry-scoped because the parked

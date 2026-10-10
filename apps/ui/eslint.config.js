@@ -139,6 +139,10 @@ export default defineConfig([
     },
     rules: {
       "import-x/first": "error",
+      "import-x/newline-after-import": [
+        "error",
+        { count: 1, exactCount: true, considerComments: true },
+      ],
       "import-x/no-named-default": "error",
       "import-x/no-namespace": "error",
       "import-x/no-useless-path-segments": "error",
@@ -200,15 +204,6 @@ export default defineConfig([
           checkInternals: true,
           policies: boundaryPolicies,
         },
-      ],
-    },
-  },
-  {
-    files: ["src/main.tsx", "src/App.tsx"],
-    rules: {
-      "import-x/newline-after-import": [
-        "error",
-        { count: 1, exactCount: true, considerComments: true },
       ],
     },
   },

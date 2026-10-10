@@ -4,7 +4,6 @@ import { Milestone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { NAV_ITEMS } from "@/constants";
-// import { ModuleMenu } from "./ModuleMenu";
 import { cn } from "@/lib";
 import { useNavigationStore } from "@/store";
 
