@@ -17,8 +17,8 @@
 ## Planned
 
 - [ ] Verify Zed format-on-save; defer further entry import conventions.
-  Known follow-ups: source-string line continuations and duplicate-import
-  autofix coverage; features/CSS remain deferred.
+  Known follow-up: duplicate-import autofix coverage; features/CSS remain
+  deferred.
 - [ ] Use fine-grained selectors / `useShallow` picks in `useSidebarStyles`,
   `SidebarToggle`, and `SideSwitch`.
 - [ ] Evaluate native `@scope (...) to (...)` for sidebar/module internals
@@ -39,6 +39,10 @@
 
 ## Completed
 
+- [x] Reject import-source line continuations in `main.tsx` and `App.tsx`
+  with existing `no-restricted-syntax`; retain deferred feature/CSS targets.
+  Thirty source/scope checks, a report-only autofix check, full UI ESLint,
+  and the entry Oxfmt check passed.
 - [x] Extend the existing internal shell/root script-extension gate to reject
   `.js` / `.jsx` in imports and re-exports; retain extensionless paths and
   deferred feature/CSS targets. Scope/error checks and repository `pnpm test`

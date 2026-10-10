@@ -189,10 +189,11 @@ export default defineConfig([
         ...restrictedSyntax,
         {
           selector:
-            String.raw`ImportDeclaration > Literal.source[raw=/(?:^|[^\\])(?:\\\\)*\\[ux]/]` +
+            String.raw`ImportDeclaration > Literal.source[raw=/(?:^|[^\\])(?:\\\\)*\\[ux\r\n\u2028\u2029]/]` +
             String.raw`:not([value=/^(?:@|\.)\u002Ffeatures(?:\u002F|$)/])` +
             String.raw`:not([value=/\.css(?:[?#].*)?$/i])`,
-          message: "Write import sources directly without Unicode or hexadecimal escapes.",
+          message:
+            "Write import sources directly without Unicode/hexadecimal escapes or line continuations.",
         },
       ],
       "no-useless-rename": [
