@@ -18,7 +18,9 @@
 
 - [ ] Decide whether to gate plain entry re-exports (`export ... from`)
   beyond the now-rejected attribute variants, or drop it as theoretical;
-  entry import uniqueness is otherwise saturated.
+  entry import uniqueness is otherwise saturated except external `.js`
+  subpath spelling (`react-dom/client.js`), probe-confirmed permissive
+  and currently unused.
 - [ ] Verify Zed format-on-save; defer further entry import conventions.
   Known follow-up: duplicate-import autofix coverage; features/CSS remain
   deferred.
@@ -42,6 +44,13 @@
 
 ## Completed
 
+- [x] Reject empty named import blocks (`import {} from "x"` and
+  `import type {}`) across the non-features shell scope with
+  `import-x/no-empty-named-blocks`; pure empty blocks report without
+  autofix and offer editor suggestions (drop the whole statement or keep
+  the side-effect spelling), while stray empty braces in mixed statements
+  auto-fix away. Empty/named/side-effect probe checks, full UI ESLint,
+  and repository tests passed.
 - [x] Drop the parked `Breadcrumb` commented `ModuleMenu` import, promote
   `import-x/newline-after-import` from entries to the shell scope, and
   dissolve the now-empty entry config block; the entry files keep every
