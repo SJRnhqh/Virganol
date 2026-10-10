@@ -16,6 +16,9 @@
 
 ## Planned
 
+- [ ] Decide whether to gate entry re-exports (`export ... from`) and import
+  attributes (`with {}`) with `no-restricted-syntax`, or drop both as
+  theoretical; entry import uniqueness is otherwise saturated.
 - [ ] Verify Zed format-on-save; defer further entry import conventions.
   Known follow-up: duplicate-import autofix coverage; features/CSS remain
   deferred.
@@ -39,6 +42,16 @@
 
 ## Completed
 
+- [x] Reject dynamic `import()` expressions across the non-features shell
+  scope with existing `no-restricted-syntax`; espree 10.4 parses `import()`
+  as a standalone `ImportExpression` node, so legacy
+  `CallExpression[callee.type=...]` selectors no longer match. Store-layer
+  and variable-argument checks are rejected, features stays deferred, and
+  repository tests passed.
+- [x] Confirm `simple-import-sort` already fixes import-block blank lines
+  uniquely (zero within a group, exactly one between groups); revert the
+  `padding-line-between-statements` trial after a live autofix conflict
+  (`ESLintCircularFixesWarning`) with no source or config change.
 - [x] Reject import-source line continuations in `main.tsx` and `App.tsx`
   with existing `no-restricted-syntax`; retain deferred feature/CSS targets.
   Thirty source/scope checks, a report-only autofix check, full UI ESLint,

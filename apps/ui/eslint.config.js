@@ -23,6 +23,10 @@ const restrictedSyntax = [
     selector: "ImportDeclaration > Literal.source[raw=/^'/]",
     message: "Use double quotes in imports.",
   },
+  {
+    selector: "ImportExpression",
+    message: "Use static imports only; dynamic import() is not allowed.",
+  },
 ];
 
 const dependencyAllows = {
