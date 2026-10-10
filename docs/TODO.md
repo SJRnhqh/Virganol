@@ -16,9 +16,9 @@
 
 ## Planned
 
-- [ ] Decide whether to gate entry re-exports (`export ... from`) and import
-  attributes (`with {}`) with `no-restricted-syntax`, or drop both as
-  theoretical; entry import uniqueness is otherwise saturated.
+- [ ] Decide whether to gate plain entry re-exports (`export ... from`)
+  beyond the now-rejected attribute variants, or drop it as theoretical;
+  entry import uniqueness is otherwise saturated.
 - [ ] Verify Zed format-on-save; defer further entry import conventions.
   Known follow-up: duplicate-import autofix coverage; features/CSS remain
   deferred.
@@ -42,6 +42,12 @@
 
 ## Completed
 
+- [x] Reject import attributes (`with {}` / legacy `assert {}`) on imports
+  and re-exports across the non-features shell scope with existing
+  `no-restricted-syntax`. TS-parser nodes always carry `attributes`, so the
+  selectors require `[attributes.length>0]`; plain imports, CSS side-effect
+  imports, and attributeless `index.ts` re-exports stay unaffected, and
+  repository tests passed.
 - [x] Reject dynamic `import()` expressions across the non-features shell
   scope with existing `no-restricted-syntax`; espree 10.4 parses `import()`
   as a standalone `ImportExpression` node, so legacy

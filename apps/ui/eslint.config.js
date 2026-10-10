@@ -27,6 +27,15 @@ const restrictedSyntax = [
     selector: "ImportExpression",
     message: "Use static imports only; dynamic import() is not allowed.",
   },
+  {
+    selector: "ImportDeclaration[attributes.length>0]",
+    message: "Write imports without attributes; loaders need no metadata here.",
+  },
+  {
+    selector:
+      "ExportNamedDeclaration[source][attributes.length>0], ExportAllDeclaration[attributes.length>0]",
+    message: "Write re-exports without attributes.",
+  },
 ];
 
 const dependencyAllows = {
