@@ -36,6 +36,14 @@ const restrictedSyntax = [
       "ExportNamedDeclaration[source][attributes.length>0], ExportAllDeclaration[attributes.length>0]",
     message: "Write re-exports without attributes.",
   },
+  {
+    selector:
+      String.raw`ImportDeclaration > Literal.source[raw=/(?:^|[^\\])(?:\\\\)*\\[ux\r\n\u2028\u2029]/]` +
+      String.raw`:not([value=/^(?:@|\.)\u002Ffeatures(?:\u002F|$)/])` +
+      String.raw`:not([value=/\.css(?:[?#].*)?$/i])`,
+    message:
+      "Write import sources directly without Unicode/hexadecimal escapes or line continuations.",
+  },
 ];
 
 const dependencyAllows = {
@@ -136,6 +144,10 @@ export default defineConfig([
       "import-x/no-useless-path-segments": "error",
       "no-duplicate-imports": "error",
       "no-restricted-syntax": restrictedSyntax,
+      "no-useless-rename": [
+        "error",
+        { ignoreExport: true, ignoreDestructuring: true },
+      ],
       "@typescript-eslint/consistent-type-imports": [
         "error",
         {
@@ -197,21 +209,6 @@ export default defineConfig([
       "import-x/newline-after-import": [
         "error",
         { count: 1, exactCount: true, considerComments: true },
-      ],
-      "no-restricted-syntax": [
-        ...restrictedSyntax,
-        {
-          selector:
-            String.raw`ImportDeclaration > Literal.source[raw=/(?:^|[^\\])(?:\\\\)*\\[ux\r\n\u2028\u2029]/]` +
-            String.raw`:not([value=/^(?:@|\.)\u002Ffeatures(?:\u002F|$)/])` +
-            String.raw`:not([value=/\.css(?:[?#].*)?$/i])`,
-          message:
-            "Write import sources directly without Unicode/hexadecimal escapes or line continuations.",
-        },
-      ],
-      "no-useless-rename": [
-        "error",
-        { ignoreExport: true, ignoreDestructuring: true },
       ],
     },
   },

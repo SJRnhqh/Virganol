@@ -19,6 +19,9 @@
 - [ ] Decide whether to gate plain entry re-exports (`export ... from`)
   beyond the now-rejected attribute variants, or drop it as theoretical;
   entry import uniqueness is otherwise saturated.
+- [ ] Promote `import-x/newline-after-import` from entries to the shell
+  scope once the parked `Breadcrumb` commented import is resolved; other
+  parked scaffolding (`ModuleMenu`) stays pending its decision.
 - [ ] Verify Zed format-on-save; defer further entry import conventions.
   Known follow-up: duplicate-import autofix coverage; features/CSS remain
   deferred.
@@ -42,6 +45,11 @@
 
 ## Completed
 
+- [x] Promote `no-useless-rename` and the import-source escape/continuation
+  selector from the entry block into the shared shell scope without touching
+  parked sources; keep `newline-after-import` entry-scoped because the parked
+  `Breadcrumb` commented import would trip it. Entry/store probe checks and
+  repository tests passed.
 - [x] Reject import attributes (`with {}` / legacy `assert {}`) on imports
   and re-exports across the non-features shell scope with existing
   `no-restricted-syntax`. TS-parser nodes always carry `attributes`, so the
