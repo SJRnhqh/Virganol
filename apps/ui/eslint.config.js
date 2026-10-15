@@ -119,6 +119,7 @@ export default defineConfig([
     settings: {
       "import/resolver": tsResolver,
       "import-x/resolver": tsResolver,
+      "import-x/extensions": [".js", ".jsx", ".ts", ".tsx"],
       "boundaries/elements": [
         { type: "types", pattern: "src/types/**" },
         { type: "constants", pattern: "src/constants/**" },
@@ -146,6 +147,7 @@ export default defineConfig([
       "import-x/no-empty-named-blocks": "error",
       "import-x/no-named-default": "error",
       "import-x/no-namespace": "error",
+      "import-x/no-rename-default": "error",
       "import-x/no-useless-path-segments": "error",
       "no-duplicate-imports": "error",
       "no-restricted-syntax": restrictedSyntax,

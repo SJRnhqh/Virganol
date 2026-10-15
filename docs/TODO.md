@@ -8,6 +8,9 @@
 
 ## Current
 
+- [ ] Review the remaining entry import conventions one at a time: named
+  aliases, quoted imported names, default-object imports, and comment spacing
+  conflicts; keep feature/CSS policy decisions deferred.
 - [ ] Evaluate CSS beyond direct Tailwind classes with a small layout prototype:
   PandaCSS, vanilla-extract, and StyleX; compare authoring, type/theme contracts,
   generated output, and migration effort.
@@ -17,13 +20,10 @@
 ## Planned
 
 - [ ] Decide whether to gate plain entry re-exports (`export ... from`)
-  beyond the now-rejected attribute variants, or drop it as theoretical;
-  entry import uniqueness is otherwise saturated except external `.js`
-  subpath spelling (`react-dom/client.js`), probe-confirmed permissive
-  and currently unused.
-- [ ] Verify Zed format-on-save; defer further entry import conventions.
-  Known follow-up: duplicate-import autofix coverage; features/CSS remain
-  deferred.
+  beyond the now-rejected attribute variants, or drop it as theoretical.
+  The unused `react-dom/client.js` spelling passes ESLint but is rejected
+  by current TypeScript/package resolution.
+- [ ] Verify Zed format-on-save and review duplicate-import autofix coverage.
 - [ ] Use fine-grained selectors / `useShallow` picks in `useSidebarStyles`,
   `SidebarToggle`, and `SideSwitch`.
 - [ ] Evaluate native `@scope (...) to (...)` for sidebar/module internals
@@ -44,6 +44,13 @@
 
 ## Completed
 
+- [x] Keep default import names aligned with resolvable default export names
+  across the non-features shell scope using `import-x/no-rename-default`;
+  include `.ts`/`.tsx` in `import-x/extensions` so export analysis reaches
+  TypeScript modules. Valid/renamed-default/named-alias and scope probes,
+  full UI ESLint, and repository `pnpm test` passed. The rule reports without
+  autofix; named aliases remain allowed and anonymous defaults have no name
+  to enforce.
 - [x] Reject empty named import blocks (`import {} from "x"` and
   `import type {}`) across the non-features shell scope with
   `import-x/no-empty-named-blocks`; pure empty blocks report without
