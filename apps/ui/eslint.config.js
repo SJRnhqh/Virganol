@@ -24,6 +24,10 @@ const restrictedSyntax = [
     message: "Use double quotes in imports.",
   },
   {
+    selector: "ImportSpecifier > Literal.imported",
+    message: "Use identifiers for imported names.",
+  },
+  {
     selector: "ImportExpression",
     message: "Use static imports only; dynamic import() is not allowed.",
   },

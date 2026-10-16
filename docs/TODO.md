@@ -8,9 +8,9 @@
 
 ## Current
 
-- [ ] Review the remaining entry import conventions one at a time: named
-  aliases, quoted imported names, default-object imports, and comment spacing
-  conflicts; keep feature/CSS policy decisions deferred.
+- [ ] Review the remaining entry import conventions one at a time:
+  default-object imports and comment spacing conflicts; keep feature/CSS
+  policy decisions deferred.
 - [ ] Evaluate CSS beyond direct Tailwind classes with a small layout prototype:
   PandaCSS, vanilla-extract, and StyleX; compare authoring, type/theme contracts,
   generated output, and migration effort.
@@ -44,6 +44,15 @@
 
 ## Completed
 
+- [x] Reject quoted imported names across the non-features shell scope with
+  the existing `no-restricted-syntax` selector
+  `ImportSpecifier > Literal.imported`; cover value and type imports while
+  preserving ordinary named aliases, source strings, and CSS side effects.
+  In-memory trial, actual-config positive/negative and scope checks, full UI
+  ESLint, and repository `pnpm test` passed. The rule reports without autofix;
+  non-identifier export names such as `"foo-bar"` are also disallowed on import.
+- [x] Retain meaningful named import aliases for naming conflicts; keep
+  `no-useless-rename` for redundant aliases without adding a blanket ban.
 - [x] Keep default import names aligned with resolvable default export names
   across the non-features shell scope using `import-x/no-rename-default`;
   include `.ts`/`.tsx` in `import-x/extensions` so export analysis reaches
