@@ -13,6 +13,25 @@ const srcFiles = [
   "src/*.{ts,tsx}",
 ];
 
+const noImportComments = {
+  meta: {
+    type: "suggestion",
+    schema: [],
+    messages: {
+      moveComment: "Move this comment above the import declaration.",
+    },
+  },
+  create(context) {
+    return {
+      ImportDeclaration(node) {
+        for (const comment of context.sourceCode.getCommentsInside(node)) {
+          context.report({ loc: comment.loc, messageId: "moveComment" });
+        }
+      },
+    };
+  },
+};
+
 const restrictedSyntax = [
   "error",
   {
@@ -140,9 +159,11 @@ export default defineConfig([
     plugins: {
       "import-x": importX,
       "simple-import-sort": simpleImportSort,
+      local: { rules: { "no-import-comments": noImportComments } },
       boundaries,
     },
     rules: {
+      "local/no-import-comments": "error",
       "import-x/first": "error",
       "import-x/newline-after-import": [
         "error",

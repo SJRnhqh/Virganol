@@ -8,9 +8,14 @@
 
 ## Current
 
-- [ ] Review the remaining entry import conventions one at a time:
-  default-object imports and comment spacing conflicts; keep feature/CSS
-  policy decisions deferred.
+- [ ] Next: resolve the import/comment blank-line conflict after committing
+  the internal-comment restriction. The original `import-x/newline-after-import`
+  rule is restored and the Stylistic trial is removed. A standalone comment before the second
+  import still triggers a circular fix with `simple-import-sort`; this is the
+  remaining confirmed tooling defect. Reconsider statement-based padding
+  separately, including where the blank line belongs around body comments.
+- [ ] Revisit default-object imports alongside the overall default
+  export/import policy; keep feature/CSS import policy decisions deferred.
 - [ ] Evaluate CSS beyond direct Tailwind classes with a small layout prototype:
   PandaCSS, vanilla-extract, and StyleX; compare authoring, type/theme contracts,
   generated output, and migration effort.
@@ -23,7 +28,11 @@
   beyond the now-rejected attribute variants, or drop it as theoretical.
   The unused `react-dom/client.js` spelling passes ESLint but is rejected
   by current TypeScript/package resolution.
-- [ ] Verify Zed format-on-save and review duplicate-import autofix coverage.
+- [ ] Verify Zed format-on-save; this editor check does not block CSS discussion.
+- [ ] Optionally improve duplicate-import autofix. Duplicate imports already
+  fail the core rule; automatic merging is not a CSS prerequisite. The existing
+  `import-x/no-duplicates` can fix simple cases but declines the tested case
+  containing the `main.tsx` file-header comment.
 - [ ] Use fine-grained selectors / `useShallow` picks in `useSidebarStyles`,
   `SidebarToggle`, and `SideSwitch`.
 - [ ] Evaluate native `@scope (...) to (...)` for sidebar/module internals
@@ -44,6 +53,20 @@
 
 ## Completed
 
+- [x] Reject comments inside static import declarations with the local ESLint
+  `local/no-import-comments` error across the non-features shell scope.
+  Use `getCommentsInside` and report the comment location with guidance to
+  move it above the import; cover inline/multiline, default/type/side-effect
+  imports without adding dependencies or an autofix. Leading, trailing,
+  and body comments remain outside this rule. After restoring the original
+  spacing rule, twelve rule/scope checks, CLI failure/success probes, and
+  repository `pnpm test` passed. The old spacing rule can still add its own
+  diagnostic for an invalid internal comment; that issue remains deferred.
+  This is an ESLint diagnostic, not a TypeScript compiler error.
+  The persistent regression script and test-gate integration are deferred
+  at the user's request; retain the ESLint rule itself.
+  Static re-exports and out-of-scope files remain unregulated by this rule;
+  standard `eslint-disable` directives can suppress it, as with other rules.
 - [x] Reject quoted imported names across the non-features shell scope with
   the existing `no-restricted-syntax` selector
   `ImportSpecifier > Literal.imported`; cover value and type imports while
