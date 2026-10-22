@@ -214,6 +214,21 @@ const importRules = {
   ],
 };
 
+const defaultExportRules = {
+  "no-restricted-exports": [
+    "error",
+    {
+      restrictDefaultExports: {
+        direct: true,
+        named: true,
+        defaultFrom: true,
+        namedFrom: true,
+        namespaceFrom: true,
+      },
+    },
+  ],
+};
+
 export default defineConfig([
   globalIgnores(["dist"]),
   {
@@ -258,6 +273,13 @@ export default defineConfig([
       "no-restricted-imports": [
         "error",
         {
+          paths: [
+            {
+              name: "react",
+              importNames: ["default"],
+              message: "Import named members from react.",
+            },
+          ],
           patterns: [
             {
               regex: "/$",
@@ -314,5 +336,10 @@ export default defineConfig([
         },
       ],
     },
+  },
+  {
+    files: srcFiles,
+    ignores: ["src/App.tsx"],
+    rules: defaultExportRules,
   },
 ]);

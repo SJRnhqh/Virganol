@@ -3,18 +3,18 @@
 - Branch: `feat/spirit-ui-polish`
 - Parent: `feat/spirit`
 - Goal: Polish the frontend shell under `ROADMAP.md` 6.5. MainLayout-facing
-  store and hotkeys reviews are complete. The import region is fully locked
-  and the lint config splits by file role: re-exports belong to `index.ts`
-  and barrels stay import-free; next settle the default-import policy, then
-  continue CSS experiments and the layouts review.
+  store and hotkeys reviews are complete. The import region is fully locked,
+  the lint config splits by file role, re-exports belong to `index.ts`,
+  barrels stay import-free, and defaults are confined to the app entry with
+  react locked to named imports; next run the CSS experiments, then continue
+  the layouts review.
 
 ## Current
 
-- [ ] Next: revisit default-object imports alongside the overall default
-  export/import policy; keep feature/CSS import policy decisions deferred.
-- [ ] Evaluate CSS beyond direct Tailwind classes with a small layout prototype:
-  PandaCSS, vanilla-extract, and StyleX; compare authoring, type/theme contracts,
-  generated output, and migration effort.
+- [ ] Next: evaluate CSS beyond direct Tailwind classes with a small layout
+  prototype: PandaCSS, vanilla-extract, and StyleX; compare authoring,
+  type/theme contracts, generated output, and migration effort.
+  Feature/CSS import policy decisions stay deferred.
 - [ ] Review the layouts layer: structure, logic, types, comments, and styling;
   continue down the shell as each layer is reviewed.
 
@@ -45,6 +45,21 @@
 
 ## Completed
 
+- [x] Settle the default-export policy for the shell. `react` is locked to
+  named imports through `no-restricted-imports` (`importNames: ["default"]`,
+  which also rejects re-export spellings that take the default), and every
+  default-export spelling is banned shell-wide via core
+  `no-restricted-exports` with all five `restrictDefaultExports` flags
+  (direct, named, defaultFrom, namedFrom, namespaceFrom) in a block that
+  ignores only `src/App.tsx`, keeping the mount root's default export as the
+  sole exception without an override composition block. Renaming a
+  third-party default into a named export (`export { default as X } from`)
+  stays allowed by design: it produces a named export that conforms to the
+  module contract, and the react entry already blocks the one laundering
+  path. Selector-list consts were regrouped in a strict order (file scopes,
+  local rule, syntax lists, boundaries, resolver, import rules). Default
+  spelling, barrel-laundering, and App exemption probes, full UI ESLint, and
+  repository `pnpm test` passed.
 - [x] Close the two coverage gaps the role split opened. `barrelFiles` now
   single-sources the barrel file set so the non-index `ignores` and the
   index-block `files` mirror exactly, dropping root `src/index.ts` out of the
