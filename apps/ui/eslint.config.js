@@ -100,6 +100,17 @@ const importSyntax = [
   },
 ];
 
+const reExportSyntax = [
+  {
+    selector: "ExportNamedDeclaration[source]",
+    message: "Re-export through index.ts module entries only.",
+  },
+  {
+    selector: "ExportAllDeclaration",
+    message: "Re-export through index.ts module entries only.",
+  },
+];
+
 const dependencyAllows = {
   types: [],
   constants: ["types"],
@@ -276,7 +287,12 @@ export default defineConfig([
     },
     rules: {
       ...importRules,
-      "no-restricted-syntax": ["error", ...sharedSyntax, ...importSyntax],
+      "no-restricted-syntax": [
+        "error",
+        ...sharedSyntax,
+        ...importSyntax,
+        ...reExportSyntax,
+      ],
     },
   },
   {
@@ -286,6 +302,14 @@ export default defineConfig([
     },
     rules: {
       "simple-import-sort/exports": "error",
+      "no-restricted-syntax": [
+        "error",
+        ...sharedSyntax,
+        {
+          selector: "ImportDeclaration",
+          message: "Keep index.ts barrels pure; write re-exports only.",
+        },
+      ],
     },
   },
 ]);

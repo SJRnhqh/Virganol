@@ -4,24 +4,13 @@
 - Parent: `feat/spirit`
 - Goal: Polish the frontend shell under `ROADMAP.md` 6.5. MainLayout-facing
   store and hotkeys reviews are complete. The import region is fully locked
-  and the lint config now splits by file role with composed constants; next
-  land the two role rules (non-index re-export ban, index import ban), then
-  continue the default-import policy, CSS experiments, and the layouts
-  review.
+  and the lint config splits by file role: re-exports belong to `index.ts`
+  and barrels stay import-free; next settle the default-import policy, then
+  continue CSS experiments and the layouts review.
 
 ## Current
 
-- [ ] Next: land the two role rules on the restructured config. Ban
-  re-exports outside `index.ts` by appending `ExportNamedDeclaration[source]`
-  and `ExportAllDeclaration` selectors to `importSyntax` ("Re-export through
-  index.ts module entries only."), and forbid imports inside `index.ts`
-  barrels via `"no-restricted-syntax": ["error", ...sharedSyntax,
-  { selector: "ImportDeclaration", ... }]` in the index block. Expect zero
-  violations at landing; verify with positive/negative probes and the full
-  gate. When features later joins the scope, widen the non-index `ignores`
-  to `**/index.{ts,tsx}` (feature barrels include `index.tsx`) and keep that
-  rollout gated behind the reverse-waterfall review.
-- [ ] Revisit default-object imports alongside the overall default
+- [ ] Next: revisit default-object imports alongside the overall default
   export/import policy; keep feature/CSS import policy decisions deferred.
 - [ ] Evaluate CSS beyond direct Tailwind classes with a small layout prototype:
   PandaCSS, vanilla-extract, and StyleX; compare authoring, type/theme contracts,
@@ -56,6 +45,18 @@
 
 ## Completed
 
+- [x] Land the two role rules on the role-split lint config. Non-index shell
+  files reject every `export ... from` / `export *` spelling through a
+  dedicated `reExportSyntax` selector list ("Re-export through index.ts
+  module entries only."), kept separate from `importSyntax` for topic
+  clarity, while `index.ts` barrels reject all `ImportDeclaration` spellings
+  ("Keep index.ts barrels pure; write re-exports only.") via shared syntax
+  plus the import selector in the index block. Probes covered named/star/
+  type re-exports, plain exports, barrel imports and side-effect spellings,
+  non-index selector inheritance, and `index2.ts`-style non-barrel names;
+  full UI ESLint and repository `pnpm test` passed with zero pre-existing
+  violations. Feature barrels (`index.tsx`) stay out of scope until the
+  ignores widen to `**/index.{ts,tsx}` behind the reverse-waterfall review.
 - [x] Restructure the UI ESLint config into file-role blocks with composed
   constants and zero behavior change. `moduleDirs` now single-sources the
   module directory glob shared by `srcFiles` and the index-block files
