@@ -3,19 +3,20 @@
 - Branch: `feat/spirit-ui-polish`
 - Parent: `feat/spirit`
 - Goal: Polish the frontend shell under `ROADMAP.md` 6.5. MainLayout-facing
-  store and hotkeys reviews are complete. Import-region comments are rejected
-  both inside declarations and between adjacent imports; next decide
-  header-to-import adjacency, then continue the default-import policy, CSS
-  experiments, and the layouts review.
+  store and hotkeys reviews are complete. The import region is fully locked:
+  zero comments inside or between declarations, flush file headers, and
+  bounded blank lines; next decide entry re-export gating, then continue the
+  default-import policy, CSS experiments, and the layouts review.
 
 ## Current
 
-- [ ] Next: decide whether to pin the header comment flush against the first
-  import (zero blank lines above the import block) to lock the region's top
-  boundary. Sorting autofix keeps a tight header in place (probe-verified),
-  nothing constrains blank lines there today outside the two Oxfmt entries,
-  and the candidate is extending the local rule rather than Stylistic or
-  `no-multiple-empty-lines`.
+- [ ] Next: decide whether to gate plain entry re-exports (`export ... from`)
+  in `main.tsx` and `App.tsx` beyond the already-rejected attribute variants,
+  or drop the restriction as theoretical. Existing `no-restricted-syntax`
+  selectors for `ExportNamedDeclaration[source]` and `ExportAllDeclaration`
+  would cover it entry-scoped without new dependencies; the unused
+  `react-dom/client.js` spelling passes ESLint but stays rejected by
+  TypeScript/package resolution.
 - [ ] Revisit default-object imports alongside the overall default
   export/import policy; keep feature/CSS import policy decisions deferred.
 - [ ] Evaluate CSS beyond direct Tailwind classes with a small layout prototype:
@@ -26,10 +27,6 @@
 
 ## Planned
 
-- [ ] Decide whether to gate plain entry re-exports (`export ... from`)
-  beyond the now-rejected attribute variants, or drop it as theoretical.
-  The unused `react-dom/client.js` spelling passes ESLint but is rejected
-  by current TypeScript/package resolution.
 - [ ] Verify Zed format-on-save; this editor check does not block CSS discussion.
 - [ ] Optionally improve duplicate-import autofix. Duplicate imports already
   fail the core rule; automatic merging is not a CSS prerequisite. The existing
@@ -55,6 +52,19 @@
 
 ## Completed
 
+- [x] Lock the import region top and tail boundaries in
+  `local/no-import-comments`. The first import now checks the last comment
+  above it: same-line leading comments report `moveComment`, a gap of two or
+  more lines reports `keepHeaderFlush`, and exactly one line stays flush;
+  header block internals stay free-form. Imports followed by a non-import
+  statement check `getCommentsAfter` for same-line trailing comments so the
+  block tail stays comment-free, while non-last imports keep coverage through
+  the between-imports check. Body comments, blank-line duties of
+  `newline-after-import`, and directive prologues stay out of scope. Probes
+  covered same-line leading, blank and multi-blank headers, multi-line
+  flush headers, trailing comments on last and non-last imports, an
+  EOF-only import, and mixed same-line statements; full UI ESLint and
+  repository `pnpm test` passed.
 - [x] Reject comments between adjacent imports across the non-features shell
   scope by extending the local `local/no-import-comments`: report comments
   between consecutive top-level imports via a previous-sibling check plus
