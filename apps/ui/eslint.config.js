@@ -15,6 +15,8 @@ const srcFiles = [
   "src/*.{ts,tsx}",
 ];
 
+const barrelFiles = [`src/${moduleDirs}/**/index.ts`];
+
 const noImportComments = {
   meta: {
     type: "suggestion",
@@ -175,7 +177,6 @@ const importRules = {
   "import-x/no-named-default": "error",
   "import-x/no-namespace": "error",
   "import-x/no-rename-default": "error",
-  "import-x/no-useless-path-segments": "error",
   "no-duplicate-imports": "error",
   "no-useless-rename": [
     "error",
@@ -208,21 +209,6 @@ const importRules = {
           "^\\./",
           "^\\.\\./",
         ],
-      ],
-    },
-  ],
-  "no-restricted-imports": [
-    "error",
-    {
-      patterns: [
-        {
-          regex: "/$",
-          message: "Omit trailing slashes in import sources.",
-        },
-        {
-          regex: "^node:",
-          message: "Node.js built-in modules are not allowed in UI source.",
-        },
       ],
     },
   ],
@@ -264,9 +250,26 @@ export default defineConfig([
     },
     plugins: {
       boundaries,
+      "import-x": importX,
     },
     rules: {
       "no-restricted-syntax": ["error", ...sharedSyntax],
+      "import-x/no-useless-path-segments": "error",
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: "/$",
+              message: "Omit trailing slashes in import sources.",
+            },
+            {
+              regex: "^node:",
+              message: "Node.js built-in modules are not allowed in UI source.",
+            },
+          ],
+        },
+      ],
       "boundaries/dependencies": [
         "error",
         {
@@ -279,7 +282,7 @@ export default defineConfig([
   },
   {
     files: srcFiles,
-    ignores: ["**/index.ts"],
+    ignores: barrelFiles,
     plugins: {
       "import-x": importX,
       "simple-import-sort": simpleImportSort,
@@ -296,7 +299,7 @@ export default defineConfig([
     },
   },
   {
-    files: [`src/${moduleDirs}/**/index.ts`],
+    files: barrelFiles,
     plugins: {
       "simple-import-sort": simpleImportSort,
     },

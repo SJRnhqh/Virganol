@@ -45,6 +45,15 @@
 
 ## Completed
 
+- [x] Close the two coverage gaps the role split opened. `barrelFiles` now
+  single-sources the barrel file set so the non-index `ignores` and the
+  index-block `files` mirror exactly, dropping root `src/index.ts` out of the
+  seam into ordinary non-index coverage, and
+  `import-x/no-useless-path-segments` plus `no-restricted-imports` moved to
+  the shared shell block (with the import-x plugin registered there) so index
+  barrels keep path discipline (`././x`, trailing slashes, and `node:`
+  re-export sources report again). Gap, inheritance, and root-index probes,
+  full UI ESLint, and repository `pnpm test` passed.
 - [x] Land the two role rules on the role-split lint config. Non-index shell
   files reject every `export ... from` / `export *` spelling through a
   dedicated `reExportSyntax` selector list ("Re-export through index.ts
