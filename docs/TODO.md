@@ -4,9 +4,10 @@
 - Parent: `feat/spirit`
 - Goal: Polish the frontend shell under `ROADMAP.md` 6.5. MainLayout-facing
   store and hotkeys reviews are complete. The import region is fully locked:
-  zero comments inside or between declarations, flush file headers, and
-  bounded blank lines; next decide entry re-export gating, then continue the
-  default-import policy, CSS experiments, and the layouts review.
+  zero comments inside or between declarations, flush comments above the
+  first import (directive prologues covered), and bounded blank lines; next
+  decide entry re-export gating, then continue the default-import policy,
+  CSS experiments, and the layouts review.
 
 ## Current
 
@@ -52,6 +53,17 @@
 
 ## Completed
 
+- [x] Cover directive prologues and positional wording in
+  `local/no-import-comments`. The first-import check now triggers on the
+  first `ImportDeclaration` in the top-level body (`slice().some(...)` scan)
+  instead of requiring the import to be the file's first statement, so
+  `"use client"; /* note */ import ...` reports `moveComment` and
+  blank-separated leading comments report `keepCommentFlush`; the renamed
+  message drops the "file header" assumption and reads "Keep this comment
+  flush with the first import.", keeping misplaced-import noise accurate.
+  Comments above a directive remain body-domain and unregulated. Directive
+  same-line/blank, renamed-message, flush, and misplaced-import probes
+  passed, along with full UI ESLint and repository `pnpm test`.
 - [x] Lock the import region top and tail boundaries in
   `local/no-import-comments`. The first import now checks the last comment
   above it: same-line leading comments report `moveComment`, a gap of two or

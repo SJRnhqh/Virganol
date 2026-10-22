@@ -19,7 +19,7 @@ const noImportComments = {
     schema: [],
     messages: {
       moveComment: "Move this comment above the import block.",
-      keepHeaderFlush: "Keep the file header flush with the first import.",
+      keepCommentFlush: "Keep this comment flush with the first import.",
     },
   },
   create(context) {
@@ -27,14 +27,14 @@ const noImportComments = {
       ImportDeclaration(node) {
         const body = node.parent.body;
         const index = body.indexOf(node);
-        if (index === 0) {
+        if (!body.slice(0, index).some((stmt) => stmt.type === "ImportDeclaration")) {
           const last = context.sourceCode.getCommentsBefore(node).at(-1);
           if (last) {
             const gap = node.loc.start.line - last.loc.end.line;
             if (gap === 0) {
               context.report({ loc: last.loc, messageId: "moveComment" });
             } else if (gap > 1) {
-              context.report({ loc: last.loc, messageId: "keepHeaderFlush" });
+              context.report({ loc: last.loc, messageId: "keepCommentFlush" });
             }
           }
         }
