@@ -8,8 +8,10 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 
+const moduleDirs = "{types,constants,lib,store,hooks,components,layouts}";
+
 const srcFiles = [
-  "src/{types,constants,lib,store,hooks,components,layouts}/**/*.{ts,tsx}",
+  `src/${moduleDirs}/**/*.{ts,tsx}`,
   "src/*.{ts,tsx}",
 ];
 
@@ -59,12 +61,23 @@ const noImportComments = {
   },
 };
 
-const restrictedSyntax = [
-  "error",
+const sharedSyntax = [
   {
     selector: "EmptyStatement",
     message: "Remove empty statements; keep imports in one sortable block.",
   },
+  {
+    selector: "ImportExpression",
+    message: "Use static imports only; dynamic import() is not allowed.",
+  },
+  {
+    selector:
+      "ExportNamedDeclaration[source][attributes.length>0], ExportAllDeclaration[attributes.length>0]",
+    message: "Write re-exports without attributes.",
+  },
+];
+
+const importSyntax = [
   {
     selector: "ImportDeclaration > Literal.source[raw=/^'/]",
     message: "Use double quotes in imports.",
@@ -74,17 +87,8 @@ const restrictedSyntax = [
     message: "Use identifiers for imported names.",
   },
   {
-    selector: "ImportExpression",
-    message: "Use static imports only; dynamic import() is not allowed.",
-  },
-  {
     selector: "ImportDeclaration[attributes.length>0]",
     message: "Write imports without attributes; loaders need no metadata here.",
-  },
-  {
-    selector:
-      "ExportNamedDeclaration[source][attributes.length>0], ExportAllDeclaration[attributes.length>0]",
-    message: "Write re-exports without attributes.",
   },
   {
     selector:
@@ -149,6 +153,70 @@ const tsResolver = {
   },
 };
 
+const importRules = {
+  "local/no-import-comments": "error",
+  "import-x/first": "error",
+  "import-x/newline-after-import": [
+    "error",
+    { count: 1, exactCount: true, considerComments: true },
+  ],
+  "import-x/no-empty-named-blocks": "error",
+  "import-x/no-named-default": "error",
+  "import-x/no-namespace": "error",
+  "import-x/no-rename-default": "error",
+  "import-x/no-useless-path-segments": "error",
+  "no-duplicate-imports": "error",
+  "no-useless-rename": [
+    "error",
+    { ignoreExport: true, ignoreDestructuring: true },
+  ],
+  "@typescript-eslint/consistent-type-imports": [
+    "error",
+    {
+      prefer: "type-imports",
+      fixStyle: "inline-type-imports",
+    },
+  ],
+  "@typescript-eslint/no-import-type-side-effects": "error",
+  "simple-import-sort/imports": [
+    "error",
+    {
+      groups: [
+        ["^\\u0000@?\\w", "^@?\\w"],
+        [
+          "^\\u0000(?:@/|\\./)",
+          "^@/types(?:/|\\u0000|$)",
+          "^@/constants(?:/|\\u0000|$)",
+          "^@/lib(?:/|\\u0000|$)",
+          "^@/store(?:/|\\u0000|$)",
+          "^@/hooks(?:/|\\u0000|$)",
+          "^@/features(?:/|\\u0000|$)",
+          "^@/components(?:/|\\u0000|$)",
+          "^@/layouts(?:/|\\u0000|$)",
+          "^@/",
+          "^\\./",
+          "^\\.\\./",
+        ],
+      ],
+    },
+  ],
+  "no-restricted-imports": [
+    "error",
+    {
+      patterns: [
+        {
+          regex: "/$",
+          message: "Omit trailing slashes in import sources.",
+        },
+        {
+          regex: "^node:",
+          message: "Node.js built-in modules are not allowed in UI source.",
+        },
+      ],
+    },
+  ],
+};
+
 export default defineConfig([
   globalIgnores(["dist"]),
   {
@@ -184,74 +252,10 @@ export default defineConfig([
       ],
     },
     plugins: {
-      "import-x": importX,
-      "simple-import-sort": simpleImportSort,
-      local: { rules: { "no-import-comments": noImportComments } },
       boundaries,
     },
     rules: {
-      "local/no-import-comments": "error",
-      "import-x/first": "error",
-      "import-x/newline-after-import": [
-        "error",
-        { count: 1, exactCount: true, considerComments: true },
-      ],
-      "import-x/no-empty-named-blocks": "error",
-      "import-x/no-named-default": "error",
-      "import-x/no-namespace": "error",
-      "import-x/no-rename-default": "error",
-      "import-x/no-useless-path-segments": "error",
-      "no-duplicate-imports": "error",
-      "no-restricted-syntax": restrictedSyntax,
-      "no-useless-rename": [
-        "error",
-        { ignoreExport: true, ignoreDestructuring: true },
-      ],
-      "@typescript-eslint/consistent-type-imports": [
-        "error",
-        {
-          prefer: "type-imports",
-          fixStyle: "inline-type-imports",
-        },
-      ],
-      "@typescript-eslint/no-import-type-side-effects": "error",
-      "simple-import-sort/imports": [
-        "error",
-        {
-          groups: [
-            ["^\\u0000@?\\w", "^@?\\w"],
-            [
-              "^\\u0000(?:@/|\\./)",
-              "^@/types(?:/|\\u0000|$)",
-              "^@/constants(?:/|\\u0000|$)",
-              "^@/lib(?:/|\\u0000|$)",
-              "^@/store(?:/|\\u0000|$)",
-              "^@/hooks(?:/|\\u0000|$)",
-              "^@/features(?:/|\\u0000|$)",
-              "^@/components(?:/|\\u0000|$)",
-              "^@/layouts(?:/|\\u0000|$)",
-              "^@/",
-              "^\\./",
-              "^\\.\\./",
-            ],
-          ],
-        },
-      ],
-      "no-restricted-imports": [
-        "error",
-        {
-          patterns: [
-            {
-              regex: "/$",
-              message: "Omit trailing slashes in import sources.",
-            },
-            {
-              regex: "^node:",
-              message: "Node.js built-in modules are not allowed in UI source.",
-            },
-          ],
-        },
-      ],
+      "no-restricted-syntax": ["error", ...sharedSyntax],
       "boundaries/dependencies": [
         "error",
         {
@@ -263,9 +267,20 @@ export default defineConfig([
     },
   },
   {
-    files: [
-      "src/{types,constants,lib,store,hooks,components,layouts}/**/index.ts",
-    ],
+    files: srcFiles,
+    ignores: ["**/index.ts"],
+    plugins: {
+      "import-x": importX,
+      "simple-import-sort": simpleImportSort,
+      local: { rules: { "no-import-comments": noImportComments } },
+    },
+    rules: {
+      ...importRules,
+      "no-restricted-syntax": ["error", ...sharedSyntax, ...importSyntax],
+    },
+  },
+  {
+    files: [`src/${moduleDirs}/**/index.ts`],
     plugins: {
       "simple-import-sort": simpleImportSort,
     },

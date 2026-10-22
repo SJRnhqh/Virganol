@@ -3,21 +3,24 @@
 - Branch: `feat/spirit-ui-polish`
 - Parent: `feat/spirit`
 - Goal: Polish the frontend shell under `ROADMAP.md` 6.5. MainLayout-facing
-  store and hotkeys reviews are complete. The import region is fully locked:
-  zero comments inside or between declarations, flush comments above the
-  first import (directive prologues covered), and bounded blank lines; next
-  decide entry re-export gating, then continue the default-import policy,
-  CSS experiments, and the layouts review.
+  store and hotkeys reviews are complete. The import region is fully locked
+  and the lint config now splits by file role with composed constants; next
+  land the two role rules (non-index re-export ban, index import ban), then
+  continue the default-import policy, CSS experiments, and the layouts
+  review.
 
 ## Current
 
-- [ ] Next: decide whether to gate plain entry re-exports (`export ... from`)
-  in `main.tsx` and `App.tsx` beyond the already-rejected attribute variants,
-  or drop the restriction as theoretical. Existing `no-restricted-syntax`
-  selectors for `ExportNamedDeclaration[source]` and `ExportAllDeclaration`
-  would cover it entry-scoped without new dependencies; the unused
-  `react-dom/client.js` spelling passes ESLint but stays rejected by
-  TypeScript/package resolution.
+- [ ] Next: land the two role rules on the restructured config. Ban
+  re-exports outside `index.ts` by appending `ExportNamedDeclaration[source]`
+  and `ExportAllDeclaration` selectors to `importSyntax` ("Re-export through
+  index.ts module entries only."), and forbid imports inside `index.ts`
+  barrels via `"no-restricted-syntax": ["error", ...sharedSyntax,
+  { selector: "ImportDeclaration", ... }]` in the index block. Expect zero
+  violations at landing; verify with positive/negative probes and the full
+  gate. When features later joins the scope, widen the non-index `ignores`
+  to `**/index.{ts,tsx}` (feature barrels include `index.tsx`) and keep that
+  rollout gated behind the reverse-waterfall review.
 - [ ] Revisit default-object imports alongside the overall default
   export/import policy; keep feature/CSS import policy decisions deferred.
 - [ ] Evaluate CSS beyond direct Tailwind classes with a small layout prototype:
@@ -53,6 +56,21 @@
 
 ## Completed
 
+- [x] Restructure the UI ESLint config into file-role blocks with composed
+  constants and zero behavior change. `moduleDirs` now single-sources the
+  module directory glob shared by `srcFiles` and the index-block files
+  pattern; the former `restrictedSyntax` split into pure `sharedSyntax`
+  (empty statements, dynamic `import()`, re-export attributes — violations
+  index files can produce) and `importSyntax` (import-only selectors);
+  `importRules` was extracted for the non-index block, which composes
+  `["error", ...sharedSyntax, ...importSyntax]` with severity kept at each
+  rule site per config convention. Blocks read base / shared shell
+  (boundaries plus shared syntax) / non-index (import discipline) / index
+  (export sort); the placeholder override block is gone. Verified all 19
+  shell index files contain no imports, probed non-index quote bans, index
+  dynamic-import and re-export-attribute bans, and the accepted dead-weight
+  departure of import-only selectors on index; full UI ESLint and repository
+  `pnpm test` passed.
 - [x] Cover directive prologues and positional wording in
   `local/no-import-comments`. The first-import check now triggers on the
   first `ImportDeclaration` in the top-level body (`slice().some(...)` scan)
