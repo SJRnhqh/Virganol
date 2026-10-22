@@ -18,12 +18,19 @@ const noImportComments = {
     type: "suggestion",
     schema: [],
     messages: {
-      moveComment: "Move this comment above the import declaration.",
+      moveComment: "Move this comment above the import block.",
     },
   },
   create(context) {
     return {
       ImportDeclaration(node) {
+        const body = node.parent.body;
+        const prev = body[body.indexOf(node) - 1];
+        if (prev?.type === "ImportDeclaration") {
+          for (const comment of context.sourceCode.getCommentsBefore(node)) {
+            context.report({ loc: comment.loc, messageId: "moveComment" });
+          }
+        }
         for (const comment of context.sourceCode.getCommentsInside(node)) {
           context.report({ loc: comment.loc, messageId: "moveComment" });
         }

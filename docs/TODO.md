@@ -3,17 +3,19 @@
 - Branch: `feat/spirit-ui-polish`
 - Parent: `feat/spirit`
 - Goal: Polish the frontend shell under `ROADMAP.md` 6.5. MainLayout-facing
-  store and hotkeys reviews are complete. Entry import checks are in place;
-  continue layouts review and CSS experiments.
+  store and hotkeys reviews are complete. Import-region comments are rejected
+  both inside declarations and between adjacent imports; next decide
+  header-to-import adjacency, then continue the default-import policy, CSS
+  experiments, and the layouts review.
 
 ## Current
 
-- [ ] Next: resolve the import/comment blank-line conflict after committing
-  the internal-comment restriction. The original `import-x/newline-after-import`
-  rule is restored and the Stylistic trial is removed. A standalone comment before the second
-  import still triggers a circular fix with `simple-import-sort`; this is the
-  remaining confirmed tooling defect. Reconsider statement-based padding
-  separately, including where the blank line belongs around body comments.
+- [ ] Next: decide whether to pin the header comment flush against the first
+  import (zero blank lines above the import block) to lock the region's top
+  boundary. Sorting autofix keeps a tight header in place (probe-verified),
+  nothing constrains blank lines there today outside the two Oxfmt entries,
+  and the candidate is extending the local rule rather than Stylistic or
+  `no-multiple-empty-lines`.
 - [ ] Revisit default-object imports alongside the overall default
   export/import policy; keep feature/CSS import policy decisions deferred.
 - [ ] Evaluate CSS beyond direct Tailwind classes with a small layout prototype:
@@ -53,6 +55,19 @@
 
 ## Completed
 
+- [x] Reject comments between adjacent imports across the non-features shell
+  scope by extending the local `local/no-import-comments`: report comments
+  between consecutive top-level imports via a previous-sibling check plus
+  `getCommentsBefore`, keep the in-declaration check, and unify both messages
+  to "Move this comment above the import block." Header comments above the
+  block and body comments after it stay allowed. This removes the contested
+  layout zone between `import-x/newline-after-import` and
+  `simple-import-sort`, closing the circular-fix defect for compliant code
+  without restoring Stylistic or changing spacing rules; `--fix` on already
+  rejected code can still warn and stays gated by the error. Probes covered
+  line/block/multiline between-import comments, the in-declaration
+  regression, and header/after-block negatives; full UI ESLint and repository
+  `pnpm test` passed.
 - [x] Reject comments inside static import declarations with the local ESLint
   `local/no-import-comments` error across the non-features shell scope.
   Use `getCommentsInside` and report the comment location with guidance to
