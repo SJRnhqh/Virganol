@@ -7,19 +7,22 @@
 
 ## Current
 
-- [ ] Connect `mainLayoutStyles` from `styles/layouts.ts` through
-  `styles/index.ts` to MainLayout. StyleX setup is ready; MainLayout still
-  uses legacy CSS, so the runtime migration has not started.
-- [ ] Verify left/right layout, sizing, overflow, themes, and hot updates
-  before removing replaced rules from `styles/layouts.css`; then continue
-  the layouts review and work down the shell.
+- [ ] Resolve StyleX CSS hot updates before expanding the migration:
+  under the current 0.19.1 adapter, JS class names update but the loaded CSS
+  stays stale until a manual page reload. Keep Rsbuild/Rspack; investigate
+  adapter CSS invalidation/HMR notifications first, then evaluate the official
+  Babel/PostCSS route if needed. Other integrations require their own proof.
+- [ ] Verify the migrated MainLayout in Tauri with real child components;
+  ordinary browser startup currently fails on the existing native bridge
+  dependency. Then continue the layouts review and work down the shell.
 
 ## Planned
 
 - [ ] Follow [StyleX #1745](https://github.com/facebook/stylex/pull/1745):
   the Rspack CSS-output fix merged on 2026-09-24, after the installed 0.19.1
   release. Upgrade to a release containing it, verify CSS output/HMR, and
-  replace the temporary `.webpack()` adapter with `.rspack()`.
+  replace the temporary `.webpack()` adapter with `.rspack()`. The fix covers
+  initial CSS output; it does not establish that hot updates work.
 - [ ] After migration, reconcile the styles-only ESLint block with `srcFiles`;
   consider mature rules for consistent style authoring where useful.
 - [ ] Verify Zed format-on-save; optionally improve duplicate-import autofix
@@ -42,12 +45,21 @@
 
 ## Completed
 
+- [x] Migrate only MainLayout's shell/workspace containers to StyleX through
+  `@/styles` and conditional `props()` composition; allow layouts to consume
+  styles without extending that permission to other shell layers. Remove
+  `layouts.css`, its CSS import, obsolete Stylelint target, and `data-side`.
+  Keep child-component styles unchanged.
+- [x] Verify migrated container geometry against the old CSS in an isolated
+  browser fixture with native-dependent children/hooks replaced: left/right
+  metrics match at 1280×720; 640×480 sizing/overflow and theme-variable
+  inheritance pass. Type checking, ESLint, Stylelint, production build, and
+  emitted StyleX CSS checks pass; hot updates expose the limitation above.
 - [x] Prepare the additive StyleX 0.19.1 pilot: `mainLayoutStyles` plus barrel
   export, Rsbuild compilation through the temporary Webpack-compatible
   adapter, standard `props()` usage (`sx` shorthand disabled), and internal
-  CSS layers without custom Tailwind precedence. MainLayout JSX and active
-  legacy CSS remain unchanged. StyleX is the pilot choice; reconsider Panda
-  only if concrete design-system needs justify it.
+  CSS layers without custom Tailwind precedence. StyleX is the pilot choice;
+  reconsider Panda only if concrete design-system needs justify it.
 - [x] Enable five official StyleX ESLint rules for `src/styles/**/*.ts`:
   `valid-styles`, `valid-shorthands`, `sort-keys`, `no-nonstandard-styles`,
   and `no-legacy-contextual-styles`. Remove custom pixel normalization;
@@ -55,7 +67,7 @@
 - [x] Validate StyleX CSS extraction with a temporary public-entry probe;
   UI type checking, ESLint, Stylelint, format checks, and production build
   passed. Latest integration simplification passed type checking, ESLint,
-  Stylelint, and production build; browser/HMR validation remains pending.
+  Stylelint, and production build.
 - [x] Review MainLayout-facing state: separate navigation from sidebar
   disclosure/docking, narrow subscriptions, make `toggleSide` synchronous,
   share disclosure helpers, remove dead actions, and retain the settings tab

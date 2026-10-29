@@ -17,7 +17,7 @@ export default {
   extends: ["stylelint-config-standard"],
   overrides: [
     {
-      files: ["src/styles/base.css", "src/styles/layouts.css"],
+      files: ["src/styles/base.css"],
       extends: ["stylelint-config-recess-order"],
       plugins: ["stylelint-order"],
       rules: {

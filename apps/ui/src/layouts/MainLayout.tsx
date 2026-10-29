@@ -1,9 +1,11 @@
 // apps/ui/src/layouts/MainLayout.tsx
+import { props } from "@stylexjs/stylex";
 import { useShallow } from "zustand/react/shallow";
 
 import { useNavigationStore, useSidebarStore } from "@/store";
 import { useKeyboardShortcuts } from "@/hooks";
 import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
+import { mainLayoutStyles } from "@/styles";
 
 /** Shell layout of the application.
  *
@@ -21,10 +23,15 @@ export function MainLayout() {
   useKeyboardShortcuts();
 
   return (
-    <div className="main-layout">
+    <div {...props(mainLayoutStyles.root)}>
       <WindowHeader />
 
-      <div className="main-layout__workspace" data-side={side}>
+      <div
+        {...props(
+          mainLayoutStyles.workspace,
+          side === "right" && mainLayoutStyles.workspaceRight,
+        )}
+      >
         <Sidebar activeNavId={activeNavId} setActiveNavId={setActiveNavId} />
 
         <MainStage activeId={activeNavId} />
