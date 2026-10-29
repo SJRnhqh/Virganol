@@ -7,14 +7,11 @@
 
 ## Current
 
-- [ ] Resolve StyleX CSS hot updates before expanding the migration:
-  under the current 0.19.1 adapter, JS class names update but the loaded CSS
-  stays stale until a manual page reload. Keep Rsbuild/Rspack; investigate
-  adapter CSS invalidation/HMR notifications first, then evaluate the official
-  Babel/PostCSS route if needed. Other integrations require their own proof.
 - [ ] Verify the migrated MainLayout in Tauri with real child components;
   ordinary browser startup currently fails on the existing native bridge
-  dependency. Then continue the layouts review and work down the shell.
+  dependency. Include native hot-update verification.
+- [ ] Continue MainLayout's JSX/style review before choosing the next CSS
+  migration slice; child-component styles remain outside the current scope.
 
 ## Planned
 
@@ -45,6 +42,12 @@
 
 ## Completed
 
+- [x] Restore StyleX hot updates with official development-only
+  `runtimeInjection`; retain Rsbuild/Rspack and production static CSS extraction.
+  Repeated edits to real layout styles update immediately in the isolated
+  browser fixture while preserving React state, input text, and sidebar side.
+  Do not retain a dedicated regression script or test gate, per user preference.
+  Repository checks and the UI production build pass.
 - [x] Migrate only MainLayout's shell/workspace containers to StyleX through
   `@/styles` and conditional `props()` composition; allow layouts to consume
   styles without extending that permission to other shell layers. Remove
@@ -54,7 +57,7 @@
   browser fixture with native-dependent children/hooks replaced: left/right
   metrics match at 1280×720; 640×480 sizing/overflow and theme-variable
   inheritance pass. Type checking, ESLint, Stylelint, production build, and
-  emitted StyleX CSS checks pass; hot updates expose the limitation above.
+  emitted StyleX CSS checks pass; the initial hot-update limitation is fixed above.
 - [x] Prepare the additive StyleX 0.19.1 pilot: `mainLayoutStyles` plus barrel
   export, Rsbuild compilation through the temporary Webpack-compatible
   adapter, standard `props()` usage (`sx` shorthand disabled), and internal

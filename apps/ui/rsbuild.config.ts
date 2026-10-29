@@ -9,7 +9,7 @@ import stylex from "@stylexjs/unplugin";
  *
  * Rsbuild 构建配置。
  */
-export default defineConfig({
+export default defineConfig(({ env }) => ({
   plugins: [pluginReact(), pluginTailwindcss()],
   tools: {
     rspack: {
@@ -18,6 +18,7 @@ export default defineConfig({
         // https://github.com/facebook/stylex/pull/1745
         stylex.webpack({
           sxPropName: false,
+          runtimeInjection: env === "development",
           useCSSLayers: true,
         }),
       ],
@@ -29,4 +30,4 @@ export default defineConfig({
   },
   html: { template: "./index.html" },
   server: { strictPort: true },
-});
+}));
