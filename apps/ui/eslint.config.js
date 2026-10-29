@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import stylex from "@stylexjs/eslint-plugin";
 import boundaries from "eslint-plugin-boundaries";
 import importX from "eslint-plugin-import-x";
 import globals from "globals";
@@ -242,6 +243,21 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+  },
+  // TBD: 混合阶段暂单独管理样式规则；全部迁移后统一规划与 srcFiles 的关系及规则归属。
+  // TBD: 后续考虑通过成熟的 ESLint 规则进一步约束样式写法的唯一性。
+  {
+    files: ["src/styles/**/*.ts"],
+    plugins: {
+      "@stylexjs": stylex,
+    },
+    rules: {
+      "@stylexjs/valid-styles": "error",
+      "@stylexjs/valid-shorthands": "error",
+      "@stylexjs/sort-keys": "error",
+      "@stylexjs/no-nonstandard-styles": "error",
+      "@stylexjs/no-legacy-contextual-styles": "error",
     },
   },
   {
