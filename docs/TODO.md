@@ -42,6 +42,9 @@
 
 ## Completed
 
+- [x] Add `tsc -b` to the TS test suite so CI type-checks the UI and fails on
+  unresolved imports; rely on `tsc` for module resolution instead of enabling
+  `import-x/no-unresolved`. The TS suite and type check pass.
 - [x] Restore StyleX hot updates with official development-only
   `runtimeInjection`; retain Rsbuild/Rspack and production static CSS extraction.
   Repeated edits to real layout styles update immediately in the isolated
