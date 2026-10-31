@@ -7,9 +7,9 @@
 
 ## Current
 
-- [ ] Verify the migrated MainLayout in Tauri with real child components;
-  ordinary browser startup currently fails on the existing native bridge
-  dependency. Include native hot-update verification.
+- [ ] Scaffold a dev preview entry with a stubbed native bridge so MainLayout
+  and real child components render in the plain browser; reuse it to verify
+  MainLayout in Tauri, including native hot updates.
 - [ ] Continue MainLayout's JSX/style review before choosing the next CSS
   migration slice; child-component styles remain outside the current scope.
 
@@ -20,8 +20,17 @@
   release. Upgrade to a release containing it, verify CSS output/HMR, and
   replace the temporary `.webpack()` adapter with `.rspack()`. The fix covers
   initial CSS output; it does not establish that hot updates work.
-- [ ] After migration, reconcile the styles-only ESLint block with `srcFiles`;
-  consider mature rules for consistent style authoring where useful.
+- [ ] Land the styles ESLint reconciliation as one knife at the WindowHeader
+  slice (trigger: the first new styles TS file, not full CSS replacement;
+  `canvas.css`/`scrollbars.css` stay CSS permanently): add `styles` to
+  `moduleDirs`, add `styles: []` to `dependencyAllows` (leaf), create the
+  `^@/styles` sort group between `@/hooks` and `@/features`, and allow
+  `styles` from `components`. The key alone is not inert: `moduleTypes` feeds
+  the generic-policy to-sets, so `main.tsx`'s `@/styles/index.css` breaks on
+  contact; legislate `index.{ts,css}` as public entry patterns in the same
+  knife. Whether `features` may consume `@/styles` stays deferred to
+  reverse-waterfall governance; consider mature style-authoring rules where
+  useful after the block merges with `srcFiles`.
 - [ ] Verify Zed format-on-save; optionally improve duplicate-import autofix
   around file-header comments. Neither blocks the StyleX pilot.
 - [ ] Narrow subscriptions in `useSidebarStyles`, `SidebarToggle`, and
@@ -42,6 +51,10 @@
 
 ## Completed
 
+- [x] Seat the `styles` boundary element between `hooks` and `features` in
+  `boundaries/elements`, expressing the TS-ified styles layer as a leaf below
+  feature domains; first-match disambiguation is unaffected and the full
+  ESLint suite passes with zero behavior change.
 - [x] Add `tsc -b` to the TS test suite so CI type-checks the UI and fails on
   unresolved imports; rely on `tsc` for module resolution instead of enabling
   `import-x/no-unresolved`. The TS suite and type check pass.
