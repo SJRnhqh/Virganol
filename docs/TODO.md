@@ -23,8 +23,7 @@
 - [ ] Land the styles ESLint reconciliation as one knife at the WindowHeader
   slice (trigger: the first new styles TS file, not full CSS replacement;
   `canvas.css`/`scrollbars.css` stay CSS permanently): add `styles` to
-  `moduleDirs`, add `styles: []` to `dependencyAllows` (leaf), create the
-  `^@/styles` sort group between `@/hooks` and `@/features`, and allow
+  `moduleDirs`, add `styles: []` to `dependencyAllows` (leaf), and allow
   `styles` from `components`. The key alone is not inert: `moduleTypes` feeds
   the generic-policy to-sets, so `main.tsx`'s `@/styles/index.css` breaks on
   contact; legislate `index.{ts,css}` as public entry patterns in the same
@@ -51,6 +50,10 @@
 
 ## Completed
 
+- [x] Add the `^@/styles` group to `simple-import-sort` between `@/hooks` and
+  `@/features`, matching the seated styles layer; autofix moves the `@/styles`
+  import in `MainLayout.tsx` above `@/components`, and the full ESLint suite
+  passes.
 - [x] Seat the `styles` boundary element between `hooks` and `features` in
   `boundaries/elements`, expressing the TS-ified styles layer as a leaf below
   feature domains; first-match disambiguation is unaffected and the full

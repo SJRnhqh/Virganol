@@ -4,8 +4,8 @@ import { useShallow } from "zustand/react/shallow";
 
 import { useNavigationStore, useSidebarStore } from "@/store";
 import { useKeyboardShortcuts } from "@/hooks";
-import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
 import { mainLayoutStyles } from "@/styles";
+import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
 
 /** Shell layout of the application.
  *
