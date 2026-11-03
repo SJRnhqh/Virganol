@@ -54,6 +54,12 @@
 
 ## Completed
 
+- [x] Move `WindowHeader` out of `workbench` into the lowercase semantic
+  folder `components/header` (files keep PascalCase, path header comments
+  updated, barrel stays tight: only `WindowHeader` exported). Seating follows
+  the `settings` pattern: lowercase domain folders at `components` top level;
+  whether `workbench` retires or renames stays deferred until the remaining
+  parts settle.
 - [x] Add `import-x/no-self-import` to the import gates: a file importing
   itself (the rename/copy-paste slip) is now lint-rejected; barrel-mediated
   cycles remain out of scope for now. Probed once to confirm the error

@@ -1,4 +1,4 @@
-// apps/ui/src/components/workbench/WindowHeader/WindowHeader.tsx
+// apps/ui/src/components/header/WindowHeader.tsx
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { type } from "@tauri-apps/plugin-os";
 import { useState } from "react";
