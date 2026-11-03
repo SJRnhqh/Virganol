@@ -13,6 +13,7 @@
     "!**/",
     "!apps/ui/src/main.tsx",
     "!apps/ui/src/App.tsx",
+    "!apps/ui/src/layouts/**",
     "node_modules",
     "**/node_modules",
     "dist",

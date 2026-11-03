@@ -30,8 +30,9 @@
   knife. Whether `features` may consume `@/styles` stays deferred to
   reverse-waterfall governance; consider mature style-authoring rules where
   useful after the block merges with `srcFiles`.
-- [ ] Verify Zed format-on-save; optionally improve duplicate-import autofix
-  around file-header comments. Neither blocks the StyleX pilot.
+- [ ] Optionally improve Zed's duplicate-import quick-fix around file-header
+  comments. Format-on-save is verified live; nothing here blocks the StyleX
+  pilot.
 - [ ] Narrow subscriptions in `useSidebarStyles`, `SidebarToggle`, and
   `SideSwitch` with selectors / `useShallow`.
 - [ ] Revisit sidebar/module CSS scoping (`@scope`, `@layer`, BEM) after
@@ -50,6 +51,19 @@
 
 ## Completed
 
+- [x] Swap core `no-duplicate-imports` for `import-x/no-duplicates` with
+  `"prefer-inline": true`: same detection, plus an autofix that merges
+  same-source imports in the project's inline-type style. Verified on
+  MainLayout with seeded duplicates — the old rule reported without fixing,
+  the new rule merges on `--fix`; detection and CI behavior are unchanged
+  and the full ESLint suite passes.
+- [x] Bring `layouts/**` under oxfmt via the `.oxfmtrc.json` allowlist so
+  fixer output and hand edits normalize to canonical form; MainLayout's
+  first pass collapsed a props spread to one line and dropped non-ES5
+  trailing commas. Add a matching `TypeScript` block to Zed settings so
+  `.ts` files format on save too, confirm live format-on-save, keep
+  `printWidth` at 100, and admit `.zed/settings.json` into the repo with a
+  selective `.gitignore` un-ignore while local overrides stay ignored.
 - [x] Add the `^@/styles` group to `simple-import-sort` between `@/hooks` and
   `@/features`, matching the seated styles layer; autofix moves the `@/styles`
   import in `MainLayout.tsx` above `@/components`, and the full ESLint suite

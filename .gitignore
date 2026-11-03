@@ -39,7 +39,8 @@ bin/
 .arts/*
 
 # Zed
-.zed/
+.zed/*
+!.zed/settings.json
 
 # Cursor
 .cursor/

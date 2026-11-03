@@ -17,7 +17,7 @@ export function MainLayout() {
     useShallow((state) => ({
       activeNavId: state.activeNavId,
       setActiveNavId: state.setActiveNavId,
-    })),
+    }))
   );
 
   useKeyboardShortcuts();
@@ -27,10 +27,7 @@ export function MainLayout() {
       <WindowHeader />
 
       <div
-        {...props(
-          mainLayoutStyles.workspace,
-          side === "right" && mainLayoutStyles.workspaceRight,
-        )}
+        {...props(mainLayoutStyles.workspace, side === "right" && mainLayoutStyles.workspaceRight)}
       >
         <Sidebar activeNavId={activeNavId} setActiveNavId={setActiveNavId} />
 
