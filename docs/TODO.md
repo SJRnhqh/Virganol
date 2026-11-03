@@ -54,6 +54,10 @@
 
 ## Completed
 
+- [x] Add `import-x/no-self-import` to the import gates: a file importing
+  itself (the rename/copy-paste slip) is now lint-rejected; barrel-mediated
+  cycles remain out of scope for now. Probed once to confirm the error
+  fires; the full ESLint suite passes with zero existing usage.
 - [x] Add `import-x/no-webpack-loader-syntax` to the import gates: inline
   webpack loader chains (`!`-separated import sources) are lint-rejected
   while Rsbuild query suffixes stay unaffected. Probed once to confirm the

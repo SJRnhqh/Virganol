@@ -179,6 +179,7 @@ const importRules = {
   "import-x/no-named-default": "error",
   "import-x/no-namespace": "error",
   "import-x/no-rename-default": "error",
+  "import-x/no-self-import": "error",
   "import-x/no-duplicates": ["error", { "prefer-inline": true }],
   "no-useless-rename": [
     "error",
