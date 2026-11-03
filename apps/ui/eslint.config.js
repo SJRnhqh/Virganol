@@ -175,6 +175,7 @@ const importRules = {
     { count: 1, exactCount: true, considerComments: true },
   ],
   "import-x/no-empty-named-blocks": "error",
+  "import-x/no-webpack-loader-syntax": "error",
   "import-x/no-named-default": "error",
   "import-x/no-namespace": "error",
   "import-x/no-rename-default": "error",

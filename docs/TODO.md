@@ -19,7 +19,10 @@
   the Rspack CSS-output fix merged on 2026-09-24, after the installed 0.19.1
   release. Upgrade to a release containing it, verify CSS output/HMR, and
   replace the temporary `.webpack()` adapter with `.rspack()`. The fix covers
-  initial CSS output; it does not establish that hot updates work.
+  initial CSS output; it does not establish that hot updates work. Checked
+  2026-11-03: npm latest `@stylexjs/unplugin` is still 0.19.1 (2026-09-15),
+  so the fix is unreleased and the wait continues; `@rsbuild/core` 2.3.0
+  exists but is unrelated to the adapter switch.
 - [ ] Land the styles ESLint reconciliation as one knife at the WindowHeader
   slice (trigger: the first new styles TS file, not full CSS replacement;
   `canvas.css`/`scrollbars.css` stay CSS permanently): add `styles` to
@@ -51,6 +54,10 @@
 
 ## Completed
 
+- [x] Add `import-x/no-webpack-loader-syntax` to the import gates: inline
+  webpack loader chains (`!`-separated import sources) are lint-rejected
+  while Rsbuild query suffixes stay unaffected. Probed once to confirm the
+  error fires; the full ESLint suite passes with zero existing usage.
 - [x] Swap core `no-duplicate-imports` for `import-x/no-duplicates` with
   `"prefer-inline": true`: same detection, plus an autofix that merges
   same-source imports in the project's inline-type style. Verified on
