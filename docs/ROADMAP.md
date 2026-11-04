@@ -91,12 +91,16 @@
 
 #### 6.5 收尾优化
 
-- [ ] 逐子组件优雅化壳层 JSX：以 MainLayout 为锚点，WindowHeader → Sidebar → MainStage → SettingsModal 依次独立成段推进；每段同构考察（JSX 结构 → 数据/行为 → styles 切片），store 与 hooks 顺带理顺
-- [ ] WindowHeader 段细节进度：平台件已收（`lib/platform` 常量 + 样式 StyleX 切片已落）→ MacTrafficLightSpacer（60 魔法数、动效参数、JSDoc）→ Breadcrumb（park 决策）→ 三按钮（订阅收窄）→ `mr-26` 让位耦合
+- [ ] 逐子组件优雅化壳层 JSX：以 MainLayout 为锚点，WindowHeader → Sidebar → MainStage → SettingsModal 依次独立成段推进；每段同构考察（JSX 结构 → 数据/行为 → styles 切片），store 与 hooks 顺带理顺；已记录段内细节：Sidebar（settings `toggle` 必要性、`useSidebarStyles` 订阅收窄）、MainStage（`NavId` 与 `types/props/` 派生对齐）
+- [ ] WindowHeader 段细节进度：平台件已收（`lib/platform` 常量 + 样式 StyleX 切片已落）→ MacTrafficLightSpacer（60 魔法数、动效参数、JSDoc）→ Breadcrumb 与 ModuleMenu（park 决策）→ 三按钮（订阅收窄）→ `mr-26` 让位耦合
+- [ ] 搭建 dev preview 入口（stub native bridge），浏览器直渲染 MainLayout 与真实子组件，复用验证 Tauri 内表现与原生热更新
+- [ ] 蹲守 StyleX #1745 发版（Rspack CSS 输出修复）：升级后验证 CSS 输出/HMR 并以 `.rspack()` 替换临时 `.webpack()` 适配器
+- [ ] styles 全刀立法暂缓：最小刀（components 可依赖 styles）已落；`moduleDirs` 键与 index 入口模式立法等 styles 文件增多再说
+- [ ] 回看侧栏/模块 CSS scoping（`@scope`、`@layer`、BEM），待组件边界清晰与 StyleX 试点评估后
 - [ ] 继续清理并规范化 `features/` 外的前端壳层，先稳定共享 layout、state、component 与 utility 边界，再进入功能级对齐
-- [ ] 前端壳层依赖方向门禁（`eslint-plugin-boundaries`）：以元素矩阵约束 shell 层与 feature 域的单向依赖，收编 `features/` 时按倒序瀑布扩展策略，并回看路线纪律（`../` 与 `@/` 量程分层）是否需要立法规化
+- [ ] 前端壳层依赖方向门禁（`eslint-plugin-boundaries`）：元素矩阵与单向依赖已全面落座（styles 叶子、components→styles 许可等）；剩余为收编 `features/` 时的倒序瀑布扩展，并回看路线纪律（`../` 与 `@/` 量程分层）是否需要立法规化
 - [ ] 前端 feature 域治理：收敛 bot 内部 82 处 `@/features/bot/...` 域内别名为相对引用，清理 45 处 `@/lib/utils` 等深钻引用并引入桶纪律，届时一并确定 feature 启动钩子的最终挂载形态（聚合钩子或根级例外）
-- [ ] 逐个优雅化 `store/`：清理死代码（`setOpen` / `setSide`）、治理 `toggleSide` 内 UI 编舞时序、收窄 `activeId` 类型，随后回头收紧 `handleKeyDown` 的依赖注入参数（文件头已标记动工点）
+- [x] 优雅化 MainLayout 视角的 `store/`：清理死代码（`setOpen` / `setSide`）、`toggleSide` 已为同步纯 set、共享 disclosure 辅助；后续仅剩 `activeId` 类型收窄（随 MainStage 段）与 `handleKeyDown` 依赖注入参数收紧
 - [ ] 深度规范化剩余样式文件：`canvas.css`、`tokens.css`、`scrollbars.css`、`themes/_palette.css` 与 `themes/light.css`（当前仅 `index.css`、`themes/index.css` 与 `base.css` 完成）
 - [ ] 决策 feature 专属 base 组件的去向：归入所属 feature 或未来的共享 UI 层
 - [ ] 编写 `docs/rules/frontend-code-style.md`：导出符号使用中英双语单行 JSDoc（英文句、空行、中文句），仅为项目特有且反直觉的事实补充细节，行内 why-comment 使用 `//`，TS/TSX 使用路径头，config 文件纳入规范扫描，HTML/JSON 不纳入；正式发布品牌图标落地前不保留占位 favicon/title

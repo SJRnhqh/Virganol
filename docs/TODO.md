@@ -7,42 +7,14 @@
 
 ## Current
 
-- [ ] Scaffold a dev preview entry with a stubbed native bridge so MainLayout
-  and real child components render in the plain browser; reuse it to verify
-  MainLayout in Tauri, including native hot updates.
-- [ ] Advance the ROADMAP 6.5 per-part walk; current pointer:
-      MacTrafficLightSpacer (60 magic number, motion params, JSDoc).
+- [ ] Advance the ROADMAP 6.5 walk; pointers: dev preview entry and the
+      MacTrafficLightSpacer pass (60 magic number, motion params, JSDoc).
 
 ## Planned
 
-- [ ] Follow [StyleX #1745](https://github.com/facebook/stylex/pull/1745):
-  the Rspack CSS-output fix merged on 2026-09-24, after the installed 0.19.1
-  release. Upgrade to a release containing it, verify CSS output/HMR, and
-  replace the temporary `.webpack()` adapter with `.rspack()`. The fix covers
-  initial CSS output; it does not establish that hot updates work. Checked
-  2026-11-03: npm latest `@stylexjs/unplugin` is still 0.19.1 (2026-09-15),
-  so the fix is unreleased and the wait continues; `@rsbuild/core` 2.3.0
-  exists but is unrelated to the adapter switch.
-- [ ] Land the full styles ESLint reconciliation when warranted: the minimal
-  knife (components depending on styles, like layouts) is already in; the
-  full knife (styles in `moduleDirs`, `styles: []` leaf key, index entry
-  patterns) stays deferred until styles files multiply.
 - [ ] Optionally improve Zed's duplicate-import quick-fix around file-header
   comments. Format-on-save is verified live; nothing here blocks the StyleX
   pilot.
-- [ ] Revisit sidebar/module CSS scoping (`@scope`, `@layer`, BEM) after
-  component boundaries emerge and the StyleX pilot is evaluated.
-- [ ] Align `MainStage` with `NavId` and derived props under `types/props/`;
-  consider deriving `NavId` from `NAV_IDS as const`.
-- [ ] After the sidebar slice, decide whether settings needs `toggle`;
-  recheck that bare `open` retains the last tab.
-- [ ] Keep `ModuleMenu` and `Breadcrumb` scaffolding parked pending a
-  decision.
-- [ ] Extend boundary/import policies into `features/` through the
-  reverse-waterfall review; stylesheet import policy remains deferred.
-- [ ] Update `docs/rules/` once ESLint coverage and conventions settle
-  across the frontend. Persistent import-rule regression scripts remain
-  deferred at the user's request.
 
 ## Completed
 
