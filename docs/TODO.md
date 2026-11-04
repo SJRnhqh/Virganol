@@ -54,6 +54,13 @@
 
 ## Completed
 
+- [x] Replace the inherited `osType` Promise bug with synchronous UA detection
+  in `lib/platform.ts`: `type()` returns a promise, so the old `useState` probe
+  stored a promise and `isMac`/`isWindows` were permanently false, leaving both
+  platform parts unrendered. Public surface is the two booleans; the platform
+  union stays inlined in the detector signature (lib cannot import `types` and
+  there is no second consumer yet), and the detector sits below the public
+  constants behind a hoisted function declaration.
 - [x] Extend oxfmt coverage to the settled header entries:
   `components/index.ts`, `header/index.ts`, and `header/WindowHeader.tsx`
   (first pass folded its cleaned JSX to the 100-col width). Header part files
