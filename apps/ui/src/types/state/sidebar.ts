@@ -1,20 +1,19 @@
 // apps/ui/src/types/state/sidebar.ts
+import type { DisclosureState } from "./disclosure";
 
-/** Shape of the sidebar store.
+/** Sidebar state.
  *
- * 侧边栏状态容器的形态。
+ * 侧边栏状态。
  */
-export interface SidebarState {
-  // 状态
-  isOpen: boolean;
+export interface SidebarState extends DisclosureState {
+  /** The docking side of the sidebar.
+   *
+   * 侧边栏的停靠侧。
+   */
   side: "left" | "right";
-  activeId: string;
-  isSwitching: boolean;
-
-  // 动作
-  toggle: () => void;
-  setOpen: (isOpen: boolean) => void;
-  setActiveId: (id: string) => void;
-  toggleSide: () => Promise<void>;
-  setSide: (side: "left" | "right") => void;
+  /** Toggles the docking side.
+   *
+   * 切换停靠侧。
+   */
+  toggleSide: () => void;
 }

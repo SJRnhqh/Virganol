@@ -1,4 +1,4 @@
-// apps/ui/src/components/workbench/WindowHeader/SidebarToggle.tsx
+// apps/ui/src/components/header/SidebarToggle.tsx
 import { PanelLeft, PanelRight } from "lucide-react";
 
 import { cn } from "@/lib";

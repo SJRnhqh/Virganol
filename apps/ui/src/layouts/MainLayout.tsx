@@ -1,31 +1,37 @@
 // apps/ui/src/layouts/MainLayout.tsx
-import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
-import { useKeyboardShortcuts } from "@/hooks";
-import { cn } from "@/lib";
-import { useSidebarStore } from "@/store";
+import { props } from "@stylexjs/stylex";
+import { useShallow } from "zustand/react/shallow";
 
-/** Composes the application shell and hosts the active feature workspace.
+import { useNavigationStore, useSidebarStore } from "@/store";
+import { useKeyboardShortcuts } from "@/hooks";
+import { mainLayoutStyles } from "@/styles";
+import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
+
+/** Shell layout of the application.
  *
- * 组合应用外壳并承载当前功能工作区。
+ * 应用的外壳布局。
  */
 export function MainLayout() {
-  const { side, activeId, setActiveId } = useSidebarStore();
+  const side = useSidebarStore((state) => state.side);
+  const { activeNavId, setActiveNavId } = useNavigationStore(
+    useShallow((state) => ({
+      activeNavId: state.activeNavId,
+      setActiveNavId: state.setActiveNavId,
+    }))
+  );
 
   useKeyboardShortcuts();
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-main-bg text-primary">
+    <div {...props(mainLayoutStyles.root)}>
       <WindowHeader />
 
       <div
-        className={cn(
-          "relative flex-1 w-full h-full overflow-hidden flex",
-          side === "left" ? "flex-row" : "flex-row-reverse",
-        )}
+        {...props(mainLayoutStyles.workspace, side === "right" && mainLayoutStyles.workspaceRight)}
       >
-        <Sidebar activeId={activeId} onActiveIdChange={setActiveId} />
+        <Sidebar activeNavId={activeNavId} setActiveNavId={setActiveNavId} />
 
-        <MainStage activeId={activeId} />
+        <MainStage activeId={activeNavId} />
       </div>
 
       <SettingsModal />

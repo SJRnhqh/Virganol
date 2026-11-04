@@ -1,3 +1,15 @@
 // apps/ui/src/types/index.ts
+export type {
+  SettingsShortcutDeps,
+  ShortcutDeps,
+  SidebarShortcutDeps,
+} from "./logic";
+export type { NavId, NavItemConfig } from "./navigation";
+export type { SidebarProps } from "./props";
 export { DEFAULT_SETTINGS_TAB, type SettingsTab } from "./settings";
-export { type SettingsState, type SidebarState } from "./state";
+export type {
+  DisclosureUpdater,
+  NavigationState,
+  SettingsState,
+  SidebarState,
+} from "./state";

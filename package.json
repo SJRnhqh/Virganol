@@ -8,6 +8,8 @@
     "diff:budget": "node dev/scripts/repo/diff-budget.mjs",
     "test": "node dev/scripts/repo/test.mjs",
     "bench": "node dev/scripts/repo/bench.mjs",
+    "format": "pnpm -F @virganol/ui format",
+    "format:check": "pnpm -F @virganol/ui format:check",
     "lint": "pnpm lint:ui",
     "lint:fix": "pnpm lint:ui:fix",
     "lint:ui": "pnpm -F @virganol/ui lint",
@@ -26,7 +28,7 @@
     "@commitlint/config-conventional": "^20.5.0",
     "@napi-rs/cli": "^3.7.4",
     "husky": "^9.1.7",
-    "prettier": "^3.8.3"
+    "oxfmt": "0.72.0"
   },
   "volta": {
     "node": "22.22.2"
