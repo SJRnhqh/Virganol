@@ -8,6 +8,7 @@ import { create } from "@stylexjs/stylex";
 export const mainLayoutStyles = create({
   root: {
     overflow: "hidden",
+    backgroundColor: "var(--main-bg)",
     display: "flex",
     flexDirection: "column",
     height: "100vh",
