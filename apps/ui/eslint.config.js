@@ -131,7 +131,7 @@ const dependencyAllows = {
   lib: [],
   store: ["types", "constants"],
   hooks: ["types", "constants", "store"],
-  components: ["types", "constants", "lib", "store", "hooks", "features"],
+  components: ["types", "constants", "lib", "store", "hooks", "styles", "features"],
   layouts: ["lib", "store", "hooks", "components", "styles"],
   app: ["features", "layouts", "styles"],
 };

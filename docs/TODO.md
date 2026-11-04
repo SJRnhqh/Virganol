@@ -54,6 +54,15 @@
 
 ## Completed
 
+- [x] Migrate WindowHeader's styles to StyleX as the first component-level
+  slice: new `styles/header.ts` (`windowHeaderStyles`, theme colors via
+  `var(--header-bg)`/`var(--sidebar-border)`, responsive padding via media
+  conditionals) exported through the styles barrel; WindowHeader swaps
+  `cn`/Tailwind classes for `props()` composition with the `controlsWindows`
+  conditional mirroring `workspaceRight`. Boundary legislation is the minimal
+  one-line knife: `components` now depends on `styles` exactly like `layouts`
+  does; the full reconciliation (moduleDirs key, index entry patterns) stays
+  deferred. Lint, type check, and the production build pass.
 - [x] Extend oxfmt coverage to the settled lib platform entries:
   `lib/index.ts` (first pass collapsed the animation re-export to one line)
   and `lib/platform.ts`; both files are already fully ESLint-gated (import
