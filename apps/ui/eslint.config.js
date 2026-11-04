@@ -18,30 +18,34 @@ const srcFiles = [
 
 const barrelFiles = [`src/${moduleDirs}/**/index.ts`];
 
-const noImportComments = {
+const noCommentPlacement = {
   meta: {
     type: "suggestion",
     schema: [],
     messages: {
       moveComment: "Move this comment above the import block.",
       keepCommentFlush: "Keep this comment flush with the first import.",
+      keepExportCommentFlush: "Keep this comment flush with the first export.",
     },
   },
   create(context) {
+    const checkFirstStatementFlush = (node, messageId) => {
+      const last = context.sourceCode.getCommentsBefore(node).at(-1);
+      if (last) {
+        const gap = node.loc.start.line - last.loc.end.line;
+        if (gap === 0) {
+          context.report({ loc: last.loc, messageId: "moveComment" });
+        } else if (gap > 1) {
+          context.report({ loc: last.loc, messageId });
+        }
+      }
+    };
     return {
       ImportDeclaration(node) {
         const body = node.parent.body;
         const index = body.indexOf(node);
         if (!body.slice(0, index).some((stmt) => stmt.type === "ImportDeclaration")) {
-          const last = context.sourceCode.getCommentsBefore(node).at(-1);
-          if (last) {
-            const gap = node.loc.start.line - last.loc.end.line;
-            if (gap === 0) {
-              context.report({ loc: last.loc, messageId: "moveComment" });
-            } else if (gap > 1) {
-              context.report({ loc: last.loc, messageId: "keepCommentFlush" });
-            }
-          }
+          checkFirstStatementFlush(node, "keepCommentFlush");
         }
         const prev = body[index - 1];
         if (prev?.type === "ImportDeclaration") {
@@ -58,6 +62,13 @@ const noImportComments = {
               context.report({ loc: comment.loc, messageId: "moveComment" });
             }
           }
+        }
+      },
+      // TBD: 待真实案例出现后，对称沿用内部/行尾禁注释到 re-export（node.source 为围栏）。
+      ExportNamedDeclaration(node) {
+        const body = node.parent.body;
+        if (body[0] === node) {
+          checkFirstStatementFlush(node, "keepExportCommentFlush");
         }
       },
     };
@@ -168,7 +179,6 @@ const tsResolver = {
 };
 
 const importRules = {
-  "local/no-import-comments": "error",
   "import-x/first": "error",
   "import-x/newline-after-import": [
     "error",
@@ -285,9 +295,11 @@ export default defineConfig([
     plugins: {
       boundaries,
       "import-x": importX,
+      local: { rules: { "no-comment-placement": noCommentPlacement } },
     },
     rules: {
       "no-restricted-syntax": ["error", ...sharedSyntax],
+      "local/no-comment-placement": "error",
       "import-x/no-useless-path-segments": "error",
       "no-restricted-imports": [
         "error",
@@ -327,7 +339,6 @@ export default defineConfig([
     plugins: {
       "import-x": importX,
       "simple-import-sort": simpleImportSort,
-      local: { rules: { "no-import-comments": noImportComments } },
     },
     rules: {
       ...importRules,

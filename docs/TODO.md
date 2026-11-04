@@ -54,6 +54,13 @@
 
 ## Completed
 
+- [x] Generalize the comment-placement rule: rename `local/no-import-comments`
+  to `local/no-comment-placement`, lift its seating from the barrel-excluded
+  branch to the shared `srcFiles` block (one declaration, barrels included),
+  extract a shared first-statement flush check, and add the export-side
+  counterpart guarded by `body[0]` so component JSDoc stays exempt. Probed
+  both sides (import header gap, barrel export gap); the full ESLint suite
+  passes. Interior/trailing bans for re-exports stay a one-line TBD.
 - [x] Move `WindowHeader` out of `workbench` into the lowercase semantic
   folder `components/header` (files keep PascalCase, path header comments
   updated, barrel stays tight: only `WindowHeader` exported). Seating follows
