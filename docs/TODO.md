@@ -10,8 +10,8 @@
 - [ ] Scaffold a dev preview entry with a stubbed native bridge so MainLayout
   and real child components render in the plain browser; reuse it to verify
   MainLayout in Tauri, including native hot updates.
-- [ ] Continue MainLayout's JSX/style review before choosing the next CSS
-  migration slice; child-component styles remain outside the current scope.
+- [ ] Advance the ROADMAP 6.5 per-part walk; current pointer:
+      MacTrafficLightSpacer (60 magic number, motion params, JSDoc).
 
 ## Planned
 
@@ -23,29 +23,21 @@
   2026-11-03: npm latest `@stylexjs/unplugin` is still 0.19.1 (2026-09-15),
   so the fix is unreleased and the wait continues; `@rsbuild/core` 2.3.0
   exists but is unrelated to the adapter switch.
-- [ ] Land the styles ESLint reconciliation as one knife at the WindowHeader
-  slice (trigger: the first new styles TS file, not full CSS replacement;
-  `canvas.css`/`scrollbars.css` stay CSS permanently): add `styles` to
-  `moduleDirs`, add `styles: []` to `dependencyAllows` (leaf), and allow
-  `styles` from `components`. The key alone is not inert: `moduleTypes` feeds
-  the generic-policy to-sets, so `main.tsx`'s `@/styles/index.css` breaks on
-  contact; legislate `index.{ts,css}` as public entry patterns in the same
-  knife. Whether `features` may consume `@/styles` stays deferred to
-  reverse-waterfall governance; consider mature style-authoring rules where
-  useful after the block merges with `srcFiles`.
+- [ ] Land the full styles ESLint reconciliation when warranted: the minimal
+  knife (components depending on styles, like layouts) is already in; the
+  full knife (styles in `moduleDirs`, `styles: []` leaf key, index entry
+  patterns) stays deferred until styles files multiply.
 - [ ] Optionally improve Zed's duplicate-import quick-fix around file-header
   comments. Format-on-save is verified live; nothing here blocks the StyleX
   pilot.
-- [ ] Narrow subscriptions in `useSidebarStyles`, `SidebarToggle`, and
-  `SideSwitch` with selectors / `useShallow`.
 - [ ] Revisit sidebar/module CSS scoping (`@scope`, `@layer`, BEM) after
   component boundaries emerge and the StyleX pilot is evaluated.
 - [ ] Align `MainStage` with `NavId` and derived props under `types/props/`;
   consider deriving `NavId` from `NAV_IDS as const`.
 - [ ] After the sidebar slice, decide whether settings needs `toggle`;
   recheck that bare `open` retains the last tab.
-- [ ] Fix the inherited `WindowHeader` `osType` Promise bug; keep
-  `ModuleMenu` and `Breadcrumb` scaffolding parked pending a decision.
+- [ ] Keep `ModuleMenu` and `Breadcrumb` scaffolding parked pending a
+  decision.
 - [ ] Extend boundary/import policies into `features/` through the
   reverse-waterfall review; stylesheet import policy remains deferred.
 - [ ] Update `docs/rules/` once ESLint coverage and conventions settle

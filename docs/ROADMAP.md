@@ -91,6 +91,8 @@
 
 #### 6.5 收尾优化
 
+- [ ] 逐子组件优雅化壳层 JSX：以 MainLayout 为锚点，WindowHeader → Sidebar → MainStage → SettingsModal 依次独立成段推进；每段同构考察（JSX 结构 → 数据/行为 → styles 切片），store 与 hooks 顺带理顺
+- [ ] WindowHeader 段细节进度：平台件已收（`lib/platform` 常量 + 样式 StyleX 切片已落）→ MacTrafficLightSpacer（60 魔法数、动效参数、JSDoc）→ Breadcrumb（park 决策）→ 三按钮（订阅收窄）→ `mr-26` 让位耦合
 - [ ] 继续清理并规范化 `features/` 外的前端壳层，先稳定共享 layout、state、component 与 utility 边界，再进入功能级对齐
 - [ ] 前端壳层依赖方向门禁（`eslint-plugin-boundaries`）：以元素矩阵约束 shell 层与 feature 域的单向依赖，收编 `features/` 时按倒序瀑布扩展策略，并回看路线纪律（`../` 与 `@/` 量程分层）是否需要立法规化
 - [ ] 前端 feature 域治理：收敛 bot 内部 82 处 `@/features/bot/...` 域内别名为相对引用，清理 45 处 `@/lib/utils` 等深钻引用并引入桶纪律，届时一并确定 feature 启动钩子的最终挂载形态（聚合钩子或根级例外）
