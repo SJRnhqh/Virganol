@@ -54,6 +54,10 @@
 
 ## Completed
 
+- [x] Extend oxfmt coverage to the settled header entries:
+  `components/index.ts`, `header/index.ts`, and `header/WindowHeader.tsx`
+  (first pass folded its cleaned JSX to the 100-col width). Header part files
+  stay outside until each is reviewed; format checks pass on 7 files.
 - [x] Generalize the comment-placement rule: rename `local/no-import-comments`
   to `local/no-comment-placement`, lift its seating from the barrel-excluded
   branch to the shared `srcFiles` block (one declaration, barrels included),
