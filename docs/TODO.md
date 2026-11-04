@@ -7,14 +7,7 @@
 
 ## Current
 
-- [ ] Advance the ROADMAP 6.5 walk; pointers: dev preview entry and the
-      MacTrafficLightSpacer pass (60 magic number, motion params, JSDoc).
-
 ## Planned
-
-- [ ] Optionally improve Zed's duplicate-import quick-fix around file-header
-  comments. Format-on-save is verified live; nothing here blocks the StyleX
-  pilot.
 
 ## Completed
 

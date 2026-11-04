@@ -93,7 +93,6 @@
 
 - [ ] 逐子组件优雅化壳层 JSX：以 MainLayout 为锚点，WindowHeader → Sidebar → MainStage → SettingsModal 依次独立成段推进；每段同构考察（JSX 结构 → 数据/行为 → styles 切片），store 与 hooks 顺带理顺；已记录段内细节：Sidebar（settings `toggle` 必要性、`useSidebarStyles` 订阅收窄）、MainStage（`NavId` 与 `types/props/` 派生对齐）
 - [ ] WindowHeader 段细节进度：平台件已收（`lib/platform` 常量 + 样式 StyleX 切片已落）→ MacTrafficLightSpacer（60 魔法数、动效参数、JSDoc）→ Breadcrumb 与 ModuleMenu（park 决策）→ 三按钮（订阅收窄）→ `mr-26` 让位耦合
-- [ ] 搭建 dev preview 入口（stub native bridge），浏览器直渲染 MainLayout 与真实子组件，复用验证 Tauri 内表现与原生热更新
 - [ ] 蹲守 StyleX #1745 发版（Rspack CSS 输出修复）：升级后验证 CSS 输出/HMR 并以 `.rspack()` 替换临时 `.webpack()` 适配器
 - [ ] styles 全刀立法暂缓：最小刀（components 可依赖 styles）已落；`moduleDirs` 键与 index 入口模式立法等 styles 文件增多再说
 - [ ] 回看侧栏/模块 CSS scoping（`@scope`、`@layer`、BEM），待组件边界清晰与 StyleX 试点评估后
