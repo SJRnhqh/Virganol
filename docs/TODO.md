@@ -54,6 +54,12 @@
 
 ## Completed
 
+- [x] Extend oxfmt coverage to the settled lib platform entries:
+  `lib/index.ts` (first pass collapsed the animation re-export to one line)
+  and `lib/platform.ts`; both files are already fully ESLint-gated (import
+  discipline on the module, barrel rules on the index), so the two now carry
+  the same format seal as the other settled entries. Format checks pass on 9
+  files.
 - [x] Replace the inherited `osType` Promise bug with synchronous UA detection
   in `lib/platform.ts`: `type()` returns a promise, so the old `useState` probe
   stored a promise and `isMac`/`isWindows` were permanently false, leaving both

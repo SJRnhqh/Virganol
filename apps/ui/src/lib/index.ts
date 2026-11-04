@@ -1,9 +1,5 @@
 // apps/ui/src/lib/index.ts
-export {
-  modalBackdrop,
-  panelSwitchVariants,
-  paperUnfoldVariants,
-} from "./animation";
+export { modalBackdrop, panelSwitchVariants, paperUnfoldVariants } from "./animation";
 export {
   connectIconVariants,
   phaseIconVariants,
