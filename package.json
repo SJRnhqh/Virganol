@@ -17,6 +17,7 @@
     "dev": "pnpm -F @virganol/desktop dev",
     "dev:ui": "pnpm -F @virganol/ui dev",
     "build": "pnpm -F @virganol/desktop build",
+    "build:doctor:ui": "pnpm -F @virganol/ui build:doctor",
     "prepare": "husky"
   },
   "keywords": [],

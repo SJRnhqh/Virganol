@@ -21,3 +21,7 @@
   `WindowsWindowControls` (absolute trailing or a shared width contract).
 
 ## Completed
+
+- [x] Wire Rsdoctor build analysis: `@rsdoctor/rspack-plugin` dev dependency,
+      opt-in `build:doctor` scripts (ui + root delegate), zero config change,
+      gated by `RSDOCTOR` env; note scripts are POSIX-shell only for now.

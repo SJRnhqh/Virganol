@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "rsbuild dev",
     "build": "tsc -b && rsbuild build",
+    "build:doctor": "export RSDOCTOR=true && tsc -b && rsbuild build",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
     "lint": "eslint . && pnpm lint:css",
@@ -36,6 +37,7 @@
     "@rsbuild/core": "2.2.5",
     "@rsbuild/plugin-react": "2.1.0",
     "@rsbuild/plugin-tailwindcss": "2.0.3",
+    "@rsdoctor/rspack-plugin": "^1.6.5",
     "@stylexjs/eslint-plugin": "^0.19.1",
     "@stylexjs/unplugin": "^0.19.1",
     "@types/node": "^24.10.1",
