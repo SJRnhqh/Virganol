@@ -22,6 +22,9 @@
 
 ## Completed
 
+- [x] Source the host platform from `@tauri-apps/plugin-os` `type()` in
+      `lib/platform.ts`, replacing user-agent sniffing; outside Tauri it
+      resolves to `unknown` so no native-control inset is reserved.
 - [x] Wire Rsdoctor build analysis: `@rsdoctor/rspack-plugin` dev dependency,
       opt-in `build:doctor` scripts (ui + root delegate), zero config change,
       gated by `RSDOCTOR` env; note scripts are POSIX-shell only for now.
