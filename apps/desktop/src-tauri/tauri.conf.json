@@ -14,6 +14,8 @@
     "windows": [
       {
         "title": "Virganol",
+        "minWidth": 480,
+        "minHeight": 600,
         "maximized": true,
         "resizable": true,
         "fullscreen": false,

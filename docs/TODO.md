@@ -22,6 +22,9 @@
 
 ## Completed
 
+- [x] Bound the main window with a 480×600 minimum size in `tauri.conf.json`;
+      it still opens maximized and restores to the default size, so the
+      viewport-driven root font size can be checked across widths.
 - [x] Source the host platform from `@tauri-apps/plugin-os` `type()` in
       `lib/platform.ts`, replacing user-agent sniffing; outside Tauri it
       resolves to `unknown` so no native-control inset is reserved.
