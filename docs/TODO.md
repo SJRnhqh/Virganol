@@ -22,6 +22,10 @@
 
 ## Completed
 
+- [x] Persist the main window state with `tauri-plugin-window-state` 2.5.0
+      (monitor, size, maximized, fullscreen); the window starts hidden and
+      the plugin shows it after restoring. Bumped `tauri` to 2.12.5 and
+      `@tauri-apps/api` / `@tauri-apps/cli` to 2.12.4 to satisfy the plugin.
 - [x] Bound the main window with a 480×600 minimum size in `tauri.conf.json`;
       it still opens maximized and restores to the default size, so the
       viewport-driven root font size can be checked across widths.
