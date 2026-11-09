@@ -2,21 +2,17 @@
 
 @layer base {
     /*
-     * Responsive document foundation.
+     * Document foundation.
      *
-     * 响应式文档基础样式。
+     * 文档基础样式。
      */
     html {
         /*
-         * Minimum: 12px preserves readability in narrow windows.
-         * Preferred: 0.85vw scales with the viewport width.
-         * Maximum: 16px prevents oversized text on wide displays.
+         * Fixed root font size of the application.
          *
-         * 最小值：12px，保证窄窗口中的可读性。
-         * 首选值：0.85vw，随视口宽度缩放。
-         * 最大值：16px，避免宽屏中的文字过大。
+         * 应用的固定根字号。
          */
-        font-size: clamp(12px, 0.85vw, 16px);
+        font-size: 16px;
     }
 
     /*

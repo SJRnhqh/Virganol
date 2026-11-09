@@ -7,9 +7,9 @@
 
 ## Current
 
-- [ ] MacTrafficLightSpacer pass: lift the 60px traffic-light width into a
-      named constant, review the framer-motion spring params, add the
-      bilingual JSDoc.
+- [ ] Traffic-light inset pass: drop `MacTrafficLightSpacer` in favor of an
+      animated inline start padding on the header, driven by the
+      `TRAFFIC_LIGHT_PADDING` / `HEADER_GUTTER` constants.
 
 ## Planned
 
@@ -22,6 +22,9 @@
 
 ## Completed
 
+- [x] Lock the document root font size at 16px, dropping the viewport-driven
+      `clamp()`: desktop convention is a fixed base (VS Code 13px, Zed 16px)
+      with OS DPI handling screen differences; zoom stays canvas-only.
 - [x] Persist the main window state with `tauri-plugin-window-state` 2.5.0
       (monitor, size, maximized, fullscreen); the window starts hidden and
       the plugin shows it after restoring. Bumped `tauri` to 2.12.5 and
