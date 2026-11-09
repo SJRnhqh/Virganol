@@ -65,12 +65,12 @@ export function BaseCanvas(props: ReactFlowProps) {
         // 展开传入的业务 Props (nodes, edges, onNodesChange 等)
         {...rest}
       >
-        <Background variant={BackgroundVariant.Dots} gap={24} />
+        <Background gap={24} variant={BackgroundVariant.Dots} />
 
         <Controls
+          className="m-6 border-none! bg-transparent! shadow-none!"
           position="top-right"
           showInteractive={false}
-          className="m-6 border-none! bg-transparent! shadow-none!"
         />
 
         {children}

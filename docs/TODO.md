@@ -22,6 +22,8 @@
 
 ## Completed
 
+- [x] Sorted JSX props alphabetically in 20 shared UI components. ESLint
+      enforcement is a separate tooling change.
 - [x] Lock the document root font size at 16px, dropping the viewport-driven
       `clamp()`: desktop convention is a fixed base (VS Code 13px, Zed 16px)
       with OS DPI handling screen differences; zoom stays canvas-only.

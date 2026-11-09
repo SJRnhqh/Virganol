@@ -17,7 +17,6 @@ export const Sidebar = memo(({ activeNavId, setActiveNavId }: SidebarProps) => {
 
   return (
     <aside
-      data-state={isOpen ? "open" : "closed"}
       className={cn(
         "relative h-full z-40 shrink-0 flex transition-[width] duration-500 ease-in-out",
         "w-18 data-[state=closed]:w-0",
@@ -25,8 +24,9 @@ export const Sidebar = memo(({ activeNavId, setActiveNavId }: SidebarProps) => {
         isOpen ? "overflow-visible" : "overflow-hidden",
         side === "left" ? "justify-end" : "justify-start"
       )}
-      onMouseMove={(e) => mouseY.set(e.pageY)}
+      data-state={isOpen ? "open" : "closed"}
       onMouseLeave={() => mouseY.set(Infinity)}
+      onMouseMove={(e) => mouseY.set(e.pageY)}
     >
       <div
         className={cn(
@@ -46,11 +46,11 @@ export const Sidebar = memo(({ activeNavId, setActiveNavId }: SidebarProps) => {
         >
           {NAV_ITEMS.map((item) => (
             <DockItem
+              icon={item.icon}
+              isActive={activeNavId === item.id}
               key={item.id}
               mouseY={mouseY}
-              isActive={activeNavId === item.id}
               onClick={() => setActiveNavId(item.id)}
-              icon={item.icon}
               side={side}
             />
           ))}

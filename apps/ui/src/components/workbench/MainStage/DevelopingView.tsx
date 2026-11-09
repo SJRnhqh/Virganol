@@ -9,8 +9,8 @@ export const DevelopingView = ({ title, icon: Icon }: DevelopingViewProps) => {
   return (
     <div className="flex flex-col items-center justify-center h-full w-full bg-main-bg animate-in fade-in zoom-in duration-500">
       <div className="relative mb-6">
-        <Icon size={80} className="text-primary/10" strokeWidth={1} />
-        <Rocket size={24} className="absolute -top-2 -right-2 text-rose-400 animate-bounce" />
+        <Icon className="text-primary/10" size={80} strokeWidth={1} />
+        <Rocket className="absolute -top-2 -right-2 text-rose-400 animate-bounce" size={24} />
       </div>
 
       <h2 className="text-xl font-medium text-primary/60 tracking-tight">{title}</h2>

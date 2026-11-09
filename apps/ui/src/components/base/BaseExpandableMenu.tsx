@@ -57,11 +57,11 @@ export const BaseExpandableMenu = ({
   return (
     <div className={className}>
       <button
-        type="button"
-        aria-expanded={isOpen}
         aria-controls={contentId}
-        onClick={toggle}
+        aria-expanded={isOpen}
         className={headerClassName}
+        onClick={toggle}
+        type="button"
       >
         <span style={{ display: "inline-flex", gap: 14, alignItems: "center" }}>
           {icon}
@@ -75,20 +75,20 @@ export const BaseExpandableMenu = ({
 
       {collapseStrategy === "hidden" ? (
         <div
+          className={contentInnerClassName}
+          hidden={!isOpen}
           id={contentId}
           role="region"
-          hidden={!isOpen}
-          className={contentInnerClassName}
         >
           {children}
         </div>
       ) : (
         <div
-          id={contentId}
-          role="region"
-          className={contentOuterClassName}
           aria-hidden={!isOpen}
+          className={contentOuterClassName}
+          id={contentId}
           inert={!isOpen ? true : undefined}
+          role="region"
         >
           <div className={contentInnerClassName}>{children}</div>
         </div>

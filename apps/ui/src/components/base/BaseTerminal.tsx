@@ -137,8 +137,8 @@ export const BaseTerminal = forwardRef<TerminalRef, BaseTerminalProps>(
 
     return (
       <div
-        ref={containerRef}
         className={`w-full h-full ${className || ""}`}
+        ref={containerRef}
         // 关键样式：防止 flex 布局下 div 塌陷或无限撑开
         style={{ minHeight: 0, minWidth: 0, overflow: "hidden" }}
       />

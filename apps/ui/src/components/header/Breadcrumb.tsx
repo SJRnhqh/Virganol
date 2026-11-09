@@ -41,41 +41,41 @@ export function Breadcrumb() {
   return (
     <div
       className="flex items-end h-full px-1 group/nav relative"
-      ref={containerRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      ref={containerRef}
     >
       <button
-        onMouseDown={(e) => e.stopPropagation()}
-        onPointerDown={(e) => {
-          e.stopPropagation();
-          setIsOpen(!isOpen);
-        }}
-        onDoubleClick={(e) => e.stopPropagation()}
         className={cn(
           "flex items-center h-7.5 px-3 z-51",
           "bg-main-bg border-t border-x border-sidebar-border rounded-t-md",
           "shadow-[0_-2px_10px_var(--color-charcoal-fade)] relative translate-y-px outline-none transition-colors",
           isOpen ? "brightness-95" : "hover:brightness-105"
         )}
+        onDoubleClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
       >
         <div className="relative flex items-center justify-center mr-2.5">
           <Milestone
+            className="text-header-icon transition-all group-hover/nav:text-header-milestone group-hover/nav:scale-110"
             size={14}
             strokeWidth={2.5}
-            className="text-header-icon transition-all group-hover/nav:text-header-milestone group-hover/nav:scale-110"
           />
         </div>
 
         <div className="overflow-hidden h-4 flex flex-col justify-center">
           <AnimatePresence mode="wait">
             <motion.span
-              key={activeNavId}
-              initial={{ y: 8, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -8, opacity: 0 }}
-              transition={{ duration: 0.15, ease: [0.2, 0.8, 0.2, 1] }}
               className="text-xs text-header-fg font-black tracking-tight uppercase"
+              exit={{ y: -8, opacity: 0 }}
+              initial={{ y: 8, opacity: 0 }}
+              key={activeNavId}
+              transition={{ duration: 0.15, ease: [0.2, 0.8, 0.2, 1] }}
             >
               {currentItem?.label || "CELLAR"}
             </motion.span>

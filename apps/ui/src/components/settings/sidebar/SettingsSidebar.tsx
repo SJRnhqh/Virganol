@@ -7,9 +7,9 @@ import { SettingsNavigation } from "./SettingsNavigation";
 export const SettingsSidebar = () => {
   return (
     <motion.div
-      initial="hidden"
       animate="visible"
       className={cn("w-60 flex flex-col py-8 z-10", "bg-settings-sidebar")}
+      initial="hidden"
     >
       <motion.div className="px-7 mb-6">
         <h2
