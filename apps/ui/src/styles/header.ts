@@ -9,10 +9,7 @@ export const windowHeaderStyles = create({
   root: {
     borderStyle: "solid",
     borderWidth: 0,
-    paddingInline: {
-      default: "1rem",
-      "@media (min-width: 640px)": "1.5rem",
-    },
+    paddingInline: "0.75rem",
     alignItems: "flex-end",
     backgroundColor: "var(--header-bg)",
     cursor: "default",
@@ -24,7 +21,10 @@ export const windowHeaderStyles = create({
     zIndex: 9999,
     borderBottomColor: "var(--sidebar-border)",
     borderBottomWidth: "1px",
-    height: "2.5rem",
+    height: "1.75rem",
+  },
+  trafficLightInset: {
+    paddingInlineStart: "5rem",
   },
   breadcrumbWrap: {
     zIndex: 10,

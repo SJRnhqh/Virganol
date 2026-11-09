@@ -7,12 +7,12 @@
 
 ## Current
 
-- [ ] Traffic-light inset pass: drop `MacTrafficLightSpacer` in favor of an
-      animated inline start padding on the header, driven by the
-      `TRAFFIC_LIGHT_PADDING` / `HEADER_GUTTER` constants.
+- [ ] Verify the traffic-light inset when entering and leaving fullscreen on macOS.
 
 ## Planned
 
+- [ ] Prevent the brief overlap between the native traffic lights and header
+      content when leaving fullscreen on macOS.
 - [ ] Decide the parked `Breadcrumb` and `ModuleMenu` scaffolding: wire,
   restyle, or remove.
 - [ ] Narrow store subscriptions in `SidebarToggle` and `SideSwitch` with
@@ -22,6 +22,8 @@
 
 ## Completed
 
+- [x] Moved the traffic-light inset into WindowHeader's StyleX styles and
+      removed the animated `MacTrafficLightSpacer`.
 - [x] Sorted JSX props alphabetically in 20 shared UI components. ESLint
       enforcement is a separate tooling change.
 - [x] Lock the document root font size at 16px, dropping the viewport-driven

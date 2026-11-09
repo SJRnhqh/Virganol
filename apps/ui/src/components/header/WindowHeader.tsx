@@ -7,7 +7,6 @@ import { isMac, isWindows } from "@/lib";
 import { useWindowState } from "@/hooks";
 import { windowHeaderStyles } from "@/styles";
 import { Breadcrumb } from "./Breadcrumb";
-import { MacTrafficLightSpacer } from "./MacTrafficLightSpacer";
 import { SettingsButton } from "./SettingsButton";
 import { SidebarToggle } from "./SidebarToggle";
 import { SideSwitch } from "./SideSwitch";
@@ -20,24 +19,25 @@ import { WindowsWindowControls } from "./WindowsWindowControls";
 export function WindowHeader() {
   const { isMaximized, isFullscreen } = useWindowState();
 
+  const handleDoubleClick = () => {
+    getCurrentWindow().toggleMaximize();
+  };
+
   const handleMouseDown = (event: MouseEvent<HTMLElement>) => {
     if (event.target === event.currentTarget && event.button === 0 && event.detail === 1) {
       getCurrentWindow().startDragging();
     }
   };
 
-  const handleDoubleClick = () => {
-    getCurrentWindow().toggleMaximize();
-  };
-
   return (
     <header
-      {...props(windowHeaderStyles.root)}
-      onMouseDown={handleMouseDown}
+      {...props(
+        windowHeaderStyles.root,
+        isMac && !isFullscreen && windowHeaderStyles.trafficLightInset
+      )}
       onDoubleClick={handleDoubleClick}
+      onMouseDown={handleMouseDown}
     >
-      {isMac && <MacTrafficLightSpacer isFullscreen={isFullscreen} />}
-
       <div {...props(windowHeaderStyles.breadcrumbWrap)}>
         <Breadcrumb />
       </div>
