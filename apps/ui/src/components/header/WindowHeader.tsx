@@ -3,7 +3,7 @@ import { props } from "@stylexjs/stylex";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { MouseEvent } from "react";
 
-import { isMac, isWindows } from "@/lib";
+import { isMac, isTahoeOrNewer, isWindows } from "@/lib";
 import { useWindowState } from "@/hooks";
 import { windowHeaderStyles } from "@/styles";
 import { Breadcrumb } from "./Breadcrumb";
@@ -33,7 +33,10 @@ export function WindowHeader() {
     <header
       {...props(
         windowHeaderStyles.root,
-        isMac && !isFullscreen && windowHeaderStyles.trafficLightInset
+        isMac && [
+          !isTahoeOrNewer && windowHeaderStyles.preTahoeHeight,
+          !isFullscreen && windowHeaderStyles.trafficLightInset,
+        ]
       )}
       onDoubleClick={handleDoubleClick}
       onMouseDown={handleMouseDown}

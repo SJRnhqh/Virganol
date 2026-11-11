@@ -7,10 +7,14 @@
 
 ## Current
 
-- [ ] Verify the traffic-light inset when entering and leaving fullscreen on macOS.
+- [ ] Walk the remaining `windowHeaderStyles.root` fields, starting from
+      `backgroundColor`.
 
 ## Planned
 
+- [ ] Verify the traffic-light inset when entering and leaving fullscreen on macOS.
+- [ ] Record macOS support (11+ minimum, 28px / 32px title bar split, SDK 26
+      build requirement) in `docs/PLATFORMS.md` and link it from `README.md`.
 - [ ] Prevent the brief overlap between the native traffic lights and header
       content when leaving fullscreen on macOS.
 - [ ] Decide the parked `Breadcrumb` and `ModuleMenu` scaffolding: wire,
@@ -22,6 +26,11 @@
 
 ## Completed
 
+- [x] Aligned the header with the native macOS title bar: 32px on macOS 26+
+      and 28px before (`isTahoeOrNewer`, same split as VS Code), content
+      centered, the invisible bottom border dropped, and the minimum system
+      version pinned to macOS 11; split `lib/platform` into `host` / `mac` /
+      `windows` files.
 - [x] Moved the traffic-light inset into WindowHeader's StyleX styles and
       removed the animated `MacTrafficLightSpacer`.
 - [x] Sorted JSX props alphabetically in 20 shared UI components. ESLint

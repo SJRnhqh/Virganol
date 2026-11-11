@@ -42,6 +42,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "externalBin": ["bin/virganol-agent"]
+    "externalBin": ["bin/virganol-agent"],
+    "macOS": {
+      "minimumSystemVersion": "11.0"
+    }
   }
 }

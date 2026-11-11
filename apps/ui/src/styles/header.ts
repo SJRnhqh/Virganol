@@ -7,10 +7,8 @@ import { create } from "@stylexjs/stylex";
  */
 export const windowHeaderStyles = create({
   root: {
-    borderStyle: "solid",
-    borderWidth: 0,
     paddingInline: "0.75rem",
-    alignItems: "flex-end",
+    alignItems: "center",
     backgroundColor: "var(--header-bg)",
     cursor: "default",
     display: "flex",
@@ -19,8 +17,9 @@ export const windowHeaderStyles = create({
     position: "relative",
     userSelect: "none",
     zIndex: 9999,
-    borderBottomColor: "var(--sidebar-border)",
-    borderBottomWidth: "1px",
+    height: "2rem",
+  },
+  preTahoeHeight: {
     height: "1.75rem",
   },
   trafficLightInset: {
@@ -35,7 +34,6 @@ export const windowHeaderStyles = create({
     alignItems: "center",
     display: "flex",
     height: "100%",
-    marginBottom: "0.125rem",
     marginLeft: "auto",
     marginRight: "0.25rem",
   },
