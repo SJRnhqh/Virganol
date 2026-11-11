@@ -7,8 +7,15 @@
 
 ## Current
 
-- [ ] `backgroundColor`: confirm the `var(--header-bg)` source and whether
-      StyleX should reference it directly or through `defineVars`.
+- [ ] `backgroundColor`: use it as the entry point to rework theme color
+      management. Reference direction (not final): declare semantic tokens
+      with StyleX `defineVars` using literal `--*` names as the built-in
+      default theme, add alternates via `createTheme`, and map community
+      palettes onto the same keys, so Tailwind keeps reading the variables
+      and runtime custom themes can override them later.
+  - [ ] Step 1: verify a minimal `tokens.stylex.ts` with a single
+        `--header-bg` literal key builds under Rsbuild and drives
+        `windowHeaderStyles.root.backgroundColor`.
 
 ## Planned
 
