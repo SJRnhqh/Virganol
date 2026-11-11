@@ -15,12 +15,12 @@ export function MainStage({ activeId }: MainStageProps) {
     <main className="flex-1 h-full bg-main-bg isolate relative min-w-0">
       <AnimatePresence mode="wait">
         <motion.div
-          key={activeId}
-          initial={{ opacity: 0, scale: 1.01, filter: "blur(4px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          exit={{ opacity: 0, scale: 0.98, filter: "blur(2px)" }}
-          transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
           className="w-full h-full p-6"
+          exit={{ opacity: 0, scale: 0.98, filter: "blur(2px)" }}
+          initial={{ opacity: 0, scale: 1.01, filter: "blur(4px)" }}
+          key={activeId}
+          transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
         >
           {renderContent(activeId)}
         </motion.div>
@@ -54,9 +54,9 @@ function renderContent(activeId: string) {
     case "sciapiary":
       return (
         <DevelopingView
+          icon={Construction}
           key="sciapiary"
           title="SciApiary (Orchestration Hub)"
-          icon={Construction}
         />
       );
 
@@ -64,9 +64,9 @@ function renderContent(activeId: string) {
       const config = NAV_ITEMS.find((i) => i.id === activeId);
       return (
         <DevelopingView
+          icon={config?.icon || Rocket}
           key={activeId}
           title={config?.label || "Unknown Deck"}
-          icon={config?.icon || Rocket}
         />
       );
     }

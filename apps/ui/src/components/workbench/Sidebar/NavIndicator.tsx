@@ -10,7 +10,6 @@ interface NavIndicatorProps {
 export function NavIndicator({ side }: NavIndicatorProps) {
   return (
     <motion.div
-      layoutId="active-pill"
       /**
        * 🎨 样式完全保留，仅对位置和圆角进行镜像
        */
@@ -21,6 +20,7 @@ export function NavIndicator({ side }: NavIndicatorProps) {
         // 右边时：贴左 (-left-3)，圆角向右 (rounded-r-full)
         side === "left" ? "-right-3 rounded-l-full" : "-left-3 rounded-r-full"
       )}
+      layoutId="active-pill"
       // 🚀 物理反馈参数严格保持原样，没有任何变动
       transition={{
         type: "spring",

@@ -93,6 +93,10 @@
 
 - [ ] 逐子组件优雅化壳层 JSX：以 MainLayout 为锚点，WindowHeader → Sidebar → MainStage → SettingsModal 依次独立成段推进；每段同构考察（JSX 结构 → 数据/行为 → styles 切片），store 与 hooks 顺带理顺；已记录段内细节：Sidebar（settings `toggle` 必要性、`useSidebarStyles` 订阅收窄）、MainStage（`NavId` 与 `types/props/` 派生对齐）
 - [ ] WindowHeader 段细节进度：平台件已收（`lib/platform` 常量 + 样式 StyleX 切片已落）→ MacTrafficLightSpacer（60 魔法数、动效参数、JSDoc）→ Breadcrumb 与 ModuleMenu（park 决策）→ 三按钮（订阅收窄）→ `mr-26` 让位耦合
+- [ ] 解耦 `controlsWindows` 右侧让位与 `WindowsWindowControls`（absolute 改为正常流末尾，或共享宽度约定）；当前 `7.25rem` 为临时值，对应 0.75rem padding + 128px Windows 控件
+- [ ] 决策 `Breadcrumb` 内注释停放的 `ModuleMenu`：接入或删除
+- [ ] `SidebarToggle` / `SideSwitch` 以 selector / `useShallow` 收窄 store 订阅
+- [ ] macOS 全屏切换补验：红绿灯让位进出全屏是否正确，退出全屏时原生红绿灯与顶栏内容的短暂重叠是否需修（根治需 Rust 侧 `willExitFullScreen` 提前通知前端）
 - [ ] 蹲守 StyleX #1745 发版（Rspack CSS 输出修复）：升级后验证 CSS 输出/HMR 并以 `.rspack()` 替换临时 `.webpack()` 适配器
 - [ ] styles 全刀立法暂缓：最小刀（components 可依赖 styles）已落；`moduleDirs` 键与 index 入口模式立法等 styles 文件增多再说
 - [ ] 回看侧栏/模块 CSS scoping（`@scope`、`@layer`、BEM），待组件边界清晰与 StyleX 试点评估后

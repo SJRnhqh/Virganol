@@ -15,7 +15,7 @@
     "!apps/ui/src/App.tsx",
     "!apps/ui/src/layouts/**",
     "!apps/ui/src/lib/index.ts",
-    "!apps/ui/src/lib/platform.ts",
+    "!apps/ui/src/lib/platform/**",
     "!apps/ui/src/components/index.ts",
     "!apps/ui/src/components/header/index.ts",
     "!apps/ui/src/components/header/WindowHeader.tsx",

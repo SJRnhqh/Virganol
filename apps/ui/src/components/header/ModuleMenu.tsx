@@ -31,11 +31,7 @@ export function ModuleMenu({ onClose }: ModuleMenuProps) {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
       animate="visible"
-      exit="exit"
-      onMouseDown={(e) => e.stopPropagation()}
       className={cn(
         // 2. 容器：极简胶囊 (Pill)，单行排列，去掉厚重阴影，改用精致的内发光
         "flex items-center gap-1 p-1.5",
@@ -44,6 +40,10 @@ export function ModuleMenu({ onClose }: ModuleMenuProps) {
         "rounded-full pointer-events-auto", // 完全圆角
         "origin-top-left"
       )}
+      exit="exit"
+      initial="hidden"
+      onMouseDown={(e) => e.stopPropagation()}
+      variants={containerVariants}
     >
       {/* 3. 直接平铺所有图标，单行显示 */}
       {NAV_ITEMS.map((item) => {
@@ -51,6 +51,12 @@ export function ModuleMenu({ onClose }: ModuleMenuProps) {
         return (
           <motion.div key={item.id} variants={itemVariants}>
             <button
+              className={cn(
+                "relative flex items-center justify-center w-9 h-9 rounded-full transition-all duration-300 outline-none",
+                isActive
+                  ? "text-header-breadcrumb-accent bg-header-breadcrumb-accent/10"
+                  : "text-sidebar-fg/80 hover:text-sidebar-fg hover:scale-105"
+              )}
               onMouseDown={(e) => e.stopPropagation()}
               onPointerDown={(e) => {
                 e.stopPropagation();
@@ -58,23 +64,17 @@ export function ModuleMenu({ onClose }: ModuleMenuProps) {
                 setActiveNavId(item.id);
                 onClose();
               }}
-              className={cn(
-                "relative flex items-center justify-center w-9 h-9 rounded-full transition-all duration-300 outline-none",
-                isActive
-                  ? "text-header-breadcrumb-accent bg-header-breadcrumb-accent/10"
-                  : "text-sidebar-fg/80 hover:text-sidebar-fg hover:scale-105"
-              )}
             >
               <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} />
 
               {/* 6. 指示器：只保留底部一个小圆点，去掉长条，极度克制 */}
               {isActive && (
                 <motion.div
-                  layoutId="active-dot-menu"
                   className={cn(
                     "absolute -bottom-1 w-1 h-1 rounded-full",
                     "bg-header-breadcrumb-accent"
                   )}
+                  layoutId="active-dot-menu"
                 />
               )}
             </button>

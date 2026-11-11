@@ -15,29 +15,29 @@ export function WindowsWindowControls({ isMaximized }: Props) {
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
         className="absolute right-0 top-0 h-full flex items-center pr-2"
+        exit={{ opacity: 0 }}
+        initial={{ opacity: 0 }}
         onMouseDown={(e) => e.stopPropagation()} // 防止拖拽
       >
         <button
-          onClick={() => appWindow.minimize()}
           className={`${baseBtnClass} hover:bg-window-control-minimize`}
+          onClick={() => appWindow.minimize()}
         >
-          <Minus strokeWidth={3} size={14} />
+          <Minus size={14} strokeWidth={3} />
         </button>
 
         <button
-          onClick={() => appWindow.toggleMaximize()}
           className={`${baseBtnClass} hover:bg-window-control-toggle-maximize`}
+          onClick={() => appWindow.toggleMaximize()}
         >
           {isMaximized ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
         </button>
 
         <button
-          onClick={() => appWindow.close()}
           className={`${baseBtnClass} hover:bg-window-control-close`}
+          onClick={() => appWindow.close()}
         >
           <X size={14} />
         </button>

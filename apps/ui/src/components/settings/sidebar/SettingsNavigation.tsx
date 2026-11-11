@@ -12,10 +12,10 @@ export const SettingsNavigation = () => {
     <motion.nav className="flex-1 px-3 space-y-1.5">
       {SETTINGS_TABS.map((tab) => (
         <SettingsNavItem
-          key={tab.id}
-          label={tab.label}
           icon={tab.icon}
           isActive={activeTab === tab.id}
+          key={tab.id}
+          label={tab.label}
           onClick={() => setTab(tab.id)}
         />
       ))}

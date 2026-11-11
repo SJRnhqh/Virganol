@@ -19,21 +19,21 @@ export const SettingsNavItem = ({
 }: SettingsNavItemProps) => {
   return (
     <button
-      onClick={onClick}
       className={cn(
         "relative w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-300 group",
         isActive
           ? "bg-settings-sidebar-icon-bg text-settings-sidebar-fg-active shadow-lg shadow-black/10"
           : "text-settings-sidebar-fg/60 hover:text-settings-sidebar-fg hover:bg-settings-sidebar-icon-bg/10",
       )}
+      onClick={onClick}
     >
       {/* 激活状态下的 赭石色指示条 */}
       {isActive && (
         <motion.div
-          layoutId="active-indicator"
+          animate={{ opacity: 1 }}
           className="absolute left-0 w-1 h-4 bg-settings-sidebar-icon-indicator rounded-full"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          layoutId="active-indicator"
           transition={{ duration: 0.2 }}
         />
       )}

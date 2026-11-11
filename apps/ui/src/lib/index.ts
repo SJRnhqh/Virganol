@@ -8,5 +8,5 @@ export {
   refreshButtonVariants,
   rotatingIconVariants,
 } from "./animations";
-export { isMac, isWindows } from "./platform";
+export { isMac, isTahoeOrNewer, isWindows } from "./platform";
 export { cn } from "./utils";

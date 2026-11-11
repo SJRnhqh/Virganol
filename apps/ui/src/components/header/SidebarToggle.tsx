@@ -12,9 +12,6 @@ export function SidebarToggle() {
 
   return (
     <button
-      onClick={toggle}
-      onMouseDown={(e) => e.stopPropagation()} // 阻止冒泡，防止触发窗口拖拽
-      onDoubleClick={(e) => e.stopPropagation()}
       className={cn(
         // 1. 基础布局
         "group flex items-center justify-center w-10 h-8 rounded-md transition-all duration-300 ease-in-out",
@@ -25,10 +22,11 @@ export function SidebarToggle() {
         // 3. 交互反馈：点击时轻微缩放
         "active:scale-90"
       )}
+      onClick={toggle}
+      onDoubleClick={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()} // 阻止冒泡，防止触发窗口拖拽
     >
       <Icon
-        size={20} // 视觉上比设置图标略细，更显精致
-        strokeWidth={2}
         className={cn(
           // 4. 核心动画逻辑
           "transition-all duration-500 ease-in-out",
@@ -44,6 +42,8 @@ export function SidebarToggle() {
            */
           side === "left" ? "group-hover:translate-x-0.5" : "group-hover:-translate-x-0.5"
         )}
+        size={20} // 视觉上比设置图标略细，更显精致
+        strokeWidth={2}
       />
     </button>
   );

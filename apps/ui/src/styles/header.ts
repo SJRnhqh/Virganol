@@ -7,13 +7,8 @@ import { create } from "@stylexjs/stylex";
  */
 export const windowHeaderStyles = create({
   root: {
-    borderStyle: "solid",
-    borderWidth: 0,
-    paddingInline: {
-      default: "1rem",
-      "@media (min-width: 640px)": "1.5rem",
-    },
-    alignItems: "flex-end",
+    paddingInline: "0.75rem",
+    alignItems: "center",
     backgroundColor: "var(--header-bg)",
     cursor: "default",
     display: "flex",
@@ -22,9 +17,13 @@ export const windowHeaderStyles = create({
     position: "relative",
     userSelect: "none",
     zIndex: 9999,
-    borderBottomColor: "var(--sidebar-border)",
-    borderBottomWidth: "1px",
-    height: "2.5rem",
+    height: "2rem",
+  },
+  preTahoeHeight: {
+    height: "1.75rem",
+  },
+  trafficLightInset: {
+    paddingInlineStart: "5rem",
   },
   breadcrumbWrap: {
     zIndex: 10,
@@ -35,11 +34,10 @@ export const windowHeaderStyles = create({
     alignItems: "center",
     display: "flex",
     height: "100%",
-    marginBottom: "0.125rem",
     marginLeft: "auto",
     marginRight: "0.25rem",
   },
   controlsWindows: {
-    marginRight: "6.5rem",
+    marginRight: "7.25rem",
   },
 });

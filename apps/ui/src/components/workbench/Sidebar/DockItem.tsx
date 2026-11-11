@@ -34,17 +34,17 @@ export function DockItem({ mouseY, icon: Icon, isActive, onClick, side }: DockIt
 
   return (
     <button
-      ref={ref}
-      onClick={onClick}
       className="group relative flex items-center justify-center w-full h-11 outline-none cursor-pointer bg-transparent border-none p-0"
+      onClick={onClick}
+      ref={ref}
     >
       {/* 🟢 镜像逻辑 2：侧边激活指示器 (严格保留) */}
       {isActive && <NavIndicator side={side} />}
 
       {/* 🚀 物理位移容器 + 镜像悬浮标集成 */}
       <motion.div
-        style={{ x, scale }}
         className="relative w-11 h-11 flex items-center justify-center"
+        style={{ x, scale }}
       >
         <div
           className={cn(
@@ -54,7 +54,7 @@ export function DockItem({ mouseY, icon: Icon, isActive, onClick, side }: DockIt
               : "bg-transparent text-sidebar-fg/50 group-hover:bg-parchment-fade group-hover:text-sidebar-fg"
           )}
         >
-          <Icon strokeWidth={isActive ? 2.5 : 2} size={22} />
+          <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
         </div>
       </motion.div>
     </button>

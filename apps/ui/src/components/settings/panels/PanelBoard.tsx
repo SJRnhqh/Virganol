@@ -22,8 +22,8 @@ export const PanelBoard = () => {
       default:
         return (
           <ComingSoonPanel
-            name={displayName || "Unknown"}
             icon={icon || Monitor}
+            name={displayName || "Unknown"}
           />
         );
     }
