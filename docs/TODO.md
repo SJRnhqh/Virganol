@@ -12,24 +12,23 @@
 
 ## Planned
 
-- [ ] Verify the traffic-light inset when entering and leaving fullscreen on macOS.
-- [ ] Record macOS support (11+ minimum, 28px / 32px title bar split, SDK 26
-      build requirement) in `docs/PLATFORMS.md` and link it from `README.md`.
-- [ ] Prevent the brief overlap between the native traffic lights and header
-      content when leaving fullscreen on macOS.
-- [ ] Decide the parked `Breadcrumb` and `ModuleMenu` scaffolding: wire,
-  restyle, or remove.
+- [ ] Resolve the `controlsWindows` margin coupling with `WindowsWindowControls`
+      (absolute trailing or a shared width contract); 7.25rem is a stopgap
+      matching 0.75rem padding to the 128px Windows controls.
+- [ ] Decide the parked `ModuleMenu` (commented out in `Breadcrumb`): wire or
+      remove.
 - [ ] Narrow store subscriptions in `SidebarToggle` and `SideSwitch` with
-  selectors / `useShallow`.
-- [ ] Resolve the `mr-26` coupling between the header controls and
-  `WindowsWindowControls` (absolute trailing or a shared width contract).
+      selectors / `useShallow`.
 
 ## Completed
 
+- [x] Restored the Windows header controls clearance (`controlsWindows`
+      6.5rem → 7.25rem) after the 0.75rem padding change left a 12px
+      overlap; parked the macOS fullscreen check in `ROADMAP.md` 6.5.
 - [x] Aligned the header with the native macOS title bar: 32px on macOS 26+
       and 28px before (`isTahoeOrNewer`, same split as VS Code), content
       centered, the invisible bottom border dropped, and the minimum system
-      version pinned to macOS 11; split `lib/platform` into `host` / `mac` /
+      version pinned to macOS 11 (the 32px split needs a macOS 26 SDK build); split `lib/platform` into `host` / `mac` /
       `windows` files.
 - [x] Moved the traffic-light inset into WindowHeader's StyleX styles and
       removed the animated `MacTrafficLightSpacer`.

@@ -38,6 +38,6 @@ export const windowHeaderStyles = create({
     marginRight: "0.25rem",
   },
   controlsWindows: {
-    marginRight: "6.5rem",
+    marginRight: "7.25rem",
   },
 });
