@@ -1,6 +1,8 @@
 // apps/ui/src/styles/header.ts
 import { create } from "@stylexjs/stylex";
 
+import { colorTokens } from "./token.stylex";
+
 /** Window header styles of the application.
  *
  * 应用的窗口顶栏样式。
@@ -9,7 +11,7 @@ export const windowHeaderStyles = create({
   root: {
     paddingInline: "0.75rem",
     alignItems: "center",
-    backgroundColor: "var(--header-bg)",
+    backgroundColor: colorTokens.headerBg,
     cursor: "default",
     display: "flex",
     flexShrink: 0,

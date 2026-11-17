@@ -7,15 +7,8 @@
 
 ## Current
 
-- [ ] `backgroundColor`: use it as the entry point to rework theme color
-      management. Reference direction (not final): declare semantic tokens
-      with StyleX `defineVars` using literal `--*` names as the built-in
-      default theme, add alternates via `createTheme`, and map community
-      palettes onto the same keys, so Tailwind keeps reading the variables
-      and runtime custom themes can override them later.
-  - [ ] Step 1: verify a minimal `tokens.stylex.ts` with a single
-        `--header-bg` literal key builds under Rsbuild and drives
-        `windowHeaderStyles.root.backgroundColor`.
+- [ ] Evaluate dark color schemes using the header background token before
+      settling how to organize theme palettes.
 
 ## Planned
 
@@ -27,3 +20,7 @@
       against `SettingsModal` (`z-100`); drop `isolation` if redundant.
 
 ## Completed
+
+- [x] Moved `windowHeaderStyles.root.backgroundColor` to the StyleX semantic
+      token `colorTokens.headerBg` with the `vine` default. Verified the token
+      definition and its use in the Rsbuild production CSS.

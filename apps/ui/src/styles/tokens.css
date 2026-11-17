@@ -10,9 +10,6 @@
 
     /* === 2. 顶部栏 === */
 
-    /* 顶部栏背景色 */
-    --color-header-bg: var(--header-bg);
-
     /* 面包屑字体颜色 */
     --color-header-fg: var(--header-fg);
 

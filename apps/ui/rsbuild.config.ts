@@ -12,6 +12,7 @@ import stylex from "@stylexjs/unplugin";
 export default defineConfig(({ env }) => ({
   plugins: [pluginReact(), pluginTailwindcss()],
   tools: {
+    swc: { jsc: { transform: { verbatimModuleSyntax: true } } },
     rspack: {
       plugins: [
         // TBD: 0.19.1 的 Rspack 适配器漏挂 CSS 输出钩子，暂用 Webpack 兼容入口；关注包含 #1745 修复的正式版本，升级并验证 CSS 输出与热更新后切回 .rspack()。
