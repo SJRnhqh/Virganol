@@ -16,7 +16,6 @@ export const windowHeaderStyles = create({
     display: "flex",
     flexShrink: 0,
     isolation: "isolate",
-    position: "relative",
     userSelect: "none",
     zIndex: 9999,
     height: "2rem",

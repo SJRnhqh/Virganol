@@ -7,15 +7,11 @@
 
 ## Current
 
-- [ ] `position`: examine `WindowsWindowControls`, the only child relying on
-      the header's `position: relative` (`absolute right-0 top-0 h-full`), and
-      its `controlsWindows` `marginRight: 7.25rem` clearance; decide whether the
-      controls should become a regular flex child.
+- [ ] `userSelect`: confirm the unprefixed `user-select` takes effect in
+      WKWebView.
 
 ## Planned
 
-- [ ] `userSelect`: confirm the unprefixed `user-select` takes effect in
-      WKWebView.
 - [ ] `zIndex`: keep while the `Breadcrumb` dropdown overflows onto the
       workspace; revisit the value against `SettingsModal` (`z-100`) when the
       breadcrumb is redesigned.
@@ -42,3 +38,9 @@
       inside the `MainLayout` column.
 - [x] `isolation`: kept to contain the header's internal layers; redundant with
       `zIndex` for now but stays in effect if `zIndex` is dropped.
+- [x] Moved `WindowsWindowControls` into the header flex layout and removed
+      the `7.25rem` clearance. Removed trailing padding from the button group
+      and the Windows header. Confirmed the edge alignment on Windows.
+- [x] Removed `position: relative` from the header root. The Windows controls
+      now occupy their own space, and the breadcrumb dropdown is positioned
+      relative to the breadcrumb container.
