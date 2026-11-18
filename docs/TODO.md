@@ -7,8 +7,9 @@
 
 ## Current
 
-- [ ] Evaluate dark color schemes using the header background token before
-      settling how to organize theme palettes.
+- [ ] Preview `bosquet.dark.dominant` (Pine `yunshanlv`, `#15231b`) on the
+      window header in WKWebView and refine the dark palette; confirm
+      `unstable_defineVarsNested` resolves in development mode.
 
 ## Planned
 
@@ -24,3 +25,8 @@
 - [x] Moved `windowHeaderStyles.root.backgroundColor` to the StyleX semantic
       token `colorTokens.headerBg` with the `vine` default. Verified the token
       definition and its use in the Rsbuild production CSS.
+- [x] Layered the header color as palettes → theme → token: Vine and Pine in
+      `styles/palettes/`, Bosquet maps `light`/`dark` to the `dominant` role via
+      `unstable_defineVarsNested`, and `colorTokens.headerBg` reads
+      `bosquet.light.dominant`. Verified the variable chain in the Rsbuild
+      production CSS.
