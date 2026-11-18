@@ -27,6 +27,9 @@ export const windowHeaderStyles = create({
   trafficLightInset: {
     paddingInlineStart: "5rem",
   },
+  windowsRoot: {
+    paddingInlineEnd: 0,
+  },
   breadcrumbWrap: {
     zIndex: 10,
     height: "100%",

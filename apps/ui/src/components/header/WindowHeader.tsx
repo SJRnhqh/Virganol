@@ -36,7 +36,8 @@ export function WindowHeader() {
         isMac && [
           !isTahoeOrNewer && windowHeaderStyles.preTahoeHeight,
           !isFullscreen && windowHeaderStyles.trafficLightInset,
-        ]
+        ],
+        isWindows && windowHeaderStyles.windowsRoot
       )}
       onDoubleClick={handleDoubleClick}
       onMouseDown={handleMouseDown}
