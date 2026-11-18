@@ -7,14 +7,11 @@
 
 ## Current
 
-- [ ] `userSelect`: confirm the unprefixed `user-select` takes effect in
-      WKWebView.
+- [ ] `zIndex`: review the header's `9999` value against the workspace and
+      `SettingsModal` (`z-100`), accounting for the breadcrumb dropdown.
 
 ## Planned
 
-- [ ] `zIndex`: keep while the `Breadcrumb` dropdown overflows onto the
-      workspace; revisit the value against `SettingsModal` (`z-100`) when the
-      breadcrumb is redesigned.
 - [ ] Refine the Pine dark palette once StyleX hot updates cover variable
       values.
 
@@ -44,3 +41,7 @@
 - [x] Removed `position: relative` from the header root. The Windows controls
       now occupy their own space, and the breadcrumb dropdown is positioned
       relative to the breadcrumb container.
+- [x] `userSelect`: kept `none` on the header root to prevent accidental text
+      selection across the title bar.
+- [x] `height`: PR #44 established the default `2rem` and pre-Tahoe macOS
+      `1.75rem` heights to align with the native title bar.
