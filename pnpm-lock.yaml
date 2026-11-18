@@ -43,8 +43,8 @@ importers:
         specifier: ^4.0.3
         version: 4.6.0(@lobehub/ui@4.38.4)(@types/react@19.2.14)(antd@6.3.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@stylexjs/stylex':
-        specifier: ^0.19.1
-        version: 0.19.1
+        specifier: ^0.19.2
+        version: 0.19.2
       '@tauri-apps/api':
         specifier: ^2.12.4
         version: 2.12.4
@@ -107,11 +107,11 @@ importers:
         specifier: ^1.6.5
         version: 1.6.5(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(@rsbuild/core@2.2.5)(@rspack/core@2.2.3(@swc/helpers@0.5.23))
       '@stylexjs/eslint-plugin':
-        specifier: ^0.19.1
-        version: 0.19.1
+        specifier: ^0.19.2
+        version: 0.19.2
       '@stylexjs/unplugin':
-        specifier: ^0.19.1
-        version: 0.19.1(unplugin@2.3.11)
+        specifier: ^0.19.2
+        version: 0.19.2(unplugin@2.3.11)
       '@types/node':
         specifier: ^24.10.1
         version: 24.10.13
@@ -2266,20 +2266,20 @@ packages:
     peerDependencies:
       react: '>= 16.3.0'
 
-  '@stylexjs/babel-plugin@0.19.1':
-    resolution: {integrity: sha512-Ig3crX6MuGWDEAx+f89aLxTQUWVeEc2Aco2moIdcObyvo7hZJgU26rxJN3k7geFjhi+5dfna6TNR8iTRK0PQGA==}
+  '@stylexjs/babel-plugin@0.19.2':
+    resolution: {integrity: sha512-R6cB7Ym+IAvySNfmtRJ6CZ+83rjZ82Uw4wmG3YtwYY8vrnliUrYy9fOLvZ1nX407zeHNkCnE5AodEnjXXfOSYg==}
 
-  '@stylexjs/eslint-plugin@0.19.1':
-    resolution: {integrity: sha512-875KpR4M71F5rTSTfDoGWbs09u8atZvVGWBN5bWt3svIEmuNwTMRZGdY8iHiaPrL+W49/tifc6pouKcn3t8d+A==}
+  '@stylexjs/eslint-plugin@0.19.2':
+    resolution: {integrity: sha512-Oynwwe3grD/H1cHOZeUQgodjmhe2CAEhf4MqdWNO95nDw5kANP9Vso/AKifhOrl5za7wpItHCW9bGef5RTl1UA==}
 
-  '@stylexjs/shared@0.19.1':
-    resolution: {integrity: sha512-oFBtW0NPNLJOT1gLweWRNKrIJHjJMwOmSV7fgd6ewok4fwb/Nh95PEaYGKu+ZONk0nNghjLFfOwiIsxJdvh3TQ==}
+  '@stylexjs/shared@0.19.2':
+    resolution: {integrity: sha512-xjTZ/6T/1FV103F2bspmXoDRDy1gM/ZKYEHpQlUC0h4R5q7PqUV6k+DJbrayRAMwALIdzTf7zSTqteRde0ZXWQ==}
 
-  '@stylexjs/stylex@0.19.1':
-    resolution: {integrity: sha512-JwNFm0MOYPqi+M4Ax5Un4ZxfZp4HEAX2sAWetZ88KALFcv1eEiHNJs75oO3V3U7RVWnzfkiM8i9eBowC3hqgUw==}
+  '@stylexjs/stylex@0.19.2':
+    resolution: {integrity: sha512-l0fRhOBZ4rFiZ0GntYSlp4lYO5dPT11F3mLb7O4ShK6eE1WOjHtv9GHGQZuzHJbQkjcEaRjPSpBn6itI7yXc3Q==}
 
-  '@stylexjs/unplugin@0.19.1':
-    resolution: {integrity: sha512-MJz/IPrFe3hSHbZtjbxaYd3kLgS718/NFBEY/Mf+njteJKLdY7bHHfVka3051LCYy9fKfyZapGCmUpibraHqmQ==}
+  '@stylexjs/unplugin@0.19.2':
+    resolution: {integrity: sha512-kyHrLCVyKNmycPl+WnjVGJmPgKGAYbtVPasuCe3UgQllennwj2himUKQncG98zt+66nDuGpy7Sx2xCYM03nr3Q==}
     peerDependencies:
       unplugin: ^2.3.11
 
@@ -3181,9 +3181,6 @@ packages:
     resolution: {integrity: sha512-8HFEBPKhOpJPEPu70wJJetjKta86Gw9+CCyCnB3sui2qQfOvRyqBy4IKLKKAwdMpWb2lHXWk9Wb4Z6AmaUT1Pg==}
     engines: {node: '>=12'}
 
-  css-mediaquery@0.1.2:
-    resolution: {integrity: sha512-COtn4EROW5dBGlE/4PiKnh6rZpAPxDeFLaEEwt4i10jpDMFt2EhQGS79QmmrO+iKCHv0PU/HrOWEhijFd1x99Q==}
-
   css-tree@3.2.1:
     resolution: {integrity: sha512-X7sjQzceUhu1u7Y/ylrRZFU2FS6LRiFVp6rKLPg23y3x3c3DOKAwuXGDp+PAGjh6CSnCjYeAul8pcT8bAl+lSA==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
@@ -4007,9 +4004,6 @@ packages:
   intersection-observer@0.12.2:
     resolution: {integrity: sha512-7m1vEcPCxXYI8HqnL8CKI6siDyD+eIWSwgB3DZA+ZTogxk9I4CDnj4wilt9x/+/QbHI4YG5YZNmC6458/e9Ktg==}
     deprecated: The Intersection Observer polyfill is no longer needed and can safely be removed. Intersection Observer has been Baseline since 2019.
-
-  invariant@2.2.4:
-    resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
 
   is-alphabetical@2.0.1:
     resolution: {integrity: sha512-FWyyY60MeTNyeSRpkM2Iry0G9hpr7/9kD40mD/cGQEuilcZYS4okz8SN2Q6rLCJ8gbCt6fN+rC+6tMGS99LaxQ==}
@@ -7952,42 +7946,40 @@ snapshots:
     dependencies:
       react: 19.2.4
 
-  '@stylexjs/babel-plugin@0.19.1':
+  '@stylexjs/babel-plugin@0.19.2':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/helper-module-imports': 7.28.6
       '@babel/traverse': 7.29.0
       '@babel/types': 7.29.0
       '@dual-bundle/import-meta-resolve': 4.2.1
-      '@stylexjs/shared': 0.19.1
-      '@stylexjs/stylex': 0.19.1
+      '@stylexjs/shared': 0.19.2
+      '@stylexjs/stylex': 0.19.2
       postcss-value-parser: 4.2.0
     transitivePeerDependencies:
       - supports-color
 
-  '@stylexjs/eslint-plugin@0.19.1':
+  '@stylexjs/eslint-plugin@0.19.2':
     dependencies:
       '@csstools/css-tokenizer': 3.0.4
-      '@stylexjs/shared': 0.19.1
+      '@stylexjs/shared': 0.19.2
       micromatch: 4.0.8
       postcss-value-parser: 4.2.0
 
-  '@stylexjs/shared@0.19.1': {}
+  '@stylexjs/shared@0.19.2': {}
 
-  '@stylexjs/stylex@0.19.1':
+  '@stylexjs/stylex@0.19.2':
     dependencies:
-      css-mediaquery: 0.1.2
-      invariant: 2.2.4
       styleq: 0.2.1
 
-  '@stylexjs/unplugin@0.19.1(unplugin@2.3.11)':
+  '@stylexjs/unplugin@0.19.2(unplugin@2.3.11)':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-syntax-flow': 7.29.7(@babel/core@7.29.0)
       '@babel/plugin-syntax-jsx': 7.29.7(@babel/core@7.29.0)
       '@babel/plugin-syntax-typescript': 7.29.7(@babel/core@7.29.0)
-      '@stylexjs/babel-plugin': 0.19.1
-      browserslist: 4.28.1
+      '@stylexjs/babel-plugin': 0.19.2
+      browserslist: 4.29.5
       lightningcss: 1.32.0
       unplugin: 2.3.11
     transitivePeerDependencies:
@@ -8886,8 +8878,6 @@ snapshots:
       which: 2.0.2
 
   css-functions-list@3.3.3: {}
-
-  css-mediaquery@0.1.2: {}
 
   css-tree@3.2.1:
     dependencies:
@@ -9826,10 +9816,6 @@ snapshots:
   internmap@2.0.3: {}
 
   intersection-observer@0.12.2: {}
-
-  invariant@2.2.4:
-    dependencies:
-      loose-envify: 1.4.0
 
   is-alphabetical@2.0.1: {}
 
