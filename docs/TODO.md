@@ -7,18 +7,17 @@
 
 ## Current
 
-- [ ] Preview `bosquet.dark.dominant` (Pine `yunshanlv`, `#15231b`) on the
-      window header in WKWebView and refine the dark palette; confirm
-      `unstable_defineVarsNested` resolves in development mode.
+- [ ] `cursor` / `userSelect`: confirm the unprefixed `user-select` takes
+      effect in WKWebView.
 
 ## Planned
 
-- [ ] `cursor` / `userSelect`: confirm the unprefixed `user-select` takes
-      effect in WKWebView.
 - [ ] `display` / `flexShrink`: confirm the header layout role inside
       `MainLayout`.
 - [ ] `position` / `zIndex` / `isolation`: settle the header stacking level
       against `SettingsModal` (`z-100`); drop `isolation` if redundant.
+- [ ] Refine the Pine dark palette once StyleX hot updates cover variable
+      values.
 
 ## Completed
 
@@ -30,3 +29,6 @@
       `unstable_defineVarsNested`, and `colorTokens.headerBg` reads
       `bosquet.light.dominant`. Verified the variable chain in the Rsbuild
       production CSS.
+- [x] Previewed `bosquet.dark.dominant` on the window header in WKWebView by
+      swapping the token value; confirmed `unstable_defineVarsNested` resolves
+      in development mode.
