@@ -7,13 +7,10 @@
 
 ## Current
 
-- [ ] `zIndex`: review the header's `9999` value against the workspace and
-      `SettingsModal` (`z-100`), accounting for the breadcrumb dropdown.
-
-## Planned
-
 - [ ] Refine the Pine dark palette once StyleX hot updates cover variable
       values.
+
+## Planned
 
 ## Completed
 
@@ -45,3 +42,5 @@
       selection across the title bar.
 - [x] `height`: PR #44 established the default `2rem` and pre-Tahoe macOS
       `1.75rem` heights to align with the native title bar.
+- [x] `zIndex`: kept `9999` for now. Revisit the header's stacking order
+      relative to the workspace and settings overlay during the header redesign.

@@ -17,7 +17,7 @@ export const windowHeaderStyles = create({
     flexShrink: 0,
     isolation: "isolate",
     userSelect: "none",
-    zIndex: 9999,
+    zIndex: 9999, // Revisit stacking during the header redesign.
     height: "2rem",
   },
   preTahoeHeight: {
