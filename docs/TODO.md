@@ -44,3 +44,6 @@
       `1.75rem` heights to align with the native title bar.
 - [x] `zIndex`: kept `9999` for now. Revisit the header's stacking order
       relative to the workspace and settings overlay during the header redesign.
+- [x] Enforced alphabetical JSX prop order with `perfectionist/sort-jsx-props`
+      (`eslint-plugin-perfectionist@5.5.0`), carrying over the core of the
+      stashed `react/jsx-sort-props` setup with a lighter dependency footprint.

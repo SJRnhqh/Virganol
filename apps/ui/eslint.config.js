@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import stylex from "@stylexjs/eslint-plugin";
 import boundaries from "eslint-plugin-boundaries";
 import importX from "eslint-plugin-import-x";
+import perfectionist from "eslint-plugin-perfectionist";
 import globals from "globals";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -296,9 +297,11 @@ export default defineConfig([
       boundaries,
       "import-x": importX,
       local: { rules: { "no-comment-placement": noCommentPlacement } },
+      perfectionist,
     },
     rules: {
       "no-restricted-syntax": ["error", ...sharedSyntax],
+      "perfectionist/sort-jsx-props": "error",
       "local/no-comment-placement": "error",
       "import-x/no-useless-path-segments": "error",
       "no-restricted-imports": [
