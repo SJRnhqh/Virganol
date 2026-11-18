@@ -45,7 +45,7 @@ export function WindowHeader() {
         <Breadcrumb />
       </div>
 
-      <div {...props(windowHeaderStyles.controls, isWindows && windowHeaderStyles.controlsWindows)}>
+      <div {...props(windowHeaderStyles.controls)}>
         <SideSwitch />
         <SidebarToggle />
         <SettingsButton />

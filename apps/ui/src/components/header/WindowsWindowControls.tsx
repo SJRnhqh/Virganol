@@ -16,7 +16,7 @@ export function WindowsWindowControls({ isMaximized }: Props) {
     <AnimatePresence>
       <motion.div
         animate={{ opacity: 1 }}
-        className="absolute right-0 top-0 h-full flex items-center pr-2"
+        className="h-full shrink-0 flex items-center"
         exit={{ opacity: 0 }}
         initial={{ opacity: 0 }}
         onMouseDown={(e) => e.stopPropagation()} // 防止拖拽
