@@ -7,9 +7,6 @@
 
 ## Current
 
-- [ ] Refine the Pine dark palette once StyleX hot updates cover variable
-      values.
-
 ## Planned
 
 ## Completed
@@ -48,6 +45,10 @@
       (`eslint-plugin-perfectionist@5.5.0`), carrying over the core of the
       stashed `react/jsx-sort-props` setup with a lighter dependency footprint.
 - [x] Upgraded StyleX to 0.19.2 and switched the unplugin adapter back to
-      `stylex.rspack()`. Verified the production CSS. Variable value changes
-      still need a page reload in development: with `runtimeInjection` off the
-      extracted CSS rebuilds, but the hot update carries only the JS chunk.
+      `stylex.rspack()`. Verified the production CSS. Kept `runtimeInjection` in
+      development: with it off the extracted CSS rebuilds, but the hot update
+      carries only the JS chunk.
+- [x] Verified development hot updates in headless Chrome: palette hex values
+      (`defineConsts`) hot-update through StyleX runtime constant injection
+      (facebook/stylex#1334); `defineVars` mapping changes still need a page
+      reload, since runtime injection deduplicates rules by selector.
