@@ -92,19 +92,19 @@
 #### 6.5 收尾优化
 
 - [ ] 逐子组件优雅化壳层 JSX：以 MainLayout 为锚点，WindowHeader → Sidebar → MainStage → SettingsModal 依次独立成段推进；每段同构考察（JSX 结构 → 数据/行为 → styles 切片），store 与 hooks 顺带理顺；已记录段内细节：Sidebar（settings `toggle` 必要性、`useSidebarStyles` 订阅收窄）、MainStage（`NavId` 与 `types/props/` 派生对齐）
-- [ ] WindowHeader 段细节进度：平台件已收（`lib/platform` 常量 + 样式 StyleX 切片已落）→ MacTrafficLightSpacer（60 魔法数、动效参数、JSDoc）→ Breadcrumb 与 ModuleMenu（park 决策）→ 三按钮（订阅收窄）→ `mr-26` 让位耦合
-- [ ] 解耦 `controlsWindows` 右侧让位与 `WindowsWindowControls`（absolute 改为正常流末尾，或共享宽度约定）；当前 `7.25rem` 为临时值，对应 0.75rem padding + 128px Windows 控件
+- [ ] WindowHeader 段细节进度：平台件、红绿灯让位（`trafficLightInset`）、root 样式字段、色系分层与 Windows 控件让位解耦已收（#44、#45）→ WindowsWindowControls 精修（去留、重构、字段考察）→ Breadcrumb 与 ModuleMenu（park 决策）→ 三按钮（订阅收窄）
 - [ ] 决策 `Breadcrumb` 内注释停放的 `ModuleMenu`：接入或删除
 - [ ] `SidebarToggle` / `SideSwitch` 以 selector / `useShallow` 收窄 store 订阅
 - [ ] macOS 全屏切换补验：红绿灯让位进出全屏是否正确，退出全屏时原生红绿灯与顶栏内容的短暂重叠是否需修（根治需 Rust 侧 `willExitFullScreen` 提前通知前端）
-- [ ] 蹲守 StyleX #1745 发版（Rspack CSS 输出修复）：升级后验证 CSS 输出/HMR 并以 `.rspack()` 替换临时 `.webpack()` 适配器
+- [x] StyleX 升级 0.19.2 并切回 `.rspack()`（#45）：开发期保留 `runtimeInjection`；色板值可热更新，`defineVars` 映射改动仍需 reload
+- [ ] 暗色主题（Pine 调色）与主题切换并入未来设置「外观」，届时评估 roles 契约 + `createTheme` 方案
 - [ ] styles 全刀立法暂缓：最小刀（components 可依赖 styles）已落；`moduleDirs` 键与 index 入口模式立法等 styles 文件增多再说
 - [ ] 回看侧栏/模块 CSS scoping（`@scope`、`@layer`、BEM），待组件边界清晰与 StyleX 试点评估后
 - [ ] 继续清理并规范化 `features/` 外的前端壳层，先稳定共享 layout、state、component 与 utility 边界，再进入功能级对齐
 - [ ] 前端壳层依赖方向门禁（`eslint-plugin-boundaries`）：元素矩阵与单向依赖已全面落座（styles 叶子、components→styles 许可等）；剩余为收编 `features/` 时的倒序瀑布扩展，并回看路线纪律（`../` 与 `@/` 量程分层）是否需要立法规化
 - [ ] 前端 feature 域治理：收敛 bot 内部 82 处 `@/features/bot/...` 域内别名为相对引用，清理 45 处 `@/lib/utils` 等深钻引用并引入桶纪律，届时一并确定 feature 启动钩子的最终挂载形态（聚合钩子或根级例外）
 - [x] 优雅化 MainLayout 视角的 `store/`：清理死代码（`setOpen` / `setSide`）、`toggleSide` 已为同步纯 set、共享 disclosure 辅助；后续仅剩 `activeId` 类型收窄（随 MainStage 段）与 `handleKeyDown` 依赖注入参数收紧
-- [ ] 深度规范化剩余样式文件：`canvas.css`、`tokens.css`、`scrollbars.css`、`themes/_palette.css` 与 `themes/light.css`（当前仅 `index.css`、`themes/index.css` 与 `base.css` 完成）
+- [ ] 深度规范化剩余样式文件：`canvas.css`、`tokens.css`、`scrollbars.css`、`themes/_palette.css` 与 `themes/light.css`（当前仅 `index.css`、`themes/index.css` 与 `base.css` 完成）；收编 `_palette.css` 时消除与 `styles/palettes/` 的色值重复
 - [ ] 决策 feature 专属 base 组件的去向：归入所属 feature 或未来的共享 UI 层
 - [ ] 编写 `docs/rules/frontend-code-style.md`：导出符号使用中英双语单行 JSDoc（英文句、空行、中文句），仅为项目特有且反直觉的事实补充细节，行内 why-comment 使用 `//`，TS/TSX 使用路径头，config 文件纳入规范扫描，HTML/JSON 不纳入；正式发布品牌图标落地前不保留占位 favicon/title
 - [ ] 首次正式发布前明确应用 identifier 与 keyring namespace 变更后的配置、密钥迁移或重置策略（`com.virganol.app` → `com.virganol`，`com.virganol.app.provider` → `com.virganol.provider`）；当前不要求已有开发安装自动迁移
@@ -121,11 +121,7 @@
 - [ ] Provider HTTP client 初始化错误收口（避免 `reqwest::Client` 构建失败通过 `expect` panic，纳入 health-check 错误路径）
 - [ ] Provider 持久化边界收口（将 `ProviderKeyTransaction` 隐藏为 store 层实现细节，由组合持久化服务统一处理 config + secret 写入与补偿回滚）
 - [x] 后端 Rust 业务代码规范化：完成 `commands`、`core/shared` 与 `core/bot` 的人工校验，统一注释、实现顺序、导入约定与最小可见范围
-- [x] Rust Comments 质量门禁与工程实验基线：完成规则实现、CLI/NAPI 正确性对齐、配置注入、仓库 audit 与 benchmark 基础设施
 - [x] Rust Comments 工程代码规范化：完成 `core`、`cli` 与 `node` crate 的人工校验，并将其纳入仓库注释门禁覆盖
-- [ ] Rust Comments 工程实验收尾：补齐 fixture，完成 fixture/仓库 audit 代表性 benchmark 与跨平台验证，确定生产 adapter
-- [ ] Comments 规则收口：完成 Outer Line Doc、Inner Doc 与 Explanatory Comments 的源码审计和文档定稿
-- [ ] Visibility 质量门禁子系统：覆盖模块项、关联项与 re-export 链，补齐 `syn` 结构检查、测试、仓库 audit 和文档定稿
 - [ ] 后端锁实现升级（`std::sync::Mutex` → `parking_lot::Mutex`）
 - [ ] 后端锁粒度细化（全局锁 → per-provider 锁）
 
@@ -137,7 +133,7 @@
 - [ ] 结合测试体系评估 `pnpm test` 与 `pnpm verify` 的职责和入口
 - [ ] Core 规范化：继续人工校验剩余 Core 的 item docs、实现顺序与可见范围
 - [x] Rust Comments 质量门禁与工程实验基线：完成规则实现、CLI/NAPI 正确性对齐、配置注入、仓库 audit 与 benchmark 基础设施
-- [ ] Rust Comments 工程实验收尾：补齐代表性 benchmark 与跨平台验证
-- [ ] Comments 规则扩展：完成 Inner Doc 与 Explanatory Comments 的源码审计、规则实现和文档定稿
+- [ ] Rust Comments 工程实验收尾：补齐 fixture，完成 fixture/仓库 audit 代表性 benchmark 与跨平台验证，确定生产 adapter
+- [ ] Comments 规则收口：完成 Outer Line Doc、Inner Doc 与 Explanatory Comments 的源码审计、规则实现和文档定稿
 - [x] Re-export visibility contract 基线：完成配置、链路校验与测试入口
-- [ ] Visibility 质量门禁扩展：在现有 re-export contract 基础上覆盖模块项与关联项，并补齐结构检查、测试、仓库 audit 和文档
+- [ ] Visibility 质量门禁扩展：在现有 re-export contract 基础上覆盖模块项与关联项，补齐 `syn` 结构检查、测试、仓库 audit 和文档定稿
