@@ -36,7 +36,8 @@ export function WindowHeader() {
         isMac && [
           !isTahoeOrNewer && windowHeaderStyles.preTahoeHeight,
           !isFullscreen && windowHeaderStyles.trafficLightInset,
-        ]
+        ],
+        isWindows && windowHeaderStyles.windowsRoot
       )}
       onDoubleClick={handleDoubleClick}
       onMouseDown={handleMouseDown}
@@ -45,7 +46,7 @@ export function WindowHeader() {
         <Breadcrumb />
       </div>
 
-      <div {...props(windowHeaderStyles.controls, isWindows && windowHeaderStyles.controlsWindows)}>
+      <div {...props(windowHeaderStyles.controls)}>
         <SideSwitch />
         <SidebarToggle />
         <SettingsButton />

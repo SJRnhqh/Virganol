@@ -20,9 +20,6 @@
 
     /* === 2. 顶部栏 (Header) === */
 
-    /* 顶部栏背景色 */
-    --header-bg: var(--color-songshuanglv);
-
     /* 面包屑文字颜色 */
     --header-fg: var(--color-qinghui);
 
