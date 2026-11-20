@@ -42,3 +42,61 @@ export const windowHeaderStyles = create({
     marginRight: "0.25rem",
   },
 });
+
+/** Window control styles of the application.
+ *
+ * 应用的窗口控制按钮组样式。
+ */
+export const windowControlsStyles = create({
+  root: {
+    alignItems: "center",
+    display: "flex",
+    flexShrink: 0,
+    height: "100%",
+  },
+  button: {
+    borderRadius: "0.375rem",
+    alignItems: "center",
+    color: {
+      default: "var(--header-icon-muted)",
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": "var(--header-icon)",
+      },
+    },
+    display: "flex",
+    justifyContent: "center",
+    transitionDuration: "200ms",
+    transitionProperty: "all",
+    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+    height: "2rem",
+    width: "2.5rem",
+  },
+  minimizeButton: {
+    backgroundColor: {
+      default: null,
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": "var(--window-control-minimize)",
+      },
+    },
+  },
+  maximizeButton: {
+    backgroundColor: {
+      default: null,
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": "var(--window-control-toggle-maximize)",
+      },
+    },
+  },
+  closeButton: {
+    backgroundColor: {
+      default: null,
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": "var(--window-control-close)",
+      },
+    },
+  },
+});

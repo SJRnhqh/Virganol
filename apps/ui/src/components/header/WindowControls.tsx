@@ -1,47 +1,47 @@
 // apps/ui/src/components/header/WindowControls.tsx
+import { props } from "@stylexjs/stylex";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { AnimatePresence, motion } from "framer-motion";
 import { Maximize2, Minimize2, Minus, X } from "lucide-react";
+
+import { windowControlsStyles } from "@/styles";
 
 interface Props {
   isMaximized: boolean;
 }
 
-/**
- * Renders the application's window controls.
+/** Window controls of the application.
  *
- * 渲染应用的窗口控制按钮组。
+ * 应用的窗口控制按钮组。
  */
 export function WindowControls({ isMaximized }: Props) {
   const appWindow = getCurrentWindow();
-  const baseBtnClass =
-    "group h-8 w-10 flex items-center justify-center rounded-md text-header-icon-muted hover:text-header-icon transition-all duration-200";
 
   return (
     <AnimatePresence>
       <motion.div
+        {...props(windowControlsStyles.root)}
         animate={{ opacity: 1 }}
-        className="h-full shrink-0 flex items-center"
         exit={{ opacity: 0 }}
         initial={{ opacity: 0 }}
-        onMouseDown={(e) => e.stopPropagation()} // 防止拖拽
+        onMouseDown={(e) => e.stopPropagation()}
       >
         <button
-          className={`${baseBtnClass} hover:bg-window-control-minimize`}
+          {...props(windowControlsStyles.button, windowControlsStyles.minimizeButton)}
           onClick={() => appWindow.minimize()}
         >
           <Minus size={14} strokeWidth={3} />
         </button>
 
         <button
-          className={`${baseBtnClass} hover:bg-window-control-toggle-maximize`}
+          {...props(windowControlsStyles.button, windowControlsStyles.maximizeButton)}
           onClick={() => appWindow.toggleMaximize()}
         >
           {isMaximized ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
         </button>
 
         <button
-          className={`${baseBtnClass} hover:bg-window-control-close`}
+          {...props(windowControlsStyles.button, windowControlsStyles.closeButton)}
           onClick={() => appWindow.close()}
         >
           <X size={14} />

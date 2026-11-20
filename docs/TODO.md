@@ -15,11 +15,10 @@
 
 ## Planned
 
-- [ ] Refactor: move the Tailwind `baseBtnClass` string and per-button hover
-      classes to StyleX slices consistent with `windowHeaderStyles`.
 - [ ] Fields: review and record the purpose of each resulting style field
       (sizing, alignment, radius, colors, transitions), one group at a time,
-      verified on Windows.
+      verified on Windows; review the legacy semantic CSS color variables
+      alongside the StyleX token mapping.
 - [ ] Compatibility: verify Windows 11 snap layouts on the custom maximize
       button and determine whether native window integration is needed.
 
@@ -30,3 +29,9 @@
 - [x] Naming: use `WindowControls` without a platform prefix; rename the file,
       export, and call site, update the source path header and roadmap reference,
       and add bilingual component JSDoc.
+- [x] StyleX: replace the Tailwind class strings with `windowControlsStyles`
+      slices for the root, shared button, and per-button hover backgrounds;
+      preserve dimensions, semantic CSS colors, hover-capability conditions,
+      and transitions while leaving behavior unchanged.
+- [x] Comments: align the component JSDoc with the concise bilingual style of
+      `App`, `main`, `MainLayout`, and `WindowHeader`.
