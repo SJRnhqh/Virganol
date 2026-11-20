@@ -1,8 +1,8 @@
 // apps/ui/src/types/props/header.ts
 
-/** Props for the window controls.
+/** Window control props of the application.
  *
- * 窗口控制按钮组的属性。
+ * 应用的窗口控制按钮组属性。
  */
 export interface WindowControlsProps {
   isMaximized: boolean;
