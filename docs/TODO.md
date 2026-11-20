@@ -37,3 +37,7 @@
       `App`, `main`, `MainLayout`, and `WindowHeader`.
 - [x] Props: extract `WindowControlsProps` to `types/props/header.ts` and expose
       it through the props and types public entries.
+- [x] Signatures: declare `JSX.Element` returns for `App`, `MainLayout`,
+      `WindowHeader`, and `WindowControls`; explicitly type `hostPlatform` as
+      `OsType | "unknown"` and `hostVersion` as `string`, while retaining
+      inference for internal callbacks.

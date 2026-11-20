@@ -3,6 +3,7 @@ import { props } from "@stylexjs/stylex";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { AnimatePresence, motion } from "framer-motion";
 import { Maximize2, Minimize2, Minus, X } from "lucide-react";
+import type { JSX } from "react";
 
 import type { WindowControlsProps } from "@/types";
 import { windowControlsStyles } from "@/styles";
@@ -11,7 +12,7 @@ import { windowControlsStyles } from "@/styles";
  *
  * 应用的窗口控制按钮组。
  */
-export function WindowControls({ isMaximized }: WindowControlsProps) {
+export function WindowControls({ isMaximized }: WindowControlsProps): JSX.Element {
   const appWindow = getCurrentWindow();
 
   return (

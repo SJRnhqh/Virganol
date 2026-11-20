@@ -1,7 +1,7 @@
 // apps/ui/src/components/header/WindowHeader.tsx
 import { props } from "@stylexjs/stylex";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import type { MouseEvent } from "react";
+import type { JSX, MouseEvent } from "react";
 
 import { isMac, isTahoeOrNewer, isWindows } from "@/lib";
 import { useWindowState } from "@/hooks";
@@ -16,7 +16,7 @@ import { WindowControls } from "./WindowControls";
  *
  * 应用的窗口顶栏。
  */
-export function WindowHeader() {
+export function WindowHeader(): JSX.Element {
   const { isMaximized, isFullscreen } = useWindowState();
 
   const handleDoubleClick = () => {

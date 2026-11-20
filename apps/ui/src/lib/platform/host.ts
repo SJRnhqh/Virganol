@@ -1,11 +1,11 @@
 // apps/ui/src/lib/platform/host.ts
-import { type, version } from "@tauri-apps/plugin-os";
+import { type OsType, type, version } from "@tauri-apps/plugin-os";
 
 /** Host platform reported by the Tauri runtime.
  *
  * 由 Tauri 运行时报告的宿主平台。
  */
-export function hostPlatform() {
+export function hostPlatform(): OsType | "unknown" {
   try {
     return type();
   } catch {
@@ -17,7 +17,7 @@ export function hostPlatform() {
  *
  * 由 Tauri 运行时报告的宿主平台版本。
  */
-export function hostVersion() {
+export function hostVersion(): string {
   try {
     return version();
   } catch {
