@@ -92,7 +92,7 @@
 #### 6.5 收尾优化
 
 - [ ] 逐子组件优雅化壳层 JSX：以 MainLayout 为锚点，WindowHeader → Sidebar → MainStage → SettingsModal 依次独立成段推进；每段同构考察（JSX 结构 → 数据/行为 → styles 切片），store 与 hooks 顺带理顺；已记录段内细节：Sidebar（settings `toggle` 必要性、`useSidebarStyles` 订阅收窄）、MainStage（`NavId` 与 `types/props/` 派生对齐）
-- [ ] WindowHeader 段细节进度：平台件、红绿灯让位（`trafficLightInset`）、root 样式字段、色系分层与 Windows 控件让位解耦已收（#44、#45）→ WindowsWindowControls 精修（去留、重构、字段考察）→ Breadcrumb 与 ModuleMenu（park 决策）→ 三按钮（订阅收窄）
+- [ ] WindowHeader 段细节进度：平台件、红绿灯让位（`trafficLightInset`）、root 样式字段、色系分层与 Windows 控件让位解耦已收（#44、#45）→ WindowControls 精修（去留、重构、字段考察）→ Breadcrumb 与 ModuleMenu（park 决策）→ 三按钮（订阅收窄）
 - [ ] 决策 `Breadcrumb` 内注释停放的 `ModuleMenu`：接入或删除
 - [ ] `SidebarToggle` / `SideSwitch` 以 selector / `useShallow` 收窄 store 订阅
 - [ ] macOS 全屏切换补验：红绿灯让位进出全屏是否正确，退出全屏时原生红绿灯与顶栏内容的短暂重叠是否需修（根治需 Rust 侧 `willExitFullScreen` 提前通知前端）

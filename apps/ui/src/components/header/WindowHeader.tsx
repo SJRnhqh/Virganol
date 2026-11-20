@@ -10,7 +10,7 @@ import { Breadcrumb } from "./Breadcrumb";
 import { SettingsButton } from "./SettingsButton";
 import { SidebarToggle } from "./SidebarToggle";
 import { SideSwitch } from "./SideSwitch";
-import { WindowsWindowControls } from "./WindowsWindowControls";
+import { WindowControls } from "./WindowControls";
 
 /** Window header of the application.
  *
@@ -52,7 +52,7 @@ export function WindowHeader() {
         <SettingsButton />
       </div>
 
-      {isWindows && <WindowsWindowControls isMaximized={isMaximized} />}
+      {isWindows && <WindowControls isMaximized={isMaximized} />}
     </header>
   );
 }

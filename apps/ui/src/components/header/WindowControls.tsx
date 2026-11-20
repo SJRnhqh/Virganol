@@ -1,4 +1,4 @@
-// apps/ui/src/components/header/WindowsWindowControls.tsx
+// apps/ui/src/components/header/WindowControls.tsx
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { AnimatePresence, motion } from "framer-motion";
 import { Maximize2, Minimize2, Minus, X } from "lucide-react";
@@ -7,7 +7,12 @@ interface Props {
   isMaximized: boolean;
 }
 
-export function WindowsWindowControls({ isMaximized }: Props) {
+/**
+ * Renders the application's window controls.
+ *
+ * 渲染应用的窗口控制按钮组。
+ */
+export function WindowControls({ isMaximized }: Props) {
   const appWindow = getCurrentWindow();
   const baseBtnClass =
     "group h-8 w-10 flex items-center justify-center rounded-md text-header-icon-muted hover:text-header-icon transition-all duration-200";
