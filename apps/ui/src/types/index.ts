@@ -5,7 +5,7 @@ export type {
   SidebarShortcutDeps,
 } from "./logic";
 export type { NavId, NavItemConfig } from "./navigation";
-export type { SidebarProps } from "./props";
+export type { SidebarProps, WindowControlsProps } from "./props";
 export { DEFAULT_SETTINGS_TAB, type SettingsTab } from "./settings";
 export type {
   DisclosureUpdater,

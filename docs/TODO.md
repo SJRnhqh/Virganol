@@ -35,3 +35,5 @@
       and transitions while leaving behavior unchanged.
 - [x] Comments: align the component JSDoc with the concise bilingual style of
       `App`, `main`, `MainLayout`, and `WindowHeader`.
+- [x] Props: extract `WindowControlsProps` to `types/props/header.ts` and expose
+      it through the props and types public entries.

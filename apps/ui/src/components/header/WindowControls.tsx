@@ -4,17 +4,14 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { AnimatePresence, motion } from "framer-motion";
 import { Maximize2, Minimize2, Minus, X } from "lucide-react";
 
+import type { WindowControlsProps } from "@/types";
 import { windowControlsStyles } from "@/styles";
-
-interface Props {
-  isMaximized: boolean;
-}
 
 /** Window controls of the application.
  *
  * 应用的窗口控制按钮组。
  */
-export function WindowControls({ isMaximized }: Props) {
+export function WindowControls({ isMaximized }: WindowControlsProps) {
   const appWindow = getCurrentWindow();
 
   return (
