@@ -62,7 +62,7 @@ export const windowControlsStyles = create({
   },
   button: {
     borderRadius: "0.375rem",
-    alignItems: "center",
+    placeItems: "center",
     color: {
       default: "var(--header-icon-muted)",
       ":hover": {
@@ -70,12 +70,11 @@ export const windowControlsStyles = create({
         "@media (hover: hover)": "var(--header-icon)",
       },
     },
-    display: "flex",
-    justifyContent: "center",
+    display: "grid",
     transitionDuration: "200ms",
     transitionProperty: "all",
     transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-    height: "2rem",
+    height: "100%",
     width: "2.5rem",
   },
   minimizeButton: {
