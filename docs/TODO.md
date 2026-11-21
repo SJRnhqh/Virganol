@@ -17,11 +17,13 @@
 
 ## Planned
 
-- [ ] Theme review: finalize the provisional window control colors alongside
-      the Bosquet title bar and main content background.
-
 ## Completed
 
+- [x] Establish provisional Bosquet Light and Dark palettes with separate
+      `tonic` (title bar) and `dominant` (main content) color roles. Review
+      window control colors alongside the title bar and main content background
+      in a visual palette preview. Keep Light as the default; defer main
+      content wiring.
 - [x] Upgrade the UI's direct `lucide-react` dependency to `1.77.0`.
 - [x] Use `Minus`, `Square`, `RestoreWindow`, and `X` for the Windows caption
       buttons. Define the custom restore glyph in `icons/RestoreWindow.ts`.
