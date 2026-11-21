@@ -9,8 +9,7 @@
 ## Current
 
 - [ ] Refactor: tidy the component structure and behavior, including but not
-      limited to the always-mounted `AnimatePresence` wrapper, the per-render
-      `getCurrentWindow()` call, the inline drag-guard `onMouseDown`, double-click
+      limited to the always-mounted `AnimatePresence` wrapper, double-click
       bubbling to the header, and button semantics (`type`, accessible labels).
 
 ## Planned
@@ -41,3 +40,6 @@
       `WindowHeader`, and `WindowControls`; explicitly type `hostPlatform` as
       `OsType | "unknown"` and `hostVersion` as `string`, while retaining
       inference for internal callbacks.
+- [x] Handlers: extract mouse-down, minimize, maximize-toggle, and close handlers
+      before JSX; resolve the current window inside action handlers instead of
+      during rendering.
