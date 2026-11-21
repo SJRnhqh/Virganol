@@ -8,10 +8,9 @@
 
 ## Current
 
-- [ ] Style review: finish the shared button fields and review
-      `windowControlsIconsStyles`. Verify the hover backgrounds, shared root
-      layout, and default icon legibility on Windows. Review the remaining legacy
-      CSS color variables alongside the StyleX token mapping.
+- [ ] Windows style verification: check the shared root layout, hover
+      backgrounds, and icon legibility at the unified size. Revisit the
+      provisional default icon color during the broader theme review.
 
 ## Planned
 
@@ -58,8 +57,8 @@
 - [x] Animation: replace the animated wrapper with a plain `div` so the controls
       appear immediately on mount. Keep the existing button hover feedback.
 - [x] Icons: expose the four Lucide glyphs through `windowControlsIcons` and
-      pair that export with `windowControlsIconsStyles`, a separate StyleX group
-      for SVG sizes and stroke width. Align their bilingual JSDoc and include
-      the icons layer in ESLint boundary checks and formatting.
+      share one 16 × 16 px StyleX size and Lucide's default stroke width.
+      Align the bilingual JSDoc and include the icons layer in ESLint boundary
+      checks and formatting.
 - [x] Checks: include `WindowControls.tsx` in the temporary ESLint refinement
       scope and oxfmt allowlist.

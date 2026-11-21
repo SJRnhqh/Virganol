@@ -10,11 +10,8 @@ import { windowControlsIconsStyles } from "@/styles";
  * 应用的窗口控制按钮组图标。
  */
 export const windowControlsIcons = {
-  minimize: createElement(
-    Minus,
-    props(windowControlsIconsStyles.icon, windowControlsIconsStyles.minimizeIcon)
-  ),
-  maximize: createElement(Maximize2, props(windowControlsIconsStyles.toggleMaximizeIcon)),
-  restore: createElement(Minimize2, props(windowControlsIconsStyles.toggleMaximizeIcon)),
+  minimize: createElement(Minus, props(windowControlsIconsStyles.icon)),
+  maximize: createElement(Maximize2, props(windowControlsIconsStyles.icon)),
+  restore: createElement(Minimize2, props(windowControlsIconsStyles.icon)),
   close: createElement(X, props(windowControlsIconsStyles.icon)),
 } as const;
