@@ -99,4 +99,15 @@ export const windowControlsStyles = create({
       },
     },
   },
+  icon: {
+    height: 14,
+    width: 14,
+  },
+  toggleMaximizeIcon: {
+    height: 13,
+    width: 13,
+  },
+  minimizeIcon: {
+    strokeWidth: "3",
+  },
 });

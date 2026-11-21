@@ -10,7 +10,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 
-const moduleDirs = "{types,constants,lib,store,hooks,components,layouts}";
+const moduleDirs = "{types,constants,lib,store,hooks,icons,components,layouts}";
 
 const srcFiles = [
   `src/${moduleDirs}/**/*.{ts,tsx}`,
@@ -24,6 +24,7 @@ const refinedFiles = [
   "src/layouts/**",
   "src/lib/index.ts",
   "src/lib/platform/**",
+  "src/icons/**",
   "src/components/index.ts",
   "src/components/header/index.ts",
   "src/components/header/WindowHeader.tsx",
@@ -144,7 +145,8 @@ const dependencyAllows = {
   lib: [],
   store: ["types", "constants"],
   hooks: ["types", "constants", "store"],
-  components: ["types", "constants", "lib", "store", "hooks", "styles", "features"],
+  icons: ["styles"],
+  components: ["types", "constants", "lib", "store", "hooks", "styles", "icons", "features"],
   layouts: ["lib", "store", "hooks", "components", "styles"],
   app: ["features", "layouts", "styles"],
 };
@@ -229,6 +231,7 @@ const importRules = {
           "^@/store(?:/|\\u0000|$)",
           "^@/hooks(?:/|\\u0000|$)",
           "^@/styles(?:/|\\u0000|$)",
+          "^@/icons(?:/|\\u0000|$)",
           "^@/features(?:/|\\u0000|$)",
           "^@/components(?:/|\\u0000|$)",
           "^@/layouts(?:/|\\u0000|$)",
@@ -305,6 +308,7 @@ export default defineConfig([
         { type: "store", pattern: "src/store/**" },
         { type: "hooks", pattern: "src/hooks/**" },
         { type: "styles", pattern: "src/styles/**" },
+        { type: "icons", pattern: "src/icons/**" },
         { type: "features", pattern: "src/features/**" },
         { type: "components", pattern: "src/components/**" },
         { type: "layouts", pattern: "src/layouts/**" },

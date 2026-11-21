@@ -13,10 +13,6 @@
 
 ## Planned
 
-- [ ] Icon library: compare Lucide with alternatives before choosing one library
-      for the window controls.
-- [ ] Icon reuse: identify components that need the same icons and decide which
-      icon styles (such as size and stroke width) they should share.
 - [ ] Fields: review and record the purpose of each resulting style field
       (sizing, alignment, radius, colors, transitions), one group at a time,
       verified on Windows; review the legacy semantic CSS color variables
@@ -48,3 +44,6 @@
       during rendering.
 - [x] Animation: replace the animated wrapper with a plain `div` so the controls
       appear immediately on mount. Keep the existing button hover feedback.
+- [x] Icons: keep Lucide for window controls and expose the four glyphs through
+      `windowControlsIcons`. Manage their sizes and stroke width in the header
+      styles. Include the icons layer in ESLint boundary checks and formatting.
