@@ -47,3 +47,5 @@
 - [x] Icons: keep Lucide for window controls and expose the four glyphs through
       `windowControlsIcons`. Manage their sizes and stroke width in the header
       styles. Include the icons layer in ESLint boundary checks and formatting.
+- [x] Checks: include `WindowControls.tsx` in the temporary ESLint refinement
+      scope and oxfmt allowlist.
