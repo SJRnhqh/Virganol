@@ -8,15 +8,16 @@
 
 ## Current
 
-- [ ] Refactor: review double-click bubbling to the header and button semantics
-      (`type`, accessible labels).
+- [ ] Style review: start with `windowControlsStyles.root`, then review the
+      remaining fields in `windowControlsStyles` and `windowControlsIconsStyles`
+      one at a time. Record each field's purpose, simplify where useful, and
+      verify the result on Windows. Review the legacy semantic CSS color
+      variables alongside the StyleX token mapping.
 
 ## Planned
 
-- [ ] Fields: review and record the purpose of each resulting style field
-      (sizing, alignment, radius, colors, transitions), one group at a time,
-      verified on Windows; review the legacy semantic CSS color variables
-      alongside the StyleX token mapping.
+- [ ] Button behavior: review double-click bubbling to the header and button
+      semantics (`type`, accessible labels).
 - [ ] Compatibility: verify Windows 11 snap layouts on the custom maximize
       button and determine whether native window integration is needed.
 
