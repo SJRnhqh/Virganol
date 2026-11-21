@@ -10,4 +10,7 @@ export const vine = defineConsts({
   qinghui: "#2b333e",
   xiayunhui: "#617172",
   white: "#ffffff",
+  danhuilv: "#ad9e5f",
+  shuilv: "#8cc269",
+  xiangyehong: "#f07c82",
 });

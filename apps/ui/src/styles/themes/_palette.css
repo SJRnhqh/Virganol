@@ -28,11 +28,6 @@
     --color-jizong: #de7622; /* 麂棕 (Jute Brown) - ester主色调 */
     --color-kongquelv: #229453; /* 孔雀绿（Malachite Green） - kiral主色调 */
 
-    /* 🚦 功能状态色 (Functional Status) */
-    --color-xiangyehong: #f07c82; /* 香叶红 (Geranium Red) - 危险/关闭/错误 */
-    --color-shuilv: #8cc269; /* 水绿 (Water Green) - 成功/最大化 */
-    --color-danhuilv: #ad9e5f; /* 淡灰绿 (Pale Olive) - 警告/最小化/中立 */
-
     /* ⚪️ 中性色与遮罩 (Neutrals & Utility) */
     --color-white: #ffffff;
     --color-black: #000000;

@@ -79,7 +79,7 @@ export const windowControlsStyles = create({
       default: null,
       ":hover": {
         default: null,
-        "@media (hover: hover)": "var(--window-control-minimize)",
+        "@media (hover: hover)": colorTokens.windowMinimizeHoverBg,
       },
     },
   },
@@ -88,7 +88,7 @@ export const windowControlsStyles = create({
       default: null,
       ":hover": {
         default: null,
-        "@media (hover: hover)": "var(--window-control-toggle-maximize)",
+        "@media (hover: hover)": colorTokens.windowToggleMaximizeHoverBg,
       },
     },
   },
@@ -97,7 +97,7 @@ export const windowControlsStyles = create({
       default: null,
       ":hover": {
         default: null,
-        "@media (hover: hover)": "var(--window-control-close)",
+        "@media (hover: hover)": colorTokens.windowCloseHoverBg,
       },
     },
   },

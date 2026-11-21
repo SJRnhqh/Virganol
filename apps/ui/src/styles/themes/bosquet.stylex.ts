@@ -14,6 +14,9 @@ export const bosquet = unstable_defineVarsNested({
     anchor: vine.qinghui,
     tether: vine.white, // Placeholder for future connection lines.
     buoy: vine.xiayunhui,
+    prelude: vine.danhuilv,
+    interlude: vine.shuilv,
+    coda: vine.xiangyehong,
   },
   dark: { dominant: pine.yunshanlv },
 });

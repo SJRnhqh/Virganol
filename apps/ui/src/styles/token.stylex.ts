@@ -11,4 +11,7 @@ export const colorTokens = defineVars({
   headerBg: bosquet.light.dominant,
   headerIcon: bosquet.light.buoy,
   headerIconHover: bosquet.light.anchor,
+  windowMinimizeHoverBg: bosquet.light.prelude,
+  windowToggleMaximizeHoverBg: bosquet.light.interlude,
+  windowCloseHoverBg: bosquet.light.coda,
 });

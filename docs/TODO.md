@@ -8,9 +8,9 @@
 
 ## Current
 
-- [ ] Style review: finish the shared button fields, then review the per-button
-      hover backgrounds and `windowControlsIconsStyles`. Verify the shared root
-      layout and default icon legibility on Windows. Review the remaining legacy
+- [ ] Style review: finish the shared button fields and review
+      `windowControlsIconsStyles`. Verify the hover backgrounds, shared root
+      layout, and default icon legibility on Windows. Review the remaining legacy
       CSS color variables alongside the StyleX token mapping.
 
 ## Planned
@@ -34,6 +34,9 @@
 - [x] Button color feedback uses the Bosquet light theme through StyleX tokens.
       The default icon uses the provisional summer cloud gray `buoy` and
       switches immediately to cyan grey `anchor` on hover-capable devices.
+- [x] Window button hover backgrounds use the Bosquet `prelude`, `interlude`,
+      and `coda` roles in yellow, green, and red order. Migrate the original
+      color values to the Vine palette and remove the old CSS aliases.
 - [x] Root styles: review the `WindowControls` root and extract `alignItems`,
       `display`, and `flexShrink` into `headerSharedStyles.root`. Compose the
       shared style in `WindowHeader` and `WindowControls` and keep their height
