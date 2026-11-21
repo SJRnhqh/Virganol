@@ -1,7 +1,7 @@
 // apps/ui/src/components/header/WindowControls.tsx
 import { props } from "@stylexjs/stylex";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import type { JSX, MouseEvent } from "react";
+import type { JSX } from "react";
 
 import type { WindowControlsProps } from "@/types";
 import { headerSharedStyles, windowControlsStyles } from "@/styles";
@@ -12,10 +12,6 @@ import { windowControlsIcons } from "@/icons";
  * 应用的窗口控制按钮组。
  */
 export function WindowControls({ isMaximized }: WindowControlsProps): JSX.Element {
-  const handleMouseDown = (event: MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-  };
-
   const handleMinimize = () => getCurrentWindow().minimize();
 
   const handleToggleMaximize = () => getCurrentWindow().toggleMaximize();
@@ -23,10 +19,7 @@ export function WindowControls({ isMaximized }: WindowControlsProps): JSX.Elemen
   const handleClose = () => getCurrentWindow().close();
 
   return (
-    <div
-      {...props(headerSharedStyles.root, windowControlsStyles.root)}
-      onMouseDown={handleMouseDown}
-    >
+    <div {...props(headerSharedStyles.root, windowControlsStyles.root)}>
       <button
         {...props(windowControlsStyles.button, windowControlsStyles.minimizeButton)}
         onClick={handleMinimize}

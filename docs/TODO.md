@@ -12,6 +12,10 @@
       root layout, and hover feedback on Windows.
 - [ ] Button behavior: review double-click bubbling to the header and button
       semantics (`type`, accessible labels).
+- [ ] Window state: review whether `WindowHeader` should call `useWindowState`
+      and pass `isMaximized` as a prop or whether `WindowControls` should
+      subscribe directly. Consider duplicate Tauri resize listeners and state
+      queries if both components call the current hook.
 - [ ] Compatibility: verify Windows 11 Snap Layouts on the custom maximize
       button and determine whether native window integration is needed.
 
@@ -19,6 +23,9 @@
 
 ## Completed
 
+- [x] Remove the redundant `mousedown` propagation guard from `WindowControls`.
+      `WindowHeader` already starts dragging only when the header itself is
+      the event target.
 - [x] Establish provisional Bosquet Light and Dark palettes with separate
       `tonic` (title bar) and `dominant` (main content) color roles. Review
       window control colors alongside the title bar and main content background
