@@ -24,6 +24,7 @@
 
 ## Completed
 
+- [x] Upgrade the UI's direct `lucide-react` dependency to `1.77.0`.
 - [x] Retention: keep custom window controls in the unified header while native
       Windows decorations remain disabled.
 - [x] Naming: use `WindowControls` without a platform prefix; rename the file,
