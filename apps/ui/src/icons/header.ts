@@ -1,9 +1,10 @@
 // apps/ui/src/icons/header.ts
 import { props } from "@stylexjs/stylex";
-import { Maximize2, Minimize2, Minus, X } from "lucide-react";
+import { Minus, Square, X } from "lucide-react";
 import { createElement } from "react";
 
 import { windowControlsIconsStyles } from "@/styles";
+import { RestoreWindow } from "./RestoreWindow";
 
 /** Window control icons of the application.
  *
@@ -11,7 +12,7 @@ import { windowControlsIconsStyles } from "@/styles";
  */
 export const windowControlsIcons = {
   minimize: createElement(Minus, props(windowControlsIconsStyles.icon)),
-  maximize: createElement(Maximize2, props(windowControlsIconsStyles.icon)),
-  restore: createElement(Minimize2, props(windowControlsIconsStyles.icon)),
+  maximize: createElement(Square, props(windowControlsIconsStyles.icon)),
+  restore: createElement(RestoreWindow, props(windowControlsIconsStyles.icon)),
   close: createElement(X, props(windowControlsIconsStyles.icon)),
 } as const;

@@ -8,10 +8,8 @@
 
 ## Current
 
-- [ ] Lucide glyph selection: compare alternatives to `Minus`, `Maximize2`,
-      `Minimize2`, and `X` at 16 × 16 px with Lucide's default stroke width.
-      Choose glyphs for minimize, maximize, restore, and close. Verify their
-      legibility, the shared root layout, and hover feedback on Windows.
+- [ ] Verify the legibility of the 16 × 16 px window control icons, the shared
+      root layout, and hover feedback on Windows.
 - [ ] Button behavior: review double-click bubbling to the header and button
       semantics (`type`, accessible labels).
 - [ ] Compatibility: verify Windows 11 Snap Layouts on the custom maximize
@@ -25,6 +23,8 @@
 ## Completed
 
 - [x] Upgrade the UI's direct `lucide-react` dependency to `1.77.0`.
+- [x] Use `Minus`, `Square`, `RestoreWindow`, and `X` for the Windows caption
+      buttons. Define the custom restore glyph in `icons/RestoreWindow.ts`.
 - [x] Retention: keep custom window controls in the unified header while native
       Windows decorations remain disabled.
 - [x] Naming: use `WindowControls` without a platform prefix; rename the file,
