@@ -8,16 +8,19 @@
 
 ## Current
 
-- [ ] Windows style verification: check the shared root layout, hover
-      backgrounds, and icon legibility at the unified size. Revisit the
-      provisional default icon color during the broader theme review.
+- [ ] Lucide glyph selection: compare alternatives to `Minus`, `Maximize2`,
+      `Minimize2`, and `X` at 16 × 16 px with Lucide's default stroke width.
+      Choose glyphs for minimize, maximize, restore, and close. Verify their
+      legibility, the shared root layout, and hover feedback on Windows.
+- [ ] Button behavior: review double-click bubbling to the header and button
+      semantics (`type`, accessible labels).
+- [ ] Compatibility: verify Windows 11 Snap Layouts on the custom maximize
+      button and determine whether native window integration is needed.
 
 ## Planned
 
-- [ ] Button behavior: review double-click bubbling to the header and button
-      semantics (`type`, accessible labels).
-- [ ] Compatibility: verify Windows 11 snap layouts on the custom maximize
-      button and determine whether native window integration is needed.
+- [ ] Theme review: finalize the provisional window control colors alongside
+      the Bosquet title bar and main content background.
 
 ## Completed
 
