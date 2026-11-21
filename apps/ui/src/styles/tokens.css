@@ -27,13 +27,6 @@
     --color-header-icon-muted: var(--header-icon-muted);
     --color-header-icon-bg: var(--header-icon-bg);
 
-    /* 窗口控制 */
-    --color-window-control-minimize: var(--window-control-minimize);
-    --color-window-control-toggle-maximize: var(
-        --window-control-toggle-maximize
-    );
-    --color-window-control-close: var(--window-control-close);
-
     /* === 3. 主体背景 === */
 
     /* 主体区域背景色 */

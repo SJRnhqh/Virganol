@@ -1,4 +1,6 @@
 // apps/ui/src/App.tsx
+import type { JSX } from "react";
+
 import { useProviderStartup } from "@/features";
 import { MainLayout } from "@/layouts";
 
@@ -6,7 +8,7 @@ import { MainLayout } from "@/layouts";
  *
  * 应用的根组件。
  */
-export default function App() {
+export default function App(): JSX.Element {
   useProviderStartup();
   return <MainLayout />;
 }

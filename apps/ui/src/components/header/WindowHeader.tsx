@@ -1,23 +1,23 @@
 // apps/ui/src/components/header/WindowHeader.tsx
 import { props } from "@stylexjs/stylex";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import type { MouseEvent } from "react";
+import type { JSX, MouseEvent } from "react";
 
 import { isMac, isTahoeOrNewer, isWindows } from "@/lib";
 import { useWindowState } from "@/hooks";
-import { windowHeaderStyles } from "@/styles";
+import { headerSharedStyles, windowHeaderStyles } from "@/styles";
 import { Breadcrumb } from "./Breadcrumb";
 import { SettingsButton } from "./SettingsButton";
 import { SidebarToggle } from "./SidebarToggle";
 import { SideSwitch } from "./SideSwitch";
-import { WindowsWindowControls } from "./WindowsWindowControls";
+import { WindowControls } from "./WindowControls";
 
 /** Window header of the application.
  *
  * 应用的窗口顶栏。
  */
-export function WindowHeader() {
-  const { isMaximized, isFullscreen } = useWindowState();
+export function WindowHeader(): JSX.Element {
+  const { isMaximized, isFullscreen } = useWindowState(); // TBD: Query window state per OS.
 
   const handleDoubleClick = () => {
     getCurrentWindow().toggleMaximize();
@@ -32,12 +32,13 @@ export function WindowHeader() {
   return (
     <header
       {...props(
+        headerSharedStyles.root,
         windowHeaderStyles.root,
         isMac && [
           !isTahoeOrNewer && windowHeaderStyles.preTahoeHeight,
           !isFullscreen && windowHeaderStyles.trafficLightInset,
         ],
-        isWindows && windowHeaderStyles.windowsRoot
+        isWindows && windowHeaderStyles.windowEdgeAlignment
       )}
       onDoubleClick={handleDoubleClick}
       onMouseDown={handleMouseDown}
@@ -52,7 +53,7 @@ export function WindowHeader() {
         <SettingsButton />
       </div>
 
-      {isWindows && <WindowsWindowControls isMaximized={isMaximized} />}
+      {isWindows && <WindowControls isMaximized={isMaximized} />}
     </header>
   );
 }

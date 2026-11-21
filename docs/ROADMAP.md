@@ -39,74 +39,56 @@
 - lifecycle payload、snapshot 与 skipped provider 契约完成收口
 - 旧错误分类、过渡 API、服务可见性与冗余日志完成清理
 
-#### 6.2 Provider 可靠性架构与可观测性（context / failure / error / boundary / logging / tracing）
+#### 6.2 Provider 可靠性与可观测性
 
-**当前状态**：Provider 与 Settings 的上下文传播、内部错误、边界投影和结构化日志门面已经闭环；Provider manager 与 lifecycle span、`run_id`、`trigger`、并发健康检查子 span 和生命周期起止事件均已完成。Rust/Tauri 日志后端已完成 `tracing-subscriber` 注册、独立 Console Layer 与每日轮转 JSONL Layer 的 best-effort 诊断链路（非阻塞、有界且允许丢失；非严格 durable persistence；初始化失败当前 fail-closed；含 worker guard 托管、保留清理、首错报警和默认级别常量统一），Console 已通过 `RUST_LOG` 降级实机验证，启动 banner 以 console-only 形态落地；可观测性代码已通过系统性审查并将枚举令牌 Display 收敛为 strum derive。语义门面与分层后端架构已落档，详细观测契约继续作为后续工作。工作分支已于 2026-09-08 通过 `pnpm test` 校验，可进入分支收尾；持久化行为验证已决策推迟至前端日志消费对齐后进行，移出后端 v1 完成门槛。
-
-**本阶段边界**：完成 Rust/Tauri 后端可观测性 v1 后即可转入前端工作；Go Sidecar stdout/stderr 归一化与跨进程关联作为后续独立集成，不阻塞本阶段完成。
-
-**已接受的延期（2026-09-08）**：JSONL 作为临时 best-effort 诊断 sink，当前接受正常退出时可能丢失尚未写出的尾部日志。Tauri 最终退出路径尚未显式释放 `WorkerGuard`，退出冲刷未实现闭环、未通过实机验证；该项转入后续持久化工作，不阻塞 `feat/spirit-log-backend` 合入 `feat/spirit`。SQLite 演进仍需单独定义写入、保留和退出语义，不能仅靠替换存储消除该风险。
+Rust/Tauri 可观测性 v1 已于 2026-09-08 合入 `feat/spirit`（#39），合入前通过 `pnpm test`。后续阶段验证完整的日志消费、持久化和跨进程关联。
 
 **已完成**：
 
-- [x] 完成 Provider 与 Settings 的 RDD 上下文、失败事实和归因边界建模
-- [x] 完成 Provider 内部错误、生命周期聚合与 `ProviderAppError` 安全边界投影
-- [x] 建立 `LogEntry`、`AppLogger` 与 `ProviderLogEntry` 的结构化日志契约和领域投影
-- [x] 完成 Provider manager、lifecycle 与 `Downgrade` 的应用层结构化日志接入及调用点审计
-- [x] 完成 Provider manager 与 lifecycle 业务 span、`run_id` / `trigger` 关联，以及并发健康检查任务的子 span 传播
-- [x] 完成生命周期稳定起止事件与交互式成功、失败、补偿事件的应用层埋点
-- [x] 以 `tracing-subscriber` 完成日志后端注册，并将 Console Layer 独立装配
-- [x] 以 Tauri 应用日志目录接入每日轮转 JSONL Layer，打通结构化日志持久化最小链路
-- [x] 完成 JSONL 基础诊断能力：非阻塞写入、worker guard 托管、启动时按十四天阈值清理过期文件、首写失败报警与命名常量集中（退出冲刷另列待办）
-- [x] 完成 Console 收口：紧凑彩色格式、字段染色策略与 `RUST_LOG` 降级实机过滤验证
-- [x] 以 console-only 直写形态落地启动 banner：双层立体框、绿色品牌艺术字与分级事实行，默认级别收敛为单一类型化常量，并按决策放弃 JSONL run 分隔符
-- [x] 完成可观测性代码系统性审查，并将枚举令牌 Display 收敛为 strum derive（snake_case / transparent / to_string 插值），手写仅保留 struct 归因与单令牌源供应商标识两处闭合例外
+- [x] 完成 Provider 和 Settings 的上下文传播、错误归因与 `ProviderAppError` 边界投影，并建立 `LogEntry`、`AppLogger` 和 `ProviderLogEntry` 日志契约
+- [x] 接入 Provider manager、lifecycle 和 `Downgrade` 日志，关联业务 span、`run_id`、`trigger` 与并发健康检查子 span，覆盖起止、成败和补偿事件
+- [x] 通过 `tracing-subscriber` 装配 Console 和每日轮转 JSONL。Console 已实机验证 `RUST_LOG` 过滤并输出启动 banner，枚举日志令牌收敛为 strum derive
+- [x] JSONL 采用有界、非阻塞的尽力写入，托管 `WorkerGuard`，在启动时清理超过十四天的文件并报告首个写入错误。日志初始化失败时阻止应用继续启动
+
+**已知边界**：正常退出可能丢失尚未写出的 JSONL 尾部日志。Tauri 退出路径的有界冲刷和实机验证留待持久化阶段完成。
 
 **后续路线**：
 
 - [ ] 观测契约落档：统一沉淀 facade、Event、Span、Subscriber、Layer、sink、过滤、字段稳定性与生命周期边界
-- [ ] 前端日志消费对齐后补验 Rust/Tauri 日志与追踪在成功、失败、并发、过滤、轮转、写入失败和退出路径下的关联与持久化行为，并沉淀最小自动回归测试（已决策移出后端 v1 完成门槛）
-- [ ] 持久化退出语义收口：在 Tauri 最终退出路径显式释放 JSONL `WorkerGuard`，执行有界冲刷并补充退出验证；若先替换为 SQLite，则在新持久化层落实相应退出契约（已接受延期，不阻塞当前分支合并）
-- [ ] 诊断存储容量约束：评估总容量上限与运行期清理，覆盖长时间运行和高频日志；当前 JSONL 仅在启动时按日期清理，无总容量上限，不阻塞当前分支
-- [ ] 后续评估 Provider Span 关联增强（例如失败事件显式携带 `run_id` / `trigger` 或采用独立过滤策略）；不作为 0.0.1-dev 后端 v1 完成门槛
-- [ ] 后续将 best-effort JSONL 诊断 sink 演进为 SQLite 持久化层；不作为当前 0.0.1-dev 后端 v1 完成门槛
-- [ ] 后续独立集成 Go Sidecar stdout/stderr、source target 与跨进程 correlation，不作为 Rust/Tauri 后端 v1 完成门槛
+- [ ] 前端日志消费对齐后，验证成功、失败、并发、过滤、轮转、写入失败和退出路径的日志关联与持久化行为，补充自动回归测试
+- [ ] 完成退出冲刷、诊断数据容量上限和运行期清理，评估 SQLite 演进并明确写入、保留和退出契约
+- [ ] 评估 Provider 失败事件是否需要显式携带 `run_id`、`trigger` 或独立过滤策略
+- [ ] 独立集成 Go Sidecar stdout/stderr，统一日志来源字段与跨进程关联
 - [ ] 定义前端日志策略（开发环境 console / 生产环境上报）
 
 #### 6.3 前端错误系统
 
-- [ ] 先调研再对齐前端与后端边界错误及契约，在明确映射后实施；继续基于已迁移的 Rsbuild 前端开发，正常开发暴露回归时重新评估构建方案
-- [ ] 同步前端错误类型（镜像后端 `ProviderErrorCode`）
-- [ ] 适配细粒度错误展示（按错误码差异化 UI 反馈）
-- [ ] 设计错误展示组件（Toast / inline 错误消息）
+- [ ] 先明确前后端边界错误的映射，再同步 `ProviderErrorCode` 并按错误码选择 Toast 或行内反馈
+- [ ] 继续使用 Rsbuild，出现构建回归时再评估构建方案
 - [ ] 评估 provider 级操作串行化需求（connect/reset/update 并发冲突）
 
 #### 6.4 集成测试与验证
 
-- [ ] 在已迁移前端上补齐 Provider connect/reset/update、启动错误与生命周期错误的完整命令/事件回归；当前 mocked browser 与真实 WebView 冒烟检查尚不能证明这些契约
-- [ ] 5 条命令链路端到端集成测试
-- [ ] 错误传播链路验证（含命令链路错误场景）
-- [ ] 错误响应契约验证（含序列化字段命名）
-- [ ] 前端日志消费对齐后的日志输出与持久化补验（不作为后端 v1 完成门槛）
+- [ ] 补齐 Provider 五条命令链路的端到端回归，覆盖 connect/reset/update、启动与生命周期的成功和错误场景。现有 mocked browser 和真实 WebView 检查仅覆盖冒烟场景
+- [ ] 验证命令和事件的错误传播、响应结构与序列化字段命名
 
 #### 6.5 收尾优化
 
-- [ ] 逐子组件优雅化壳层 JSX：以 MainLayout 为锚点，WindowHeader → Sidebar → MainStage → SettingsModal 依次独立成段推进；每段同构考察（JSX 结构 → 数据/行为 → styles 切片），store 与 hooks 顺带理顺；已记录段内细节：Sidebar（settings `toggle` 必要性、`useSidebarStyles` 订阅收窄）、MainStage（`NavId` 与 `types/props/` 派生对齐）
-- [ ] WindowHeader 段细节进度：平台件已收（`lib/platform` 常量 + 样式 StyleX 切片已落）→ MacTrafficLightSpacer（60 魔法数、动效参数、JSDoc）→ Breadcrumb 与 ModuleMenu（park 决策）→ 三按钮（订阅收窄）→ `mr-26` 让位耦合
-- [ ] 解耦 `controlsWindows` 右侧让位与 `WindowsWindowControls`（absolute 改为正常流末尾，或共享宽度约定）；当前 `7.25rem` 为临时值，对应 0.75rem padding + 128px Windows 控件
-- [ ] 决策 `Breadcrumb` 内注释停放的 `ModuleMenu`：接入或删除
-- [ ] `SidebarToggle` / `SideSwitch` 以 selector / `useShallow` 收窄 store 订阅
+- [ ] 以 `MainLayout` 为入口，按 WindowHeader → Sidebar → MainStage → SettingsModal 检查 JSX、状态与样式边界。Sidebar 重点检查 settings `toggle` 和 `useSidebarStyles` 订阅，MainStage 对齐 `NavId` 与 `types/props/` 的类型派生
+- [ ] 完成 WindowHeader 收尾。平台适配、`trafficLightInset`、根样式和配色分层已完成（#44、#45），Windows 自绘控件的 StyleX 迁移及图标、布局、悬停反馈已验证。剩余 `Breadcrumb` 的 `ModuleMenu` 去留，以及 `SidebarToggle` / `SideSwitch` 的订阅范围
+- [ ] 按平台裁剪窗口状态查询（暂缓）。目前 `WindowHeader` 通过一份尺寸变化监听查询全屏和最大化状态。后续评估 macOS 只查全屏、Windows 只查最大化的方案。
 - [ ] macOS 全屏切换补验：红绿灯让位进出全屏是否正确，退出全屏时原生红绿灯与顶栏内容的短暂重叠是否需修（根治需 Rust 侧 `willExitFullScreen` 提前通知前端）
-- [ ] 蹲守 StyleX #1745 发版（Rspack CSS 输出修复）：升级后验证 CSS 输出/HMR 并以 `.rspack()` 替换临时 `.webpack()` 适配器
-- [ ] styles 全刀立法暂缓：最小刀（components 可依赖 styles）已落；`moduleDirs` 键与 index 入口模式立法等 styles 文件增多再说
+- [x] StyleX 升级 0.19.2 并切回 `.rspack()`（#45）：开发期保留 `runtimeInjection`；色板值可热更新，`defineVars` 映射改动仍需 reload
+- [ ] 暗色主题（Pine 调色）与主题切换并入未来设置「外观」，届时评估 roles 契约 + `createTheme` 方案
+- [ ] `components` 已可依赖 `styles`。样式文件增多后再评估 `moduleDirs` 配置和索引入口规则
 - [ ] 回看侧栏/模块 CSS scoping（`@scope`、`@layer`、BEM），待组件边界清晰与 StyleX 试点评估后
-- [ ] 继续清理并规范化 `features/` 外的前端壳层，先稳定共享 layout、state、component 与 utility 边界，再进入功能级对齐
-- [ ] 前端壳层依赖方向门禁（`eslint-plugin-boundaries`）：元素矩阵与单向依赖已全面落座（styles 叶子、components→styles 许可等）；剩余为收编 `features/` 时的倒序瀑布扩展，并回看路线纪律（`../` 与 `@/` 量程分层）是否需要立法规化
-- [ ] 前端 feature 域治理：收敛 bot 内部 82 处 `@/features/bot/...` 域内别名为相对引用，清理 45 处 `@/lib/utils` 等深钻引用并引入桶纪律，届时一并确定 feature 启动钩子的最终挂载形态（聚合钩子或根级例外）
-- [x] 优雅化 MainLayout 视角的 `store/`：清理死代码（`setOpen` / `setSide`）、`toggleSide` 已为同步纯 set、共享 disclosure 辅助；后续仅剩 `activeId` 类型收窄（随 MainStage 段）与 `handleKeyDown` 依赖注入参数收紧
-- [ ] 深度规范化剩余样式文件：`canvas.css`、`tokens.css`、`scrollbars.css`、`themes/_palette.css` 与 `themes/light.css`（当前仅 `index.css`、`themes/index.css` 与 `base.css` 完成）
+- [ ] 前端壳层的单向依赖门禁已落地。收编 `features/` 时扩展 `eslint-plugin-boundaries` 检查，并复核相对路径和 `@/` 别名的使用范围
+- [ ] 清理 bot 域内别名和跨目录深层导入，按 TypeScript 导入规则收口，并明确 feature 启动 Hook 的挂载位置
+- [x] 清理壳层 store 中闲置的 `setOpen`、`setSide`，将 `toggleSide` 简化为同步状态更新，并复用 disclosure 辅助逻辑
+- [ ] 随 MainStage 收窄 `activeId` 的类型，并收紧 `handleKeyDown` 的依赖参数
+- [ ] 深度规范化剩余样式文件：`canvas.css`、`tokens.css`、`scrollbars.css`、`themes/_palette.css` 与 `themes/light.css`（当前仅 `index.css`、`themes/index.css` 与 `base.css` 完成）；收编 `_palette.css` 时消除与 `styles/palettes/` 的色值重复
 - [ ] 决策 feature 专属 base 组件的去向：归入所属 feature 或未来的共享 UI 层
-- [ ] 编写 `docs/rules/frontend-code-style.md`：导出符号使用中英双语单行 JSDoc（英文句、空行、中文句），仅为项目特有且反直觉的事实补充细节，行内 why-comment 使用 `//`，TS/TSX 使用路径头，config 文件纳入规范扫描，HTML/JSON 不纳入；正式发布品牌图标落地前不保留占位 favicon/title
+- [ ] 完善 [TypeScript 代码规范](rules/typescript-code-style.md) 的 JSDoc、路径头和扫描范围。补齐行内注释约定，明确 config 文件纳入扫描、HTML/JSON 排除；正式发布品牌图标落地前清理占位 favicon/title
 - [ ] 首次正式发布前明确应用 identifier 与 keyring namespace 变更后的配置、密钥迁移或重置策略（`com.virganol.app` → `com.virganol`，`com.virganol.app.provider` → `com.virganol.provider`）；当前不要求已有开发安装自动迁移
 - [ ] 首次正式发布前明确支持的 OS/WebView 版本范围，并验证 Windows/Linux、较旧 WebView 与签名发布打包；当前原生打包检查仅覆盖 macOS arm64 debug
 - [ ] 前端状态转换验证（`useProviderCollectionStore` 防御性编程）
@@ -121,23 +103,23 @@
 - [ ] Provider HTTP client 初始化错误收口（避免 `reqwest::Client` 构建失败通过 `expect` panic，纳入 health-check 错误路径）
 - [ ] Provider 持久化边界收口（将 `ProviderKeyTransaction` 隐藏为 store 层实现细节，由组合持久化服务统一处理 config + secret 写入与补偿回滚）
 - [x] 后端 Rust 业务代码规范化：完成 `commands`、`core/shared` 与 `core/bot` 的人工校验，统一注释、实现顺序、导入约定与最小可见范围
-- [x] Rust Comments 质量门禁与工程实验基线：完成规则实现、CLI/NAPI 正确性对齐、配置注入、仓库 audit 与 benchmark 基础设施
 - [x] Rust Comments 工程代码规范化：完成 `core`、`cli` 与 `node` crate 的人工校验，并将其纳入仓库注释门禁覆盖
-- [ ] Rust Comments 工程实验收尾：补齐 fixture，完成 fixture/仓库 audit 代表性 benchmark 与跨平台验证，确定生产 adapter
-- [ ] Comments 规则收口：完成 Outer Line Doc、Inner Doc 与 Explanatory Comments 的源码审计和文档定稿
-- [ ] Visibility 质量门禁子系统：覆盖模块项、关联项与 re-export 链，补齐 `syn` 结构检查、测试、仓库 audit 和文档定稿
 - [ ] 后端锁实现升级（`std::sync::Mutex` → `parking_lot::Mutex`）
 - [ ] 后端锁粒度细化（全局锁 → per-provider 锁）
 
 #### 6.6 测试覆盖与质量门禁
 
-- [ ] 在 `dev/scripts/ts/comments/` 建立基于 comment-parser 的 TS 注释检查器并接入 `dev/scripts/ts/test.mjs`；先对现有 52 个仅中文文档注释启用报告模式，随前端规范扫描转为强制门禁
+- [ ] 在 `dev/scripts/ts/comments/` 建立基于 comment-parser 的 TS 注释检查器并接入 `dev/scripts/ts/test.mjs`。现有仅中文文档注释先报告，再随规范扫描切换为强制门禁
 - [ ] 前端行为测试出现时评估 Rstest；Rslib、Rspress、Rsdoctor 与 Rslint 继续延后到明确需求出现
 - [ ] 补齐 0.0.1 单元测试与缺口覆盖
 - [ ] 结合测试体系评估 `pnpm test` 与 `pnpm verify` 的职责和入口
 - [ ] Core 规范化：继续人工校验剩余 Core 的 item docs、实现顺序与可见范围
 - [x] Rust Comments 质量门禁与工程实验基线：完成规则实现、CLI/NAPI 正确性对齐、配置注入、仓库 audit 与 benchmark 基础设施
-- [ ] Rust Comments 工程实验收尾：补齐代表性 benchmark 与跨平台验证
-- [ ] Comments 规则扩展：完成 Inner Doc 与 Explanatory Comments 的源码审计、规则实现和文档定稿
+- [ ] Rust Comments 工程实验收尾：补齐 fixture，完成 fixture/仓库 audit 代表性 benchmark 与跨平台验证，确定生产 adapter
+- [ ] Comments 规则收口：完成 Outer Line Doc、Inner Doc 与 Explanatory Comments 的源码审计、规则实现和文档定稿
 - [x] Re-export visibility contract 基线：完成配置、链路校验与测试入口
-- [ ] Visibility 质量门禁扩展：在现有 re-export contract 基础上覆盖模块项与关联项，并补齐结构检查、测试、仓库 audit 和文档
+- [ ] Visibility 质量门禁扩展：在现有 re-export contract 基础上覆盖模块项与关联项，补齐 `syn` 结构检查、测试、仓库 audit 和文档定稿
+
+## 首版发布后
+
+- 在 Windows 11 上评估自绘最大化按钮是否值得接入系统贴靠布局（Snap Layouts）。

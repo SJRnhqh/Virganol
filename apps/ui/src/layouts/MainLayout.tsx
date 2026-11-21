@@ -1,5 +1,6 @@
 // apps/ui/src/layouts/MainLayout.tsx
 import { props } from "@stylexjs/stylex";
+import type { JSX } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { useNavigationStore, useSidebarStore } from "@/store";
@@ -11,7 +12,7 @@ import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
  *
  * 应用的外壳布局。
  */
-export function MainLayout() {
+export function MainLayout(): JSX.Element {
   const side = useSidebarStore((state) => state.side);
   const { activeNavId, setActiveNavId } = useNavigationStore(
     useShallow((state) => ({

@@ -3,6 +3,18 @@ import { create } from "@stylexjs/stylex";
 
 import { colorTokens } from "./token.stylex";
 
+/** Shared window header styles of the application.
+ *
+ * 应用的窗口顶栏共享样式。
+ */
+export const headerSharedStyles = create({
+  root: {
+    alignItems: "center",
+    display: "flex",
+    flexShrink: 0,
+  },
+});
+
 /** Window header styles of the application.
  *
  * 应用的窗口顶栏样式。
@@ -10,11 +22,8 @@ import { colorTokens } from "./token.stylex";
 export const windowHeaderStyles = create({
   root: {
     paddingInline: "0.75rem",
-    alignItems: "center",
     backgroundColor: colorTokens.headerBg,
     cursor: "default",
-    display: "flex",
-    flexShrink: 0,
     isolation: "isolate",
     userSelect: "none",
     zIndex: 9999, // Revisit stacking during the header redesign.
@@ -26,19 +35,81 @@ export const windowHeaderStyles = create({
   trafficLightInset: {
     paddingInlineStart: "5rem",
   },
-  windowsRoot: {
+  windowEdgeAlignment: {
     paddingInlineEnd: 0,
   },
-  breadcrumbWrap: {
+  breadcrumbWrap: { // TBD
     zIndex: 10,
     height: "100%",
   },
-  controls: {
+  controls: { // TBD
     gap: "0.25rem",
     alignItems: "center",
     display: "flex",
     height: "100%",
     marginLeft: "auto",
     marginRight: "0.25rem",
+  },
+});
+
+/** Window control styles of the application.
+ *
+ * 应用的窗口控制按钮组样式。
+ */
+export const windowControlsStyles = create({
+  root: {
+    height: "100%",
+  },
+  button: {
+    borderRadius: "0.375rem",
+    placeItems: "center",
+    color: {
+      default: colorTokens.headerIcon,
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": colorTokens.headerIconHover,
+      },
+    },
+    display: "grid",
+    height: "100%",
+    width: "2.5rem",
+  },
+  minimizeButton: {
+    backgroundColor: {
+      default: null,
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": colorTokens.windowMinimizeHoverBg,
+      },
+    },
+  },
+  maximizeButton: {
+    backgroundColor: {
+      default: null,
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": colorTokens.windowToggleMaximizeHoverBg,
+      },
+    },
+  },
+  closeButton: {
+    backgroundColor: {
+      default: null,
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": colorTokens.windowCloseHoverBg,
+      },
+    },
+  },
+});
+
+/** Window control icon styles of the application.
+ *
+ * 应用的窗口控制按钮组图标样式。
+ */
+export const windowControlsIconsStyles = create({
+  icon: {
+    height: 16,
+    width: 16,
   },
 });

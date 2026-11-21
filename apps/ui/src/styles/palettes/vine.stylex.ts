@@ -7,4 +7,11 @@ import { defineConsts } from "@stylexjs/stylex";
  */
 export const vine = defineConsts({
   songshuanglv: "#83a78d",
+  danmifen: "#fbeee2",
+  qinghui: "#2b333e",
+  xiayunhui: "#617172",
+  white: "#ffffff",
+  danhuilv: "#ad9e5f",
+  shuilv: "#8cc269",
+  xiangyehong: "#f07c82",
 });
