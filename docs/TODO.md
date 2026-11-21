@@ -17,8 +17,6 @@
 
 ## Planned
 
-- [ ] Button semantics: review `type` and accessible labels.
-
 ## Completed
 
 - [x] Upgrade pnpm to `12.21.0` and have CI read the version from
