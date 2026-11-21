@@ -17,6 +17,18 @@ const srcFiles = [
   "src/*.{ts,tsx}",
 ];
 
+// Temporary refinement scope; keep in sync with the oxfmt allowlist.
+const refinedFiles = [
+  "src/main.tsx",
+  "src/App.tsx",
+  "src/layouts/**",
+  "src/lib/index.ts",
+  "src/lib/platform/**",
+  "src/components/index.ts",
+  "src/components/header/index.ts",
+  "src/components/header/WindowHeader.tsx",
+];
+
 const barrelFiles = [`src/${moduleDirs}/**/index.ts`];
 
 const noCommentPlacement = {
@@ -257,6 +269,12 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+  },
+  {
+    files: refinedFiles,
+    rules: {
+      "@typescript-eslint/explicit-module-boundary-types": "error",
     },
   },
   // TBD: 混合阶段暂单独管理样式规则；全部迁移后统一规划与 srcFiles 的关系及规则归属。
