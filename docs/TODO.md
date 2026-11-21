@@ -8,13 +8,13 @@
 
 ## Current
 
-- [ ] Window state: review whether `WindowHeader` should call `useWindowState`
-      and pass `isMaximized` as a prop or whether `WindowControls` should
-      subscribe directly. Consider duplicate Tauri resize listeners and state
-      queries if both components call the current hook.
+## Planned
 
 ## Completed
 
+- [x] Review window state ownership. Keep one resize listener in
+      `WindowHeader` through `useWindowState` and pass `isMaximized` to
+      `WindowControls`. Defer platform-specific queries to the [roadmap](ROADMAP.md#65-收尾优化).
 - [x] Upgrade pnpm to `12.21.0` and have CI read the version from
       `package.json`. Verify a clean frozen-lockfile install, the UI build,
       and all repository test suites with the existing Node.js version.

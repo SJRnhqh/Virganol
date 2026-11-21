@@ -17,7 +17,7 @@ import { WindowControls } from "./WindowControls";
  * 应用的窗口顶栏。
  */
 export function WindowHeader(): JSX.Element {
-  const { isMaximized, isFullscreen } = useWindowState();
+  const { isMaximized, isFullscreen } = useWindowState(); // TBD: Query window state per OS.
 
   const handleDoubleClick = () => {
     getCurrentWindow().toggleMaximize();

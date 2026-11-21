@@ -75,7 +75,8 @@ Rust/Tauri 可观测性 v1 已于 2026-09-08 合入 `feat/spirit`（#39），合
 #### 6.5 收尾优化
 
 - [ ] 以 `MainLayout` 为入口，按 WindowHeader → Sidebar → MainStage → SettingsModal 检查 JSX、状态与样式边界。Sidebar 重点检查 settings `toggle` 和 `useSidebarStyles` 订阅，MainStage 对齐 `NavId` 与 `types/props/` 的类型派生
-- [ ] 完成 WindowHeader 收尾。平台适配、`trafficLightInset`、根样式和配色分层已完成（#44、#45），Windows 自绘控件的 StyleX 迁移及图标、布局、悬停反馈已验证。剩余窗口状态订阅方式、`Breadcrumb` 的 `ModuleMenu` 去留，以及 `SidebarToggle` / `SideSwitch` 的订阅范围
+- [ ] 完成 WindowHeader 收尾。平台适配、`trafficLightInset`、根样式和配色分层已完成（#44、#45），Windows 自绘控件的 StyleX 迁移及图标、布局、悬停反馈已验证。剩余 `Breadcrumb` 的 `ModuleMenu` 去留，以及 `SidebarToggle` / `SideSwitch` 的订阅范围
+- [ ] 按平台裁剪窗口状态查询（暂缓）。目前 `WindowHeader` 通过一份尺寸变化监听查询全屏和最大化状态。后续评估 macOS 只查全屏、Windows 只查最大化的方案。
 - [ ] macOS 全屏切换补验：红绿灯让位进出全屏是否正确，退出全屏时原生红绿灯与顶栏内容的短暂重叠是否需修（根治需 Rust 侧 `willExitFullScreen` 提前通知前端）
 - [x] StyleX 升级 0.19.2 并切回 `.rspack()`（#45）：开发期保留 `runtimeInjection`；色板值可热更新，`defineVars` 映射改动仍需 reload
 - [ ] 暗色主题（Pine 调色）与主题切换并入未来设置「外观」，届时评估 roles 契约 + `createTheme` 方案
