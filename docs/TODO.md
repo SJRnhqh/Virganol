@@ -10,8 +10,7 @@
 
 - [ ] Verify the legibility of the 16 × 16 px window control icons, the shared
       root layout, and hover feedback on Windows.
-- [ ] Button behavior: review double-click bubbling to the header and button
-      semantics (`type`, accessible labels).
+- [ ] Button semantics: review `type` and accessible labels.
 - [ ] Window state: review whether `WindowHeader` should call `useWindowState`
       and pass `isMaximized` as a prop or whether `WindowControls` should
       subscribe directly. Consider duplicate Tauri resize listeners and state
@@ -23,6 +22,8 @@
 
 ## Completed
 
+- [x] Verify that double-clicking the window controls does not trigger the
+      header's maximize toggle in the temporary macOS preview.
 - [x] Remove the redundant `mousedown` propagation guard from `WindowControls`.
       `WindowHeader` already starts dragging only when the header itself is
       the event target.
