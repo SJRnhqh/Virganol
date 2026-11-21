@@ -10,7 +10,8 @@ import { vine } from "../palettes/vine.stylex";
  */
 export const bosquet = unstable_defineVarsNested({
   light: {
-    dominant: vine.songshuanglv,
+    tonic: vine.songshuanglv,
+    dominant: vine.danmifen,
     anchor: vine.qinghui,
     tether: vine.white, // Placeholder for future connection lines.
     buoy: vine.xiayunhui,
@@ -18,5 +19,14 @@ export const bosquet = unstable_defineVarsNested({
     interlude: vine.shuilv,
     coda: vine.xiangyehong,
   },
-  dark: { dominant: pine.yunshanlv },
+  dark: {
+    tonic: pine.songlv,
+    dominant: pine.hehui,
+    anchor: pine.xuebai,
+    tether: pine.white, // Placeholder for future connection lines.
+    buoy: pine.xingzihui,
+    prelude: pine.caohuilv,
+    interlude: pine.helv,
+    coda: pine.shuangyehong,
+  },
 });
