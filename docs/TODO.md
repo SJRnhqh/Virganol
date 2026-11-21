@@ -21,6 +21,9 @@
 
 ## Completed
 
+- [x] Upgrade pnpm to `12.21.0` and have CI read the version from
+      `package.json`. Verify a clean frozen-lockfile install, the UI build,
+      and all repository test suites with the existing Node.js version.
 - [x] Verify the legibility of the 16 × 16 px window control icons, the shared
       root layout, and hover feedback on Windows.
 - [x] Verify that double-clicking the window controls does not trigger the
