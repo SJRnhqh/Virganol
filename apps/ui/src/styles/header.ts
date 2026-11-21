@@ -64,16 +64,13 @@ export const windowControlsStyles = create({
     borderRadius: "0.375rem",
     placeItems: "center",
     color: {
-      default: "var(--header-icon-muted)",
+      default: colorTokens.headerIcon,
       ":hover": {
         default: null,
-        "@media (hover: hover)": "var(--header-icon)",
+        "@media (hover: hover)": colorTokens.headerIconHover,
       },
     },
     display: "grid",
-    transitionDuration: "200ms",
-    transitionProperty: "all",
-    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
     height: "100%",
     width: "2.5rem",
   },

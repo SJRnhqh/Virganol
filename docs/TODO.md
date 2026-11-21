@@ -8,11 +8,10 @@
 
 ## Current
 
-- [ ] Style review: continue with `windowControlsStyles.button`, then review
-      the per-button hover styles and `windowControlsIconsStyles` one field at
-      a time. Record each field's purpose, simplify where useful, and verify
-      the result, including the shared root layout, on Windows. Review the legacy
-      semantic CSS color variables alongside the StyleX token mapping.
+- [ ] Style review: finish the shared button fields, then review the per-button
+      hover backgrounds and `windowControlsIconsStyles`. Verify the shared root
+      layout and default icon legibility on Windows. Review the remaining legacy
+      CSS color variables alongside the StyleX token mapping.
 
 ## Planned
 
@@ -32,6 +31,9 @@
       slices for the root, shared button, and per-button hover backgrounds;
       preserve dimensions, semantic CSS colors, hover-capability conditions,
       and transitions while leaving behavior unchanged.
+- [x] Button color feedback uses the Bosquet light theme through StyleX tokens.
+      The default icon uses the provisional summer cloud gray `buoy` and
+      switches immediately to cyan grey `anchor` on hover-capable devices.
 - [x] Root styles: review the `WindowControls` root and extract `alignItems`,
       `display`, and `flexShrink` into `headerSharedStyles.root`. Compose the
       shared style in `WindowHeader` and `WindowControls` and keep their height

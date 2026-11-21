@@ -9,4 +9,6 @@ import { bosquet } from "./themes/bosquet.stylex";
  */
 export const colorTokens = defineVars({
   headerBg: bosquet.light.dominant,
+  headerIcon: bosquet.light.buoy,
+  headerIconHover: bosquet.light.anchor,
 });

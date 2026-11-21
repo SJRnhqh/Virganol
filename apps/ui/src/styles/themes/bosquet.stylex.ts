@@ -9,6 +9,11 @@ import { vine } from "../palettes/vine.stylex";
  * Bosquet 主题。
  */
 export const bosquet = unstable_defineVarsNested({
-  light: { dominant: vine.songshuanglv },
+  light: {
+    dominant: vine.songshuanglv,
+    anchor: vine.qinghui,
+    tether: vine.white, // Placeholder for future connection lines.
+    buoy: vine.xiayunhui,
+  },
   dark: { dominant: pine.yunshanlv },
 });
