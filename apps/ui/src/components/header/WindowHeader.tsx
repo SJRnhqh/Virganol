@@ -37,7 +37,7 @@ export function WindowHeader(): JSX.Element {
           !isTahoeOrNewer && windowHeaderStyles.preTahoeHeight,
           !isFullscreen && windowHeaderStyles.trafficLightInset,
         ],
-        isWindows && windowHeaderStyles.windowsRoot
+        isWindows && windowHeaderStyles.windowEdgeAlignment
       )}
       onDoubleClick={handleDoubleClick}
       onMouseDown={handleMouseDown}

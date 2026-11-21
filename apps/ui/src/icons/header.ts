@@ -3,7 +3,7 @@ import { props } from "@stylexjs/stylex";
 import { Maximize2, Minimize2, Minus, X } from "lucide-react";
 import { createElement } from "react";
 
-import { windowControlsStyles } from "@/styles";
+import { windowControlsIconsStyles } from "@/styles";
 
 /** Window control icons of the application.
  *
@@ -12,9 +12,9 @@ import { windowControlsStyles } from "@/styles";
 export const windowControlsIcons = {
   minimize: createElement(
     Minus,
-    props(windowControlsStyles.icon, windowControlsStyles.minimizeIcon)
+    props(windowControlsIconsStyles.icon, windowControlsIconsStyles.minimizeIcon)
   ),
-  maximize: createElement(Maximize2, props(windowControlsStyles.toggleMaximizeIcon)),
-  restore: createElement(Minimize2, props(windowControlsStyles.toggleMaximizeIcon)),
-  close: createElement(X, props(windowControlsStyles.icon)),
+  maximize: createElement(Maximize2, props(windowControlsIconsStyles.toggleMaximizeIcon)),
+  restore: createElement(Minimize2, props(windowControlsIconsStyles.toggleMaximizeIcon)),
+  close: createElement(X, props(windowControlsIconsStyles.icon)),
 } as const;

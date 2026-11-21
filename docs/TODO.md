@@ -31,6 +31,9 @@
       slices for the root, shared button, and per-button hover backgrounds;
       preserve dimensions, semantic CSS colors, hover-capability conditions,
       and transitions while leaving behavior unchanged.
+- [x] Edge alignment: rename the Windows-only header override to
+      `windowEdgeAlignment` to describe how the window controls sit against the
+      window edge.
 - [x] Comments: align the component JSDoc with the concise bilingual style of
       `App`, `main`, `MainLayout`, and `WindowHeader`.
 - [x] Props: extract `WindowControlsProps` to `types/props/header.ts` and expose
@@ -44,8 +47,9 @@
       during rendering.
 - [x] Animation: replace the animated wrapper with a plain `div` so the controls
       appear immediately on mount. Keep the existing button hover feedback.
-- [x] Icons: keep Lucide for window controls and expose the four glyphs through
-      `windowControlsIcons`. Manage their sizes and stroke width in the header
-      styles. Include the icons layer in ESLint boundary checks and formatting.
+- [x] Icons: expose the four Lucide glyphs through `windowControlsIcons` and
+      pair that export with `windowControlsIconsStyles`, a separate StyleX group
+      for SVG sizes and stroke width. Align their bilingual JSDoc and include
+      the icons layer in ESLint boundary checks and formatting.
 - [x] Checks: include `WindowControls.tsx` in the temporary ESLint refinement
       scope and oxfmt allowlist.

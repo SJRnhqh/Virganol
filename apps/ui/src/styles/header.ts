@@ -26,14 +26,14 @@ export const windowHeaderStyles = create({
   trafficLightInset: {
     paddingInlineStart: "5rem",
   },
-  windowsRoot: {
+  windowEdgeAlignment: {
     paddingInlineEnd: 0,
   },
-  breadcrumbWrap: {
+  breadcrumbWrap: { // TBD
     zIndex: 10,
     height: "100%",
   },
-  controls: {
+  controls: { // TBD
     gap: "0.25rem",
     alignItems: "center",
     display: "flex",
@@ -99,6 +99,13 @@ export const windowControlsStyles = create({
       },
     },
   },
+});
+
+/** Window control icon styles of the application.
+ *
+ * 应用的窗口控制按钮组图标样式。
+ */
+export const windowControlsIconsStyles = create({
   icon: {
     height: 14,
     width: 14,
