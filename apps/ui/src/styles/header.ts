@@ -3,6 +3,18 @@ import { create } from "@stylexjs/stylex";
 
 import { colorTokens } from "./token.stylex";
 
+/** Shared window header styles of the application.
+ *
+ * 应用的窗口顶栏共享样式。
+ */
+export const headerSharedStyles = create({
+  root: {
+    alignItems: "center",
+    display: "flex",
+    flexShrink: 0,
+  },
+});
+
 /** Window header styles of the application.
  *
  * 应用的窗口顶栏样式。
@@ -10,11 +22,8 @@ import { colorTokens } from "./token.stylex";
 export const windowHeaderStyles = create({
   root: {
     paddingInline: "0.75rem",
-    alignItems: "center",
     backgroundColor: colorTokens.headerBg,
     cursor: "default",
-    display: "flex",
-    flexShrink: 0,
     isolation: "isolate",
     userSelect: "none",
     zIndex: 9999, // Revisit stacking during the header redesign.
@@ -49,9 +58,6 @@ export const windowHeaderStyles = create({
  */
 export const windowControlsStyles = create({
   root: {
-    alignItems: "center",
-    display: "flex",
-    flexShrink: 0,
     height: "100%",
   },
   button: {

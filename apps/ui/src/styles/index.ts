@@ -1,3 +1,8 @@
 // apps/ui/src/styles/index.ts
-export { windowControlsIconsStyles, windowControlsStyles, windowHeaderStyles } from "./header";
+export {
+  headerSharedStyles,
+  windowControlsIconsStyles,
+  windowControlsStyles,
+  windowHeaderStyles,
+} from "./header";
 export { mainLayoutStyles } from "./layouts";

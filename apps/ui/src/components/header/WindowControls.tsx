@@ -4,7 +4,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { JSX, MouseEvent } from "react";
 
 import type { WindowControlsProps } from "@/types";
-import { windowControlsStyles } from "@/styles";
+import { headerSharedStyles, windowControlsStyles } from "@/styles";
 import { windowControlsIcons } from "@/icons";
 
 /** Window controls of the application.
@@ -23,7 +23,10 @@ export function WindowControls({ isMaximized }: WindowControlsProps): JSX.Elemen
   const handleClose = () => getCurrentWindow().close();
 
   return (
-    <div {...props(windowControlsStyles.root)} onMouseDown={handleMouseDown}>
+    <div
+      {...props(headerSharedStyles.root, windowControlsStyles.root)}
+      onMouseDown={handleMouseDown}
+    >
       <button
         {...props(windowControlsStyles.button, windowControlsStyles.minimizeButton)}
         onClick={handleMinimize}

@@ -8,11 +8,11 @@
 
 ## Current
 
-- [ ] Style review: start with `windowControlsStyles.root`, then review the
-      remaining fields in `windowControlsStyles` and `windowControlsIconsStyles`
-      one at a time. Record each field's purpose, simplify where useful, and
-      verify the result on Windows. Review the legacy semantic CSS color
-      variables alongside the StyleX token mapping.
+- [ ] Style review: continue with `windowControlsStyles.button`, then review
+      the per-button hover styles and `windowControlsIconsStyles` one field at
+      a time. Record each field's purpose, simplify where useful, and verify
+      the result, including the shared root layout, on Windows. Review the legacy
+      semantic CSS color variables alongside the StyleX token mapping.
 
 ## Planned
 
@@ -32,6 +32,10 @@
       slices for the root, shared button, and per-button hover backgrounds;
       preserve dimensions, semantic CSS colors, hover-capability conditions,
       and transitions while leaving behavior unchanged.
+- [x] Root styles: review the `WindowControls` root and extract `alignItems`,
+      `display`, and `flexShrink` into `headerSharedStyles.root`. Compose the
+      shared style in `WindowHeader` and `WindowControls` and keep their height
+      rules in their respective roots.
 - [x] Edge alignment: rename the Windows-only header override to
       `windowEdgeAlignment` to describe how the window controls sit against the
       window edge.

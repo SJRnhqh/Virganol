@@ -5,7 +5,7 @@ import type { JSX, MouseEvent } from "react";
 
 import { isMac, isTahoeOrNewer, isWindows } from "@/lib";
 import { useWindowState } from "@/hooks";
-import { windowHeaderStyles } from "@/styles";
+import { headerSharedStyles, windowHeaderStyles } from "@/styles";
 import { Breadcrumb } from "./Breadcrumb";
 import { SettingsButton } from "./SettingsButton";
 import { SidebarToggle } from "./SidebarToggle";
@@ -32,6 +32,7 @@ export function WindowHeader(): JSX.Element {
   return (
     <header
       {...props(
+        headerSharedStyles.root,
         windowHeaderStyles.root,
         isMac && [
           !isTahoeOrNewer && windowHeaderStyles.preTahoeHeight,
