@@ -12,10 +12,6 @@
       and pass `isMaximized` as a prop or whether `WindowControls` should
       subscribe directly. Consider duplicate Tauri resize listeners and state
       queries if both components call the current hook.
-- [ ] Compatibility: verify Windows 11 Snap Layouts on the custom maximize
-      button and determine whether native window integration is needed.
-
-## Planned
 
 ## Completed
 
