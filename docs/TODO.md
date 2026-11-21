@@ -8,12 +8,15 @@
 
 ## Current
 
-- [ ] Refactor: tidy the component structure and behavior, including but not
-      limited to the always-mounted `AnimatePresence` wrapper, double-click
-      bubbling to the header, and button semantics (`type`, accessible labels).
+- [ ] Refactor: review double-click bubbling to the header and button semantics
+      (`type`, accessible labels).
 
 ## Planned
 
+- [ ] Icon library: compare Lucide with alternatives before choosing one library
+      for the window controls.
+- [ ] Icon reuse: identify components that need the same icons and decide which
+      icon styles (such as size and stroke width) they should share.
 - [ ] Fields: review and record the purpose of each resulting style field
       (sizing, alignment, radius, colors, transitions), one group at a time,
       verified on Windows; review the legacy semantic CSS color variables
@@ -43,3 +46,5 @@
 - [x] Handlers: extract mouse-down, minimize, maximize-toggle, and close handlers
       before JSX; resolve the current window inside action handlers instead of
       during rendering.
+- [x] Animation: replace the animated wrapper with a plain `div` so the controls
+      appear immediately on mount. Keep the existing button hover feedback.
