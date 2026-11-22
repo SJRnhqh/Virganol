@@ -6,7 +6,7 @@ import { create } from "@stylexjs/stylex";
  * 应用的外壳布局样式。
  */
 export const mainLayoutStyles = create({
-  root: {
+  root: { // TBD
     overflow: "hidden",
     backgroundColor: "var(--main-bg)",
     display: "flex",
@@ -14,7 +14,7 @@ export const mainLayoutStyles = create({
     height: "100vh",
     width: "100vw",
   },
-  workspace: {
+  workspace: { // TBD
     flex: "1",
     overflow: "hidden",
     display: "flex",
@@ -22,7 +22,7 @@ export const mainLayoutStyles = create({
     height: "100%",
     width: "100%",
   },
-  workspaceRight: {
+  workspaceRight: { // TBD
     flexDirection: "row-reverse",
   },
 });

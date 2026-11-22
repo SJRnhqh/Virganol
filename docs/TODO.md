@@ -8,9 +8,9 @@
 
 ## Current
 
-- [ ] Review the three controls and their wrapper. Identify which state each
-      control reads, which styles they share, and which event handlers they
-      need to coexist with the draggable header.
+- [ ] Review the pending SideSwitch changes and gradually refine the button
+      toward the shared header control pattern: selector subscription, shared
+      StyleX shell, icon registry, and comment style.
 
 ## Planned
 
