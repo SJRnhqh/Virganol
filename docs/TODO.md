@@ -9,13 +9,14 @@
 
 ## Current
 
-- Nothing in progress. `SideSwitchButton` and `SidebarToggleButton` are
-  refined; next is the store layer review, the first Planned item.
+- [ ] Review `mainLayoutStyles` field by field: `root`, `workspace`, and
+      `workspaceRight` still carry `// TBD`.
 
 ## Planned
 
-- [ ] Review the store layer from the `SideSwitchButton` subscription: how the
-      header controls select sidebar state and actions from `useSidebarStore`.
+- [ ] Review the store layer behind the refined buttons: how `SideSwitchButton`
+      and `SidebarToggleButton` select sidebar state and actions from
+      `useSidebarStore`.
 - [ ] Simplify `SettingsButton` props and click handling. Check whether the
       optional `onClick` override has callers and preserve context-aware
       settings navigation.
