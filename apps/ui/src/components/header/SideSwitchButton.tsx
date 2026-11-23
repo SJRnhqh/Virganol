@@ -3,7 +3,7 @@ import { props } from "@stylexjs/stylex";
 import type { JSX } from "react";
 
 import { useSidebarStore } from "@/store";
-import { headerSharedStyles, sideSwitchButtonStyles } from "@/styles";
+import { headerSharedStyles } from "@/styles";
 import { sideSwitchButtonIcon } from "@/icons";
 
 /** Side switch button of the application.
@@ -15,7 +15,7 @@ export function SideSwitchButton(): JSX.Element {
 
   return (
     <button
-      {...props(headerSharedStyles.button, sideSwitchButtonStyles.root)}
+      {...props(headerSharedStyles.button, headerSharedStyles.buttonBg)}
       onClick={handleSwitch}
     >
       {sideSwitchButtonIcon}

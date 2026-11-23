@@ -27,6 +27,15 @@ export const headerSharedStyles = create({
     height: "100%",
     width: "2.5rem",
   },
+  buttonBg: {
+    backgroundColor: {
+      default: null,
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": colorTokens.headerIconHoverBg,
+      },
+    },
+  },
   icon: {
     height: 16,
     width: 16,
@@ -70,19 +79,16 @@ export const windowHeaderStyles = create({
   },
 });
 
-/** Side switch button styles of the application.
+/** Sidebar toggle styles of the application.
  *
- * 应用的侧栏换边按钮样式。
+ * 应用的侧栏开合按钮样式。
  */
-export const sideSwitchButtonStyles = create({
-  root: {
-    backgroundColor: {
-      default: null,
-      ":hover": {
-        default: null,
-        "@media (hover: hover)": colorTokens.headerIconHoverBg,
-      },
-    },
+export const sidebarToggleStyles = create({
+  mirrored: {
+    transform: "scaleX(-1)",
+  },
+  closed: {
+    opacity: 0.5,
   },
 });
 

@@ -1,2 +1,2 @@
 // apps/ui/src/icons/index.ts
-export { sideSwitchButtonIcon, windowControlsIcons } from "./header";
+export { sidebarToggleIcon, sideSwitchButtonIcon, windowControlsIcons } from "./header";

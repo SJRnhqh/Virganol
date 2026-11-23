@@ -9,25 +9,24 @@
 
 ## Current
 
-- Nothing in progress. The `SideSwitchButton` style review is settled; next is
-  its store layer review, the first Planned item.
+- Nothing in progress. `SideSwitchButton` and `SidebarToggle` are refined; next
+  is the store layer review, the first Planned item.
 
 ## Planned
 
 - [ ] Review the store layer from the `SideSwitchButton` subscription: how the
       header controls select sidebar state and actions from `useSidebarStore`.
-- [ ] Narrow the `SidebarToggle` subscription to the state and actions it
-      uses. Preserve sidebar placement, visibility, and icon feedback.
 - [ ] Simplify `SettingsButton` props and click handling. Check whether the
       optional `onClick` override has callers and preserve context-aware
       settings navigation.
-- [ ] Move the controls to StyleX and reuse existing header styles and tokens
-      where appropriate. Review group spacing, icon sizing, and the hover and
-      focus feedback. Decide the focus styles of `headerSharedStyles.button`.
+- [ ] Move `SettingsButton` to StyleX and reuse existing header styles and
+      tokens where appropriate. Review group spacing, icon sizing, and the
+      hover and focus feedback. Decide the focus styles of
+      `headerSharedStyles.button`.
 - [ ] Review the remaining mouse-down and double-click interception in
-      `SidebarToggle` and `SettingsButton` against the `WindowHeader` guards.
-      Verify that clicking or double-clicking the controls does not start
-      dragging or toggle window maximization.
+      `SettingsButton` against the `WindowHeader` guards. Verify that clicking
+      or double-clicking the controls does not start dragging or toggle window
+      maximization.
 - [ ] Verify keyboard operation, accessible button names, sidebar switching
       and toggling, and context-aware settings on macOS and Windows. Run
       `pnpm test`.
@@ -65,3 +64,20 @@
 - [x] Shorten the `MainLayout` `useShallow` selector: destructure the picked
       fields in the selector parameter instead of mapping each one from
       `state`. Behavior is unchanged.
+- [x] Migrate `SidebarToggle` to the header control pattern: a `useShallow`
+      subscription, `headerSharedStyles.button`, and the registered
+      `sidebarToggleIcon`. The button no longer stops mouse-down or
+      double-click propagation.
+- [x] Deliberately change the sidebar toggle behavior: the hover translate,
+      active scale, and transitions are dropped, the icon is 16px, and the
+      button height follows the header. The icon color comes from
+      `colorTokens` through the shared button.
+- [x] Replace the `PanelLeft` / `PanelRight` switch with one `PanelLeft` icon,
+      mirrored by `sidebarToggleStyles.mirrored` when the sidebar is on the
+      right.
+- [x] Deliberately keep the closed-state feedback as `sidebarToggleStyles.closed`
+      (`opacity: 0.5`) on the whole button, so the hover background dims with
+      the icon.
+- [x] Extract the hover background into `headerSharedStyles.buttonBg` and
+      remove `sideSwitchButtonStyles`. `SideSwitchButton` and `SidebarToggle`
+      compose `button` with `buttonBg`.
