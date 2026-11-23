@@ -8,6 +8,7 @@ import { bosquet } from "./themes/bosquet.stylex";
  * 应用的语义颜色令牌。
  */
 export const colorTokens = defineVars({
+  bg: bosquet.light.dominant,
   headerBg: bosquet.light.tonic,
   headerIcon: bosquet.light.buoy,
   headerIconHover: bosquet.light.anchor,

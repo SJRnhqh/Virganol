@@ -9,8 +9,8 @@
 
 ## Current
 
-- [ ] Review `mainLayoutStyles` field by field: `root`, `workspace`, and
-      `workspaceRight` still carry `// TBD`.
+- Nothing in progress. `mainLayoutStyles` is settled; next is the store
+  layer review, the first Planned item.
 
 ## Planned
 
@@ -86,3 +86,16 @@
       `SidebarToggleButton`.
 - [x] Add `SidebarToggleButton.tsx` to the ESLint `refinedFiles` list and the
       matching oxfmt allowlist.
+- [x] Add `bg` as the first `colorTokens` entry, backed by
+      `bosquet.light.dominant`, and move the `mainLayoutStyles.root`
+      background off `var(--main-bg)`.
+- [x] Trim `root`: drop the redundant `width`, and deliberately drop
+      `overflow: hidden` so shell overflow surfaces instead of being clipped.
+- [x] Trim `workspace`: drop the inert `height`, `width`, and `position`.
+      `flex: 1` sets the height and no descendant is anchored to it.
+- [x] Deliberately drop `overflow: hidden` on `workspace` until real content
+      lands. If tall content makes the page scroll, restore it or add
+      `min-height: 0`.
+- [x] Rename `workspaceRight` to `workspaceMirrored`, matching
+      `sidebarToggleButtonStyles.mirrored`, and remove the three `// TBD`
+      markers from `mainLayoutStyles`.

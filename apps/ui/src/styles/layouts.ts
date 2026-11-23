@@ -1,28 +1,24 @@
 // apps/ui/src/styles/layouts.ts
 import { create } from "@stylexjs/stylex";
 
+import { colorTokens } from "./token.stylex";
+
 /** Shell layout styles of the application.
  *
  * 应用的外壳布局样式。
  */
 export const mainLayoutStyles = create({
-  root: { // TBD
-    overflow: "hidden",
-    backgroundColor: "var(--main-bg)",
+  root: {
+    backgroundColor: colorTokens.bg,
     display: "flex",
     flexDirection: "column",
     height: "100vh",
-    width: "100vw",
   },
-  workspace: { // TBD
+  workspace: {
     flex: "1",
-    overflow: "hidden",
     display: "flex",
-    position: "relative",
-    height: "100%",
-    width: "100%",
   },
-  workspaceRight: { // TBD
+  workspaceMirrored: {
     flexDirection: "row-reverse",
   },
 });

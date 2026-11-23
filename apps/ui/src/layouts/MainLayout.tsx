@@ -25,7 +25,10 @@ export function MainLayout(): JSX.Element {
       <WindowHeader />
 
       <div
-        {...props(mainLayoutStyles.workspace, side === "right" && mainLayoutStyles.workspaceRight)}
+        {...props(
+          mainLayoutStyles.workspace,
+          side === "right" && mainLayoutStyles.workspaceMirrored
+        )}
       >
         <Sidebar activeNavId={activeNavId} setActiveNavId={setActiveNavId} />
 
