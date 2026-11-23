@@ -4,19 +4,21 @@
 - Parent: `feat/spirit`
 - Goal: Refine `SideSwitch`, `SidebarToggle`, and `SettingsButton` in the
   `WindowHeader` controls group. Simplify their state subscriptions,
-  event handling, and styles while preserving their existing behavior.
+  event handling, and styles. Preserve their existing behavior except for
+  the deliberate changes recorded under Completed.
 
 ## Current
 
-- [ ] Review the pending SideSwitch changes and gradually refine the button
-      toward the shared header control pattern: selector subscription,
-      `sideSwitchStyles.button`, icon registry, and comment style.
+- [ ] Review `sideSwitchStyles.button` field by field against the legacy
+      Tailwind classes: control-specific versus shared declarations, color
+      sources, sizing, and hover and focus feedback.
 
 ## Planned
 
-- [ ] Narrow `SideSwitch` and `SidebarToggle` subscriptions to the state and
-      actions each control uses. Preserve sidebar placement, visibility, and
-      icon feedback.
+- [ ] Review the store layer from the `SideSwitch` subscription: how the
+      header controls select sidebar state and actions from `useSidebarStore`.
+- [ ] Narrow the `SidebarToggle` subscription to the state and actions it
+      uses. Preserve sidebar placement, visibility, and icon feedback.
 - [ ] Simplify `SettingsButton` props and click handling. Check whether the
       optional `onClick` override has callers and preserve context-aware
       settings navigation.
@@ -37,3 +39,9 @@
       mouse-down check. Only the header surface toggles maximization.
 - [x] Register `sideSwitchIcon` in the header icon registry and move the 16px
       icon sizing into `headerSharedStyles.icon`.
+- [x] Migrate `SideSwitch` to the header control pattern: selector
+      subscription, `sideSwitchStyles.button`, and the registered icon. The
+      button no longer stops mouse-down or double-click propagation.
+- [x] Deliberately change the side switch behavior: the icon hover rotation
+      and right-side mirror are dropped, the icon is 16px, and the button
+      height follows the header.

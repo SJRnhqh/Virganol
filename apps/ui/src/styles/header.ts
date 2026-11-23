@@ -56,6 +56,34 @@ export const windowHeaderStyles = create({
   },
 });
 
+/** Side switch styles of the application.
+ *
+ * 应用的侧栏换边按钮样式。
+ */
+export const sideSwitchStyles = create({
+  button: {
+    borderRadius: "0.375rem",
+    alignItems: "center",
+    // Colors stay on the legacy CSS variables until the color token rework.
+    backgroundColor: {
+      default: null,
+      ":hover": "var(--header-icon-bg)",
+    },
+    color: {
+      default: "var(--header-icon-muted)",
+      ":hover": "var(--header-icon)",
+    },
+    display: "flex",
+    justifyContent: "center",
+    transform: { default: null, ":active": "scale(0.9)" },
+    transitionDuration: "300ms",
+    transitionProperty: "background-color, color, transform",
+    transitionTimingFunction: "ease-in-out",
+    height: "100%",
+    width: "2.5rem",
+  },
+});
+
 /** Window control styles of the application.
  *
  * 应用的窗口控制按钮组样式。
