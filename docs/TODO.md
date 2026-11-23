@@ -83,3 +83,5 @@
       `SidebarToggleButton` compose `button` with `buttonBg`.
 - [x] Rename the sidebar toggle component, file, icon, and styles to
       `SidebarToggleButton`.
+- [x] Add `SidebarToggleButton.tsx` to the ESLint `refinedFiles` list and the
+      matching oxfmt allowlist.
