@@ -9,21 +9,14 @@
 
 ## Current
 
-- Nothing in progress. `mainLayoutStyles` is settled; next is the store
-  layer review, the first Planned item.
+- [ ] Refine `SettingsButton`: simplify its props and click handling, then
+      migrate it to the shared header control pattern. Check whether the
+      optional `onClick` override has callers and preserve context-aware
+      settings navigation.
 
 ## Planned
 
-- [ ] Review the store layer behind the refined buttons: how `SideSwitchButton`
-      and `SidebarToggleButton` select sidebar state and actions from
-      `useSidebarStore`.
-- [ ] Simplify `SettingsButton` props and click handling. Check whether the
-      optional `onClick` override has callers and preserve context-aware
-      settings navigation.
-- [ ] Move `SettingsButton` to StyleX and reuse existing header styles and
-      tokens where appropriate. Review group spacing, icon sizing, and the
-      hover and focus feedback. Decide the focus styles of
-      `headerSharedStyles.button`.
+- [ ] Review the store layer behind the three buttons and their selectors.
 - [ ] Review the remaining mouse-down and double-click interception in
       `SettingsButton` against the `WindowHeader` guards. Verify that clicking
       or double-clicking the controls does not start dragging or toggle window
@@ -31,6 +24,7 @@
 - [ ] Verify keyboard operation, accessible button names, sidebar switching
       and toggling, and context-aware settings on macOS and Windows. Run
       `pnpm test`.
+- [ ] Check the workspace dependencies for updates on a regular basis.
 
 ## Completed
 
