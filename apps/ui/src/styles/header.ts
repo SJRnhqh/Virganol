@@ -13,6 +13,20 @@ export const headerSharedStyles = create({
     display: "flex",
     flexShrink: 0,
   },
+  button: {
+    borderRadius: "0.375rem",
+    placeItems: "center",
+    color: {
+      default: colorTokens.headerIcon,
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": colorTokens.headerIconHover,
+      },
+    },
+    display: "grid",
+    height: "100%",
+    width: "2.5rem",
+  },
   icon: {
     height: 16,
     width: 16,
@@ -62,25 +76,17 @@ export const windowHeaderStyles = create({
  */
 export const sideSwitchButtonStyles = create({
   root: {
-    borderRadius: "0.375rem",
-    alignItems: "center",
-    // Colors stay on the legacy CSS variables until the color token rework.
+    // The background stays on the legacy CSS variable until the color token rework.
     backgroundColor: {
       default: null,
-      ":hover": "var(--header-icon-bg)",
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": "var(--header-icon-bg)",
+      },
     },
-    color: {
-      default: "var(--header-icon-muted)",
-      ":hover": "var(--header-icon)",
-    },
-    display: "flex",
-    justifyContent: "center",
-    transform: { default: null, ":active": "scale(0.9)" },
     transitionDuration: "300ms",
-    transitionProperty: "background-color, color, transform",
+    transitionProperty: "background-color, color",
     transitionTimingFunction: "ease-in-out",
-    height: "100%",
-    width: "2.5rem",
   },
 });
 
@@ -91,20 +97,6 @@ export const sideSwitchButtonStyles = create({
 export const windowControlsStyles = create({
   root: {
     height: "100%",
-  },
-  button: {
-    borderRadius: "0.375rem",
-    placeItems: "center",
-    color: {
-      default: colorTokens.headerIcon,
-      ":hover": {
-        default: null,
-        "@media (hover: hover)": colorTokens.headerIconHover,
-      },
-    },
-    display: "grid",
-    height: "100%",
-    width: "2.5rem",
   },
   minimizeButton: {
     backgroundColor: {

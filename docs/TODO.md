@@ -9,9 +9,10 @@
 
 ## Current
 
-- [ ] Review `sideSwitchButtonStyles.root` field by field against the legacy
-      Tailwind classes: control-specific versus shared declarations, color
-      sources, sizing, and hover and focus feedback.
+- [ ] Settle the `SideSwitchButton` hover background: keep
+      `var(--header-icon-bg)` or replace it with a color token. Close the
+      remaining feedback points with it: where the transition lives and the
+      focus styles of `headerSharedStyles.button`.
 
 ## Planned
 
@@ -49,3 +50,10 @@
       height follows the header.
 - [x] Rename the side switch component, file, icon, and styles to
       `SideSwitchButton`. Its styles use `root` for the button element.
+- [x] Extract `windowControlsStyles.button` into `headerSharedStyles.button`
+      between `root` and `icon`. `WindowControls` and `SideSwitchButton`
+      compose it, and `sideSwitchButtonStyles.root` keeps only the hover
+      background and the transition.
+- [x] Deliberately change the side switch feedback: the active scale is
+      dropped, the icon color comes from `colorTokens` through the shared
+      button, and the hover background is guarded by `@media (hover: hover)`.

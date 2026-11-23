@@ -21,21 +21,21 @@ export function WindowControls({ isMaximized }: WindowControlsProps): JSX.Elemen
   return (
     <div {...props(headerSharedStyles.root, windowControlsStyles.root)}>
       <button
-        {...props(windowControlsStyles.button, windowControlsStyles.minimizeButton)}
+        {...props(headerSharedStyles.button, windowControlsStyles.minimizeButton)}
         onClick={handleMinimize}
       >
         {windowControlsIcons.minimize}
       </button>
 
       <button
-        {...props(windowControlsStyles.button, windowControlsStyles.maximizeButton)}
+        {...props(headerSharedStyles.button, windowControlsStyles.maximizeButton)}
         onClick={handleToggleMaximize}
       >
         {isMaximized ? windowControlsIcons.restore : windowControlsIcons.maximize}
       </button>
 
       <button
-        {...props(windowControlsStyles.button, windowControlsStyles.closeButton)}
+        {...props(headerSharedStyles.button, windowControlsStyles.closeButton)}
         onClick={handleClose}
       >
         {windowControlsIcons.close}
