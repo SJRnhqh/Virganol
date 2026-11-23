@@ -9,8 +9,8 @@
 ## Current
 
 - [ ] Review the pending SideSwitch changes and gradually refine the button
-      toward the shared header control pattern: selector subscription, shared
-      StyleX shell, icon registry, and comment style.
+      toward the shared header control pattern: selector subscription,
+      `sideSwitchStyles.button`, icon registry, and comment style.
 
 ## Planned
 
@@ -35,3 +35,5 @@
 
 - [x] Guard the `WindowHeader` double-click by event target, matching the
       mouse-down check. Only the header surface toggles maximization.
+- [x] Register `sideSwitchIcon` in the header icon registry and move the 16px
+      icon sizing into `headerSharedStyles.icon`.

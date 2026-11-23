@@ -13,6 +13,10 @@ export const headerSharedStyles = create({
     display: "flex",
     flexShrink: 0,
   },
+  icon: {
+    height: 16,
+    width: 16,
+  },
 });
 
 /** Window header styles of the application.
@@ -100,16 +104,5 @@ export const windowControlsStyles = create({
         "@media (hover: hover)": colorTokens.windowCloseHoverBg,
       },
     },
-  },
-});
-
-/** Window control icon styles of the application.
- *
- * 应用的窗口控制按钮组图标样式。
- */
-export const windowControlsIconsStyles = create({
-  icon: {
-    height: 16,
-    width: 16,
   },
 });
