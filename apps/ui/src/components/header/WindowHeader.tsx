@@ -8,7 +8,7 @@ import { useWindowState } from "@/hooks";
 import { headerSharedStyles, windowHeaderStyles } from "@/styles";
 import { Breadcrumb } from "./Breadcrumb";
 import { SettingsButton } from "./SettingsButton";
-import { SidebarToggle } from "./SidebarToggle";
+import { SidebarToggleButton } from "./SidebarToggleButton";
 import { SideSwitchButton } from "./SideSwitchButton";
 import { WindowControls } from "./WindowControls";
 
@@ -51,7 +51,7 @@ export function WindowHeader(): JSX.Element {
 
       <div {...props(windowHeaderStyles.controls)}>
         <SideSwitchButton />
-        <SidebarToggle />
+        <SidebarToggleButton />
         <SettingsButton />
       </div>
 

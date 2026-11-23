@@ -2,15 +2,15 @@
 
 - Branch: `feat/spirit-ui-header-controls`
 - Parent: `feat/spirit`
-- Goal: Refine `SideSwitchButton`, `SidebarToggle`, and `SettingsButton` in the
-  `WindowHeader` controls group. Simplify their state subscriptions,
-  event handling, and styles. Preserve their existing behavior except for
-  the deliberate changes recorded under Completed.
+- Goal: Refine `SideSwitchButton`, `SidebarToggleButton`, and
+  `SettingsButton` in the `WindowHeader` controls group. Simplify their state
+  subscriptions, event handling, and styles. Preserve their existing behavior
+  except for the deliberate changes recorded under Completed.
 
 ## Current
 
-- Nothing in progress. `SideSwitchButton` and `SidebarToggle` are refined; next
-  is the store layer review, the first Planned item.
+- Nothing in progress. `SideSwitchButton` and `SidebarToggleButton` are
+  refined; next is the store layer review, the first Planned item.
 
 ## Planned
 
@@ -64,20 +64,22 @@
 - [x] Shorten the `MainLayout` `useShallow` selector: destructure the picked
       fields in the selector parameter instead of mapping each one from
       `state`. Behavior is unchanged.
-- [x] Migrate `SidebarToggle` to the header control pattern: a `useShallow`
-      subscription, `headerSharedStyles.button`, and the registered
-      `sidebarToggleIcon`. The button no longer stops mouse-down or
-      double-click propagation.
+- [x] Migrate `SidebarToggleButton` to the header control pattern: a
+      `useShallow` subscription, `headerSharedStyles.button`, and the
+      registered `sidebarToggleButtonIcon`. The button no longer stops
+      mouse-down or double-click propagation.
 - [x] Deliberately change the sidebar toggle behavior: the hover translate,
       active scale, and transitions are dropped, the icon is 16px, and the
       button height follows the header. The icon color comes from
       `colorTokens` through the shared button.
 - [x] Replace the `PanelLeft` / `PanelRight` switch with one `PanelLeft` icon,
-      mirrored by `sidebarToggleStyles.mirrored` when the sidebar is on the
-      right.
-- [x] Deliberately keep the closed-state feedback as `sidebarToggleStyles.closed`
-      (`opacity: 0.5`) on the whole button, so the hover background dims with
-      the icon.
+      mirrored by `sidebarToggleButtonStyles.mirrored` when the sidebar is on
+      the right.
+- [x] Deliberately keep the closed-state feedback as
+      `sidebarToggleButtonStyles.closed` (`opacity: 0.5`) on the whole button,
+      so the hover background dims with the icon.
 - [x] Extract the hover background into `headerSharedStyles.buttonBg` and
-      remove `sideSwitchButtonStyles`. `SideSwitchButton` and `SidebarToggle`
-      compose `button` with `buttonBg`.
+      remove `sideSwitchButtonStyles`. `SideSwitchButton` and
+      `SidebarToggleButton` compose `button` with `buttonBg`.
+- [x] Rename the sidebar toggle component, file, icon, and styles to
+      `SidebarToggleButton`.

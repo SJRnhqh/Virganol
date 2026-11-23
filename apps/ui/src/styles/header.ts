@@ -79,11 +79,11 @@ export const windowHeaderStyles = create({
   },
 });
 
-/** Sidebar toggle styles of the application.
+/** Sidebar toggle button styles of the application.
  *
  * 应用的侧栏开合按钮样式。
  */
-export const sidebarToggleStyles = create({
+export const sidebarToggleButtonStyles = create({
   mirrored: {
     transform: "scaleX(-1)",
   },

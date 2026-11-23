@@ -12,11 +12,11 @@ import { RestoreWindow } from "./RestoreWindow";
  */
 export const sideSwitchButtonIcon = createElement(ArrowLeftRight, props(headerSharedStyles.icon));
 
-/** Sidebar toggle icon of the application.
+/** Sidebar toggle button icon of the application.
  *
  * 应用的侧栏开合按钮图标。
  */
-export const sidebarToggleIcon = createElement(PanelLeft, props(headerSharedStyles.icon));
+export const sidebarToggleButtonIcon = createElement(PanelLeft, props(headerSharedStyles.icon));
 
 /** Window control icons of the application.
  *
