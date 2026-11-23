@@ -23,7 +23,7 @@
   "keywords": [],
   "author": "SJRnhqh",
   "license": "GPL-3.0",
-  "packageManager": "pnpm@12.21.0",
+  "packageManager": "pnpm@12.23.0",
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
