@@ -62,3 +62,6 @@
       by a temporary comment.
 - [x] Add `SideSwitchButton.tsx` to the ESLint `refinedFiles` list and the
       matching oxfmt allowlist.
+- [x] Shorten the `MainLayout` `useShallow` selector: destructure the picked
+      fields in the selector parameter instead of mapping each one from
+      `state`. Behavior is unchanged.
