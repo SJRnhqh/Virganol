@@ -27,6 +27,7 @@ const refinedFiles = [
   "src/icons/**",
   "src/components/index.ts",
   "src/components/header/index.ts",
+  "src/components/header/SideSwitchButton.tsx",
   "src/components/header/WindowControls.tsx",
   "src/components/header/WindowHeader.tsx",
 ];

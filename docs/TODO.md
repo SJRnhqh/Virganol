@@ -16,8 +16,6 @@
 
 - [ ] Review the store layer from the `SideSwitchButton` subscription: how the
       header controls select sidebar state and actions from `useSidebarStore`.
-- [ ] Once the `SideSwitchButton` reviews are settled, add its file to the
-      ESLint `refinedFiles` list and the matching oxfmt allowlist.
 - [ ] Narrow the `SidebarToggle` subscription to the state and actions it
       uses. Preserve sidebar placement, visibility, and icon feedback.
 - [ ] Simplify `SettingsButton` props and click handling. Check whether the
@@ -62,3 +60,5 @@
       now only holds the hover background.
 - [x] Move the placeholder `white` to the bottom of both palettes, separated
       by a temporary comment.
+- [x] Add `SideSwitchButton.tsx` to the ESLint `refinedFiles` list and the
+      matching oxfmt allowlist.
