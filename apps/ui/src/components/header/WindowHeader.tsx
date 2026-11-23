@@ -9,7 +9,7 @@ import { headerSharedStyles, windowHeaderStyles } from "@/styles";
 import { Breadcrumb } from "./Breadcrumb";
 import { SettingsButton } from "./SettingsButton";
 import { SidebarToggle } from "./SidebarToggle";
-import { SideSwitch } from "./SideSwitch";
+import { SideSwitchButton } from "./SideSwitchButton";
 import { WindowControls } from "./WindowControls";
 
 /** Window header of the application.
@@ -50,7 +50,7 @@ export function WindowHeader(): JSX.Element {
       </div>
 
       <div {...props(windowHeaderStyles.controls)}>
-        <SideSwitch />
+        <SideSwitchButton />
         <SidebarToggle />
         <SettingsButton />
       </div>

@@ -6,11 +6,11 @@ import { createElement } from "react";
 import { headerSharedStyles } from "@/styles";
 import { RestoreWindow } from "./RestoreWindow";
 
-/** Side switch icon of the application.
+/** Side switch button icon of the application.
  *
  * 应用的侧栏换边按钮图标。
  */
-export const sideSwitchIcon = createElement(ArrowLeftRight, props(headerSharedStyles.icon));
+export const sideSwitchButtonIcon = createElement(ArrowLeftRight, props(headerSharedStyles.icon));
 
 /** Window control icons of the application.
  *

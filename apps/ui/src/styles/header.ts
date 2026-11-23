@@ -56,12 +56,12 @@ export const windowHeaderStyles = create({
   },
 });
 
-/** Side switch styles of the application.
+/** Side switch button styles of the application.
  *
  * 应用的侧栏换边按钮样式。
  */
-export const sideSwitchStyles = create({
-  button: {
+export const sideSwitchButtonStyles = create({
+  root: {
     borderRadius: "0.375rem",
     alignItems: "center",
     // Colors stay on the legacy CSS variables until the color token rework.

@@ -1,7 +1,7 @@
 // apps/ui/src/styles/index.ts
 export {
   headerSharedStyles,
-  sideSwitchStyles,
+  sideSwitchButtonStyles,
   windowControlsStyles,
   windowHeaderStyles,
 } from "./header";

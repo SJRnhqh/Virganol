@@ -2,20 +2,20 @@
 
 - Branch: `feat/spirit-ui-header-controls`
 - Parent: `feat/spirit`
-- Goal: Refine `SideSwitch`, `SidebarToggle`, and `SettingsButton` in the
+- Goal: Refine `SideSwitchButton`, `SidebarToggle`, and `SettingsButton` in the
   `WindowHeader` controls group. Simplify their state subscriptions,
   event handling, and styles. Preserve their existing behavior except for
   the deliberate changes recorded under Completed.
 
 ## Current
 
-- [ ] Review `sideSwitchStyles.button` field by field against the legacy
+- [ ] Review `sideSwitchButtonStyles.root` field by field against the legacy
       Tailwind classes: control-specific versus shared declarations, color
       sources, sizing, and hover and focus feedback.
 
 ## Planned
 
-- [ ] Review the store layer from the `SideSwitch` subscription: how the
+- [ ] Review the store layer from the `SideSwitchButton` subscription: how the
       header controls select sidebar state and actions from `useSidebarStore`.
 - [ ] Narrow the `SidebarToggle` subscription to the state and actions it
       uses. Preserve sidebar placement, visibility, and icon feedback.
@@ -37,11 +37,13 @@
 
 - [x] Guard the `WindowHeader` double-click by event target, matching the
       mouse-down check. Only the header surface toggles maximization.
-- [x] Register `sideSwitchIcon` in the header icon registry and move the 16px
-      icon sizing into `headerSharedStyles.icon`.
-- [x] Migrate `SideSwitch` to the header control pattern: selector
-      subscription, `sideSwitchStyles.button`, and the registered icon. The
-      button no longer stops mouse-down or double-click propagation.
+- [x] Register `sideSwitchButtonIcon` in the header icon registry and move
+      the 16px icon sizing into `headerSharedStyles.icon`.
+- [x] Migrate `SideSwitchButton` to the header control pattern: selector
+      subscription, `sideSwitchButtonStyles.root`, and the registered icon.
+      The button no longer stops mouse-down or double-click propagation.
 - [x] Deliberately change the side switch behavior: the icon hover rotation
       and right-side mirror are dropped, the icon is 16px, and the button
       height follows the header.
+- [x] Rename the side switch component, file, icon, and styles to
+      `SideSwitchButton`. Its styles use `root` for the button element.
