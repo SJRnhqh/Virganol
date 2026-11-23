@@ -23,7 +23,8 @@
 - [ ] Move the controls to StyleX and reuse existing header styles and tokens
       where appropriate. Review group spacing, icon sizing, and hover and
       focus feedback.
-- [ ] Review mouse-down and double-click propagation against `WindowHeader`.
+- [ ] Review the remaining mouse-down and double-click interception in
+      `SidebarToggle` and `SettingsButton` against the `WindowHeader` guards.
       Verify that clicking or double-clicking the controls does not start
       dragging or toggle window maximization.
 - [ ] Verify keyboard operation, accessible button names, sidebar switching
@@ -31,3 +32,6 @@
       `pnpm test`.
 
 ## Completed
+
+- [x] Guard the `WindowHeader` double-click by event target, matching the
+      mouse-down check. Only the header surface toggles maximization.

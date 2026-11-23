@@ -19,8 +19,10 @@ import { WindowControls } from "./WindowControls";
 export function WindowHeader(): JSX.Element {
   const { isMaximized, isFullscreen } = useWindowState(); // TBD: Query window state per OS.
 
-  const handleDoubleClick = () => {
-    getCurrentWindow().toggleMaximize();
+  const handleDoubleClick = (event: MouseEvent<HTMLElement>) => {
+    if (event.target === event.currentTarget) {
+      getCurrentWindow().toggleMaximize();
+    }
   };
 
   const handleMouseDown = (event: MouseEvent<HTMLElement>) => {
