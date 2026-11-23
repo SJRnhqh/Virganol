@@ -9,10 +9,8 @@
 
 ## Current
 
-- [ ] Settle the `SideSwitchButton` hover background: keep
-      `var(--header-icon-bg)` or replace it with a color token. Close the
-      remaining feedback points with it: where the transition lives and the
-      focus styles of `headerSharedStyles.button`.
+- Nothing in progress. The `SideSwitchButton` style review is settled; next is
+  its store layer review, the first Planned item.
 
 ## Planned
 
@@ -26,8 +24,8 @@
       optional `onClick` override has callers and preserve context-aware
       settings navigation.
 - [ ] Move the controls to StyleX and reuse existing header styles and tokens
-      where appropriate. Review group spacing, icon sizing, and hover and
-      focus feedback.
+      where appropriate. Review group spacing, icon sizing, and the hover and
+      focus feedback. Decide the focus styles of `headerSharedStyles.button`.
 - [ ] Review the remaining mouse-down and double-click interception in
       `SidebarToggle` and `SettingsButton` against the `WindowHeader` guards.
       Verify that clicking or double-clicking the controls does not start
@@ -57,3 +55,10 @@
 - [x] Deliberately change the side switch feedback: the active scale is
       dropped, the icon color comes from `colorTokens` through the shared
       button, and the hover background is guarded by `@media (hover: hover)`.
+- [x] Replace `var(--header-icon-bg)` with `colorTokens.headerIconHoverBg`.
+      Add `vine.danlvhui` and the `undertone` role in `bosquet`, with
+      `pine.wasonglv` as the dark placeholder.
+- [x] Deliberately drop the transition from `sideSwitchButtonStyles.root`. It
+      now only holds the hover background.
+- [x] Move the placeholder `white` to the bottom of both palettes, separated
+      by a temporary comment.

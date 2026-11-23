@@ -76,17 +76,13 @@ export const windowHeaderStyles = create({
  */
 export const sideSwitchButtonStyles = create({
   root: {
-    // The background stays on the legacy CSS variable until the color token rework.
     backgroundColor: {
       default: null,
       ":hover": {
         default: null,
-        "@media (hover: hover)": "var(--header-icon-bg)",
+        "@media (hover: hover)": colorTokens.headerIconHoverBg,
       },
     },
-    transitionDuration: "300ms",
-    transitionProperty: "background-color, color",
-    transitionTimingFunction: "ease-in-out",
   },
 });
 

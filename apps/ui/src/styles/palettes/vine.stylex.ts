@@ -10,8 +10,11 @@ export const vine = defineConsts({
   danmifen: "#fbeee2",
   qinghui: "#2b333e",
   xiayunhui: "#617172",
-  white: "#ffffff",
+  danlvhui: "#70887d",
   danhuilv: "#ad9e5f",
   shuilv: "#8cc269",
   xiangyehong: "#f07c82",
+
+  // Temporary placeholders: pure white, not named palette colors.
+  white: "#ffffff",
 });
