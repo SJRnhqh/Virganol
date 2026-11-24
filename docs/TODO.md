@@ -16,6 +16,9 @@
 
 ## Completed
 
+- [x] Upgrade `eslint-plugin-react-refresh` to 0.5.8. Cumulative diff budget:
+      11.6%; `pnpm test` passes.
+
 - [x] Upgrade `@types/node` to 26.6.6. Cumulative diff budget: 10.4%; `pnpm test`
       passes.
 
