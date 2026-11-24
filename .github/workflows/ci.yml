@@ -17,40 +17,52 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    name: Test
-    runs-on: macos-latest
-    timeout-minutes: 30
-
+  go:
+    name: Go
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          run_install: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22.22.2
-          cache: pnpm
-
-      - name: Setup Go
-        uses: actions/setup-go@v6
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
         with:
           go-version-file: apps/server/go.mod
           cache-dependency-path: apps/server/go.sum
+      - run: node dev/scripts/go/test.mjs
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+  rust:
+    name: Rust
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22.22.2
+          cache: pnpm
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: apps/server/go.mod
+          cache-dependency-path: apps/server/go.sum
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: pnpm install --frozen-lockfile
+      - run: node dev/scripts/rust/test.mjs
 
-      - name: Cache Rust builds
-        uses: Swatinem/rust-cache@v2
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Test
-        run: pnpm test
+  ui:
+    name: UI
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22.22.2
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: node dev/scripts/ts/test.mjs

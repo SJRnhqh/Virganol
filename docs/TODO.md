@@ -10,6 +10,7 @@
 
 ## Planned
 
-- [ ] Split CI checks and avoid duplicated push and pull-request runs.
-
 ## Completed
+
+- [x] Split CI into parallel Go, Rust, and UI jobs. Go and UI run on Ubuntu;
+      Rust retains Go for its sidecar build. Remote CI validation pending.
