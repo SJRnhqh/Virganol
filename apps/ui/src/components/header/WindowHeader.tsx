@@ -6,10 +6,9 @@ import type { JSX, MouseEvent } from "react";
 import { isMac, isTahoeOrNewer, isWindows } from "@/lib";
 import { useWindowState } from "@/hooks";
 import { headerSharedStyles, windowHeaderStyles } from "@/styles";
-import { Breadcrumb } from "./Breadcrumb";
 import { SettingsButton } from "./SettingsButton";
-import { SidebarToggle } from "./SidebarToggle";
-import { SideSwitch } from "./SideSwitch";
+import { SidebarToggleButton } from "./SidebarToggleButton";
+import { SideSwitchButton } from "./SideSwitchButton";
 import { WindowControls } from "./WindowControls";
 
 /** Window header of the application.
@@ -19,8 +18,10 @@ import { WindowControls } from "./WindowControls";
 export function WindowHeader(): JSX.Element {
   const { isMaximized, isFullscreen } = useWindowState(); // TBD: Query window state per OS.
 
-  const handleDoubleClick = () => {
-    getCurrentWindow().toggleMaximize();
+  const handleDoubleClick = (event: MouseEvent<HTMLElement>) => {
+    if (event.target === event.currentTarget) {
+      getCurrentWindow().toggleMaximize();
+    }
   };
 
   const handleMouseDown = (event: MouseEvent<HTMLElement>) => {
@@ -43,13 +44,9 @@ export function WindowHeader(): JSX.Element {
       onDoubleClick={handleDoubleClick}
       onMouseDown={handleMouseDown}
     >
-      <div {...props(windowHeaderStyles.breadcrumbWrap)}>
-        <Breadcrumb />
-      </div>
-
-      <div {...props(windowHeaderStyles.controls)}>
-        <SideSwitch />
-        <SidebarToggle />
+      <div {...props(windowHeaderStyles.actions)}>
+        <SideSwitchButton />
+        <SidebarToggleButton />
         <SettingsButton />
       </div>
 

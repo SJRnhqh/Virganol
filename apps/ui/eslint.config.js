@@ -22,13 +22,15 @@ const refinedFiles = [
   "src/main.tsx",
   "src/App.tsx",
   "src/layouts/**",
+  "src/components/index.ts",
+  "src/components/header/**",
+  "src/icons/**",
   "src/lib/index.ts",
   "src/lib/platform/**",
-  "src/icons/**",
-  "src/components/index.ts",
-  "src/components/header/index.ts",
-  "src/components/header/WindowControls.tsx",
-  "src/components/header/WindowHeader.tsx",
+  "src/store/**",
+  "src/types/index.ts",
+  "src/types/state/**",
+  "src/types/settings.ts",
 ];
 
 const barrelFiles = [`src/${moduleDirs}/**/index.ts`];

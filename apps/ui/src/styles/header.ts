@@ -13,53 +13,6 @@ export const headerSharedStyles = create({
     display: "flex",
     flexShrink: 0,
   },
-});
-
-/** Window header styles of the application.
- *
- * 应用的窗口顶栏样式。
- */
-export const windowHeaderStyles = create({
-  root: {
-    paddingInline: "0.75rem",
-    backgroundColor: colorTokens.headerBg,
-    cursor: "default",
-    isolation: "isolate",
-    userSelect: "none",
-    zIndex: 9999, // Revisit stacking during the header redesign.
-    height: "2rem",
-  },
-  preTahoeHeight: {
-    height: "1.75rem",
-  },
-  trafficLightInset: {
-    paddingInlineStart: "5rem",
-  },
-  windowEdgeAlignment: {
-    paddingInlineEnd: 0,
-  },
-  breadcrumbWrap: { // TBD
-    zIndex: 10,
-    height: "100%",
-  },
-  controls: { // TBD
-    gap: "0.25rem",
-    alignItems: "center",
-    display: "flex",
-    height: "100%",
-    marginLeft: "auto",
-    marginRight: "0.25rem",
-  },
-});
-
-/** Window control styles of the application.
- *
- * 应用的窗口控制按钮组样式。
- */
-export const windowControlsStyles = create({
-  root: {
-    height: "100%",
-  },
   button: {
     borderRadius: "0.375rem",
     placeItems: "center",
@@ -73,6 +26,73 @@ export const windowControlsStyles = create({
     display: "grid",
     height: "100%",
     width: "2.5rem",
+  },
+  buttonBg: {
+    backgroundColor: {
+      default: null,
+      ":hover": {
+        default: null,
+        "@media (hover: hover)": colorTokens.headerIconHoverBg,
+      },
+    },
+  },
+  icon: {
+    height: 16,
+    width: 16,
+  },
+});
+
+/** Window header styles of the application.
+ *
+ * 应用的窗口顶栏样式。
+ */
+export const windowHeaderStyles = create({
+  root: {
+    paddingInline: "0.75rem",
+    backgroundColor: colorTokens.headerBg,
+    cursor: "default",
+    isolation: "isolate",
+    userSelect: "none",
+    height: "2rem",
+  },
+  preTahoeHeight: {
+    height: "1.75rem",
+  },
+  trafficLightInset: {
+    paddingInlineStart: "5rem",
+  },
+  windowEdgeAlignment: {
+    paddingInlineEnd: 0,
+  },
+  actions: {
+    gap: "0.25rem",
+    display: "flex",
+    height: "100%",
+    marginLeft: "auto",
+    marginRight: "0.25rem",
+  },
+});
+
+/** Sidebar toggle button styles of the application.
+ *
+ * 应用的侧栏开合按钮样式。
+ */
+export const sidebarToggleButtonStyles = create({
+  mirrored: {
+    transform: "scaleX(-1)",
+  },
+  closed: {
+    opacity: 0.5,
+  },
+});
+
+/** Window control styles of the application.
+ *
+ * 应用的窗口控制按钮组样式。
+ */
+export const windowControlsStyles = create({
+  root: {
+    height: "100%",
   },
   minimizeButton: {
     backgroundColor: {
@@ -100,16 +120,5 @@ export const windowControlsStyles = create({
         "@media (hover: hover)": colorTokens.windowCloseHoverBg,
       },
     },
-  },
-});
-
-/** Window control icon styles of the application.
- *
- * 应用的窗口控制按钮组图标样式。
- */
-export const windowControlsIconsStyles = create({
-  icon: {
-    height: 16,
-    width: 16,
   },
 });

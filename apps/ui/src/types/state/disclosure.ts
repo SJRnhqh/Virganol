@@ -5,9 +5,7 @@
  * 开合状态的更新器。
  */
 export type DisclosureUpdater = (
-  updater:
-    | Partial<DisclosureValue>
-    | ((value: DisclosureValue) => Partial<DisclosureValue>),
+  updater: Partial<DisclosureValue> | ((value: DisclosureValue) => Partial<DisclosureValue>)
 ) => void;
 
 /** Disclosure state.

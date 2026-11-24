@@ -20,13 +20,8 @@
 
     /* === 2. 顶部栏 (Header) === */
 
-    /* 面包屑文字颜色 */
+    /* 文字颜色 */
     --header-fg: var(--color-qinghui);
-
-    /* 面包屑交互体系 */
-    --header-milestone: var(--color-zheshi);
-    --header-breadcrumb-bg: var(--color-jizong);
-    --header-breadcrumb-icon-accent: var(--color-zheshi);
 
     /* 图标默认颜色（静默60%透明度的青灰色）和背景色 */
     --header-icon-muted: color-mix(

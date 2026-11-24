@@ -15,10 +15,7 @@ import { MainStage, SettingsModal, Sidebar, WindowHeader } from "@/components";
 export function MainLayout(): JSX.Element {
   const side = useSidebarStore((state) => state.side);
   const { activeNavId, setActiveNavId } = useNavigationStore(
-    useShallow((state) => ({
-      activeNavId: state.activeNavId,
-      setActiveNavId: state.setActiveNavId,
-    }))
+    useShallow(({ activeNavId, setActiveNavId }) => ({ activeNavId, setActiveNavId }))
   );
 
   useKeyboardShortcuts();
@@ -28,7 +25,10 @@ export function MainLayout(): JSX.Element {
       <WindowHeader />
 
       <div
-        {...props(mainLayoutStyles.workspace, side === "right" && mainLayoutStyles.workspaceRight)}
+        {...props(
+          mainLayoutStyles.workspace,
+          side === "right" && mainLayoutStyles.workspaceMirrored
+        )}
       >
         <Sidebar activeNavId={activeNavId} setActiveNavId={setActiveNavId} />
 

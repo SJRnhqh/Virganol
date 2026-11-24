@@ -15,6 +15,7 @@ export const bosquet = unstable_defineVarsNested({
     anchor: vine.qinghui,
     tether: vine.white, // Placeholder for future connection lines.
     buoy: vine.xiayunhui,
+    undertone: vine.danlvhui,
     prelude: vine.danhuilv,
     interlude: vine.shuilv,
     coda: vine.xiangyehong,
@@ -25,6 +26,7 @@ export const bosquet = unstable_defineVarsNested({
     anchor: pine.xuebai,
     tether: pine.white, // Placeholder for future connection lines.
     buoy: pine.xingzihui,
+    undertone: pine.wasonglv,
     prelude: pine.caohuilv,
     interlude: pine.helv,
     coda: pine.shuangyehong,

@@ -75,7 +75,7 @@ Rust/Tauri 可观测性 v1 已于 2026-09-08 合入 `feat/spirit`（#39），合
 #### 6.5 收尾优化
 
 - [ ] 以 `MainLayout` 为入口，按 WindowHeader → Sidebar → MainStage → SettingsModal 检查 JSX、状态与样式边界。Sidebar 重点检查 settings `toggle` 和 `useSidebarStyles` 订阅，MainStage 对齐 `NavId` 与 `types/props/` 的类型派生
-- [ ] 完成 WindowHeader 收尾。平台适配、`trafficLightInset`、根样式和配色分层已完成（#44、#45），Windows 自绘控件的 StyleX 迁移及图标、布局、悬停反馈已验证。剩余 `Breadcrumb` 的 `ModuleMenu` 去留，以及 `SidebarToggle` / `SideSwitch` 的订阅范围
+- [x] 完成 WindowHeader 收尾。平台适配、`trafficLightInset`、根样式和配色分层已完成（#44、#45），Windows 自绘控件的 StyleX 迁移及图标、布局、悬停反馈已验证。`Breadcrumb` 与 `ModuleMenu` 已整体移除（含面包屑专属 token），0.0.1 的模块定位由侧栏承担，后续聊天界面落地时再评估顶栏信息区设计。三个应用按钮及壳层 store/state 契约已完成订阅与规范化审查，设置按钮默认打开 General
 - [ ] 按平台裁剪窗口状态查询（暂缓）。目前 `WindowHeader` 通过一份尺寸变化监听查询全屏和最大化状态。后续评估 macOS 只查全屏、Windows 只查最大化的方案。
 - [ ] macOS 全屏切换补验：红绿灯让位进出全屏是否正确，退出全屏时原生红绿灯与顶栏内容的短暂重叠是否需修（根治需 Rust 侧 `willExitFullScreen` 提前通知前端）
 - [x] StyleX 升级 0.19.2 并切回 `.rspack()`（#45）：开发期保留 `runtimeInjection`；色板值可热更新，`defineVars` 映射改动仍需 reload
@@ -109,6 +109,7 @@ Rust/Tauri 可观测性 v1 已于 2026-09-08 合入 `feat/spirit`（#39），合
 
 #### 6.6 测试覆盖与质量门禁
 
+- [ ] 依赖更新分批推进（首批 ESLint 家族已在 `feat/spirit-ui-header-controls` 完成，范围内 7 包）。剩余：范围内运行时依赖（react、zustand、framer-motion 等）、范围内其他工具链（stylelint、tailwindcss、@types 等）；跨大版本逐项评估（eslint 10、stylelint 18、typescript 7、framer-motion 14、@xyflow/react 13、@lobehub/icons 6、commitlint 21 等）。每批单独提交并跑 `pnpm test` 与 `pnpm diff:budget`
 - [ ] 在 `dev/scripts/ts/comments/` 建立基于 comment-parser 的 TS 注释检查器并接入 `dev/scripts/ts/test.mjs`。现有仅中文文档注释先报告，再随规范扫描切换为强制门禁
 - [ ] 前端行为测试出现时评估 Rstest；Rslib、Rspress、Rsdoctor 与 Rslint 继续延后到明确需求出现
 - [ ] 补齐 0.0.1 单元测试与缺口覆盖
