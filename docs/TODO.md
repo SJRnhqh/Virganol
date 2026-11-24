@@ -15,3 +15,5 @@
       `pnpm diff:budget` for each batch.
 
 ## Completed
+
+- [x] Upgrade `globals` to 17.14.0. Diff budget: 1.5%; `pnpm test` passes.
