@@ -16,6 +16,9 @@
 
 ## Completed
 
+- [x] Upgrade the commitlint family to 21.2.4. Cumulative diff budget: 30.9%;
+      `pnpm test` passes.
+
 - [x] Upgrade `eslint-plugin-react-refresh` to 0.5.8. Cumulative diff budget:
       11.6%; `pnpm test` passes.
 
