@@ -14,6 +14,9 @@
 
 ## Completed
 
+- [x] Fourth compatible root tooling batch: commitlint and NAPI CLI. Cumulative
+      diff budget: 83.3% (warning); `pnpm test` passes.
+
 - [x] Third compatible batch: Tauri API, CLI, opener, and OS plugins. Cumulative
       diff budget: 33.2%; `pnpm test` passes.
 
