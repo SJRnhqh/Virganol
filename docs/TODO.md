@@ -6,11 +6,12 @@
 
 ## Current
 
-- [ ] Update the remaining compatible dependencies in small verified batches.
-
 ## Planned
 
 ## Completed
+
+- [x] Complete the remaining compatible React, React types, framer-motion, and
+      xyflow updates. Cumulative diff budget: 74.6%; `pnpm test` passes.
 
 - [x] Split CI into parallel Go, Rust, and UI jobs. Go and UI run on Ubuntu;
       Rust retains Go for its sidecar build. Remote CI validation pending.
