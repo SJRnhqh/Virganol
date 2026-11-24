@@ -6,7 +6,6 @@ import type { JSX, MouseEvent } from "react";
 import { isMac, isTahoeOrNewer, isWindows } from "@/lib";
 import { useWindowState } from "@/hooks";
 import { headerSharedStyles, windowHeaderStyles } from "@/styles";
-import { Breadcrumb } from "./Breadcrumb";
 import { SettingsButton } from "./SettingsButton";
 import { SidebarToggleButton } from "./SidebarToggleButton";
 import { SideSwitchButton } from "./SideSwitchButton";
@@ -45,10 +44,6 @@ export function WindowHeader(): JSX.Element {
       onDoubleClick={handleDoubleClick}
       onMouseDown={handleMouseDown}
     >
-      <div {...props(windowHeaderStyles.breadcrumbWrap)}>
-        <Breadcrumb />
-      </div>
-
       <div {...props(windowHeaderStyles.controls)}>
         <SideSwitchButton />
         <SidebarToggleButton />

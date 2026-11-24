@@ -13,15 +13,6 @@
     /* 面包屑字体颜色 */
     --color-header-fg: var(--header-fg);
 
-    /* 面包屑图标高亮颜色 */
-    --color-header-milestone: var(--header-milestone);
-
-    /* 面包屑背景颜色 */
-    --color-header-breadcrumb-bg: var(--header-breadcrumb-bg);
-
-    /* 面包屑光标颜色 */
-    --color-header-breadcrumb-accent: var(--header-breadcrumb-accent);
-
     /* 顶部栏图标和背景颜色 */
     --color-header-icon: var(--header-icon);
     --color-header-icon-muted: var(--header-icon-muted);

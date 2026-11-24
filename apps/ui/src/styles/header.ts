@@ -65,10 +65,6 @@ export const windowHeaderStyles = create({
   windowEdgeAlignment: {
     paddingInlineEnd: 0,
   },
-  breadcrumbWrap: { // TBD
-    zIndex: 10,
-    height: "100%",
-  },
   controls: { // TBD
     gap: "0.25rem",
     alignItems: "center",

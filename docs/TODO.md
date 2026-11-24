@@ -100,3 +100,9 @@
 - [x] Deliberately change the settings button feedback: the 22px icon, hover
       rotation, active scale, transitions, and Tailwind classes are dropped.
       The icon is 16px and uses `colorTokens` through the shared button.
+- [x] Remove the breadcrumb and `ModuleMenu` from the header: delete
+      `Breadcrumb.tsx`, `ModuleMenu.tsx`, the `breadcrumbWrap` style, and the
+      breadcrumb-only theme tokens (`--header-milestone`,
+      `--header-breadcrumb-bg`, `--header-breadcrumb-icon-accent`) from
+      `tokens.css` and `light.css`. The active module stays visible in the
+      sidebar and `MainStage`.
