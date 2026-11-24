@@ -14,7 +14,7 @@
     "lint:css:fix": "stylelint . --fix"
   },
   "dependencies": {
-    "@lobehub/icons": "^4.0.3",
+    "@lobehub/icons": "^4.12.0",
     "@stylexjs/stylex": "^0.19.2",
     "@tauri-apps/api": "^2.12.5",
     "@tauri-apps/plugin-os": "^2.4.0",

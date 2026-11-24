@@ -13,6 +13,10 @@
 
 ## Completed
 
+- [x] Update `@lobehub/icons` within its compatible range. Cumulative diff
+      budget: 89.9%; `pnpm test` passes. Defer the remaining React, animation,
+      and flow updates to another branch.
+
 - [x] Update `@types/node` within its compatible range. Cumulative diff budget:
       86.2% (warning); `pnpm test` passes.
 
