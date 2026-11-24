@@ -16,4 +16,7 @@
 
 ## Completed
 
+- [x] Upgrade `@types/node` to 26.6.6. Cumulative diff budget: 10.4%; `pnpm test`
+      passes.
+
 - [x] Upgrade `globals` to 17.14.0. Diff budget: 1.5%; `pnpm test` passes.
