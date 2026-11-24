@@ -15,5 +15,8 @@
 
 ## Completed
 
+- [x] Upgrade framer-motion to 14.14.0. Cumulative diff budget: 78.1%; `pnpm test`
+      passes.
+
 - [x] Upgrade Stylelint and its standard config to v18/v41. Diff budget: 75.7%;
       `pnpm test` passes.
