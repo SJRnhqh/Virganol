@@ -9,14 +9,19 @@
 
 ## Current
 
-- [ ] Review the store layer behind `SidebarToggleButton` and `SettingsButton`
-      and their selectors. Known lead: `useSmartSettings` casts `activeNavId`
-      to `SettingsTab` and relies on nav IDs matching settings tab IDs.
+- [ ] Review the store/hooks path behind `SettingsButton`. Known lead:
+      `useSmartSettings` casts `activeNavId` to `SettingsTab` and relies on nav
+      IDs matching settings tab IDs.
+- [ ] Review the remaining `MainLayout` store/hooks boundaries and the
+      `WindowHeader` window-state hook as needed.
 
 ## Planned
 
 ## Completed
 
+- [x] Review `SidebarToggleButton`: it shares the sidebar store already reviewed
+      for `SideSwitchButton`, and additionally selects `isOpen` and `side` for
+      its closed and mirrored styles. No further store/types changes needed.
 - [x] Review the store/types path behind `SideSwitchButton`: the sidebar store,
       disclosure factory, state contracts, and public type entry. Unify the
       Chinese sidebar wording, export `DisclosureState`, and add the factory's
