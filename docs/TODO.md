@@ -13,3 +13,6 @@
 - [ ] Improve CI caching for dependencies and Rust builds.
 
 ## Completed
+
+- [x] First compatible runtime batch: immer, lucide-react, react-icons,
+      tailwind-merge, and zustand. Diff budget: 5.6%.
