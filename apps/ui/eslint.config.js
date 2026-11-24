@@ -26,11 +26,7 @@ const refinedFiles = [
   "src/lib/platform/**",
   "src/icons/**",
   "src/components/index.ts",
-  "src/components/header/index.ts",
-  "src/components/header/SidebarToggleButton.tsx",
-  "src/components/header/SideSwitchButton.tsx",
-  "src/components/header/WindowControls.tsx",
-  "src/components/header/WindowHeader.tsx",
+  "src/components/header/**",
 ];
 
 const barrelFiles = [`src/${moduleDirs}/**/index.ts`];

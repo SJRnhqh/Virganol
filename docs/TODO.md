@@ -9,12 +9,10 @@
 
 ## Current
 
-- [ ] Add `SettingsButton.tsx` to the ESLint `refinedFiles` list and the
-      matching oxfmt allowlist.
+- [ ] Review the store layer behind the three buttons and their selectors.
 
 ## Planned
 
-- [ ] Review the store layer behind the three buttons and their selectors.
 - [ ] Verify keyboard operation, accessible button names, sidebar switching
       and toggling, and context-aware settings on macOS and Windows. Run
       `pnpm test`.
@@ -106,3 +104,6 @@
       `--header-breadcrumb-bg`, `--header-breadcrumb-icon-accent`) from
       `tokens.css` and `light.css`. The active module stays visible in the
       sidebar and `MainStage`.
+- [x] Widen the ESLint `refinedFiles` entry and the oxfmt allowlist from
+      individual header files to `src/components/header/**`, which covers
+      `SettingsButton.tsx`.
