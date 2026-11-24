@@ -14,6 +14,9 @@
 
 ## Completed
 
+- [x] Third compatible batch: Tauri API, CLI, opener, and OS plugins. Cumulative
+      diff budget: 33.2%; `pnpm test` passes.
+
 - [x] Second compatible tooling batch: stylelint, stylelint-config-recess-order,
       stylelint-order, tailwindcss, and typescript-eslint. Cumulative diff
       budget: 25.8%; `pnpm test` passes.
