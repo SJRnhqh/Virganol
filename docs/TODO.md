@@ -9,18 +9,12 @@
 
 ## Current
 
-- [ ] Refine `SettingsButton`: simplify its props and click handling, then
-      migrate it to the shared header control pattern. Check whether the
-      optional `onClick` override has callers and preserve context-aware
-      settings navigation.
+- [ ] Add `SettingsButton.tsx` to the ESLint `refinedFiles` list and the
+      matching oxfmt allowlist.
 
 ## Planned
 
 - [ ] Review the store layer behind the three buttons and their selectors.
-- [ ] Review the remaining mouse-down and double-click interception in
-      `SettingsButton` against the `WindowHeader` guards. Verify that clicking
-      or double-clicking the controls does not start dragging or toggle window
-      maximization.
 - [ ] Verify keyboard operation, accessible button names, sidebar switching
       and toggling, and context-aware settings on macOS and Windows. Run
       `pnpm test`.
@@ -93,3 +87,16 @@
 - [x] Rename `workspaceRight` to `workspaceMirrored`, matching
       `sidebarToggleButtonStyles.mirrored`, and remove the three `// TBD`
       markers from `mainLayoutStyles`.
+- [x] Migrate `SettingsButton` to the header control pattern:
+      `headerSharedStyles.button` and `buttonBg`, the registered
+      `settingsButtonIcon`, and `handleOpenSettings` bound directly to
+      `onClick`.
+- [x] Drop the `SettingsButton` `onClick` prop override and its `handleClick`
+      wrapper: no callers pass it, and the override silently bypassed
+      context-aware settings navigation. `useSmartSettings` stays intact.
+      The button no longer stops mouse-down or double-click propagation;
+      clicking or double-clicking the controls does not start dragging or
+      toggle window maximization.
+- [x] Deliberately change the settings button feedback: the 22px icon, hover
+      rotation, active scale, transitions, and Tailwind classes are dropped.
+      The icon is 16px and uses `colorTokens` through the shared button.
