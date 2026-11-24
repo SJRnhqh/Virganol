@@ -16,6 +16,10 @@
 
 ## Completed
 
+- [x] Upgrade ESLint, `@eslint/js`, and the TypeScript import resolver. Preserve
+      the caught error as `cause` for the new lint rule. Cumulative diff budget:
+      71.7%; `pnpm test` passes.
+
 - [x] Upgrade `oxfmt` to 0.80.0. Cumulative diff budget: 40.1%; `pnpm test`
       passes.
 
