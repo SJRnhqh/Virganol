@@ -40,7 +40,7 @@
     "@rsdoctor/rspack-plugin": "^1.6.5",
     "@stylexjs/eslint-plugin": "^0.19.2",
     "@stylexjs/unplugin": "^0.19.2",
-    "@types/node": "^24.10.1",
+    "@types/node": "^24.19.2",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.5",

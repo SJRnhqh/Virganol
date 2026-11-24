@@ -13,6 +13,9 @@
 
 ## Completed
 
+- [x] Update `@types/node` within its compatible range. Cumulative diff budget:
+      86.2% (warning); `pnpm test` passes.
+
 - [x] Cache Rust builds in CI with `Swatinem/rust-cache`; pnpm and Go caching
       were already configured. Remote CI validation pending.
 
