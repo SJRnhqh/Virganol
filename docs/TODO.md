@@ -6,13 +6,15 @@
 
 ## Current
 
-- [ ] Update pnpm dependencies in small batches and verify each batch.
+- [ ] Update the remaining compatible dependencies in smaller batches and verify
+      each batch.
 
 ## Planned
 
-- [ ] Improve CI caching for dependencies and Rust builds.
-
 ## Completed
+
+- [x] Cache Rust builds in CI with `Swatinem/rust-cache`; pnpm and Go caching
+      were already configured. Remote CI validation pending.
 
 - [x] Fourth compatible root tooling batch: commitlint and NAPI CLI. Cumulative
       diff budget: 83.3% (warning); `pnpm test` passes.
