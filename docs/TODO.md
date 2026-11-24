@@ -10,6 +10,9 @@
 
 ## Completed
 
+- [x] Update `@rsbuild/plugin-react` to 2.1.1. Cumulative diff budget: 76.5%;
+      `pnpm test` passes.
+
 - [x] Complete the remaining compatible React, React types, framer-motion, and
       xyflow updates. Cumulative diff budget: 74.6%; `pnpm test` passes.
 
