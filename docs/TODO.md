@@ -9,13 +9,19 @@
 
 ## Current
 
-- [ ] Review the store layer behind the three buttons and their selectors.
-      Known lead: `useSmartSettings` casts `activeNavId` to `SettingsTab` and
-      relies on nav IDs matching settings tab IDs.
+- [ ] Review the store layer behind `SidebarToggleButton` and `SettingsButton`
+      and their selectors. Known lead: `useSmartSettings` casts `activeNavId`
+      to `SettingsTab` and relies on nav IDs matching settings tab IDs.
 
 ## Planned
 
 ## Completed
+
+- [x] Review the store/types path behind `SideSwitchButton`: the sidebar store,
+      disclosure factory, state contracts, and public type entry. Unify the
+      Chinese sidebar wording, export `DisclosureState`, and add the factory's
+      explicit return type. Add these files to both refinement allowlists;
+      TypeScript, ESLint, and oxfmt checks pass.
 
 - [x] Guard the `WindowHeader` double-click by event target, matching the
       mouse-down check. Only the header surface toggles maximization.
