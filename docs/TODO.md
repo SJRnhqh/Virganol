@@ -6,8 +6,9 @@
 
 ## Current
 
-- [ ] Upgrade Lobehub icons and TypeScript in separate verified batches.
-
 ## Planned
 
 ## Completed
+
+- [x] Upgrade Lobehub icons to 6.20.0. Diff budget: 117.7%; `pnpm test` passes.
+      Defer TypeScript v6 to a separate branch to keep this lockfile reviewable.
