@@ -15,9 +15,6 @@
 
 ## Planned
 
-- [ ] Verify keyboard operation, sidebar switching and toggling, and
-      context-aware settings on macOS and Windows. Run `pnpm test`.
-
 ## Completed
 
 - [x] Guard the `WindowHeader` double-click by event target, matching the
