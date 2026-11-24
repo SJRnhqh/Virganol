@@ -25,9 +25,9 @@
   "license": "GPL-3.0",
   "packageManager": "pnpm@12.23.0",
   "devDependencies": {
-    "@commitlint/cli": "^20.5.0",
-    "@commitlint/config-conventional": "^20.5.0",
-    "@napi-rs/cli": "^3.7.4",
+    "@commitlint/cli": "^20.5.3",
+    "@commitlint/config-conventional": "^20.5.3",
+    "@napi-rs/cli": "^3.11.0",
     "husky": "^9.1.7",
     "oxfmt": "0.72.0"
   },
