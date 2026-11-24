@@ -53,7 +53,7 @@ const registerListener = async (
   } catch (error) {
     cleanupRegisteredListeners(cleanups);
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`[React] failed to register ${checkEvent}: ${message}`);
+    throw new Error(`[React] failed to register ${checkEvent}: ${message}`, { cause: error });
   }
 };
 
