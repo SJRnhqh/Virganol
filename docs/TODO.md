@@ -3,19 +3,20 @@
 - Branch: `feat/spirit-ui-header-controls`
 - Parent: `feat/spirit`
 - Goal: Refine `SideSwitchButton`, `SidebarToggleButton`, and
-  `SettingsButton` in the `WindowHeader` controls group. Simplify their state
+  `SettingsButton` in the `WindowHeader` actions group. Simplify their state
   subscriptions, event handling, and styles. Preserve their existing behavior
   except for the deliberate changes recorded under Completed.
 
 ## Current
 
 - [ ] Review the store layer behind the three buttons and their selectors.
+      Known lead: `useSmartSettings` casts `activeNavId` to `SettingsTab` and
+      relies on nav IDs matching settings tab IDs.
 
 ## Planned
 
-- [ ] Verify keyboard operation, accessible button names, sidebar switching
-      and toggling, and context-aware settings on macOS and Windows. Run
-      `pnpm test`.
+- [ ] Verify keyboard operation, sidebar switching and toggling, and
+      context-aware settings on macOS and Windows. Run `pnpm test`.
 - [ ] Check the workspace dependencies for updates on a regular basis.
 
 ## Completed
@@ -107,3 +108,19 @@
 - [x] Widen the ESLint `refinedFiles` entry and the oxfmt allowlist from
       individual header files to `src/components/header/**`, which covers
       `SettingsButton.tsx`.
+- [x] Drop `zIndex: 9999` from `windowHeaderStyles.root`; `isolation:
+      "isolate"` is now its only stacking rule. Consequence: the header no
+      longer floats above the settings overlay (`z-100`) or the sidebar
+      (`z-40`). While the settings modal is open, its transparent backdrop
+      covers the header, so the header buttons do not respond and clicking
+      the header closes the modal. Accepted for now, to revisit when the
+      settings modal is refined.
+- [x] Drop `alignItems: "center"` from `windowHeaderStyles.controls`. Every
+      child is a full-height `headerSharedStyles.button`, so cross-axis
+      alignment has nothing to align.
+- [x] Rename `windowHeaderStyles.controls` to `actions` and drop its `// TBD`
+      marker. The name now separates the app buttons from `WindowControls`,
+      and the group's shape is settled.
+- [x] Keep `actions` inside `windowHeaderStyles`: the namespace reads as
+      `root`, its conditional fixes, then coexisting child elements. Split
+      the group into a component only when a third group arrives.

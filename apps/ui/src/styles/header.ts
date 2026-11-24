@@ -53,7 +53,6 @@ export const windowHeaderStyles = create({
     cursor: "default",
     isolation: "isolate",
     userSelect: "none",
-    zIndex: 9999, // Revisit stacking during the header redesign.
     height: "2rem",
   },
   preTahoeHeight: {
@@ -65,9 +64,8 @@ export const windowHeaderStyles = create({
   windowEdgeAlignment: {
     paddingInlineEnd: 0,
   },
-  controls: { // TBD
+  actions: {
     gap: "0.25rem",
-    alignItems: "center",
     display: "flex",
     height: "100%",
     marginLeft: "auto",

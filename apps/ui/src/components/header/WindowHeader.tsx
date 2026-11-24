@@ -44,7 +44,7 @@ export function WindowHeader(): JSX.Element {
       onDoubleClick={handleDoubleClick}
       onMouseDown={handleMouseDown}
     >
-      <div {...props(windowHeaderStyles.controls)}>
+      <div {...props(windowHeaderStyles.actions)}>
         <SideSwitchButton />
         <SidebarToggleButton />
         <SettingsButton />
