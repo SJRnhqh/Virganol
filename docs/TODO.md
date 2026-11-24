@@ -9,12 +9,17 @@
 
 ## Current
 
-- [ ] Review the remaining `MainLayout` store/hooks boundaries and the
-      `WindowHeader` window-state hook as needed.
-
 ## Planned
 
 ## Completed
+
+- [x] Review the `MainLayout` store boundaries: it selects only the sidebar side
+      and navigation fields consumed by its shell and direct children; the
+      header subscribes independently. Defer the window-state hook to the later
+      hooks refinement pass.
+- [x] Expand both refinement allowlists to all of `src/store/**` and
+      `src/types/state/**`, plus the types entry. Keep both lists synchronized
+      in top-down module order; TypeScript, ESLint, and oxfmt checks pass.
 
 - [x] Review `SettingsButton`: remove `useSmartSettings` and deliberately open
       the default General tab directly through `useSettingsStore.open` instead

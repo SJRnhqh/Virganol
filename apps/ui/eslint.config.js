@@ -21,21 +21,16 @@ const srcFiles = [
 const refinedFiles = [
   "src/main.tsx",
   "src/App.tsx",
-  "src/types/settings.ts",
-  "src/types/state/disclosure.ts",
-  "src/types/state/index.ts",
-  "src/types/state/settings.ts",
-  "src/types/state/sidebar.ts",
-  "src/store/createDisclosure.ts",
-  "src/store/index.ts",
-  "src/store/SidebarStore.ts",
-  "src/store/SettingsStore.ts",
   "src/layouts/**",
-  "src/lib/index.ts",
-  "src/lib/platform/**",
-  "src/icons/**",
   "src/components/index.ts",
   "src/components/header/**",
+  "src/icons/**",
+  "src/lib/index.ts",
+  "src/lib/platform/**",
+  "src/store/**",
+  "src/types/index.ts",
+  "src/types/state/**",
+  "src/types/settings.ts",
 ];
 
 const barrelFiles = [`src/${moduleDirs}/**/index.ts`];
