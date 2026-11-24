@@ -75,7 +75,7 @@ Rust/Tauri 可观测性 v1 已于 2026-09-08 合入 `feat/spirit`（#39），合
 #### 6.5 收尾优化
 
 - [ ] 以 `MainLayout` 为入口，按 WindowHeader → Sidebar → MainStage → SettingsModal 检查 JSX、状态与样式边界。Sidebar 重点检查 settings `toggle` 和 `useSidebarStyles` 订阅，MainStage 对齐 `NavId` 与 `types/props/` 的类型派生
-- [ ] 完成 WindowHeader 收尾。平台适配、`trafficLightInset`、根样式和配色分层已完成（#44、#45），Windows 自绘控件的 StyleX 迁移及图标、布局、悬停反馈已验证。`Breadcrumb` 与 `ModuleMenu` 已整体移除（含面包屑专属 token），0.0.1 的模块定位由侧栏承担，后续聊天界面落地时再评估顶栏信息区设计。剩余 `SidebarToggleButton` / `SideSwitchButton` 的订阅范围
+- [x] 完成 WindowHeader 收尾。平台适配、`trafficLightInset`、根样式和配色分层已完成（#44、#45），Windows 自绘控件的 StyleX 迁移及图标、布局、悬停反馈已验证。`Breadcrumb` 与 `ModuleMenu` 已整体移除（含面包屑专属 token），0.0.1 的模块定位由侧栏承担，后续聊天界面落地时再评估顶栏信息区设计。三个应用按钮及壳层 store/state 契约已完成订阅与规范化审查，设置按钮默认打开 General
 - [ ] 按平台裁剪窗口状态查询（暂缓）。目前 `WindowHeader` 通过一份尺寸变化监听查询全屏和最大化状态。后续评估 macOS 只查全屏、Windows 只查最大化的方案。
 - [ ] macOS 全屏切换补验：红绿灯让位进出全屏是否正确，退出全屏时原生红绿灯与顶栏内容的短暂重叠是否需修（根治需 Rust 侧 `willExitFullScreen` 提前通知前端）
 - [x] StyleX 升级 0.19.2 并切回 `.rspack()`（#45）：开发期保留 `runtimeInjection`；色板值可热更新，`defineVars` 映射改动仍需 reload
