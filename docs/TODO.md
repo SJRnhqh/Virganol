@@ -10,6 +10,9 @@
 
 ## Completed
 
+- [x] Update `@rsbuild/core` to 2.3.3. Cumulative diff budget: 92.1%;
+      `pnpm test` passes.
+
 - [x] Update `@rsbuild/plugin-react` to 2.1.1. Cumulative diff budget: 76.5%;
       `pnpm test` passes.
 
