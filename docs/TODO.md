@@ -14,3 +14,6 @@
 - [ ] Verify each batch with `pnpm test` and `pnpm diff:budget`.
 
 ## Completed
+
+- [x] Upgrade Stylelint and its standard config to v18/v41. Diff budget: 75.7%;
+      `pnpm test` passes.
