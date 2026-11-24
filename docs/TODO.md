@@ -17,7 +17,6 @@
 
 - [ ] Verify keyboard operation, sidebar switching and toggling, and
       context-aware settings on macOS and Windows. Run `pnpm test`.
-- [ ] Check the workspace dependencies for updates on a regular basis.
 
 ## Completed
 
@@ -124,3 +123,7 @@
 - [x] Keep `actions` inside `windowHeaderStyles`: the namespace reads as
       `root`, its conditional fixes, then coexisting child elements. Split
       the group into a component only when a third group arrives.
+- [x] First small dependency batch: update the ESLint family within semver
+      ranges (eslint, @eslint/js, typescript-eslint, and four plugins).
+      `pnpm test` passes; `pnpm diff:budget` worktree at 91.6%. Remaining
+      dependency updates tracked in `ROADMAP.md`.

@@ -109,6 +109,7 @@ Rust/Tauri 可观测性 v1 已于 2026-09-08 合入 `feat/spirit`（#39），合
 
 #### 6.6 测试覆盖与质量门禁
 
+- [ ] 依赖更新分批推进（首批 ESLint 家族已在 `feat/spirit-ui-header-controls` 完成，范围内 7 包）。剩余：范围内运行时依赖（react、zustand、framer-motion 等）、范围内其他工具链（stylelint、tailwindcss、@types 等）；跨大版本逐项评估（eslint 10、stylelint 18、typescript 7、framer-motion 14、@xyflow/react 13、@lobehub/icons 6、commitlint 21 等）。每批单独提交并跑 `pnpm test` 与 `pnpm diff:budget`
 - [ ] 在 `dev/scripts/ts/comments/` 建立基于 comment-parser 的 TS 注释检查器并接入 `dev/scripts/ts/test.mjs`。现有仅中文文档注释先报告，再随规范扫描切换为强制门禁
 - [ ] 前端行为测试出现时评估 Rstest；Rslib、Rspress、Rsdoctor 与 Rslint 继续延后到明确需求出现
 - [ ] 补齐 0.0.1 单元测试与缺口覆盖
