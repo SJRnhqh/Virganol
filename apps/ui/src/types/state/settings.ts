@@ -12,9 +12,9 @@ export interface SettingsState extends DisclosureState {
    * 当前激活的设置页签。
    */
   activeTab: SettingsTab;
-  /** Sets the active settings tab.
+  /** Activates a settings tab.
    *
-   * 设置激活的设置页签。
+   * 切换设置页签。
    */
   setTab: (tab: SettingsTab) => void;
 }

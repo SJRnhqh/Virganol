@@ -2,7 +2,7 @@
 import { props } from "@stylexjs/stylex";
 import type { JSX } from "react";
 
-import { useSmartSettings } from "@/hooks";
+import { useSettingsStore } from "@/store";
 import { headerSharedStyles } from "@/styles";
 import { settingsButtonIcon } from "@/icons";
 
@@ -11,7 +11,7 @@ import { settingsButtonIcon } from "@/icons";
  * 应用的设置按钮。
  */
 export function SettingsButton(): JSX.Element {
-  const { openContextAwareSettings: handleOpenSettings } = useSmartSettings();
+  const handleOpenSettings = useSettingsStore((state) => state.open);
 
   return (
     <button

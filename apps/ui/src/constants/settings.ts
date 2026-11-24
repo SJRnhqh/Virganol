@@ -4,6 +4,12 @@ import { type LucideIcon, Settings2 } from "lucide-react";
 import type { SettingsTab } from "@/types";
 import { NAV_ITEMS } from "./navigation";
 
+/** Default settings tab.
+ *
+ * 默认设置页签。
+ */
+export const DEFAULT_SETTINGS_TAB: SettingsTab = "general";
+
 // Settings UI 的静态配置：侧边栏条目、图标、与面板类型映射
 // 定义面板类型
 export type PanelType = "general" | "spirit" | "comingSoon";
@@ -33,7 +39,7 @@ const STATIC_TABS: SettingsTabItem[] = [
 // 2. 动态生成模块设置项（与左侧导航保持一致）
 // 从 NAV_ITEMS 中提取信息，自动生成 Spirit, Script, Comb 等设置入口
 const MODULE_TABS: SettingsTabItem[] = NAV_ITEMS.map((item) => ({
-  id: item.id as SettingsTab, // 确保 ID 类型匹配
+  id: item.id,
   label: item.label, // 复用导航栏的短名称 (e.g., "Spirit")
   icon: item.icon, // 复用导航栏的图标
   // 根据 ID 决定面板类型

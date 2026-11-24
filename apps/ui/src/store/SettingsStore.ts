@@ -1,7 +1,8 @@
 // apps/ui/src/store/SettingsStore.ts
 import { create } from "zustand";
 
-import { DEFAULT_SETTINGS_TAB, type SettingsState } from "@/types";
+import type { SettingsState } from "@/types";
+import { DEFAULT_SETTINGS_TAB } from "@/constants";
 import { createDisclosure } from "./createDisclosure";
 
 /** State container of the settings.

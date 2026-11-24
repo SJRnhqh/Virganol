@@ -9,15 +9,22 @@
 
 ## Current
 
-- [ ] Review the store/hooks path behind `SettingsButton`. Known lead:
-      `useSmartSettings` casts `activeNavId` to `SettingsTab` and relies on nav
-      IDs matching settings tab IDs.
 - [ ] Review the remaining `MainLayout` store/hooks boundaries and the
       `WindowHeader` window-state hook as needed.
 
 ## Planned
 
 ## Completed
+
+- [x] Review `SettingsButton`: remove `useSmartSettings` and deliberately open
+      the default General tab directly through `useSettingsStore.open` instead
+      of deriving a settings tab from navigation. `SettingsNavigation` keeps
+      `setTab` for explicit tab switching.
+- [x] Derive `SettingsTab` from `"general" | NavId`, removing the navigation ID
+      casts. Move `DEFAULT_SETTINGS_TAB` from types to constants so the types
+      module stays type-only. Clarify the `setTab` contract and add the settings
+      store and state types to both refinement allowlists. TypeScript, ESLint,
+      and oxfmt checks pass.
 
 - [x] Review `SidebarToggleButton`: it shares the sidebar store already reviewed
       for `SideSwitchButton`, and additionally selects `isOpen` and `side` for
