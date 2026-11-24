@@ -16,6 +16,9 @@
 
 ## Completed
 
+- [x] Upgrade `oxfmt` to 0.80.0. Cumulative diff budget: 40.1%; `pnpm test`
+      passes.
+
 - [x] Upgrade the commitlint family to 21.2.4. Cumulative diff budget: 30.9%;
       `pnpm test` passes.
 
