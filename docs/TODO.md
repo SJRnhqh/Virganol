@@ -13,6 +13,9 @@
 
 ## Completed
 
+- [x] Update `@napi-rs/cli` to 3.11.1. Cumulative diff budget: 71.4%; `pnpm test`
+      passes.
+
 - [x] Update `@rsbuild/core` to 2.3.4. Cumulative diff budget: 70.0%; `pnpm test`
       passes.
 

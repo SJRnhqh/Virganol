@@ -192,8 +192,8 @@ importers:
         specifier: ^21.2.4
         version: 21.2.4
       '@napi-rs/cli':
-        specifier: ^3.11.0
-        version: 3.11.0(@emnapi/core@2.0.0-beta.3)(@emnapi/runtime@2.0.0-beta.3)(@types/node@26.6.6)(emnapi@1.11.2)(supports-color@7.2.0)
+        specifier: ^3.11.1
+        version: 3.11.1(@emnapi/core@2.0.0-beta.3)(@emnapi/runtime@2.0.0-beta.3)(@types/node@26.6.6)(emnapi@1.11.2)(supports-color@7.2.0)
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -996,8 +996,8 @@ packages:
   '@mdx-js/mdx@3.1.1':
     resolution: {integrity: sha512-f6ZO2ifpwAQIpzGWaBQT2TXxPv6z3RBzQKpVftEWN78Vl/YweF1uwussDx8ECAXVtr3Rs89fKyG9YlzUs9DyGQ==}
 
-  '@napi-rs/cli@3.11.0':
-    resolution: {integrity: sha512-Tyw5qCYyOHLQ/GuncGhjLogFu9u+IQZiFUjaJegpy8RNY1wBHEvyf8Std/Ssax4AUo1oVsvBltqpPvMGaKUgnw==}
+  '@napi-rs/cli@3.11.1':
+    resolution: {integrity: sha512-OGgD7qK01x5/YXHvOadEhgIsCHxw87WMnE7cPMvHAgStsCZJS+hVOu8KtWXj+vBeVwH/Ufi0S1jUD+Djqn3r+w==}
     engines: {node: ^20.17.0 || ^22.13.0 || >= 23.5.0}
     hasBin: true
     peerDependencies:
@@ -5626,7 +5626,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@napi-rs/cli@3.11.0(@emnapi/core@2.0.0-beta.3)(@emnapi/runtime@2.0.0-beta.3)(@types/node@26.6.6)(emnapi@1.11.2)(supports-color@7.2.0)':
+  '@napi-rs/cli@3.11.1(@emnapi/core@2.0.0-beta.3)(@emnapi/runtime@2.0.0-beta.3)(@types/node@26.6.6)(emnapi@1.11.2)(supports-color@7.2.0)':
     dependencies:
       '@inquirer/prompts': 8.8.1(@types/node@26.6.6)
       '@napi-rs/cross-toolchain': 1.0.5(supports-color@7.2.0)
