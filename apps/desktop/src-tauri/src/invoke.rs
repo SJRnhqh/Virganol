@@ -16,8 +16,5 @@ fn register_invoke_handler(builder: Builder<Wry>) -> Builder<Wry> {
         connect_and_save_provider,
         reset_provider,
         update_enabled_models,
-        tmp::ssh::test_ssh_params,
-        tmp::terminal::init_pty,
-        tmp::terminal::write_pty,
     ])
 }

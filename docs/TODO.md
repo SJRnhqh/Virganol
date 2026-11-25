@@ -13,6 +13,13 @@
 
 ## Completed
 
+- [x] Remove the unused SSH prototype, Tauri `tmp` module, and `ssh2` dependency
+      after confirming no frontend consumer. Cargo check and `pnpm test` pass.
+
+- [x] Remove the orphaned Tauri PTY terminal implementation, command/state
+      registrations, and `portable-pty` dependency. The Go sidecar and Provider
+      lifecycle remain in use. Cargo check and `pnpm test` pass.
+
 - [x] Remove the orphaned `@xyflow/react`, `@xterm/xterm`,
       `@xterm/addon-fit`, and `@xterm/addon-web-links` dependencies. Cumulative
       diff budget: 45.7%; `pnpm test` passes.
