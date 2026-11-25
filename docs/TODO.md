@@ -7,11 +7,13 @@
 
 ## Current
 
-- [ ] Upgrade TypeScript to a supported v6 release and review remaining updates.
-
 ## Planned
 
 ## Completed
+
+- [x] Upgrade TypeScript to 6.0.3, supported by typescript-eslint, and remove the
+      deprecated `baseUrl`; relative `paths` now resolve from the tsconfig.
+      Cumulative diff budget: 91.2%; `pnpm test` passes.
 
 - [x] Update `lucide-react` to 1.79.0. Cumulative diff budget: 74.3%; `pnpm test`
       passes.
