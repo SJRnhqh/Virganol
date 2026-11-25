@@ -8,7 +8,6 @@
     "types": ["@rsbuild/core/types"],
     "jsx": "react-jsx",
 
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
     },

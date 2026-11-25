@@ -2,7 +2,6 @@
 mod commands;
 mod container;
 mod core;
-mod tmp;
 
 pub use container::run;
 
