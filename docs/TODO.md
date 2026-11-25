@@ -13,6 +13,9 @@
 
 ## Completed
 
+- [x] Update `@rsbuild/core` to 2.3.4. Cumulative diff budget: 70.0%; `pnpm test`
+      passes.
+
 - [x] Remove the unused SSH prototype, Tauri `tmp` module, and `ssh2` dependency
       after confirming no frontend consumer. Cargo check and `pnpm test` pass.
 

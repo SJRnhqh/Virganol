@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@rsbuild/core": "2.3.3",
+    "@rsbuild/core": "2.3.4",
     "@rsbuild/plugin-react": "2.1.1",
     "@rsbuild/plugin-tailwindcss": "2.0.3",
     "@rsdoctor/rspack-plugin": "^1.6.5",
