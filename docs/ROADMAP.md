@@ -109,7 +109,7 @@ Rust/Tauri 可观测性 v1 已于 2026-09-08 合入 `feat/spirit`（#39），合
 
 #### 6.6 测试覆盖与质量门禁
 
-- [ ] 依赖更新分批推进（范围内依赖及 Rsbuild、ESLint、Stylelint、commitlint、oxfmt、framer-motion 等大版本已更新；CI 已补 Rust 缓存并拆分 Go、Rust、UI 并行任务）。剩余 @lobehub/icons 6 单独升级；xyflow 13 存在 NodeChangeset 类型不兼容，TypeScript 7 待 typescript-eslint 支持。每批单独提交并跑 `pnpm test` 与 `pnpm diff:budget`
+- [ ] 依赖更新分批推进（范围内依赖及 Rsbuild、ESLint、Stylelint、commitlint、oxfmt、framer-motion、@lobehub/icons 6 等大版本已更新；CI 已补 Rust 缓存并拆分 Go、Rust、UI 并行任务）。TypeScript 6 单独升级；xyflow 13 存在 NodeChangeset 类型不兼容，TypeScript 7 待 typescript-eslint 支持。每批单独提交并跑 `pnpm test` 与 `pnpm diff:budget`
 - [ ] 在 `dev/scripts/ts/comments/` 建立基于 comment-parser 的 TS 注释检查器并接入 `dev/scripts/ts/test.mjs`。现有仅中文文档注释先报告，再随规范扫描切换为强制门禁
 - [ ] 前端行为测试出现时评估 Rstest；Rslib、Rspress、Rsdoctor 与 Rslint 继续延后到明确需求出现
 - [ ] 补齐 0.0.1 单元测试与缺口覆盖
