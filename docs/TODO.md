@@ -13,6 +13,9 @@
 
 ## Completed
 
+- [x] Update `lucide-react` to 1.79.0. Cumulative diff budget: 74.3%; `pnpm test`
+      passes.
+
 - [x] Update `@napi-rs/cli` to 3.11.1. Cumulative diff budget: 71.4%; `pnpm test`
       passes.
 
